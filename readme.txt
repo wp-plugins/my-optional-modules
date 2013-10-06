@@ -3,7 +3,7 @@ Contributors: Matthew Trevino
 Tags: word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 1.0.3
+Stable tag: 1.0.3.1
 
 A bundle of optional Wordpress modules to enhance functionality.
 
