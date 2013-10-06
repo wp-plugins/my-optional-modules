@@ -121,7 +121,16 @@
 				<td>
 					<em>Count all words from all published posts (word count).  Optional: Keep track of a Total Word Goal.</em>
 				</td>
-			</tr>
+			</tr>";
+			
+			if(is_plugin_active('rotating-universal-passwords/RUPs.php')){
+			echo "
+			<tr valign=\"top\">
+				<th scope=\"row\">RUPs</th>
+				<td>Activate (Standalone)</td>
+				<td>You currently have the standalone version of RUPs installed and active.  Please disable and delete it to use this module.</td>
+			</tr>"; } else {			
+			echo "
 			<tr valign=\"top\">
 				<th scope=\"row\">
 					<label for=\"mommaincontrol_momrups\">RUPs</label>
@@ -145,6 +154,7 @@
 			</tr>
 			";
 		}
+		}
 	
 	##	Plugin options page output.
 		function my_optional_modules_page_content() {
@@ -157,8 +167,15 @@
 					not currently available in a fresh installation.  They are designed to be lightweight and easilly implemented by even the most novice of 
 					Wordpress users.</p>
 					<p>Deactivating modules will deactivate their associated functionality.  All code examples accounts for this with 
-					a check to see if the function being called exists (is active).</p>
-				<h3 class=\"title\">Modules</h3>
+					a check to see if the function being called exists (is active).</p>";
+					
+				if (is_plugin_inactive('rotating-universal-passwords/RUPs.php')){
+					echo "
+						<div class=\"updated settings-error\"><p>You currently have the standalone version of RUPs installed (but not active).  It is advised to delete this plugin as <em>My Optional Modules</em> incorporates the same functions and options, and both plugins will conflict with each other (if you decided to activate both the RUPs plugin and the RUPs module at the same time).</p></div>
+					";
+				}
+					
+				echo "<h3 class=\"title\">Modules</h3>
 				";
 				
 				if(isset($_POST['momsave'])){

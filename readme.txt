@@ -1,9 +1,9 @@
 === My Optional Modules ===
 Contributors: Matthew Trevino
-Tags: word count, word goal, countdown, total
+Tags: word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 1
+Stable tag: 1.1
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -20,6 +20,11 @@ They are designed to be lightweight and easilly implemented by even the most nov
 
 
 == Changelog ==
+
+= 1.1 =
+* Checks for previously installed RUPs (standalone plugin).
+* If RUPs is installed but not active, it will warn you to uninstall it.
+* If RUPs is installed AND active, the RUPs module will be unavailable until the RUPs plugin is deactivated.
 
 = 1.0 =
 * Initial release.
