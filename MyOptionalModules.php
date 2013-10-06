@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: My Optional Modules
-Plugin URI: http://onebillionwords.com
+Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 1.0.1
+Version: 1.0.2
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 */

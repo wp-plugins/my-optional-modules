@@ -20,6 +20,8 @@ They are designed to be lightweight and easilly implemented by even the most nov
 
 
 == Changelog ==
+= 1.0.2 =
+* Official Plugin page updated, plugin page created.
 
 = 1.0.1 =
 * Version updates (plugin file)
