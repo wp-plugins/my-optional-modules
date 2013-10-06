@@ -11,6 +11,12 @@ A bundle of optional Wordpress modules to enhance functionality.
 My Optional Modules (or MOM) is a bundle of optional modules for Wordpress which give extra functionality not currently available in a fresh installation. 
 They are designed to be lightweight and easilly implemented by even the most novice of Wordpress users.
 
+Modules currently available:
+* Count++, a module to count words on the blog and countdown from an (optional) total count goal.
+* RUPs, a module for storing 7 unique (SHA512 salted) passwords, and then hiding content with a shortcode (and IP based lockout) that is unlockable using the current days password.
+* Simply Exclude (SE), a module to hide tags, categories, and post formats from the front page, the archives, the search results, or the feed (or all).
+
+
 == Installation ==
 
 1. Upload /my-optional-modules/ to your plguins folder.
