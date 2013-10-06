@@ -3,7 +3,7 @@ Contributors: Matthew Trevino
 Tags: word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -20,6 +20,11 @@ They are designed to be lightweight and easilly implemented by even the most nov
 
 
 == Changelog ==
+= 1.0.3 = 
+* Module 3: SE (Simple Exclude)
+* - Exclude a single or comma-separated list of tags and categories from: front page, archives, search results, or feed.
+* - can exclude tags, categories, and post formats.
+
 = 1.0.2 =
 * Official Plugin page updated, plugin page created.
 

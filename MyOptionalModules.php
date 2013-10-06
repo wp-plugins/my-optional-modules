@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 1.0.2
+Version: 1.0.3
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 */
@@ -28,6 +28,7 @@ Author URI: http://onebillionwords.com
 	function my_optional_modules_main_control_install() {
 		add_option("mommaincontrol_obwcountplus","0","Count++ activated?");
 		add_option("mommaincontrol_momrups","0","RUPs activated?");
+		add_option("mommaincontrol_momse","0","Simply Exclude activated?");
 	}
 	include( plugin_dir_path( __FILE__ ) . 'modules/maincontrol.php');
 	
@@ -40,6 +41,10 @@ Author URI: http://onebillionwords.com
 		include( plugin_dir_path( __FILE__ ) . 'modules/rups.php');
 	}
 	
+	## Load Simple Exclude if we ask for it
+	if (get_option("mommaincontrol_momse") == 1) {	
+		include( plugin_dir_path( __FILE__ ) . 'modules/se.php');
+	}	
 
 
 ?>

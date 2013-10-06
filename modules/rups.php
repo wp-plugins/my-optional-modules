@@ -3,7 +3,9 @@
 	if(!defined('MyOptionalModules')) {
 	die('You can not call this file directly.');
 	}
-	
+
+ ## RUPs (Rotating Universal Passwords)
+	## RUPs	
 	## SALT
 	## $theSalt = "SOME_LONG_STRING_OF_RANDOM_CHARACTERS";
 	## The below salt is provided as a default.  It should not be used as-is and should 
@@ -16,7 +18,6 @@
 	87890&F()*&)SD(&*)(F*&)(&*)g7d-f7-gdfg-d7f-g7_&G_D&*F&G*d8g7jd890fg78df7g89d7fg78*(GD*F*gd8fg8d89fgfgfgf";
 	$theMethod = "sha512";
 
-	##  RUPs-+++	
 	##  Initial plugin options, actions, and whatnot
 	$rups_pass = "";
 	add_action("admin_menu", "rotating_universal_passwords_options_add_options_page");
