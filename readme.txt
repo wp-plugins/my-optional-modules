@@ -21,7 +21,7 @@ They are designed to be lightweight and easilly implemented by even the most nov
 
 == Changelog ==
 = 1.0.3 = 
-* Module 3: SE (Simple Exclude)
+* Module 3: SE (Simply Exclude)
 * - Exclude a single or comma-separated list of tags and categories from: front page, archives, search results, or feed.
 * - can exclude tags, categories, and post formats.
 
