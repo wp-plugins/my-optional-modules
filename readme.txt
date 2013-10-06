@@ -23,7 +23,6 @@ They are designed to be lightweight and easilly implemented by even the most nov
 
 = 1.1 =
 * Checks for previously installed RUPs (standalone plugin).
-* If RUPs is installed but not active, it will warn you to uninstall it.
 * If RUPs is installed AND active, the RUPs module will be unavailable until the RUPs plugin is deactivated.
 
 = 1.0 =

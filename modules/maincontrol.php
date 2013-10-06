@@ -169,12 +169,7 @@
 					<p>Deactivating modules will deactivate their associated functionality.  All code examples accounts for this with 
 					a check to see if the function being called exists (is active).</p>";
 					
-				if (is_plugin_inactive('rotating-universal-passwords/RUPs.php')){
-					echo "
-						<div class=\"updated settings-error\"><p>You currently have the standalone version of RUPs installed (but not active).  It is advised to delete this plugin as <em>My Optional Modules</em> incorporates the same functions and options, and both plugins will conflict with each other (if you decided to activate both the RUPs plugin and the RUPs module at the same time).</p></div>
-					";
-				}
-					
+				
 				echo "<h3 class=\"title\">Modules</h3>
 				";
 				
