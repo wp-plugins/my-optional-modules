@@ -21,11 +21,12 @@ They are designed to be lightweight and easilly implemented by even the most nov
 
 == Changelog ==
 
-= 1.1 =
+= 1.0.1 =
+* Version updates (plugin file)
 * Checks for previously installed RUPs (standalone plugin).
 * If RUPs is installed AND active, the RUPs module will be unavailable until the RUPs plugin is deactivated.
 
-= 1.0 =
+= 1.0.0 =
 * Initial release.
 * Module 1: Post Word Count (http://wordpress.org/plugins/post-word-count/)
 * - added an options page to allow for word goal and word change.
