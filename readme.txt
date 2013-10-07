@@ -12,7 +12,7 @@ My Optional Modules (or MOM) is a bundle of optional modules for Wordpress which
 They are designed to be lightweight and easilly implemented by even the most novice of Wordpress users.
 
 = No Unnecessary Load =
-MOM only lods what you want it to load - so no matter how many modules come packaged, the only ones that get loaded are the ones that you ask for.
+MOM only loads what you want it to load - so no matter how many modules come packaged, the only ones that get loaded are the ones that you ask for.
 
 = Modules currently available: =
 * Count++, a module to count words on the blog and countdown from an (optional) total count goal.
