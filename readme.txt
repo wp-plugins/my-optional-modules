@@ -3,7 +3,7 @@ Contributors: Matthew Trevino
 Tags: keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 1.0.4
+Stable tag: 1.0.5
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -30,6 +30,11 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
+= 1.0.5 =
+* 2 Uninstall methods: reset all and nuke.  
+* Reset all erases all options associated with all modules.  
+* Nuke erases all options associated with the plugin itself, which includes any separate tables it has created to store information for future usage.
+
 = 1.0.4 =
 * Module 4: Post as Front (PAF)
 * - Select a specific post to be your home page, or make your home page your most recent post.
