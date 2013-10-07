@@ -16,7 +16,9 @@
 	$mommaincontrol_obwcountplus = get_option("mommaincontrol_obwcountplus");
 	$mommaincontrol_momrups = get_option("mommaincontrol_momrups");	
 	$mommaincontrol_momse = get_option("mommaincontrol_momse");
-
+	$mommaincontrol_mompaf = get_option("mommaincontrol_mompaf");
+	$mommaincontrol_momja = get_option("mommaincontrol_momja");
+	
 	## MOM options page
 		function my_optional_modules_add_options_page() {																
 			$myoptionalmodules_options = add_options_page("MOM: Main Control", "MOM: Main Control", "manage_options", "mommaincontrol", "my_optional_modules_page_content");
@@ -27,7 +29,12 @@
 	
 	##	Update options if form is submitted
 		function update_myoptionalmodules_options() {
-				global $mommaincontrol_obwcountplus;
+			global $mommaincontrol_obwcountplus;
+			global $mommaincontrol_momrups;
+			global $mommaincontrol_momse;
+			global $mommaincontrol_mompaf;
+			global $mommaincontrol_momja;
+			
 					if(isset($_POST['momsave'])){
 
 					if ($_REQUEST["mommaincontrol_obwcountplus"] != "$mommaincontrol_obwcountplus") { 
@@ -126,7 +133,54 @@
 						delete_option("simple_announcement_with_exclusion_9_13");
 						delete_option("simple_announcement_with_exclusion_9_14");
 					}
-				}			
+				}
+
+				if ($_REQUEST["mommaincontrol_mompaf"] != "$mommaincontrol_mompaf") { 
+					update_option("mommaincontrol_mompaf",$_REQUEST["mommaincontrol_mompaf"]); 
+					
+					if ($_REQUEST["mommaincontrol_mompaf"] == 1) {
+						## If we're enabling Post as Front for the first time, set up its options.
+						if (!get_option('mompaf_post')) {
+							add_option("mompaf_post","","Post ID to use as front page");
+						}
+					}
+					if ($_REQUEST["mommaincontrol_mompaf"] == 3) {
+						## If we're uninstalling Post as Front, remove the options from the database.
+							delete_option("mompaf_post");
+					}
+				}
+				
+				if ($_REQUEST["mommaincontrol_momja"] != "$mommaincontrol_momja") { 
+					update_option("mommaincontrol_momja",$_REQUEST["mommaincontrol_momja"]); 
+					
+					if ($_REQUEST["mommaincontrol_momja"] == 1) {
+						## If we're enabling Jump Around for the first time, set up its options.				
+							if (!get_option('jump_around_0') || !get_option('jump_around_1') || !get_option('jump_around_2') || !get_option('jump_around_3') || !get_option('jump_around_4') || !get_option('jump_around_5') || !get_option('jump_around_6') || !get_option('jump_around_7') || !get_option('jump_around_8')){ 
+								add_option("jump_around_0","post","Post wrap");
+								add_option("jump_around_1","entry-title","Link wrap");
+								add_option("jump_around_2","previous-link","Previous link");
+								add_option("jump_around_3","next-link","Next link");
+								add_option("jump_around_4","65","Previous");
+								add_option("jump_around_5","83","View");
+								add_option("jump_around_6","68","Next");
+								add_option("jump_around_7","90","Older posts");
+								add_option("jump_around_8","88","Newer posts");
+							}
+					}
+					if ($_REQUEST["mommaincontrol_momja"] == 3) {
+						## If we're enabling Count++ for the first time, set up its options.				
+						delete_option("jump_around_0");
+						delete_option("jump_around_1");
+						delete_option("jump_around_2");
+						delete_option("jump_around_3");
+						delete_option("jump_around_4");
+						delete_option("jump_around_5");
+						delete_option("jump_around_6");
+						delete_option("jump_around_7");
+						delete_option("jump_around_8");
+				
+					}
+				}
 			}
 		}
 		
@@ -135,6 +189,8 @@
 			global $mommaincontrol_obwcountplus;
 			global $mommaincontrol_momrups;
 			global $mommaincontrol_momse;
+			global $mommaincontrol_mompaf;
+			global $mommaincontrol_momja;
 		
 			echo "
 			
@@ -159,12 +215,65 @@
 					<em>Count all words from all published posts (word count).  Optional: Keep track of a Total Word Goal.</em>
 				</td>
 			</tr>";
+
+			if(is_plugin_active('jump-around/jumparound.php')){
+			echo "
+			<tr valign=\"top\">
+				<th scope=\"row\">Jump Around</th>
+				<td>Activated (Standalone)</td>
+				<td>You currently have the standalone version of Jump Around installed and active.  Please disable and delete it to use this module.</td>
+			</tr>"; } else {			
+			echo "
+			<tr valign=\"top\">
+				<th scope=\"row\">
+					<label for=\"mommaincontrol_momja\">Jump Around</label>
+				</th>
+				<td>
+					<select id=\"mommaincontrol_momja\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_momja\">
+					<option value=\"0\" 
+					";
+						if ($mommaincontrol_momja == 0 || $mommaincontrol_momja == 3) { echo "selected=\"selected\""; }
+					echo ">No</option>					
+					<option value=\"1\" 
+					";
+						if ($mommaincontrol_momja == 1) { echo "selected=\"selected\""; }
+					echo ">Yes</option>
+					<option value=\"3\">Uninstall</option>
+						</select>
+				</td>
+				<td>
+					<em>Navigate posts by pressing keys on the keyboard. (<strong>May require template editing</strong>)</em>
+				</td>
+			</tr>";
+			}		
+			
+			echo "<tr valign=\"top\">
+				<th scope=\"row\">
+					<label for=\"mommaincontrol_momse\">Post as Front (PAF)</label>
+				</th>
+				<td>
+					<select id=\"mommaincontrol_momse\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_mompaf\">
+					<option value=\"0\" 
+					";
+						if ($mommaincontrol_mompaf == 0 || $mommaincontrol_mompaf == 3) { echo "selected=\"selected\""; }
+					echo ">No</option>					
+					<option value=\"1\" 
+					";
+						if ($mommaincontrol_mompaf == 1) { echo "selected=\"selected\""; }
+					echo ">Yes</option>
+					<option value=\"3\">Uninstall</option>
+						</select>
+				</td>
+				<td>
+					<em>Select a specific post to be your home page, or make your home page your most recent post.</em>
+				</td>
+			</tr>";
 			
 			if(is_plugin_active('rotating-universal-passwords/RUPs.php')){
 			echo "
 			<tr valign=\"top\">
 				<th scope=\"row\">RUPs</th>
-				<td>Activate (Standalone)</td>
+				<td>Activated (Standalone)</td>
 				<td>You currently have the standalone version of RUPs installed and active.  Please disable and delete it to use this module.</td>
 			</tr>"; } else {			
 			echo "
@@ -188,13 +297,10 @@
 				<td>
 					<em>Hide password-protected content using [rups]the shortcode[/rups].  Passwords are rotated once per day.</em>
 				</td>
-			</tr>
+			</tr>";
+			}
 			
-			
-			
-
-
-			<tr valign=\"top\">
+			echo "<tr valign=\"top\">
 				<th scope=\"row\">
 					<label for=\"mommaincontrol_momse\">Simply Exclude (SE)</label>
 				</th>
@@ -214,9 +320,8 @@
 				<td>
 					<em>Exclude tags, post formats, and categories from the front page, category/tag archives, search results, or the RSS feed.</em>
 				</td>
-			</tr>			
+			</tr>						
 			";
-		}
 		}
 	
 	##	Plugin options page output.

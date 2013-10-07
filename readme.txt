@@ -1,9 +1,9 @@
 === My Optional Modules ===
 Contributors: Matthew Trevino
-Tags: word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
+Tags: keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 1.0.3.1
+Stable tag: 1.0.4
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -15,7 +15,8 @@ They are designed to be lightweight and easilly implemented by even the most nov
 * Count++, a module to count words on the blog and countdown from an (optional) total count goal.
 * RUPs, a module for storing 7 unique (SHA512 salted) passwords, and then hiding content with a shortcode (and IP based lockout) that is unlockable using the current days password.
 * Simply Exclude (SE), a module to hide tags, categories, and post formats from the front page, the archives, the search results, or the feed (or all).
-
+* Post as Front (PAF), a module that allows you to select a specific post to be your home page, or make your home page your most recent post.
+* Jump Around, a module that allows users to navigate posts by pressing keys on the keyboard.
 
 == Installation ==
 
@@ -26,6 +27,12 @@ They are designed to be lightweight and easilly implemented by even the most nov
 
 
 == Changelog ==
+= 1.0.4 =
+* Module 4: Post as Front (PAF)
+* - Select a specific post to be your home page, or make your home page your most recent post.
+* Module 5: Jump Around
+* - Navigate posts by pressing keys on the keyboard.
+
 = 1.0.3 = 
 * Module 3: SE (Simply Exclude)
 * - Exclude a single or comma-separated list of tags and categories from: front page, archives, search results, or feed.
