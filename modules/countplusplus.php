@@ -108,7 +108,14 @@
 				</form>
 				
 				<h3 class=\"title\">Usage</h3>
-				<code>&lt;?php if(function_exists('obwcountplus_count')){ obwcountplus_count(); } ?&gt;</code>
+				<p><em>Display total words and words remaining</em><br />
+				<code>&lt;?php if(function_exists('obwcountplus_count')){ obwcountplus_count(); } ?&gt;</code></p>
+				<p><em>Display numerical value of total words only</em><br />			
+				<code>&lt;?php if(function_exists('obwcountplus_total')){ obwcountplus_total(); } ?&gt;</code></p>
+				<p><em>Display numerical value of remaining words (will result in total if goal has been reached)</em><br />			
+				<code>&lt;?php if(function_exists('obwcountplus_remaining')){ obwcountplus_remaining(); } ?&gt;</code></p>
+				<p><em>Display numerical value of the current number of words in the post (only visable on single post views)</em><br />			
+				<code>&lt;?php if(function_exists('obwcountplus_single')){ obwcountplus_single(); } ?&gt;</code></p>				
 				
 				</div>
 				";
@@ -123,16 +130,91 @@
 	}
 
 	## Template function to output count according to parameters
-	function obwcountplus_count($single = false) {
-		global $obwcountplus_countdownfrom;
-		global $obwcountplus_remaining;
-		global $obwcountplus_total;
+	function obwcountplus_single() {
 		global $wpdb, $id;
 
 		$now = gmdate("Y-m-d H:i:s",time());
 
-		if ($single) $query = "SELECT post_content FROM $wpdb->posts WHERE ID = '$id' AND post_type = 'post'";
-		else $query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_date < '$now' AND post_type = 'post'";
+		$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_date < '$now' AND post_type = 'post' AND ID = '$id'";
+		
+		$words = $wpdb->get_results($query);
+		if ($words) {
+			foreach ($words as $word) {
+				$post = strip_tags($word->post_content);
+				$post = explode(' ', $post);
+				$count = count($post);
+				$totalcount = $count + $oldcount;
+				$oldcount = $totalcount;
+			}
+		} else {
+			$totalcount=0;
+		}
+			if (is_single()) {
+			echo $totalcount; 
+			} else {
+			}
+	}	
+	
+	function obwcountplus_remaining() {
+		global $obwcountplus_countdownfrom;
+		global $wpdb;
+
+		$now = gmdate("Y-m-d H:i:s",time());
+
+		$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_date < '$now' AND post_type = 'post'";
+		
+		$words = $wpdb->get_results($query);
+		if ($words) {
+			foreach ($words as $word) {
+				$post = strip_tags($word->post_content);
+				$post = explode(' ', $post);
+				$count = count($post);
+				$totalcount = $count + $oldcount;
+				$oldcount = $totalcount;
+			}
+		} else {
+			$totalcount=0;
+		}
+
+		if ($totalcount >= $obwcountplus_countdownfrom || $obwcountplus_countdownfrom == 0) {
+			echo $totalcount;
+		} else {
+			echo number_format($obwcountplus_countdownfrom - $totalcount);
+		} 
+	}	
+	
+	function obwcountplus_total() {
+		global $wpdb;
+
+		$now = gmdate("Y-m-d H:i:s",time());
+
+		$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_date < '$now' AND post_type = 'post'";
+		
+		$words = $wpdb->get_results($query);
+		if ($words) {
+			foreach ($words as $word) {
+				$post = strip_tags($word->post_content);
+				$post = explode(' ', $post);
+				$count = count($post);
+				$totalcount = $count + $oldcount;
+				$oldcount = $totalcount;
+			}
+		} else {
+			$totalcount=0;
+		}
+
+			echo $totalcount;
+	}
+	
+	function obwcountplus_count() {
+		global $obwcountplus_countdownfrom;
+		global $obwcountplus_remaining;
+		global $obwcountplus_total;
+		global $wpdb;
+
+		$now = gmdate("Y-m-d H:i:s",time());
+
+		$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_date < '$now' AND post_type = 'post'";
 		
 		$words = $wpdb->get_results($query);
 		if ($words) {
