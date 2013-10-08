@@ -111,7 +111,6 @@
 			header("location: ".get_permalink($mompaf_front));
 			exit;
 			endif;
-			echo "This is just a test";
 		}
 	}
 	
