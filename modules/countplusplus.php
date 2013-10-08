@@ -150,7 +150,7 @@
 			$totalcount=0;
 		}
 			if (is_single()) {
-			echo $totalcount; 
+			echo number_format($totalcount); 
 			} else {
 			}
 	}	
@@ -177,7 +177,7 @@
 		}
 
 		if ($totalcount >= $obwcountplus_countdownfrom || $obwcountplus_countdownfrom == 0) {
-			echo $totalcount;
+			echo number_format($totalcount);
 		} else {
 			echo number_format($obwcountplus_countdownfrom - $totalcount);
 		} 
@@ -203,7 +203,7 @@
 			$totalcount=0;
 		}
 
-			echo $totalcount;
+			echo number_format($totalcount);
 	}
 	
 	function obwcountplus_count() {
@@ -230,7 +230,7 @@
 		}
 
 		if ($totalcount >= $obwcountplus_countdownfrom || $obwcountplus_countdownfrom == 0) {
-			echo $totalcount . " " . $obwcountplus_total;
+			echo number_format($totalcount) . " " . $obwcountplus_total;
 		} else {
 			echo number_format($obwcountplus_countdownfrom - $totalcount) . ' ' . $obwcountplus_remaining . ' (' . number_format($totalcount) . ' '. $obwcountplus_total . ')' ;
 		} 
