@@ -1,43 +1,32 @@
 <?php 
 
-	if(!defined('MyOptionalModules')) {
-	die('You can not call this file directly.');
-	}
+	## Main Control Panel
+	## MCP contents
+	## options page
+	##   - options form (save)
+	##   - options form (output)
+	##   - options page (output)
+	## set home page post content
 
- ## MOM Main Control
-	## MOM
-	## 	register activation/deactivation hooks
-	##	register options page
-	if (is_admin() ) {
-		add_action("admin_menu", "my_optional_modules_add_options_page");
-	}
-	
-	## Get the options set up by the plugin for use throughout
-	$mommaincontrol_obwcountplus = get_option("mommaincontrol_obwcountplus");
-	$mommaincontrol_momrups = get_option("mommaincontrol_momrups");	
-	$mommaincontrol_momse = get_option("mommaincontrol_momse");
-	$mommaincontrol_mompaf = get_option("mommaincontrol_mompaf");
-	$mommaincontrol_momja = get_option("mommaincontrol_momja");
-	
-	## MOM options page
-		function my_optional_modules_add_options_page() {																
-			$myoptionalmodules_options = add_options_page("MOM: Main Control", "MOM: Main Control", "manage_options", "mommaincontrol", "my_optional_modules_page_content");
-		}	
+	if(!defined('MyOptionalModules')) { die('You can not call this file directly.'); }
 		
 	## Check if admin or not
 	if (is_admin() ) { 
+
+		## options page
+		add_action("admin_menu", "my_optional_modules_add_options_page");
+		function my_optional_modules_add_options_page() { $myoptionalmodules_options = add_options_page("MOM: Main Control", "MOM: Main Control", "manage_options", "mommaincontrol", "my_optional_modules_page_content"); }	
 	
-	##	Update options if form is submitted
+		## options form (save)
 		function update_myoptionalmodules_options() {
-			global $mommaincontrol_obwcountplus;
-			global $mommaincontrol_momrups;
-			global $mommaincontrol_momse;
-			global $mommaincontrol_mompaf;
-			global $mommaincontrol_momja;
-			
 			if(isset($_POST['momsave'])){
 				if ($_REQUEST["mommaincontrol_uninstall_all"] == 1 || $_REQUEST["mommaincontrol_uninstall_all"] == 3) {
 					if ($_REQUEST["mommaincontrol_uninstall_all"] == 1) {	
+						update_option("mommaincontrol_obwcountplus",0);
+						update_option("mommaincontrol_momrups",0);
+						update_option("mommaincontrol_momse",0);
+						update_option("mommaincontrol_mompaf",0);
+						update_option("mommaincontrol_momja",0);			
 						global $table_prefix, $table_suffix, $wpdb;
 						$table_name = $table_prefix . $table_suffix . 'rotating_universal_passwords';
 						$wpdb->query("DROP TABLE {$table_name}");											
@@ -121,7 +110,7 @@
 						delete_option("mommaincontrol_momja");
 					}
 				} else {					
-						if ($_REQUEST["mommaincontrol_obwcountplus"] != "$mommaincontrol_obwcountplus") { 
+						if ($_REQUEST["mommaincontrol_obwcountplus"] != "" . get_option("mommaincontrol_obwcountplus") ."") { 
 							update_option("mommaincontrol_obwcountplus",$_REQUEST["mommaincontrol_obwcountplus"]); 
 							
 							if ($_REQUEST["mommaincontrol_obwcountplus"] == 1) {
@@ -140,7 +129,7 @@
 							}
 						}
 						
-						if ($_REQUEST["mommaincontrol_momrups"] != "$mommaincontrol_momrups") { 
+						if ($_REQUEST["mommaincontrol_momrups"] != "" . get_option("mommaincontrol_momrups") . "") { 
 							update_option("mommaincontrol_momrups",$_REQUEST["mommaincontrol_momrups"]); 
 						
 							if ($_REQUEST["mommaincontrol_momrups"] == 1) {
@@ -180,7 +169,7 @@
 							}
 						}
 											
-					if ($_REQUEST["mommaincontrol_momse"] != "$mommaincontrol_momse") { 
+					if ($_REQUEST["mommaincontrol_momse"] != "" . get_option("mommaincontrol_momse") . "") { 
 						update_option("mommaincontrol_momse",$_REQUEST["mommaincontrol_momse"]); 
 						
 						if ($_REQUEST["mommaincontrol_momse"] == 1) {
@@ -217,7 +206,7 @@
 						}
 					}
 
-					if ($_REQUEST["mommaincontrol_mompaf"] != "$mommaincontrol_mompaf") { 
+					if ($_REQUEST["mommaincontrol_mompaf"] != "" . get_option("mommaincontrol_mompaf") . "") { 
 						update_option("mommaincontrol_mompaf",$_REQUEST["mommaincontrol_mompaf"]); 
 						
 						if ($_REQUEST["mommaincontrol_mompaf"] == 1) {
@@ -232,7 +221,7 @@
 						}
 					}
 					
-					if ($_REQUEST["mommaincontrol_momja"] != "$mommaincontrol_momja") { 
+					if ($_REQUEST["mommaincontrol_momja"] != "" . get_option("mommaincontrol_momja") ."") { 
 						update_option("mommaincontrol_momja",$_REQUEST["mommaincontrol_momja"]); 
 						
 						if ($_REQUEST["mommaincontrol_momja"] == 1) {
@@ -267,37 +256,27 @@
 			}
 		}
 		
-	##	Form to save the plugin options from.
+		## options form (output)
 		function my_optional_modules_form() {
-			global $mommaincontrol_obwcountplus;
-			global $mommaincontrol_momrups;
-			global $mommaincontrol_momse;
-			global $mommaincontrol_mompaf;
-			global $mommaincontrol_momja;
-		
 			echo "
-			
 			<tr valign=\"top\">
-				<th scope=\"row\">
-					<label for=\"mommaincontrol_obwcountplus\">Count++</label>
-				</th>
+				<th scope=\"row\"><label for=\"mommaincontrol_obwcountplus\">Count++</label></th>
 				<td>
 					<select id=\"mommaincontrol_obwcountplus\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_obwcountplus\">
 					<option value=\"0\" 
 					";
-						if ($mommaincontrol_obwcountplus == 0 || $mommaincontrol_obwcountplus == 3) { echo "selected=\"selected\""; }
+						if (get_option("mommaincontrol_obwcountplus") == 0 || get_option("mommaincontrol_obwcountplus") == 3) { echo "selected=\"selected\""; }
 					echo ">No</option>					
 					<option value=\"1\" 
 					";
-						if ($mommaincontrol_obwcountplus == 1) { echo "selected=\"selected\""; }
+						if (get_option("mommaincontrol_obwcountplus") == 1) { echo "selected=\"selected\""; }
 					echo ">Yes</option>
 					<option value=\"3\">Uninstall</option>
 						</select>
 				</td>
-				<td>
-					<em>Count all words from all published posts (word count).  Optional: Keep track of a Total Word Goal.</em>
-				</td>
-			</tr>";
+				<td><em>Count all words from all published posts (word count).  Optional: Keep track of a Total Word Goal.</em></td>
+			</tr>
+			";
 
 			if(is_plugin_active('jump-around/jumparound.php')){
 			echo "
@@ -315,11 +294,11 @@
 					<select id=\"mommaincontrol_momja\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_momja\">
 					<option value=\"0\" 
 					";
-						if ($mommaincontrol_momja == 0 || $mommaincontrol_momja == 3) { echo "selected=\"selected\""; }
+						if (get_option("mommaincontrol_momja") == 0 || get_option("mommaincontrol_momja") == 3) { echo "selected=\"selected\""; }
 					echo ">No</option>					
 					<option value=\"1\" 
 					";
-						if ($mommaincontrol_momja == 1) { echo "selected=\"selected\""; }
+						if (get_option("mommaincontrol_momja") == 1) { echo "selected=\"selected\""; }
 					echo ">Yes</option>
 					<option value=\"3\">Uninstall</option>
 						</select>
@@ -338,11 +317,11 @@
 					<select id=\"mommaincontrol_mompaf\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_mompaf\">
 					<option value=\"0\" 
 					";
-						if ($mommaincontrol_mompaf == 0 || $mommaincontrol_mompaf == 3) { echo "selected=\"selected\""; }
+						if (get_option("mommaincontrol_mompaf") == 0 || get_option("mommaincontrol_mompaf") == 3) { echo "selected=\"selected\""; }
 					echo ">No</option>					
 					<option value=\"1\" 
 					";
-						if ($mommaincontrol_mompaf == 1) { echo "selected=\"selected\""; }
+						if (get_option("mommaincontrol_mompaf") == 1) { echo "selected=\"selected\""; }
 					echo ">Yes</option>
 					<option value=\"3\">Uninstall</option>
 						</select>
@@ -368,11 +347,11 @@
 					<select id=\"mommaincontrol_momrups\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_momrups\">
 					<option value=\"0\" 
 					";
-						if ($mommaincontrol_momrups == 0 || $mommaincontrol_momrups == 3) { echo "selected=\"selected\""; }
+						if (get_option("mommaincontrol_momrups") == 0 || get_option("mommaincontrol_momrups") == 3) { echo "selected=\"selected\""; }
 					echo ">No</option>					
 					<option value=\"1\" 
 					";
-						if ($mommaincontrol_momrups == 1) { echo "selected=\"selected\""; }
+						if (get_option("mommaincontrol_momrups") == 1) { echo "selected=\"selected\""; }
 					echo ">Yes</option>
 					<option value=\"3\">Uninstall</option>
 						</select>
@@ -391,11 +370,11 @@
 					<select id=\"mommaincontrol_momse\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_momse\">
 					<option value=\"0\" 
 					";
-						if ($mommaincontrol_momse == 0 || $mommaincontrol_momse == 3) { echo "selected=\"selected\""; }
+						if (get_option("mommaincontrol_momse") == 0 || get_option("mommaincontrol_momse") == 3) { echo "selected=\"selected\""; }
 					echo ">No</option>					
 					<option value=\"1\" 
 					";
-						if ($mommaincontrol_momse == 1) { echo "selected=\"selected\""; }
+						if (get_option("mommaincontrol_momse") == 1) { echo "selected=\"selected\""; }
 					echo ">Yes</option>
 					<option value=\"3\">Uninstall</option>
 						</select>
@@ -417,7 +396,7 @@
 					</select>
 				</td>
 				<td>
-					<em>Uninstalls all options associated with all modules and deactivates them.  If you choose to Nuke the install, it uninstalls <strong>everything</strong> associated with this plugin (for plugin deletion purposes).  If you decide to nuke it, you'll need to deactivate/reactivate the plugin.</em>
+					<em>Uninstalls all options associated with all modules and deactivates them.  If you choose to Nuke the install, it uninstalls <strong>everything</strong> associated with this plugin (for plugin deletion purposes).  If you decide to nuke it, you may need to deactivate/reactivate the plugin.</em>
 				</td>
 			</tr>			
 
@@ -425,7 +404,7 @@
 			";
 		}
 	
-	##	Plugin options page output.
+		## options form (output)
 		function my_optional_modules_page_content() {
 			echo "
 			<div class=\"wrap\">
@@ -437,9 +416,7 @@
 				Wordpress users.</p>
 				<p>Deactivating modules will deactivate their associated functionality.  All code examples accounts for this with 
 				a check to see if the function being called exists (is active).</p>";
-				
 			echo "<h3 class=\"title\">Modules</h3>";
-				
 			if(isset($_POST['momsave'])){
 				echo "<div id=\"setting-error-settings_updated\" class=\"updated settings-error\"><p>Settings saved.</p></div>";
 			}
@@ -447,7 +424,6 @@
 				$uninstalled = 1;
 				echo "<div id=\"setting-error-settings_nuked\" class=\"updated settings-error\"><p>All settings associated with MOM have been wiped from your database.  You may now uninstall this plugin.  All customized settings for individual modules have been lost, however.</p><p>Thanks for using <em>My Optional Modules</em>, and good luck in your future endeavors!</div>";
 			}				
-				
 			if ($uninstalled == 1) { } else {
 				echo "<form method=\"post\">
 					<table class=\"form-table\">
@@ -465,15 +441,13 @@
 					</p>
 				</form>";
 			}
-			
 			echo "</div>";
 		}
-
-				if(isset($_POST["momsave"])){
-					if ($_REQUEST["momsave"]) { 
-						update_myoptionalmodules_options();
-					}
-				}		
-	
+		
+		if(isset($_POST["momsave"])){
+			if ($_REQUEST["momsave"]) { 
+				update_myoptionalmodules_options();
+			}
+		}
 	} 
  ?>

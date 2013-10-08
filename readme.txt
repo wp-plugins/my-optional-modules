@@ -3,7 +3,7 @@ Contributors: Matthew Trevino
 Tags: keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 1.0.6.1
+Stable tag: 1.0.7
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -30,6 +30,11 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
+= 1.0.7 =
+* Removed global variables from modules.
+* Due to the way RUPs handles the user defined salt, $theSalt global was left in (for admin convenience).
+* Cleaned up code for all modules.
+
 = 1.0.6 / 1.0.6.1 =
 * Fixed: Number formatting (commas)
 * Module update: Count++

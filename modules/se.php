@@ -1,281 +1,228 @@
 <?php 
 
-	if(!defined('MyOptionalModules')) {
-	die('You can not call this file directly.');
-	}
+	## Module name: Simply Exclude (SE)
+	## Module contents
+	## add action to filter posts
+	## options page
+	##   - options form (save)
+	##   - options form (output)
+	##   - options page (output)
+	## filter posts action content
 
- ## SE (Simply Exclude)
-	## momse
-	##	register options page
-	if (is_admin() ) {
-		add_action("admin_menu", "momse_add_options_page");
-	}
+	if(!defined('MyOptionalModules')) {	die('You can not call this file directly.'); }
+	
+	## add action to filter posts
 	add_action( "pre_get_posts", "momse_filter_home" );
 	
-	## Get the options set up by the plugin for use throughout
-	$simple_announcement_with_exclusion_9 = get_option('simple_announcement_with_exclusion_9');
-	$simple_announcement_with_exclusion_9_2 = get_option('simple_announcement_with_exclusion_9_2');
-	$simple_announcement_with_exclusion_9_3 = get_option('simple_announcement_with_exclusion_9_3');
-	$simple_announcement_with_exclusion_9_4 = get_option('simple_announcement_with_exclusion_9_4');
-	$simple_announcement_with_exclusion_9_5 = get_option('simple_announcement_with_exclusion_9_5');
-	$simple_announcement_with_exclusion_9_7 = get_option('simple_announcement_with_exclusion_9_7');
-	$simple_announcement_with_exclusion_9_8 = get_option('simple_announcement_with_exclusion_9_8');
-	$simple_announcement_with_exclusion_9_9 = get_option('simple_announcement_with_exclusion_9_9');
-	$simple_announcement_with_exclusion_9_10 = get_option('simple_announcement_with_exclusion_9_10');
-	$simple_announcement_with_exclusion_9_11 = get_option('simple_announcement_with_exclusion_9_11');
-	$simple_announcement_with_exclusion_9_12 = get_option('simple_announcement_with_exclusion_9_12');
-	$simple_announcement_with_exclusion_9_13 = get_option('simple_announcement_with_exclusion_9_13');
-	$simple_announcement_with_exclusion_9_14 = get_option('simple_announcement_with_exclusion_9_14');
-
-	## simple exclude options page
-		function momse_add_options_page() {																
-			$obwcountplus_options = add_options_page("MOM: SE", " &not; MOM: SE", "manage_options", "momse", "momse_page_content");
-		}	
-	
-	## Check if admin or not
 	if (is_admin() ) { 
 	
-	##	Update options if form is submitted
-		function update_momse_options() {
-		global $simple_announcement_with_exclusion_9;
-		global $simple_announcement_with_exclusion_9_2;
-		global $simple_announcement_with_exclusion_9_3;
-		global $simple_announcement_with_exclusion_9_4;
-		global $simple_announcement_with_exclusion_9_5;
-		global $simple_announcement_with_exclusion_9_7;
-		global $simple_announcement_with_exclusion_9_8;
-		global $simple_announcement_with_exclusion_9_9;
-		global $simple_announcement_with_exclusion_9_10;
-		global $simple_announcement_with_exclusion_9_11;
-		global $simple_announcement_with_exclusion_9_12;
-		global $simple_announcement_with_exclusion_9_13;
-		global $simple_announcement_with_exclusion_9_14;
-
+	## options page
+	add_action("admin_menu", "momse_add_options_page");
+	function momse_add_options_page() {	$obwcountplus_options = add_options_page("MOM: SE", " &not; MOM: SE", "manage_options", "momse", "momse_page_content"); }	
+	
+	## options form (save)
+	function update_momse_options() {
 		if(isset($_POST['momsesave'])){
-				if ($_REQUEST["simple_announcement_with_exclusion_9"] != "$simple_announcement_with_exclusion_9") { update_option("simple_announcement_with_exclusion_9",$_REQUEST["simple_announcement_with_exclusion_9"]); }
-				if ($_REQUEST["simple_announcement_with_exclusion_9_2"] != "$simple_announcement_with_exclusion_9_2") { update_option("simple_announcement_with_exclusion_9_2",$_REQUEST["simple_announcement_with_exclusion_9_2"]); }
-				if ($_REQUEST["simple_announcement_with_exclusion_9_3"] != "$simple_announcement_with_exclusion_9_3") { update_option("simple_announcement_with_exclusion_9_3",$_REQUEST["simple_announcement_with_exclusion_9_3"]); }
-				if ($_REQUEST["simple_announcement_with_exclusion_9_4"] != "$simple_announcement_with_exclusion_9_4") { update_option("simple_announcement_with_exclusion_9_4",$_REQUEST["simple_announcement_with_exclusion_9_4"]); }
-				if ($_REQUEST["simple_announcement_with_exclusion_9_5"] != "$simple_announcement_with_exclusion_9_5") { update_option("simple_announcement_with_exclusion_9_5",$_REQUEST["simple_announcement_with_exclusion_9_5"]); }
-				if ($_REQUEST["simple_announcement_with_exclusion_9_7"] != "$simple_announcement_with_exclusion_9_7") { update_option("simple_announcement_with_exclusion_9_7",$_REQUEST["simple_announcement_with_exclusion_9_7"]); }
-				if ($_REQUEST["simple_announcement_with_exclusion_9_8"] != "$simple_announcement_with_exclusion_9_8") { update_option("simple_announcement_with_exclusion_9_8",$_REQUEST["simple_announcement_with_exclusion_9_8"]); }
-				if ($_REQUEST["simple_announcement_with_exclusion_9_9"] != "$simple_announcement_with_exclusion_9_9") { update_option("simple_announcement_with_exclusion_9_9",$_REQUEST["simple_announcement_with_exclusion_9_9"]); }
-				if ($_REQUEST["simple_announcement_with_exclusion_9_10"] != "$simple_announcement_with_exclusion_9_10") { update_option("simple_announcement_with_exclusion_9_10",$_REQUEST["simple_announcement_with_exclusion_9_10"]); }
-				if ($_REQUEST["simple_announcement_with_exclusion_9_11"] != "$simple_announcement_with_exclusion_9_11") { update_option("simple_announcement_with_exclusion_9_11",$_REQUEST["simple_announcement_with_exclusion_9_11"]); }
-				if ($_REQUEST["simple_announcement_with_exclusion_9_12"] != "$simple_announcement_with_exclusion_9_12") { update_option("simple_announcement_with_exclusion_9_12",$_REQUEST["simple_announcement_with_exclusion_9_12"]); }
-				if ($_REQUEST["simple_announcement_with_exclusion_9_13"] != "$simple_announcement_with_exclusion_9_13") { update_option("simple_announcement_with_exclusion_9_13",$_REQUEST["simple_announcement_with_exclusion_9_13"]); }
-				if ($_REQUEST["simple_announcement_with_exclusion_9_14"] != "$simple_announcement_with_exclusion_9_14") { update_option("simple_announcement_with_exclusion_9_14",$_REQUEST["simple_announcement_with_exclusion_9_14"]); }
-			}		
-		}
+			if ($_REQUEST["simple_announcement_with_exclusion_9"] != "" . get_option('simple_announcement_with_exclusion_9') . "") { update_option("simple_announcement_with_exclusion_9",$_REQUEST["simple_announcement_with_exclusion_9"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_9_2"] != "". get_option('simple_announcement_with_exclusion_9_2') . "") { update_option("simple_announcement_with_exclusion_9_2",$_REQUEST["simple_announcement_with_exclusion_9_2"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_9_3"] != "" . get_option('simple_announcement_with_exclusion_9_3') . "") { update_option("simple_announcement_with_exclusion_9_3",$_REQUEST["simple_announcement_with_exclusion_9_3"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_9_4"] != "" . get_option('simple_announcement_with_exclusion_9_4') . "") { update_option("simple_announcement_with_exclusion_9_4",$_REQUEST["simple_announcement_with_exclusion_9_4"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_9_5"] != "" . get_option('simple_announcement_with_exclusion_9_5') ."") { update_option("simple_announcement_with_exclusion_9_5",$_REQUEST["simple_announcement_with_exclusion_9_5"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_9_7"] != "" . get_option('simple_announcement_with_exclusion_9_7') . "") { update_option("simple_announcement_with_exclusion_9_7",$_REQUEST["simple_announcement_with_exclusion_9_7"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_9_8"] != "" . get_option('simple_announcement_with_exclusion_9_8') ."") { update_option("simple_announcement_with_exclusion_9_8",$_REQUEST["simple_announcement_with_exclusion_9_8"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_9_9"] != "" . get_option('simple_announcement_with_exclusion_9_9') . "") { update_option("simple_announcement_with_exclusion_9_9",$_REQUEST["simple_announcement_with_exclusion_9_9"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_9_10"] != "" . get_option('simple_announcement_with_exclusion_9_10') . "") { update_option("simple_announcement_with_exclusion_9_10",$_REQUEST["simple_announcement_with_exclusion_9_10"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_9_11"] != "" . get_option('simple_announcement_with_exclusion_9_11') . "") { update_option("simple_announcement_with_exclusion_9_11",$_REQUEST["simple_announcement_with_exclusion_9_11"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_9_12"] != "" . get_option('simple_announcement_with_exclusion_9_12') . "") { update_option("simple_announcement_with_exclusion_9_12",$_REQUEST["simple_announcement_with_exclusion_9_12"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_9_13"] != "" . get_option('simple_announcement_with_exclusion_9_13') . "") { update_option("simple_announcement_with_exclusion_9_13",$_REQUEST["simple_announcement_with_exclusion_9_13"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_9_14"] != "" . get_option('simple_announcement_with_exclusion_9_14') . "") { update_option("simple_announcement_with_exclusion_9_14",$_REQUEST["simple_announcement_with_exclusion_9_14"]); }
+		}		
+	}
 		
-	##	Form to save the plugin options from.
+	## options form (output)
 		function momse_form() {
-			global $simple_announcement_with_exclusion_9;
-			global $simple_announcement_with_exclusion_9_2;
-			global $simple_announcement_with_exclusion_9_3;
-			global $simple_announcement_with_exclusion_9_4;
-			global $simple_announcement_with_exclusion_9_5;
-			global $simple_announcement_with_exclusion_9_7;
-			global $simple_announcement_with_exclusion_9_8;
-			global $simple_announcement_with_exclusion_9_9;
-			global $simple_announcement_with_exclusion_9_10;
-			global $simple_announcement_with_exclusion_9_11;
-			global $simple_announcement_with_exclusion_9_12;
-			global $simple_announcement_with_exclusion_9_13;
-			global $simple_announcement_with_exclusion_9_14;
-		
 			echo "
-		<td><tr valign=\"top\"><th scope=\"row\"><strong>Categories</strong></th>
-		<td>";
-
-		$showmecats =  get_categories('taxonomy=category'); 
-			echo "(<strong>Category name</strong> / <em>Category ID</em>) ";
-		foreach ($showmecats as $catsshown) {
-			echo "  &mdash; (<strong>",$catsshown->cat_name,"</strong> / <em>",$catsshown->cat_ID,"</em>)";
-		}		
-		
-		echo "</td>
-		</tr>
-		<tr valign=\"top\">
-			<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_12\">Hide from RSS</label></th>
-			<td><input type=\"text\" id=\"simple_announcement_with_exclusion_9_12\" name=\"simple_announcement_with_exclusion_9_12\" value=\"$simple_announcement_with_exclusion_9_12\"></td>
-		</tr>
-		<tr valign=\"top\">
-			<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9\">Hide from front page</label></th>
-			<td><input type=\"text\" id=\"simple_announcement_with_exclusion_9\" name=\"simple_announcement_with_exclusion_9\" value=\"$simple_announcement_with_exclusion_9\"></td>
-		</tr>
-		<tr valign=\"top\">
-			<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_2\">Hide from tag archives</label></th>
-			<td><input type=\"text\" id=\"simple_announcement_with_exclusion_9_2\" name=\"simple_announcement_with_exclusion_9_2\" value=\"$simple_announcement_with_exclusion_9_2\">
-		</tr>
-		<tr valign=\"top\">
-			<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_3\">Hide from search results</label></th>
-			<td><input type=\"text\" id=\"simple_announcement_with_exclusion_9_3\" name=\"simple_announcement_with_exclusion_9_3\" value=\"$simple_announcement_with_exclusion_9_3\">
-		</tr>	
-
-		<td><tr valign=\"top\"><th scope=\"row\"><strong>Tags</strong></th><td>";
-		$showmetags =  get_categories('taxonomy=post_tag'); 
-			echo "(<strong>Tag Name</strong> / <em>Tag ID</em>) ";
-		foreach ($showmetags as $tagsshown) {
-			echo " &mdash; (<strong>",$tagsshown->cat_name,"</strong> / <em>",$tagsshown->cat_ID,"</em>)";
-		}		
-		echo "</td></tr>
-		<tr valign=\"top\">
-			<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_13\">Hide from RSS</label></th>
-			<td><input type=\"text\" id=\"simple_announcement_with_exclusion_9_13\" name=\"simple_announcement_with_exclusion_9_13\" value=\"$simple_announcement_with_exclusion_9_13\"></td>
-		</tr>
-		<tr valign=\"top\">
-			<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_4\">Hide from front page</label></th>
-			<td><input type=\"text\" id=\"simple_announcement_with_exclusion_9_4\" name=\"simple_announcement_with_exclusion_9_4\" value=\"$simple_announcement_with_exclusion_9_4\"></td>
-		</tr>
-		<tr valign=\"top\">
-			<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_5\">Hide from category archives</label></th>
-			<td><input type=\"text\" id=\"simple_announcement_with_exclusion_9_5\" name=\"simple_announcement_with_exclusion_9_5\" value=\"$simple_announcement_with_exclusion_9_5\">
-		</tr>
-		<tr valign=\"top\">
-			<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_7\">Hide from search results</label></th>
-			<td><input type=\"text\" id=\"simple_announcement_with_exclusion_9_7\" name=\"simple_announcement_with_exclusion_9_7\" value=\"$simple_announcement_with_exclusion_9_7\">
-		</tr>			
-		
-		<td><tr valign=\"top\"><th scope=\"row\"><strong>Post formats</strong></th></tr>
-		<tr valign=\"top\">
-			<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_14\">Hide from RSS</label></th>
-			<td><select name=\"simple_announcement_with_exclusion_9_14\" id=\"simple_announcement_with_exclusion_9_14\">
-					<option value=\"\">none</option>
-					<option value=\"post-format-aside\"";if ($simple_announcement_with_exclusion_9_14 === "post-format-aside") { echo " selected=\"selected\""; } echo ">Aside</option>
-					<option value=\"post-format-gallery\"";if ($simple_announcement_with_exclusion_9_14 === "post-format-gallery") { echo " selected=\"selected\""; } echo ">Gallery</option>
-					<option value=\"post-format-link\"";if ($simple_announcement_with_exclusion_9_14 === "post-format-link") { echo " selected=\"selected\""; } echo ">Link</option>
-					<option value=\"post-format-image\"";if ($simple_announcement_with_exclusion_9_14 === "post-format-image") { echo " selected=\"selected\""; } echo ">Image</option>
-					<option value=\"post-format-quote\"";if ($simple_announcement_with_exclusion_9_14 === "post-format-quote") { echo " selected=\"selected\""; } echo ">Quote</option>
-					<option value=\"post-format-status\"";if ($simple_announcement_with_exclusion_9_14 === "post-format-status") { echo " selected=\"selected\""; } echo ">Status</option>
-					<option value=\"post-format-video\"";if ($simple_announcement_with_exclusion_9_14 === "post-format-video") { echo " selected=\"selected\""; } echo ">Video</option>
-					<option value=\"post-format-audio\"";if ($simple_announcement_with_exclusion_9_14 === "post-format-audio") { echo " selected=\"selected\""; } echo ">Audio</option>
-					<option value=\"post-format-chat\"";if ($simple_announcement_with_exclusion_9_14 === "post-format-chat") { echo " selected=\"selected\""; } echo ">Chat</option>
-				</select>
-			</td></tr>
-		<tr valign=\"top\">
-			<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_14\">Hide from front page</label></th>
-			<td><select name=\"simple_announcement_with_exclusion_9_8\" id=\"simple_announcement_with_exclusion_9_8\">
-					<option value=\"\">none</option>
-					<option value=\"post-format-aside\"";if ($simple_announcement_with_exclusion_9_8 === "post-format-aside") { echo " selected=\"selected\""; } echo ">Aside</option>
-					<option value=\"post-format-gallery\"";if ($simple_announcement_with_exclusion_9_8 === "post-format-gallery") { echo " selected=\"selected\""; } echo ">Gallery</option>
-					<option value=\"post-format-link\"";if ($simple_announcement_with_exclusion_9_8 === "post-format-link") { echo " selected=\"selected\""; } echo ">Link</option>
-					<option value=\"post-format-image\"";if ($simple_announcement_with_exclusion_9_8 === "post-format-image") { echo " selected=\"selected\""; } echo ">Image</option>
-					<option value=\"post-format-quote\"";if ($simple_announcement_with_exclusion_9_8 === "post-format-quote") { echo " selected=\"selected\""; } echo ">Quote</option>
-					<option value=\"post-format-status\"";if ($simple_announcement_with_exclusion_9_8 === "post-format-status") { echo " selected=\"selected\""; } echo ">Status</option>
-					<option value=\"post-format-video\"";if ($simple_announcement_with_exclusion_9_8 === "post-format-video") { echo " selected=\"selected\""; } echo ">Video</option>
-					<option value=\"post-format-audio\"";if ($simple_announcement_with_exclusion_9_8 === "post-format-audio") { echo " selected=\"selected\""; } echo ">Audio</option>
-					<option value=\"post-format-chat\"";if ($simple_announcement_with_exclusion_9_8 === "post-format-chat") { echo " selected=\"selected\""; } echo ">Chat</option>
-				</select>
-			</td></tr>
-		<tr valign=\"top\">
-			<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_14\">Hide from archives</label></th>
-			<td><select name=\"simple_announcement_with_exclusion_9_9\" id=\"simple_announcement_with_exclusion_9_9\">
-					<option value=\"\">none</option>
-					<option value=\"post-format-aside\"";if ($simple_announcement_with_exclusion_9_9 === "post-format-aside") { echo " selected=\"selected\""; } echo ">Aside</option>
-					<option value=\"post-format-gallery\"";if ($simple_announcement_with_exclusion_9_9 === "post-format-gallery") { echo " selected=\"selected\""; } echo ">Gallery</option>
-					<option value=\"post-format-link\"";if ($simple_announcement_with_exclusion_9_9 === "post-format-link") { echo " selected=\"selected\""; } echo ">Link</option>
-					<option value=\"post-format-image\"";if ($simple_announcement_with_exclusion_9_9 === "post-format-image") { echo " selected=\"selected\""; } echo ">Image</option>
-					<option value=\"post-format-quote\"";if ($simple_announcement_with_exclusion_9_9 === "post-format-quote") { echo " selected=\"selected\""; } echo ">Quote</option>
-					<option value=\"post-format-status\"";if ($simple_announcement_with_exclusion_9_9 === "post-format-status") { echo " selected=\"selected\""; } echo ">Status</option>
-					<option value=\"post-format-video\"";if ($simple_announcement_with_exclusion_9_9 === "post-format-video") { echo " selected=\"selected\""; } echo ">Video</option>
-					<option value=\"post-format-audio\"";if ($simple_announcement_with_exclusion_9_9 === "post-format-audio") { echo " selected=\"selected\""; } echo ">Audio</option>
-					<option value=\"post-format-chat\"";if ($simple_announcement_with_exclusion_9_9 === "post-format-chat") { echo " selected=\"selected\""; } echo ">Chat</option>
-				</select>
-			</td></tr>
-		<tr valign=\"top\">
-			<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_14\">Hide from tag archives</label></th>
-			<td><select name=\"simple_announcement_with_exclusion_9_10\" id=\"simple_announcement_with_exclusion_9_10\">
-				<option value=\"\">none</option>
-				<option value=\"post-format-aside\"";if ($simple_announcement_with_exclusion_9_10 === "post-format-aside") { echo " selected=\"selected\""; } echo ">Aside</option>
-				<option value=\"post-format-gallery\"";if ($simple_announcement_with_exclusion_9_10 === "post-format-gallery") { echo " selected=\"selected\""; } echo ">Gallery</option>
-				<option value=\"post-format-link\"";if ($simple_announcement_with_exclusion_9_10 === "post-format-link") { echo " selected=\"selected\""; } echo ">Link</option>
-				<option value=\"post-format-image\"";if ($simple_announcement_with_exclusion_9_10 === "post-format-image") { echo " selected=\"selected\""; } echo ">Image</option>
-				<option value=\"post-format-quote\"";if ($simple_announcement_with_exclusion_9_10 === "post-format-quote") { echo " selected=\"selected\""; } echo ">Quote</option>
-				<option value=\"post-format-status\"";if ($simple_announcement_with_exclusion_9_10 === "post-format-status") { echo " selected=\"selected\""; } echo ">Status</option>
-				<option value=\"post-format-video\"";if ($simple_announcement_with_exclusion_9_10 === "post-format-video") { echo " selected=\"selected\""; } echo ">Video</option>
-				<option value=\"post-format-audio\"";if ($simple_announcement_with_exclusion_9_10 === "post-format-audio") { echo " selected=\"selected\""; } echo ">Audio</option>
-				<option value=\"post-format-chat\"";if ($simple_announcement_with_exclusion_9_10 === "post-format-chat") { echo " selected=\"selected\""; } echo ">Chat</option>
-			</select>
-		</td></tr>
-		<tr valign=\"top\">
-			<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_14\">Hide from search results</label></th>
-			<td><select name=\"simple_announcement_with_exclusion_9_11\" id=\"simple_announcement_with_exclusion_9_11\">
-				<option value=\"\">none</option>
-				<option value=\"post-format-aside\"";if ($simple_announcement_with_exclusion_9_11 === "post-format-aside") { echo " selected=\"selected\""; } echo ">Aside</option>
-				<option value=\"post-format-gallery\"";if ($simple_announcement_with_exclusion_9_11 === "post-format-gallery") { echo " selected=\"selected\""; } echo ">Gallery</option>
-				<option value=\"post-format-link\"";if ($simple_announcement_with_exclusion_9_11 === "post-format-link") { echo " selected=\"selected\""; } echo ">Link</option>
-				<option value=\"post-format-image\"";if ($simple_announcement_with_exclusion_9_11 === "post-format-image") { echo " selected=\"selected\""; } echo ">Image</option>
-				<option value=\"post-format-quote\"";if ($simple_announcement_with_exclusion_9_11 === "post-format-quote") { echo " selected=\"selected\""; } echo ">Quote</option>
-				<option value=\"post-format-status\"";if ($simple_announcement_with_exclusion_9_11 === "post-format-status") { echo " selected=\"selected\""; } echo ">Status</option>
-				<option value=\"post-format-video\"";if ($simple_announcement_with_exclusion_9_11 === "post-format-video") { echo " selected=\"selected\""; } echo ">Video</option>
-				<option value=\"post-format-audio\"";if ($simple_announcement_with_exclusion_9_11 === "post-format-audio") { echo " selected=\"selected\""; } echo ">Audio</option>
-				<option value=\"post-format-chat\"";if ($simple_announcement_with_exclusion_9_11 === "post-format-chat") { echo " selected=\"selected\""; } echo ">Chat</option>
-			</select>
-		</td></tr>
+				<tr valign=\"top\"><th scope=\"row\"><strong>Categories</strong></th>
+					<td>
+			";
+					$showmecats =  get_categories('taxonomy=category'); 
+					echo "(<strong>Category name</strong> / <em>Category ID</em>) ";
+					foreach ($showmecats as $catsshown) {
+						echo "  &mdash; (<strong>",$catsshown->cat_name,"</strong> / <em>",$catsshown->cat_ID,"</em>)";
+					}		
+			echo "
+					</td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_12\">Hide from RSS</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_9_12\" name=\"simple_announcement_with_exclusion_9_12\" value=\"" . get_option('simple_announcement_with_exclusion_9_12') . "\"></td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9\">Hide from front page</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_9\" name=\"simple_announcement_with_exclusion_9\" value=\"" . get_option('simple_announcement_with_exclusion_9') . "\"></td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_2\">Hide from tag archives</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_9_2\" name=\"simple_announcement_with_exclusion_9_2\" value=\"" . get_option('simple_announcement_with_exclusion_9_2') . "\">
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_3\">Hide from search results</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_9_3\" name=\"simple_announcement_with_exclusion_9_3\" value=\"" . get_option('simple_announcement_with_exclusion_9_3') . "\">
+				</tr>	
+				<tr valign=\"top\"><th scope=\"row\"><strong>Tags</strong></th>
+					<td>
+			";
+						$showmetags =  get_categories('taxonomy=post_tag'); 
+						echo "(<strong>Tag Name</strong> / <em>Tag ID</em>) ";
+						foreach ($showmetags as $tagsshown) {
+							echo " &mdash; (<strong>",$tagsshown->cat_name,"</strong> / <em>",$tagsshown->cat_ID,"</em>)";
+						}		
+			echo "
+					</td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_13\">Hide from RSS</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_9_13\" name=\"simple_announcement_with_exclusion_9_13\" value=\"" . get_option('simple_announcement_with_exclusion_9_13') . "\"></td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_4\">Hide from front page</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_9_4\" name=\"simple_announcement_with_exclusion_9_4\" value=\"" . get_option('simple_announcement_with_exclusion_9_4') . "\"></td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_5\">Hide from category archives</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_9_5\" name=\"simple_announcement_with_exclusion_9_5\" value=\"" . get_option('simple_announcement_with_exclusion_9_5') . "\">
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_7\">Hide from search results</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_9_7\" name=\"simple_announcement_with_exclusion_9_7\" value=\"" . get_option('simple_announcement_with_exclusion_9_7') . "\">
+				</tr>			
+				<tr valign=\"top\"><th scope=\"row\"><strong>Post formats</strong></th></tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_14\">Hide from RSS</label></th>
+					<td><select name=\"simple_announcement_with_exclusion_9_14\" id=\"simple_announcement_with_exclusion_9_14\">
+							<option value=\"\">none</option>
+							<option value=\"post-format-aside\"";if (get_option('simple_announcement_with_exclusion_9_14') === "post-format-aside") { echo " selected=\"selected\""; } echo ">Aside</option>
+							<option value=\"post-format-gallery\"";if (get_option('simple_announcement_with_exclusion_9_14') === "post-format-gallery") { echo " selected=\"selected\""; } echo ">Gallery</option>
+							<option value=\"post-format-link\"";if (get_option('simple_announcement_with_exclusion_9_14') === "post-format-link") { echo " selected=\"selected\""; } echo ">Link</option>
+							<option value=\"post-format-image\"";if (get_option('simple_announcement_with_exclusion_9_14') === "post-format-image") { echo " selected=\"selected\""; } echo ">Image</option>
+							<option value=\"post-format-quote\"";if (get_option('simple_announcement_with_exclusion_9_14') === "post-format-quote") { echo " selected=\"selected\""; } echo ">Quote</option>
+							<option value=\"post-format-status\"";if (get_option('simple_announcement_with_exclusion_9_14') === "post-format-status") { echo " selected=\"selected\""; } echo ">Status</option>
+							<option value=\"post-format-video\"";if (get_option('simple_announcement_with_exclusion_9_14') === "post-format-video") { echo " selected=\"selected\""; } echo ">Video</option>
+							<option value=\"post-format-audio\"";if (get_option('simple_announcement_with_exclusion_9_14') === "post-format-audio") { echo " selected=\"selected\""; } echo ">Audio</option>
+							<option value=\"post-format-chat\"";if (get_option('simple_announcement_with_exclusion_9_14') === "post-format-chat") { echo " selected=\"selected\""; } echo ">Chat</option>
+						</select>
+					</td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_14\">Hide from front page</label></th>
+					<td><select name=\"simple_announcement_with_exclusion_9_8\" id=\"simple_announcement_with_exclusion_9_8\">
+							<option value=\"\">none</option>
+							<option value=\"post-format-aside\"";if (get_option('simple_announcement_with_exclusion_9_8') === "post-format-aside") { echo " selected=\"selected\""; } echo ">Aside</option>
+							<option value=\"post-format-gallery\"";if (get_option('simple_announcement_with_exclusion_9_8') === "post-format-gallery") { echo " selected=\"selected\""; } echo ">Gallery</option>
+							<option value=\"post-format-link\"";if (get_option('simple_announcement_with_exclusion_9_8') === "post-format-link") { echo " selected=\"selected\""; } echo ">Link</option>
+							<option value=\"post-format-image\"";if (get_option('simple_announcement_with_exclusion_9_8') === "post-format-image") { echo " selected=\"selected\""; } echo ">Image</option>
+							<option value=\"post-format-quote\"";if (get_option('simple_announcement_with_exclusion_9_8') === "post-format-quote") { echo " selected=\"selected\""; } echo ">Quote</option>
+							<option value=\"post-format-status\"";if (get_option('simple_announcement_with_exclusion_9_8') === "post-format-status") { echo " selected=\"selected\""; } echo ">Status</option>
+							<option value=\"post-format-video\"";if (get_option('simple_announcement_with_exclusion_9_8') === "post-format-video") { echo " selected=\"selected\""; } echo ">Video</option>
+							<option value=\"post-format-audio\"";if (get_option('simple_announcement_with_exclusion_9_8') === "post-format-audio") { echo " selected=\"selected\""; } echo ">Audio</option>
+							<option value=\"post-format-chat\"";if (get_option('simple_announcement_with_exclusion_9_8') === "post-format-chat") { echo " selected=\"selected\""; } echo ">Chat</option>
+						</select>
+					</td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_14\">Hide from archives</label></th>
+					<td><select name=\"simple_announcement_with_exclusion_9_9\" id=\"simple_announcement_with_exclusion_9_9\">
+							<option value=\"\">none</option>
+							<option value=\"post-format-aside\"";if (get_option('simple_announcement_with_exclusion_9_9') === "post-format-aside") { echo " selected=\"selected\""; } echo ">Aside</option>
+							<option value=\"post-format-gallery\"";if (get_option('simple_announcement_with_exclusion_9_9') === "post-format-gallery") { echo " selected=\"selected\""; } echo ">Gallery</option>
+							<option value=\"post-format-link\"";if (get_option('simple_announcement_with_exclusion_9_9') === "post-format-link") { echo " selected=\"selected\""; } echo ">Link</option>
+							<option value=\"post-format-image\"";if (get_option('simple_announcement_with_exclusion_9_9') === "post-format-image") { echo " selected=\"selected\""; } echo ">Image</option>
+							<option value=\"post-format-quote\"";if (get_option('simple_announcement_with_exclusion_9_9') === "post-format-quote") { echo " selected=\"selected\""; } echo ">Quote</option>
+							<option value=\"post-format-status\"";if (get_option('simple_announcement_with_exclusion_9_9') === "post-format-status") { echo " selected=\"selected\""; } echo ">Status</option>
+							<option value=\"post-format-video\"";if (get_option('simple_announcement_with_exclusion_9_9') === "post-format-video") { echo " selected=\"selected\""; } echo ">Video</option>
+							<option value=\"post-format-audio\"";if (get_option('simple_announcement_with_exclusion_9_9') === "post-format-audio") { echo " selected=\"selected\""; } echo ">Audio</option>
+							<option value=\"post-format-chat\"";if (get_option('simple_announcement_with_exclusion_9_9') === "post-format-chat") { echo " selected=\"selected\""; } echo ">Chat</option>
+						</select>
+					</td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_14\">Hide from tag archives</label></th>
+					<td><select name=\"simple_announcement_with_exclusion_9_10\" id=\"simple_announcement_with_exclusion_9_10\">
+						<option value=\"\">none</option>
+						<option value=\"post-format-aside\"";if (get_option('simple_announcement_with_exclusion_9_10') === "post-format-aside") { echo " selected=\"selected\""; } echo ">Aside</option>
+						<option value=\"post-format-gallery\"";if (get_option('simple_announcement_with_exclusion_9_10') === "post-format-gallery") { echo " selected=\"selected\""; } echo ">Gallery</option>
+						<option value=\"post-format-link\"";if (get_option('simple_announcement_with_exclusion_9_10') === "post-format-link") { echo " selected=\"selected\""; } echo ">Link</option>
+						<option value=\"post-format-image\"";if (get_option('simple_announcement_with_exclusion_9_10') === "post-format-image") { echo " selected=\"selected\""; } echo ">Image</option>
+						<option value=\"post-format-quote\"";if (get_option('simple_announcement_with_exclusion_9_10') === "post-format-quote") { echo " selected=\"selected\""; } echo ">Quote</option>
+						<option value=\"post-format-status\"";if (get_option('simple_announcement_with_exclusion_9_10') === "post-format-status") { echo " selected=\"selected\""; } echo ">Status</option>
+						<option value=\"post-format-video\"";if (get_option('simple_announcement_with_exclusion_9_10') === "post-format-video") { echo " selected=\"selected\""; } echo ">Video</option>
+						<option value=\"post-format-audio\"";if (get_option('simple_announcement_with_exclusion_9_10') === "post-format-audio") { echo " selected=\"selected\""; } echo ">Audio</option>
+						<option value=\"post-format-chat\"";if (get_option('simple_announcement_with_exclusion_9_10') === "post-format-chat") { echo " selected=\"selected\""; } echo ">Chat</option>
+						</select>
+					</td>
+				</tr>
+			<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_14\">Hide from search results</label></th>
+					<td><select name=\"simple_announcement_with_exclusion_9_11\" id=\"simple_announcement_with_exclusion_9_11\">
+						<option value=\"\">none</option>
+						<option value=\"post-format-aside\"";if (get_option('simple_announcement_with_exclusion_9_11') === "post-format-aside") { echo " selected=\"selected\""; } echo ">Aside</option>
+						<option value=\"post-format-gallery\"";if (get_option('simple_announcement_with_exclusion_9_11') === "post-format-gallery") { echo " selected=\"selected\""; } echo ">Gallery</option>
+						<option value=\"post-format-link\"";if (get_option('simple_announcement_with_exclusion_9_11') === "post-format-link") { echo " selected=\"selected\""; } echo ">Link</option>
+						<option value=\"post-format-image\"";if (get_option('simple_announcement_with_exclusion_9_11') === "post-format-image") { echo " selected=\"selected\""; } echo ">Image</option>
+						<option value=\"post-format-quote\"";if (get_option('simple_announcement_with_exclusion_9_11') === "post-format-quote") { echo " selected=\"selected\""; } echo ">Quote</option>
+						<option value=\"post-format-status\"";if (get_option('simple_announcement_with_exclusion_9_11') === "post-format-status") { echo " selected=\"selected\""; } echo ">Status</option>
+						<option value=\"post-format-video\"";if (get_option('simple_announcement_with_exclusion_9_11') === "post-format-video") { echo " selected=\"selected\""; } echo ">Video</option>
+						<option value=\"post-format-audio\"";if (get_option('simple_announcement_with_exclusion_9_11') === "post-format-audio") { echo " selected=\"selected\""; } echo ">Audio</option>
+						<option value=\"post-format-chat\"";if (get_option('simple_announcement_with_exclusion_9_11') === "post-format-chat") { echo " selected=\"selected\""; } echo ">Chat</option>
+						</select>
+					</td>
+				</tr>
 			";
 		}
 	
-	##	Plugin options page output.
+	## options page (output)
 		function momse_page_content() {
 				echo "
-				<div class=\"wrap\">
-					<div id=\"icon-options-general\" class=\"icon32\"></div>
-					<h2>Simply Exclude</h2>
-					<p>Exclude categories, tags, and post formats from archive views, category views, tag archives, search results, the RSS feed, or the front page.</p>		
-					<h3 class=\"title\">Settings</h3>
-					<p>Use single IDs (or comma-separated lists of IDs) to exclude selected tags and categories from their chosen locations.  (IE <em>1,2,3...</em>)</p>
-				";
-				
-				if(isset($_POST['momsesave'])){
-					echo "
-						<div id=\"setting-error-settings_updated\" class=\"updated settings-error\"><p>Settings saved.</p></div>
+					<div class=\"wrap\">
+						<div id=\"icon-options-general\" class=\"icon32\"></div>
+						<h2>Simply Exclude</h2>
+						<p>Exclude categories, tags, and post formats from archive views, category views, tag archives, search results, the RSS feed, or the front page.</p>		
+						<h3 class=\"title\">Settings</h3>
+						<p>Use single IDs (or comma-separated lists of IDs) to exclude selected tags and categories from their chosen locations.  (IE <em>1,2,3...</em>)</p>
 					";
-				}
-				
-				echo "<form method=\"post\">
-					<table class=\"form-table\">
-						<tbody>
-				";
-				momse_form();
-				echo "
-						</tbody>
-					</table>
-					<p class=\"submit\">
-						<input id=\"momsesave\" class=\"button button-primary\" type=\"submit\" value=\"Save Changes\" name=\"momsesave\"></input>
-					</p>
-				</form>
-				
-				<h3 class=\"title\">Usage</h3>
-				Output is automatic - no need for shortcodes or template editing.
-				
-				</div>
+					if(isset($_POST['momsesave'])){ echo "<div id=\"setting-error-settings_updated\" class=\"updated settings-error\"><p>Settings saved.</p></div>"; }
+					echo "<form method=\"post\">
+						<table class=\"form-table\">
+							<tbody>
+					";
+					momse_form();
+					echo "
+							</tbody>
+						</table>
+						<p class=\"submit\"><input id=\"momsesave\" class=\"button button-primary\" type=\"submit\" value=\"Save Changes\" name=\"momsesave\"></input></p>
+					</form>
+					</div>
 				";
 		}
-
-				if(isset($_POST["momsesave"])){
-					if ($_REQUEST["momsesave"]) { 
-						update_momse_options();
-					}
-				}		
-	
+		if(isset($_POST["momsesave"])){ update_momse_options();	}		
 	}
 
-	##	Filter posts from the designated areas depending on options set.
+	## filter posts action content
 	function momse_filter_home( $query ) {	
-		global $simple_announcement_with_exclusion_9;
-		global $simple_announcement_with_exclusion_9_2;
-		global $simple_announcement_with_exclusion_9_3;
-		global $simple_announcement_with_exclusion_9_4;
-		global $simple_announcement_with_exclusion_9_5;
-		global $simple_announcement_with_exclusion_9_7;
-		global $simple_announcement_with_exclusion_9_8;
-		global $simple_announcement_with_exclusion_9_9;
-		global $simple_announcement_with_exclusion_9_10;
-		global $simple_announcement_with_exclusion_9_11;
-		global $simple_announcement_with_exclusion_9_12;
-		global $simple_announcement_with_exclusion_9_13;
-		global $simple_announcement_with_exclusion_9_14;
+		$simple_announcement_with_exclusion_9 = get_option('simple_announcement_with_exclusion_9');
+		$simple_announcement_with_exclusion_9_2 = get_option('simple_announcement_with_exclusion_9_2');
+		$simple_announcement_with_exclusion_9_3 = get_option('simple_announcement_with_exclusion_9_3');
+		$simple_announcement_with_exclusion_9_4 = get_option('simple_announcement_with_exclusion_9_4');
+		$simple_announcement_with_exclusion_9_5 = get_option('simple_announcement_with_exclusion_9_5');
+		$simple_announcement_with_exclusion_9_7 = get_option('simple_announcement_with_exclusion_9_7');
+		$simple_announcement_with_exclusion_9_8 = get_option('simple_announcement_with_exclusion_9_8');
+		$simple_announcement_with_exclusion_9_9 = get_option('simple_announcement_with_exclusion_9_9');
+		$simple_announcement_with_exclusion_9_10 = get_option('simple_announcement_with_exclusion_9_10');
+		$simple_announcement_with_exclusion_9_11 = get_option('simple_announcement_with_exclusion_9_11');
+		$simple_announcement_with_exclusion_9_12 = get_option('simple_announcement_with_exclusion_9_12');
+		$simple_announcement_with_exclusion_9_13 = get_option('simple_announcement_with_exclusion_9_13');
+		$simple_announcement_with_exclusion_9_14 = get_option('simple_announcement_with_exclusion_9_14');
+				
 		if ($query->is_feed) {
 			$rss1 = explode(',', $simple_announcement_with_exclusion_9_12);
 			foreach ($rss1 as &$RSS1) { $RSS1 = "".$RSS1.","; }
@@ -427,5 +374,4 @@
 			}
 		}
 	}
-	
 ?>

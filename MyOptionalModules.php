@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 1.0.6.1
+Version: 1.0.7
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 */
@@ -22,7 +22,7 @@ Author URI: http://onebillionwords.com
 
 	## Call modules
 	define('MyOptionalModules', TRUE);
-	
+
 	## Register Main Control activation, install options, call main control file
 	register_activation_hook( __FILE__, "my_optional_modules_main_control_install" );
 	function my_optional_modules_main_control_install() {
@@ -34,27 +34,19 @@ Author URI: http://onebillionwords.com
 	}
 	include( plugin_dir_path( __FILE__ ) . 'modules/maincontrol.php');
 	
-	## Load Count++ if we ask for it
-	if (get_option("mommaincontrol_obwcountplus") == 1) {	
-		include( plugin_dir_path( __FILE__ ) . 'modules/countplusplus.php');
-	}
-	## Load RUPs if we ask for it
-	if (get_option("mommaincontrol_momrups") == 1) {	
-		include( plugin_dir_path( __FILE__ ) . 'modules/rups.php');
-	}
-	
-	## Load Simple Exclude if we ask for it
-	if (get_option("mommaincontrol_momse") == 1) {	
-		include( plugin_dir_path( __FILE__ ) . 'modules/se.php');
-	}	
-
-	## Load Post as Front if we ask for it
-	if (get_option("mommaincontrol_mompaf") == 1) {	
-		include( plugin_dir_path( __FILE__ ) . 'modules/postasfront.php');
-	}	
-
-	## Load Jump Around if we ask for it
-	if (get_option("mommaincontrol_momja") == 1) {	
-		include( plugin_dir_path( __FILE__ ) . 'modules/jumparound.php');
-	}	
+	## Conditional module loading
+	## Count++
+	if (get_option("mommaincontrol_obwcountplus") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/countplusplus.php'); }
+		
+	## RUPs
+	if (get_option("mommaincontrol_momrups") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/rups.php'); }
+		
+	## Simply Exclude
+	if (get_option("mommaincontrol_momse") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/se.php'); }	
+		
+	## Post as Front
+	if (get_option("mommaincontrol_mompaf") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/postasfront.php'); }	
+		
+	## Jump Around
+	if (get_option("mommaincontrol_momja") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/jumparound.php'); }	
 ?>
