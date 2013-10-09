@@ -14,12 +14,18 @@ They are designed to be lightweight and easilly implemented by even the most nov
 = No Unnecessary Load =
 MOM only loads what you want it to load - so no matter how many modules come packaged, the only ones that get loaded are the ones that you ask for.
 
+= Standing on the shoulders of geniuses =
+The following modules could not have existed without the work from previous plugins and authors:
+* Count++ is adapted from [Post Word Count](http://wordpress.org/plugins/post-word-count/) by [Nick Momrik](http://profiles.wordpress.org/nickmomrik/).
+* Google Maps in the Shortcodes! module adapted from [Very Simple Google Maps](http://wordpress.org/plugins/very-simple-google-maps/) by [Michael Araonoff](http://profiles.wordpress.org/masterk/)
+
 = Modules currently available: =
 * Count++, a module to count words on the blog and countdown from an (optional) total count goal.
 * RUPs, a module for storing 7 unique (SHA512 salted) passwords, and then hiding content with a shortcode (and IP based lockout) that is unlockable using the current days password.
 * Simply Exclude (SE), a module to hide tags, categories, and post formats from the front page, the archives, the search results, or the feed (or all).
 * Post as Front (PAF), a module that allows you to select a specific post to be your home page, or make your home page your most recent post.
 * Jump Around, a module that allows users to navigate posts by pressing keys on the keyboard.
+* Shortcodes!, a module that adds useful shortcodes for posts and pages.
 
 == Installation ==
 
