@@ -15,7 +15,7 @@ They are designed to be lightweight and easilly implemented by even the most nov
 MOM only loads what you want it to load - so no matter how many modules come packaged, the only ones that get loaded are the ones that you ask for.
 
 = Standing on the shoulders of geniuses =
-The following modules could not have existed without the work from previous plugins and authors:
+* The following modules could not have existed without the work from previous plugins and authors:
 * Count++ is adapted from [Post Word Count](http://wordpress.org/plugins/post-word-count/) by [Nick Momrik](http://profiles.wordpress.org/nickmomrik/).
 * Google Maps in the Shortcodes! module adapted from [Very Simple Google Maps](http://wordpress.org/plugins/very-simple-google-maps/) by [Michael Araonoff](http://profiles.wordpress.org/masterk/)
 
