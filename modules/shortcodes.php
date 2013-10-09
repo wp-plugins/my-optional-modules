@@ -48,6 +48,8 @@
 								Height: 350px <br />
 								Frameborder: 0 <br />
 								Align: center <br />
+								<hr />
+								div class .mom_map
 								</td>
 								<td valign=\"top\">
 									<table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
@@ -74,6 +76,8 @@
 								title: post title<br />
 								bgcolor: transparent<br />
 								border (color): transparent<br />
+								<hr />
+								div class .mom_reddit
 								</td>
 								<td valign=\"top\">
 									<table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
@@ -133,6 +137,7 @@
 		## Google map embed 
 		add_shortcode('mom_map', 'mom_google_map_shortcode');
 		function mom_google_map_shortcode($atts, $content = null) {
+		ob_start();
 			extract(
 				shortcode_atts(array(
 					"width" => '100%',
@@ -151,6 +156,7 @@
 				<iframe align=\"" . $align . "\" width=\"" . $width . "\" height=\"" . $height . "\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"https://maps.google.com/maps?&amp;" . htmlentities($mgms_output) . "&amp;output=embed&amp;z=" . $zoom . "&amp;iwloc=" . $info_window . "&amp;visual_refresh=true\"></iframe>
 			</div>
 			";
+			return ob_get_clean();
 		}
 		
 		## Reddit submit button
@@ -172,7 +178,9 @@
 					"border" => ''
 				), $atts)
 			);
+			ob_start();
 			echo "
+			<div class=\"mom_reddit\">
 			<script type=\"text/javascript\">
 				reddit_url = \"" . $url . "\";
 				reddit_target = \"" . $target . "\";
@@ -181,7 +189,9 @@
 				reddit_bordercolor = \"" . $border . "\";
 			</script>
 			<script type=\"text/javascript\" src=\"http://www.reddit.com/static/button/button3.js\"></script>
+			</div>
 			";
+			return ob_get_clean();
 			}
 		}			
 

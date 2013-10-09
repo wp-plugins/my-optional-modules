@@ -3,7 +3,7 @@ Contributors: Matthew Trevino
 Tags: reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 1.0.8
+Stable tag: 1.0.8.1
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -36,7 +36,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= 1.0.8 =
+= 1.0.8 / 1.0.8.1 =
+* Fixed shortcode positioning so that it stays where you put it.
 * Module 6: Shortcodes!
 * - A module that introduces some useful shortcodes that you can incorporate into posts and pages.
 
