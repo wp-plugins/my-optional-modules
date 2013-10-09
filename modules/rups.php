@@ -9,9 +9,7 @@
 	##   - options page (output)
 	##  shortcode content
 	
-	if(!defined('MyOptionalModules')) {
-	die('You can not call this file directly.');
-	}
+	if(!defined('MyOptionalModules')) {	die('You can not call this file directly.'); }
 
 	## Salt (change immediately)
 	$theSalt = "fasdf789F&S*()D&f89sjf8s7d90f87as09df70a9s8d7f908&J)(F*S&()D&f09

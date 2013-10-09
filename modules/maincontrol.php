@@ -27,6 +27,7 @@
 						update_option("mommaincontrol_momse",0);
 						update_option("mommaincontrol_mompaf",0);
 						update_option("mommaincontrol_momja",0);			
+						update_option("mommaincontrol_shorts",0);
 						global $table_prefix, $table_suffix, $wpdb;
 						$table_name = $table_prefix . $table_suffix . 'rotating_universal_passwords';
 						$wpdb->query("DROP TABLE {$table_name}");											
@@ -108,6 +109,7 @@
 						delete_option("mommaincontrol_momse");
 						delete_option("mommaincontrol_mompaf");
 						delete_option("mommaincontrol_momja");
+						delete_option("mommaincontrol_shorts");
 					}
 				} else {					
 						if ($_REQUEST["mommaincontrol_obwcountplus"] != "" . get_option("mommaincontrol_obwcountplus") ."") { 
@@ -252,6 +254,11 @@
 					
 						}
 					}
+					
+					if ($_REQUEST["mommaincontrol_shorts"] != "" . get_option("mommaincontrol_shorts") ."") { 
+						update_option("mommaincontrol_shorts",$_REQUEST["mommaincontrol_shorts"]); 
+					}					
+					
 				}
 			}
 		}
@@ -362,7 +369,30 @@
 			</tr>";
 			}
 			
-			echo "<tr valign=\"top\">
+			echo "
+			<tr valign=\"top\">
+				<th scope=\"row\">
+					<label for=\"mommaincontrol_shorts\">Shortcodes!</label>
+				</th>
+				<td>
+					<select id=\"mommaincontrol_shorts\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_shorts\">
+					<option value=\"0\" 
+					";
+						if (get_option("mommaincontrol_shorts") == 0 || get_option("mommaincontrol_shorts") == 3) { echo "selected=\"selected\""; }
+					echo ">No</option>					
+					<option value=\"1\" 
+					";
+						if (get_option("mommaincontrol_shorts") == 1) { echo "selected=\"selected\""; }
+					echo ">Yes</option>
+					<option value=\"3\">Uninstall</option>
+						</select>
+				</td>
+				<td>
+					<em>A collection of various shortcodes that you can use in your posts and pages.</em>
+				</td>
+			</tr>			
+			
+			<tr valign=\"top\">
 				<th scope=\"row\">
 					<label for=\"mommaincontrol_momse\">Simply Exclude (SE)</label>
 				</th>
