@@ -55,6 +55,13 @@
 						delete_option("simple_announcement_with_exclusion_9_12");
 						delete_option("simple_announcement_with_exclusion_9_13");
 						delete_option("simple_announcement_with_exclusion_9_14");		
+						delete_option("simple_announcement_with_exclusion_sun");
+						delete_option("simple_announcement_with_exclusion_mon");
+						delete_option("simple_announcement_with_exclusion_tue");
+						delete_option("simple_announcement_with_exclusion_wed");
+						delete_option("simple_announcement_with_exclusion_thu");
+						delete_option("simple_announcement_with_exclusion_fri");
+						delete_option("simple_announcement_with_exclusion_sat");												
 						delete_option("mompaf_post");
 						delete_option("jump_around_0");
 						delete_option("jump_around_1");
@@ -94,6 +101,13 @@
 						delete_option("simple_announcement_with_exclusion_9_12");
 						delete_option("simple_announcement_with_exclusion_9_13");
 						delete_option("simple_announcement_with_exclusion_9_14");		
+						delete_option("simple_announcement_with_exclusion_sun");
+						delete_option("simple_announcement_with_exclusion_mon");
+						delete_option("simple_announcement_with_exclusion_tue");
+						delete_option("simple_announcement_with_exclusion_wed");
+						delete_option("simple_announcement_with_exclusion_thu");
+						delete_option("simple_announcement_with_exclusion_fri");
+						delete_option("simple_announcement_with_exclusion_sat");						
 						delete_option("mompaf_post");
 						delete_option("jump_around_0");
 						delete_option("jump_around_1");
@@ -117,11 +131,9 @@
 							
 							if ($_REQUEST["mommaincontrol_obwcountplus"] == 1) {
 								## If we're enabling Count++ for the first time, set up its options.
-								if (!get_option("obwcountplus_1_countdownfrom") || !get_option("obwcountplus_2_remaining") || !get_option("obwcountplus_3_total")) {
 									add_option("obwcountplus_1_countdownfrom","0","Word goal to count down to?");
 									add_option("obwcountplus_2_remaining","remaining","Word to describe remaining amount of words until goal.");
 									add_option("obwcountplus_3_total","total","Word to describe words total present on blog.");
-								}
 							}
 							if ($_REQUEST["mommaincontrol_obwcountplus"] == 3) {
 								## If we're uninstalling Count++, remove the options from the database.
@@ -135,7 +147,6 @@
 							update_option("mommaincontrol_momrups",$_REQUEST["mommaincontrol_momrups"]); 
 						
 							if ($_REQUEST["mommaincontrol_momrups"] == 1) {
-								if (!get_option("rotating_universal_passwords_1") || !get_option("rotating_universal_passwords_2") || !get_option("rotating_universal_passwords_3") || !get_option("rotating_universal_passwords_4") || !get_option("rotating_universal_passwords_5") || !get_option("rotating_universal_passwords_6") || !get_option("rotating_universal_passwords_7") || !get_option("rotating_universal_passwords_8")) {
 									## Create table for lockouts (if bad password attempts are made, store IPs, timer, etc.
 									global $wpdb;
 									$RUPs_table_name = $wpdb->prefix . "rotating_universal_passwords";
@@ -157,7 +168,6 @@
 									add_option("rotating_universal_passwords_6","","Fri password");
 									add_option("rotating_universal_passwords_7","","Sat password");
 									add_option("rotating_universal_passwords_8","7","Attempts");
-								}
 							}
 							if ($_REQUEST["mommaincontrol_momrups"] == 3) {
 								delete_option("rotating_universal_passwords_1");
@@ -175,7 +185,6 @@
 						update_option("mommaincontrol_momse",$_REQUEST["mommaincontrol_momse"]); 
 						
 						if ($_REQUEST["mommaincontrol_momse"] == 1) {
-							if (!get_option('simple_announcement_with_exclusion_9') || !get_option('simple_announcement_with_exclusion_9_2') || !get_option('simple_announcement_with_exclusion_9_3') || !get_option('simple_announcement_with_exclusion_9_4') || !get_option('simple_announcement_with_exclusion_9_5') || !get_option('simple_announcement_with_exclusion_9_7') || !get_option('simple_announcement_with_exclusion_9_8') || !get_option('simple_announcement_with_exclusion_9_9') || !get_option('simple_announcement_with_exclusion_9_10') || !get_option('simple_announcement_with_exclusion_9_11') || !get_option('simple_announcement_with_exclusion_9_12') || !get_option('simple_announcement_with_exclusion_9_13') || !get_option('simple_announcement_with_exclusion_9_14') ) {			
 								add_option("simple_announcement_with_exclusion_9","","Categories front");
 								add_option("simple_announcement_with_exclusion_9_2","","Categories front and tag");
 								add_option("simple_announcement_with_exclusion_9_3","","Categories everywhere");
@@ -189,7 +198,13 @@
 								add_option("simple_announcement_with_exclusion_9_12","","Exclude cats from feed");
 								add_option("simple_announcement_with_exclusion_9_13","","Exclude tags from feed");
 								add_option("simple_announcement_with_exclusion_9_14","","Exclude post-format from feed");		
-							}
+								add_option("simple_announcement_with_exclusion_sun","","Exclude Sunday");
+								add_option("simple_announcement_with_exclusion_mon","","Exclude Monday");
+								add_option("simple_announcement_with_exclusion_tue","","Exclude Tuesday");
+								add_option("simple_announcement_with_exclusion_wed","","Exclude Wednesday");
+								add_option("simple_announcement_with_exclusion_thu","","Exclude Thursday");
+								add_option("simple_announcement_with_exclusion_fri","","Exclude Friday");
+								add_option("simple_announcement_with_exclusion_sat","","Exclude Saturday");
 						}
 						if ($_REQUEST["mommaincontrol_momse"] == 3) {
 							delete_option("simple_announcement_with_exclusion_9");
@@ -213,9 +228,7 @@
 						
 						if ($_REQUEST["mommaincontrol_mompaf"] == 1) {
 							## If we're enabling Post as Front for the first time, set up its options.
-							if (!get_option('mompaf_post')) {
 								add_option("mompaf_post","","Post ID to use as front page");
-							}
 						}
 						if ($_REQUEST["mommaincontrol_mompaf"] == 3) {
 							## If we're uninstalling Post as Front, remove the options from the database.
@@ -228,7 +241,6 @@
 						
 						if ($_REQUEST["mommaincontrol_momja"] == 1) {
 							## If we're enabling Jump Around for the first time, set up its options.				
-								if (!get_option('jump_around_0') || !get_option('jump_around_1') || !get_option('jump_around_2') || !get_option('jump_around_3') || !get_option('jump_around_4') || !get_option('jump_around_5') || !get_option('jump_around_6') || !get_option('jump_around_7') || !get_option('jump_around_8')){ 
 									add_option("jump_around_0","post","Post wrap");
 									add_option("jump_around_1","entry-title","Link wrap");
 									add_option("jump_around_2","previous-link","Previous link");
@@ -238,7 +250,6 @@
 									add_option("jump_around_6","68","Next");
 									add_option("jump_around_7","90","Older posts");
 									add_option("jump_around_8","88","Newer posts");
-								}
 						}
 						if ($_REQUEST["mommaincontrol_momja"] == 3) {
 							## If we're enabling Count++ for the first time, set up its options.				

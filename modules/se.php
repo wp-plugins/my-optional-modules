@@ -36,6 +36,14 @@
 			if ($_REQUEST["simple_announcement_with_exclusion_9_12"] != "" . get_option('simple_announcement_with_exclusion_9_12') . "") { update_option("simple_announcement_with_exclusion_9_12",$_REQUEST["simple_announcement_with_exclusion_9_12"]); }
 			if ($_REQUEST["simple_announcement_with_exclusion_9_13"] != "" . get_option('simple_announcement_with_exclusion_9_13') . "") { update_option("simple_announcement_with_exclusion_9_13",$_REQUEST["simple_announcement_with_exclusion_9_13"]); }
 			if ($_REQUEST["simple_announcement_with_exclusion_9_14"] != "" . get_option('simple_announcement_with_exclusion_9_14') . "") { update_option("simple_announcement_with_exclusion_9_14",$_REQUEST["simple_announcement_with_exclusion_9_14"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_sun"] != "" . get_option('simple_announcement_with_exclusion_sun') . "") { update_option("simple_announcement_with_exclusion_sun",$_REQUEST["simple_announcement_with_exclusion_sun"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_mon"] != "" . get_option('simple_announcement_with_exclusion_mon') . "") { update_option("simple_announcement_with_exclusion_mon",$_REQUEST["simple_announcement_with_exclusion_mon"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_tue"] != "" . get_option('simple_announcement_with_exclusion_tue') . "") { update_option("simple_announcement_with_exclusion_tue",$_REQUEST["simple_announcement_with_exclusion_tue"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_wed"] != "" . get_option('simple_announcement_with_exclusion_wed') . "") { update_option("simple_announcement_with_exclusion_wed",$_REQUEST["simple_announcement_with_exclusion_wed"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_thu"] != "" . get_option('simple_announcement_with_exclusion_thu') . "") { update_option("simple_announcement_with_exclusion_thu",$_REQUEST["simple_announcement_with_exclusion_thu"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_fri"] != "" . get_option('simple_announcement_with_exclusion_fri') . "") { update_option("simple_announcement_with_exclusion_fri",$_REQUEST["simple_announcement_with_exclusion_fri"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_sat"] != "" . get_option('simple_announcement_with_exclusion_sat') . "") { update_option("simple_announcement_with_exclusion_sat",$_REQUEST["simple_announcement_with_exclusion_sat"]); }
+		
 		}		
 	}
 		
@@ -96,6 +104,36 @@
 					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_7\">Hide from search results</label></th>
 					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_9_7\" name=\"simple_announcement_with_exclusion_9_7\" value=\"" . get_option('simple_announcement_with_exclusion_9_7') . "\">
 				</tr>			
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_sun\">Hide on Sunday</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_sun\" name=\"simple_announcement_with_exclusion_sun\" value=\"" . get_option('simple_announcement_with_exclusion_sun') . "\"></td>
+				</tr>				
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_mon\">Hide on Monday</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_mon\" name=\"simple_announcement_with_exclusion_mon\" value=\"" . get_option('simple_announcement_with_exclusion_mon') . "\"></td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_tue\">Hide on Tuesday</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_tue\" name=\"simple_announcement_with_exclusion_tue\" value=\"" . get_option('simple_announcement_with_exclusion_tue') . "\"></td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_wed\">Hide on Wednesday</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_wed\" name=\"simple_announcement_with_exclusion_wed\" value=\"" . get_option('simple_announcement_with_exclusion_wed') . "\"></td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_thu\">Hide on Thursday</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_thu\" name=\"simple_announcement_with_exclusion_thu\" value=\"" . get_option('simple_announcement_with_exclusion_thu') . "\"></td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_fri\">Hide on Friday</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_fri\" name=\"simple_announcement_with_exclusion_fri\" value=\"" . get_option('simple_announcement_with_exclusion_fri') . "\"></td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_sat\">Hide on Saturday</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_sat\" name=\"simple_announcement_with_exclusion_sat\" value=\"" . get_option('simple_announcement_with_exclusion_sat') . "\"></td>
+				</tr>				
+
+
 				<tr valign=\"top\"><th scope=\"row\"><strong>Post formats</strong></th></tr>
 				<tr valign=\"top\">
 					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_14\">Hide from RSS</label></th>
@@ -189,6 +227,7 @@
 						<p>Exclude categories, tags, and post formats from archive views, category views, tag archives, search results, the RSS feed, or the front page.</p>		
 						<h3 class=\"title\">Settings</h3>
 						<p>Use single IDs (or comma-separated lists of IDs) to exclude selected tags and categories from their chosen locations.  (IE <em>1,2,3...</em>)</p>
+						<p>For the tags to hide during certain days, it is advisable to create tags named after the days to make it easier to group them up.</p>
 					";
 					if(isset($_POST['momsesave'])){ echo "<div id=\"setting-error-settings_updated\" class=\"updated settings-error\"><p>Settings saved.</p></div>"; }
 					echo "<form method=\"post\">
@@ -222,7 +261,19 @@
 		$simple_announcement_with_exclusion_9_12 = get_option('simple_announcement_with_exclusion_9_12');
 		$simple_announcement_with_exclusion_9_13 = get_option('simple_announcement_with_exclusion_9_13');
 		$simple_announcement_with_exclusion_9_14 = get_option('simple_announcement_with_exclusion_9_14');
-				
+		if (date("D") === "Sun") { $simple_announcement_with_exclusion_day = get_option('simple_announcement_with_exclusion_sun'); }
+		if (date("D") === "Mon") { $simple_announcement_with_exclusion_day = get_option('simple_announcement_with_exclusion_mon'); }
+		if (date("D") === "Tue") { $simple_announcement_with_exclusion_day = get_option('simple_announcement_with_exclusion_tue'); } 
+		if (date("D") === "Wed") { $simple_announcement_with_exclusion_day = get_option('simple_announcement_with_exclusion_wed'); }
+		if (date("D") === "Thu") { $simple_announcement_with_exclusion_day = get_option('simple_announcement_with_exclusion_thu'); }
+		if (date("D") === "Fri") { $simple_announcement_with_exclusion_day = get_option('simple_announcement_with_exclusion_fri'); }
+		if (date("D") === "Sat") { $simple_announcement_with_exclusion_day = get_option('simple_announcement_with_exclusion_sat'); }
+
+		$rss_day = explode(',', $simple_announcement_with_exclusion_day);
+		foreach ($rss_day as &$rss_day_1) { $rss_day_1 = "".$rss_day_1.","; }
+		$rss_day_1 = implode($rss_day);		
+		$rssday = explode(',', str_replace(' ', '', $rss_day_1));
+		
 		if ($query->is_feed) {
 			$rss1 = explode(',', $simple_announcement_with_exclusion_9_12);
 			foreach ($rss1 as &$RSS1) { $RSS1 = "".$RSS1.","; }
@@ -252,6 +303,12 @@
 					'terms' => array( $simple_announcement_with_exclusion_9_14 ),
 					'operator' => 'NOT IN'
 				),
+				array(
+					'taxonomy' => 'post_tag',
+					'terms' => $rssday,
+					'field' => 'id',
+					'operator' => 'NOT IN'
+				),				
 			);
 			$query->set( 'tax_query', $tax_query );						
 		}
@@ -266,7 +323,7 @@
 				foreach ($t1 as &$T1) { $T1 = "".$T1.","; }
 				$t_1 = implode($t1);		
 				$t11 = explode(',', str_replace(' ', '', $t_1));
-		
+			
 				$tax_query = array(
 					'relation' => 'AND OR',
 					array(
@@ -285,6 +342,12 @@
 						'taxonomy' => 'post_format',
 						'field' => 'slug',
 						'terms' => array( $simple_announcement_with_exclusion_9_8 ),
+						'operator' => 'NOT IN'
+					),
+					array(
+						'taxonomy' => 'post_tag',
+						'terms' => $rssday,
+						'field' => 'id',
 						'operator' => 'NOT IN'
 					),
 				);
@@ -310,7 +373,13 @@
 						'field' => 'slug',
 						'terms' => array( $simple_announcement_with_exclusion_9_9 ),
 						'operator' => 'NOT IN',
-								),
+					),
+					array(
+						'taxonomy' => 'post_tag',
+						'terms' => $rssday,
+						'field' => 'id',
+						'operator' => 'NOT IN'
+					),					
 				);
 				$query->set( 'tax_query', $tax_query );				
 			}
@@ -335,6 +404,12 @@
 						'terms' => array( $simple_announcement_with_exclusion_9_10 ),
 						'operator' => 'NOT IN',
 					),
+					array(
+						'taxonomy' => 'post_tag',
+						'terms' => $rssday,
+						'field' => 'id',
+						'operator' => 'NOT IN'
+					),					
 				);
 				$query->set( 'tax_query', $tax_query );
 			}		
@@ -369,6 +444,12 @@
 						'terms' => array( $simple_announcement_with_exclusion_9_11 ),
 						'operator' => 'NOT IN',
 					),
+					array(
+						'taxonomy' => 'post_tag',
+						'terms' => $rssday,
+						'field' => 'id',
+						'operator' => 'NOT IN'
+					),					
 				);
 				$query->set( 'tax_query', $tax_query );					
 			}
