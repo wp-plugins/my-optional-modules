@@ -29,7 +29,8 @@
 						<tbody>
 							<tr valign=\"top\">
 								[<a href=\"#google_maps\">map</a>] 
-								&mdash; [<a href=\"#reddit_button\">reddit</a>]
+								&mdash; [<a href=\"#reddit_button\">reddit</a>] 
+								&mdash; [<a href=\"#restrict\">restrict content to logged in users</a>]
 							</tr>
 							<tr valign=\"top\" id=\"google_maps\">
 								<td valign=\"top\"><strong>Google Maps</strong><br />Embed a Google map.<br />Based on <a href=\"http://wordpress.org/plugins/very-simple-google-maps/\">Very Simple Google Maps</a> by <a href=\"http://profiles.wordpress.org/masterk/\">Michael Aronoff</a><hr /><br />
@@ -64,7 +65,7 @@
 								
 							</tr>
 							
-							<tr valign=\"top\" id=\"reddit_button\">
+							<tr valign=\"top\" id=\"reddit_button\" style=\"background-color:#f4faff;\">
 								<td valign=\"top\"><strong>Reddit button</strong><br />Create a customizable submit button for the current post.<br /><hr /><br />
 								<u>Parameters</u><br />
 								target<br />
@@ -124,7 +125,61 @@
 									</tbody>
 									</table>
 								</td>
-							</tr>							
+							</tr>		
+
+							<tr valign=\"top\" id=\"restrict\">
+								<td valign=\"top\"><strong>Restrict content to logged in users</strong><br />Create a customizable submit button for the current post.<br /><hr /><br />
+								<u>Parameters</u><br />
+								message<br />
+								comments<br />
+								<hr />
+								<u>Defaults</u> <br />
+								message: You must be logged in to view this content.
+								<hr />
+								div class .mom_restrict
+								</td>
+								<td valign=\"top\">
+									<table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
+									<tbody>
+									<tr><td><code>[mom_restrict]some content[/mom_restrict]</code></td><td><em>Default</em></td></tr>
+									<tr>
+										<td>
+										Logged in users see:<br />
+										some content
+										<p>
+										Users who are not logged in see:<br />
+										You must be logged in to view this content.</p>
+										</td>
+									</tr>
+									<tr><td><code>[mom_restrict comments=\"1\" form=\"closed\" message=\"Log in to view this content!\"]some content[/mom_restrict]</code></td><td><em>Comments and form are hidden</em></td></tr>
+									<tr>
+										<td>
+										Logged in users see:<br />
+										some content
+										<p>
+										Users who are not logged in see:<br />
+										Log in to view this content!<br />
+										(<em>Comment form and comments are hidden.)</em>)
+										</p>
+										</td>
+									</tr>
+									<tr><td><code>[mom_restrict comments=\"2\" message=\"Log in to view this content!\"]some content[/mom_restrict]</code></td><td><em>Comment form is hidden</em></td></tr>
+									<tr>
+										<td>
+										Logged in users see:<br />
+										some content
+										<p>
+										Users who are not logged in see:<br />
+										Log in to view this content!<br />
+										(<em>Comment form is hidden</em>)
+										</p>
+										</td>
+									</tr>									
+									</tbody>
+									</table>
+								</td>
+							</tr>
+							
 						</tbody>
 					</table>					
 			";
@@ -136,6 +191,7 @@
 	## add shortcodes
 		## Google map embed 
 		add_shortcode('mom_map', 'mom_google_map_shortcode');
+		add_filter('the_content', 'do_shortcode', 'mom_map');
 		function mom_google_map_shortcode($atts, $content = null) {
 		ob_start();
 			extract(
@@ -161,6 +217,7 @@
 		
 		## Reddit submit button
 		add_shortcode('mom_reddit', 'mom_reddit_shortcode');
+		add_filter('the_content', 'do_shortcode', 'mom_reddit');
 		function mom_reddit_shortcode($atts, $content = null) {
 			global $wpdb, $id, $post_title;
 			$query = "SELECT post_title FROM $wpdb->posts WHERE post_status = 'publish' AND ID = '$id'";
@@ -193,7 +250,40 @@
 			";
 			return ob_get_clean();
 			}
-		}			
+		}
 
-	
+		## Restrict content to logged in users
+		add_shortcode('mom_restrict', 'mom_restrict_shortcode');
+		add_filter('the_content', 'do_shortcode', 'mom_restrict');
+		function mom_restrict_shortcode($atts, $content = null) {
+			extract(
+					shortcode_atts(array(
+					"message" => 'You must be logged in to view this content.',
+					"comments" => '',
+					"form" => ''
+				), $atts)
+			);
+			ob_start();
+			if ( is_user_logged_in() ) {
+				return $content;
+			} else {
+				echo "<div class=\"mom_restrict\">" . htmlentities($message) . "</div>";
+				if ($comments == "1") {
+					add_filter( 'comments_template', 'restricted_comments_view' );
+					function restricted_comments_view( $comment_template ) {
+						return dirname( __FILE__) . '/comment_template.php';
+					}
+				}
+				if ($comments == "2") {
+					add_filter( 'comments_open', 'restricted_comments_form', 10, 2 );
+					function restricted_comments_form( $open, $post_id ) {
+						$post = get_post( $post_id );
+						$open = false;
+						return $open;
+					}	
+				}
+				
+			}		
+			return ob_get_clean();
+		}
 ?>

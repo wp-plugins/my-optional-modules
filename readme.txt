@@ -27,6 +27,11 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Jump Around, a module that allows users to navigate posts by pressing keys on the keyboard.
 * Shortcodes!, a module that adds useful shortcodes for posts and pages.
 
+= Shortcodes =
+* Google maps embedding.
+* Reddit submit button.
+* Restrict content to logged in users, with the option to selectively allow comments (both form and viewing of) to logged in users only.
+
 == Installation ==
 
 1. Upload /my-optional-modules/ to your plguins folder.
@@ -36,7 +41,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= 1.0.8 / 1.0.8.1 =
+= 1.0.8 / 1.0.8.1 / 1.0.8.2 =
+* Added shortcode to selectively hide content and comments (both the viewing of and commenting of) from viewers who are not logged in.
 * Fixed shortcode positioning so that it stays where you put it.
 * Module 6: Shortcodes!
 * - A module that introduces some useful shortcodes that you can incorporate into posts and pages.
