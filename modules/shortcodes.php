@@ -151,7 +151,7 @@
 										You must be logged in to view this content.</p>
 										</td>
 									</tr>
-									<tr><td><code>[mom_restrict comments=\"1\" form=\"closed\" message=\"Log in to view this content!\"]some content[/mom_restrict]</code></td><td><em>Comments and form are hidden</em></td></tr>
+									<tr><td><code>[mom_restrict comments=\"1\" message=\"Log in to view this content!\"]some content[/mom_restrict]</code></td><td><em>Comments and form are hidden</em></td></tr>
 									<tr>
 										<td>
 										Logged in users see:<br />
