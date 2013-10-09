@@ -81,7 +81,7 @@
 								div class .mom_reddit
 								</td>
 								<td valign=\"top\">
-									<table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
+									<table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\">
 									<tbody>
 									<tr><td><code>[mom_reddit]</code></td><td><em>Default</em></td></tr>
 									<tr>
