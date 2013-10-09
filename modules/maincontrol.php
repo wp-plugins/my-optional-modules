@@ -220,6 +220,13 @@
 							delete_option("simple_announcement_with_exclusion_9_12");
 							delete_option("simple_announcement_with_exclusion_9_13");
 							delete_option("simple_announcement_with_exclusion_9_14");
+							delete_option("simple_announcement_with_exclusion_sun");
+							delete_option("simple_announcement_with_exclusion_mon");
+							delete_option("simple_announcement_with_exclusion_tue");
+							delete_option("simple_announcement_with_exclusion_wed");
+							delete_option("simple_announcement_with_exclusion_thu");
+							delete_option("simple_announcement_with_exclusion_fri");
+							delete_option("simple_announcement_with_exclusion_sat");								
 						}
 					}
 
