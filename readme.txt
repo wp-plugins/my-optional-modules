@@ -17,7 +17,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 = Standing on the shoulders of geniuses =
 * The following modules could not have existed without the work from previous plugins and authors:
 * Count++ is adapted from [Post Word Count](http://wordpress.org/plugins/post-word-count/) by [Nick Momrik](http://profiles.wordpress.org/nickmomrik/).
-* Google Maps in the Shortcodes! module adapted from [Very Simple Google Maps](http://wordpress.org/plugins/very-simple-google-maps/) by [Michael Araonoff](http://profiles.wordpress.org/masterk/)
+* Google Maps in the Shortcodes! module adapted from [Very Simple Google Maps](http://wordpress.org/plugins/very-simple-google-maps/) by [Michael Araonoff](http://profiles.wordpress.org/masterk/).
 
 = Modules currently available: =
 * Count++, a module to count words on the blog and countdown from an (optional) total count goal.
