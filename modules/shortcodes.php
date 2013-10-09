@@ -128,7 +128,7 @@
 							</tr>		
 
 							<tr valign=\"top\" id=\"restrict\">
-								<td valign=\"top\"><strong>Restrict content to logged in users</strong><br />Create a customizable submit button for the current post.<br /><hr /><br />
+								<td valign=\"top\"><strong>Restrict content to logged in users</strong><br />Restrict content to users who are not logged in, including commenting or viewing comments.<br /><hr /><br />
 								<u>Parameters</u><br />
 								message<br />
 								comments<br />
