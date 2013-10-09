@@ -35,7 +35,7 @@
 					<td>
 						<select id=\"mompaf_post\" class=\"regular-text\" type=\"text\" name=\"mompaf_post\">
 						<option value=\"\">Most recent post</option>";
-							$showmeposts =  get_posts(); 
+							$showmeposts =  get_posts( array('posts_per_page' => -1 )); 
 							foreach ($showmeposts as $postsshown) {
 								echo "<option value=\"" . $postsshown->ID . "\">$postsshown->post_title</option>";
 							}		
