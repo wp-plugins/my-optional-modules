@@ -336,7 +336,7 @@
 			
 			echo "<tr valign=\"top\">
 				<th scope=\"row\">
-					<label for=\"mommaincontrol_mompaf\">Post as Front (PAF)</label>
+					<label for=\"mommaincontrol_mompaf\">Post as Front</label>
 				</th>
 				<td>
 					<select id=\"mommaincontrol_mompaf\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_mompaf\">
@@ -351,9 +351,12 @@
 					<option value=\"3\">Uninstall</option>
 						</select>
 				</td>
-				<td>
-					<em>Select a specific post to be your home page, or make your home page your most recent post.</em>
-				</td>
+				<td>";
+				if (get_option("mommaincontrol_mompaf") == 0 || get_option("mommaincontrol_mompaf") == 3) { echo "<em>Select a specific post to be your home page, or make your home page your most recent post.</em>"; }
+				## Post as Front
+				if (get_option("mommaincontrol_mompaf") == 1) { include('postasfront.php'); }	
+
+				echo "</td>
 			</tr>";
 			
 			if(is_plugin_active('rotating-universal-passwords/RUPs.php')){
@@ -465,7 +468,7 @@
 				<p>Deactivating modules will deactivate their associated functionality.  All code examples accounts for this with 
 				a check to see if the function being called exists (is active).</p>";
 			echo "<h3 class=\"title\">Modules</h3>";
-			if(isset($_POST['momsave'])){
+			if(isset($_POST['momsave']) || isset($_POST['mompafsave'])){
 				echo "<div id=\"setting-error-settings_updated\" class=\"updated settings-error\"><p>Settings saved.</p></div>";
 			}
 			if ($_REQUEST["mommaincontrol_uninstall_all"] == 3) {

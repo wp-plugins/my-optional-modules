@@ -3,7 +3,7 @@ Contributors: Matthew Trevino
 Tags: logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 1.0.8.4
+Stable tag: 1.0.8.5
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -41,7 +41,10 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= 1.0.8 / 1.0.8.1 / 1.0.8.2 / 1.0.8.3 / 1.0.8.4 =
+= 1.0.8 / 1.0.8.1 / 1.0.8.2 / 1.0.8.3 / 1.0.8.4 / 1.0.8.5 =
+* Post as Front now correctly pre-selects saved post (if set to anything other than Most Recent Post).
+* Options page for Post as front removed, and settings move to MOM: Main Control (since there was only one settings anyway).
+* SE settings page tidied up.
 * SE can now hide tags based on what day of the week it is.  (You will need to deactivate/reactivate the module to take advantage of this.)
 * Fixed Post as Front to display all posts.
 * Added shortcode to selectively hide content and comments (both the viewing of and commenting of) from viewers who are not logged in.
