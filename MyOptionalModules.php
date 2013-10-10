@@ -4,7 +4,7 @@ Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
 Version: 1.0.8.5.1
-Author: Matthew Trevino
+Author: One Billion Words
 Author URI: http://onebillionwords.com
 */
 	## This program is free software; you can redistribute it and/or modify
