@@ -2,17 +2,12 @@
 
 	## Module name: Post as Front (PAF)
 	## Module contents
-	## add action to set home page post
 	##   - options form (save)
 	##   - options form (output)
 	##   - options page (output)
-	## set home page post content
 
 	if(!defined('MyOptionalModules')) { die('You can not call this file directly.'); }
 
-	## add action to set home page post
-	add_action( "wp", "mompaf_filter_home" );
-	
 	if (is_admin() ) { 
 	
 		## options form (save)
@@ -58,20 +53,5 @@
 			";
 			if(isset($_POST["mompafsave"])){ update_mompaf_options(); } 
 		
-	}
-	
-	## set home page post content
-	function mompaf_filter_home() {	
-		if (is_home()) {
-			if (is_numeric(get_option("mompaf_post"))){
-				$mompaf_front = get_option("mompaf_post");
-			} else {
-				$mompaf_front = "";
-			}
-			if (have_posts()) : the_post();
-			header("location: ".get_permalink($mompaf_front));
-			exit;
-			endif;
-		}
 	}
 ?>
