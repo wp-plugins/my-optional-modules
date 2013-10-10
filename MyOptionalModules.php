@@ -47,23 +47,21 @@ Author URI: http://onebillionwords.com
 		
 	## Post as Front
 	if (get_option("mommaincontrol_mompaf") == 1) { 
-	
-	add_action( "wp", "mompaf_filter_home" );
-	function mompaf_filter_home() {	
-		if (is_home()) {
-			if (is_numeric(get_option("mompaf_post"))){
-				$mompaf_front = get_option("mompaf_post");
-			} else {
-				$mompaf_front = "";
+		add_action( "wp", "mompaf_filter_home" );
+		function mompaf_filter_home() {	
+			if (is_home()) {
+				if (is_numeric(get_option("mompaf_post"))){
+					$mompaf_front = get_option("mompaf_post");
+				} else {
+					$mompaf_front = "";
+				}
+				if (have_posts()) : the_post();
+				header("location: ".get_permalink($mompaf_front));
+				exit;
+				endif;
 			}
-			if (have_posts()) : the_post();
-			header("location: ".get_permalink($mompaf_front));
-			exit;
-			endif;
-		}
-	}	
-	
-	}	
+		}	
+	}
 		
 	## Jump Around
 	if (get_option("mommaincontrol_momja") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/jumparound.php'); }	

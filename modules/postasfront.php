@@ -13,7 +13,7 @@
 		## options form (save)
 		function update_mompaf_options() {
 			if(isset($_POST['mompafsave'])){
-				if ($_REQUEST["mompaf_post"] != "" . get_option("mompaf_post") . "" && is_numeric($_REQUEST["mompaf_post"])) { update_option("mompaf_post",$_REQUEST["mompaf_post"]); }
+				update_option("mompaf_post",$_REQUEST["mompaf_post"]);
 			}		
 		}
 		
