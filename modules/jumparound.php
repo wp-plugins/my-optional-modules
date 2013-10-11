@@ -44,20 +44,23 @@
 		## options form (output)
 		function print_jump_around_form() {
 			echo "
+			<td>
+				<table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
+						<tbody>			
 				<tr valign=\"top\">
-					<th scope=\"row\"><label for=\"jump_around_0\">Post container class</label></th>
+					<th scope=\"row\"><label for=\"jump_around_0\">Post container:</label></th>
 					<td><input type=\"text\" name=\"jump_around_0\" value=\"" . get_option("jump_around_0") . "\" /></td>
 				</tr>
 				<tr valign=\"top\">
-					<th scope=\"row\"><label for=\"jump_around_1\">Post permalink class:</label></th>
+					<th scope=\"row\"><label for=\"jump_around_1\">Permalink:</label></th>
 					<td><input type=\"text\" name=\"jump_around_1\" value=\"" . get_option("jump_around_1") . "\" /></td>
 				</tr>
 				<tr valign=\"top\">		
-					<th scope=\"row\"><label for=\"jump_around_2\">Previous posts link wrapper</label></th>
+					<th scope=\"row\"><label for=\"jump_around_2\">Previous posts</label></th>
 					<td><input type=\"text\" name=\"jump_around_2\" value=\"" . get_option("jump_around_2") . "\" /></td>
 				</tr>
 				<tr valign=\"top\">
-					<th scope=\"row\"><label for=\"jump_around_3\">Next posts link wrapper</label></th>
+					<th scope=\"row\"><label for=\"jump_around_3\">Next posts</label></th>
 					<td><input type=\"text\" name=\"jump_around_3\" value=\"" . get_option("jump_around_3") . "\" /></td>
 				</tr>
 				<tr valign=\"top\">
@@ -284,7 +287,12 @@
 							<option value=\"39\"";if (get_option("jump_around_8") == "39") { echo " selected=\"selected\""; } echo ">right arrow</option>
 							<option value=\"40\"";if (get_option("jump_around_8") == "40") { echo " selected=\"selected\""; } echo ">down arrow</option>
 							</select></td>
+						<tr><td><input id=\"update_JA\" class=\"button button-primary\" type=\"submit\" value=\"Save Changes\" name=\"update_JA\"></input></td></tr>
 						</tr>
+					</tbody>
+				</table>
+			</td>
+					
 		";
 		}
 		
@@ -293,40 +301,38 @@
 			echo "	
 			<div class=\"wrap\">
 				<div id=\"icon-options-general\" class=\"icon32\"></div>
-				<h2>Jump Around</h2>
-				<p>Navigate posts by pressing keys on the keyboard.</p>		
-				<p>
-					Default keys:<br />
-					<strong>a</strong> : previous / 
-					<strong>d</strong> : next / 
-					<strong>s</strong> : open currently selected post / 
-					<strong>z</strong> : older posts / 
-					<strong>x</strong> : newer posts 
-				</p>
-				<p>Adds a class of .current to the currently selected item (which you can style in .css). Custom keys must not be the same.  Each one must be different.</p>";
+				<h2>Jump Around</h2>";
 				if(isset($_POST['update_JA'])){
 					echo "<div id=\"setting-error-settings_updated\" class=\"updated settings-error\"><p>Settings saved.</p></div>";
 				}		
 				echo "
+				<h3 class=\"tittle\">Settings</h3>
 				<form method=\"post\">
-					<table class=\"form-table\">
+					<table class=\"form-table\" border=\"1\">
 						<tbody>
+						<tr>
+						<td valign=\"top\">Inputs accept a variety of queries:
+							<table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
+								<tbody>
+								<tr><td valign=\"top\">div class:</td><td valign=\"top\"><strong>.div</strong></td></tr>
+								<tr><td valign=\"top\">link in div:</td><td valign=\"top\"><strong>.div a</strong></td></tr>
+								<tr><td valign=\"top\">h1 in div:</td><td valign=\"top\"><strong>.div h1</strong></td></tr>
+								<tr><td valign=\"top\">combination:</td><td valign=\"top\"><strong>.div h1 a</strong></td></tr>
+								</tbody>
+							</table>
+						
+						<p><em>Thanks to <a href=\"http://stackoverflow.com/questions/1939041/change-hash-without-reload-in-jquery\">jitter</a> &amp; <a href=\"http://stackoverflow.com/questions/13694277/scroll-to-next-div-using-arrow-keys\">mVChr</a> for the help.</em></p>
 					";
 					print_jump_around_form();
 					echo "
+						</tr>
 						</tbody>
-					</table>
-					<p class=\"submit\">
-						<input id=\"update_JA\" class=\"button button-primary\" type=\"submit\" value=\"Save Changes\" name=\"update_JA\"></input>
-					</p>
+					</table>					
 				</form>
 				";
 				if ($_REQUEST["update_JA"]) { update_JA(); }
 				echo "
-				<p>If you can not get this to work with your current theme, some minor template modifications may be in order.  However, since every theme is potentially unique from the last, I can't exactly give you step-by-step instructions on how to edit your current theme.</p>
-				<p>If you are unsure of how to edit templates, your best resources are as follows: <a href=\"http://reddit.com/r/wordpress/\">/r/Wordpress on Reddit</a>, <a href=\"http://stackoverflow.com/\">Stack Overflow</a>, or the <a href=\"http://wordpress.org/support/\">Wordpress.org Support Forums</a>.</p>
-				<p>Firefox users may easily find class names by right-clicking on the element in question and using the <strong>Inspect Element</strong> to figure out the class name of your current item.</p>
-				<p><em>Thanks to <a href=\"http://stackoverflow.com/questions/1939041/change-hash-without-reload-in-jquery\">jitter</a> &amp; <a href=\"http://stackoverflow.com/questions/13694277/scroll-to-next-div-using-arrow-keys\">mVChr</a></em></p>
+				
 			</div>";
 		}
 	}

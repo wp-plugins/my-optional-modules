@@ -34,6 +34,7 @@
 						delete_option("obwcountplus_1_countdownfrom");
 						delete_option("obwcountplus_2_remaining");
 						delete_option("obwcountplus_3_total");
+						delete_option("obwcountplus_4_custom");
 						delete_option("rotating_universal_passwords_1");
 						delete_option("rotating_universal_passwords_2");
 						delete_option("rotating_universal_passwords_3");
@@ -55,13 +56,20 @@
 						delete_option("simple_announcement_with_exclusion_9_12");
 						delete_option("simple_announcement_with_exclusion_9_13");
 						delete_option("simple_announcement_with_exclusion_9_14");		
-						delete_option("simple_announcement_with_exclusion_sun");
-						delete_option("simple_announcement_with_exclusion_mon");
-						delete_option("simple_announcement_with_exclusion_tue");
-						delete_option("simple_announcement_with_exclusion_wed");
-						delete_option("simple_announcement_with_exclusion_thu");
-						delete_option("simple_announcement_with_exclusion_fri");
-						delete_option("simple_announcement_with_exclusion_sat");												
+						delete_option("simple_announcement_with_exclusion_cat_sun");
+						delete_option("simple_announcement_with_exclusion_cat_mon");
+						delete_option("simple_announcement_with_exclusion_cat_tue");
+						delete_option("simple_announcement_with_exclusion_cat_wed");
+						delete_option("simple_announcement_with_exclusion_cat_thu");
+						delete_option("simple_announcement_with_exclusion_cat_fri");
+						delete_option("simple_announcement_with_exclusion_cat_sat");												
+						delete_option("simple_announcement_with_exclusion_cat_sun");
+						delete_option("simple_announcement_with_exclusion_cat_mon");
+						delete_option("simple_announcement_with_exclusion_cat_tue");
+						delete_option("simple_announcement_with_exclusion_cat_wed");
+						delete_option("simple_announcement_with_exclusion_cat_thu");
+						delete_option("simple_announcement_with_exclusion_cat_fri");
+						delete_option("simple_announcement_with_exclusion_cat_sat");
 						delete_option("mompaf_post");
 						delete_option("jump_around_0");
 						delete_option("jump_around_1");
@@ -80,6 +88,7 @@
 						delete_option("obwcountplus_1_countdownfrom");
 						delete_option("obwcountplus_2_remaining");
 						delete_option("obwcountplus_3_total");
+						delete_option("obwcountplus_4_custom");
 						delete_option("rotating_universal_passwords_1");
 						delete_option("rotating_universal_passwords_2");
 						delete_option("rotating_universal_passwords_3");
@@ -107,7 +116,21 @@
 						delete_option("simple_announcement_with_exclusion_wed");
 						delete_option("simple_announcement_with_exclusion_thu");
 						delete_option("simple_announcement_with_exclusion_fri");
-						delete_option("simple_announcement_with_exclusion_sat");						
+						delete_option("simple_announcement_with_exclusion_sat");
+						delete_option("simple_announcement_with_exclusion_cat_sun");
+						delete_option("simple_announcement_with_exclusion_cat_mon");
+						delete_option("simple_announcement_with_exclusion_cat_tue");
+						delete_option("simple_announcement_with_exclusion_cat_wed");
+						delete_option("simple_announcement_with_exclusion_cat_thu");
+						delete_option("simple_announcement_with_exclusion_cat_fri");
+						delete_option("simple_announcement_with_exclusion_cat_sat");												
+						delete_option("simple_announcement_with_exclusion_cat_sun");
+						delete_option("simple_announcement_with_exclusion_cat_mon");
+						delete_option("simple_announcement_with_exclusion_cat_tue");
+						delete_option("simple_announcement_with_exclusion_cat_wed");
+						delete_option("simple_announcement_with_exclusion_cat_thu");
+						delete_option("simple_announcement_with_exclusion_cat_fri");
+						delete_option("simple_announcement_with_exclusion_cat_sat");						
 						delete_option("mompaf_post");
 						delete_option("jump_around_0");
 						delete_option("jump_around_1");
@@ -134,12 +157,14 @@
 									add_option("obwcountplus_1_countdownfrom","0","Word goal to count down to?");
 									add_option("obwcountplus_2_remaining","remaining","Word to describe remaining amount of words until goal.");
 									add_option("obwcountplus_3_total","total","Word to describe words total present on blog.");
+									add_option("obwcountplus_4_custom","","Custom output.");
 							}
 							if ($_REQUEST["mommaincontrol_obwcountplus"] == 3) {
 								## If we're uninstalling Count++, remove the options from the database.
 									delete_option("obwcountplus_1_countdownfrom");
 									delete_option("obwcountplus_2_remaining");
 									delete_option("obwcountplus_3_total");
+									delete_option("obwcountplus_4_custom");
 							}
 						}
 						
@@ -205,6 +230,13 @@
 								add_option("simple_announcement_with_exclusion_thu","","Exclude Thursday");
 								add_option("simple_announcement_with_exclusion_fri","","Exclude Friday");
 								add_option("simple_announcement_with_exclusion_sat","","Exclude Saturday");
+								add_option("simple_announcement_with_exclusion_cat_sun","","Exclude categories Sunday");
+								add_option("simple_announcement_with_exclusion_cat_mon","","Exclude categories Monday");
+								add_option("simple_announcement_with_exclusion_cat_tue","","Exclude categories Tuesday");
+								add_option("simple_announcement_with_exclusion_cat_wed","","Exclude categories Wednesday");
+								add_option("simple_announcement_with_exclusion_cat_thu","","Exclude categories Thursday");
+								add_option("simple_announcement_with_exclusion_cat_fri","","Exclude categories Friday");
+								add_option("simple_announcement_with_exclusion_cat_sat","","Exclude categories Saturday");								
 						}
 						if ($_REQUEST["mommaincontrol_momse"] == 3) {
 							delete_option("simple_announcement_with_exclusion_9");
@@ -226,7 +258,21 @@
 							delete_option("simple_announcement_with_exclusion_wed");
 							delete_option("simple_announcement_with_exclusion_thu");
 							delete_option("simple_announcement_with_exclusion_fri");
-							delete_option("simple_announcement_with_exclusion_sat");								
+							delete_option("simple_announcement_with_exclusion_sat");				
+							delete_option("simple_announcement_with_exclusion_cat_sun");
+							delete_option("simple_announcement_with_exclusion_cat_mon");
+							delete_option("simple_announcement_with_exclusion_cat_tue");
+							delete_option("simple_announcement_with_exclusion_cat_wed");
+							delete_option("simple_announcement_with_exclusion_cat_thu");
+							delete_option("simple_announcement_with_exclusion_cat_fri");
+							delete_option("simple_announcement_with_exclusion_cat_sat");												
+							delete_option("simple_announcement_with_exclusion_cat_sun");
+							delete_option("simple_announcement_with_exclusion_cat_mon");
+							delete_option("simple_announcement_with_exclusion_cat_tue");
+							delete_option("simple_announcement_with_exclusion_cat_wed");
+							delete_option("simple_announcement_with_exclusion_cat_thu");
+							delete_option("simple_announcement_with_exclusion_cat_fri");
+							delete_option("simple_announcement_with_exclusion_cat_sat");
 						}
 					}
 

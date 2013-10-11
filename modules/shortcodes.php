@@ -6,6 +6,7 @@
 	## add shortcodes
 	##	Google map embed
 	##  Reddit submit button
+	##  Restrict content to logged in users
 	
 	if(!defined('MyOptionalModules')) {	die('You can not call this file directly.'); }
 	
@@ -22,15 +23,13 @@
 				<div class=\"wrap\">
 					<div id=\"icon-options-general\" class=\"icon32\"></div>
 					<h2>Shortcodes!</h2>
-					<p>A collection of shortcodes to use in your posts and pages.</p>
-					<p>If a shortcode has parameters, you will use those parameters like this: <em>paramater=\"value\"</em></p>
 					
 					<table class=\"form-table\" border=\"1\">
 						<tbody>
 							<tr valign=\"top\">
-								[<a href=\"#google_maps\">map</a>] 
+								<p>[<a href=\"#google_maps\">map</a>] 
 								&mdash; [<a href=\"#reddit_button\">reddit</a>] 
-								&mdash; [<a href=\"#restrict\">restrict content to logged in users</a>]
+								&mdash; [<a href=\"#restrict\">restrict content to logged in users</a>]</p>
 							</tr>
 							<tr valign=\"top\" id=\"google_maps\">
 								<td valign=\"top\"><strong>Google Maps</strong><br />Embed a Google map.<br />Based on <a href=\"http://wordpress.org/plugins/very-simple-google-maps/\">Very Simple Google Maps</a> by <a href=\"http://profiles.wordpress.org/masterk/\">Michael Aronoff</a><hr /><br />

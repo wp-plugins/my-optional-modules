@@ -43,7 +43,13 @@
 			if ($_REQUEST["simple_announcement_with_exclusion_thu"] != "" . get_option('simple_announcement_with_exclusion_thu') . "") { update_option("simple_announcement_with_exclusion_thu",$_REQUEST["simple_announcement_with_exclusion_thu"]); }
 			if ($_REQUEST["simple_announcement_with_exclusion_fri"] != "" . get_option('simple_announcement_with_exclusion_fri') . "") { update_option("simple_announcement_with_exclusion_fri",$_REQUEST["simple_announcement_with_exclusion_fri"]); }
 			if ($_REQUEST["simple_announcement_with_exclusion_sat"] != "" . get_option('simple_announcement_with_exclusion_sat') . "") { update_option("simple_announcement_with_exclusion_sat",$_REQUEST["simple_announcement_with_exclusion_sat"]); }
-		
+			if ($_REQUEST["simple_announcement_with_exclusion_cat_sun"] != "" . get_option('simple_announcement_with_exclusion_cat_sun') . "") { update_option("simple_announcement_with_exclusion_cat_sun",$_REQUEST["simple_announcement_with_exclusion_cat_sun"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_cat_mon"] != "" . get_option('simple_announcement_with_exclusion_cat_mon') . "") { update_option("simple_announcement_with_exclusion_cat_mon",$_REQUEST["simple_announcement_with_exclusion_cat_mon"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_cat_tue"] != "" . get_option('simple_announcement_with_exclusion_cat_tue') . "") { update_option("simple_announcement_with_exclusion_cat_tue",$_REQUEST["simple_announcement_with_exclusion_cat_tue"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_cat_wed"] != "" . get_option('simple_announcement_with_exclusion_cat_wed') . "") { update_option("simple_announcement_with_exclusion_cat_wed",$_REQUEST["simple_announcement_with_exclusion_cat_wed"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_cat_thu"] != "" . get_option('simple_announcement_with_exclusion_cat_thu') . "") { update_option("simple_announcement_with_exclusion_cat_thu",$_REQUEST["simple_announcement_with_exclusion_cat_thu"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_cat_fri"] != "" . get_option('simple_announcement_with_exclusion_cat_fri') . "") { update_option("simple_announcement_with_exclusion_cat_fri",$_REQUEST["simple_announcement_with_exclusion_cat_fri"]); }
+			if ($_REQUEST["simple_announcement_with_exclusion_cat_sat"] != "" . get_option('simple_announcement_with_exclusion_cat_sat') . "") { update_option("simple_announcement_with_exclusion_cat_sat",$_REQUEST["simple_announcement_with_exclusion_cat_sat"]); }		
 		}		
 	}
 		
@@ -85,6 +91,34 @@
 					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_3\">Hide from search results</label></th>
 					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_9_3\" name=\"simple_announcement_with_exclusion_9_3\" value=\"" . get_option('simple_announcement_with_exclusion_9_3') . "\">
 				</tr>	
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_cat_sun\">Hide on Sunday</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_cat_sun\" name=\"simple_announcement_with_exclusion_cat_sun\" value=\"" . get_option('simple_announcement_with_exclusion_cat_sun') . "\"></td>
+				</tr>				
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_cat_mon\">Hide on Monday</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_cat_mon\" name=\"simple_announcement_with_exclusion_cat_mon\" value=\"" . get_option('simple_announcement_with_exclusion_cat_mon') . "\"></td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_cat_tue\">Hide on Tuesday</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_cat_tue\" name=\"simple_announcement_with_exclusion_cat_tue\" value=\"" . get_option('simple_announcement_with_exclusion_cat_tue') . "\"></td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_cat_wed\">Hide on Wednesday</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_cat_wed\" name=\"simple_announcement_with_exclusion_cat_wed\" value=\"" . get_option('simple_announcement_with_exclusion_cat_wed') . "\"></td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_cat_thu\">Hide on Thursday</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_cat_thu\" name=\"simple_announcement_with_exclusion_cat_thu\" value=\"" . get_option('simple_announcement_with_exclusion_cat_thu') . "\"></td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_cat_fri\">Hide on Friday</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_cat_fri\" name=\"simple_announcement_with_exclusion_cat_fri\" value=\"" . get_option('simple_announcement_with_exclusion_cat_fri') . "\"></td>
+				</tr>
+				<tr valign=\"top\">
+					<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_cat_sat\">Hide on Saturday</label></th>
+					<td><input type=\"text\" id=\"simple_announcement_with_exclusion_cat_sat\" name=\"simple_announcement_with_exclusion_cat_sat\" value=\"" . get_option('simple_announcement_with_exclusion_cat_sat') . "\"></td>
+				</tr>				
 				</tbody>
 				</table>
 				</td>
@@ -257,7 +291,6 @@
 					<div class=\"wrap\">
 						<div id=\"icon-options-general\" class=\"icon32\"></div>
 						<h2>Simply Exclude</h2>
-						<p>Exclude categories, tags, and post formats from archive views, category views, tag archives, search results, the RSS feed, or the front page.</p>		
 						<h3 class=\"title\">Settings</h3>
 				";
 					if(isset($_POST['momsesave'])){ echo "<div id=\"setting-error-settings_updated\" class=\"updated settings-error\"><p>Settings saved.</p></div>"; }
@@ -298,12 +331,24 @@
 		if (date("D") === "Wed") { $simple_announcement_with_exclusion_day = get_option('simple_announcement_with_exclusion_wed'); }
 		if (date("D") === "Thu") { $simple_announcement_with_exclusion_day = get_option('simple_announcement_with_exclusion_thu'); }
 		if (date("D") === "Fri") { $simple_announcement_with_exclusion_day = get_option('simple_announcement_with_exclusion_fri'); }
-		if (date("D") === "Sat") { $simple_announcement_with_exclusion_day = get_option('simple_announcement_with_exclusion_sat'); }
+		if (date("D") === "Sat") { $simple_announcement_with_exclusion_cat_day = get_option('simple_announcement_with_exclusion_cat_sat'); }
+		if (date("D") === "Sun") { $simple_announcement_with_exclusion_cat_day = get_option('simple_announcement_with_exclusion_cat_sun'); }
+		if (date("D") === "Mon") { $simple_announcement_with_exclusion_cat_day = get_option('simple_announcement_with_exclusion_cat_mon'); }
+		if (date("D") === "Tue") { $simple_announcement_with_exclusion_cat_day = get_option('simple_announcement_with_exclusion_cat_tue'); } 
+		if (date("D") === "Wed") { $simple_announcement_with_exclusion_cat_day = get_option('simple_announcement_with_exclusion_cat_wed'); }
+		if (date("D") === "Thu") { $simple_announcement_with_exclusion_cat_day = get_option('simple_announcement_with_exclusion_cat_thu'); }
+		if (date("D") === "Fri") { $simple_announcement_with_exclusion_cat_day = get_option('simple_announcement_with_exclusion_cat_fri'); }
+		if (date("D") === "Sat") { $simple_announcement_with_exclusion_cat_day = get_option('simple_announcement_with_exclusion_cat_sat'); }		
 
 		$rss_day = explode(',', $simple_announcement_with_exclusion_day);
 		foreach ($rss_day as &$rss_day_1) { $rss_day_1 = "".$rss_day_1.","; }
 		$rss_day_1 = implode($rss_day);		
 		$rssday = explode(',', str_replace(' ', '', $rss_day_1));
+
+		$rss_day_cat = explode(',', $simple_announcement_with_exclusion_cat_day);
+		foreach ($rss_day_cat as &$rss_day_1_cat) { $rss_day_1_cat = "".$rss_day_1_cat.","; }
+		$rss_day_1_cat = implode($rss_day_cat);		
+		$rssday_cat = explode(',', str_replace(' ', '', $rss_day_1_cat));		
 		
 		if ($query->is_feed) {
 			$rss1 = explode(',', $simple_announcement_with_exclusion_9_12);
@@ -337,6 +382,12 @@
 				array(
 					'taxonomy' => 'post_tag',
 					'terms' => $rssday,
+					'field' => 'id',
+					'operator' => 'NOT IN'
+				),				
+				array(
+					'taxonomy' => 'category',
+					'terms' => $rssday_cat,
 					'field' => 'id',
 					'operator' => 'NOT IN'
 				),				
@@ -381,6 +432,12 @@
 						'field' => 'id',
 						'operator' => 'NOT IN'
 					),
+					array(
+						'taxonomy' => 'category',
+						'terms' => $rssday_cat,
+						'field' => 'id',
+						'operator' => 'NOT IN'
+					),						
 				);
 				$query->set( 'tax_query', $tax_query );
 			}
@@ -411,6 +468,12 @@
 						'field' => 'id',
 						'operator' => 'NOT IN'
 					),					
+					array(
+						'taxonomy' => 'category',
+						'terms' => $rssday_cat,
+						'field' => 'id',
+						'operator' => 'NOT IN'
+					),						
 				);
 				$query->set( 'tax_query', $tax_query );				
 			}
@@ -441,6 +504,12 @@
 						'field' => 'id',
 						'operator' => 'NOT IN'
 					),					
+					array(
+						'taxonomy' => 'category',
+						'terms' => $rssday_cat,
+						'field' => 'id',
+						'operator' => 'NOT IN'
+					),						
 				);
 				$query->set( 'tax_query', $tax_query );
 			}		
@@ -480,7 +549,13 @@
 						'terms' => $rssday,
 						'field' => 'id',
 						'operator' => 'NOT IN'
-					),					
+					),		
+					array(
+						'taxonomy' => 'category',
+						'terms' => $rssday_cat,
+						'field' => 'id',
+						'operator' => 'NOT IN'
+					),						
 				);
 				$query->set( 'tax_query', $tax_query );					
 			}
