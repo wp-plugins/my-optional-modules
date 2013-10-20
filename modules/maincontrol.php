@@ -28,6 +28,7 @@
 						update_option("mommaincontrol_mompaf",0);
 						update_option("mommaincontrol_momja",0);			
 						update_option("mommaincontrol_shorts",0);
+						update_option("mommaincontrol_analytics",0);
 						global $table_prefix, $table_suffix, $wpdb;
 						$table_name = $table_prefix . $table_suffix . 'rotating_universal_passwords';
 						$wpdb->query("DROP TABLE {$table_name}");											
@@ -79,7 +80,8 @@
 						delete_option("jump_around_5");
 						delete_option("jump_around_6");
 						delete_option("jump_around_7");
-						delete_option("jump_around_8");							
+						delete_option("jump_around_8");		
+						delete_option("momanalytics_code");						
 					}
 					if ($_REQUEST["mommaincontrol_uninstall_all"] == 3) {
 						global $table_prefix, $table_suffix, $wpdb;
@@ -147,6 +149,8 @@
 						delete_option("mommaincontrol_mompaf");
 						delete_option("mommaincontrol_momja");
 						delete_option("mommaincontrol_shorts");
+						delete_option("mommaincontrol_analytics");						
+						delete_option("momanalytics_code");						
 					}
 				} else {					
 						if ($_REQUEST["mommaincontrol_obwcountplus"] != "" . get_option("mommaincontrol_obwcountplus") ."") { 
@@ -281,7 +285,7 @@
 						
 						if ($_REQUEST["mommaincontrol_mompaf"] == 1) {
 							## If we're enabling Post as Front for the first time, set up its options.
-								add_option("mompaf_post","","Post ID to use as front page");
+								add_option("mompaf_post","0","Post ID to use as front page");
 						}
 						if ($_REQUEST["mommaincontrol_mompaf"] == 3) {
 							## If we're uninstalling Post as Front, remove the options from the database.
@@ -321,6 +325,21 @@
 					
 					if ($_REQUEST["mommaincontrol_shorts"] != "" . get_option("mommaincontrol_shorts") ."") { 
 						update_option("mommaincontrol_shorts",$_REQUEST["mommaincontrol_shorts"]); 
+					}
+
+					if ($_REQUEST["mommaincontrol_analytics"] != "" . get_option("mommaincontrol_analytics") ."") { 
+						update_option("mommaincontrol_analytics",$_REQUEST["mommaincontrol_analytics"]); 
+						
+						if ($_REQUEST["mommaincontrol_analytics"] == 1) {
+							## If we're enabling Analytics for the first time, set up its options.				
+									add_option("momanalytics_code","","Tracking ID");
+						}
+						if ($_REQUEST["mommaincontrol_analytics"] == 3) {
+							## If we're enabling Analytics for the first time, set up its options.				
+							delete_option("momanalytics_code");
+						}						
+						
+						
 					}					
 					
 				}
@@ -330,6 +349,30 @@
 		## options form (output)
 		function my_optional_modules_form() {
 			echo "
+			<tr valign=\"top\">
+				<th scope=\"row\">
+					<label for=\"mommaincontrol_analytics\">Analytics</label>
+				</th>
+				<td>
+					<select id=\"mommaincontrol_analytics\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_analytics\">
+					<option value=\"0\" 
+						";
+							if (get_option("mommaincontrol_analytics") == 0 || get_option("mommaincontrol_analytics") == 3) { echo "selected=\"selected\""; }
+							echo ">No</option>					
+							<option value=\"1\" 
+							";
+							if (get_option("mommaincontrol_analytics") == 1) { echo "selected=\"selected\""; }
+							echo ">Yes</option>
+							<option value=\"3\">Uninstall</option>
+						</select>
+					</td>
+				<td>";
+				if (get_option("mommaincontrol_analytics") == 0 || get_option("mommaincontrol_analytics") == 3) { echo "<em>Insert your Google Analytics tracking code.</em>"; }
+				## Analytics
+				if (get_option("mommaincontrol_analytics") == 1) { include('analytics.php'); }	
+				echo "</td>
+			</tr>
+						
 			<tr valign=\"top\">
 				<th scope=\"row\"><label for=\"mommaincontrol_obwcountplus\">Count++</label></th>
 				<td>

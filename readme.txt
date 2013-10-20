@@ -3,7 +3,7 @@ Contributors: One Billion Words
 Tags: logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 1.0.9
+Stable tag: 1.0.9.1
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -41,7 +41,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= 1.0.9 =
+= 1.0.9 / 1.0.9.1 =
+* Added module to insert Google Analytics tracking code.
 * Updated modules will need to be deactivated/reactivated for new options to be fully available upon upgrading.
 * Modules updated: Simply Exclude (SE), Count++.
 * Simply Exclude module updates - can now hide categories based on what day of the week it is.  (You will need to deactivate/reactive the module to take advantage of this.)
