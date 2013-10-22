@@ -21,9 +21,9 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 = Modules currently available: =
 * Count++, a module to count words on the blog and countdown from an (optional) total count goal.
-* RUPs, a module for storing 7 unique (SHA512 salted) passwords, and then hiding content with a shortcode (and IP based lockout) that is unlockable using the current days password.
-* Simply Exclude (SE), a module to hide tags, categories, and post formats from the front page, the archives, the search results, or the feed (or all).
-* Post as Front (PAF), a module that allows you to select a specific post to be your home page, or make your home page your most recent post.
+* Passwords, a module for storing 7 unique (SHA512 salted) passwords, and then hiding content with a shortcode (and IP based lockout) that is unlockable using the current days password.
+* Exclude, a module to hide tags, categories, and post formats from the front page, the archives, the search results, or the feed (or all).
+* Post as Front, a module that allows you to select a specific post to be your home page, or make your home page your most recent post.
 * Jump Around, a module that allows users to navigate posts by pressing keys on the keyboard.
 * Shortcodes!, a module that adds useful shortcodes for posts and pages.
 * Analaytics automatic embedding.
