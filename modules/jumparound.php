@@ -1,17 +1,17 @@
 <?php
 
-	## Module name: Jump Around
-	## Module contents
-	## enqueue jquery, add footer script
-	## options page
-	##   - options form (save)
-	##   - options form (output)
-	##   - options page (output)
-	## footer script contents
+	// Module name: Jump Around
+	// Module contents
+	// enqueue jquery, add footer script
+	// options page
+	//   - options form (save)
+	//   - options form (output)
+	//   - options page (output)
+	// footer script contents
 	
 	if(!defined('MyOptionalModules')) {	die('You can not call this file directly.'); }
 
-	## enqueue jquery, add footer script 
+	// enqueue jquery, add footer script 
 	if (!is_admin()) add_action("wp_enqueue_scripts", "Jump_Around_jquery_enqueue", 11);
 	function Jump_Around_jquery_enqueue() {
 		wp_deregister_script('jquery');
@@ -22,11 +22,11 @@
 	
 	if (is_admin() ) {
 		
-		## options page
+		// options page
 		add_action("admin_menu", "momja_add_options_page");
 		function momja_add_options_page() { $obwcountplus_options = add_options_page("MOM: Jump Around", " &not; MOM: Jump Around", "manage_options", "momja", "momja_page_content"); }	
 		
-		## options form (save)
+		// options form (save)
 		function update_JA() {
 			if ( $_REQUEST["jump_around_0"] || $_REQUEST["jump_around_1"] || $_REQUEST["jump_around_2"] || $_REQUEST["jump_around_3"] || $_REQUEST["jump_around_4"] || $_REQUEST["jump_around_5"] || $_REQUEST["jump_around_6"] || $_REQUEST["jump_around_7"] || $_REQUEST["jump_around_8"]  ) {
 				update_option("jump_around_0",$_REQUEST["jump_around_0"]);
@@ -41,7 +41,7 @@
 			}
 		}
 		
-		## options form (output)
+		// options form (output)
 		function print_jump_around_form() {
 			echo "
 			<td>
@@ -296,7 +296,7 @@
 		";
 		}
 		
-		## options page (output)
+		// options page (output)
 		function momja_page_content() { 
 			echo "	
 			<div class=\"wrap\">
@@ -306,7 +306,7 @@
 					echo "<div id=\"setting-error-settings_updated\" class=\"updated settings-error\"><p>Settings saved.</p></div>";
 				}		
 				echo "
-				<h3 class=\"tittle\">Settings</h3>
+				<h3 class=\"title\">Settings</h3>
 				<form method=\"post\">
 					<table class=\"form-table\" border=\"1\">
 						<tbody>
@@ -337,7 +337,7 @@
 		}
 	}
 	
-	## footer script contents
+	// footer script contents
 	function jump_around_footer_script(){
 		if (is_archive() || is_home() || is_search() ) { 
 			echo "

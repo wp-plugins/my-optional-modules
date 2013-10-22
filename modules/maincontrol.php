@@ -1,23 +1,23 @@
 <?php 
 
-	## Main Control Panel
-	## MCP contents
-	## options page
-	##   - options form (save)
-	##   - options form (output)
-	##   - options page (output)
-	## set home page post content
+	// Main Control Panel
+	// MCP contents
+	// options page
+	//   - options form (save)
+	//   - options form (output)
+	//   - options page (output)
+	// set home page post content
 
 	if(!defined('MyOptionalModules')) { die('You can not call this file directly.'); }
 		
-	## Check if admin or not
+	// Check if admin or not
 	if (is_admin() ) { 
 
-		## options page
+		// options page
 		add_action("admin_menu", "my_optional_modules_add_options_page");
 		function my_optional_modules_add_options_page() { $myoptionalmodules_options = add_options_page("MOM: Main Control", "MOM: Main Control", "manage_options", "mommaincontrol", "my_optional_modules_page_content"); }	
 	
-		## options form (save)
+		// options form (save)
 		function update_myoptionalmodules_options() {
 			if(isset($_POST['momsave'])){
 				if ($_REQUEST["mommaincontrol_uninstall_all"] == 1 || $_REQUEST["mommaincontrol_uninstall_all"] == 3) {
@@ -157,14 +157,14 @@
 							update_option("mommaincontrol_obwcountplus",$_REQUEST["mommaincontrol_obwcountplus"]); 
 							
 							if ($_REQUEST["mommaincontrol_obwcountplus"] == 1) {
-								## If we're enabling Count++ for the first time, set up its options.
+								// If we're enabling Count++ for the first time, set up its options.
 									add_option("obwcountplus_1_countdownfrom","0","Word goal to count down to?");
 									add_option("obwcountplus_2_remaining","remaining","Word to describe remaining amount of words until goal.");
 									add_option("obwcountplus_3_total","total","Word to describe words total present on blog.");
 									add_option("obwcountplus_4_custom","","Custom output.");
 							}
 							if ($_REQUEST["mommaincontrol_obwcountplus"] == 3) {
-								## If we're uninstalling Count++, remove the options from the database.
+								// If we're uninstalling Count++, remove the options from the database.
 									delete_option("obwcountplus_1_countdownfrom");
 									delete_option("obwcountplus_2_remaining");
 									delete_option("obwcountplus_3_total");
@@ -176,7 +176,7 @@
 							update_option("mommaincontrol_momrups",$_REQUEST["mommaincontrol_momrups"]); 
 						
 							if ($_REQUEST["mommaincontrol_momrups"] == 1) {
-									## Create table for lockouts (if bad password attempts are made, store IPs, timer, etc.
+									// Create table for lockouts (if bad password attempts are made, store IPs, timer, etc.
 									global $wpdb;
 									$RUPs_table_name = $wpdb->prefix . "rotating_universal_passwords";
 									$RUPs_sql = "CREATE TABLE $RUPs_table_name (
@@ -188,7 +188,7 @@
 									);";
 									require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 									dbDelta( $RUPs_sql );
-									## core settings
+									// core settings
 									add_option("rotating_universal_passwords_1","","Sun password");
 									add_option("rotating_universal_passwords_2","","Mon password");
 									add_option("rotating_universal_passwords_3","","Tue password");
@@ -284,11 +284,11 @@
 						update_option("mommaincontrol_mompaf",$_REQUEST["mommaincontrol_mompaf"]); 
 						
 						if ($_REQUEST["mommaincontrol_mompaf"] == 1) {
-							## If we're enabling Post as Front for the first time, set up its options.
+							// If we're enabling Post as Front for the first time, set up its options.
 								add_option("mompaf_post","0","Post ID to use as front page");
 						}
 						if ($_REQUEST["mommaincontrol_mompaf"] == 3) {
-							## If we're uninstalling Post as Front, remove the options from the database.
+							// If we're uninstalling Post as Front, remove the options from the database.
 								delete_option("mompaf_post");
 						}
 					}
@@ -297,7 +297,7 @@
 						update_option("mommaincontrol_momja",$_REQUEST["mommaincontrol_momja"]); 
 						
 						if ($_REQUEST["mommaincontrol_momja"] == 1) {
-							## If we're enabling Jump Around for the first time, set up its options.				
+							// If we're enabling Jump Around for the first time, set up its options.				
 									add_option("jump_around_0","post","Post wrap");
 									add_option("jump_around_1","entry-title","Link wrap");
 									add_option("jump_around_2","previous-link","Previous link");
@@ -309,7 +309,7 @@
 									add_option("jump_around_8","88","Newer posts");
 						}
 						if ($_REQUEST["mommaincontrol_momja"] == 3) {
-							## If we're enabling Count++ for the first time, set up its options.				
+							// If we're enabling Count++ for the first time, set up its options.				
 							delete_option("jump_around_0");
 							delete_option("jump_around_1");
 							delete_option("jump_around_2");
@@ -331,11 +331,11 @@
 						update_option("mommaincontrol_analytics",$_REQUEST["mommaincontrol_analytics"]); 
 						
 						if ($_REQUEST["mommaincontrol_analytics"] == 1) {
-							## If we're enabling Analytics for the first time, set up its options.				
+							// If we're enabling Analytics for the first time, set up its options.				
 									add_option("momanalytics_code","","Tracking ID");
 						}
 						if ($_REQUEST["mommaincontrol_analytics"] == 3) {
-							## If we're enabling Analytics for the first time, set up its options.				
+							// If we're enabling Analytics for the first time, set up its options.				
 							delete_option("momanalytics_code");
 						}						
 						
@@ -346,12 +346,12 @@
 			}
 		}
 		
-		## options form (output)
+		// options form (output)
 		function my_optional_modules_form() {
 			echo "
 			<tr valign=\"top\">
 				<th scope=\"row\">
-					<label for=\"mommaincontrol_analytics\">Analytics</label>
+					<label for=\"mommaincontrol_analytics\"><strong>Analytics</strong></label>
 				</th>
 				<td>
 					<select id=\"mommaincontrol_analytics\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_analytics\">
@@ -368,13 +368,13 @@
 					</td>
 				<td>";
 				if (get_option("mommaincontrol_analytics") == 0 || get_option("mommaincontrol_analytics") == 3) { echo "<em>Insert your Google Analytics tracking code.</em>"; }
-				## Analytics
+				// Analytics
 				if (get_option("mommaincontrol_analytics") == 1) { include('analytics.php'); }	
 				echo "</td>
 			</tr>
 						
 			<tr valign=\"top\">
-				<th scope=\"row\"><label for=\"mommaincontrol_obwcountplus\">Count++</label></th>
+				<th scope=\"row\"><label for=\"mommaincontrol_obwcountplus\"><strong>Count++</strong></label></th>
 				<td>
 					<select id=\"mommaincontrol_obwcountplus\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_obwcountplus\">
 					<option value=\"0\" 
@@ -395,14 +395,14 @@
 			if(is_plugin_active('jump-around/jumparound.php')){
 			echo "
 			<tr valign=\"top\">
-				<th scope=\"row\">Jump Around</th>
+				<th scope=\"row\"><strong>Jump Around</strong></th>
 				<td>Activated (Standalone)</td>
 				<td>You currently have the standalone version of Jump Around installed and active.  Please disable and delete it to use this module.</td>
 			</tr>"; } else {			
 			echo "
 			<tr valign=\"top\">
 				<th scope=\"row\">
-					<label for=\"mommaincontrol_momja\">Jump Around</label>
+					<label for=\"mommaincontrol_momja\"><strong>Jump Around</strong></label>
 				</th>
 				<td>
 					<select id=\"mommaincontrol_momja\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_momja\">
@@ -425,7 +425,7 @@
 			
 			echo "<tr valign=\"top\">
 				<th scope=\"row\">
-					<label for=\"mommaincontrol_mompaf\">Post as Front</label>
+					<label for=\"mommaincontrol_mompaf\"><strong>Post as Front</strong></label>
 				</th>
 				<td>
 					<select id=\"mommaincontrol_mompaf\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_mompaf\">
@@ -442,7 +442,7 @@
 				</td>
 				<td>";
 				if (get_option("mommaincontrol_mompaf") == 0 || get_option("mommaincontrol_mompaf") == 3) { echo "<em>Select a specific post to be your home page, or make your home page your most recent post.</em>"; }
-				## Post as Front
+				// Post as Front
 				if (get_option("mommaincontrol_mompaf") == 1) { include('postasfront.php'); }	
 
 				echo "</td>
@@ -451,14 +451,14 @@
 			if(is_plugin_active('rotating-universal-passwords/RUPs.php')){
 			echo "
 			<tr valign=\"top\">
-				<th scope=\"row\">RUPs</th>
+				<th scope=\"row\"><strong>Passwords</strong></th>
 				<td>Activated (Standalone)</td>
 				<td>You currently have the standalone version of RUPs installed and active.  Please disable and delete it to use this module.</td>
 			</tr>"; } else {			
 			echo "
 			<tr valign=\"top\">
 				<th scope=\"row\">
-					<label for=\"mommaincontrol_momrups\">RUPs</label>
+					<label for=\"mommaincontrol_momrups\"><strong>Passwords</strong></label>
 				</th>
 				<td>
 					<select id=\"mommaincontrol_momrups\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_momrups\">
@@ -482,7 +482,7 @@
 			echo "
 			<tr valign=\"top\">
 				<th scope=\"row\">
-					<label for=\"mommaincontrol_shorts\">Shortcodes!</label>
+					<label for=\"mommaincontrol_shorts\"><strong>Shortcodes!</strong></label>
 				</th>
 				<td>
 					<select id=\"mommaincontrol_shorts\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_shorts\">
@@ -504,7 +504,7 @@
 			
 			<tr valign=\"top\">
 				<th scope=\"row\">
-					<label for=\"mommaincontrol_momse\">Simply Exclude (SE)</label>
+					<label for=\"mommaincontrol_momse\"><strong>Exclude</strong></label>
 				</th>
 				<td>
 					<select id=\"mommaincontrol_momse\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_momse\">
@@ -526,7 +526,7 @@
 
 			<tr valign=\"top\">
 				<th scope=\"row\">
-					<label for=\"mommaincontrol_uninstall_all\">Uninstall/Deactivate All Modules</label>
+					<label for=\"mommaincontrol_uninstall_all\"><strong>Uninstall All Modules</strong></label>
 				</th>
 				<td>
 					<select id=\"mommaincontrol_uninstall_all\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_uninstall_all\">
@@ -544,18 +544,12 @@
 			";
 		}
 	
-		## options form (output)
+		// options form (output)
 		function my_optional_modules_page_content() {
 			echo "
 			<div class=\"wrap\">
 				<div id=\"icon-options-general\" class=\"icon32\"></div>
-				<h2>My Optional Modules</h2>
-				<p>My Optional Modules (or <em>MOM</em>) is a bundle of optional modules for Wordpress 
-				which give extra functionality 
-				not currently available in a fresh installation.  They are designed to be lightweight and easilly implemented by even the most novice of 
-				Wordpress users.</p>
-				<p>Deactivating modules will deactivate their associated functionality.  All code examples accounts for this with 
-				a check to see if the function being called exists (is active).</p>";
+				<h2>My Optional Modules</h2>";
 			if(isset($_POST['momsave']) || isset($_POST['mompafsave'])){
 				echo "<div id=\"setting-error-settings_updated\" class=\"updated settings-error\"><p>Settings saved.</p></div>";
 			}
@@ -567,11 +561,11 @@
 				echo "<form method=\"post\">
 				<table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\">
 				<tbody>				
-				<tr valign=\"top\"><td>Modules</td></tr>
+				<tr valign=\"top\"><td><h3 class=\"title\">Modules</h3></td></tr>
 				<tr valign=\"top\">
-						<td>Module name</td>
-						<td>Activated?</td>
-						<td>Description</td>
+						<td><u>Module name</u></td>
+						<td><u>Activated?</u></td>
+						<td><u>Description</u></td>
 				</tr>
 				";
 				my_optional_modules_form();
@@ -580,62 +574,28 @@
 					</table>
 				</form>";
 				
-					$revisions_count = 0;
-					global $table_prefix, $table_suffix, $wpdb;
-					$postsTable = $table_prefix . $table_suffix . 'posts';
-					$revisions_total = $wpdb->get_results ("SELECT ID FROM `" . $postsTable . "` WHERE `post_type` = 'revision' OR `post_type` = 'auto_draft' OR `post_status` = 'trash'");
-					foreach ($revisions_total as $retot) {
-						$revisions_count++;
-					}
-					$comments_count = 0;
-					$commentsTable = $table_prefix . $table_suffix . 'comments';
-					$comments_total = $wpdb->get_results ("SELECT comment_ID FROM `" . $commentsTable . "` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'");
-					foreach ($comments_total as $comtot) {
-						$comments_count++;
-					}					
-					$terms_count = 0;
-					$termsTable = $table_prefix . $table_suffix . 'term_taxonomy';
-					$termsTable2 = $table_prefix . $table_suffix . 'terms';
-					$terms_total = $wpdb->get_results ("SELECT term_taxonomy_id FROM `" . $termsTable . "` WHERE `count` = '0'");
-					foreach ($terms_total as $termstot) {
-					    $this_term = $termstot->term_id;
-						$terms_count++;
-					}					
-				
-				echo "<table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\">
-				<tbody>				
-				<tr valign=\"top\"><td>Tools</td></tr>
-				<tr valign=\"top\">
-						<td>Database cleaner</td>
-						<td>
-							<form method=\"post\"><input id=\"delete_post_revisions\" class=\"button button-primary\" type=\"submit\" value=\"Delete " . $revisions_count . " revisions, drafts, and trashed posts\" name=\"delete_post_revisions\"></input></form><br />
-							<form method=\"post\"><input id=\"delete_unapproved_comments\" class=\"button button-primary\" type=\"submit\" value=\"Delete " . $comments_count . " unapproved, trashed, or spam comments\" name=\"delete_unapproved_comments\"></input></form><br />
-							<form method=\"post\"><input id=\"delete_unused_terms\" class=\"button button-primary\" type=\"submit\" value=\"Delete " . $terms_count . " unused tags and categories\" name=\"delete_unused_terms\"></input></form>
-						</td>
-						<td>Clean your database of unnecessary clutter.</td>
-				</tr>				
-				";
+				echo "
+				<table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\">
+					<tbody>				
+						<tr valign=\"top\"><td><h3 class=\"title\">Tools</h3></td></tr>";
+							include( 'databasecleaner.php');
+				echo "	
+					</tbody>
+				</table>
+				<table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\">
+					<tbody>
+						<tr>
+							<td><p><h3 class=\"title\"><em>Don't forget</em> to <a href=\"http://wordpress.org/support/view/plugin-reviews/my-optional-modules\">rate and review</a> this plugin &mdash; it would be greatly appreciated!</h3></p></td>
+						</tr>
+					</tbody>
+				</table>
+				</div>";				
 			}
-			echo "</div>";
-			
-			if(isset($_POST['delete_post_revisions'])){
-						$wpdb->query("DELETE FROM `" . $postsTable . "` WHERE `post_type` = 'revision' OR `post_type` = 'auto-draft' OR `post_status` = 'trash'");				
-			}
-			if(isset($_POST['delete_unapproved_comments'])){
-						$wpdb->query("DELETE FROM `" . $commentsTable . "` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'");				
-			}			
-			if(isset($_POST['delete_unused_terms'])){
-						$wpdb->query("DELETE FROM `" . $termsTable2 . "` WHERE `term_id` IN (select `term_id` from `" . $termsTable . "` WHERE `count` = 0 )");
-						$wpdb->query("DELETE FROM `" . $termsTable . "` WHERE `count` = 0");
-						
-			}			
-			
 		}
-		
 		if(isset($_POST["momsave"])){
-			if ($_REQUEST["momsave"]) { 
-				update_myoptionalmodules_options();
-			}
+				if ($_REQUEST["momsave"]) { 
+					update_myoptionalmodules_options();
+				}
 		}
 	} 
  ?>

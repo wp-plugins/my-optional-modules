@@ -1,22 +1,22 @@
 <?php 
 
-	## Module name: Shortcodes!
-	## Module contents
-	##  options page
-	## add shortcodes
-	##	Google map embed
-	##  Reddit submit button
-	##  Restrict content to logged in users
+	// Module name: Shortcodes!
+	// Module contents
+	//  options page
+	// add shortcodes
+	//	Google map embed
+	//  Reddit submit button
+	//  Restrict content to logged in users
 	
 	if(!defined('MyOptionalModules')) {	die('You can not call this file directly.'); }
 	
 	if (is_admin() ) {
 
-		##  options page
+		//  options page
 		add_action("admin_menu", "mom_shortcodes_page");
 		function mom_shortcodes_page() {$RUPs_options = add_options_page("MOM: Shortcodes!", " &not; MOM: Shortcodes!", "manage_options", "momshorts", "mom_shortcodes_page_content"); }
 		
-		## options page (output)
+		// options page (output)
 		function mom_shortcodes_page_content() { 
 			global $theSalt;
 			echo "	
@@ -187,8 +187,8 @@
 	
 	
 	
-	## add shortcodes
-		## Google map embed 
+	// add shortcodes
+		// Google map embed 
 		add_shortcode('mom_map', 'mom_google_map_shortcode');
 		add_filter('the_content', 'do_shortcode', 'mom_map');
 		function mom_google_map_shortcode($atts, $content = null) {
@@ -214,7 +214,7 @@
 			return ob_get_clean();
 		}
 		
-		## Reddit submit button
+		// Reddit submit button
 		add_shortcode('mom_reddit', 'mom_reddit_shortcode');
 		add_filter('the_content', 'do_shortcode', 'mom_reddit');
 		function mom_reddit_shortcode($atts, $content = null) {
@@ -251,7 +251,7 @@
 			}
 		}
 
-		## Restrict content to logged in users
+		// Restrict content to logged in users
 		add_shortcode('mom_restrict', 'mom_restrict_shortcode');
 		add_filter('the_content', 'do_shortcode', 'mom_restrict');
 		function mom_restrict_shortcode($atts, $content = null) {

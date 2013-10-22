@@ -1,23 +1,23 @@
 <?php 
 
-	## Module name: Post as Front (PAF)
-	## Module contents
-	##   - options form (save)
-	##   - options form (output)
-	##   - options page (output)
+	// Module name: Post as Front (PAF)
+	// Module contents
+	//   - options form (save)
+	//   - options form (output)
+	//   - options page (output)
 
 	if(!defined('MyOptionalModules')) { die('You can not call this file directly.'); }
 
 	if (is_admin() ) { 
 	
-		## options form (save)
+		// options form (save)
 		function update_mompaf_options() {
 			if(isset($_POST['mompafsave'])){
 				update_option("mompaf_post",$_REQUEST["mompaf_post"]);
 			}		
 		}
 		
-		## options form (output)
+		// options form (output)
 		function mompaf_form() {
 			echo "
 				<tr valign=\"top\">
@@ -38,7 +38,7 @@
 			";
 		}
 	
-		## options page (output)
+		// options page (output)
 		
 			echo "
 				<form method=\"post\">

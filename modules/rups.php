@@ -1,17 +1,17 @@
 <?php 
 
-	## Module name: Count++
-	##  Salt (change immediately)
-	##  add shortcode
-	##  options page
-	##   - options form (save)
-	##   - options form (output)
-	##   - options page (output)
-	##  shortcode content
+	// Module name: Count++
+	//  Salt (change immediately)
+	//  add shortcode
+	//  options page
+	//   - options form (save)
+	//   - options form (output)
+	//   - options page (output)
+	//  shortcode content
 	
 	if(!defined('MyOptionalModules')) {	die('You can not call this file directly.'); }
 
-	## Salt (change immediately)
+	// Salt (change immediately)
 	$theSalt = "fasdf789F&S*()D&f89sjf8s7d90f87as09df70a9s8d7f908&J)(F*S&()D&f09
 	fasdfuas8df9a7sd89g7J()*G&S()D&*g90sd78fg907asd90fg7s90d8f7g90s7d0f98g790sd7f90gs7d90f7g09sd7f0g7sd90fg7
 	g*&G()D&()G&)Df7gj90sd78f09g8s7dj90f7g0s9d7f90g7ds907g09d7sfgsdfgsdf;;;-sd-f-gsd9fg908()&()G*&D()*F&g90d
@@ -20,17 +20,17 @@
 	87890&F()*&)SD(&*)(F*&)(&*)g7d-f7-gdfg-d7f-g7_&G_D&*F&G*d8g7jd890fg78df7g89d7fg78*(GD*F*gd8fg8d89fgfgfgf";
 	$theMethod = "sha512";
 
-	##  add shortcode
+	//  add shortcode
 	add_shortcode('rups', 'rotating_universal_passwords_shortcode');	
 	add_filter('the_content', 'do_shortcode', 'rotating_universal_passwords_shortcode');	
 	
 	if (is_admin() ) {
-		##  options page
+		//  options page
 		add_action("admin_menu", "rotating_universal_passwords_options_add_options_page");
-		function rotating_universal_passwords_options_add_options_page() {$RUPs_options = add_options_page("MOM: RUPs", " &not; MOM: RUPs", "manage_options", "momrups", "rotating_universal_passwords_page_content"); }
+		function rotating_universal_passwords_options_add_options_page() {$RUPs_options = add_options_page("MOM: Passwords", " &not; MOM: Passwords", "manage_options", "momrups", "rotating_universal_passwords_page_content"); }
 
 		
-		## options form (save)
+		// options form (save)
 		function update_rotating_universal_passwords() {
 			$rotating_universal_passwords_encryption = get_option("rotating_universal_passwords_9");
 			global $theSalt;
@@ -60,42 +60,42 @@
 			}
 		}	
 		
-		## options form (output)
+		// options form (output)
 		function print_rotating_universal_passwords_form() {
 			global $theSalt;
 			echo "
 				
 				<td valign=\"top\">
 				
-				<form method=\"post\" class=\"rups\">
+				<form method=\"post\">
 					<table class=\"form-table\" border=\"1\" style=\"margin:5px; \">
 						<tbody>
 							<tr valign=\"top\">
-								<th scope=\"row\"><label for=\"rotating_universal_passwords_1\">Sunday's password:</label></th>
+								<th scope=\"row\"><label for=\"rotating_universal_passwords_1\">Sunday:</label></th>
 								<td><input type=\"text\" name=\"rotating_universal_passwords_1\" "; if (get_option("rotating_universal_passwords_1") !== "") { echo "placeholder=\"Hashed and set.\""; } else { echo "class=\"notset\" placeholder=\"password not set\""; } echo " /></td>
 							</tr>
 							<tr valign=\"top\">
-								<th scope=\"row\"><label for=\"rotating_universal_passwords_2\">Monday's password:</label></th>
+								<th scope=\"row\"><label for=\"rotating_universal_passwords_2\">Monday:</label></th>
 								<td><input type=\"text\" name=\"rotating_universal_passwords_2\" "; if (get_option("rotating_universal_passwords_2") !== "") { echo "placeholder=\"Hashed and set.\""; } else { echo "class=\"notset\" placeholder=\"password not set\""; } echo " /></td>
 							</tr>
 							<tr valign=\"top\">
-								<th scope=\"row\"><label for=\"rotating_universal_passwords_3\">Tuesday's password:</label></th>
+								<th scope=\"row\"><label for=\"rotating_universal_passwords_3\">Tuesday:</label></th>
 								<td><input type=\"text\" name=\"rotating_universal_passwords_3\" "; if (get_option("rotating_universal_passwords_3") !== "") { echo "placeholder=\"Hashed and set.\""; } else { echo "class=\"notset\" placeholder=\"password not set\""; } echo " /></td>
 							</tr>
 							<tr valign=\"top\">
-								<th scope=\"row\"><label for=\"rotating_universal_passwords_4\">Wednesday's password:</label></th>
+								<th scope=\"row\"><label for=\"rotating_universal_passwords_4\">Wednesday:</label></th>
 								<td><input type=\"text\" name=\"rotating_universal_passwords_4\" "; if (get_option("rotating_universal_passwords_4") !== "") { echo "placeholder=\"Hashed and set.\""; } else { echo "class=\"notset\" placeholder=\"password not set\""; } echo " /></td>
 							</tr>
 							<tr valign=\"top\">
-								<th scope=\"row\"><label for=\"rotating_universal_passwords_5\">Thursday's password:</label></th>
+								<th scope=\"row\"><label for=\"rotating_universal_passwords_5\">Thursday:</label></th>
 								<td><input type=\"text\" name=\"rotating_universal_passwords_5\" "; if (get_option("rotating_universal_passwords_5") !== "") { echo "placeholder=\"Hashed and set.\""; } else { echo "class=\"notset\" placeholder=\"password not set\""; } echo " /></td>
 							</tr>
 							<tr valign=\"top\">
-								<th scope=\"row\"><label for=\"rotating_universal_passwords_6\">Friday's password:</label></th>
+								<th scope=\"row\"><label for=\"rotating_universal_passwords_6\">Friday:</label></th>
 								<td><input type=\"text\" name=\"rotating_universal_passwords_6\" "; if (get_option("rotating_universal_passwords_6") !== "") { echo "placeholder=\"Hashed and set.\""; } else { echo "class=\"notset\" placeholder=\"password not set\""; } echo " /></td>
 							</tr>		
 							<tr valign=\"top\">
-								<th scope=\"row\"><label for=\"rotating_universal_passwords_7\">Saturday's password:</label></th>
+								<th scope=\"row\"><label for=\"rotating_universal_passwords_7\">Saturday:</label></th>
 								<td><input type=\"text\" name=\"rotating_universal_passwords_7\" "; if (get_option("rotating_universal_passwords_7") !== "") { echo "placeholder=\"Hashed and set.\""; } else { echo "class=\"notset\" placeholder=\"password not set\""; } echo " /></td>
 							</tr>
 							<tr valign=\"top\">
@@ -108,7 +108,7 @@
 					</table>
 				</form>
 				
-				<form method=\"post\" class=\"rups\">
+				<form method=\"post\">
 					<table class=\"form-table\" border=\"1\" style=\"margin:5px; \">
 						<tbody>
 								<tr valign=\"top\">
@@ -125,8 +125,8 @@
 							<tr>
 								<td>Date</td>
 								<td>ID</td>
-								<td>Post origin</td>
-								<td>Clear lock?</td>
+								<td>Origin</td>
+								<td>Clear?</td>
 							</tr>			
 					";
 					global $wpdb;
@@ -178,13 +178,13 @@
 			}
 		}
 
-		## options page (output)
+		// options page (output)
 		function rotating_universal_passwords_page_content() { 
 			global $theSalt;
 			echo "	
 				<div class=\"wrap\">
 					<div id=\"icon-options-general\" class=\"icon32\"></div>
-					<h2>RUPs</h2>
+					<h2>Passwords</h2>
 			";
 			if ($theSalt == "fasdf789F&S*()D&f89sjf8s7d90f87as09df70a9s8d7f908&J)(F*S&()D&f09
 			fasdfuas8df9a7sd89g7J()*G&S()D&*g90sd78fg907asd90fg7s90d8f7g90s7d0f98g790sd7f90gs7d90f7g09sd7f0g7sd90fg7
@@ -231,7 +231,7 @@
 		}
 	}
 	
-	## shortcode content
+	// shortcode content
 	function rotating_universal_passwords_shortcode($atts, $content = null) {
 		ob_start();
 		global $theSalt;

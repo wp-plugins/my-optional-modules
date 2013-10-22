@@ -1,27 +1,27 @@
 <?php 
 
-	## Module name: Count++
-	##  Module contents
-	##  options page
-	##   - options form (save)
-	##   - options form (output)
-	##   - options page (output)
-	##  template functions
-	##   - single
-	##   - remaining
-	##   - total
-	##   - count
+	// Module name: Count++
+	//  Module contents
+	//  options page
+	//   - options form (save)
+	//   - options form (output)
+	//   - options page (output)
+	//  template functions
+	//   - single
+	//   - remaining
+	//   - total
+	//   - count
 
 	if(!defined('MyOptionalModules')) {	die('You can not call this file directly.'); }
 
 	if (is_admin() ) { 
-		## options page
+		// options page
 		add_action("admin_menu", "obwcountplus_add_options_page");
 		function obwcountplus_add_options_page() { 
 			$obwcountplus_options = add_options_page("MOM: Count++", " &not; MOM: Count++", "manage_options", "obwcountplus", "obwcountplus_page_content");
 		}	
 	
-		##	options form (save)
+		//	options form (save)
 		function update_obwcountplus_options() {
 				if(isset($_POST['obwcountsave'])){
 				if ($_REQUEST["obwcountplus_countdownfrom"] != "" . get_option("obwcountplus_1_countdownfrom") . "" && is_numeric($_REQUEST["obwcountplus_countdownfrom"])) { update_option("obwcountplus_1_countdownfrom",$_REQUEST["obwcountplus_countdownfrom"]); }
@@ -36,7 +36,7 @@
 			}		
 		}
 		
-		##	options form (output)
+		//	options form (output)
 		function obwcountplus_form() {
 			echo "
 			<table class=\"form-table\" border=\"1\" style=\"margin:5px; \">
@@ -76,7 +76,7 @@
 			";
 		}
 	
-		##	options page (output)
+		//	options page (output)
 		function obwcountplus_page_content() {
 				echo "
 				<div class=\"wrap\">
@@ -121,7 +121,7 @@
 		if(isset($_POST["obwcountsave"])){ update_obwcountplus_options(); }		
 	}
 
-	## template functions
+	// template functions
 	function countsplusplus() {
 		
 		global $wpdb;

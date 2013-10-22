@@ -1,9 +1,9 @@
 === My Optional Modules ===
 Contributors: One Billion Words
-Tags: analytics,mass delete,delete spam,delete trash,delete unapproved,delete drafts,delete revisions,delete unused,tags,categories,comments,posts,logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
+Tags: logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 2
+Stable tag: 2.1
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -43,7 +43,9 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= 2 =
+= 2 / 2.1 =
+* RUPs is now just Passwords.  Simply Exclude (SE) is now just Exclude.
+* Added delete all button to Database cleaner to one-click delete all database clutter.
 * Simply Exclude (SE) now automatically enables all post types.
 * Tools section added to Main Control page.
 * Database cleaner added to Tools section, which allows the admin to mass delete: post revisions, post drafts, trashed posts, unapproved comments, trashed comments, spam comments, unused tags, or unused categories at the push of a button.

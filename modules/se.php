@@ -1,29 +1,29 @@
 <?php 
 
-	## Module name: Simply Exclude (SE)
-	## Module contents
-	## add action to filter posts
-	## options page
-	##   - options form (save)
-	##   - options form (output)
-	##   - options page (output)
-	## filter posts action content
+	// Module name: Simply Exclude (SE)
+	// Module contents
+	// add action to filter posts
+	// options page
+	//   - options form (save)
+	//   - options form (output)
+	//   - options page (output)
+	// filter posts action content
 
 	if(!defined('MyOptionalModules')) {	die('You can not call this file directly.'); }
 	
-	## add action to filter posts
+	// add action to filter posts
 	add_action( "pre_get_posts", "momse_filter_home" );
 	
 	if (is_admin() ) { 
 
-	## make all post formats available
+	// make all post formats available
 	add_theme_support( 'post-formats', array( 'aside', 'gallery', 'link', 'image', 'quote', 'status', 'video', 'audio', 'chat' ) );
 	
-	## options page
+	// options page
 	add_action("admin_menu", "momse_add_options_page");
-	function momse_add_options_page() {	$obwcountplus_options = add_options_page("MOM: SE", " &not; MOM: SE", "manage_options", "momse", "momse_page_content"); }	
+	function momse_add_options_page() {	$obwcountplus_options = add_options_page("MOM: Exclude", " &not; MOM: Exclude", "manage_options", "momse", "momse_page_content"); }	
 	
-	## options form (save)
+	// options form (save)
 	function update_momse_options() {
 		if(isset($_POST['momsesave'])){
 			if ($_REQUEST["simple_announcement_with_exclusion_9"] != "" . get_option('simple_announcement_with_exclusion_9') . "") { update_option("simple_announcement_with_exclusion_9",$_REQUEST["simple_announcement_with_exclusion_9"]); }
@@ -56,7 +56,7 @@
 		}		
 	}
 		
-	## options form (output)
+	// options form (output)
 		function momse_form() {
 			echo "
 				<tr valign=\"top\" id=\"reddit_button\">
@@ -288,12 +288,12 @@
 			";
 		}
 	
-	## options page (output)
+	// options page (output)
 		function momse_page_content() {
 				echo "
 					<div class=\"wrap\">
 						<div id=\"icon-options-general\" class=\"icon32\"></div>
-						<h2>Simply Exclude</h2>
+						<h2>Exclude</h2>
 						<h3 class=\"title\">Settings</h3>
 				";
 					if(isset($_POST['momsesave'])){ echo "<div id=\"setting-error-settings_updated\" class=\"updated settings-error\"><p>Settings saved.</p></div>"; }
@@ -313,7 +313,7 @@
 		if(isset($_POST["momsesave"])){ update_momse_options();	}		
 	}
 
-	## filter posts action content
+	// filter posts action content
 	function momse_filter_home( $query ) {	
 		$simple_announcement_with_exclusion_9 = get_option('simple_announcement_with_exclusion_9');
 		$simple_announcement_with_exclusion_9_2 = get_option('simple_announcement_with_exclusion_9_2');

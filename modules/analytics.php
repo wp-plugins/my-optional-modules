@@ -1,23 +1,23 @@
 <?php 
 
-	## Module name: Analytics
-	## Module contents
-	##   - options form (save)
-	##   - options form (output)
-	##   - options page (output)
+	// Module name: Analytics
+	// Module contents
+	//   - options form (save)
+	//   - options form (output)
+	//   - options page (output)
 
 	if(!defined('MyOptionalModules')) { die('You can not call this file directly.'); }
 
 	if (is_admin() ) { 
 	
-		## options form (save)
+		// options form (save)
 		function update_momana_options() {
 			if(isset($_POST['momanasave'])){
 				update_option("momanalytics_code",$_REQUEST["momanalytics_code"]);
 			}		
 		}
 		
-		## options form (output)
+		// options form (output)
 		function momana_form() {
 			echo "
 				<tr valign=\"top\">
@@ -30,7 +30,7 @@
 			";
 		}
 	
-		## options page (output)
+		// options page (output)
 		
 			echo "
 				<form method=\"post\">
