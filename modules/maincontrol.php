@@ -556,7 +556,6 @@
 				Wordpress users.</p>
 				<p>Deactivating modules will deactivate their associated functionality.  All code examples accounts for this with 
 				a check to see if the function being called exists (is active).</p>";
-			echo "<h3 class=\"title\">Modules</h3>";
 			if(isset($_POST['momsave']) || isset($_POST['mompafsave'])){
 				echo "<div id=\"setting-error-settings_updated\" class=\"updated settings-error\"><p>Settings saved.</p></div>";
 			}
@@ -566,22 +565,71 @@
 			}				
 			if ($uninstalled == 1) { } else {
 				echo "<form method=\"post\">
-					<table class=\"form-table\">
-						<tbody>
+				<table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\">
+				<tbody>				
+				<tr valign=\"top\"><td>Modules</td></tr>
+				<tr valign=\"top\">
 						<td>Module name</td>
 						<td>Activated?</td>
 						<td>Description</td>
+				</tr>
 				";
 				my_optional_modules_form();
-				echo "
-						</tbody>
+				echo "</tbody>
+					<tr valign=\"top\"><td><input id=\"momsave\" class=\"button button-primary\" type=\"submit\" value=\"Save Changes\" name=\"momsave\"></input></td></tr>
 					</table>
-					<p class=\"submit\">
-						<input id=\"momsave\" class=\"button button-primary\" type=\"submit\" value=\"Save Changes\" name=\"momsave\"></input>
-					</p>
 				</form>";
+				
+					$revisions_count = 0;
+					global $table_prefix, $table_suffix, $wpdb;
+					$postsTable = $table_prefix . $table_suffix . 'posts';
+					$revisions_total = $wpdb->get_results ("SELECT ID FROM `" . $postsTable . "` WHERE `post_type` = 'revision' OR `post_type` = 'auto_draft' OR `post_status` = 'trash'");
+					foreach ($revisions_total as $retot) {
+						$revisions_count++;
+					}
+					$comments_count = 0;
+					$commentsTable = $table_prefix . $table_suffix . 'comments';
+					$comments_total = $wpdb->get_results ("SELECT comment_ID FROM `" . $commentsTable . "` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'");
+					foreach ($comments_total as $comtot) {
+						$comments_count++;
+					}					
+					$terms_count = 0;
+					$termsTable = $table_prefix . $table_suffix . 'term_taxonomy';
+					$termsTable2 = $table_prefix . $table_suffix . 'terms';
+					$terms_total = $wpdb->get_results ("SELECT term_taxonomy_id FROM `" . $termsTable . "` WHERE `count` = '0'");
+					foreach ($terms_total as $termstot) {
+					    $this_term = $termstot->term_id;
+						$terms_count++;
+					}					
+				
+				echo "<table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\">
+				<tbody>				
+				<tr valign=\"top\"><td>Tools</td></tr>
+				<tr valign=\"top\">
+						<td>Database cleaner</td>
+						<td>
+							<form method=\"post\"><input id=\"delete_post_revisions\" class=\"button button-primary\" type=\"submit\" value=\"Delete " . $revisions_count . " revisions, drafts, and trashed posts\" name=\"delete_post_revisions\"></input></form><br />
+							<form method=\"post\"><input id=\"delete_unapproved_comments\" class=\"button button-primary\" type=\"submit\" value=\"Delete " . $comments_count . " unapproved, trashed, or spam comments\" name=\"delete_unapproved_comments\"></input></form><br />
+							<form method=\"post\"><input id=\"delete_unused_terms\" class=\"button button-primary\" type=\"submit\" value=\"Delete " . $terms_count . " unused tags and categories\" name=\"delete_unused_terms\"></input></form>
+						</td>
+						<td>Clean your database of unnecessary clutter.</td>
+				</tr>				
+				";
 			}
 			echo "</div>";
+			
+			if(isset($_POST['delete_post_revisions'])){
+						$wpdb->query("DELETE FROM `" . $postsTable . "` WHERE `post_type` = 'revision' OR `post_type` = 'auto-draft' OR `post_status` = 'trash'");				
+			}
+			if(isset($_POST['delete_unapproved_comments'])){
+						$wpdb->query("DELETE FROM `" . $commentsTable . "` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'");				
+			}			
+			if(isset($_POST['delete_unused_terms'])){
+						$wpdb->query("DELETE FROM `" . $termsTable2 . "` WHERE `term_id` IN (select `term_id` from `" . $termsTable . "` WHERE `count` = 0 )");
+						$wpdb->query("DELETE FROM `" . $termsTable . "` WHERE `count` = 0");
+						
+			}			
+			
 		}
 		
 		if(isset($_POST["momsave"])){

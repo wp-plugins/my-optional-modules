@@ -3,7 +3,7 @@ Contributors: One Billion Words
 Tags: logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 1.0.9.1
+Stable tag: 2
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -26,6 +26,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Post as Front (PAF), a module that allows you to select a specific post to be your home page, or make your home page your most recent post.
 * Jump Around, a module that allows users to navigate posts by pressing keys on the keyboard.
 * Shortcodes!, a module that adds useful shortcodes for posts and pages.
+* Analaytics automatic embedding.
+* Database cleaner to mass-delete trashed/revisions/drafts, unapproved/trashed/spam comments, or unused tags and categories.
 
 = Shortcodes =
 * Google maps embedding.
@@ -41,6 +43,11 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
+= 2 =
+* Simply Exclude (SE) now automatically enables all post types.
+* Tools section added to Main Control page.
+* Database cleaner added to Tools section, which allows the admin to mass delete: post revisions, post drafts, trashed posts, unapproved comments, trashed comments, spam comments, unused tags, or unused categories at the push of a button.
+
 = 1.0.9 / 1.0.9.1 =
 * Added module to insert Google Analytics tracking code.
 * Updated modules will need to be deactivated/reactivated for new options to be fully available upon upgrading.

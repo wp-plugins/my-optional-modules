@@ -15,6 +15,9 @@
 	add_action( "pre_get_posts", "momse_filter_home" );
 	
 	if (is_admin() ) { 
+
+	## make all post formats available
+	add_theme_support( 'post-formats', array( 'aside', 'gallery', 'link', 'image', 'quote', 'status', 'video', 'audio', 'chat' ) );
 	
 	## options page
 	add_action("admin_menu", "momse_add_options_page");
@@ -215,7 +218,7 @@
 						</td>
 					</tr>
 					<tr valign=\"top\">
-						<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_14\">Hide from front page</label></th>
+						<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_8\">Hide from front page</label></th>
 						<td><select name=\"simple_announcement_with_exclusion_9_8\" id=\"simple_announcement_with_exclusion_9_8\">
 								<option value=\"\">none</option>
 								<option value=\"post-format-aside\"";if (get_option('simple_announcement_with_exclusion_9_8') === "post-format-aside") { echo " selected=\"selected\""; } echo ">Aside</option>
@@ -231,7 +234,7 @@
 						</td>
 					</tr>
 					<tr valign=\"top\">
-						<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_14\">Hide from archives</label></th>
+						<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_9\">Hide from archives</label></th>
 						<td><select name=\"simple_announcement_with_exclusion_9_9\" id=\"simple_announcement_with_exclusion_9_9\">
 								<option value=\"\">none</option>
 								<option value=\"post-format-aside\"";if (get_option('simple_announcement_with_exclusion_9_9') === "post-format-aside") { echo " selected=\"selected\""; } echo ">Aside</option>
@@ -247,7 +250,7 @@
 						</td>
 					</tr>
 					<tr valign=\"top\">
-						<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_14\">Hide from tag archives</label></th>
+						<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_10\">Hide from tag archives</label></th>
 						<td><select name=\"simple_announcement_with_exclusion_9_10\" id=\"simple_announcement_with_exclusion_9_10\">
 							<option value=\"\">none</option>
 							<option value=\"post-format-aside\"";if (get_option('simple_announcement_with_exclusion_9_10') === "post-format-aside") { echo " selected=\"selected\""; } echo ">Aside</option>
@@ -263,7 +266,7 @@
 						</td>
 					</tr>
 					<tr valign=\"top\">
-						<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_14\">Hide from search results</label></th>
+						<th scope=\"row\"><label for=\"simple_announcement_with_exclusion_9_11\">Hide from search results</label></th>
 						<td><select name=\"simple_announcement_with_exclusion_9_11\" id=\"simple_announcement_with_exclusion_9_11\">
 							<option value=\"\">none</option>
 							<option value=\"post-format-aside\"";if (get_option('simple_announcement_with_exclusion_9_11') === "post-format-aside") { echo " selected=\"selected\""; } echo ">Aside</option>
