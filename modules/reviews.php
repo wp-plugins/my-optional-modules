@@ -69,9 +69,9 @@
 											<input type=\"checkbox\" name=\"momreview\" id=\"test\" />
 											<label for=\"test\">Title<span>+</span><span>-</span></label>
 											<section class=\"reviewed\">
-												<strong>Review type</strong>: <em>Review type</em> &mdash;
+												<em>Review type</em> &mdash;
 												<a href=\"http://onebillionwords.com/\">#</a> &mdash;
-												<strong>Rating</strong>: <em>Helpful</em><hr />
+												<em>Helpful</em><hr />
 												<p>This is your review.  It will be formatted with the appropriate HTML, and 
 												even images (if you have added any).</p>
 												<p>This is just a <em>display purposes only</em> block to show you how your css
@@ -146,9 +146,9 @@ textarea { height: 250px; }
 									<input type=\"checkbox\" name=\"momreview\" id=\"" . $this_ID . "\" />
 									<label for=\"" . $this_ID . "\">" .  $reviews_results->TITLE . "<span>+</span><span>-</span></label>
 									<section class=\"reviewed\">
-										<strong>Review type</strong>: <em>" . $reviews_results->TYPE . "</em> &mdash; ";
+										<em>" . $reviews_results->TYPE . "</em> &mdash; ";
 										if ($reviews_results->LINK != "") { echo "<a href=\"" . $reviews_results->LINK . "\">#</a> &mdash;"; }
-										echo "<strong>Rating</strong>: <em>" . $reviews_results->RATING . "</em> <hr />" . $reviews_results->REVIEW . "
+										echo "<em>" . $reviews_results->RATING . "</em> <hr />" . $reviews_results->REVIEW . "
 									</section>
 									<form method=\"post\" class=\"reviews_item_form\"><input type=\"submit\" name=\"$this_ID\" value=\"Delete\"></form>";
 									if(isset($_POST[$this_ID])){
@@ -195,7 +195,7 @@ textarea { height: 250px; }
 		}
 		foreach ($reviews as $reviews_results) {
 			$this_ID = $reviews_results->ID;
-				echo "<div "; if ($result_type != "") { echo "id=\"$result_type\""; } echo " class=\"momreview\"><article class=\"block\"><input type=\"checkbox\" name=\"review\" id=\"" . $this_ID . "" . $mom_review_global . "\" /><label for=\"" . $this_ID . "" . $mom_review_global . "\">"; if ($reviews_results->TITLE != "") { echo $reviews_results->TITLE; } echo "<span>+</span><span>-</span></label><section class=\"reviewed\">"; if ($reviews_results->TYPE != "") { echo " [ <strong>Review type</strong>: <em>" . $reviews_results->TYPE . "</em> ] ";} if ($reviews_results->LINK != "") { echo " [ <a href=\"" . $reviews_results->LINK . "\">#</a> ] "; } if ($reviews_results->RATING != "") { echo " [ <strong>Rating</strong>: <em>" . $reviews_results->RATING . "</em> ] "; } if ($reviews_results->REVIEW != "") { echo "<hr />" . $reviews_results->REVIEW . ""; } echo "</section></article></div>";
+				echo "<div "; if ($result_type != "") { echo "id=\"$result_type\""; } echo " class=\"momreview\"><article class=\"block\"><input type=\"checkbox\" name=\"review\" id=\"" . $this_ID . "" . $mom_review_global . "\" /><label for=\"" . $this_ID . "" . $mom_review_global . "\">"; if ($reviews_results->TITLE != "") { echo $reviews_results->TITLE; } echo "<span>+</span><span>-</span></label><section class=\"reviewed\">"; if ($reviews_results->TYPE != "") { echo " [ <em>" . $reviews_results->TYPE . "</em> ] ";} if ($reviews_results->LINK != "") { echo " [ <a href=\"" . $reviews_results->LINK . "\">#</a> ] "; } if ($reviews_results->RATING != "") { echo " [ <em>" . $reviews_results->RATING . "</em> ] "; } if ($reviews_results->REVIEW != "") { echo "<hr />" . $reviews_results->REVIEW . ""; } echo "</section></article></div>";
 		}		
 		return ob_get_clean();
 	}

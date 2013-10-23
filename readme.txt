@@ -3,7 +3,7 @@ Contributors: One Billion Words
 Tags: reviews,review,custom,tinymce,logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 3.0.4
+Stable tag: 3.0.5
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -45,6 +45,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 == Changelog ==
 = 3.0.+ =
+* 3.0.5 / Wording for reviews has been removed (Review type:, rating:).
 * 3.0.4 / In order to keep from calling the CSS in places that the shortcode for Reviews wasn't being used, the CSS has been moved from the header and place above the shortcode output.
 * 3.0.4 / Multiple review types can be stringed together into a single output block.
 * 3.0.4 / Multiple Review shortcode usages with the same output will now behave appropriately when menu items are clicked.
