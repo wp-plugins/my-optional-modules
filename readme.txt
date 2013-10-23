@@ -3,7 +3,7 @@ Contributors: One Billion Words
 Tags: reviews,review,custom,tinymce,logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 3.0.3
+Stable tag: 3.0.4
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -44,7 +44,11 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= 3.0.0 / 3.0.1 / 3.0.2 / 3.0.3 =
+= 3.0.+ =
+* 3.0.4 / In order to keep from calling the CSS in places that the shortcode for Reviews wasn't being used, the CSS has been moved from the header and place above the shortcode output.
+* 3.0.4 / Multiple review types can be stringed together into a single output block.
+* 3.0.4 / Multiple Review shortcode usages with the same output will now behave appropriately when menu items are clicked.
+* 3.0.4 / An old function that was no longer being used by the Reviews module has been removed from the code.
 * Hotfix: CSS 's no longer escaped
 * Minor tweaks, bug fixes.
 * Review CSS edit box added.  Disable and renable the Review module to use this feature.
@@ -53,23 +57,20 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Stray checked tag removed from items in reviews output.
 * Module: Reviews added - it allows you to create custom reviews of anything and show them (via shortcode) on a post or page.
 
-= 2 / 2.1 / 2.2 =
+= 2.0.+ =
 * RUPs is now just Passwords.  Simply Exclude (SE) is now just Exclude.
 * Added delete all button to Database cleaner to one-click delete all database clutter.
 * Simply Exclude (SE) now automatically enables all post types.
 * Tools section added to Main Control page.
 * Database cleaner added to Tools section, which allows the admin to mass delete: post revisions, post drafts, trashed posts, unapproved comments, trashed comments, spam comments, unused tags, or unused categories at the push of a button.
 
-= 1.0.9 / 1.0.9.1 =
+= 1.0.+ =
 * Added module to insert Google Analytics tracking code.
 * Updated modules will need to be deactivated/reactivated for new options to be fully available upon upgrading.
 * Modules updated: Simply Exclude (SE), Count++.
 * Simply Exclude module updates - can now hide categories based on what day of the week it is.  (You will need to deactivate/reactive the module to take advantage of this.)
 * Count++ module updates- tidied up settings page, displayed message can be customized.
 * RUPs and Jump Around have had their pages tidied up.
-
-
-= 1.0.8 / 1.0.8.1 / 1.0.8.2 / 1.0.8.3 / 1.0.8.4 / 1.0.8.5 / 1.0.8.5.1 =
 * Post as Front minor glitch fixed.
 * Post as Front now correctly pre-selects saved post (if set to anything other than Most Recent Post).
 * Options page for Post as front removed, and settings move to MOM: Main Control (since there was only one settings anyway).
@@ -80,43 +81,27 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Fixed shortcode positioning so that it stays where you put it.
 * Module 6: Shortcodes!
 * - A module that introduces some useful shortcodes that you can incorporate into posts and pages.
-
-= 1.0.7 =
 * Removed global variables from modules.
 * Due to the way RUPs handles the user defined salt, $theSalt global was left in (for admin convenience).
 * Cleaned up code for all modules.
-
-= 1.0.6 / 1.0.6.1 =
 * Fixed: Number formatting (commas)
 * Module update: Count++
 * - 3 new functions added: output total words (numerical only), total remaining (numerical only), and total words in post (single post view only, numerical only)
-
-= 1.0.5 / 1.0.5.1 =
 * [This is just a test] removed / leftover (accidentally left in)
 * 2 Uninstall methods: reset all and nuke.  
 * Reset all erases all options associated with all modules.  
 * Nuke erases all options associated with the plugin itself, which includes any separate tables it has created to store information for future usage.
-
-= 1.0.4 =
 * Module 4: Post as Front (PAF)
 * - Select a specific post to be your home page, or make your home page your most recent post.
 * Module 5: Jump Around
 * - Navigate posts by pressing keys on the keyboard.
-
-= 1.0.3 = 
 * Module 3: SE (Simply Exclude)
 * - Exclude a single or comma-separated list of tags and categories from: front page, archives, search results, or feed.
 * - can exclude tags, categories, and post formats.
-
-= 1.0.2 =
 * Official Plugin page updated, plugin page created.
-
-= 1.0.1 =
 * Version updates (plugin file)
 * Checks for previously installed RUPs (standalone plugin).
 * If RUPs is installed AND active, the RUPs module will be unavailable until the RUPs plugin is deactivated.
-
-= 1.0.0 =
 * Initial release.
 * Module 1: Post Word Count (http://wordpress.org/plugins/post-word-count/)
 * - added an options page to allow for word goal and word change.

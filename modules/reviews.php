@@ -9,23 +9,12 @@
 	//  shortcode content
 	
 	if(!defined('MyOptionalModules')) {	die('You can not call this file directly.'); }
-	
+	$mom_review_global = 0;
+
 	//  add shortcode
 	add_shortcode('momreviews', 'mom_reviews_shortcode');	
 	add_filter('the_content', 'do_shortcode', 'mom_reviews_shortcode');	
-	add_action('wp_head', 'mom_reviews_style');
 
-	function reviews_paragraph($str) {
-		$arr=explode("\n",$str);
-		$out='';
-
-		for($i=0;$i<count($arr);$i++) {
-			if(strlen(trim($arr[$i]))>0)
-				$out.='<p>'.trim($arr[$i]).'</p>';
-		}
-		return $out;
-	}
-	
 	if (is_admin() ) {
 		//  options page
 		add_action("admin_menu", "mom_reviews_options_add_options_page");
@@ -126,11 +115,16 @@
 									to the IMDB page.  If you're reviewing a book, link to the author's website.  It's optional, however.</li>
 									<li>Use the text field to write a review.  Use HTML if you want to.</li>
 									<li>Rating can be anything: It sucked!, 5 out of 10, jolly rancher!, whatever.</li>
-									<li>Place the shortcode <code>[momreviews]</code> where you would like to show your list of reviews.</li>
-									<li>To show a loop of specific review types, use <code>[momreviews type=\"type\"]</code>.</li>
 									<li>Use the table below to delete specific reviews.</li>
 									<li>Shortcodes may not execute properly in the review table below, although they may display normally on your live site. (Check and make sure before you delete a review thinking you've made a mistake.)</li>
 								</ol></blockquote>
+								<blockquote><ol>
+									<li><code>[momreviews]</code> = all reviews</li>
+									<li><code>[momreviews type=\"'type'\"]</code> = reviews from review type <em>type</em></li>
+									<li><code>[momreviews type=\"'type1','type2','type3'\"]</code> = reviews from reviews types <em>type1, type2, and type3</em>.</code>.</li>
+								</ol>
+								</blockquote>
+
 				<hr />
 				<table class=\"form-table\" border=\"1\">
 					<tbody>								
@@ -154,7 +148,7 @@ textarea { height: 250px; }
 									<section class=\"reviewed\">
 										<strong>Review type</strong>: <em>" . $reviews_results->TYPE . "</em> &mdash; ";
 										if ($reviews_results->LINK != "") { echo "<a href=\"" . $reviews_results->LINK . "\">#</a> &mdash;"; }
-										echo "<strong>Rating</strong>: <em>" . $reviews_results->RATING . "</em></strong><hr />" . $reviews_results->REVIEW . "
+										echo "<strong>Rating</strong>: <em>" . $reviews_results->RATING . "</em> <hr />" . $reviews_results->REVIEW . "
 									</section>
 									<form method=\"post\" class=\"reviews_item_form\"><input type=\"submit\" name=\"$this_ID\" value=\"Delete\"></form>";
 									if(isset($_POST[$this_ID])){
@@ -180,6 +174,9 @@ textarea { height: 250px; }
 	
 	// shortcode content
 	function mom_reviews_shortcode($atts, $content = null) {
+		global $mom_review_global;
+		$mom_review_global++;
+		if ($mom_review_global == 1) { mom_reviews_style(); } else { }
 		ob_start();
 		extract(
 			shortcode_atts(array(
@@ -194,11 +191,11 @@ textarea { height: 250px; }
 		if ($result_type == "") {
 			$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name ORDER BY ID DESC");
 		} else {
-			$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE TYPE = '$result_type' ORDER BY ID DESC");
+			$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE TYPE IN ($result_type) ORDER BY ID DESC");
 		}
 		foreach ($reviews as $reviews_results) {
 			$this_ID = $reviews_results->ID;
-				echo "<div "; if ($result_type != "") { echo "id=\"$result_type\""; } echo " class=\"momreview\"><article class=\"block\"><input type=\"checkbox\" name=\"review\" id=\"" . $this_ID . "\" /><label for=\"" . $this_ID . "\">"; if ($reviews_results->TITLE != "") { echo $reviews_results->TITLE; } echo "<span>+</span><span>-</span></label><section class=\"reviewed\">"; if ($reviews_results->TYPE != "") { echo " [ <strong>Review type</strong>: <em>" . $reviews_results->TYPE . "</em> ] ";} if ($reviews_results->LINK != "") { echo " [ <a href=\"" . $reviews_results->LINK . "\">#</a> ] "; } if ($reviews_results->RATING != "") { echo " [ <strong>Rating</strong>: <em>" . $reviews_results->RATING . "</em></strong>] "; } if ($reviews_results->REVIEW != "") { echo "<hr />" . $reviews_results->REVIEW . ""; } echo "</section></article></div>";
+				echo "<div "; if ($result_type != "") { echo "id=\"$result_type\""; } echo " class=\"momreview\"><article class=\"block\"><input type=\"checkbox\" name=\"review\" id=\"" . $this_ID . "" . $mom_review_global . "\" /><label for=\"" . $this_ID . "" . $mom_review_global . "\">"; if ($reviews_results->TITLE != "") { echo $reviews_results->TITLE; } echo "<span>+</span><span>-</span></label><section class=\"reviewed\">"; if ($reviews_results->TYPE != "") { echo " [ <strong>Review type</strong>: <em>" . $reviews_results->TYPE . "</em> ] ";} if ($reviews_results->LINK != "") { echo " [ <a href=\"" . $reviews_results->LINK . "\">#</a> ] "; } if ($reviews_results->RATING != "") { echo " [ <strong>Rating</strong>: <em>" . $reviews_results->RATING . "</em> ] "; } if ($reviews_results->REVIEW != "") { echo "<hr />" . $reviews_results->REVIEW . ""; } echo "</section></article></div>";
 		}		
 		return ob_get_clean();
 	}
