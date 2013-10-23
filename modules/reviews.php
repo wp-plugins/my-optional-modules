@@ -126,7 +126,7 @@
 							echo "<tr><td>
 							<div class=\"review\">
 								<article class=\"block\">
-									<input type=\"checkbox\" name=\"review\" id=\"" . $this_ID . "\" checked />
+									<input type=\"checkbox\" name=\"review\" id=\"" . $this_ID . "\" />
 									<label for=\"" . $this_ID . "\">" .  $reviews_results->TITLE . "<span>+</span><span>-</span></label>
 									<section class=\"reviewed\">
 										<strong>Review type</strong>: <em>" . $reviews_results->TYPE . "</em> &mdash; ";
@@ -192,7 +192,7 @@
 		}
 		foreach ($reviews as $reviews_results) {
 			$this_ID = $reviews_results->ID;
-				echo "<div "; if ($result_type != "") { echo "id=\"$result_type\""; } echo " class=\"review\"><article class=\"block\"><input type=\"checkbox\" name=\"review\" id=\"" . $this_ID . "\" checked /><label for=\"" . $this_ID . "\">" .  $reviews_results->TITLE . "<span>+</span><span>-</span></label><section class=\"reviewed\"><strong>Review type</strong>: <em>" . $reviews_results->TYPE . "</em> &mdash; ";if ($reviews_results->LINK != "") { echo "<a href=\"" . $reviews_results->LINK . "\">#</a> &mdash;"; }echo "<strong>Rating</strong>: <em>" . $reviews_results->RATING . "</em></strong><hr />" . $reviews_results->REVIEW . "</section></article></div>";
+				echo "<div "; if ($result_type != "") { echo "id=\"$result_type\""; } echo " class=\"review\"><article class=\"block\"><input type=\"checkbox\" name=\"review\" id=\"" . $this_ID . "\" /><label for=\"" . $this_ID . "\">" .  $reviews_results->TITLE . "<span>+</span><span>-</span></label><section class=\"reviewed\"><strong>Review type</strong>: <em>" . $reviews_results->TYPE . "</em> &mdash; ";if ($reviews_results->LINK != "") { echo "<a href=\"" . $reviews_results->LINK . "\">#</a> &mdash;"; }echo "<strong>Rating</strong>: <em>" . $reviews_results->RATING . "</em></strong><hr />" . $reviews_results->REVIEW . "</section></article></div>";
 		}		
 		return ob_get_clean();
 	}
