@@ -45,7 +45,8 @@
 				$wpdb->query("INSERT INTO $reviews_table_name (ID,TYPE,LINK,TITLE,REVIEW,RATING) VALUES ('','$reviews_type','$reviews_link','$reviews_title','$reviews_review','$reviews_rating')") ;
 		}
 		function update_mom_css() {
-			update_option("momreviews_css",$_REQUEST["css"]); 
+			$newCSS = stripslashes_deep($_REQUEST["css"]);
+			update_option("momreviews_css",$newCSS); 
 		}
 		
 		// options form (output)
