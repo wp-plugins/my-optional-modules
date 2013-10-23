@@ -3,7 +3,7 @@ Contributors: One Billion Words
 Tags: reviews,review,custom,tinymce,logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 3.0.1
+Stable tag: 3.0.2
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -44,7 +44,11 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= 3.0.0 / 3.0.1 =
+= 3.0.0 / 3.0.1 / 3.0.2 =
+* Minor tweaks, bug fixes.
+* Review CSS edit box added.  Disable and renable the Review module to use this feature.
+* Title, type, URL, and rating are now optional fields.
+* CSS for Reviews injected into header (wp_head)
 * Stray checked tag removed from items in reviews output.
 * Module: Reviews added - it allows you to create custom reviews of anything and show them (via shortcode) on a post or page.
 

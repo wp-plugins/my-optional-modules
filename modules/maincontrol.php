@@ -30,8 +30,8 @@
 						update_option("mommaincontrol_shorts",0);
 						update_option("mommaincontrol_analytics",0);
 						update_option("mommaincontrol_reviews",0);
-						global $table_prefix, $table_suffix, $wpdb;
-						$table_name = $table_prefix . $table_suffix . 'rotating_universal_passwords';
+						global $wpdb;
+						$table_name = $wpdb->prefix . $wpdb->suffix . 'rotating_universal_passwords';
 						$wpdb->query("DROP TABLE {$table_name}");											
 						delete_option("obwcountplus_1_countdownfrom");
 						delete_option("obwcountplus_2_remaining");
@@ -83,12 +83,13 @@
 						delete_option("jump_around_7");
 						delete_option("jump_around_8");		
 						delete_option("momanalytics_code");			
-						$reviews_table_name = $table_prefix . $table_suffix . 'momreviews';
+						$reviews_table_name = $wpdb->prefix . $wpdb->suffix . 'momreviews';
 						$wpdb->query("DROP TABLE {$reviews_table_name}");							
+						delete_option("momreviews_css");
 					}
 					if ($_REQUEST["mommaincontrol_uninstall_all"] == 3) {
-						global $table_prefix, $table_suffix, $wpdb;
-						$table_name = $table_prefix . $table_suffix . 'rotating_universal_passwords';
+						global $wpdb;
+						$table_name = $wpdb->prefix . $wpdb->suffix . 'rotating_universal_passwords';
 						$wpdb->query("DROP TABLE {$table_name}");											
 						delete_option("obwcountplus_1_countdownfrom");
 						delete_option("obwcountplus_2_remaining");
@@ -155,8 +156,9 @@
 						delete_option("mommaincontrol_analytics");						
 						delete_option("momanalytics_code");					
 						delete_option("mommaincontrol_reviews");					
-						$reviews_table_name = $table_prefix . $table_suffix . 'momreviews';
+						$reviews_table_name = $wpdb->prefix . $wpdb->suffix . 'momreviews';
 						$wpdb->query("DROP TABLE {$reviews_table_name}");	
+						delete_option("momreviews_css");
 					}
 				} else {					
 						if ($_REQUEST["mommaincontrol_obwcountplus"] != "" . get_option("mommaincontrol_obwcountplus") ."") { 
@@ -350,30 +352,43 @@
 							update_option("mommaincontrol_reviews",$_REQUEST["mommaincontrol_reviews"]); 
 						
 							if ($_REQUEST["mommaincontrol_reviews"] == 1) {
-									// Create table for lockouts (if bad password attempts are made, store IPs, timer, etc.
-									global $wpdb;
-									$review_table_name = $wpdb->prefix . "momreviews";
-									$reviews_sql = "CREATE TABLE $review_table_name (
-									ID INT( 11 ) NOT NULL PRIMARY KEY AUTO_INCREMENT , 
-									TYPE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-									LINK TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-									TITLE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-									REVIEW TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-									RATING TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
-									);";
-									require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-									dbDelta( $reviews_sql );
-									// core settings
+add_option("momreviews_css", "
+/* Colors */
+.momreview .block { background-color: #fff; color: #000; }
+.momreview section.reviewed { background-color: #fff; color: #000; }
+.momreview ::selection { background: #222; color: #fff; }
+.momreview label { color: #111; text-shadow: 1px 1px 2px #ccc; }
+/* Containers */
+.momreview { margin: 0 auto; width: 95%; }
+.momreview .block { padding-top: 5px; margin: 0 auto 0 auto; }
+.momreview label { width: 95%; min-height: 35px; margin: 0 auto; display: block; cursor: pointer; }
+.momreview .reviewed { width: 93%; height: 0; padding: 0 15px 0 15px; display: block; overflow: hidden; box-sizing: border-box; margin: auto; } 
+/* Do not edit below this line */
+/* unless you know what you're doing. */
+.momreview label span { font-weight: bold; float:right; }
+.momreview input[type='checkbox']  { display: none; }
+.momreview .block input[type='checkbox']:checked ~ .reviewed { height: auto; margin: -25px auto 5px auto; }
+.momreview .block input[type='checkbox'] ~ label span:first-of-type { display:block; visibility:visible; float:right; margin:0 -5px 0 0; }
+.momreview .block input[type='checkbox'] ~ label span:last-of-type,
+.momreview .block input[type='checkbox']:checked ~ label span:first-of-type { display:none; visibility:hidden; float:right; }
+.momreview .block input[type='checkbox']:checked ~ label span:last-of-type { display:block; visibility:visible; float:right; }
+", "Reviews CSS" );
+							global $wpdb;
+							$review_table_name = $wpdb->prefix . $wpdb->suffix . "momreviews";
+							$reviews_sql = "CREATE TABLE $review_table_name (
+								ID INT( 11 ) NOT NULL PRIMARY KEY AUTO_INCREMENT , 
+								TYPE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+								LINK TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+								TITLE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+								REVIEW TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+								RATING TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+							);";
+							require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+							dbDelta( $reviews_sql );
 							}
 							if ($_REQUEST["mommaincontrol_reviews"] == 3) {
-								delete_option("rotating_universal_passwords_1");
-								delete_option("rotating_universal_passwords_2");
-								delete_option("rotating_universal_passwords_3");
-								delete_option("rotating_universal_passwords_4");
-								delete_option("rotating_universal_passwords_5");
-								delete_option("rotating_universal_passwords_6");
-								delete_option("rotating_universal_passwords_7");
-								delete_option("rotating_universal_passwords_8");
+								delete_option("mommaincontrol_reviews");
+								delete_option("momreviews_css");
 							}
 						}
 					

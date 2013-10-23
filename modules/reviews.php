@@ -13,6 +13,7 @@
 	//  add shortcode
 	add_shortcode('momreviews', 'mom_reviews_shortcode');	
 	add_filter('the_content', 'do_shortcode', 'mom_reviews_shortcode');	
+	add_action('wp_head', 'mom_reviews_style');
 
 	function reviews_paragraph($str) {
 		$arr=explode("\n",$str);
@@ -28,7 +29,7 @@
 	if (is_admin() ) {
 		//  options page
 		add_action("admin_menu", "mom_reviews_options_add_options_page");
-		function mom_reviews_options_add_options_page() {$reviews_options = add_options_page("MOM: Reviews", " &not; MOM: Reviews", "manage_options", "momreviewreviews", "reviews_page_content"); }
+		function mom_reviews_options_add_options_page() {$reviews_options = add_options_page("MOM: Reviews", " &not; MOM: Reviews", "manage_options", "momreviews", "reviews_page_content"); }
 
 		
 		// options form (save)
@@ -43,29 +44,62 @@
 				$reviews_rating = $_REQUEST["reviews_rating"]; 
 				$wpdb->query("INSERT INTO $reviews_table_name (ID,TYPE,LINK,TITLE,REVIEW,RATING) VALUES ('','$reviews_type','$reviews_link','$reviews_title','$reviews_review','$reviews_rating')") ;
 		}
+		function update_mom_css() {
+			update_option("momreviews_css",$_REQUEST["css"]); 
+		}
 		
 		// options form (output)
 		function print_mom_reviews_form() {
 			echo "
+				
 				<td valign=\"top\">
 					<form method=\"post\">
 						<table class=\"form-table\" border=\"1\" style=\"margin:5px; \">
 							<tbody>
-								<tr valign=\"top\"><td><input type=\"text\" name=\"reviews_title\" placeholder=\"Review title (Required)\" required=\"required\"></td></tr>
-								<tr valign=\"top\"><td><input type=\"text\" name=\"reviews_type\" placeholder=\"Review type (Required)\" required=\"required\"></td></tr>
-								<tr valign=\"top\"><td><input type=\"text\" name=\"reviews_link\" placeholder=\"Relevant URL (optional)\" ></td></tr>
+								<tr valign=\"top\"><td><input type=\"text\" name=\"reviews_title\" placeholder=\"Review title\"></td></tr>
+								<tr valign=\"top\"><td><input type=\"text\" name=\"reviews_type\" placeholder=\"Review type\"></td></tr>
+								<tr valign=\"top\"><td><input type=\"text\" name=\"reviews_link\" placeholder=\"Relevant URL\" ></td></tr>
 								
 								<tr valign=\"top\"><td>";
 									the_editor($content, $name = 'reviews_review', $id = 'reviews_review', $prev_id = 'title', $media_buttons = false, $tab_index = 2);
 								echo "</td></tr>
 
-								<tr valign=\"top\"><td><input type=\"text\" name=\"reviews_rating\" placeholder=\"Your rating (Required)\" required=\"required\"></td></tr>
+								<tr valign=\"top\"><td><input type=\"text\" name=\"reviews_rating\" placeholder=\"Your rating\"></td></tr>
 								<tr valign=\"top\"><td><input id=\"reviewsubmit\" class=\"button button-primary\" type=\"submit\" value=\"Add review\" name=\"reviewsubmit\"></input></td></tr>	
 							</tbody>
 						</table>
 					</form>
+
+				<form method=\"post\">
+					<table class=\"form-table\" border=\"1\" style=\"margin:5px; \">
+						<tbody>
+								<tr valign=\"top\"><td>
+									<div class=\"momreview\">
+										<article class=\"block\">
+											<input type=\"checkbox\" name=\"momreview\" id=\"test\" />
+											<label for=\"test\">Title<span>+</span><span>-</span></label>
+											<section class=\"reviewed\">
+												<strong>Review type</strong>: <em>Review type</em> &mdash;
+												<a href=\"http://onebillionwords.com/\">#</a> &mdash;
+												<strong>Rating</strong>: <em>Helpful</em><hr />
+												<p>This is your review.  It will be formatted with the appropriate HTML, and 
+												even images (if you have added any).</p>
+												<p>This is just a <em>display purposes only</em> block to show you how your css
+												will affect the display.</p>
+											</section>
+										</article>
+									</div>
+								</td></tr>
+								<tr valign=\"top\"><td><textarea name=\"css\">" . get_option('momreviews_css') . "</textarea></td></tr>
+								<tr valign=\"top\"><td><input id=\"csssubmit\" class=\"button button-primary\" type=\"submit\" value=\"Save CSS\" name=\"csssubmit\"></input></td></tr>
+						</tbody>
+					</table>
+				</form>
+
+				
 				</td>
-			
+				
+
 			";
 		}
 
@@ -77,6 +111,7 @@
 				<h2>Reviews</h2>
 			";
 			if ($_REQUEST["reviewsubmit"]) { update_mom_reviews(); }
+			if ($_REQUEST["csssubmit"]) { update_mom_css(); }
 			echo "
 				<h3 class=\"title\">Add a review</h3>
 				<table class=\"form-table\" border=\"1\">
@@ -98,24 +133,11 @@
 				<hr />
 				<table class=\"form-table\" border=\"1\">
 					<tbody>								
-						<style>
-							input[type='text'] { width: 100%; display:block; cursor:pointer;}
-							.review { margin: 0 auto 0 auto; width: 95%; }
-							.review .block { padding-top: 5px; margin: 0 auto 0 auto;}
-							.review .block input[type='checkbox']:checked ~ .reviewed {height: auto; margin: -25px auto 5px auto;}
-							.review input[type='checkbox']  {display: none;}
-							.review label {width: 95%; min-height: 35px; margin: 0 auto; display: block; cursor: pointer; }
-							.review label:hover { }
-							.review span {font-weight: bold;float:right;}
-							.review .block input[type='checkbox'] ~ label span:first-of-type {display:block;visibility:visible;float:right;margin:0 -5px 0 0;}
-							.review .block input[type='checkbox'] ~ label span:last-of-type {display:none;visibility:hidden;float:right;}
-							.review .block input[type='checkbox']:checked ~ label span:first-of-type {display:none;visibility:hidden;float:right;}
-							.review .block input[type='checkbox']:checked ~ label span:last-of-type {display:block;visibility:visible;float:right;}
-							.review .reviewed { width: 93%; height: 0; padding: 0 15px 0 15px;display: block;overflow: hidden; box-sizing: border-box; margin: auto;} 
-							.review h4 {color: #111;text-align: right;text-shadow: 1px 1px 2px #fff;position: absolute;bottom: 20px;right: 15px;}
-							.review h4 a {color: #111;text-decoration: none;}
-							.review ::selection {background: #222;color: #fff;}
-						</style>
+<style>
+textarea, input[type='text'] { width: 100%; display:block; cursor:pointer;}
+textarea { height: 250px; }
+" . get_option('momreviews_css') . "
+</style>
 			";
 
 					global $wpdb;
@@ -124,9 +146,9 @@
 					foreach ($reviews as $reviews_results) {
 						$this_ID = $reviews_results->ID;
 							echo "<tr><td>
-							<div class=\"review\">
+							<div class=\"momreview\">
 								<article class=\"block\">
-									<input type=\"checkbox\" name=\"review\" id=\"" . $this_ID . "\" />
+									<input type=\"checkbox\" name=\"momreview\" id=\"" . $this_ID . "\" />
 									<label for=\"" . $this_ID . "\">" .  $reviews_results->TITLE . "<span>+</span><span>-</span></label>
 									<section class=\"reviewed\">
 										<strong>Review type</strong>: <em>" . $reviews_results->TYPE . "</em> &mdash; ";
@@ -165,23 +187,6 @@
 		);	
 		$result_type = sanitize_text_field ($type);
 		echo "
-			<style>
-				.review { margin: 0 auto 0 auto; width: 95%; }
-				.review .block { padding-top: 5px; margin: 0 auto 0 auto;}
-				.review .block input[type='checkbox']:checked ~ .reviewed {height: auto; margin: -25px auto 5px auto;}
-				.review input[type='checkbox']  {display: none;}
-				.review label {width: 95%; min-height: 35px; margin: 0 auto; display: block; cursor: pointer; }
-				.review label:hover { }
-				.review span {font-weight: bold;float:right;}
-				.review .block input[type='checkbox'] ~ label span:first-of-type {display:block;visibility:visible;float:right;margin:0 -5px 0 0;}
-				.review .block input[type='checkbox'] ~ label span:last-of-type {display:none;visibility:hidden;float:right;}
-				.review .block input[type='checkbox']:checked ~ label span:first-of-type {display:none;visibility:hidden;float:right;}
-				.review .block input[type='checkbox']:checked ~ label span:last-of-type {display:block;visibility:visible;float:right;}
-				.review .reviewed { width: 93%; height: 0; padding: 0 15px 0 15px;display: block;overflow: hidden; box-sizing: border-box; margin: auto;} 
-				.review h4 {color: #111;text-align: right;text-shadow: 1px 1px 2px #fff;position: absolute;bottom: 20px;right: 15px;}
-				.review h4 a {color: #111;text-decoration: none;}
-				.review ::selection {background: #222;color: #fff;}
-			</style>
 		";
 		global $wpdb;
 		$mom_reviews_table_name = $wpdb->prefix . "momreviews";
@@ -192,8 +197,14 @@
 		}
 		foreach ($reviews as $reviews_results) {
 			$this_ID = $reviews_results->ID;
-				echo "<div "; if ($result_type != "") { echo "id=\"$result_type\""; } echo " class=\"review\"><article class=\"block\"><input type=\"checkbox\" name=\"review\" id=\"" . $this_ID . "\" /><label for=\"" . $this_ID . "\">" .  $reviews_results->TITLE . "<span>+</span><span>-</span></label><section class=\"reviewed\"><strong>Review type</strong>: <em>" . $reviews_results->TYPE . "</em> &mdash; ";if ($reviews_results->LINK != "") { echo "<a href=\"" . $reviews_results->LINK . "\">#</a> &mdash;"; }echo "<strong>Rating</strong>: <em>" . $reviews_results->RATING . "</em></strong><hr />" . $reviews_results->REVIEW . "</section></article></div>";
+				echo "<div "; if ($result_type != "") { echo "id=\"$result_type\""; } echo " class=\"momreview\"><article class=\"block\"><input type=\"checkbox\" name=\"review\" id=\"" . $this_ID . "\" /><label for=\"" . $this_ID . "\">"; if ($reviews_results->TITLE != "") { echo $reviews_results->TITLE; } echo "<span>+</span><span>-</span></label><section class=\"reviewed\">"; if ($reviews_results->TYPE != "") { echo " [ <strong>Review type</strong>: <em>" . $reviews_results->TYPE . "</em> ] ";} if ($reviews_results->LINK != "") { echo " [ <a href=\"" . $reviews_results->LINK . "\">#</a> ] "; } if ($reviews_results->RATING != "") { echo " [ <strong>Rating</strong>: <em>" . $reviews_results->RATING . "</em></strong>] "; } if ($reviews_results->REVIEW != "") { echo "<hr />" . $reviews_results->REVIEW . ""; } echo "</section></article></div>";
 		}		
 		return ob_get_clean();
 	}
+	
+	function mom_reviews_style() {
+		echo "<style>" . get_option('momreviews_css') . "</style>
+		";
+	}
+	
 ?>
