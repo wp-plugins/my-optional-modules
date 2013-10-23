@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 2.1
+Version: 3.0.0
 Author: One Billion Words
 Author URI: http://onebillionwords.com
 */
@@ -33,6 +33,7 @@ Author URI: http://onebillionwords.com
 		add_option("mommaincontrol_momja","0","Jump Around activated?");
 		add_option("mommaincontrol_shorts","0","Shortcodes! activated?");
 		add_option("mommaincontrol_analytics","0","Analytics activated?");
+		add_option("mommaincontrol_reviews","0","Reviews activated?");
 	}
 	include( plugin_dir_path( __FILE__ ) . 'modules/maincontrol.php');
 	
@@ -86,4 +87,8 @@ Author URI: http://onebillionwords.com
 		}
 		add_action('wp_footer', 'mom_analytics');		
 	}
+	
+	// Reviews 
+	if (get_option("mommaincontrol_reviews") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/reviews.php'); }
+	
 ?>

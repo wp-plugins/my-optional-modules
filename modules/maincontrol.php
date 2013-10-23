@@ -29,6 +29,7 @@
 						update_option("mommaincontrol_momja",0);			
 						update_option("mommaincontrol_shorts",0);
 						update_option("mommaincontrol_analytics",0);
+						update_option("mommaincontrol_reviews",0);
 						global $table_prefix, $table_suffix, $wpdb;
 						$table_name = $table_prefix . $table_suffix . 'rotating_universal_passwords';
 						$wpdb->query("DROP TABLE {$table_name}");											
@@ -81,7 +82,9 @@
 						delete_option("jump_around_6");
 						delete_option("jump_around_7");
 						delete_option("jump_around_8");		
-						delete_option("momanalytics_code");						
+						delete_option("momanalytics_code");			
+						$reviews_table_name = $table_prefix . $table_suffix . 'momreviews';
+						$wpdb->query("DROP TABLE {$reviews_table_name}");							
 					}
 					if ($_REQUEST["mommaincontrol_uninstall_all"] == 3) {
 						global $table_prefix, $table_suffix, $wpdb;
@@ -150,7 +153,10 @@
 						delete_option("mommaincontrol_momja");
 						delete_option("mommaincontrol_shorts");
 						delete_option("mommaincontrol_analytics");						
-						delete_option("momanalytics_code");						
+						delete_option("momanalytics_code");					
+						delete_option("mommaincontrol_reviews");					
+						$reviews_table_name = $table_prefix . $table_suffix . 'momreviews';
+						$wpdb->query("DROP TABLE {$reviews_table_name}");	
 					}
 				} else {					
 						if ($_REQUEST["mommaincontrol_obwcountplus"] != "" . get_option("mommaincontrol_obwcountplus") ."") { 
@@ -338,9 +344,38 @@
 							// If we're enabling Analytics for the first time, set up its options.				
 							delete_option("momanalytics_code");
 						}						
+					}
+
+						if ($_REQUEST["mommaincontrol_reviews"] != "" . get_option("mommaincontrol_reviews") . "") { 
+							update_option("mommaincontrol_reviews",$_REQUEST["mommaincontrol_reviews"]); 
 						
-						
-					}					
+							if ($_REQUEST["mommaincontrol_reviews"] == 1) {
+									// Create table for lockouts (if bad password attempts are made, store IPs, timer, etc.
+									global $wpdb;
+									$review_table_name = $wpdb->prefix . "momreviews";
+									$reviews_sql = "CREATE TABLE $review_table_name (
+									ID INT( 11 ) NOT NULL PRIMARY KEY AUTO_INCREMENT , 
+									TYPE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+									LINK TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+									TITLE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+									REVIEW TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+									RATING TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+									);";
+									require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+									dbDelta( $reviews_sql );
+									// core settings
+							}
+							if ($_REQUEST["mommaincontrol_reviews"] == 3) {
+								delete_option("rotating_universal_passwords_1");
+								delete_option("rotating_universal_passwords_2");
+								delete_option("rotating_universal_passwords_3");
+								delete_option("rotating_universal_passwords_4");
+								delete_option("rotating_universal_passwords_5");
+								delete_option("rotating_universal_passwords_6");
+								delete_option("rotating_universal_passwords_7");
+								delete_option("rotating_universal_passwords_8");
+							}
+						}
 					
 				}
 			}
@@ -423,7 +458,28 @@
 			</tr>";
 			}		
 			
-			echo "<tr valign=\"top\">
+			echo "
+				<tr valign=\"top\">
+					<th scope=\"row\">
+						<label for=\"mommaincontrol_reviews\"><strong>Reviews</strong></label>
+					</th>
+					<td>
+						<select id=\"mommaincontrol_reviews\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_reviews\">
+						<option value=\"0\" 
+						";
+							if (get_option("mommaincontrol_reviews") == 0 || get_option("mommaincontrol_reviews") == 3) { echo "selected=\"selected\""; }
+						echo ">No</option>					
+						<option value=\"1\" 
+						";
+							if (get_option("mommaincontrol_reviews") == 1) { echo "selected=\"selected\""; }
+						echo ">Yes</option>
+						<option value=\"3\">Uninstall</option>
+							</select>
+					</td>
+					<td><em>Rate and review anything.</em></td>
+				</tr>
+
+				<tr valign=\"top\">
 				<th scope=\"row\">
 					<label for=\"mommaincontrol_mompaf\"><strong>Post as Front</strong></label>
 				</th>
