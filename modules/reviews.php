@@ -136,7 +136,9 @@
 									<li> &mdash;&mdash; RATING is the rating you gave it (if any).</li>
 									<li> &mdash; order (default is DESC) : available parameters: DESC or ASC. Usage: <code>[momreviews order=\"DESC\"]</code></li>
 									<li> &mdash; meta (default is 1) : 1 is to show meta values (review type, rating, and relevant link).  0 is to hide this section altogether.  Usage: <code>[momreviews meta=\"1\"]</code></li>
-									<li>Multiple parameter usage: <code>[momreviews type=\"book\" orderby=\"TITLE\" order=\"DESC\" meta=\"0\"]</code>
+									<li> &mdash; expand (default is +) : what to show (on the right) when a review is collapsed.</li>
+									<li> &mdash; retract (default is -) : what to show (on the right) when a review is expanded.</li>
+									<li>Multiple parameter usage: <code>[momreviews type=\"'book'\" orderby=\"TITLE\" order=\"DESC\" meta=\"0\" expand=\"Show\" retract=\"Hide\"]</code>
 								</blockquote>
 
 				<hr />
@@ -198,12 +200,16 @@ textarea { height: 250px; }
 				"orderby" => 'ID',
 				"order" => 'ASC',
 				"meta" => '1',
+				"expand" => "+",
+				"retract" => "-",
 			), $atts)
 		);	
 		$result_type = sanitize_text_field ($type);
 		$order_by = sanitize_text_field ($orderby);
 		$order_dir = sanitize_text_field ($order);
 		$meta_show = sanitize_text_field ($meta);
+		$expand_this = sanitize_text_field ($expand);
+		$retract_this = sanitize_text_field ($retract);
 		echo "
 		";
 		global $wpdb;
@@ -215,7 +221,7 @@ textarea { height: 250px; }
 		}
 		foreach ($reviews as $reviews_results) {
 			$this_ID = $reviews_results->ID;
-				echo "<div "; if ($result_type != "") { echo "id=\"$result_type\""; } echo " class=\"momreview\"><article class=\"block\"><input type=\"checkbox\" name=\"review\" id=\"" . $this_ID . "" . $mom_review_global . "\" /><label for=\"" . $this_ID . "" . $mom_review_global . "\">"; if ($reviews_results->TITLE != "") { echo $reviews_results->TITLE; } echo "<span>+</span><span>-</span></label><section class=\"reviewed\">"; if ($meta_show == 1 ) { if ($reviews_results->TYPE != "") { echo " [ <em>" . $reviews_results->TYPE . "</em> ] ";} if ($reviews_results->LINK != "") { echo " [ <a href=\"" . $reviews_results->LINK . "\">#</a> ] "; } if ($reviews_results->RATING != "") { echo " [ <em>" . $reviews_results->RATING . "</em> ] "; } } if ($reviews_results->REVIEW != "") { echo "<hr />" . $reviews_results->REVIEW . ""; } echo "</section></article></div>";
+				echo "<div "; if ($result_type != "") { echo "id=\"$result_type\""; } echo " class=\"momreview\"><article class=\"block\"><input type=\"checkbox\" name=\"review\" id=\"" . $this_ID . "" . $mom_review_global . "\" /><label for=\"" . $this_ID . "" . $mom_review_global . "\">"; if ($reviews_results->TITLE != "") { echo $reviews_results->TITLE; } echo "<span>" . $expand_this . "</span><span>" . $retract_this . "</span></label><section class=\"reviewed\">"; if ($meta_show == 1 ) { if ($reviews_results->TYPE != "") { echo " [ <em>" . $reviews_results->TYPE . "</em> ] ";} if ($reviews_results->LINK != "") { echo " [ <a href=\"" . $reviews_results->LINK . "\">#</a> ] "; } } if ($reviews_results->REVIEW != "") { echo "<hr />" . $reviews_results->REVIEW . ""; } if ($reviews_results->RATING != "") { echo " <p><em>" . $reviews_results->RATING . "</em></p> "; } echo "</section></article></div>";
 		}		
 		return ob_get_clean();
 	}
