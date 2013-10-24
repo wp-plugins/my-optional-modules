@@ -32,16 +32,17 @@
 				$reviews_review = wpautop($reviews_reviewed);
 				$reviews_rating = $_REQUEST["reviews_rating"]; 
 				$wpdb->query("INSERT INTO $reviews_table_name (ID,TYPE,LINK,TITLE,REVIEW,RATING) VALUES ('','$reviews_type','$reviews_link','$reviews_title','$reviews_review','$reviews_rating')") ;
+				echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
 		}
 		function update_mom_css() {
 			$newCSS = stripslashes_deep($_REQUEST["css"]);
 			update_option("momreviews_css",$newCSS); 
+			echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
 		}
 		
 		// options form (output)
 		function print_mom_reviews_form() {
 			echo "
-				
 				<td valign=\"top\">
 					<form method=\"post\">
 						<table class=\"form-table\" border=\"1\" style=\"margin:5px; \">

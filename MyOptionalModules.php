@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 3.0.5
+Version: 3.0.6
 Author: One Billion Words
 Author URI: http://onebillionwords.com
 */
@@ -36,18 +36,9 @@ Author URI: http://onebillionwords.com
 		add_option("mommaincontrol_reviews","0","Reviews activated?");
 	}
 	include( plugin_dir_path( __FILE__ ) . 'modules/maincontrol.php');
-	
-	// Conditional module loading
-	// Count++
-	if (get_option("mommaincontrol_obwcountplus") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/countplusplus.php'); }
-		
-	// RUPs
-	if (get_option("mommaincontrol_momrups") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/rups.php'); }
-		
-	// Simply Exclude
-	if (get_option("mommaincontrol_momse") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/se.php'); }	
-		
-	// Post as Front
+
+	// If Post as Front is active, let's go to the post being asked for in the settings.
+	// If it's a numerical ID, load the ID.  Otherwise, load the first person available.
 	if (get_option("mommaincontrol_mompaf") == 1) { 
 		add_action( "wp", "mompaf_filter_home" );
 		function mompaf_filter_home() {	
@@ -63,18 +54,10 @@ Author URI: http://onebillionwords.com
 				endif;
 			}
 		}	
-	}
-		
-	// Jump Around
-	if (get_option("mommaincontrol_momja") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/jumparound.php'); }	
-	
-	// Shortcodes! 
-	if (get_option("mommaincontrol_shorts") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/shortcodes.php'); }
-	
-	// Analytics
-	if (get_option("mommaincontrol_analytics") == 1) {
+	}	
+	// If Analytics is active, and there is an ID set, let's load the tracking code into the footer of the theme.
+	if (get_option("mommaincontrol_analytics") == 1 && get_option("momanalytics_code") != "") {
 		function mom_analytics() {
-			if (get_option("momanalytics_code") != "") {
 				echo "<script>
 						(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 						(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -83,12 +66,27 @@ Author URI: http://onebillionwords.com
 						ga('create', '" . get_option("momanalytics_code") . "', '" . home_url('/') . "');
 						ga('send', 'pageview');
 					</script>";
-			} else { }
 		}
 		add_action('wp_footer', 'mom_analytics');		
 	}
+
+	// Conditional module loading
+	// Count++
+	if (get_option("mommaincontrol_obwcountplus") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/countplusplus.php'); }
+		
+	// Passwords
+	if (get_option("mommaincontrol_momrups") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/passwords.php'); }
+		
+	// Exclude
+	if (get_option("mommaincontrol_momse") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/exclude.php'); }	
+		
+	// Jump Around
+	if (get_option("mommaincontrol_momja") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/jumparound.php'); }	
+
 	
 	// Reviews 
 	if (get_option("mommaincontrol_reviews") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/reviews.php'); }
 	
+	// Shortcodes! 
+	if (get_option("mommaincontrol_shorts") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/shortcodes.php'); }
 ?>

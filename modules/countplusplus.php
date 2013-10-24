@@ -23,7 +23,6 @@
 	
 		//	options form (save)
 		function update_obwcountplus_options() {
-				if(isset($_POST['obwcountsave'])){
 				if ($_REQUEST["obwcountplus_countdownfrom"] != "" . get_option("obwcountplus_1_countdownfrom") . "" && is_numeric($_REQUEST["obwcountplus_countdownfrom"])) { update_option("obwcountplus_1_countdownfrom",$_REQUEST["obwcountplus_countdownfrom"]); }
 				if ($_REQUEST["obwcountplus_remaining"] != "" . get_option("obwcountplus_2_remaining") . "") { update_option("obwcountplus_2_remaining",$_REQUEST["obwcountplus_remaining"]); }
 				if ($_REQUEST["obwcountplus_total"] != "" . get_option("obwcountplus_3_total") . "") { update_option("obwcountplus_3_total",$_REQUEST["obwcountplus_total"]); }
@@ -32,8 +31,7 @@
 				if ($_REQUEST["obwcountplus_remaining"] == "") { update_option("obwcountplus_2_remaining","remaining"); }
 				if ($_REQUEST["obwcountplus_total"] == "") { update_option("obwcountplus_3_total","total"); }				
 				if ($_REQUEST["obwcountplus_custom"] == "") { update_option("obwcountplus_4_custom",""); }				
-				
-			}		
+				echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";	
 		}
 		
 		//	options form (output)
@@ -60,14 +58,12 @@
 					<tr valign=\"top\">					
 						<td>How to use custom output</td>
 						<td>%total% will be replaced with the total words on the blog<br />
-						%remain% will be replaced with the remaining words of the total<br /><hr />
-						
+						%remain% will be replaced with the remaining words of the total<br /><hr />						
 						<p>Examples:<br />
 						<code>There are %total% words with %remain% left to go!</code><br /> will output 
 						<em>There are 90 words with 10 left to go!</em> (if you have a goal of 100 words 
 						set and there are currently 90 words published.</p>
 						<p>If you've already reached your goal, %remain% will be a negative number.</p>
-						
 						</td>
 						</td>
 					</tr>					
@@ -84,7 +80,6 @@
 					<h2>Count++</h2>
 					<h3 class=\"title\">Settings</h3>
 				";
-				if(isset($_POST['obwcountsave'])){ echo "<div id=\"setting-error-settings_updated\" class=\"updated settings-error\"><p>Settings saved.</p></div>"; }
 				echo "
 					<form method=\"post\">
 						<table class=\"form-table\" border=\"1\">
@@ -139,7 +134,6 @@
 		} else {
 				$totalcount=0;
 		}			
-
 		$remain = number_format(get_option("obwcountplus_1_countdownfrom") - $totalcount);
 		$c_custom = get_option("obwcountplus_4_custom");
 		$c_search = array("%total%","%remain%");

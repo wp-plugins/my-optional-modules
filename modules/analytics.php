@@ -9,12 +9,10 @@
 	if(!defined('MyOptionalModules')) { die('You can not call this file directly.'); }
 
 	if (is_admin() ) { 
-	
 		// options form (save)
 		function update_momana_options() {
-			if(isset($_POST['momanasave'])){
-				update_option("momanalytics_code",$_REQUEST["momanalytics_code"]);
-			}		
+			update_option("momanalytics_code",$_REQUEST["momanalytics_code"]);
+			echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";			
 		}
 		
 		// options form (output)
@@ -31,19 +29,17 @@
 		}
 	
 		// options page (output)
-		
-			echo "
-				<form method=\"post\">
-					<table class=\"form-table\"  style=\"margin-top: -8px; margin-left: -10px;\">
-						<tbody>
-			";
-			momana_form();
-			echo "
-						</tbody>
-					</table>
-				</form>			
-			";
-			if(isset($_POST["momanasave"])){ update_momana_options(); } 
-		
+		echo "
+		<form method=\"post\">
+			<table class=\"form-table\"  style=\"margin-top: -8px; margin-left: -10px;\">
+				<tbody>
+		";
+		momana_form();
+		echo "
+				</tbody>
+			</table>
+		</form>			
+		";
+		if(isset($_POST["momanasave"])){ update_momana_options(); } 
 	}
 ?>

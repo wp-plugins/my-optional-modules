@@ -34,7 +34,6 @@
 		function update_rotating_universal_passwords() {
 			$rotating_universal_passwords_encryption = get_option("rotating_universal_passwords_9");
 			global $theSalt;
-			if ( $_REQUEST["rotating_universal_passwords_1"] ||	$_REQUEST["rotating_universal_passwords_2"] || $_REQUEST["rotating_universal_passwords_3"] || $_REQUEST["rotating_universal_passwords_4"] || $_REQUEST["rotating_universal_passwords_5"] || $_REQUEST["rotating_universal_passwords_6"] || $_REQUEST["rotating_universal_passwords_7"] || $_REQUEST["rotating_universal_passwords_8"] ) {
 				$pass1 = $_REQUEST["rotating_universal_passwords_1"];
 				$pass2 = $_REQUEST["rotating_universal_passwords_2"];
 				$pass3 = $_REQUEST["rotating_universal_passwords_3"];
@@ -57,16 +56,14 @@
 				if ($_POST['rotating_universal_passwords_6'] !== "" ) {update_option("rotating_universal_passwords_6",$pass_final_6); }
 				if ($_POST['rotating_universal_passwords_7'] !== "" ) {update_option("rotating_universal_passwords_7",$pass_final_7); }			
 				if ($_POST['rotating_universal_passwords_8'] !== "" ) {update_option("rotating_universal_passwords_8",$_REQUEST["rotating_universal_passwords_8"]);}
-			}
+				echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
 		}	
 		
 		// options form (output)
 		function print_rotating_universal_passwords_form() {
 			global $theSalt;
 			echo "
-				
 				<td valign=\"top\">
-				
 				<form method=\"post\">
 					<table class=\"form-table\" border=\"1\" style=\"margin:5px; \">
 						<tbody>
@@ -144,9 +141,7 @@
 							</tr>
 							";
 							if(isset($_POST[$this_ID])){
-								$current = plugin_basename(__FILE__);
 								$wpdb->query(" DELETE FROM $RUPs_table_name WHERE ID = '$this_ID' ");
-								echo "<meta http-equiv=\"refresh\" content=\"0;url=\"$current\" />";
 							}
 					}			
 					echo "

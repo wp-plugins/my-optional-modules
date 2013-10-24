@@ -28,17 +28,16 @@
 		
 		// options form (save)
 		function update_JA() {
-			if ( $_REQUEST["jump_around_0"] || $_REQUEST["jump_around_1"] || $_REQUEST["jump_around_2"] || $_REQUEST["jump_around_3"] || $_REQUEST["jump_around_4"] || $_REQUEST["jump_around_5"] || $_REQUEST["jump_around_6"] || $_REQUEST["jump_around_7"] || $_REQUEST["jump_around_8"]  ) {
-				update_option("jump_around_0",$_REQUEST["jump_around_0"]);
-				update_option("jump_around_1",$_REQUEST["jump_around_1"]);
-				update_option("jump_around_2",$_REQUEST["jump_around_2"]);
-				update_option("jump_around_3",$_REQUEST["jump_around_3"]);
-				update_option("jump_around_4",$_REQUEST["jump_around_4"]);
-				update_option("jump_around_5",$_REQUEST["jump_around_5"]);
-				update_option("jump_around_6",$_REQUEST["jump_around_6"]);
-				update_option("jump_around_7",$_REQUEST["jump_around_7"]);
-				update_option("jump_around_8",$_REQUEST["jump_around_8"]);
-			}
+			update_option("jump_around_0",$_REQUEST["jump_around_0"]);
+			update_option("jump_around_1",$_REQUEST["jump_around_1"]);
+			update_option("jump_around_2",$_REQUEST["jump_around_2"]);
+			update_option("jump_around_3",$_REQUEST["jump_around_3"]);
+			update_option("jump_around_4",$_REQUEST["jump_around_4"]);
+			update_option("jump_around_5",$_REQUEST["jump_around_5"]);
+			update_option("jump_around_6",$_REQUEST["jump_around_6"]);
+			update_option("jump_around_7",$_REQUEST["jump_around_7"]);
+			update_option("jump_around_8",$_REQUEST["jump_around_8"]);
+			echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
 		}
 		
 		// options form (output)
@@ -302,9 +301,6 @@
 			<div class=\"wrap\">
 				<div id=\"icon-options-general\" class=\"icon32\"></div>
 				<h2>Jump Around</h2>";
-				if(isset($_POST['update_JA'])){
-					echo "<div id=\"setting-error-settings_updated\" class=\"updated settings-error\"><p>Settings saved.</p></div>";
-				}		
 				echo "
 				<h3 class=\"title\">Settings</h3>
 				<form method=\"post\">
@@ -336,6 +332,7 @@
 			</div>";
 		}
 	}
+	
 	
 	// footer script contents
 	function jump_around_footer_script(){

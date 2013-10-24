@@ -20,7 +20,27 @@
 		// options form (save)
 		function update_myoptionalmodules_options() {
 			if(isset($_POST['momsave'])){
-				if ($_REQUEST["mommaincontrol_uninstall_all"] == 1 || $_REQUEST["mommaincontrol_uninstall_all"] == 3) {
+				if ($_REQUEST["mommaincontrol_uninstall_all"] == 1 || $_REQUEST["mommaincontrol_uninstall_all"] == 3 || $_REQUEST["mommaincontrol_uninstall_all"] == 4 || $_REQUEST["mommaincontrol_uninstall_all"] == 5) {
+					if ($_REQUEST["mommaincontrol_uninstall_all"] == 5) {	
+						update_option("mommaincontrol_obwcountplus",0);
+						update_option("mommaincontrol_momrups",0);
+						update_option("mommaincontrol_momse",0);
+						update_option("mommaincontrol_mompaf",0);
+						update_option("mommaincontrol_momja",0);			
+						update_option("mommaincontrol_shorts",0);
+						update_option("mommaincontrol_analytics",0);
+						update_option("mommaincontrol_reviews",0);
+					}
+					if ($_REQUEST["mommaincontrol_uninstall_all"] == 4) {	
+						update_option("mommaincontrol_obwcountplus",1);
+						update_option("mommaincontrol_momrups",1);
+						update_option("mommaincontrol_momse",1);
+						update_option("mommaincontrol_mompaf",1);
+						update_option("mommaincontrol_momja",1);			
+						update_option("mommaincontrol_shorts",1);
+						update_option("mommaincontrol_analytics",1);
+						update_option("mommaincontrol_reviews",1);
+					}
 					if ($_REQUEST["mommaincontrol_uninstall_all"] == 1) {	
 						update_option("mommaincontrol_obwcountplus",0);
 						update_option("mommaincontrol_momrups",0);
@@ -493,7 +513,6 @@ add_option("momreviews_css", "
 					</td>
 					<td><em>Rate and review anything.</em></td>
 				</tr>
-
 				<tr valign=\"top\">
 				<th scope=\"row\">
 					<label for=\"mommaincontrol_mompaf\"><strong>Post as Front</strong></label>
@@ -518,7 +537,7 @@ add_option("momreviews_css", "
 
 				echo "</td>
 			</tr>";
-			
+
 			if(is_plugin_active('rotating-universal-passwords/RUPs.php')){
 			echo "
 			<tr valign=\"top\">
@@ -549,7 +568,7 @@ add_option("momreviews_css", "
 				</td>
 			</tr>";
 			}
-			
+
 			echo "
 			<tr valign=\"top\">
 				<th scope=\"row\">
@@ -572,7 +591,6 @@ add_option("momreviews_css", "
 					<em>A collection of various shortcodes that you can use in your posts and pages.</em>
 				</td>
 			</tr>			
-			
 			<tr valign=\"top\">
 				<th scope=\"row\">
 					<label for=\"mommaincontrol_momse\"><strong>Exclude</strong></label>
@@ -594,24 +612,23 @@ add_option("momreviews_css", "
 					<em>Exclude tags, post formats, and categories from the front page, category/tag archives, search results, or the RSS feed.</em>
 				</td>
 			</tr>			
-
 			<tr valign=\"top\">
 				<th scope=\"row\">
-					<label for=\"mommaincontrol_uninstall_all\"><strong>Uninstall All Modules</strong></label>
+					<label for=\"mommaincontrol_uninstall_all\"><strong>All Modules</strong></label>
 				</th>
 				<td>
 					<select id=\"mommaincontrol_uninstall_all\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_uninstall_all\">
 					<option value=\"0\"></option>					
+					<option value=\"4\">Activate all</option>
+					<option value=\"5\">Deactivate all</option>
 					<option value=\"1\">Reset all</option>
 					<option value=\"3\">Nuke</option>
 					</select>
 				</td>
 				<td>
-					<em>Uninstalls all options associated with all modules and deactivates them.  If you choose to Nuke the install, it uninstalls <strong>everything</strong> associated with this plugin (for plugin deletion purposes).  If you decide to nuke it, you may need to deactivate/reactivate the plugin.</em>
+					<em>Activate all/deactivate all activates or deactivates all modules.  Reset all deactivates all modules, and deletes all options associated with them.  Nuke deletes all options associated with this plugin, and allows for you to cleanly disable and delete it.  (You will need to deactivate and reactivate the plugin in order to use it again after using Nuke.)</em>
 				</td>
 			</tr>			
-
-			
 			";
 		}
 	
@@ -663,10 +680,6 @@ add_option("momreviews_css", "
 				</div>";				
 			}
 		}
-		if(isset($_POST["momsave"])){
-				if ($_REQUEST["momsave"]) { 
-					update_myoptionalmodules_options();
-				}
-		}
+		if(isset($_POST["momsave"])){ update_myoptionalmodules_options(); }
 	} 
  ?>

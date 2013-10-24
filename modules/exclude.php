@@ -53,6 +53,7 @@
 			if ($_REQUEST["simple_announcement_with_exclusion_cat_thu"] != "" . get_option('simple_announcement_with_exclusion_cat_thu') . "") { update_option("simple_announcement_with_exclusion_cat_thu",$_REQUEST["simple_announcement_with_exclusion_cat_thu"]); }
 			if ($_REQUEST["simple_announcement_with_exclusion_cat_fri"] != "" . get_option('simple_announcement_with_exclusion_cat_fri') . "") { update_option("simple_announcement_with_exclusion_cat_fri",$_REQUEST["simple_announcement_with_exclusion_cat_fri"]); }
 			if ($_REQUEST["simple_announcement_with_exclusion_cat_sat"] != "" . get_option('simple_announcement_with_exclusion_cat_sat') . "") { update_option("simple_announcement_with_exclusion_cat_sat",$_REQUEST["simple_announcement_with_exclusion_cat_sat"]); }		
+			echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
 		}		
 	}
 		
@@ -296,7 +297,6 @@
 						<h2>Exclude</h2>
 						<h3 class=\"title\">Settings</h3>
 				";
-					if(isset($_POST['momsesave'])){ echo "<div id=\"setting-error-settings_updated\" class=\"updated settings-error\"><p>Settings saved.</p></div>"; }
 					echo "<form method=\"post\">
 						<table class=\"form-table\" border=\"1\">
 							<tbody>

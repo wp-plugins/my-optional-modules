@@ -40,15 +40,26 @@
 			</td>
 		</tr>				
 		";
-		if(isset($_POST['delete_post_revisions']) || isset($_POST['delete_all'])){
-			$wpdb->query("DELETE FROM `" . $postsTable . "` WHERE `post_type` = 'revision' OR `post_type` = 'auto-draft' OR `post_status` = 'trash'");				
-		}
-		if(isset($_POST['delete_unapproved_comments']) || isset($_POST['delete_all'])){
-			$wpdb->query("DELETE FROM `" . $commentsTable . "` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'");				
-		}			
-		if(isset($_POST['delete_unused_terms']) || isset($_POST['delete_all'])){
-			$wpdb->query("DELETE FROM `" . $termsTable2 . "` WHERE `term_id` IN (select `term_id` from `" . $termsTable . "` WHERE `count` = 0 )");
-			$wpdb->query("DELETE FROM `" . $termsTable . "` WHERE `count` = 0");		
+		if(isset($_POST['delete_unused_terms']) || isset($_POST['delete_post_revisions']) || isset($_POST['delete_unapproved_comments']) || isset($_POST['delete_all'])){
+			if(isset($_POST['delete_post_revisions'])){
+				$wpdb->query("DELETE FROM `" . $postsTable . "` WHERE `post_type` = 'revision' OR `post_type` = 'auto-draft' OR `post_status` = 'trash'");				
+				
+			}
+			if(isset($_POST['delete_unapproved_comments'])){
+				$wpdb->query("DELETE FROM `" . $commentsTable . "` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'");				
+			}			
+			if(isset($_POST['delete_unused_terms'])){
+				$wpdb->query("DELETE FROM `" . $termsTable2 . "` WHERE `term_id` IN (select `term_id` from `" . $termsTable . "` WHERE `count` = 0 )");
+				$wpdb->query("DELETE FROM `" . $termsTable . "` WHERE `count` = 0");		
+			}
+			if(isset($_POST['delete_all'])){
+				$wpdb->query("DELETE FROM `" . $postsTable . "` WHERE `post_type` = 'revision' OR `post_type` = 'auto-draft' OR `post_status` = 'trash'");				
+				$wpdb->query("DELETE FROM `" . $commentsTable . "` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'");				
+				$wpdb->query("DELETE FROM `" . $termsTable2 . "` WHERE `term_id` IN (select `term_id` from `" . $termsTable . "` WHERE `count` = 0 )");
+				$wpdb->query("DELETE FROM `" . $termsTable . "` WHERE `count` = 0");		
+
+			}			
+			echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
 		}
 	}
 ?>
