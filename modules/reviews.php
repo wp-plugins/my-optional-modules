@@ -118,12 +118,25 @@
 									<li>Rating can be anything: It sucked!, 5 out of 10, jolly rancher!, whatever.</li>
 									<li>Use the table below to delete specific reviews.</li>
 									<li>Shortcodes may not execute properly in the review table below, although they may display normally on your live site. (Check and make sure before you delete a review thinking you've made a mistake.)</li>
-								</ol></blockquote>
-								<blockquote><ol>
+								</ol>
+								<ol>
 									<li><code>[momreviews]</code> = all reviews</li>
 									<li><code>[momreviews type=\"'type'\"]</code> = reviews from review type <em>type</em></li>
 									<li><code>[momreviews type=\"'type1','type2','type3'\"]</code> = reviews from reviews types <em>type1, type2, and type3</em>.</code>.</li>
 								</ol>
+								<ol>
+									<li>The shortcode accepts a variety of options.:</li>
+									<li> &mdash; type (default is blank) : parameters explained above (see code with list of types or single type usage above.)</li>
+									<li> &mdash; orderby (default is ID) : available parameters: ID,TYPE,LINK,TITLE,REVIEW,RATING.  Usage: <code>[momreviews orderby=\"LINK\"]</code></li>
+									<li> &mdash;&mdash; ID is the ID of the review, and will increment by 1 sequentially with each new review added to the database. </li>
+									<li> &mdash;&mdash; TYPE is the kind of review you are adding (if any).</li>
+									<li> &mdash;&mdash; LINK is the relevant URL you have attached to your review (if any).</li>
+									<li> &mdash;&mdash; TITLE is the title of the review (if any).</li>
+									<li> &mdash;&mdash; REVIEW is the review itself for the item in question (if any).</li>
+									<li> &mdash;&mdash; RATING is the rating you gave it (if any).</li>
+									<li> &mdash; order (default is DESC) : available parameters: DESC or ASC. Usage: <code>[momreviews order=\"DESC\"]</code></li>
+									<li> &mdash; meta (default is 1) : 1 is to show meta values (review type, rating, and relevant link).  0 is to hide this section altogether.  Usage: <code>[momreviews meta=\"1\"]</code></li>
+									<li>Multiple parameter usage: <code>[momreviews type=\"book\" orderby=\"TITLE\" order=\"DESC\" meta=\"0\"]</code>
 								</blockquote>
 
 				<hr />
@@ -182,21 +195,27 @@ textarea { height: 250px; }
 		extract(
 			shortcode_atts(array(
 				"type" => '',
+				"orderby" => 'ID',
+				"order" => 'ASC',
+				"meta" => '1',
 			), $atts)
 		);	
 		$result_type = sanitize_text_field ($type);
+		$order_by = sanitize_text_field ($orderby);
+		$order_dir = sanitize_text_field ($order);
+		$meta_show = sanitize_text_field ($meta);
 		echo "
 		";
 		global $wpdb;
 		$mom_reviews_table_name = $wpdb->prefix . "momreviews";
-		if ($result_type == "") {
-			$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name ORDER BY ID DESC");
+		if ($result_type != "") { 
+			$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE TYPE IN ($result_type) ORDER BY $order_by $order_dir");
 		} else {
-			$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE TYPE IN ($result_type) ORDER BY ID DESC");
+			$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name ORDER BY $order_by $order_dir");
 		}
 		foreach ($reviews as $reviews_results) {
 			$this_ID = $reviews_results->ID;
-				echo "<div "; if ($result_type != "") { echo "id=\"$result_type\""; } echo " class=\"momreview\"><article class=\"block\"><input type=\"checkbox\" name=\"review\" id=\"" . $this_ID . "" . $mom_review_global . "\" /><label for=\"" . $this_ID . "" . $mom_review_global . "\">"; if ($reviews_results->TITLE != "") { echo $reviews_results->TITLE; } echo "<span>+</span><span>-</span></label><section class=\"reviewed\">"; if ($reviews_results->TYPE != "") { echo " [ <em>" . $reviews_results->TYPE . "</em> ] ";} if ($reviews_results->LINK != "") { echo " [ <a href=\"" . $reviews_results->LINK . "\">#</a> ] "; } if ($reviews_results->RATING != "") { echo " [ <em>" . $reviews_results->RATING . "</em> ] "; } if ($reviews_results->REVIEW != "") { echo "<hr />" . $reviews_results->REVIEW . ""; } echo "</section></article></div>";
+				echo "<div "; if ($result_type != "") { echo "id=\"$result_type\""; } echo " class=\"momreview\"><article class=\"block\"><input type=\"checkbox\" name=\"review\" id=\"" . $this_ID . "" . $mom_review_global . "\" /><label for=\"" . $this_ID . "" . $mom_review_global . "\">"; if ($reviews_results->TITLE != "") { echo $reviews_results->TITLE; } echo "<span>+</span><span>-</span></label><section class=\"reviewed\">"; if ($meta_show == 1 ) { if ($reviews_results->TYPE != "") { echo " [ <em>" . $reviews_results->TYPE . "</em> ] ";} if ($reviews_results->LINK != "") { echo " [ <a href=\"" . $reviews_results->LINK . "\">#</a> ] "; } if ($reviews_results->RATING != "") { echo " [ <em>" . $reviews_results->RATING . "</em> ] "; } } if ($reviews_results->REVIEW != "") { echo "<hr />" . $reviews_results->REVIEW . ""; } echo "</section></article></div>";
 		}		
 		return ob_get_clean();
 	}
