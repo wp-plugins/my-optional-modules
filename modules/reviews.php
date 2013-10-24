@@ -208,8 +208,8 @@ textarea { height: 250px; }
 		$order_by = sanitize_text_field ($orderby);
 		$order_dir = sanitize_text_field ($order);
 		$meta_show = sanitize_text_field ($meta);
-		$expand_this = sanitize_text_field ($expand);
-		$retract_this = sanitize_text_field ($retract);
+		$expand_this = $expand;
+		$retract_this = $retract;
 		echo "
 		";
 		global $wpdb;

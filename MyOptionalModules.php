@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 3.0.8
+Version: 3.0.9
 Author: One Billion Words
 Author URI: http://onebillionwords.com
 */
@@ -34,21 +34,9 @@ Author URI: http://onebillionwords.com
 		add_option("mommaincontrol_shorts","0","Shortcodes! activated?");
 		add_option("mommaincontrol_analytics","0","Analytics activated?");
 		add_option("mommaincontrol_reviews","0","Reviews activated?");
-		add_option("mommaincontrol_fontawesome","0","Font Awesome activated?");
 	}
 	include( plugin_dir_path( __FILE__ ) . 'modules/maincontrol.php');
 
-	// If Font Awesome is configured to load, then load it.
-	if (get_option("mommaincontrol_fontawesome") == 1) {
-		function mom_enqueue_fontawesome()
-		{
-			if ( !is_admin() ) {
-				wp_enqueue_style('font_awesome', PLUGIN_URL . '/includes/font-awesome-4.0/css/font-awesome.min.css');
-			}
-		}	
-		mom_enqueue_fontawesome();
-	}
-	
 	// If Post as Front is active, let's go to the post being asked for in the settings.
 	// If it's a numerical ID, load the ID.  Otherwise, load the first person available.
 	if (get_option("mommaincontrol_mompaf") == 1) { 

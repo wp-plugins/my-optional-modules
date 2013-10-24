@@ -30,7 +30,6 @@
 						update_option("mommaincontrol_shorts",0);
 						update_option("mommaincontrol_analytics",0);
 						update_option("mommaincontrol_reviews",0);
-						update_option("mommaincontrol_fontawesome",0);
 					}
 					if ($_REQUEST["mommaincontrol_uninstall_all"] == 4) {	
 						update_option("mommaincontrol_obwcountplus",1);
@@ -41,7 +40,6 @@
 						update_option("mommaincontrol_shorts",1);
 						update_option("mommaincontrol_analytics",1);
 						update_option("mommaincontrol_reviews",1);
-						update_option("mommaincontrol_fontawesome",1);
 
 							global $wpdb;
 							add_option("obwcountplus_1_countdownfrom","0","Word goal to count down to?");
@@ -147,7 +145,6 @@
 						update_option("mommaincontrol_shorts",0);
 						update_option("mommaincontrol_analytics",0);
 						update_option("mommaincontrol_reviews",0);
-						update_option("mommaincontrol_fontawesome",0);
 						global $wpdb;
 						$table_name = $wpdb->prefix . $wpdb->suffix . 'rotating_universal_passwords';
 						$wpdb->query("DROP TABLE {$table_name}");											
@@ -274,7 +271,6 @@
 						delete_option("mommaincontrol_analytics");						
 						delete_option("momanalytics_code");					
 						delete_option("mommaincontrol_reviews");					
-						delete_option("mommaincontrol_fontawesome");
 						$reviews_table_name = $wpdb->prefix . $wpdb->suffix . 'momreviews';
 						$wpdb->query("DROP TABLE {$reviews_table_name}");	
 						delete_option("momreviews_css");
@@ -297,10 +293,6 @@
 									delete_option("obwcountplus_3_total");
 									delete_option("obwcountplus_4_custom");
 							}
-						}
-						
-						if ($_REQUEST["mommaincontrol_fontawesome"] != "" . get_option("mommaincontrol_fontawesome") . "") {
-							update_option("mommaincontrol_fontawesome",1);
 						}
 						
 						if ($_REQUEST["mommaincontrol_momrups"] != "" . get_option("mommaincontrol_momrups") . "") { 
@@ -765,20 +757,6 @@ add_option("momreviews_css", "
 				<table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\">
 					<tbody>				
 						<tr valign=\"top\"><td><h3 class=\"title\">Tweaks</h3></td></tr>
-						<tr valign=\"top\"><td><strong>Font Awesome</strong></td>
-						<td>
-						<select id=\"mommaincontrol_fontawesome\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_fontawesome\">
-						<option value=\"0\" 
-						";
-							if (get_option("mommaincontrol_fontawesome") == 0) { echo "selected=\"selected\""; }
-						echo ">No</option>					
-						<option value=\"1\" 
-						";
-							if (get_option("mommaincontrol_fontawesome") == 1) { echo "selected=\"selected\""; }
-						echo ">Yes</option>
-						</select>
-						</td>
-						<td><em>Enable <a href=\"http://fortawesome.github.io/Font-Awesome/\">Font Awesome</a> on your theme, allowing you to use all available <a href=\"http://fortawesome.github.io/Font-Awesome/icons/\">icons</a>.</td>
 					</tbody>
 				</table>
 				<table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\"><tbody><tr valign=\"top\"><td><input id=\"momsave\" class=\"button button-primary\" type=\"submit\" value=\"Save Changes\" name=\"momsave\"></input></td><td>Save any changes made to any options above.</td></tr></tbody></table>
