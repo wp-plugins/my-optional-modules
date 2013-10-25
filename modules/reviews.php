@@ -71,12 +71,13 @@
 											<label for=\"test\">Title<span>+</span><span>-</span></label>
 											<section class=\"reviewed\">
 												<em>Review type</em> &mdash;
-												<a href=\"http://onebillionwords.com/\">#</a> &mdash;
-												<em>Helpful</em><hr />
+												<a href=\"http://onebillionwords.com/\">#</a>
+												<hr />
 												<p>This is your review.  It will be formatted with the appropriate HTML, and 
 												even images (if you have added any).</p>
 												<p>This is just a <em>display purposes only</em> block to show you how your css
 												will affect the display.</p>
+												<p><em>Helpful</em></p>
 											</section>
 										</article>
 									</div>
@@ -126,7 +127,7 @@
 								</ol>
 								<ol>
 									<li>The shortcode accepts a variety of options.:</li>
-									<li> &mdash; type (default is blank) : parameters explained above (see code with list of types or single type usage above.)</li>
+									<li> &mdash; type <strong>or</strong> id (default is blank) : parameters explained above (see code with list of types or single type usage above.) <strong>or</strong> the id of the particular review you want to display (as found in the table below).  (Either or, but not both type and id can be used.)</li>
 									<li> &mdash; orderby (default is ID) : available parameters: ID,TYPE,LINK,TITLE,REVIEW,RATING.  Usage: <code>[momreviews orderby=\"LINK\"]</code></li>
 									<li> &mdash;&mdash; ID is the ID of the review, and will increment by 1 sequentially with each new review added to the database. </li>
 									<li> &mdash;&mdash; TYPE is the kind of review you are adding (if any).</li>
@@ -138,25 +139,46 @@
 									<li> &mdash; meta (default is 1) : 1 is to show meta values (review type, rating, and relevant link).  0 is to hide this section altogether.  Usage: <code>[momreviews meta=\"1\"]</code></li>
 									<li> &mdash; expand (default is +) : what to show (on the right) when a review is collapsed.</li>
 									<li> &mdash; retract (default is -) : what to show (on the right) when a review is expanded.</li>
+									<li> &mdash;&mdash; if using Font Awesome, use <code>expand=\"&lt;i class='fa fa-arrow-down'>&lt;/i>\"</code> and <code>retract=\"&lt;i class='fa fa-arrow-up'>&lt;/i>\"</code> (examples) as your expand and retract display.</li>
 									<li>Multiple parameter usage: <code>[momreviews type=\"'book'\" orderby=\"TITLE\" order=\"DESC\" meta=\"0\" expand=\"Show\" retract=\"Hide\"]</code>
 								</blockquote>
 
 				<hr />
-				<table class=\"form-table\" border=\"1\">
-					<tbody>								
+				<table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
+					<tbody>							
+					<tr valign=\"top\">
+					<td></td>
+					<td>Filter these results</td>
+					<form method=\"post\" class=\"reviews_item_form\">
+						<td><input type=\"text\" name=\"filterResults_type\" placeholder=\"Filter by type\"></td>
+						<td><input type=\"submit\" name=\"filterResults\" value=\"Accept\"></td>
+					</form>
+					</tr>
+					<tr valign=\"top\">
+					<td><strong>ID</strong></td>
+					<td><strong>Type</strong></td>
+					<td><strong>Content</strong></td>
+					<td><strong>Delete</strong></td>
+					</tr>
 <style>
 textarea, input[type='text'] { width: 100%; display:block; cursor:pointer;}
 textarea { height: 250px; }
 " . get_option('momreviews_css') . "
 </style>
 			";
-
 					global $wpdb;
 					$mom_reviews_table_name = $wpdb->prefix . "momreviews";
+					if (isset($_POST["filterResults"]) && $_REQUEST["filterResults_type"] != ""){
+					$filter_type = $_REQUEST["filterResults_type"];		
+					$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE TYPE = '$filter_type' ORDER BY ID DESC");
+					} else {
 					$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name ORDER BY ID DESC");
+					}
 					foreach ($reviews as $reviews_results) {
 						$this_ID = $reviews_results->ID;
-							echo "<tr><td>
+							echo "<tr><td>" . $this_ID . "</td>
+							<td>" . $reviews_results->TYPE . "</td>
+							<td>
 							<div class=\"momreview\">
 								<article class=\"block\">
 									<input type=\"checkbox\" name=\"momreview\" id=\"" . $this_ID . "\" />
@@ -166,17 +188,17 @@ textarea { height: 250px; }
 										if ($reviews_results->LINK != "") { echo "<a href=\"" . $reviews_results->LINK . "\">#</a> &mdash;"; }
 										echo "<em>" . $reviews_results->RATING . "</em> <hr />" . $reviews_results->REVIEW . "
 									</section>
-									<form method=\"post\" class=\"reviews_item_form\"><input type=\"submit\" name=\"$this_ID\" value=\"Delete\"></form>";
-									if(isset($_POST[$this_ID])){
-										$current = plugin_basename(__FILE__);
-										$wpdb->query(" DELETE FROM $mom_reviews_table_name WHERE ID = '$this_ID' ");
-										echo "<meta http-equiv=\"refresh\" content=\"0;url=\"$current\" />";
-									}
-									echo "
 								</article>
 							</div>";
-					}
-				echo "</td></tr></tbody></table></td>";
+				echo "</td><td>
+				<form method=\"post\" class=\"reviews_item_form\"><input type=\"submit\" name=\"$this_ID\" value=\"Delete\"></form>";
+				if(isset($_POST[$this_ID])){
+					$current = plugin_basename(__FILE__);
+					$wpdb->query(" DELETE FROM $mom_reviews_table_name WHERE ID = '$this_ID' ");
+					echo "<meta http-equiv=\"refresh\" content=\"0;url=\"$current\" />";
+				}
+				}
+				echo "</tr></tbody></table></td>";
 				print_mom_reviews_form();
 				echo "
 					</tr>
@@ -202,8 +224,10 @@ textarea { height: 250px; }
 				"meta" => '1',
 				"expand" => "+",
 				"retract" => "-",
+				"id" => "",
 			), $atts)
 		);	
+		$id_fetch = sanitize_text_field ($id);
 		$result_type = sanitize_text_field ($type);
 		$order_by = sanitize_text_field ($orderby);
 		$order_dir = sanitize_text_field ($order);
@@ -214,11 +238,17 @@ textarea { height: 250px; }
 		";
 		global $wpdb;
 		$mom_reviews_table_name = $wpdb->prefix . "momreviews";
-		if ($result_type != "") { 
-			$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE TYPE IN ($result_type) ORDER BY $order_by $order_dir");
+		
+		if ($id_fetch != "" && is_numeric($id_fetch)) {
+			$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE ID = '$id_fetch' ORDER BY $order_by $order_dir LIMIT 1");
 		} else {
-			$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name ORDER BY $order_by $order_dir");
+			if ($result_type != "") { 
+				$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE TYPE IN ($result_type) ORDER BY $order_by $order_dir");
+			} else {
+				$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name ORDER BY $order_by $order_dir");
+			}
 		}
+		
 		foreach ($reviews as $reviews_results) {
 			$this_ID = $reviews_results->ID;
 				echo "<div "; if ($result_type != "") { echo "id=\"$result_type\""; } echo " class=\"momreview\"><article class=\"block\"><input type=\"checkbox\" name=\"review\" id=\"" . $this_ID . "" . $mom_review_global . "\" /><label for=\"" . $this_ID . "" . $mom_review_global . "\">"; if ($reviews_results->TITLE != "") { echo $reviews_results->TITLE; } echo "<span>" . $expand_this . "</span><span>" . $retract_this . "</span></label><section class=\"reviewed\">"; if ($meta_show == 1 ) { if ($reviews_results->TYPE != "") { echo " [ <em>" . $reviews_results->TYPE . "</em> ] ";} if ($reviews_results->LINK != "") { echo " [ <a href=\"" . $reviews_results->LINK . "\">#</a> ] "; } } if ($reviews_results->REVIEW != "") { echo "<hr />" . $reviews_results->REVIEW . ""; } if ($reviews_results->RATING != "") { echo " <p><em>" . $reviews_results->RATING . "</em></p> "; } echo "</section></article></div>";
