@@ -122,7 +122,7 @@
 								</ol>
 								<ol>
 									<li><code>[momreviews]</code> = all reviews</li>
-									<li><code>[momreviews type=\"'type'\"]</code>/<code>[momreviews type=\"1\"] = reviews from review type <em>type</em></li>
+									<li><code>[momreviews type=\"'type'\"]</code> / <code>[momreviews type=\"1\"]</code> = reviews from review type <em>type</em></li>
 									<li><code>[momreviews type=\"'type1','type2','type3'\"]</code> = reviews from reviews types <em>type1, type2, and type3</em>.</code>.</li>
 								</ol>
 								<ol>
