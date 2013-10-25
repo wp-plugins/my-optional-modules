@@ -45,7 +45,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 == Changelog ==
 = 4.0.+ = 
-* 4.0.4 / Searching Reviews on admin page now sticks those results until another search term is entered.  (Required plugin deactivate/reactivate to function.)
+* 4.0.4 / Searching Reviews on admin page now sticks those results until another search term is entered.  (Required Reviews module deactivate/reactivate to function.)
 * 4.0.3 / Multiple IDs can be called with Reviews.
 * 4.0.2 / Fixed f***ing closing </code> tag.  Where's my coffee at?
 * 4.0.1 / Reviews admin page spruced up a tad.
