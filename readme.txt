@@ -3,7 +3,7 @@ Contributors: One Billion Words
 Tags: no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 4.0.2
+Stable tag: 4.0.4
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -19,32 +19,34 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Count++ is adapted from [Post Word Count](http://wordpress.org/plugins/post-word-count/) by [Nick Momrik](http://profiles.wordpress.org/nickmomrik/).
 * Google Maps in the Shortcodes! module adapted from [Very Simple Google Maps](http://wordpress.org/plugins/very-simple-google-maps/) by [Michael Araonoff](http://profiles.wordpress.org/masterk/).
 
-= Modules currently available: =
+= Modules: =
 * Count++, a module to count words on the blog and countdown from an (optional) total count goal.
 * Passwords, a module for storing 7 unique (SHA512 salted) passwords, and then hiding content with a shortcode (and IP based lockout) that is unlockable using the current days password.
 * Exclude, a module to hide tags, categories, and post formats from the front page, the archives, the search results, or the feed (or all).
 * Post as Front, a module that allows you to select a specific post to be your home page, or make your home page your most recent post.
 * Jump Around, a module that allows users to navigate posts by pressing keys on the keyboard.
 * Shortcodes!, a module that adds useful shortcodes for posts and pages.
-* Analaytics automatic embedding.
 * Reviews allows you to create custom reviews on anything you want, and display them on a post or a page.
+
+= Tweaks: =
+* Analaytics automatic embedding.
+* Hide WP Version from enqueued scripts and stylesheets.
+
+= Tools: =
 * Database cleaner to mass-delete trashed/revisions/drafts, unapproved/trashed/spam comments, or unused tags and categories.
 
-= Shortcodes =
-* Google maps embedding.
-* Reddit submit button.
-* Restrict content to logged in users, with the option to selectively allow comments (both form and viewing of) to logged in users only.
-
 == Installation ==
-
+= 3-step installation =
 1. Upload /my-optional-modules/ to your plguins folder.
 2. Navigate to your plugins menu in your Wordpress admin.
 3. Activate it.
-4. You'll find settings for the plugin under Settings->MOM: Main Control.
+
 
 
 == Changelog ==
 = 4.0.+ = 
+* 4.0.4 / Searching Reviews on admin page now sticks those results until another search term is entered.  (Required plugin deactivate/reactivate to function.)
+* 4.0.3 / Multiple IDs can be called with Reviews.
 * 4.0.2 / Fixed f***ing closing </code> tag.  Where's my coffee at?
 * 4.0.1 / Reviews admin page spruced up a tad.
 * 4.0.1 / New parameter added: id (allows you to show a single review based on the id of the review).

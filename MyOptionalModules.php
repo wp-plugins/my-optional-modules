@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 4.0.2
+Version: 4.0.4
 Author: One Billion Words
 Author URI: http://onebillionwords.com
 */
@@ -35,19 +35,30 @@ Author URI: http://onebillionwords.com
 		add_option("mommaincontrol_analytics","0","Analytics activated?");
 		add_option("mommaincontrol_reviews","0","Reviews activated?");
 		add_option("mommaincontrol_fontawesome","0","Font Awesome activated?");
+		add_option("mommaincontrol_versionnumbers","0","Version numbers hidden?");
 	}
 	include( plugin_dir_path( __FILE__ ) . 'modules/maincontrol.php');
 
 	// If Font Awesome is configured to load, then load it.
 	if (get_option("mommaincontrol_fontawesome") == 1 && !is_admin() ) {
-	
 		function mom_plugin_scripts() {
 		$css = plugins_url() . "/" . plugin_basename(dirname(__FILE__)) . '/includes/';
 			wp_enqueue_style('font_awesome', $css . 'fontawesome/css/font-awesome.css' );
 		}
 		add_action( 'wp_enqueue_scripts', 'mom_plugin_scripts' );
-
 	}
+
+	// Hide version numbers if asked to.
+	// http://techtalk.virendrachandak.com/how-to-remove-wordpress-version-parameter-from-js-and-css-files/
+	if (get_option("mommaincontrol_versionnumbers") == 1 && !is_admin() ) {
+		function mom_remove_version_numbers( $src ) {
+			if ( strpos( $src, 'ver=' . get_bloginfo( 'version' ) ) )
+				$src = remove_query_arg( 'ver', $src );
+			return $src;
+		}
+		add_filter( 'style_loader_src', 'mom_remove_version_numbers', 0 );
+		add_filter( 'script_loader_src', 'mom_remove_version_numbers', 0 );
+	}	
 	
 	// If Post as Front is active, let's go to the post being asked for in the settings.
 	// If it's a numerical ID, load the ID.  Otherwise, load the first person available.

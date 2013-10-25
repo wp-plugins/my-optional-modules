@@ -122,12 +122,12 @@
 								</ol>
 								<ol>
 									<li><code>[momreviews]</code> = all reviews</li>
-									<li><code>[momreviews type=\"'type'\"]</code> / <code>[momreviews type=\"1\"]</code> = reviews from review type <em>type</em></li>
-									<li><code>[momreviews type=\"'type1','type2','type3'\"]</code> = reviews from reviews types <em>type1, type2, and type3</em>.</code>.</li>
+									<li><code>[momreviews type=\"'type'\"]</code> / <code>[momreviews type=\"'1'\"]</code> = reviews from review type <em>type</em></li>
+									<li><code>[momreviews type=\"'type1','type2','type3'\"]</code> /  <code>[momreviews type=\"'1','2','3'\"]</code> = reviews from reviews types <em>type1, type2, and type3</em>. <strong>or</strong> with the IDs 1, 2, and 3.</code>.</li>
 								</ol>
 								<ol>
 									<li>The shortcode accepts a variety of options.:</li>
-									<li> &mdash; type <strong>or</strong> id (default is blank) : parameters explained above (see code with list of types or single type usage above.) <strong>or</strong> the id of the particular review you want to display (as found in the table below).  (Either or, but not both type and id can be used.)</li>
+									<li> &mdash; type <strong>or</strong> id (default is blank) : parameters explained above (see code with list of types or single type usage above.) <strong>or</strong> the id(s) of the particular review you want to display (as found in the table below).  (Either or, but not both type and id can be used.)</li>
 									<li> &mdash; orderby (default is ID) : available parameters: ID,TYPE,LINK,TITLE,REVIEW,RATING.  Usage: <code>[momreviews orderby=\"LINK\"]</code></li>
 									<li> &mdash;&mdash; ID is the ID of the review, and will increment by 1 sequentially with each new review added to the database. </li>
 									<li> &mdash;&mdash; TYPE is the kind of review you are adding (if any).</li>
@@ -150,7 +150,7 @@
 					<td></td>
 					<td>Filter these results</td>
 					<form method=\"post\" class=\"reviews_item_form\">
-						<td><input type=\"text\" name=\"filterResults_type\" placeholder=\"Filter by type\"></td>
+						<td><input type=\"text\" name=\"filterResults_type\" placeholder=\"Filter by type (or blank for all results)\""; if ( get_option("momreviews_search") != "") echo "value=\"" . get_option("momreviews_search") . "\""; echo "></td>
 						<td><input type=\"submit\" name=\"filterResults\" value=\"Accept\"></td>
 					</form>
 					</tr>
@@ -168,12 +168,20 @@ textarea { height: 250px; }
 			";
 					global $wpdb;
 					$mom_reviews_table_name = $wpdb->prefix . "momreviews";
-					if (isset($_POST["filterResults"]) && $_REQUEST["filterResults_type"] != ""){
+					
+					if (isset($_POST["filterResults"])){
 					$filter_type = $_REQUEST["filterResults_type"];		
-					$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE TYPE = '$filter_type' ORDER BY ID DESC");
+					$filter_type_fetch = sanitize_text_field ($filter_type);
+					update_option("momreviews_search",$filter_type_fetch);
+					}
+					
+					$filtered_search = get_option("momreviews_search");
+					if ( get_option("momreviews_search") != "" ) {
+					$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE TYPE = '$filtered_search' ORDER BY ID DESC");
 					} else {
 					$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name ORDER BY ID DESC");
 					}
+					
 					foreach ($reviews as $reviews_results) {
 						$this_ID = $reviews_results->ID;
 							echo "<tr><td>" . $this_ID . "</td>
@@ -239,8 +247,8 @@ textarea { height: 250px; }
 		global $wpdb;
 		$mom_reviews_table_name = $wpdb->prefix . "momreviews";
 		
-		if ($id_fetch != "" && is_numeric($id_fetch)) {
-			$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE ID = '$id_fetch' ORDER BY $order_by $order_dir LIMIT 1");
+		if ($id_fetch != "") {
+			$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE ID IN ($id_fetch) ORDER BY $order_by $order_dir");
 		} else {
 			if ($result_type != "") { 
 				$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE TYPE IN ($result_type) ORDER BY $order_by $order_dir");

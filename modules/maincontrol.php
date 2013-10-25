@@ -31,6 +31,7 @@
 						update_option("mommaincontrol_analytics",0);
 						update_option("mommaincontrol_reviews",0);
 						update_option("mommaincontrol_fontawesome",0);
+						update_option("mommaincontrol_versionnumbers",0);
 					}
 					if ($_REQUEST["mommaincontrol_uninstall_all"] == 4) {	
 						update_option("mommaincontrol_obwcountplus",1);
@@ -42,6 +43,7 @@
 						update_option("mommaincontrol_analytics",1);
 						update_option("mommaincontrol_reviews",1);
 						update_option("mommaincontrol_fontawesome",1);
+						update_option("mommaincontrol_versionnumbers",1);
 
 							global $wpdb;
 							add_option("obwcountplus_1_countdownfrom","0","Word goal to count down to?");
@@ -104,6 +106,7 @@
 							add_option("jump_around_7","90","Older posts");
 							add_option("jump_around_8","88","Newer posts");
 							add_option("momanalytics_code","","Tracking ID");
+							add_option("momreviews_search", "");
 							add_option("momreviews_css", "
 							/* Colors */
 							.momreview .block { background-color: #fff; color: #000; }
@@ -148,6 +151,7 @@
 						update_option("mommaincontrol_analytics",0);
 						update_option("mommaincontrol_reviews",0);
 						update_option("mommaincontrol_fontawesome",0);
+						update_option("mommaincontrol_versionnumbers",0);
 						global $wpdb;
 						$table_name = $wpdb->prefix . $wpdb->suffix . 'rotating_universal_passwords';
 						$wpdb->query("DROP TABLE {$table_name}");											
@@ -204,6 +208,7 @@
 						$reviews_table_name = $wpdb->prefix . $wpdb->suffix . 'momreviews';
 						$wpdb->query("DROP TABLE {$reviews_table_name}");							
 						delete_option("momreviews_css");
+						delete_option("momreviews_search");
 					}
 					if ($_REQUEST["mommaincontrol_uninstall_all"] == 3) {
 						global $wpdb;
@@ -275,9 +280,11 @@
 						delete_option("momanalytics_code");					
 						delete_option("mommaincontrol_reviews");					
 						delete_option("mommaincontrol_fontawesome");
+						delete_option("mommaincontrol_versionnumbers");
 						$reviews_table_name = $wpdb->prefix . $wpdb->suffix . 'momreviews';
 						$wpdb->query("DROP TABLE {$reviews_table_name}");	
 						delete_option("momreviews_css");
+						delete_option("momreviews_search");
 					}
 				} else {					
 						if ($_REQUEST["mommaincontrol_obwcountplus"] != "" . get_option("mommaincontrol_obwcountplus") ."") { 
@@ -301,6 +308,9 @@
 						
 						if ($_REQUEST["mommaincontrol_fontawesome"] != "" . get_option("mommaincontrol_fontawesome") . "") {
 							update_option("mommaincontrol_fontawesome",1);
+						}
+						if ($_REQUEST["mommaincontrol_versionnumbers"] != "" . get_option("mommaincontrol_versionnumbers") . "") {
+							update_option("mommaincontrol_versionnumbers",1);
 						}
 						
 						if ($_REQUEST["mommaincontrol_momrups"] != "" . get_option("mommaincontrol_momrups") . "") { 
@@ -512,6 +522,7 @@ add_option("momreviews_css", "
 							if ($_REQUEST["mommaincontrol_reviews"] == 3) {
 								delete_option("mommaincontrol_reviews");
 								delete_option("momreviews_css");
+								delete_option("momreviews_search");
 							}
 						}
 					
@@ -778,7 +789,22 @@ add_option("momreviews_css", "
 						echo ">Yes</option>
 						</select>
 						</td>
-						<td><em>Enable <a href=\"http://fortawesome.github.io/Font-Awesome/\">Font Awesome</a> on your theme, allowing you to use all available <a href=\"http://fortawesome.github.io/Font-Awesome/icons/\">icons</a>.  (Don't fgorget to prefix all font awesome i class calls with fa ( <i class='fa some-icon'</i>) or you will get broken font images.)</td>
+						<td><em>Enable <a href=\"http://fortawesome.github.io/Font-Awesome/\">Font Awesome</a> on your theme, allowing you to use all available <a href=\"http://fortawesome.github.io/Font-Awesome/icons/\">icons</a>.  (Don't fgorget to prefix all font awesome i class calls with fa ( <i class='fa some-icon'</i>) or you will get broken font images.)</td></tr>
+
+						<tr valign=\"top\"><td><strong>Hide WP Version</strong></td>
+						<td>
+						<select id=\"mommaincontrol_versionnumbers\" class=\"regular-text\" type=\"text\" name=\"mommaincontrol_versionnumbers\">
+						<option value=\"0\" 
+						";
+							if (get_option("mommaincontrol_versionnumbers") == 0) { echo "selected=\"selected\""; }
+						echo ">No</option>					
+						<option value=\"1\" 
+						";
+							if (get_option("mommaincontrol_versionnumbers") == 1) { echo "selected=\"selected\""; }
+						echo ">Yes</option>
+						</select>
+						</td>
+						<td><em>Hide Wordpress version number from enqueued scripts and stylesheets on the front end of your website.</em></td></tr>
 					</tbody>
 				</table>
 				<table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\"><tbody><tr valign=\"top\"><td><input id=\"momsave\" class=\"button button-primary\" type=\"submit\" value=\"Save Changes\" name=\"momsave\"></input></td><td>Save any changes made to any options above.</td></tr></tbody></table>
