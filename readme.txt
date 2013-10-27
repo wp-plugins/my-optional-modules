@@ -3,7 +3,7 @@ Contributors: One Billion Words
 Tags: no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 4.0.6
+Stable tag: 4.0.7
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -45,6 +45,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 == Changelog ==
 = 4.0.+ = 
+* 4.0.7 / Passwords uses the salt provided by Wordpress (you don't have to edit the salt yourself).  Requires you to update your passwords to rehash them.
+* 4.0.7 / Code cleanup, including minor bug fixes and removal of a couple of functions that were left over from early releases that are no longer used or supported.
 * 4.0.6 / URLs in Reviews escaped.
 * 4.0.5 / Admin interface has been completely overhauled, with all settings pages for all modules either being consolidated completely to a single screen.
 * 4.0.5 / various bug fixes.

@@ -5,7 +5,7 @@
 	// shortcode content
 	function rotating_universal_passwords_shortcode($atts, $content = null) {
 		ob_start();
-		global $theSalt;
+		global $my_optional_modules_passwords_salt;
 		if ( isset($_SERVER["REMOTE_ADDR"]) ) { 
 			$RUPs_origin = $_SERVER["REMOTE_ADDR"]; 
 		} else if ( isset($_SERVER["HTTP_X_FORWARDED_FOR"]) ) { 
@@ -23,7 +23,7 @@
 		if (date("D") === "Thu") { $rotating_universal_passwords_todays_password = get_option("rotating_universal_passwords_5"); $rotating_universal_passwords_today_is = "Thursday"; }
 		if (date("D") === "Fri") { $rotating_universal_passwords_todays_password = get_option("rotating_universal_passwords_6"); $rotating_universal_passwords_today_is = "Friday"; }
 		if (date("D") === "Sat") { $rotating_universal_passwords_todays_password = get_option("rotating_universal_passwords_7"); $rotating_universal_passwords_today_is = "Saturday"; }	
-		$rups_md5passa = hash("sha512", $theSalt . $_POST['rups_pass']);
+		$rups_md5passa = hash("sha512", $my_optional_modules_passwords_salt . $_POST['rups_pass']);
 		global $wpdb;
 		$RUPs_table_name = $wpdb->prefix . "rotating_universal_passwords";
 		$RUPs_result = $wpdb->get_results ("SELECT ID FROM $RUPs_table_name WHERE IP = '".$RUPs_s32int."'");

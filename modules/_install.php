@@ -1,5 +1,4 @@
-<?php 
-	if(!defined('MyOptionalModules')) { die('You can not call this file directly.'); }
+<?php if(!defined('MyOptionalModules')) { die('You can not call this file directly.'); }
 	
 	// Install script
 	update_option("mommaincontrol_shorts",$_REQUEST["mommaincontrol_shorts"]);
@@ -120,4 +119,5 @@
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	dbDelta( $reviews_sql );
 	}
+	
 ?>
