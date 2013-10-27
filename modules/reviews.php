@@ -42,7 +42,7 @@
 								<tr valign=\"top\"><td><input type=\"text\" name=\"reviews_link\" placeholder=\"Relevant URL\" ></td></tr>
 								
 								<tr valign=\"top\"><td>";
-									the_editor($content, $name = 'reviews_review', $id = 'reviews_review', $prev_id = 'title', $media_buttons = false, $tab_index = 2);
+									the_editor($content, $name = 'reviews_review', $id = 'reviews_review', $prev_id = 'title', $media_buttons = true, $tab_index = 2);
 								echo "</td></tr>
 
 								<tr valign=\"top\"><td><input type=\"text\" name=\"reviews_rating\" placeholder=\"Your rating\"></td></tr>
@@ -183,7 +183,7 @@ textarea { height: 250px; }
 									<label for=\"" . $this_ID . "\">" .  $reviews_results->TITLE . "<span>+</span><span>-</span></label>
 									<section class=\"reviewed\">
 										<em>" . $reviews_results->TYPE . "</em> &mdash; ";
-										if ($reviews_results->LINK != "") { echo "<a href=\"" . $reviews_results->LINK . "\">#</a> &mdash;"; }
+										if ($reviews_results->LINK != "") { echo "<a href=\"" . esc_url( $reviews_results->LINK ) . "\">#</a> &mdash;"; }
 										echo "<em>" . $reviews_results->RATING . "</em> <hr />" . $reviews_results->REVIEW . "
 									</section>
 								</article>
