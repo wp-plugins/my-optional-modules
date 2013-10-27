@@ -3,7 +3,7 @@ Contributors: One Billion Words
 Tags: no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 4.0.4
+Stable tag: 4.0.5
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -45,6 +45,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 == Changelog ==
 = 4.0.+ = 
+* 4.0.5 / Admin interface has been completely overhauled, with all settings pages for all modules either being consolidated completely to a single screen.
+* 4.0.5 / various bug fixes.
 * 4.0.4 / Searching Reviews on admin page now sticks those results until another search term is entered.  (Required Reviews module deactivate/reactivate to function.)
 * 4.0.3 / Multiple IDs can be called with Reviews.
 * 4.0.2 / Fixed f***ing closing </code> tag.  Where's my coffee at?

@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 4.0.4
+Version: 4.0.5
 Author: One Billion Words
 Author URI: http://onebillionwords.com
 */
@@ -22,10 +22,12 @@ Author URI: http://onebillionwords.com
 
 	// Call modules
 	define('MyOptionalModules', TRUE);
-
+	
 	// Register Main Control activation, install options, call main control file
 	register_activation_hook( __FILE__, "my_optional_modules_main_control_install" );
+
 	function my_optional_modules_main_control_install() {
+		add_option("mommaincontrol_focus","","Focus module");
 		add_option("mommaincontrol_obwcountplus","0","Count++ activated?");
 		add_option("mommaincontrol_momrups","0","RUPs activated?");
 		add_option("mommaincontrol_momse","0","Simply Exclude activated?");
@@ -37,19 +39,27 @@ Author URI: http://onebillionwords.com
 		add_option("mommaincontrol_fontawesome","0","Font Awesome activated?");
 		add_option("mommaincontrol_versionnumbers","0","Version numbers hidden?");
 	}
-	include( plugin_dir_path( __FILE__ ) . 'modules/maincontrol.php');
 
-	// If Font Awesome is configured to load, then load it.
+	function mom_list_styles() {
+		wp_register_style( 'roboto', 'http://fonts.googleapis.com/css?family=Roboto' );
+		wp_register_style( 'mom_admin_css', plugins_url() . "/" . plugin_basename(dirname(__FILE__)) . "/includes/adminstyle/css.css" );
+		wp_register_style('font_awesome', plugins_url() . "/" . plugin_basename(dirname(__FILE__)) . '/includes/fontawesome/css/font-awesome.css' );
+		wp_enqueue_style( 'roboto' );
+		wp_enqueue_style( 'font_awesome' );
+		wp_enqueue_style( 'mom_admin_css' );	
+	}
+	function mom_styles($hook) {
+		if( 'settings_page_mommaincontrol' != $hook ) return; mom_list_styles();
+	}
+	add_action( 'admin_enqueue_scripts', 'mom_styles' );
+
 	if (get_option("mommaincontrol_fontawesome") == 1 && !is_admin() ) {
 		function mom_plugin_scripts() {
 		$css = plugins_url() . "/" . plugin_basename(dirname(__FILE__)) . '/includes/';
 			wp_enqueue_style('font_awesome', $css . 'fontawesome/css/font-awesome.css' );
 		}
 		add_action( 'wp_enqueue_scripts', 'mom_plugin_scripts' );
-	}
-
-	// Hide version numbers if asked to.
-	// http://techtalk.virendrachandak.com/how-to-remove-wordpress-version-parameter-from-js-and-css-files/
+	}	
 	if (get_option("mommaincontrol_versionnumbers") == 1 && !is_admin() ) {
 		function mom_remove_version_numbers( $src ) {
 			if ( strpos( $src, 'ver=' . get_bloginfo( 'version' ) ) )
@@ -59,9 +69,6 @@ Author URI: http://onebillionwords.com
 		add_filter( 'style_loader_src', 'mom_remove_version_numbers', 0 );
 		add_filter( 'script_loader_src', 'mom_remove_version_numbers', 0 );
 	}	
-	
-	// If Post as Front is active, let's go to the post being asked for in the settings.
-	// If it's a numerical ID, load the ID.  Otherwise, load the first person available.
 	if (get_option("mommaincontrol_mompaf") == 1) { 
 		add_action( "wp", "mompaf_filter_home" );
 		function mompaf_filter_home() {	
@@ -78,7 +85,6 @@ Author URI: http://onebillionwords.com
 			}
 		}	
 	}	
-	// If Analytics is active, and there is an ID set, let's load the tracking code into the footer of the theme.
 	if (get_option("mommaincontrol_analytics") == 1 && get_option("momanalytics_code") != "") {
 		function mom_analytics() {
 				echo "<script>
@@ -92,24 +98,13 @@ Author URI: http://onebillionwords.com
 		}
 		add_action('wp_footer', 'mom_analytics');		
 	}
-
-	// Conditional module loading
-	// Count++
-	if (get_option("mommaincontrol_obwcountplus") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/countplusplus.php'); }
-		
-	// Passwords
-	if (get_option("mommaincontrol_momrups") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/passwords.php'); }
-		
-	// Exclude
-	if (get_option("mommaincontrol_momse") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/exclude.php'); }	
-		
-	// Jump Around
-	if (get_option("mommaincontrol_momja") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/jumparound.php'); }	
-
 	
-	// Reviews 
-	if (get_option("mommaincontrol_reviews") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/reviews.php'); }
+	include( plugin_dir_path( __FILE__ ) . 'modules/maincontrol.php');
+	if (get_option("mommaincontrol_obwcountplus") == 1) { include( plugin_dir_path( __FILE__ ) . 'functions/_functions_countplusplus.php'); }
+	if (get_option("mommaincontrol_momse") == 1) { include( plugin_dir_path( __FILE__ ) . 'functions/_functions_exclude.php'); }	
+	if (get_option("mommaincontrol_momja") == 1) { include( plugin_dir_path( __FILE__ ) . 'functions/_functions_jumparound.php'); }	
+	if (get_option("mommaincontrol_momrups") == 1) { include( plugin_dir_path( __FILE__ ) . 'functions/_functions_passwords.php'); }
+	if (get_option("mommaincontrol_reviews") == 1) { include( plugin_dir_path( __FILE__ ) . 'functions/_functions_reviews.php'); }
+	if (get_option("mommaincontrol_shorts") == 1) { include( plugin_dir_path( __FILE__ ) . 'functions/_functions_shortcodes.php');}
 	
-	// Shortcodes! 
-	if (get_option("mommaincontrol_shorts") == 1) { include( plugin_dir_path( __FILE__ ) . 'modules/shortcodes.php'); }
 ?>

@@ -26,20 +26,67 @@
 		$this_term = $termstot->term_id;
 		$terms_count++;
 	}					
-	echo "<tr valign=\"top\">
-			<td><strong>Database cleaner</strong><hr />Clean your database of unnecessary clutter.</td>
-			<td>
-				<table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\">		
-					<tbody>
-						<tr><td><form method=\"post\"><input id=\"delete_post_revisions\" class=\"button button-primary\" type=\"submit\" value=\"Delete ($revisions_count)\" name=\"delete_post_revisions\"></input></form></td><td>Post clutter</td></tr>
-						<tr><td><form method=\"post\"><input id=\"delete_unapproved_comments\" class=\"button button-primary\" type=\"submit\" value=\"Delete ($comments_count)\" name=\"delete_unapproved_comments\"></input></form></td><td>Comment clutter</td></tr>
-						<tr><td><form method=\"post\"><input id=\"delete_unused_terms\" class=\"button button-primary\" type=\"submit\" value=\"Delete ($terms_count)\" name=\"delete_unused_terms\"></input></form></td><td>Tag clutter</td></tr>
-						<tr><td><form method=\"post\"><input id=\"delete_all\" class=\"button button-primary\" type=\"submit\" value=\"Delete all (" . ($revisions_count+$comments_count+$terms_count) . ")\" name=\"delete_all\"></input></form></td><td>Clear all clutter</td></tr>
-					</tbody>
-				</table>
-			</td>
-		</tr>				
-		";
+	$trash_total = ($revisions_count+$comments_count+$terms_count);
+	echo "
+	<div class=\"new\">
+		<div class=\"panelSection clear\">
+			<div class=\"info panel left\">
+				<section class=\"title clear\">
+					<span><i class=\"fa fa-eraser\"></i> Database cleaner</span>
+				</section>
+				<p>Clean your database of unnecessary clutter.</p>
+			</div>
+			<div class=\"panel left\">
+				<section class=\"title clear\">
+					<span><i class=\"fa fa-trash-o\"></i> All Clutter</span>
+					<form method=\"post\"><input id=\"delete_all\" class=\"button button-primary\" type=\"submit\" value=\"Go\" name=\"delete_all\"></input></form>
+				</section>
+				<p>";
+				if ( $trash_total != 0 ) { echo "Delete $trash_total items of post, comment, and tag clutter."; }
+				else { echo "Nothing to see here."; }
+				echo "</p>
+			</div>
+			<div class=\"panel left\">
+				<section class=\"title clear\">
+					<span></span>
+				</section>
+				<p></p>
+			</div>			
+		</div>
+		<div class=\"panelSection clear\">
+			<div class=\"panel left\">
+				<section class=\"title clear\">
+					<span><i class=\"fa fa-pencil\"></i> Post Clutter</span>
+					<form method=\"post\"><input id=\"delete_post_revisions\" class=\"button button-primary\" type=\"submit\" value=\"Go\" name=\"delete_post_revisions\"></input></form>
+				</section>
+				<p>";
+				if ( $revisions_count != 0 ) { echo "Delete $revisions_count post revisions, post drafts, and trashed posts."; }
+				else { echo "Nothing to see here."; }
+				echo "</p>
+			</div>
+			<div class=\"panel left\">
+				<section class=\"title clear\">
+					<span><i class=\"fa fa-comment\"></i> Comment Clutter</span>
+					<form method=\"post\"><input id=\"delete_unapproved_comments\" class=\"button button-primary\" type=\"submit\" value=\"Go\" name=\"delete_unapproved_comments\"></input></form>
+				</section>
+				<p>";
+				if ( $comments_count != 0 ) { echo "Delete $comments_count unapproved comments, trashed comments, and spam comments."; }
+				else { echo "Nothing to see here."; }
+				echo "</p>
+			</div>
+			<div class=\"panel left\">
+				<section class=\"title clear\">
+					<span><i class=\"fa fa-tag\"></i> Tag/Cat Clutter</span>
+					<form method=\"post\"><input id=\"delete_unused_terms\" class=\"button button-primary\" type=\"submit\" value=\"Go\" name=\"delete_unused_terms\"></input></form>
+				</section>
+				<p>";
+				if ( $terms_count != 0 ) { echo "Delete $terms_count tags and categories with no posts associated with them."; } 
+				else { echo "Nothing to see here."; }
+				echo "</p>
+			</div>
+		</div>
+	</div>
+	";
 		if(isset($_POST['delete_unused_terms']) || isset($_POST['delete_post_revisions']) || isset($_POST['delete_unapproved_comments']) || isset($_POST['delete_all'])){
 			if(isset($_POST['delete_post_revisions'])){
 				$wpdb->query("DELETE FROM `" . $postsTable . "` WHERE `post_type` = 'revision' OR `post_type` = 'auto-draft' OR `post_status` = 'trash'");				
