@@ -34,7 +34,6 @@
 	.updated { background-color: #f6fff6 !important; }
 	.new { margin: 50px 0 10px 0; display: block; height: auto; overflow-y: auto; overflow-x: hidden;}
 	.info { text-align: center; background-color: transparent !important; border:0px !important; text-shadow: 1px 1px 2px #9e9e9e; color: #0d2033; margin:2px 2px 2px 4px !important;}
-	.info a { color: #d0deff; }
 	.info span { font-size: 20px; text-align: center; margin: 20px auto !important; width: 100%; display: block;}
 	.important { background-color: #fff3f3 !important; margin:2px 2px 2px 3px !important;}
 	.panel { height: 140px; width: 200px; display: block; margin: 2px; padding: 5px; border-radius: 3px; background-color: #fbfbfb; border:1px solid #f4f4f4;}
