@@ -160,7 +160,7 @@
                             <option value=\"1\" "; if (get_option("mommaincontrol_fontawesome") == 1) { echo "selected=\"selected\""; } echo ">On</option>
                         </select>
                     </section>
-                    <p>Enable <a href=\"http://fortawesome.github.io/Font-Awesome/\">Font Awesome</a> on your theme, allowing you to use all available <a href=\"http://fortawesome.github.io/Font-Awesome/icons/\">icons</a>.</p>
+                    <p>Enable <a href=\"http://fortawesome.github.io/Font-Awesome/\">Font Awesome</a> on your theme, allowing you to use all available <a href=\"http://fortawesome.github.io/Font-Awesome/icons/\">icons</a>. (Shortcodes also avaailable.)</p>
                 </div>
                 <div class=\"panel left\">
                     <section class=\"title clear\">
@@ -246,6 +246,14 @@
                     }
                     echo "\"></i></label><input id=\"MOMexclude\" name=\"MOMexclude\" type=\"submit\">"; 
                 }
+
+                if ( get_option( 'mommaincontrol_fontawesome' ) == 1 ) {
+                    echo "<label for=\"MOMfontfa\"><i title=\"Font Awesome shortcodes\" class=\"fa fa-flag"; 
+                    if ( get_option( 'mommaincontrol_focus' ) == "fontfa" ) {
+                        echo " active"; 
+                    }
+                    echo "\"></i></label><input id=\"MOMfontfa\" name=\"MOMfontfa\" type=\"submit\">"; 
+                }				
                 
                 if ( get_option( 'mommaincontrol_momrups' ) == 1 ) {
                     echo "<label for=\"MOMpasswords\"><i title=\"Passwords settings\" class=\"fa fa-lock"; 
@@ -286,6 +294,7 @@
             
             if( isset( $_POST[ 'MOMclear' ] ) ) { update_option( 'mommaincontrol_focus','' ); echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />"; }
             if( isset( $_POST[ 'MOMexclude' ] ) ) { update_option( 'mommaincontrol_focus','exclude' ); echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />"; }
+			if( isset( $_POST[ 'MOMfontfa' ] ) ) { update_option( 'mommaincontrol_focus','fontfa' ); echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />"; }
             if( isset( $_POST[ 'MOMcount' ] ) ) { update_option( 'mommaincontrol_focus','count' ); echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />"; }
             if( isset( $_POST[ 'MOMjumparound' ] ) ) { update_option( 'mommaincontrol_focus','jumparound' ); echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />"; }
             if( isset( $_POST[ 'MOMpasswords' ] ) ) { update_option( 'mommaincontrol_focus','passwords' ); echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />"; }
@@ -323,6 +332,7 @@
                                 elseif ( get_option( 'mommaincontrol_focus' ) == 'passwords' ) { include( plugin_dir_path( __FILE__ ) . 'passwords.php'); }
                                 elseif ( get_option( 'mommaincontrol_focus' ) == 'reviews' ) { include( plugin_dir_path( __FILE__ ) . 'reviews.php'); }
                                 elseif ( get_option( 'mommaincontrol_focus' ) == 'shortcodes' ) { include( plugin_dir_path( __FILE__ ) . 'shortcodes.php'); }
+								elseif ( get_option( 'mommaincontrol_focus' ) == 'fontfa' ) { include( plugin_dir_path( __FILE__ ) . 'fontfa.php'); }
                             echo "
                             </div>";
                         }

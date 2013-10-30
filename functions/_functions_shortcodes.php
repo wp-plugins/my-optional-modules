@@ -1,4 +1,7 @@
 <?php
+
+		$mom_progress_id = 0;
+
 		// Google map embed 
 		add_shortcode('mom_map', 'mom_google_map_shortcode');
 		add_filter('the_content', 'do_shortcode', 'mom_map');
@@ -96,4 +99,38 @@
 			}		
 			return ob_get_clean();
 		}
+	
+	// Progress bars
+		add_shortcode('mom_progress', 'mom_progress_shortcode');
+		add_filter('the_content', 'do_shortcode', 'mom_progress');
+		function mom_progress_shortcode($atts, $content = null) {
+			$mom_progress_id++;
+			extract(
+					shortcode_atts(array(
+					"align" => 'none',
+					"fillcolor" => '#ccc',
+					"maincolor" => '#000',
+					"height" => '15',
+					"fontsize" => '15',
+					"level" => '',
+					"margin" => '0 auto',
+					"talign" => 'center',
+					"width" => '95%',
+				), $atts)
+			);
+			$align_fetch = sanitize_text_field ($align);
+			$fillcolor_fetch = sanitize_text_field ($fillcolor);
+			$height_fetch = sanitize_text_field ($height);
+			$level_fetch = sanitize_text_field ($level);
+			$maincolor_fetch = sanitize_text_field ($maincolor);
+			$margin_fetch = sanitize_text_field ($margin);
+			$width_fetch = sanitize_text_field ($width);
+			ob_start();
+			if ( $align_fetch == "left" ) { $align_fetch_final = "float: left;"; }
+			elseif ($align_fetch == "right" ) { $align_fetch_final = "float: right;"; }
+			else { $align_fetch_final = "clear: both; "; }
+			echo "<div class=\"mom_progress\" id=\"". $mom_progress_id . "\" style=\"" . $align_fetch_final . "; height:" . $height_fetch . "px; display: block; width:" . $width_fetch . "%;  margin: $margin_fetch; background-color:" . $maincolor_fetch . "\"><div style=\"display: block; height:" . $height_fetch . "px; width:" . $level_fetch . "%; background-color: $fillcolor_fetch;\"></div></div>";
+			return ob_get_clean();
+		}	
+	
 ?>

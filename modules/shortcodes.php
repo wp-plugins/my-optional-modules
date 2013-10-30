@@ -18,7 +18,8 @@
                             <tr valign=\"top\">
                                 <p>[<a href=\"#google_maps\">map</a>] 
                                 &mdash; [<a href=\"#reddit_button\">reddit</a>] 
-                                &mdash; [<a href=\"#restrict\">restrict content to logged in users</a>]</p>
+                                &mdash; [<a href=\"#restrict\">restrict content to logged in users</a>] 
+								&mdash; [<a href=\"#progress_bars\">progress bars</a>]</p>
                             </tr>
                             <tr valign=\"top\" id=\"google_maps\">
                                 <td valign=\"top\">
@@ -154,6 +155,38 @@
                                     </table>
                                 </td>
                             </tr>
+							
+                            <tr valign=\"top\" id=\"progress_bars\">
+                                <td valign=\"top\" style=\"max-width:300px;\">
+                                    <strong>Progress bars</strong>
+                                    <br />Create bars that fill up, based on your parameters, to show progression towards a goal.<hr />
+                                    <u>Parameters</u><br />align, fillcolor, maincolor, 
+									height, level, margin, 
+									width<hr />
+                                    <u>Defaults</u><br />align: none<br />fillcolor: #ccc<br />maincolor: #000<br />height: 15<br />level:<br />margin: 0 auto<br />width: 95%<br /><hr />
+                                    div class .mom_progress<hr />
+									The <code>level</code> refers to the % of the main bar to be filled.  So a level of 51 would fill it 51%, 29 would fill it 29%, 75 would fill it 75%, and so on.
+                                </td>
+                                <td valign=\"top\">
+                                    <table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
+                                    <tbody>
+                                    <tr><td><code>[mom_progress level=\"10\"]</code></td><td><em>Default, level 10</em></td></tr>
+                                    <tr><td>
+										<div id=\"1\" class=\"mom_progress\" style=\"clear: both; height:15px; display: block; width:95%%; margin: 0 auto; background-color:#000\"><div style=\"display: block; height:15px; width:10%; background-color: #ccc;\"></div></div>
+									</td></tr>
+                                    <tr><td><code>[mom_progress level=\"70\" maincolor=\"#ff0000\" fillcolor=\"#009cff\"]</code></td><td><em>Level 70, custom colors</em></td></tr>
+                                    <tr><td>
+										<div id=\"2\" class=\"mom_progress\" style=\"clear: both; height:15px; display: block; width:95%; margin: 0 auto; background-color:#ff0000\"><div style=\"display: block; height:15px; width:70%; background-color: #009cff;\"></div></div>
+									</td></tr>
+                                    <tr><td><code>[mom_progress height=\"50\" level=\"70\" maincolor=\"#ff0000\" fillcolor=\"#009cff\"]</code></td><td><em>Level 70, custom colors, height of 50 (translates to 50px)</em></td></tr>
+                                    <tr><td>
+										<div id=\"3\" class=\"mom_progress\" style=\"clear: both; height:50px; display: block; width:95%; margin: 0 auto; background-color:#ff0000\"><div style=\"display: block; height:50px; width:70%; background-color: #009cff;\"></div></div>
+									</td></tr>									
+                                    </tbody>
+                                    </table>
+                                </td>
+                            </tr>							
+							
                         </tbody>
                     </table>
                 </div>";

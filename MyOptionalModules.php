@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 4.0.8
+Version: 4.0.9
 Author: One Billion Words
 Author URI: http://onebillionwords.com
 */
@@ -69,6 +69,7 @@ Author URI: http://onebillionwords.com
 		if( 'settings_page_mommaincontrol' != $hook ) return; mom_list_styles();
 	}
 	add_action( 'admin_enqueue_scripts', 'mom_styles' );
+	
 
 	// Font awesome enqueue
 	if ( get_option( 'mommaincontrol_fontawesome' ) == 1 && !is_admin() ) {
@@ -78,6 +79,7 @@ Author URI: http://onebillionwords.com
 		}
 		add_action( 'wp_enqueue_scripts', 'mom_plugin_scripts' );
 	}	
+	if ( get_option( 'mommaincontrol_fontawesome' ) == 1) { include( plugin_dir_path( __FILE__ ) . 'functions/_functions_fontawesome.php' ); }
 
 	// Hide version numbers from enqueue scripts and stylesheets
 	if ( get_option( 'mommaincontrol_versionnumbers' ) == 1 && !is_admin() ) {
