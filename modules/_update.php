@@ -4,18 +4,7 @@
         global $wpdb;
         $RUPs_table_name = $wpdb->prefix . $wpdb->suffix . "rotating_universal_passwords";
         $review_table_name = $wpdb->prefix . $wpdb->suffix . "momreviews";
-        
-        if ( $_REQUEST[ 'mommaincontrol_analytics' ] != get_option( 'mommaincontrol_analytics' ) ) {  update_option( 'mommaincontrol_analytics',$_REQUEST[ 'mommaincontrol_analytics' ] ); }
-        if ( $_REQUEST[ 'mommaincontrol_obwcountplus' ] != get_option( 'mommaincontrol_obwcountplus' ) ) {  update_option( 'mommaincontrol_obwcountplus',$_REQUEST[ 'mommaincontrol_obwcountplus' ] ); }
-        if ( $_REQUEST[ 'mommaincontrol_momse' ] != get_option( 'mommaincontrol_momse' ) ) {  update_option( 'mommaincontrol_momse',$_REQUEST[ 'mommaincontrol_momse' ] ); }
-        if ( $_REQUEST[ 'mommaincontrol_fontawesome' ] != get_option( 'mommaincontrol_fontawesome' ) ) {  update_option( 'mommaincontrol_fontawesome',$_REQUEST[ 'mommaincontrol_fontawesome' ] ); }
-        if ( $_REQUEST[ 'mommaincontrol_momja' ] != get_option( 'mommaincontrol_momja' ) ) {  update_option( 'mommaincontrol_momja',$_REQUEST[ 'mommaincontrol_momja' ] ); }
-        if ( $_REQUEST[ 'mommaincontrol_momrups' ] != get_option( 'mommaincontrol_momrups' ) ) {  update_option( 'mommaincontrol_momrups',$_REQUEST[ 'mommaincontrol_momrups' ] ); }
-        if ( $_REQUEST[ 'mommaincontrol_reviews' ] != get_option( 'mommaincontrol_reviews' ) ) {  update_option( 'mommaincontrol_reviews',$_REQUEST[ 'mommaincontrol_reviews' ] ); }
-        if ( $_REQUEST[ 'mommaincontrol_shorts' ] != get_option( 'mommaincontrol_shorts' ) ) {  update_option( 'mommaincontrol_shorts',$_REQUEST[ 'mommaincontrol_shorts' ] ); }
-        if ( $_REQUEST[ 'mommaincontrol_versionnumbers' ] != get_option( 'mommaincontrol_versionnumbers' ) ) {  update_option( 'mommaincontrol_versionnumbers',$_REQUEST[ 'mommaincontrol_versionnumbers' ] ); }
-        if ( $_REQUEST[ 'mommaincontrol_mompaf' ] != get_option( 'mommaincontrol_mompaf' ) ) {  update_option( 'mommaincontrol_mompaf',$_REQUEST[ 'mommaincontrol_mompaf' ] ); }
-        
+
         //    Base options
         if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 5 || $_REQUEST["mommaincontrol_uninstall_all"] == 1 ) {
             update_option( 'mommaincontrol_obwcountplus',0);
@@ -29,7 +18,30 @@
             update_option( 'mommaincontrol_fontawesome',0);
             update_option( 'mommaincontrol_versionnumbers',0);
             update_option( 'mommaincontrol_focus','');
-        }
+        } elseif ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 3 ) {
+            delete_option( 'mommaincontrol_obwcountplus' );
+            delete_option( 'mommaincontrol_momrups' );
+            delete_option( 'mommaincontrol_momse' );
+            delete_option( 'mommaincontrol_mompaf' );
+            delete_option( 'mommaincontrol_momja' );            
+            delete_option( 'mommaincontrol_shorts' );
+            delete_option( 'mommaincontrol_analytics' );
+            delete_option( 'mommaincontrol_reviews' );
+            delete_option( 'mommaincontrol_fontawesome' );
+            delete_option( 'mommaincontrol_versionnumbers' );
+            delete_option( 'mommaincontrol_focus');
+		} else {
+			if ( $_REQUEST[ 'mommaincontrol_analytics' ] != get_option( 'mommaincontrol_analytics' ) ) {  update_option( 'mommaincontrol_analytics',$_REQUEST[ 'mommaincontrol_analytics' ] ); }
+			if ( $_REQUEST[ 'mommaincontrol_obwcountplus' ] != get_option( 'mommaincontrol_obwcountplus' ) ) {  update_option( 'mommaincontrol_obwcountplus',$_REQUEST[ 'mommaincontrol_obwcountplus' ] ); }
+			if ( $_REQUEST[ 'mommaincontrol_momse' ] != get_option( 'mommaincontrol_momse' ) ) {  update_option( 'mommaincontrol_momse',$_REQUEST[ 'mommaincontrol_momse' ] ); }
+			if ( $_REQUEST[ 'mommaincontrol_fontawesome' ] != get_option( 'mommaincontrol_fontawesome' ) ) {  update_option( 'mommaincontrol_fontawesome',$_REQUEST[ 'mommaincontrol_fontawesome' ] ); }
+			if ( $_REQUEST[ 'mommaincontrol_momja' ] != get_option( 'mommaincontrol_momja' ) ) {  update_option( 'mommaincontrol_momja',$_REQUEST[ 'mommaincontrol_momja' ] ); }
+			if ( $_REQUEST[ 'mommaincontrol_momrups' ] != get_option( 'mommaincontrol_momrups' ) ) {  update_option( 'mommaincontrol_momrups',$_REQUEST[ 'mommaincontrol_momrups' ] ); }
+			if ( $_REQUEST[ 'mommaincontrol_reviews' ] != get_option( 'mommaincontrol_reviews' ) ) {  update_option( 'mommaincontrol_reviews',$_REQUEST[ 'mommaincontrol_reviews' ] ); }
+			if ( $_REQUEST[ 'mommaincontrol_shorts' ] != get_option( 'mommaincontrol_shorts' ) ) {  update_option( 'mommaincontrol_shorts',$_REQUEST[ 'mommaincontrol_shorts' ] ); }
+			if ( $_REQUEST[ 'mommaincontrol_versionnumbers' ] != get_option( 'mommaincontrol_versionnumbers' ) ) {  update_option( 'mommaincontrol_versionnumbers',$_REQUEST[ 'mommaincontrol_versionnumbers' ] ); }
+			if ( $_REQUEST[ 'mommaincontrol_mompaf' ] != get_option( 'mommaincontrol_mompaf' ) ) {  update_option( 'mommaincontrol_mompaf',$_REQUEST[ 'mommaincontrol_mompaf' ] ); }
+		}
 
         //    Analytics
         if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_analytics' ] == 1 && !get_option( 'momanalytics_code' ) ) { add_option( 'momanalytics_code','','Tracking ID' ); }    
@@ -61,13 +73,13 @@
         if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_momse' ] == 1 && !get_option( 'simple_announcement_with_exclusion_thu' ) ) { add_option( 'simple_announcement_with_exclusion_thu','','Exclude Thursday' ); } 
         if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_momse' ] == 1 && !get_option( 'simple_announcement_with_exclusion_fri' ) ) { add_option( 'simple_announcement_with_exclusion_fri','','Exclude Friday' ); } 
         if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_momse' ] == 1 && !get_option( 'simple_announcement_with_exclusion_sat' ) ) { add_option( 'simple_announcement_with_exclusion_sat','','Exclude Saturday' ); } 
-        if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_momse' ] == 1 && !get_option( 'simple_announcement_with_exclusion_cat_' ) ) { add_option( 'simple_announcement_with_exclusion_cat_sun','','Exclude categories Sunday' ); } 
-        if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_momse' ] == 1 && !get_option( 'simple_announcement_with_exclusion_cat_' ) ) { add_option( 'simple_announcement_with_exclusion_cat_mon','','Exclude categories Monday' ); } 
-        if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_momse' ] == 1 && !get_option( 'simple_announcement_with_exclusion_cat_' ) ) { add_option( 'simple_announcement_with_exclusion_cat_tue','','Exclude categories Tuesday' ); } 
-        if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_momse' ] == 1 && !get_option( 'simple_announcement_with_exclusion_cat_' ) ) { add_option( 'simple_announcement_with_exclusion_cat_wed','','Exclude categories Wednesday' ); } 
-        if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_momse' ] == 1 && !get_option( 'simple_announcement_with_exclusion_cat_' ) ) { add_option( 'simple_announcement_with_exclusion_cat_thu','','Exclude categories Thursday' ); } 
-        if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_momse' ] == 1 && !get_option( 'simple_announcement_with_exclusion_cat_' ) ) { add_option( 'simple_announcement_with_exclusion_cat_fri','','Exclude categories Friday' ); } 
-        if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_momse' ] == 1 && !get_option( 'simple_announcement_with_exclusion_cat_' ) ) { add_option( 'simple_announcement_with_exclusion_cat_sat','','Exclude categories Saturday' ); }     
+        if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_momse' ] == 1 && !get_option( 'simple_announcement_with_exclusion_cat_sun' ) ) { add_option( 'simple_announcement_with_exclusion_cat_sun','','Exclude categories Sunday' ); } 
+        if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_momse' ] == 1 && !get_option( 'simple_announcement_with_exclusion_cat_mon' ) ) { add_option( 'simple_announcement_with_exclusion_cat_mon','','Exclude categories Monday' ); } 
+        if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_momse' ] == 1 && !get_option( 'simple_announcement_with_exclusion_cat_tue' ) ) { add_option( 'simple_announcement_with_exclusion_cat_tue','','Exclude categories Tuesday' ); } 
+        if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_momse' ] == 1 && !get_option( 'simple_announcement_with_exclusion_cat_wed' ) ) { add_option( 'simple_announcement_with_exclusion_cat_wed','','Exclude categories Wednesday' ); } 
+        if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_momse' ] == 1 && !get_option( 'simple_announcement_with_exclusion_cat_thu' ) ) { add_option( 'simple_announcement_with_exclusion_cat_thu','','Exclude categories Thursday' ); } 
+        if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_momse' ] == 1 && !get_option( 'simple_announcement_with_exclusion_cat_fri' ) ) { add_option( 'simple_announcement_with_exclusion_cat_fri','','Exclude categories Friday' ); } 
+        if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_momse' ] == 1 && !get_option( 'simple_announcement_with_exclusion_cat_sat' ) ) { add_option( 'simple_announcement_with_exclusion_cat_sat','','Exclude categories Saturday' ); }     
 
         //    Jump Around                    
         if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_momja' ] == 1 && !get_option( 'jump_around_0' ) ) { add_option( 'jump_around_0','post','Post wrap' ); }
@@ -103,7 +115,6 @@
         
         //    Post as front
         if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_mompaf' ] == 1 && !get_option( 'mompaf_post' ) ) { add_option( 'mompaf_post',0,'Post ID to use as front page'); }    
-        
         if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_reviews' ] == 1 && !get_option( 'momreviews_css' ) ) {
         add_option("momreviews_search", "");
         add_option( 'momreviews_css','
@@ -155,60 +166,60 @@
         }
 
         if ($_REQUEST[ 'mommaincontrol_uninstall_all' ] == 1 || $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 3) {    
-            $wpdb->query("DROP TABLE {$table_name}");        
-            $wpdb->query("DROP TABLE {$reviews_table_name}");                                
-            delete_option("obwcountplus_1_countdownfrom");
-            delete_option("obwcountplus_2_remaining");
-            delete_option("obwcountplus_3_total");
-            delete_option("obwcountplus_4_custom");
-            delete_option("rotating_universal_passwords_1");
-            delete_option("rotating_universal_passwords_2");
-            delete_option("rotating_universal_passwords_3");
-            delete_option("rotating_universal_passwords_4");
-            delete_option("rotating_universal_passwords_5");
-            delete_option("rotating_universal_passwords_6");
-            delete_option("rotating_universal_passwords_7");
-            delete_option("rotating_universal_passwords_8");    
-            delete_option("simple_announcement_with_exclusion_9");
-            delete_option("simple_announcement_with_exclusion_9_2");
-            delete_option("simple_announcement_with_exclusion_9_3");
-            delete_option("simple_announcement_with_exclusion_9_4");
-            delete_option("simple_announcement_with_exclusion_9_5");
-            delete_option("simple_announcement_with_exclusion_9_7");
-            delete_option("simple_announcement_with_exclusion_9_8");
-            delete_option("simple_announcement_with_exclusion_9_9");
-            delete_option("simple_announcement_with_exclusion_9_10");
-            delete_option("simple_announcement_with_exclusion_9_11");
-            delete_option("simple_announcement_with_exclusion_9_12");
-            delete_option("simple_announcement_with_exclusion_9_13");
-            delete_option("simple_announcement_with_exclusion_9_14");        
-            delete_option("simple_announcement_with_exclusion_cat_sun");
-            delete_option("simple_announcement_with_exclusion_cat_mon");
-            delete_option("simple_announcement_with_exclusion_cat_tue");
-            delete_option("simple_announcement_with_exclusion_cat_wed");
-            delete_option("simple_announcement_with_exclusion_cat_thu");
-            delete_option("simple_announcement_with_exclusion_cat_fri");
-            delete_option("simple_announcement_with_exclusion_cat_sat");                                                
-            delete_option("simple_announcement_with_exclusion_cat_sun");
-            delete_option("simple_announcement_with_exclusion_cat_mon");
-            delete_option("simple_announcement_with_exclusion_cat_tue");
-            delete_option("simple_announcement_with_exclusion_cat_wed");
-            delete_option("simple_announcement_with_exclusion_cat_thu");
-            delete_option("simple_announcement_with_exclusion_cat_fri");
-            delete_option("simple_announcement_with_exclusion_cat_sat");
-            delete_option("mompaf_post");
-            delete_option("jump_around_0");
-            delete_option("jump_around_1");
-            delete_option("jump_around_2");
-            delete_option("jump_around_3");
-            delete_option("jump_around_4");
-            delete_option("jump_around_5");
-            delete_option("jump_around_6");
-            delete_option("jump_around_7");
-            delete_option("jump_around_8");        
-            delete_option("momanalytics_code");            
-            delete_option("momreviews_css");
-            delete_option("momreviews_search");
+            $wpdb->query( "DROP TABLE {$RUPs_table_name}" );
+            $wpdb->query( "DROP TABLE {$review_table_name}" );
+            delete_option( 'obwcountplus_1_countdownfrom' );
+            delete_option( 'obwcountplus_2_remaining' );
+            delete_option( 'obwcountplus_3_total' );
+            delete_option( 'obwcountplus_4_custom' );
+            delete_option( 'rotating_universal_passwords_1' );
+            delete_option( 'rotating_universal_passwords_2' );
+            delete_option( 'rotating_universal_passwords_3' );
+            delete_option( 'rotating_universal_passwords_4' );
+            delete_option( 'rotating_universal_passwords_5' );
+            delete_option( 'rotating_universal_passwords_6' );
+            delete_option( 'rotating_universal_passwords_7' );
+            delete_option( 'rotating_universal_passwords_8' );    
+            delete_option( 'simple_announcement_with_exclusion_9' );
+            delete_option( 'simple_announcement_with_exclusion_9_2' );
+            delete_option( 'simple_announcement_with_exclusion_9_3' );
+            delete_option( 'simple_announcement_with_exclusion_9_4' );
+            delete_option( 'simple_announcement_with_exclusion_9_5' );
+            delete_option( 'simple_announcement_with_exclusion_9_7' );
+            delete_option( 'simple_announcement_with_exclusion_9_8' );
+            delete_option( 'simple_announcement_with_exclusion_9_9' );
+            delete_option( 'simple_announcement_with_exclusion_9_10' );
+            delete_option( 'simple_announcement_with_exclusion_9_11' );
+            delete_option( 'simple_announcement_with_exclusion_9_12' );
+            delete_option( 'simple_announcement_with_exclusion_9_13' );
+            delete_option( 'simple_announcement_with_exclusion_9_14' );        
+            delete_option( 'simple_announcement_with_exclusion_cat_sun' );
+            delete_option( 'simple_announcement_with_exclusion_cat_mon' );
+            delete_option( 'simple_announcement_with_exclusion_cat_tue' );
+            delete_option( 'simple_announcement_with_exclusion_cat_wed' );
+            delete_option( 'simple_announcement_with_exclusion_cat_thu' );
+            delete_option( 'simple_announcement_with_exclusion_cat_fri' );
+            delete_option( 'simple_announcement_with_exclusion_cat_sat' );                                                
+            delete_option( 'simple_announcement_with_exclusion_cat_sun' );
+            delete_option( 'simple_announcement_with_exclusion_cat_mon' );
+            delete_option( 'simple_announcement_with_exclusion_cat_tue' );
+            delete_option( 'simple_announcement_with_exclusion_cat_wed' );
+            delete_option( 'simple_announcement_with_exclusion_cat_thu' );
+            delete_option( 'simple_announcement_with_exclusion_cat_fri' );
+            delete_option( 'simple_announcement_with_exclusion_cat_sat' );
+            delete_option( 'mompaf_post' );
+            delete_option( 'jump_around_0' );
+            delete_option( 'jump_around_1' );
+            delete_option( 'jump_around_2' );
+            delete_option( 'jump_around_3' );
+            delete_option( 'jump_around_4' );
+            delete_option( 'jump_around_5' );
+            delete_option( 'jump_around_6' );
+            delete_option( 'jump_around_7' );
+            delete_option( 'jump_around_8' );        
+            delete_option( 'momanalytics_code' );            
+            delete_option( 'momreviews_css' );
+            delete_option( 'momreviews_search' );
         }
     }
 ?>

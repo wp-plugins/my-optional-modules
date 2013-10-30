@@ -3,7 +3,7 @@ Contributors: One Billion Words
 Tags: no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 4.0.9.1
+Stable tag: 5.0.0.10302013
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -44,6 +44,13 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
+= 5.0.+ =
+* 5.0.0.10302013 / Developer's note: It's been a hectic release schedule this past month, and from this point on the, the updates are going to slow down tremendously (unless code breaking bugs are reported or found).  This plugin has grown in the past month to the monster it is now - and as the developer, I'd like to thank you for your continued use of it.  
+* 5.0.0.10302013 / Exclude installation bug fix.
+* 5.0.0.10302013 / Further code cleanup on remaining files that weren't previously cleaned up in the 4.0.+ series.
+* 5.0.0.10302013 / Install procedures (activate all, deactivate all, reset, nuke) corrected.
+* 5.0.0.10302013 / Module settings pages have had their CSS altered to be more uniform.
+
 = 4.0.+ = 
 * 4.0.9.1 / CSS fixed
 * 4.0.9 / Progress bar shortcodes added.

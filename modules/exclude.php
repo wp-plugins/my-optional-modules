@@ -98,387 +98,180 @@
 
             function momse_form() {
                 echo "
-                <tr valign=\"top\">
-                    <th scope=\"row\">
-                        <strong>Categories</strong><hr />
-                        Usage:<br />
-                        <p>Comma separated lists for multiple exclusions (or single ids).</p>
-                        <p>Example: 1,2,3</p>
-                    </th>
-                    <td>";
-                    
+				<div class=\"settingsInfo\">
+                    <h2>Categories</h2>
+					<div class=\"list\">";
                     $showmecats =  get_categories( 'taxonomy=category' ); 
-                    
-                        echo "
-                        <table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\">
-                            <tr>
-                                <td>Category</td>
-                                <td>ID</td>
-                            </tr>";
-                                    
-                            foreach ( $showmecats as $catsshown ) {
-                                echo "
-                                <tr>
-                                    <td>
-                                        <strong>",$catsshown->cat_name,"</strong></td><td><em>",$catsshown->cat_ID,"</em>
-                                    </td>
-                                </tr>";
-                            }
-                            
-                        echo "
-                        </table>
-                    </td>
-                    <td valign=\"top\">
-                        <table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\">
-                            <tbody>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_9_12\">Hide from RSS</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_9_12\" name=\"simple_announcement_with_exclusion_9_12\" value=\"" . get_option( 'simple_announcement_with_exclusion_9_12' ) . "\">
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_9\">Hide from front page</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_9\" name=\"simple_announcement_with_exclusion_9\" value=\"" . get_option( 'simple_announcement_with_exclusion_9' ) . "\">
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_9_2\">Hide from tag archives</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_9_2\" name=\"simple_announcement_with_exclusion_9_2\" value=\"" . get_option( 'simple_announcement_with_exclusion_9_2' ) . "\">
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_9_3\">Hide from search results</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_9_3\" name=\"simple_announcement_with_exclusion_9_3\" value=\"" . get_option( 'simple_announcement_with_exclusion_9_3' ) . "\">
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_cat_sun\">Hide on Sunday</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_cat_sun\" name=\"simple_announcement_with_exclusion_cat_sun\" value=\"" . get_option( 'simple_announcement_with_exclusion_cat_sun' ) . "\">
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_cat_mon\">Hide on Monday</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_cat_mon\" name=\"simple_announcement_with_exclusion_cat_mon\" value=\"" . get_option( 'simple_announcement_with_exclusion_cat_mon' ) . "\">
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_cat_tue\">Hide on Tuesday</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_cat_tue\" name=\"simple_announcement_with_exclusion_cat_tue\" value=\"" . get_option( 'simple_announcement_with_exclusion_cat_tue' ) . "\">
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_cat_wed\">Hide on Wednesday</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_cat_wed\" name=\"simple_announcement_with_exclusion_cat_wed\" value=\"" . get_option( 'simple_announcement_with_exclusion_cat_wed' ) . "\">
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_cat_thu\">Hide on Thursday</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_cat_thu\" name=\"simple_announcement_with_exclusion_cat_thu\" value=\"" . get_option( 'simple_announcement_with_exclusion_cat_thu' ) . "\">
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_cat_fri\">Hide on Friday</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_cat_fri\" name=\"simple_announcement_with_exclusion_cat_fri\" value=\"" . get_option( 'simple_announcement_with_exclusion_cat_fri' ) . "\">
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_cat_sat\">Hide on Saturday</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_cat_sat\" name=\"simple_announcement_with_exclusion_cat_sat\" value=\"" . get_option( 'simple_announcement_with_exclusion_cat_sat' ) . "\">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-                        
-                <tr valign=\"top\" id=\"reddit_button\" style=\"background-color:#f4faff;\">
-                    <th scope=\"row\"><strong>Tags</strong><hr />
-                        Usage:<br />
-                        <p>Comma separated lists for multiple exclusions (or single ids).</p>
-                        <p>Example: 1,2,3</p>
-                    </th>
-                    <td>";
-
+					foreach ( $showmecats as $catsshown ) {
+						echo "
+                        <span>",$catsshown->cat_name,"/<strong>",$catsshown->cat_ID,"</strong></span>";
+                    }
+                echo "
+					</div>
+				</div>
+				<div class=\"settingsInput\">
+					<section>Comma separate multiple IDs (1,2,3)</section>
+					<section><label for=\"simple_announcement_with_exclusion_9_12\">Hide from RSS</label>
+                    <input type=\"text\" id=\"simple_announcement_with_exclusion_9_12\" name=\"simple_announcement_with_exclusion_9_12\" value=\"" . get_option( 'simple_announcement_with_exclusion_9_12' ) . "\"></section>
+                    <section><label for=\"simple_announcement_with_exclusion_9\">Hide from front page</label>
+                    <input type=\"text\" id=\"simple_announcement_with_exclusion_9\" name=\"simple_announcement_with_exclusion_9\" value=\"" . get_option( 'simple_announcement_with_exclusion_9' ) . "\"></section>
+                    <section><label for=\"simple_announcement_with_exclusion_9_2\">Hide from tag archives</label>
+                    <input type=\"text\" id=\"simple_announcement_with_exclusion_9_2\" name=\"simple_announcement_with_exclusion_9_2\" value=\"" . get_option( 'simple_announcement_with_exclusion_9_2' ) . "\"></section>
+                    <section><label for=\"simple_announcement_with_exclusion_9_3\">Hide from search results</label>
+                    <input type=\"text\" id=\"simple_announcement_with_exclusion_9_3\" name=\"simple_announcement_with_exclusion_9_3\" value=\"" . get_option( 'simple_announcement_with_exclusion_9_3' ) . "\"></section>
+                    <section><label for=\"simple_announcement_with_exclusion_cat_sun\">Hide on Sunday</label>
+                    <input type=\"text\" id=\"simple_announcement_with_exclusion_cat_sun\" name=\"simple_announcement_with_exclusion_cat_sun\" value=\"" . get_option( 'simple_announcement_with_exclusion_cat_sun' ) . "\"></section>
+                    <section><label for=\"simple_announcement_with_exclusion_cat_mon\">Hide on Monday</label>
+                    <input type=\"text\" id=\"simple_announcement_with_exclusion_cat_mon\" name=\"simple_announcement_with_exclusion_cat_mon\" value=\"" . get_option( 'simple_announcement_with_exclusion_cat_mon' ) . "\"></section>
+                    <section><label for=\"simple_announcement_with_exclusion_cat_tue\">Hide on Tuesday</label>
+                    <input type=\"text\" id=\"simple_announcement_with_exclusion_cat_tue\" name=\"simple_announcement_with_exclusion_cat_tue\" value=\"" . get_option( 'simple_announcement_with_exclusion_cat_tue' ) . "\"></section>
+                    <section><label for=\"simple_announcement_with_exclusion_cat_wed\">Hide on Wednesday</label>
+                    <input type=\"text\" id=\"simple_announcement_with_exclusion_cat_wed\" name=\"simple_announcement_with_exclusion_cat_wed\" value=\"" . get_option( 'simple_announcement_with_exclusion_cat_wed' ) . "\"></section>
+                    <section><label for=\"simple_announcement_with_exclusion_cat_thu\">Hide on Thursday</label>
+                    <input type=\"text\" id=\"simple_announcement_with_exclusion_cat_thu\" name=\"simple_announcement_with_exclusion_cat_thu\" value=\"" . get_option( 'simple_announcement_with_exclusion_cat_thu' ) . "\"></section>
+                    <section><label for=\"simple_announcement_with_exclusion_cat_fri\">Hide on Friday</label>
+                    <input type=\"text\" id=\"simple_announcement_with_exclusion_cat_fri\" name=\"simple_announcement_with_exclusion_cat_fri\" value=\"" . get_option( 'simple_announcement_with_exclusion_cat_fri' ) . "\"></section>
+                    <section><label for=\"simple_announcement_with_exclusion_cat_sat\">Hide on Saturday</label>
+                    <input type=\"text\" id=\"simple_announcement_with_exclusion_cat_sat\" name=\"simple_announcement_with_exclusion_cat_sat\" value=\"" . get_option( 'simple_announcement_with_exclusion_cat_sat' ) . "\"></section>
+				</div>
+				<div class=\"clear top\"></div>
+				<div class=\"settingsInfo\">
+				<h2>Tags</h2>
+				<div class=\"list\">";
                     $showmetags =  get_categories( 'taxonomy=post_tag' ); 
-
-                    echo "
-                        <table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\">
-                            <tbody>
-                                <tr valign=\"top\">
-                                    <td>Tag</td>
-                                    <td>ID</td>
-                                </tr>";
-                                
-                                foreach ( $showmetags as $tagsshown ) {
-                                    echo "
-                                    <tr valign=\"top\">
-                                        <td>
-                                            <strong>",$tagsshown->cat_name,"</strong></td><td><em>",$tagsshown->cat_ID,"</em>
-                                        </td>
-                                    </tr>";
-                                }
-                                
-                            echo "
-                            </tbody>
-                        </table>
-                    </td>
-                    <td valign=\"top\">
-                        <table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\">
-                            <tbody>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_9_13\">Hide from RSS</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_9_13\" name=\"simple_announcement_with_exclusion_9_13\" value=\"" . get_option( 'simple_announcement_with_exclusion_9_13' ) . "\">
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_9_4\">Hide from front page</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_9_4\" name=\"simple_announcement_with_exclusion_9_4\" value=\"" . get_option( 'simple_announcement_with_exclusion_9_4' ) . "\">
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_9_5\">Hide from category archives</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_9_5\" name=\"simple_announcement_with_exclusion_9_5\" value=\"" . get_option( 'simple_announcement_with_exclusion_9_5' ) . "\">
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_9_7\">Hide from search results</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_9_7\" name=\"simple_announcement_with_exclusion_9_7\" value=\"" . get_option( 'simple_announcement_with_exclusion_9_7' ) . "\">
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_sun\">Hide on Sunday</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_sun\" name=\"simple_announcement_with_exclusion_sun\" value=\"" . get_option( 'simple_announcement_with_exclusion_sun' ) . "\">
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_mon\">Hide on Monday</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_mon\" name=\"simple_announcement_with_exclusion_mon\" value=\"" . get_option( 'simple_announcement_with_exclusion_mon' ) . "\">
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_tue\">Hide on Tuesday</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_tue\" name=\"simple_announcement_with_exclusion_tue\" value=\"" . get_option( 'simple_announcement_with_exclusion_tue' ) . "\">
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_wed\">Hide on Wednesday</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_wed\" name=\"simple_announcement_with_exclusion_wed\" value=\"" . get_option( 'simple_announcement_with_exclusion_wed' ) . "\">
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_thu\">Hide on Thursday</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_thu\" name=\"simple_announcement_with_exclusion_thu\" value=\"" . get_option( 'simple_announcement_with_exclusion_thu' ) . "\">
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_fri\">Hide on Friday</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_fri\" name=\"simple_announcement_with_exclusion_fri\" value=\"" . get_option( 'simple_announcement_with_exclusion_fri' ) . "\">
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_sat\">Hide on Saturday</label>
-                                    </th>
-                                    <td>
-                                        <input type=\"text\" id=\"simple_announcement_with_exclusion_sat\" name=\"simple_announcement_with_exclusion_sat\" value=\"" . get_option( 'simple_announcement_with_exclusion_sat' ) . "\">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>
-
-                <tr valign=\"top\">
-                    <th scope=\"row\"><strong>Post formats</strong></th>
-                    <td valign=\"top\">
-                        <table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\">
-                            <tbody>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_9_14\">Hide from RSS</label>
-                                    </th>
-                                    <td>
-                                        <select name=\"simple_announcement_with_exclusion_9_14\" id=\"simple_announcement_with_exclusion_9_14\">
-                                        <option value=\"\">none</option>
-                                            <option value=\"post-format-aside\""; if ( get_option( 'simple_announcement_with_exclusion_9_14' ) == 'post-format-aside' ) { echo " selected=\"selected\""; } echo ">Aside</option>
-                                            <option value=\"post-format-gallery\""; if ( get_option( 'simple_announcement_with_exclusion_9_14' ) == 'post-format-gallery' ) { echo " selected=\"selected\""; } echo ">Gallery</option>
-                                            <option value=\"post-format-link\""; if ( get_option( 'simple_announcement_with_exclusion_9_14' ) == 'post-format-link' ) { echo " selected=\"selected\""; } echo ">Link</option>
-                                            <option value=\"post-format-image\""; if ( get_option( 'simple_announcement_with_exclusion_9_14' ) == 'post-format-image' ) { echo " selected=\"selected\""; } echo ">Image</option>
-                                            <option value=\"post-format-quote\""; if ( get_option( 'simple_announcement_with_exclusion_9_14' ) == 'post-format-quote' ) { echo " selected=\"selected\""; } echo ">Quote</option>
-                                            <option value=\"post-format-status\""; if ( get_option( 'simple_announcement_with_exclusion_9_14' ) == 'post-format-status' ) { echo " selected=\"selected\""; } echo ">Status</option>
-                                            <option value=\"post-format-video\""; if ( get_option( 'simple_announcement_with_exclusion_9_14' ) == 'post-format-video' ) { echo " selected=\"selected\""; } echo ">Video</option>
-                                            <option value=\"post-format-audio\""; if ( get_option( 'simple_announcement_with_exclusion_9_14' ) == 'post-format-audio' ) { echo " selected=\"selected\""; } echo ">Audio</option>
-                                            <option value=\"post-format-chat\""; if ( get_option( 'simple_announcement_with_exclusion_9_14' ) == 'post-format-chat' ) { echo " selected=\"selected\""; } echo ">Chat</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_9_8\">Hide from front page</label>
-                                    </th>
-                                    <td>
-                                        <select name=\"simple_announcement_with_exclusion_9_8\" id=\"simple_announcement_with_exclusion_9_8\">
-                                            <option value=\"\">none</option>
-                                            <option value=\"post-format-aside\""; if ( get_option( 'simple_announcement_with_exclusion_9_8' ) == 'post-format-aside' ) { echo " selected=\"selected\""; } echo ">Aside</option>
-                                            <option value=\"post-format-gallery\""; if ( get_option( 'simple_announcement_with_exclusion_9_8' ) == 'post-format-gallery' ) { echo " selected=\"selected\""; } echo ">Gallery</option>
-                                            <option value=\"post-format-link\""; if ( get_option( 'simple_announcement_with_exclusion_9_8' ) == 'post-format-link' ) { echo " selected=\"selected\""; } echo ">Link</option>
-                                            <option value=\"post-format-image\""; if ( get_option( 'simple_announcement_with_exclusion_9_8' ) == 'post-format-image' ) { echo " selected=\"selected\""; } echo ">Image</option>
-                                            <option value=\"post-format-quote\""; if ( get_option( 'simple_announcement_with_exclusion_9_8' ) == 'post-format-quote' ) { echo " selected=\"selected\""; } echo ">Quote</option>
-                                            <option value=\"post-format-status\""; if ( get_option( 'simple_announcement_with_exclusion_9_8' ) == 'post-format-status' ) { echo " selected=\"selected\""; } echo ">Status</option>
-                                            <option value=\"post-format-video\""; if ( get_option( 'simple_announcement_with_exclusion_9_8' ) == 'post-format-video' ) { echo " selected=\"selected\""; } echo ">Video</option>
-                                            <option value=\"post-format-audio\""; if ( get_option( 'simple_announcement_with_exclusion_9_8' ) == 'post-format-audio' ) { echo " selected=\"selected\""; } echo ">Audio</option>
-                                            <option value=\"post-format-chat\""; if ( get_option( 'simple_announcement_with_exclusion_9_8' ) == 'post-format-chat' ) { echo " selected=\"selected\""; } echo ">Chat</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_9_9\">Hide from archives</label>
-                                    </th>
-                                    <td>
-                                        <select name=\"simple_announcement_with_exclusion_9_9\" id=\"simple_announcement_with_exclusion_9_9\">
-                                            <option value=\"\">none</option>
-                                            <option value=\"post-format-aside\""; if (get_option( 'simple_announcement_with_exclusion_9_9' ) == 'post-format-aside' ) { echo " selected=\"selected\""; } echo ">Aside</option>
-                                            <option value=\"post-format-gallery\""; if (get_option( 'simple_announcement_with_exclusion_9_9' ) == 'post-format-gallery' ) { echo " selected=\"selected\""; } echo ">Gallery</option>
-                                            <option value=\"post-format-link\""; if (get_option( 'simple_announcement_with_exclusion_9_9' ) == 'post-format-link' ) { echo " selected=\"selected\""; } echo ">Link</option>
-                                            <option value=\"post-format-image\""; if (get_option( 'simple_announcement_with_exclusion_9_9' ) == 'post-format-image' ) { echo " selected=\"selected\""; } echo ">Image</option>
-                                            <option value=\"post-format-quote\""; if (get_option( 'simple_announcement_with_exclusion_9_9' ) == 'post-format-quote' ) { echo " selected=\"selected\""; } echo ">Quote</option>
-                                            <option value=\"post-format-status\""; if (get_option( 'simple_announcement_with_exclusion_9_9' ) == 'post-format-status' ) { echo " selected=\"selected\""; } echo ">Status</option>
-                                            <option value=\"post-format-video\""; if (get_option( 'simple_announcement_with_exclusion_9_9' ) == 'post-format-video' ) { echo " selected=\"selected\""; } echo ">Video</option>
-                                            <option value=\"post-format-audio\""; if (get_option( 'simple_announcement_with_exclusion_9_9' ) == 'post-format-audio' ) { echo " selected=\"selected\""; } echo ">Audio</option>
-                                            <option value=\"post-format-chat\""; if (get_option( 'simple_announcement_with_exclusion_9_9' ) == 'post-format-chat' ) { echo " selected=\"selected\""; } echo ">Chat</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_9_10\">Hide from tag archives</label>
-                                    </th>
-                                    <td>
-                                        <select name=\"simple_announcement_with_exclusion_9_10\" id=\"simple_announcement_with_exclusion_9_10\">
-                                            <option value=\"\">none</option>
-                                            <option value=\"post-format-aside\"";if (get_option( 'simple_announcement_with_exclusion_9_10' ) == 'post-format-aside' ) { echo " selected=\"selected\""; } echo ">Aside</option>
-                                            <option value=\"post-format-gallery\"";if (get_option( 'simple_announcement_with_exclusion_9_10' ) == 'post-format-gallery' ) { echo " selected=\"selected\""; } echo ">Gallery</option>
-                                            <option value=\"post-format-link\"";if (get_option( 'simple_announcement_with_exclusion_9_10' ) == 'post-format-link' ) { echo " selected=\"selected\""; } echo ">Link</option>
-                                            <option value=\"post-format-image\"";if (get_option( 'simple_announcement_with_exclusion_9_10' ) == 'post-format-image' ) { echo " selected=\"selected\""; } echo ">Image</option>
-                                            <option value=\"post-format-quote\"";if (get_option( 'simple_announcement_with_exclusion_9_10' ) == 'post-format-quote' ) { echo " selected=\"selected\""; } echo ">Quote</option>
-                                            <option value=\"post-format-status\"";if (get_option( 'simple_announcement_with_exclusion_9_10' ) == 'post-format-status' ) { echo " selected=\"selected\""; } echo ">Status</option>
-                                            <option value=\"post-format-video\"";if (get_option( 'simple_announcement_with_exclusion_9_10' ) == 'post-format-video' ) { echo " selected=\"selected\""; } echo ">Video</option>
-                                            <option value=\"post-format-audio\"";if (get_option( 'simple_announcement_with_exclusion_9_10' ) == 'post-format-audio' ) { echo " selected=\"selected\""; } echo ">Audio</option>
-                                            <option value=\"post-format-chat\"";if (get_option( 'simple_announcement_with_exclusion_9_10' ) == 'post-format-chat' ) { echo " selected=\"selected\""; } echo ">Chat</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\">
-                                        <label for=\"simple_announcement_with_exclusion_9_11\">Hide from search results</label>
-                                    </th>
-                                    <td>
-                                        <select name=\"simple_announcement_with_exclusion_9_11\" id=\"simple_announcement_with_exclusion_9_11\">
-                                            <option value=\"\">none</option>
-                                            <option value=\"post-format-aside\"";if (get_option( 'simple_announcement_with_exclusion_9_11' ) == 'post-format-aside' ) { echo " selected=\"selected\""; } echo ">Aside</option>
-                                            <option value=\"post-format-gallery\"";if (get_option( 'simple_announcement_with_exclusion_9_11' ) == 'post-format-gallery' ) { echo " selected=\"selected\""; } echo ">Gallery</option>
-                                            <option value=\"post-format-link\"";if (get_option( 'simple_announcement_with_exclusion_9_11' ) == 'post-format-link' ) { echo " selected=\"selected\""; } echo ">Link</option>
-                                            <option value=\"post-format-image\"";if (get_option( 'simple_announcement_with_exclusion_9_11' ) == 'post-format-image' ) { echo " selected=\"selected\""; } echo ">Image</option>
-                                            <option value=\"post-format-quote\"";if (get_option( 'simple_announcement_with_exclusion_9_11' ) == 'post-format-quote' ) { echo " selected=\"selected\""; } echo ">Quote</option>
-                                            <option value=\"post-format-status\"";if (get_option( 'simple_announcement_with_exclusion_9_11' ) == 'post-format-status' ) { echo " selected=\"selected\""; } echo ">Status</option>
-                                            <option value=\"post-format-video\"";if (get_option( 'simple_announcement_with_exclusion_9_11' ) == 'post-format-video' ) { echo " selected=\"selected\""; } echo ">Video</option>
-                                            <option value=\"post-format-audio\"";if (get_option( 'simple_announcement_with_exclusion_9_11' ) == 'post-format-audio' ) { echo " selected=\"selected\""; } echo ">Audio</option>
-                                            <option value=\"post-format-chat\"";if (get_option( 'simple_announcement_with_exclusion_9_11' ) == 'post-format-chat' ) { echo " selected=\"selected\""; } echo ">Chat</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </td>
-                </tr>";
+                        foreach ( $showmetags as $tagsshown ) {
+                        echo "<span>",$tagsshown->cat_name,"/<strong>",$tagsshown->cat_ID,"</strong></span>";
+                    }
+				echo "
+                </div>
+				</div>
+                <div class=\"settingsInput\">
+				<section>Comma separate multiple IDs (1,2,3)</section>
+				<section><label for=\"simple_announcement_with_exclusion_9_13\">Hide from RSS</label>
+                <input type=\"text\" id=\"simple_announcement_with_exclusion_9_13\" name=\"simple_announcement_with_exclusion_9_13\" value=\"" . get_option( 'simple_announcement_with_exclusion_9_13' ) . "\"></section>
+                <section><label for=\"simple_announcement_with_exclusion_9_4\">Hide from front page</label>
+                <input type=\"text\" id=\"simple_announcement_with_exclusion_9_4\" name=\"simple_announcement_with_exclusion_9_4\" value=\"" . get_option( 'simple_announcement_with_exclusion_9_4' ) . "\"></section>
+                <section><label for=\"simple_announcement_with_exclusion_9_5\">Hide from category archives</label>
+                <input type=\"text\" id=\"simple_announcement_with_exclusion_9_5\" name=\"simple_announcement_with_exclusion_9_5\" value=\"" . get_option( 'simple_announcement_with_exclusion_9_5' ) . "\"></section>
+                <section><label for=\"simple_announcement_with_exclusion_9_7\">Hide from search results</label>
+                <input type=\"text\" id=\"simple_announcement_with_exclusion_9_7\" name=\"simple_announcement_with_exclusion_9_7\" value=\"" . get_option( 'simple_announcement_with_exclusion_9_7' ) . "\"></section>
+                <section><label for=\"simple_announcement_with_exclusion_sun\">Hide on Sunday</label>
+                <input type=\"text\" id=\"simple_announcement_with_exclusion_sun\" name=\"simple_announcement_with_exclusion_sun\" value=\"" . get_option( 'simple_announcement_with_exclusion_sun' ) . "\"></section>
+                <section><label for=\"simple_announcement_with_exclusion_mon\">Hide on Monday</label>
+                <input type=\"text\" id=\"simple_announcement_with_exclusion_mon\" name=\"simple_announcement_with_exclusion_mon\" value=\"" . get_option( 'simple_announcement_with_exclusion_mon' ) . "\"></section>
+                <section><label for=\"simple_announcement_with_exclusion_tue\">Hide on Tuesday</label>
+                <input type=\"text\" id=\"simple_announcement_with_exclusion_tue\" name=\"simple_announcement_with_exclusion_tue\" value=\"" . get_option( 'simple_announcement_with_exclusion_tue' ) . "\"></section>
+                <section><label for=\"simple_announcement_with_exclusion_wed\">Hide on Wednesday</label>
+                <input type=\"text\" id=\"simple_announcement_with_exclusion_wed\" name=\"simple_announcement_with_exclusion_wed\" value=\"" . get_option( 'simple_announcement_with_exclusion_wed' ) . "\"></section>
+                <section><label for=\"simple_announcement_with_exclusion_thu\">Hide on Thursday</label>
+                <input type=\"text\" id=\"simple_announcement_with_exclusion_thu\" name=\"simple_announcement_with_exclusion_thu\" value=\"" . get_option( 'simple_announcement_with_exclusion_thu' ) . "\"></section>
+                <section><label for=\"simple_announcement_with_exclusion_fri\">Hide on Friday</label>
+                <input type=\"text\" id=\"simple_announcement_with_exclusion_fri\" name=\"simple_announcement_with_exclusion_fri\" value=\"" . get_option( 'simple_announcement_with_exclusion_fri' ) . "\"></section>
+                <section><label for=\"simple_announcement_with_exclusion_sat\">Hide on Saturday</label>
+                <input type=\"text\" id=\"simple_announcement_with_exclusion_sat\" name=\"simple_announcement_with_exclusion_sat\" value=\"" . get_option( 'simple_announcement_with_exclusion_sat' ) . "\"></section>
+				</div>
+				<div class=\"clear top\"></div>
+				<div class=\"settingsInfo\">
+				<h2>Post Formats</h2>
+				</div>
+				<div class=\"settingsInput\">
+				<section>
+                    <label for=\"simple_announcement_with_exclusion_9_14\">Hide from RSS</label>
+                    <select name=\"simple_announcement_with_exclusion_9_14\" id=\"simple_announcement_with_exclusion_9_14\">
+                        <option value=\"\">none</option>
+                        <option value=\"post-format-aside\""; if ( get_option( 'simple_announcement_with_exclusion_9_14' ) == 'post-format-aside' ) { echo " selected=\"selected\""; } echo ">Aside</option>
+                        <option value=\"post-format-gallery\""; if ( get_option( 'simple_announcement_with_exclusion_9_14' ) == 'post-format-gallery' ) { echo " selected=\"selected\""; } echo ">Gallery</option>
+                        <option value=\"post-format-link\""; if ( get_option( 'simple_announcement_with_exclusion_9_14' ) == 'post-format-link' ) { echo " selected=\"selected\""; } echo ">Link</option>
+                        <option value=\"post-format-image\""; if ( get_option( 'simple_announcement_with_exclusion_9_14' ) == 'post-format-image' ) { echo " selected=\"selected\""; } echo ">Image</option>
+                        <option value=\"post-format-quote\""; if ( get_option( 'simple_announcement_with_exclusion_9_14' ) == 'post-format-quote' ) { echo " selected=\"selected\""; } echo ">Quote</option>
+                        <option value=\"post-format-status\""; if ( get_option( 'simple_announcement_with_exclusion_9_14' ) == 'post-format-status' ) { echo " selected=\"selected\""; } echo ">Status</option>
+                        <option value=\"post-format-video\""; if ( get_option( 'simple_announcement_with_exclusion_9_14' ) == 'post-format-video' ) { echo " selected=\"selected\""; } echo ">Video</option>
+                        <option value=\"post-format-audio\""; if ( get_option( 'simple_announcement_with_exclusion_9_14' ) == 'post-format-audio' ) { echo " selected=\"selected\""; } echo ">Audio</option>
+                        <option value=\"post-format-chat\""; if ( get_option( 'simple_announcement_with_exclusion_9_14' ) == 'post-format-chat' ) { echo " selected=\"selected\""; } echo ">Chat</option>
+                    </select>
+				</section>
+				<section>
+                    <label for=\"simple_announcement_with_exclusion_9_8\">Hide from front page</label>
+                    <select name=\"simple_announcement_with_exclusion_9_8\" id=\"simple_announcement_with_exclusion_9_8\">
+                        <option value=\"\">none</option>
+                        <option value=\"post-format-aside\""; if ( get_option( 'simple_announcement_with_exclusion_9_8' ) == 'post-format-aside' ) { echo " selected=\"selected\""; } echo ">Aside</option>
+                        <option value=\"post-format-gallery\""; if ( get_option( 'simple_announcement_with_exclusion_9_8' ) == 'post-format-gallery' ) { echo " selected=\"selected\""; } echo ">Gallery</option>
+                        <option value=\"post-format-link\""; if ( get_option( 'simple_announcement_with_exclusion_9_8' ) == 'post-format-link' ) { echo " selected=\"selected\""; } echo ">Link</option>
+                        <option value=\"post-format-image\""; if ( get_option( 'simple_announcement_with_exclusion_9_8' ) == 'post-format-image' ) { echo " selected=\"selected\""; } echo ">Image</option>
+                        <option value=\"post-format-quote\""; if ( get_option( 'simple_announcement_with_exclusion_9_8' ) == 'post-format-quote' ) { echo " selected=\"selected\""; } echo ">Quote</option>
+                        <option value=\"post-format-status\""; if ( get_option( 'simple_announcement_with_exclusion_9_8' ) == 'post-format-status' ) { echo " selected=\"selected\""; } echo ">Status</option>
+                        <option value=\"post-format-video\""; if ( get_option( 'simple_announcement_with_exclusion_9_8' ) == 'post-format-video' ) { echo " selected=\"selected\""; } echo ">Video</option>
+                        <option value=\"post-format-audio\""; if ( get_option( 'simple_announcement_with_exclusion_9_8' ) == 'post-format-audio' ) { echo " selected=\"selected\""; } echo ">Audio</option>
+                        <option value=\"post-format-chat\""; if ( get_option( 'simple_announcement_with_exclusion_9_8' ) == 'post-format-chat' ) { echo " selected=\"selected\""; } echo ">Chat</option>
+                    </select>
+				</section>
+				<section>
+                    <label for=\"simple_announcement_with_exclusion_9_9\">Hide from archives</label>
+                    <select name=\"simple_announcement_with_exclusion_9_9\" id=\"simple_announcement_with_exclusion_9_9\">
+                        <option value=\"\">none</option>
+                        <option value=\"post-format-aside\""; if (get_option( 'simple_announcement_with_exclusion_9_9' ) == 'post-format-aside' ) { echo " selected=\"selected\""; } echo ">Aside</option>
+                        <option value=\"post-format-gallery\""; if (get_option( 'simple_announcement_with_exclusion_9_9' ) == 'post-format-gallery' ) { echo " selected=\"selected\""; } echo ">Gallery</option>
+                        <option value=\"post-format-link\""; if (get_option( 'simple_announcement_with_exclusion_9_9' ) == 'post-format-link' ) { echo " selected=\"selected\""; } echo ">Link</option>
+                        <option value=\"post-format-image\""; if (get_option( 'simple_announcement_with_exclusion_9_9' ) == 'post-format-image' ) { echo " selected=\"selected\""; } echo ">Image</option>
+                        <option value=\"post-format-quote\""; if (get_option( 'simple_announcement_with_exclusion_9_9' ) == 'post-format-quote' ) { echo " selected=\"selected\""; } echo ">Quote</option>
+                        <option value=\"post-format-status\""; if (get_option( 'simple_announcement_with_exclusion_9_9' ) == 'post-format-status' ) { echo " selected=\"selected\""; } echo ">Status</option>
+                        <option value=\"post-format-video\""; if (get_option( 'simple_announcement_with_exclusion_9_9' ) == 'post-format-video' ) { echo " selected=\"selected\""; } echo ">Video</option>
+                        <option value=\"post-format-audio\""; if (get_option( 'simple_announcement_with_exclusion_9_9' ) == 'post-format-audio' ) { echo " selected=\"selected\""; } echo ">Audio</option>
+                        <option value=\"post-format-chat\""; if (get_option( 'simple_announcement_with_exclusion_9_9' ) == 'post-format-chat' ) { echo " selected=\"selected\""; } echo ">Chat</option>
+                    </select>
+				</section>
+				<section>
+                    <label for=\"simple_announcement_with_exclusion_9_10\">Hide from tag archives</label>
+                    <select name=\"simple_announcement_with_exclusion_9_10\" id=\"simple_announcement_with_exclusion_9_10\">
+                        <option value=\"\">none</option>
+                        <option value=\"post-format-aside\"";if (get_option( 'simple_announcement_with_exclusion_9_10' ) == 'post-format-aside' ) { echo " selected=\"selected\""; } echo ">Aside</option>
+                        <option value=\"post-format-gallery\"";if (get_option( 'simple_announcement_with_exclusion_9_10' ) == 'post-format-gallery' ) { echo " selected=\"selected\""; } echo ">Gallery</option>
+                        <option value=\"post-format-link\"";if (get_option( 'simple_announcement_with_exclusion_9_10' ) == 'post-format-link' ) { echo " selected=\"selected\""; } echo ">Link</option>
+                        <option value=\"post-format-image\"";if (get_option( 'simple_announcement_with_exclusion_9_10' ) == 'post-format-image' ) { echo " selected=\"selected\""; } echo ">Image</option>
+                        <option value=\"post-format-quote\"";if (get_option( 'simple_announcement_with_exclusion_9_10' ) == 'post-format-quote' ) { echo " selected=\"selected\""; } echo ">Quote</option>
+                        <option value=\"post-format-status\"";if (get_option( 'simple_announcement_with_exclusion_9_10' ) == 'post-format-status' ) { echo " selected=\"selected\""; } echo ">Status</option>
+                        <option value=\"post-format-video\"";if (get_option( 'simple_announcement_with_exclusion_9_10' ) == 'post-format-video' ) { echo " selected=\"selected\""; } echo ">Video</option>
+                        <option value=\"post-format-audio\"";if (get_option( 'simple_announcement_with_exclusion_9_10' ) == 'post-format-audio' ) { echo " selected=\"selected\""; } echo ">Audio</option>
+                        <option value=\"post-format-chat\"";if (get_option( 'simple_announcement_with_exclusion_9_10' ) == 'post-format-chat' ) { echo " selected=\"selected\""; } echo ">Chat</option>
+                    </select>
+				</section>
+				<section>
+                    <label for=\"simple_announcement_with_exclusion_9_11\">Hide from search results</label>
+                    <select name=\"simple_announcement_with_exclusion_9_11\" id=\"simple_announcement_with_exclusion_9_11\">
+						<option value=\"\">none</option>
+						<option value=\"post-format-aside\"";if (get_option( 'simple_announcement_with_exclusion_9_11' ) == 'post-format-aside' ) { echo " selected=\"selected\""; } echo ">Aside</option>
+						<option value=\"post-format-gallery\"";if (get_option( 'simple_announcement_with_exclusion_9_11' ) == 'post-format-gallery' ) { echo " selected=\"selected\""; } echo ">Gallery</option>
+						<option value=\"post-format-link\"";if (get_option( 'simple_announcement_with_exclusion_9_11' ) == 'post-format-link' ) { echo " selected=\"selected\""; } echo ">Link</option>
+						<option value=\"post-format-image\"";if (get_option( 'simple_announcement_with_exclusion_9_11' ) == 'post-format-image' ) { echo " selected=\"selected\""; } echo ">Image</option>
+						<option value=\"post-format-quote\"";if (get_option( 'simple_announcement_with_exclusion_9_11' ) == 'post-format-quote' ) { echo " selected=\"selected\""; } echo ">Quote</option>
+						<option value=\"post-format-status\"";if (get_option( 'simple_announcement_with_exclusion_9_11' ) == 'post-format-status' ) { echo " selected=\"selected\""; } echo ">Status</option>
+						<option value=\"post-format-video\"";if (get_option( 'simple_announcement_with_exclusion_9_11' ) == 'post-format-video' ) { echo " selected=\"selected\""; } echo ">Video</option>
+						<option value=\"post-format-audio\"";if (get_option( 'simple_announcement_with_exclusion_9_11' ) == 'post-format-audio' ) { echo " selected=\"selected\""; } echo ">Audio</option>
+						<option value=\"post-format-chat\"";if (get_option( 'simple_announcement_with_exclusion_9_11' ) == 'post-format-chat' ) { echo " selected=\"selected\""; } echo ">Chat</option>
+					</select>
+				</section>
+				</div>";
             }
 
             function momse_page_content() {
                 echo "
                 <div class=\"wrap\">
-                    <h2>Exclude</h2>
                     <form method=\"post\">
-                        <table class=\"form-table\" border=\"1\">
-                            <tbody>";
-                                momse_form();
-                            echo "
-                            </tbody>
-                        </table>
+                        <div class=\"settings\">";
+                        momse_form();
+                        echo "
                         <input id=\"momsesave\" type=\"submit\" value=\"Save Changes\" name=\"momsesave\">
+						</div>
                     </form>
                 </div>";
             }
-            
+			
             if( isset( $_POST[ 'momsesave' ] ) ) { update_momse_options(); }
-            
             momse_page_content();
-            
+			
         }
-
+		
         my_optional_modules_exclude_module();
-
     }
 
 ?>

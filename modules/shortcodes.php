@@ -10,8 +10,8 @@
             function mom_shortcodes_page_content() {
                 echo "
                 <div class=\"wrap\">
-                    <h2>Shortcodes!</h2>
-
+					<div class=\"settings\">
+					
                     <table class=\"form-table\" border=\"1\">
                         <tbody>
                             
@@ -189,6 +189,7 @@
 							
                         </tbody>
                     </table>
+				</div>
                 </div>";
             }
             

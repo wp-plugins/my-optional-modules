@@ -42,100 +42,76 @@
             function print_rotating_universal_passwords_form() {
                 global $my_optional_modules_passwords_salt;
                 echo "
-                <td valign=\"top\">
                     <form method=\"post\">
-                        <table class=\"form-table\" border=\"1\" style=\"margin:5px; \">
-                            <tbody>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\"><label for=\"rotating_universal_passwords_1\">Sunday:</label></th>
-                                    <td><input type=\"text\" name=\"rotating_universal_passwords_1\" "; 
-                                    if ( get_option( 'rotating_universal_passwords_1' ) !== '' ) { 
-                                        echo "placeholder=\"Hashed and set.\""; 
-                                    } else { 
-                                        echo "class=\"notset\" placeholder=\"password not set\""; }
-                                    echo " /></td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\"><label for=\"rotating_universal_passwords_2\">Monday:</label></th>
-                                    <td><input type=\"text\" name=\"rotating_universal_passwords_2\" "; 
-                                    if ( get_option( 'rotating_universal_passwords_2' ) !== '' ) { 
-                                        echo "placeholder=\"Hashed and set.\""; 
-                                    } else { 
-                                        echo "class=\"notset\" placeholder=\"password not set\""; }
-                                    echo " /></td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\"><label for=\"rotating_universal_passwords_3\">Tuesday:</label></th>
-                                    <td><input type=\"text\" name=\"rotating_universal_passwords_3\" "; 
-                                    if ( get_option( 'rotating_universal_passwords_3' ) !== '' ) { 
-                                        echo "placeholder=\"Hashed and set.\""; 
-                                    } else { 
-                                        echo "class=\"notset\" placeholder=\"password not set\""; }
-                                    echo " /></td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\"><label for=\"rotating_universal_passwords_4\">Wednesday:</label></th>
-                                    <td><input type=\"text\" name=\"rotating_universal_passwords_4\" "; 
-                                    if ( get_option( 'rotating_universal_passwords_4' ) !== '' ) { 
-                                        echo "placeholder=\"Hashed and set.\""; 
-                                    } else { 
-                                        echo "class=\"notset\" placeholder=\"password not set\""; }
-                                    echo " /></td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\"><label for=\"rotating_universal_passwords_5\">Thursday:</label></th>
-                                    <td><input type=\"text\" name=\"rotating_universal_passwords_5\" "; 
-                                    if ( get_option( 'rotating_universal_passwords_5' ) !== '' ) { 
-                                        echo "placeholder=\"Hashed and set.\""; 
-                                    } else { 
-                                        echo "class=\"notset\" placeholder=\"password not set\""; }
-                                    echo " /></td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\"><label for=\"rotating_universal_passwords_6\">Friday:</label></th>
-                                    <td><input type=\"text\" name=\"rotating_universal_passwords_6\" "; 
-                                    if ( get_option( 'rotating_universal_passwords_6' ) !== '' ) {
-                                        echo "placeholder=\"Hashed and set.\""; 
-                                    } else { 
-                                        echo "class=\"notset\" placeholder=\"password not set\""; }
-                                    echo " /></td>
-                                </tr>        
-                                <tr valign=\"top\">
-                                    <th scope=\"row\"><label for=\"rotating_universal_passwords_7\">Saturday:</label></th>
-                                    <td><input type=\"text\" name=\"rotating_universal_passwords_7\" "; 
-                                    if ( get_option( 'rotating_universal_passwords_7' ) !== '' ) {
-                                        echo "placeholder=\"Hashed and set.\""; 
-                                    } else { 
-                                        echo "class=\"notset\" placeholder=\"password not set\""; }
-                                    echo " /></td>
-                                </tr>
-                                <tr valign=\"top\">
-                                    <th scope=\"row\"><label for=\"rotating_universal_passwords_8\">Attempts before lockout:</label></th>
-                                    <td><input type=\"text\" name=\"rotating_universal_passwords_8\" value=\""; 
-                                    if ( get_option( 'rotating_universal_passwords_8' ) !== '' ) {
-                                        echo get_option("rotating_universal_passwords_8"); 
-                                    } echo "\" /></td>
-                                    <tr valign=\"top\">
-                                        <td>
-                                            <input type=\"submit\" name=\"passwordsSave\" value=\"Save changes\" />
-                                        </td>
-                                        <td>
-                                            <input type=\"submit\" name=\"reset_rups\" value=\"Reset passwords\" /></td>
-                                        </td>
-                                    </tr>
-                            </tbody>
-                        </table>
+						<div class=\"settingsInput\">
+                            <section><label for=\"rotating_universal_passwords_1\">Sunday:</label></th>
+                            <input type=\"text\" name=\"rotating_universal_passwords_1\" "; 
+                            if ( get_option( 'rotating_universal_passwords_1' ) !== '' ) { 
+								echo "placeholder=\"Hashed and set.\""; 
+                            } else { 
+                            echo "class=\"notset\" placeholder=\"password not set\""; }
+                            echo " /></section>
+                            <section><label for=\"rotating_universal_passwords_2\">Monday:</label></th>
+                            <input type=\"text\" name=\"rotating_universal_passwords_2\" "; 
+                            if ( get_option( 'rotating_universal_passwords_2' ) !== '' ) { 
+								echo "placeholder=\"Hashed and set.\""; 
+                            } else { 
+                            echo "class=\"notset\" placeholder=\"password not set\""; }
+                            echo " /></section>
+                            <section><label for=\"rotating_universal_passwords_3\">Tuesday:</label></th>
+                            <input type=\"text\" name=\"rotating_universal_passwords_3\" "; 
+                            if ( get_option( 'rotating_universal_passwords_3' ) !== '' ) { 
+								echo "placeholder=\"Hashed and set.\""; 
+                            } else { 
+                            echo "class=\"notset\" placeholder=\"password not set\""; }
+                            echo " /></section>
+                            <section><label for=\"rotating_universal_passwords_4\">Wednesday:</label></th>
+                            <input type=\"text\" name=\"rotating_universal_passwords_4\" "; 
+                            if ( get_option( 'rotating_universal_passwords_4' ) !== '' ) { 
+								echo "placeholder=\"Hashed and set.\""; 
+                            } else { 
+							echo "class=\"notset\" placeholder=\"password not set\""; }
+                            echo " /></section>
+                            <section><label for=\"rotating_universal_passwords_5\">Thursday:</label></th>
+                            <input type=\"text\" name=\"rotating_universal_passwords_5\" "; 
+                            if ( get_option( 'rotating_universal_passwords_5' ) !== '' ) { 
+								echo "placeholder=\"Hashed and set.\""; 
+                            } else { 
+							echo "class=\"notset\" placeholder=\"password not set\""; }
+                            echo " /></section>
+                            <section><label for=\"rotating_universal_passwords_6\">Friday:</label></th>
+                            <input type=\"text\" name=\"rotating_universal_passwords_6\" "; 
+                            if ( get_option( 'rotating_universal_passwords_6' ) !== '' ) {
+								echo "placeholder=\"Hashed and set.\""; 
+                            } else { 
+							echo "class=\"notset\" placeholder=\"password not set\""; }
+                            echo " /></section>
+							<section><label for=\"rotating_universal_passwords_7\">Saturday:</label></th>
+                            <input type=\"text\" name=\"rotating_universal_passwords_7\" "; 
+                            if ( get_option( 'rotating_universal_passwords_7' ) !== '' ) {
+								echo "placeholder=\"Hashed and set.\""; 
+                            } else { 
+                            echo "class=\"notset\" placeholder=\"password not set\""; }
+                            echo " /></section>
+                            <section><label for=\"rotating_universal_passwords_8\">Attempts before lockout:</label></th>
+                            <input type=\"text\" name=\"rotating_universal_passwords_8\" value=\""; 
+                            if ( get_option( 'rotating_universal_passwords_8' ) !== '' ) {
+								echo get_option("rotating_universal_passwords_8"); 
+                            } echo "\" /></section>
+                            </div>
+							<input type=\"submit\" name=\"passwordsSave\" value=\"Save changes\" />
+                            <input type=\"submit\" name=\"reset_rups\" value=\"Reset passwords\" />
                     </form>
-                    </td>
-                    <td valign=\"top\">
-                        <table class=\"form-table\">
-                            <tbody>
-                                <tr>
-                                    <td>Date</td>
-                                    <td>ID</td>
-                                    <td>Origin</td>
-                                    <td>Clear?</td>
-                                </tr>";
+					<div class=\"clear new\">
+					<div class=\"settingsInfo full\">
+					<h2>Current locks</h2>
+                        <div class=\"clear locked\">
+                            <span><strong>Date/time</strong></span>
+                            <span>User ID</span>
+							<span>Originating post</span>
+							<span>Clear</span>
+                        </div>								
+					";
                                 
                         global $wpdb;
                         $RUPs_attempts_amount = get_option("rotating_universal_passwords_8");
@@ -144,21 +120,19 @@
                         foreach ($RUPs_locks as $RUPs_locks_admin) {
                             $this_ID = $RUPs_locks_admin->ID;
                                 echo "
-                                <tr>
-                                    <td><strong>",$RUPs_locks_admin->DATE,"</strong></td>
-                                    <td>",$RUPs_locks_admin->IP,"</td>
-                                    <td><a href=\"",$RUPs_locks_admin->URL,"\">Originating post</a></td>
-                                    <td><form method=\"post\" class=\"RUPs_item_form\"><input type=\"submit\" name=\"$this_ID\" value=\"Clear lock\"></form></td>
-                                </tr>
+                                <div class=\"clear locked\">
+                                    <span><strong>",$RUPs_locks_admin->DATE,"</strong></span>
+                                    <span>",$RUPs_locks_admin->IP,"</span>
+                                    <span><a href=\"",$RUPs_locks_admin->URL,"\">Link</a></span>
+                                    <span><form method=\"post\" class=\"RUPs_item_form\"><input type=\"submit\" name=\"$this_ID\" value=\"Clear lock\"></span></form>
+                                </div>
                                 ";
                                 if(isset($_POST[$this_ID])){
                                     $wpdb->query(" DELETE FROM $RUPs_table_name WHERE ID = '$this_ID' ");
                                 }
                         }
                         echo "
-                            </tbody>
-                        </table>
-                    </td>";
+                        </div>";
                 
                 
             
@@ -184,20 +158,13 @@
             function rotating_universal_passwords_page_content() { 
                 echo "    
                     <div class=\"wrap\">
-                        <h2>Passwords</h2>
-                        <table class=\"form-table\" border=\"1\">
-                            <tbody>
-                                <tr>
-                                    <td valign=\"top\"><strong>Usage</strong><br />
-                                        Surround content in your posts and pages that you wish to password protect using the shortcode.<hr />
-                                        <p><code>[rups]content[/rups]</code></p>
-                                    </td>";
+						<div class=\"settings\">
+                            <div class=\"settingsInfo\">
+								<strong>Usage</strong><br />
+                                Surround content in your posts and pages that you wish to password protect using the shortcode.<hr />
+                                <p><code>[rups]content[/rups]</code></p></div>";
                                     print_rotating_universal_passwords_form();
-                                    echo "
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>";
+                                    echo "</div></div>";
             }
             
             rotating_universal_passwords_page_content();

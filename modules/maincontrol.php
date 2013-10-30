@@ -304,8 +304,8 @@
             echo "
             <div class=\"allSections\">
                 <div class=\"allSectionsContent\">
-                    <h2>My Optional Modules</h2>";
-            
+                    <h2>My Optional Modules ( version 5.0.0.10302013 )</h2><div class=\"settings\">";
+					
                     if ( $_REQUEST [ 'mommaincontrol_uninstall_all'] == 3 ) {
                         $uninstalled = 1;
                         echo "
@@ -338,7 +338,7 @@
                         }
                     }
                     echo "
-                </div>
+                </div></div>
             </div>";
         }
     

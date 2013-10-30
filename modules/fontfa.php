@@ -8,11 +8,14 @@
             function mom_fontfa_page_content() {
                 echo "
                 <div class=\"wrap\">
-                <h2>Font Awesome Shortcodes</h2>
+				<div class=\"settings\">
+				<div class=\"settingsInfo full\">
                 <p>Current version: <code>4.0</code></p>
                 <p>Usage: <code>[font-fa i=\"iconName\"]</code>.</p>
                 <p>Icons are found <a href=\"http://fortawesome.github.io/Font-Awesome/icons/\">here</a>.  Each icon has a name (like this: fa-adjust).  For the shortcode, you don't need <code>fa-</code>. So, for <code><i class=\"fa fa-adjust\"></i> fa-adjust</code>, you'd simply need to type <code>[font-fa i=\"adjust\"]</code></p>
                 </div>
+				</div>
+				</div>
                 ";
             }
             mom_fontfa_page_content();
