@@ -8,34 +8,37 @@
         function my_optional_modules_count_module() {
     
             function update_obwcountplus_options() {
-                if ( $_REQUEST[ 'obwcountplus_countdownfrom' ] != '' . get_option("obwcountplus_1_countdownfrom") . '' && is_numeric( $_REQUEST[ 'obwcountplus_countdownfrom' ] ) ) { 
-                    update_option("obwcountplus_1_countdownfrom",$_REQUEST["obwcountplus_countdownfrom"]); 
+                if ( $_REQUEST[ 'obwcountplus_countdownfrom' ] != '' . get_option( 'obwcountplus_1_countdownfrom'   ) . '' && is_numeric( $_REQUEST[ 'obwcountplus_countdownfrom' ] ) ) { 
+                    update_option( 'obwcountplus_1_countdownfrom',$_REQUEST[ 'obwcountplus_countdownfrom' ] ); 
                 }
-                if ( $_REQUEST[ 'obwcountplus_remaining' ] != '' . get_option("obwcountplus_2_remaining") . "") { 
+                if ( $_REQUEST[ 'obwcountplus_remaining'     ] != '' . get_option( 'obwcountplus_2_remaining'       ) . ""                                                            ) { 
                     update_option( 'obwcountplus_2_remaining',$_REQUEST[ 'obwcountplus_remaining' ] ); 
                 }
-                if ( $_REQUEST[ 'obwcountplus_total' ] != '' . get_option("obwcountplus_3_total") . '') { 
+                if ( $_REQUEST[ 'obwcountplus_total'         ] != '' . get_option( 'obwcountplus_3_total'           ) . ''                                                            ) { 
                     update_option( 'obwcountplus_3_total',$_REQUEST[ 'obwcountplus_total' ] ); 
                 }
-                if ( $_REQUEST[ 'obwcountplus_custom' ] != '' . get_option("obwcountplus_4_custom") . '') { 
+                if ( $_REQUEST[ 'obwcountplus_custom'        ] != '' . get_option( 'obwcountplus_4_custom'          ) . ''                                                            ) { 
                     update_option( 'obwcountplus_4_custom',$_REQUEST[ 'obwcountplus_custom' ] ); 
                 }
-                if ( $_REQUEST[ 'obwcountplus_countdownfrom' ] == '') { 
+                if ( $_REQUEST[ 'obwcountplus_countdownfrom' ] == ''                                                                                                                  ) { 
                     update_option( 'obwcountplus_1_countdownfrom','0' ); 
                 }
-                if ( $_REQUEST[ 'obwcountplus_remaining' ] == '') { 
+                if ( $_REQUEST[ 'obwcountplus_remaining'     ] == ''                                                                                                                  ) { 
                     update_option( 'obwcountplus_2_remaining','remaining' ); 
                 }
-                if ( $_REQUEST[ 'obwcountplus_total' ] == '') { 
+                if ( $_REQUEST[ 'obwcountplus_total'         ] == ''                                                                                                                  ) { 
                     update_option( 'obwcountplus_3_total','total' ); 
                 }
-                if ( $_REQUEST[ 'obwcountplus_custom' ] == '') { 
+                if ( $_REQUEST[ 'obwcountplus_custom'        ] == ''                                                                                                                  ) { 
                     update_option( 'obwcountplus_4_custom','' ); 
                 }
-                echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
             }
+			
+			
+			
+			
 
-            function obwcountplus_form() {
+			function obwcountplus_form() {
                 echo "
 				<div class=\"settingsInput\">
 				    <section>
@@ -69,6 +72,10 @@
                 </div>";
             }
 
+
+
+
+
             function obwcountplus_page_content() {
                 echo "
                 <div class=\"wrap\">";
@@ -96,15 +103,26 @@
                     </form>
                 </div>";
             }
-            
-            if(isset( $_POST[ 'obwcountsave' ] ) ) { update_obwcountplus_options(); }
+
+
+
+
+
+            if(isset( $_POST[ 'obwcountsave' ] ) ) {
+				update_obwcountplus_options(); 
+				echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
+			}
+
+
+
+
 
             obwcountplus_page_content();
-        
-        }
+
+		}
         
         my_optional_modules_count_module();
         
     }
-    
+
 ?>

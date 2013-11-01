@@ -6,16 +6,43 @@
     if (is_admin() ) {
             
         function my_optional_modules_reviews_module() {
+		
+			function mom_closetags( $html ) {
+				// http://stackoverflow.com/questions/3059398/how-to-close-unclosed-html-tags
+				preg_match_all ( "#<([a-z]+)( .*)?(?!/)>#iU", $html, $result );
+				$openedtags = $result[1];
+				preg_match_all ( "#</([a-z]+)>#iU", $html, $result );
+				$closedtags = $result[1];
+				$len_opened = count ( $openedtags );
+				if( count ( $closedtags ) == $len_opened )
+				{
+				return $html;
+				}
+				$openedtags = array_reverse ( $openedtags );
+				for( $i = 0; $i < $len_opened; $i++ )
+				{
+					if ( !in_array ( $openedtags[$i], $closedtags ) )
+					{
+					$html .= "</" . $openedtags[$i] . ">";
+					}
+					else
+					{
+					unset ( $closedtags[array_search ( $openedtags[$i], $closedtags)] );
+					}
+				}
+				return $html;
+			}
+		
         
             function update_mom_reviews() {
                 global $table_prefix, $table_suffix, $wpdb;
                 $reviews_table_name = $table_prefix . $table_suffix . 'momreviews';            
-                    $reviews_type = $_REQUEST[ 'reviews_type' ];
-                    $reviews_link = $_REQUEST[ 'reviews_link' ];
-                    $reviews_title = $_REQUEST[ 'reviews_title' ];
-                    $reviews_reviewed = $_REQUEST[ 'reviews_review' ];
+                    $reviews_type = sanitize_text_field( esc_html(mom_closetags( $_REQUEST[ 'reviews_type' ] ) ) );
+                    $reviews_link = sanitize_text_field( esc_html(mom_closetags( $_REQUEST[ 'reviews_link' ] ) ) );
+                    $reviews_title = sanitize_text_field( esc_html(mom_closetags( $_REQUEST[ 'reviews_title' ] ) ) );
+                    $reviews_reviewed = sanitize_text_field( esc_html(mom_closetags( $_REQUEST[ 'reviews_review' ] ) ) ) ;
                     $reviews_review = wpautop( $reviews_reviewed );
-                    $reviews_rating = $_REQUEST[ 'reviews_rating' ]; 
+                    $reviews_rating = sanitize_text_field( esc_html(mom_closetags( $_REQUEST[ 'reviews_rating' ] ) ) ); 
                     $wpdb->query("INSERT INTO $reviews_table_name (ID,TYPE,LINK,TITLE,REVIEW,RATING) VALUES ('','$reviews_type','$reviews_link','$reviews_title','$reviews_review','$reviews_rating')") ;
                     echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
             }
@@ -162,7 +189,7 @@
                     <form method=\"post\"><input class=\"deleteSubmit\" type=\"submit\" name=\"$this_ID\" value=\"Delete\"></form>";
                     if(isset($_POST[$this_ID])){
                         $current = plugin_basename(__FILE__);
-                        $wpdb->query(" DELETE FROM $mom_reviews_table_name WHERE ID = '$this_ID' ");
+                        $wpdb->query("DELETE FROM $mom_reviews_table_name WHERE ID = '$this_ID'");
                         echo "<meta http-equiv=\"refresh\" content=\"0;url=\"$current\" />";
                     }
                     }

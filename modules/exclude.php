@@ -11,64 +11,64 @@
 
             function update_momse_options() {
                 if ( isset( $_POST[ 'momsesave' ] ) ) {
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9' ] != '' . get_option( 'simple_announcement_with_exclusion_9' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9'       ] != '' . get_option( 'simple_announcement_with_exclusion_9'       ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_9',$_REQUEST[ 'simple_announcement_with_exclusion_9' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_2' ] != ''. get_option( 'simple_announcement_with_exclusion_9_2' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_2'     ] != '' . get_option( 'simple_announcement_with_exclusion_9_2'     ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_9_2',$_REQUEST[ 'simple_announcement_with_exclusion_9_2' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_3' ] != '' . get_option( 'simple_announcement_with_exclusion_9_3' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_3'     ] != '' . get_option( 'simple_announcement_with_exclusion_9_3'     ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_9_3',$_REQUEST[ 'simple_announcement_with_exclusion_9_3' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_4' ] != '' . get_option( 'simple_announcement_with_exclusion_9_4' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_4'     ] != '' . get_option( 'simple_announcement_with_exclusion_9_4'     ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_9_4',$_REQUEST[ 'simple_announcement_with_exclusion_9_4' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_5' ] != '' . get_option( 'simple_announcement_with_exclusion_9_5' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_5'     ] != '' . get_option( 'simple_announcement_with_exclusion_9_5'     ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_9_5',$_REQUEST[ 'simple_announcement_with_exclusion_9_5' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_7' ] != '' . get_option( 'simple_announcement_with_exclusion_9_7' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_7'     ] != '' . get_option( 'simple_announcement_with_exclusion_9_7'     ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_9_7',$_REQUEST[ 'simple_announcement_with_exclusion_9_7' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_8' ] != '' . get_option( 'simple_announcement_with_exclusion_9_8' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_8'     ] != '' . get_option( 'simple_announcement_with_exclusion_9_8'     ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_9_8',$_REQUEST[ 'simple_announcement_with_exclusion_9_8' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_9' ] != '' . get_option( 'simple_announcement_with_exclusion_9_9' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_9'     ] != '' . get_option( 'simple_announcement_with_exclusion_9_9'     ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_9_9',$_REQUEST[ 'simple_announcement_with_exclusion_9_9' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_10' ] != '' . get_option( 'simple_announcement_with_exclusion_9_10' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_10'    ] != '' . get_option( 'simple_announcement_with_exclusion_9_10'    ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_9_10',$_REQUEST[ 'simple_announcement_with_exclusion_9_10' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_11' ] != '' . get_option( 'simple_announcement_with_exclusion_9_11' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_11'    ] != '' . get_option( 'simple_announcement_with_exclusion_9_11'    ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_9_11',$_REQUEST[ 'simple_announcement_with_exclusion_9_11' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_12' ] != '' . get_option( 'simple_announcement_with_exclusion_9_12' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_12'    ] != '' . get_option( 'simple_announcement_with_exclusion_9_12'    ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_9_12',$_REQUEST[ 'simple_announcement_with_exclusion_9_12' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_13' ] != '' . get_option( 'simple_announcement_with_exclusion_9_13' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_13'    ] != '' . get_option( 'simple_announcement_with_exclusion_9_13'    ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_9_13',$_REQUEST[ 'simple_announcement_with_exclusion_9_13' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_14' ] != '' . get_option( 'simple_announcement_with_exclusion_9_14' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_9_14'    ] != '' . get_option( 'simple_announcement_with_exclusion_9_14'    ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_9_14',$_REQUEST[ 'simple_announcement_with_exclusion_9_14' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_sun' ] != '' . get_option( 'simple_announcement_with_exclusion_sun' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_sun'     ] != '' . get_option( 'simple_announcement_with_exclusion_sun'     ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_sun',$_REQUEST[ 'simple_announcement_with_exclusion_sun' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_mon' ] != '' . get_option( 'simple_announcement_with_exclusion_mon' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_mon'     ] != '' . get_option( 'simple_announcement_with_exclusion_mon'     ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_mon',$_REQUEST[ 'simple_announcement_with_exclusion_mon' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_tue' ] != '' . get_option( 'simple_announcement_with_exclusion_tue' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_tue'     ] != '' . get_option( 'simple_announcement_with_exclusion_tue'     ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_tue',$_REQUEST[ 'simple_announcement_with_exclusion_tue' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_wed' ] != '' . get_option( 'simple_announcement_with_exclusion_wed' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_wed'     ] != '' . get_option( 'simple_announcement_with_exclusion_wed'     ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_wed',$_REQUEST[ 'simple_announcement_with_exclusion_wed' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_thu' ] != '' . get_option( 'simple_announcement_with_exclusion_thu' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_thu'     ] != '' . get_option( 'simple_announcement_with_exclusion_thu'     ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_thu',$_REQUEST[ 'simple_announcement_with_exclusion_thu' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_fri' ] != '' . get_option( 'simple_announcement_with_exclusion_fri' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_fri'     ] != '' . get_option( 'simple_announcement_with_exclusion_fri'     ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_fri',$_REQUEST[ 'simple_announcement_with_exclusion_fri' ] ); 
                     }
-                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_sat' ] != '' . get_option( 'simple_announcement_with_exclusion_sat' ) . '' ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_sat'     ] != '' . get_option( 'simple_announcement_with_exclusion_sat'     ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_sat',$_REQUEST[ 'simple_announcement_with_exclusion_sat' ] ); 
                     }
                     if ( $_REQUEST[ 'simple_announcement_with_exclusion_cat_sun' ] != '' . get_option( 'simple_announcement_with_exclusion_cat_sun' ) . '' ) {

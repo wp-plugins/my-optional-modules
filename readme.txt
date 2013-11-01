@@ -1,9 +1,9 @@
 === My Optional Modules ===
 Contributors: One Billion Words
-Tags: no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
+Tags: lazy,lazy load,twitter,google+,open graph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 5.0.0.10302013
+Stable tag: 5.0.1
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -21,15 +21,17 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 = Modules: =
 * Count++, a module to count words on the blog and countdown from an (optional) total count goal.
-* Passwords, a module for storing 7 unique (SHA512 salted) passwords, and then hiding content with a shortcode (and IP based lockout) that is unlockable using the current days password.
 * Exclude, a module to hide tags, categories, and post formats from the front page, the archives, the search results, or the feed (or all).
-* Post as Front, a module that allows you to select a specific post to be your home page, or make your home page your most recent post.
 * Jump Around, a module that allows users to navigate posts by pressing keys on the keyboard.
-* Shortcodes!, a module that adds useful shortcodes for posts and pages.
+* Post as Front, a module that allows you to select a specific post to be your home page, or make your home page your most recent post.
+* Passwords, a module for storing 7 unique (SHA512 salted) passwords, and then hiding content with a shortcode (and IP based lockout) that is unlockable using the current days password.
 * Reviews allows you to create custom reviews on anything you want, and display them on a post or a page.
+* Shortcodes!, a module that adds useful shortcodes for posts and pages.
 
 = Tweaks: =
 * Analaytics automatic embedding.
+* Automatically enable all images in posts and pages to use Lazy Load.
+* Include meta/open-graph tags for posts and pages, including keywords that are based on the content of your post and open-graph tags for Twitter, Facebook, and Google+ - automatically.
 * Hide WP Version from enqueued scripts and stylesheets.
 
 = Tools: =
@@ -45,11 +47,15 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 == Changelog ==
 = 5.0.+ =
-* 5.0.0.10302013 / Developer's note: It's been a hectic release schedule this past month, and from this point on the, the updates are going to slow down tremendously (unless code breaking bugs are reported or found).  This plugin has grown in the past month to the monster it is now - and as the developer, I'd like to thank you for your continued use of it.  
-* 5.0.0.10302013 / Exclude installation bug fix.
-* 5.0.0.10302013 / Further code cleanup on remaining files that weren't previously cleaned up in the 4.0.+ series.
-* 5.0.0.10302013 / Install procedures (activate all, deactivate all, reset, nuke) corrected.
-* 5.0.0.10302013 / Module settings pages have had their CSS altered to be more uniform.
+* 5.0.1 / Better output filtering on Reviews.
+* 5.0.1 / Add Twitter username field to profile field for use in meta, keywords and site Twitter username to general settings.
+* 5.0.1 / Enable Meta keywords, description, and other meta properties (like og:title,og:image,og:description, and so-forth) automatically for posts and pages.
+* 5.0.1 / Lazy Load added; automatically converts (for those with javascript enabled) images in posts (added via gallery - single or multiple) to be loaded via Lazy Load, decreasing page load times.
+* 5.0.0 / Developer's note: It's been a hectic release schedule this past month, and from this point on the, the updates are going to slow down tremendously (unless code breaking bugs are reported or found).  This plugin has grown in the past month to the monster it is now - and as the developer, I'd like to thank you for your continued use of it.  
+* 5.0.0 / Exclude installation bug fix.
+* 5.0.0 / Further code cleanup on remaining files that weren't previously cleaned up in the 4.0.+ series.
+* 5.0.0 / Install procedures (activate all, deactivate all, reset, nuke) corrected.
+* 5.0.0 / Module settings pages have had their CSS altered to be more uniform.
 
 = 4.0.+ = 
 * 4.0.9.1 / CSS fixed

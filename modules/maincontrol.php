@@ -8,23 +8,30 @@
     //        Main form content to display on the options page
     //        Content to display on the options page  
 
-    if (is_admin() ) { 
+    if ( is_admin() ) { 
 
-        //    Add options page for plugin to Wordpress backend
+        // Add options page for plugin to Wordpress backend
         add_action("admin_menu", "my_optional_modules_add_options_page");
         function my_optional_modules_add_options_page() { 
             add_options_page( 'My Optional Modules', 'My Optional Modules', 'manage_options', 'mommaincontrol', 'my_optional_modules_page_content'); 
         }
 
-        //    Update base options when main form is submitted
+
+
+
+
+        // Update base options when main form is submitted
         if( isset( $_POST[ 'momsave' ] ) ) { 
             include( '_update.php' ); 
             my_optional_modules_update_and_install(); 
 		}
 
-        //    Main form content to display on the options page
-        function my_optional_modules_form() {
-        
+
+
+
+
+        // Main form content to display on the options page
+        function my_optional_modules_form() {        
         echo "
             <div class=\"panelSection clear\">
                 <div class=\"info panel left\">
@@ -160,7 +167,7 @@
                             <option value=\"1\" "; if (get_option("mommaincontrol_fontawesome") == 1) { echo "selected=\"selected\""; } echo ">On</option>
                         </select>
                     </section>
-                    <p>Enable <a href=\"http://fortawesome.github.io/Font-Awesome/\">Font Awesome</a> on your theme, allowing you to use all available <a href=\"http://fortawesome.github.io/Font-Awesome/icons/\">icons</a>. (Shortcodes also avaailable.)</p>
+                    <p>Enable <a href=\"http://fortawesome.github.io/Font-Awesome/\">Font Awesome</a> on your theme, allowing you to use all available <a href=\"http://fortawesome.github.io/Font-Awesome/icons/\">icons</a>. (Shortcodes also available.)</p>
                 </div>
                 <div class=\"panel left\">
                     <section class=\"title clear\">
@@ -172,7 +179,55 @@
                     </section>
                     <p>Hide Wordpress version number from enqueued scripts and stylesheets on the front end of your website.</p>
                 </div>
+                <div class=\"panel left\">
+                    <section class=\"title clear\">
+                        <span><i class=\"fa fa-picture-o\"></i> Lazy Load</span>
+                        <select id=\"mommaincontrol_lazyload\" type=\"text\" name=\"mommaincontrol_lazyload\">
+                            <option value=\"0\" "; if (get_option("mommaincontrol_lazyload") == 0) { echo "selected=\"selected\""; } echo ">Off</option>
+                            <option value=\"1\" "; if (get_option("mommaincontrol_lazyload") == 1) { echo "selected=\"selected\""; } echo ">On</option>
+                        </select>
+                    </section>
+                    <p>Automatically convert all images in posts added via gallery (single or multiple) to be loaded (to users with javascript enabled) using <a href=\"http://www.appelsiini.net/projects/lazyload\">Lazy Load</a>.</p>
+                </div>
             </div>
+			
+            <div class=\"panelSection clear\">
+                <div class=\"panel left\">
+                    <section class=\"title clear\">
+                        <span><i class=\"fa fa-tasks\"></i> Meta</span>
+                        <select id=\"mommaincontrol_meta\" type=\"text\" name=\"mommaincontrol_meta\">
+                            <option value=\"0\" "; if (get_option("mommaincontrol_meta") == 0) { echo "selected=\"selected\""; } echo ">Off</option>
+                            <option value=\"1\" "; if (get_option("mommaincontrol_meta") == 1) { echo "selected=\"selected\""; } echo ">On</option>
+                        </select>
+                    </section>";
+					if (get_option( 'mommaincontrol_meta' ) == 1 ) { 
+						echo "
+						<p>			
+						Edit the following:<br />
+						Profile->Twitter username<br />
+						General->Keywords<br />
+						General->Twitter Site username
+						</p>";
+					} else {					
+						echo "
+						<p>Enable <meta> tags for posts and pages.</p>";
+					}
+					echo "
+					</div>
+                <div class=\"panel left\">
+                    <section class=\"title clear\">
+                        <span><i class=\"fa fa-\"></i> </span>
+                    </section>
+                    <p></p>
+                </div>
+                <div class=\"panel left\">
+                    <section class=\"title clear\">
+                        <span><i class=\"fa fa-\"></i> </span>
+                    </section>
+                    <p></p>
+                </div>
+            </div>
+			
 
             <div class=\"panelSection clear new\">
                 <div class=\"important panel left\">
@@ -220,17 +275,29 @@
             </div>";
         }
 
-        //    Content to display on the options page
+
+
+
+
+        // Content to display on the options page
         function my_optional_modules_page_content() {
-        
-            if ( get_option( 'mommaincontrol_obwcountplus' ) == 1 || get_option( 'mommaincontrol_momse' ) == 1 || get_option( 'mommaincontrol_momrups' ) == 1 || get_option( 'mommaincontrol_momja' ) == 1 || get_option( 'mommaincontrol_shorts' ) == 1 || get_option( 'mommaincontrol_reviews' ) == 1 ) {
+            
+			// Determine what settings page we're looking at.
+			if ( 
+                get_option( 'mommaincontrol_obwcountplus' ) == 1 || 
+                get_option( 'mommaincontrol_momse'        ) == 1 || 
+                get_option( 'mommaincontrol_momrups'      ) == 1 || 
+                get_option( 'mommaincontrol_momja'        ) == 1 || 
+                get_option( 'mommaincontrol_shorts'       ) == 1 || 
+                get_option( 'mommaincontrol_reviews'      ) == 1 ||
+				get_option( 'mommaincontrol_fontawesome'  ) == 1
+            ) {
                 echo "
                 <div class=\"leftMenu\">
                     <form method=\"post\">
                         <label for=\"MOMclear\"><i class=\"fa fa-home\"></i></label>
                         <input id=\"MOMclear\" name=\"MOMclear\" type=\"submit\">
                 ";
-                
                 if ( get_option( 'mommaincontrol_obwcountplus' ) == 1 ) { 
                     echo "<label for=\"MOMcount\"><i title=\"Count++ settings\" class=\"fa fa-bar-chart-o"; 
                     if ( get_option( 'mommaincontrol_focus' ) == "count" ) {
@@ -238,7 +305,6 @@
                     }
                     echo "\"></i></label><input id=\"MOMcount\" name=\"MOMcount\" type=\"submit\">"; 
                 }
-                
                 if ( get_option( 'mommaincontrol_momse' ) == 1 ) {
                     echo "<label for=\"MOMexclude\"><i title=\"Exclude settings\" class=\"fa fa-minus"; 
                     if ( get_option( 'mommaincontrol_focus' ) == "exclude" ) {
@@ -246,7 +312,6 @@
                     }
                     echo "\"></i></label><input id=\"MOMexclude\" name=\"MOMexclude\" type=\"submit\">"; 
                 }
-
                 if ( get_option( 'mommaincontrol_fontawesome' ) == 1 ) {
                     echo "<label for=\"MOMfontfa\"><i title=\"Font Awesome shortcodes\" class=\"fa fa-flag"; 
                     if ( get_option( 'mommaincontrol_focus' ) == "fontfa" ) {
@@ -254,7 +319,6 @@
                     }
                     echo "\"></i></label><input id=\"MOMfontfa\" name=\"MOMfontfa\" type=\"submit\">"; 
                 }				
-                
                 if ( get_option( 'mommaincontrol_momrups' ) == 1 ) {
                     echo "<label for=\"MOMpasswords\"><i title=\"Passwords settings\" class=\"fa fa-lock"; 
                     if ( get_option( 'mommaincontrol_focus' ) == "passwords" ) {
@@ -262,7 +326,6 @@
                     }
                     echo "\"></i></label><input id=\"MOMpasswords\" name=\"MOMpasswords\" type=\"submit\">"; 
                 }
-                
                 if ( get_option( 'mommaincontrol_momja' ) == 1 ) {
                     echo "<label for=\"MOMjumparound\"><i title=\"Jump Around settings\" class=\"fa fa-gamepad"; 
                     if ( get_option( 'mommaincontrol_focus' ) == "jumparound" ) {
@@ -270,7 +333,6 @@
                     }
                     echo "\"></i></label><input id=\"MOMjumparound\" name=\"MOMjumparound\" type=\"submit\">"; 
                 }
-                
                 if ( get_option( 'mommaincontrol_reviews' ) == 1 ) {
                     echo "<label for=\"MOMreviews\"><i title=\"Reviews settings\" class=\"fa fa-thumbs-up"; 
                     if ( get_option( 'mommaincontrol_focus' ) == "reviews" ) {
@@ -278,7 +340,6 @@
                     }
                     echo "\"></i></label><input id=\"MOMreviews\" name=\"MOMreviews\" type=\"submit\">"; 
                 }
-                
                 if ( get_option( 'mommaincontrol_shorts' ) == 1 ) {
                     echo "<label for=\"MOMshortcodes\"><i title=\"Shortcodes settings\" class=\"fa fa-pencil"; 
                     if ( get_option( 'mommaincontrol_focus' ) == "shortcodes" ) {
@@ -286,28 +347,21 @@
                     }
                     echo "\"></i></label><input id=\"MOMshortcodes\" name=\"MOMshortcodes\" type=\"submit\">"; 
                 }
-                
                 echo "
                     </form>
                 </div>";
             }
-            
-            if( isset( $_POST[ 'MOMclear' ] ) ) { update_option( 'mommaincontrol_focus','' ); echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />"; }
-            if( isset( $_POST[ 'MOMexclude' ] ) ) { update_option( 'mommaincontrol_focus','exclude' ); echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />"; }
-			if( isset( $_POST[ 'MOMfontfa' ] ) ) { update_option( 'mommaincontrol_focus','fontfa' ); echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />"; }
-            if( isset( $_POST[ 'MOMcount' ] ) ) { update_option( 'mommaincontrol_focus','count' ); echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />"; }
-            if( isset( $_POST[ 'MOMjumparound' ] ) ) { update_option( 'mommaincontrol_focus','jumparound' ); echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />"; }
-            if( isset( $_POST[ 'MOMpasswords' ] ) ) { update_option( 'mommaincontrol_focus','passwords' ); echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />"; }
-            if( isset( $_POST[ 'MOMreviews' ] ) ) { update_option( 'mommaincontrol_focus','reviews' ); echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />"; }
-            if( isset( $_POST[ 'MOMshortcodes' ] ) ) { update_option( 'mommaincontrol_focus','shortcodes' ); echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />"; }
 
+            // Screen display; determine if nuked or otherwise.
             echo "
             <div class=\"allSections\">
                 <div class=\"allSectionsContent\">
-                    <h2>My Optional Modules ( version 5.0.0.10302013 )</h2><div class=\"settings\">";
+                    <h2>My Optional Modules ( version 5.0.1 )</h2><div class=\"settings\">";
 					
-                    if ( $_REQUEST [ 'mommaincontrol_uninstall_all'] == 3 ) {
+                    if ( $_REQUEST [ 'mommaincontrol_uninstall_all' ] == 3 ) {
                         $uninstalled = 1;
+                    }
+					if ( $uninstalled == 1 ) {
                         echo "
                         <div id=\"setting-error-settings_nuked\" class=\"updated settings-error\">
                             <p>All settings associated with MOM have been wiped from your database.  
@@ -315,33 +369,49 @@
                             however.</p>
                             <p>Thanks for using <em>My Optional Modules</em>, and good luck in your future endeavors!</p>
                         </div>";
-                    }
-
-                    if ($uninstalled == 1) { } else {
-                    if ( get_option('mommaincontrol_focus') == "" ) {
-                            echo "<form method=\"post\">";
-                            my_optional_modules_form();
-                            echo "</form>";
+                    } else {
+                        if ( get_option('mommaincontrol_focus') == "" ) {
+                            echo "
+							<form method=\"post\">";
+                                my_optional_modules_form();
+                            echo "
+							</form>";
                             include( 'databasecleaner.php');
                         } else {
                             echo "
                             <div class=\"panelSection clear plugin\">";
-                                if ( get_option( 'mommaincontrol_focus' ) == 'count' ) { include( plugin_dir_path( __FILE__ ) . 'countplusplus.php'); }
-                                elseif ( get_option( 'mommaincontrol_focus' ) == 'exclude' ) { include( plugin_dir_path( __FILE__ ) . 'exclude.php'); }
-                                elseif ( get_option( 'mommaincontrol_focus' ) == 'jumparound' ) { include( plugin_dir_path( __FILE__ ) . 'jumparound.php'); }
-                                elseif ( get_option( 'mommaincontrol_focus' ) == 'passwords' ) { include( plugin_dir_path( __FILE__ ) . 'passwords.php'); }
-                                elseif ( get_option( 'mommaincontrol_focus' ) == 'reviews' ) { include( plugin_dir_path( __FILE__ ) . 'reviews.php'); }
-                                elseif ( get_option( 'mommaincontrol_focus' ) == 'shortcodes' ) { include( plugin_dir_path( __FILE__ ) . 'shortcodes.php'); }
-								elseif ( get_option( 'mommaincontrol_focus' ) == 'fontfa' ) { include( plugin_dir_path( __FILE__ ) . 'fontfa.php'); }
+                                if     ( get_option( 'mommaincontrol_focus' ) == 'count'      ) { include( plugin_dir_path( __FILE__ ) . 'countplusplus.php'); }
+                                elseif ( get_option( 'mommaincontrol_focus' ) == 'exclude'    ) { include( plugin_dir_path( __FILE__ ) . 'exclude.php');       }
+                                elseif ( get_option( 'mommaincontrol_focus' ) == 'jumparound' ) { include( plugin_dir_path( __FILE__ ) . 'jumparound.php');    }
+                                elseif ( get_option( 'mommaincontrol_focus' ) == 'passwords'  ) { include( plugin_dir_path( __FILE__ ) . 'passwords.php');     }
+                                elseif ( get_option( 'mommaincontrol_focus' ) == 'reviews'    ) { include( plugin_dir_path( __FILE__ ) . 'reviews.php');       }
+                                elseif ( get_option( 'mommaincontrol_focus' ) == 'shortcodes' ) { include( plugin_dir_path( __FILE__ ) . 'shortcodes.php');    }
+								elseif ( get_option( 'mommaincontrol_focus' ) == 'fontfa'     ) { include( plugin_dir_path( __FILE__ ) . 'fontfa.php');        }
                             echo "
                             </div>";
                         }
                     }
                     echo "
-                </div></div>
+                    </div>
+			    </div>
             </div>";
         }
-    
+
+
+
+
+
+        // Form handling for header location (refreshing the page was kind of rudimentary...) 
+		if( isset( $_POST[ 'MOMsave'                    ] ) ) {                                                       header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
+        if( isset( $_POST[ 'MOMclear'                   ] ) ) { update_option( 'mommaincontrol_focus',''           ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
+        if( isset( $_POST[ 'MOMexclude'                 ] ) ) { update_option( 'mommaincontrol_focus','exclude'    ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
+		if( isset( $_POST[ 'MOMfontfa'                  ] ) ) { update_option( 'mommaincontrol_focus','fontfa'     ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
+        if( isset( $_POST[ 'MOMcount'                   ] ) ) { update_option( 'mommaincontrol_focus','count'      ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
+        if( isset( $_POST[ 'MOMjumparound'              ] ) ) { update_option( 'mommaincontrol_focus','jumparound' ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
+        if( isset( $_POST[ 'MOMpasswords'               ] ) ) { update_option( 'mommaincontrol_focus','passwords'  ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
+        if( isset( $_POST[ 'MOMreviews'                 ] ) ) { update_option( 'mommaincontrol_focus','reviews'    ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
+        if( isset( $_POST[ 'MOMshortcodes'              ] ) ) { update_option( 'mommaincontrol_focus','shortcodes' ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
+		
     } 
     
  ?>

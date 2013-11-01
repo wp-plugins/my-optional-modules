@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.0.0.10302013
+Version: 5.0.1
 Author: One Billion Words
 Author URI: http://onebillionwords.com
 */
@@ -54,6 +54,8 @@ Author URI: http://onebillionwords.com
 		add_option( 'mommaincontrol_reviews','0','Reviews activated?' );
 		add_option( 'mommaincontrol_fontawesome','0','Font Awesome activated?' );
 		add_option( 'mommaincontrol_versionnumbers','0','Version numbers hidden?' );
+		add_option( 'mommaincontrol_lazyload','0','Lazy load activated?' );
+		add_option( 'mommaincontrol_meta','0','Meta acitvated?' );
 	}
 
 	// Admin stylesheet enqueue
@@ -133,5 +135,48 @@ Author URI: http://onebillionwords.com
 	if ( get_option( 'mommaincontrol_momrups' ) == 1 ) { include( plugin_dir_path( __FILE__ ) . 'functions/_functions_passwords.php' ); }
 	if ( get_option( 'mommaincontrol_reviews' ) == 1 ) { include( plugin_dir_path( __FILE__ ) . 'functions/_functions_reviews.php' ); }
 	if ( get_option( 'mommaincontrol_shorts' ) == 1 ) { include( plugin_dir_path( __FILE__ ) . 'functions/_functions_shortcodes.php' ); }
+	if ( get_option( 'mommaincontrol_meta' ) == 1 || get_option( 'mommaincontrol_meta' ) == 2 || get_option( 'mommaincontrol_meta' ) == 3  ) { 
+		include( plugin_dir_path( __FILE__ ) . 'modules/SEO.php' ); 
+	}
+	
+	
 
+
+	// Lazy load 
+	if ( get_option( 'mommaincontrol_lazyload' ) == 1 ) { 
+		function mom_jquery() {
+			wp_deregister_script('jquery');
+			wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", '', '', null, false);
+			wp_enqueue_script('jquery');		
+		}
+	
+		function mom_lazy_load() {
+			$lazyLoad = "//cdn.jsdelivr.net/jquery.lazyload/1.9.0/jquery.lazyload.min.js";
+			$placeholder = plugins_url() . '/' . plugin_basename(dirname(__FILE__)) . '/includes/javascript/placeholder.png';
+			echo "
+			<script type='text/javascript' src='" . $lazyLoad . "'></script>
+			<script>
+				$(document).ready(function () {
+					$(\"img\").wrap(function() {
+						$(this).wrap(function() {
+							var newimg = '<img src=\"" . $placeholder . "\" data-original=\"' + $(this).attr('src') + '\" width=\"' + $(this).attr('width') + '\" height=\"' + $(this).attr('height') + '\" class=\"lazy ' + $(this).attr('class') + '\">';
+							return newimg;  
+						});
+						return '<noscript>';
+					});
+				});
+			</script>
+			<script>
+				jQuery(document).ready(function ($) {
+					$(\"img.lazy\").lazyload(
+					{ data_attribute: \"original\" 
+					});
+				});
+			</script>";
+		}
+		add_action( 'wp_enqueue_scripts', 'mom_jquery' );
+		add_action('wp_footer', 'mom_lazy_load');   
+	}
+
+	
 ?>

@@ -6,32 +6,32 @@
     if (is_admin() ) {
 
         function my_optional_modules_cleaner_module() {
-        global $table_prefix, $table_suffix, $wpdb;
-        $revisions_count = 0;
-        $comments_count = 0;
-        $terms_count = 0;
-        $postsTable = $table_prefix . $table_suffix . 'posts';
-        $commentsTable = $table_prefix . $table_suffix . 'comments';
-        $termsTable2 = $table_prefix . $table_suffix . 'terms';
-        $termsTable = $table_prefix . $table_suffix . 'term_taxonomy';
-        $revisions_total = $wpdb->get_results ( "SELECT ID FROM `" . $postsTable . "` WHERE `post_type` = 'revision' OR `post_type` = 'auto_draft' OR `post_status` = 'trash'" );
-        $comments_total = $wpdb->get_results ( "SELECT comment_ID FROM `" . $commentsTable . "` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'" );
-        $terms_total = $wpdb->get_results ( "SELECT term_taxonomy_id FROM `" . $termsTable . "` WHERE `count` = '0'" );
-        
-        foreach ( $revisions_total as $retot ) {
-            $revisions_count++;
-        }
-        
-        foreach ( $comments_total as $comtot ) {
-            $comments_count++;
-        }
-        
-        foreach ( $terms_total as $termstot ) {
-            $this_term = $termstot->term_id;
-            $terms_count++;
-        }
-        
-        echo "
+            global $table_prefix, $table_suffix, $wpdb;
+            $revisions_count = 0;
+            $comments_count = 0;
+            $terms_count = 0;
+            $postsTable = $table_prefix . $table_suffix . 'posts';
+            $commentsTable = $table_prefix . $table_suffix . 'comments';
+            $termsTable2 = $table_prefix . $table_suffix . 'terms';
+            $termsTable = $table_prefix . $table_suffix . 'term_taxonomy';
+            $revisions_total = $wpdb->get_results ( "SELECT ID FROM `" . $postsTable . "` WHERE `post_type` = 'revision' OR `post_type` = 'auto_draft' OR `post_status` = 'trash'" );
+            $comments_total = $wpdb->get_results ( "SELECT comment_ID FROM `" . $commentsTable . "` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'" );
+            $terms_total = $wpdb->get_results ( "SELECT term_taxonomy_id FROM `" . $termsTable . "` WHERE `count` = '0'" );
+            
+            foreach ( $revisions_total as $retot ) {
+                $revisions_count++;
+            }
+            
+            foreach ( $comments_total as $comtot ) {
+                $comments_count++;
+            }
+            
+            foreach ( $terms_total as $termstot ) {
+                $this_term = $termstot->term_id;
+                $terms_count++;
+            }
+            
+            echo "
             <div class=\"new\">
                 <div class=\"panelSection clear\">
                     <div class=\"info panel left\">
@@ -126,9 +126,7 @@
                     $wpdb->query( "DELETE FROM `" . $termsTable2 . "` WHERE `term_id` IN (select `term_id` from `" . $termsTable . "` WHERE `count` = 0 )" );
                     $wpdb->query( "DELETE FROM `" . $termsTable . "` WHERE `count` = 0");
                 }
-        
                 echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
-                
             }
         }
     
