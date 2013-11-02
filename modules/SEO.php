@@ -22,23 +22,34 @@
 		}
 		
 		function mom_grab_author_count() {
-			$authorsCounted           = 0;
+			$authorsCounted = 0;
 			global $wpdb;
 			$countAuthors = (array) $wpdb->get_results("
-					SELECT DISTINCT(post_author)
+					SELECT DISTINCT('post_author')
 					FROM {$wpdb->posts}
 				", object);
 			foreach ( $countAuthors as $authorCount ) {
 					$authorsCounted++;
 			}
 			
+			if ( $authorsCounted == 1 ) {
+				add_action( "wp", "mom_author_archives_author" );
+				function mom_author_archives_author() {	
+					if ( is_author() ) {
+						$homeURL = esc_url( home_url('/') );
+						if (have_posts()) : the_post();
+						header("location: " . $homeURL );
+						exit;
+						endif;
+					}
+				}
+			}
 		}
 		mom_grab_author_count();
 		
-		add_action( "wp", "mom_author_archive_disabled" );
-		function mom_author_archive_disabled() {	
-			if ( is_author() && $authorsCounted == 1 || 
-			     is_date() ||
+		add_action( "wp", "mom_author_archives" );
+		function mom_author_archives() {	
+			if ( is_date() ||
 				 is_year() ||
 				 is_month() || 
 				 is_day() || 
@@ -82,8 +93,7 @@
 			$excerpt                  = htmlentities( $the_excerpt );
 			$currentURL               = add_query_arg( $wp->query_string, '', home_url( $wp->request ) );
 			
-			echo $authorName;
-			
+	
 			if ( $excerpt != "" ) { 
 				$theExcerpt           = "<meta property=\"og:description\" content=\"" . htmlentities( $excerpt_from->post_excerpt ) . "\"/>\n";
 			} else {
