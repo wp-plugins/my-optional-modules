@@ -30,32 +30,34 @@
 
 		function extractCommonWords($string){
 			  $stopWords = array(
-			  'a','about','an','and','are','as','at','also','again',
-			  'b','be','by','because',
+			  'a','about','an','and','are','as','at','also','again','actually','actual',
+			  'b','be','by','because','being',
 			  'c','com','contrary',
 			  'd','de',
-			  'e','en','essentially','essential',
+			  'e','en','essentially','essential','even',
 			  'f','for','from','firstly','finally',
 			  'g',
 			  'h','how','however','hence',
 			  'i','in','is','it',
-			  'j',
+			  'j','just',
 			  'k',
 			  'l','la','last','likewise',
 			  'm','most','more',
 			  'n','next','need',
-			  'o','of','on','or',
+			  'o','of','on','or','only',
 			  'p','presently','primarily',
 			  'q',
 			  'r',
 			  's','secondly','similarily','since','should',
 			  't','that','the','this','to','thirdly','thus','their','there','than','then',
+			  'true',
+			  'they','them',
 			  'u','und','until',
 			  'v',
 			  'was','what','when','where','who','will','with','www','while','whereas',
-			  'wherever','whenever','whether','without','well',
+			  'wherever','whenever','whether','without','well','would',
 			  'x',
-			  'y',
+			  'y','you','your','you\'re','you\'ll',
 			  'z',
 			  );
 		   
@@ -63,7 +65,6 @@
 			  $string = trim($string);
 			  $string = preg_replace('/<(pre)(?:(?!<\/\1).)*?<\/\1>/s','',$string);
 			  $string = preg_replace('/\[.+\]/U', '', $string);
-			  $string = preg_replace('/\<.+\>/U', '', $string);
 			  $string = preg_replace('/[^a-zA-Z0-9 -]/', '', $string); 
 			  $string = preg_replace('/[0-9]/', '', $string);
 			  $string = strtolower($string); 
