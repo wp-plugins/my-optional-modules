@@ -344,7 +344,7 @@
             echo "
             <div class=\"allSections\">
                 <div class=\"allSectionsContent\">
-                    <h2>My Optional Modules ( version 5.0.1 )</h2><div class=\"settings\">";
+                    <h2>My Optional Modules</h2><div class=\"settings\">";
 					
                     if ( $_REQUEST [ 'mommaincontrol_uninstall_all' ] == 3 ) {
                         $uninstalled = 1;
