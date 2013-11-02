@@ -3,7 +3,7 @@ Contributors: One Billion Words
 Tags: lazy,lazy load,twitter,google+,open graph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 5.0.6
+Stable tag: 5.0.7
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -53,6 +53,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 == Changelog ==
 = 5.0.+ =
+* 5.0.7 / Hotfix for Twitter (author).
 * 5.0.6 / Hotfix for author count logic.
 * 5.0.5 / Meta disables author archives if there is only a single author with posts; disables date based archives as well.
 * 5.0.5 / Meta noarchive/nofollows 404s and archive pages.

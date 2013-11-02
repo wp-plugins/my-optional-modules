@@ -1,7 +1,7 @@
 <?php
 
 	function mom_SEO_header() {
-		global $post;	
+			
 		if ( is_admin() ) {
 			function add_fields_to_profile($profile_fields) {
 				$profile_fields[ 'twitter_personal' ] = 'Twitter Username';
@@ -67,6 +67,7 @@
 		
 	
 		function mom_meta_module() {
+		global $post;
 			$theExcerpt               = '';
 			$theFeaturedImage         = '';
 			$Twitter_start            = '';
@@ -103,11 +104,14 @@
 			}			
 			if ( $twitter_personal_content != "" || $twitter_site_content != "" ) { 
 				$Twitter_start        = "<meta name=\"twitter:card\" value=\"summary\">\n";
-				if ( $twitter_site_content != "" ) { 
-				$Twitter_site         = "<meta name=\"twitter:site\" value=\"" . get_option( 'site_twitter' ) . "\">\n"; }
-				if ( $twitter_personal_content != "" ) { 
-				$Twitter_author       = "<meta name=\"twitter:creator\" value=\"" . get_the_author_meta( 'twitter_personal', $authorID ) . "\">\n"; }
 			}			
+			if ( $twitter_site_content != "" ) { 
+				$Twitter_site         = "<meta name=\"twitter:site\" value=\"" . $twitter_site_content . "\">\n"; 
+			}
+			if ( $twitter_personal_content != "" ) { 
+				$Twitter_author       = "<meta name=\"twitter:creator\" value=\"" . $twitter_personal_content . "\">\n"; 
+			}
+			
 			if ( is_single() || is_page() ) {
 			    echo "\n";
 				echo "<link rel=\"canonical\" href=\"" . esc_url( get_permalink( $post->ID ) ) . "\"/>\n";
