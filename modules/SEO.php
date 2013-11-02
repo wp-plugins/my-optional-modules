@@ -25,13 +25,12 @@
 			$authorsCounted = 0;
 			global $wpdb;
 			$countAuthors = (array) $wpdb->get_results("
-					SELECT DISTINCT('post_author')
+					SELECT DISTINCT(post_author)
 					FROM {$wpdb->posts}
 				", object);
 			foreach ( $countAuthors as $authorCount ) {
 					$authorsCounted++;
 			}
-			
 			if ( $authorsCounted == 1 ) {
 				add_action( "wp", "mom_author_archives_author" );
 				function mom_author_archives_author() {	
