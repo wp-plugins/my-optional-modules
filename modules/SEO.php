@@ -21,60 +21,141 @@
 			add_filter( 'user_contactmethods', 'add_fields_to_profile');
 		}
 		
-	
-		function grab_keywords() {
-		
-				
-			// Keyword function http://www.hashbangcode.com/blog/extract-keywords-text-string-php-412.html
-			$postid = $post->ID;
-			$authorID = $post->post_author;
-			$post_content = get_post_field('post_content', $postid);
-			$featured_image = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' );	
-			$featured_image_url = $featured_image[0];
-			$post_link = get_permalink($post->ID);
-			$post_title = get_post_field('post_title', $postid);
-			$excerpt_from = get_post( $postid ); 
-			$the_excerpt = $excerpt_from->post_excerpt;
-			$description_content = get_bloginfo( 'description' );
-			$twitter_personal_content = get_the_author_meta( 'twitter_personal', $authorID );
-			$twitter_site_content = get_option( 'site_twitter' );
-			$site_keywords = get_option( 'site_keywords' );
-			$post_title_final = htmlentities( $post_title );
-			$the_excerpt_final = htmlentities( $the_excerpt );
-					
-			if ( is_single() || is_page() ) {
-				if ( $description_content != "" )  echo "
-<meta name=\"description\" content=\"$description_content\"/>"; 
-				echo "
-<meta property=\"og:title\" content=\"$post_title_final\"/>";
-				if ( $featured_image_url != "" ) { echo "
-<meta property=\"og:image\" content=\"$featured_image_url\"/>"; }
-				if ( $the_excerpt_final != "" ) { echo "
-<meta property=\"og:description\" content=\"$the_excerpt_final\"/>"; }
-				echo "
-<meta property=\"og:url\" content=\"$post_link\"/>
-<meta property=\"og:type\" content=\"article\"/>";
-				if ( $twitter_personal_content != "" || $twitter_site_content != "" ) {
-					echo "
-<meta name=\"twitter:card\" value=\"summary\">";
-						
-						if ( $twitter_site_content != "" ) { echo "
-<meta name=\"twitter:site\" value=\"" . $twitter_site_content . "\">";
-						}
-						if ( $twitter_personal_content != "" ) { echo "
-<meta name=\"twitter:creator\" value=\"" . $twitter_personal_content . "\">";
-						}				
-				}
-			} else {
+		function mom_grab_author_count() {
+			$authorsCounted           = 0;
+			global $wpdb;
+			$countAuthors = (array) $wpdb->get_results("
+					SELECT DISTINCT(post_author)
+					FROM {$wpdb->posts}
+				", object);
+			foreach ( $countAuthors as $authorCount ) {
+					$authorsCounted++;
 			}
-			echo "
 			
-			";				
 		}
+		mom_grab_author_count();
 		
-		add_action('wp_head', 'grab_keywords');   
-	}
+		add_action( "wp", "mom_author_archive_disabled" );
+		function mom_author_archive_disabled() {	
+			if ( is_author() && $authorsCounted == 1 || 
+			     is_date() ||
+				 is_year() ||
+				 is_month() || 
+				 is_day() || 
+				 is_time() || 
+				 is_new_day() 				 
+			   ) {
+				$homeURL = esc_url( home_url('/') );
+				if (have_posts()) : the_post();
+				header("location: " . $homeURL );
+				exit;
+				endif;
+			}
+		}
+
+				
+		
 	
+		function mom_meta_module() {
+			$theExcerpt               = '';
+			$theFeaturedImage         = '';
+			$Twitter_start            = '';
+			$Twitter_site             = '';
+			$Twitter_author           = '';
+			$postid                   = $post->ID;
+			$authorID                 = $post->post_author;
+			$excerpt_from             = get_post( $postid ); 
+			$post_content             = get_post_field( 'post_content', $postid );
+			$post_title				  = get_post_field( 'post_title', $postid );
+			$publishedTime            = get_post_field( 'post_date', $postid );
+			$modifiedTime             = get_post_field( 'post_modified', $postid );
+			$post_link                = get_permalink( $post->ID );
+			$post_title               = get_post_field( 'post_title', $postid );
+			$sitename_content         = get_bloginfo( 'site_name' );
+			$description_content      = get_bloginfo( 'description' );
+			$twitter_personal_content = get_the_author_meta( 'twitter_personal', $authorID );
+			$twitter_site_content     = get_option( 'site_twitter' );
+			$locale_content           = get_locale();
+			$featured_image           = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' );	
+			$featuredImage            = $featured_image[0];
+			$the_excerpt              = $excerpt_from->post_excerpt;
+			$excerpt                  = htmlentities( $the_excerpt );
+			$currentURL               = add_query_arg( $wp->query_string, '', home_url( $wp->request ) );
+			
+			echo $authorName;
+			
+			if ( $excerpt != "" ) { 
+				$theExcerpt           = "<meta property=\"og:description\" content=\"" . htmlentities( $excerpt_from->post_excerpt ) . "\"/>\n";
+			} else {
+				$theExcerpt           = "<meta property=\"og:description\" content=\"" . htmlentities( get_the_excerpt() ) . "\"/>";
+			}
+			if ( $featuredImage != "" ) { 
+				$theFeaturedImage     = "<meta property=\"og:image\" content=\"" . $featuredImage  . "\"/>\n";
+			}			
+			if ( $twitter_personal_content != "" || $twitter_site_content != "" ) { 
+				$Twitter_start        = "<meta name=\"twitter:card\" value=\"summary\">\n";
+				if ( $twitter_site_content != "" ) { 
+				$Twitter_site         = "<meta name=\"twitter:site\" value=\"" . get_option( 'site_twitter' ) . "\">\n"; }
+				if ( $twitter_personal_content != "" ) { 
+				$Twitter_author       = "<meta name=\"twitter:creator\" value=\"" . get_the_author_meta( 'twitter_personal', $authorID ) . "\">\n"; }
+			}			
+			if ( is_single() || is_page() ) {
+			    echo "\n";
+				echo "<link rel=\"canonical\" href=\"" . esc_url( get_permalink( $post->ID ) ) . "\"/>\n";
+				echo "<meta name=\"og:title\" content=\""; wp_title( '|', true, 'right' ); echo "\"/>\n";
+				echo "<meta name=\"og:site_name\" content=\"" . get_bloginfo( 'site_name' ) . "\"/>\n";
+				echo $theExcerpt;
+				echo "<meta property=\"og:title\" content=\"" . htmlentities( get_post_field('post_title', $postid) ) . "\"/>\n";
+				echo "<meta property=\"og:locale\" content=\"" . $locale_content . "\"/>\n";
+				echo "<meta property=\"og:published_time\" content=\"" . $publishedTime . "\"/>\n";
+				echo "<meta property=\"og:modified_time\" content=\"" . $modifiedTime . "\"/>\n";
+				$category_names=get_the_category($postid);
+				foreach($category_names as $categoryNames){
+					echo "<meta property=\"og:section\" content=\"" . $categoryNames->cat_name . "\"/>\n";
+				}			
+				$tagNames = get_the_tags($postid);
+				if ($tagNames) {
+					foreach($tagNames as $tagName) {
+						echo "<meta property=\"og:tag\" content=\"" . $tagName->name . "\"/>\n";
+					}
+				}	
+				echo "<meta property=\"og:url\" content=\"" . esc_url( get_permalink( $post->ID ) ) . "\"/>\n";
+				echo "<meta property=\"og:type\" content=\"article\"/>\n";
+				echo $theFeaturedImage;
+                echo $Twitter_start;
+				echo $Twitter_site;
+				echo $Twitter_author;
+				echo "\n";
+			} else {
+			    echo "\n";
+				echo "<link rel=\"canonical\" href=\"" . esc_url( $currentURL ) . "\"/>\n";
+				echo "<meta name=\"description\" content=\"" . $description_content . "\"/>\n";
+				echo "<meta property=\"og:title\" content=\""; wp_title( '|', true, 'right' ); echo "\"/>\n";
+				echo "<meta property=\"og:locale\" content=\"" . $locale_content . "\"/>\n";
+				echo "<meta name=\"og:site_name\" content=\"" . get_bloginfo( 'site_name' ) . "\"/>\n";
+				echo "<meta property=\"og:url\" content=\"" . esc_url( $currentURL ) . "\"/>\n";
+				echo "<meta property=\"og:type\" content=\"website\"/>\n";
+				echo "\n";
+			}
+			
+			if ( is_search() || is_404() || is_archive() ) {
+				echo "\n";
+				echo "<meta name=\"robots\" content=\"noarchive\"/>\n";
+				echo "<meta name=\"robots\" content=\"nofollow\"/>\n";
+				echo "\n";
+			}
+			
+		}
+		add_action('wp_head', 'mom_meta_module');   
+		
+		function momSEOfeed($content) {
+			return $content . "<p><a href=\"" . esc_url( get_permalink( $post->ID ) ) . "\">" . htmlentities( get_post_field('post_title', $postid) ) . "</a> via <a href=\"" . esc_url( home_url('/') ) . "\">" . get_bloginfo( 'site_name' ) . "</a></p>";
+		}
+		add_filter('the_content_feed', 'momSEOfeed');
+		add_filter('the_excerpt_rss',  'momSEOfeed');		
+	}
+		
+		
 	mom_SEO_header();
 
 ?>

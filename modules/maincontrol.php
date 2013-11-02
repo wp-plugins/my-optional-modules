@@ -199,20 +199,8 @@
                             <option value=\"0\" "; if (get_option("mommaincontrol_meta") == 0) { echo "selected=\"selected\""; } echo ">Off</option>
                             <option value=\"1\" "; if (get_option("mommaincontrol_meta") == 1) { echo "selected=\"selected\""; } echo ">On</option>
                         </select>
-                    </section>";
-					if (get_option( 'mommaincontrol_meta' ) == 1 ) { 
-						echo "
-						<p>			
-						Edit the following:<br />
-						Profile->Twitter username<br />
-						General->Keywords<br />
-						General->Twitter Site username
-						</p>";
-					} else {					
-						echo "
-						<p>Enable <meta> tags for posts and pages.</p>";
-					}
-					echo "
+                    </section>
+						<p>Enable meta/open-graph; disable author archive if only one author; noarchive and nofollow archive,search,404; disable date archives; linkbacks on RSS items.</p>
 					</div>
                 <div class=\"panel left\">
                     <section class=\"title clear\">

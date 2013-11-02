@@ -3,7 +3,7 @@ Contributors: One Billion Words
 Tags: lazy,lazy load,twitter,google+,open graph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 5.0.4
+Stable tag: 5.0.5
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -31,8 +31,14 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 = Tweaks: =
 * Analaytics automatic embedding.
 * Automatically enable all images in posts and pages to use Lazy Load.
-* Include meta/open-graph tags for posts and pages, including keywords that are based on the content of your post and open-graph tags for Twitter, Facebook, and Google+ - automatically.
 * Hide WP Version from enqueued scripts and stylesheets.
+
+= Meta: =
+* Auto-generate meta tags (open-graph and otherwise).
+* Appends linkbacks on RSS items (against scrapers).
+* noarchive/nofollow on 404/search pages/archives.
+* Disables Author archives if only one author exists.
+* Disables date based archives to avoid duplicate content.
 
 = Tools: =
 * Database cleaner to mass-delete trashed/revisions/drafts, unapproved/trashed/spam comments, or unused tags and categories.
@@ -47,6 +53,10 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 == Changelog ==
 = 5.0.+ =
+* 5.0.5 / Meta disables author archives if there is only a single author with posts; disables date based archives as well.
+* 5.0.5 / Meta noarchive/nofollows 404s and archive pages.
+* 5.0.5 / Appends "Post title" via "Site title" with link-backs to your feeds.
+* 5.0.5 / Meta embeds Open Graph (og:) protocol tags on all posts, pages, and portions of the site.
 * 5.0.4 / Hotfix.
 * 5.0.2 / Improved keyword generation for the Meta module.  It will now ignore numbers, anything inside of <pre></pre>, and any [shortcode] codes.
 * 5.0.1 / Better output filtering on Reviews.
