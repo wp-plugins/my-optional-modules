@@ -37,7 +37,7 @@
 		
 		add_action( "wp", "mom_author_archive_disabled" );
 		function mom_author_archive_disabled() {	
-			if ( is_author() && $authorsCounted <= 1 || 
+			if ( is_author() && $authorsCounted == 1 || 
 			     is_date() ||
 				 is_year() ||
 				 is_month() || 
