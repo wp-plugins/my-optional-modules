@@ -29,11 +29,43 @@
 		
 
 		function extractCommonWords($string){
-			  $stopWords = array('i','a','about','an','and','are','as','at','be','by','com','de','en','for','from','how','in','is','it','la','of','on','or','that','the','this','to','was','what','when','where','who','will','with','und','the','www');
+			  $stopWords = array(
+			  'a','about','an','and','are','as','at','also','again',
+			  'b','be','by','because',
+			  'c','com','contrary',
+			  'd','de',
+			  'e','en','essentially','essential',
+			  'f','for','from','firstly','finally',
+			  'g',
+			  'h','how','however','hence',
+			  'i','in','is','it',
+			  'j',
+			  'k',
+			  'l','la','last','likewise',
+			  'm','most','more',
+			  'n','next','need',
+			  'o','of','on','or',
+			  'p','presently','primarily',
+			  'q',
+			  'r',
+			  's','secondly','similarily','since','should',
+			  't','that','the','this','to','thirdly','thus','their','there','than','then',
+			  'u','und','until',
+			  'v',
+			  'was','what','when','where','who','will','with','www','while','whereas',
+			  'wherever','whenever','whether','without','well',
+			  'x',
+			  'y',
+			  'z',
+			  );
 		   
 			  $string = preg_replace('/\s\s+/i', '', $string);
 			  $string = trim($string);
+			  $string = preg_replace('/<(pre)(?:(?!<\/\1).)*?<\/\1>/s','',$string);
+			  $string = preg_replace('/\[.+\]/U', '', $string);
+			  $string = preg_replace('/\<.+\>/U', '', $string);
 			  $string = preg_replace('/[^a-zA-Z0-9 -]/', '', $string); 
+			  $string = preg_replace('/[0-9]/', '', $string);
 			  $string = strtolower($string); 
 		   
 			  preg_match_all('/\b.*?\b/i', $string, $matchWords);
