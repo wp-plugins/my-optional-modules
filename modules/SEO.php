@@ -97,7 +97,8 @@
 			$featuredImage            = $featured_image[0];
 			$currentURL               = add_query_arg( $wp->query_string, '', home_url( $wp->request ) );
 			$excerpt                  = get_post_field( 'post_content', $postid );
-			$excerpt                  = strip_tags( htmlentities( $excerpt ) );
+			$excerpt                  = strip_tags( $excerpt );
+			$excerpt				  = esc_html ( $excerpt);
 			$excerpt                  = preg_replace('/\s\s+/i', '', $excerpt); // replace whitespace
 			$excerpt                  = substr( $excerpt,0,155 );
 			$excerpt_short            = substr( $excerpt, 0, strrpos( $excerpt,' ')).'...';
@@ -306,6 +307,19 @@
 			}		
 		}
 		add_filter( 'wp_head', 'momFindfocus' );
+				
+		// reWrite titles
+        add_filter( 'wp_title', 'momBetterTitles' );                
+        function momBetterTitles( $title ) {
+            global $page, $paged;
+            if ( is_feed() )
+            return $title;
+            $site_description = get_bloginfo( 'description' );
+            $filtered_title = $title . get_bloginfo( 'name' );
+            $filtered_title .= ( ! empty( $site_description ) && ( is_home() || is_front_page() ) ) ? ' | ' . $site_description: '';
+            $filtered_title .= ( 2 <= $paged || 2 <= $page ) ? ' | ' . sprintf( __( 'Page %s' ), max( $paged, $page ) ) : ''; 
+            return $filtered_title; 
+        }	
 	}
 	
 	mom_SEO_header();
