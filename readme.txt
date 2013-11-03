@@ -3,7 +3,7 @@ Contributors: One Billion Words
 Tags: scripts,javascript,footer,lazy,lazy load,twitter,google+,open graph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 5.0.9.2
+Stable tag: 5.0.9.3
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -41,7 +41,6 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Disables date based archives to avoid duplicate content.
 * Moves Javascript to the footer to decrease page load times.
 * Returns 5 keywords for the post in meta:keywords, based on most used words.
-* reWrite titles so that page content is clearer.
 
 = Tools: =
 * Database cleaner to mass-delete trashed/revisions/drafts, unapproved/trashed/spam comments, or unused tags and categories.
@@ -56,6 +55,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 == Changelog ==
 = 5.0.+ =
+* 5.0.9.3 / Title rewrites removed (this really should be handled on a theme level, in my opinion.)
 * 5.0.9.2 / Buttons add to post editing screen; if a module has a shortcode, a button for it will be added for easy access to that shortcode.
 * 5.0.9.2 / Meta: Excerpt handling hotfixed to remove html tags from the output.
 * 5.0.9.2 / Meta: reWrite titles (so that page content is clearer).
