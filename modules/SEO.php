@@ -1,7 +1,73 @@
 <?php
 
 	function mom_SEO_header() {
-			
+
+			function extractCommonWords($string){
+			// Could use some more common words to weed out stupid keywords
+				$stopWords = array(
+					'a','about','an','and','are','as','at','after',
+					'b','be','by','back','but',
+					'c','com','could',
+					'd','de',
+					'e','en','even','evens',
+					'f','for','from','first','firstly',
+					'g','good','great','grand','get','go',
+					'h','how','his','her','have','having','haven\'t',
+					'i','in','is','it','into','if','item',
+					'j',
+					'k',
+					'l','la','li','list',
+					'm',
+					'n',
+					'o','of','on','or','out','our','other','others','odd','odds',
+					'p','people',
+					'q',
+					'r',
+					's','so','some','say','see','she','she\'ll',
+					'strong',
+					't','that','the','this','to','the','their','there','they\'re','two',
+					'them','tags','tag',
+					'then','than','thus','thusly','they','them','than',
+					'u','und','up','use',
+					'v',
+					'w','was','what','when','where','who','will','with','www',
+					'whose','who\'s','whom','we','work','which','whichever',
+					'well','we\'ll','wouldn\'t','wasn\'t','way','ways',
+					'x',
+					'y','year','your','you\re','your','yours','you',
+					'z'
+				);
+			   
+				$string = preg_replace('/\s\s+/i', '', $string); // replace whitespace
+				$string = trim($string); // trim the string
+				$string = preg_replace('/[^a-zA-Z0-9 -]/', '', $string); // only take alphanumerical characters, but keep the spaces and dashes too…
+				$string = strtolower($string); // make it lowercase
+			   
+				preg_match_all('/\b.*?\b/i', $string, $matchWords);
+				$matchWords = $matchWords[0];
+				  
+				foreach ( $matchWords as $key=>$item ) {
+					if ( $item == '' || in_array(strtolower($item), $stopWords) || strlen($item) <= 3 ) {
+						unset($matchWords[$key]);
+					}
+				}   
+				$wordCountArr = array();
+				if ( is_array($matchWords) ) {
+					foreach ( $matchWords as $key => $val ) {
+						$val = strtolower($val);
+							if ( isset($wordCountArr[$val]) ) {
+								$wordCountArr[$val]++;
+							} else {
+								$wordCountArr[$val] = 1;
+							}
+						}
+					}
+				arsort($wordCountArr);
+				$wordCountArr = array_slice($wordCountArr, 0, 1);
+				return $wordCountArr;
+			}
+	
+		// Add twitter fields to profile and general settings
 		if ( is_admin() ) {
 			function add_fields_to_profile($profile_fields) {
 				$profile_fields[ 'twitter_personal' ] = 'Twitter Username';
@@ -21,6 +87,7 @@
 			add_filter( 'user_contactmethods', 'add_fields_to_profile');
 		}
 		
+		// Disable author archive if only one author
 		function mom_grab_author_count() {
 			$authorsCounted = 0;
 			global $wpdb;
@@ -46,6 +113,7 @@
 		}
 		mom_grab_author_count();
 		
+		// Disable date-based archives
 		add_action( "wp", "mom_author_archives" );
 		function mom_author_archives() {	
 			if ( is_date() ||
@@ -65,7 +133,7 @@
 
 				
 		
-	
+		// Conditional open graph and meta tag handling
 		function mom_meta_module() {
 		global $post;
 			$theExcerpt               = '';
@@ -114,7 +182,6 @@
 			
 			if ( is_single() || is_page() ) {
 			    echo "\n";
-				echo "<link rel=\"canonical\" href=\"" . esc_url( get_permalink( $post->ID ) ) . "\"/>\n";
 				echo "<meta name=\"og:title\" content=\""; wp_title( '|', true, 'right' ); echo "\"/>\n";
 				echo "<meta name=\"og:site_name\" content=\"" . get_bloginfo( 'site_name' ) . "\"/>\n";
 				echo $theExcerpt;
@@ -161,11 +228,53 @@
 		}
 		add_action('wp_head', 'mom_meta_module');   
 		
+		// Append a backlink to every item in each feed, so that scrapers that steal your content
+		// will also link back to you.
 		function momSEOfeed($content) {
 			return $content . "<p><a href=\"" . esc_url( get_permalink( $post->ID ) ) . "\">" . htmlentities( get_post_field('post_title', $postid) ) . "</a> via <a href=\"" . esc_url( home_url('/') ) . "\">" . get_bloginfo( 'site_name' ) . "</a></p>";
 		}
 		add_filter('the_content_feed', 'momSEOfeed');
 		add_filter('the_excerpt_rss',  'momSEOfeed');		
+		
+		// Move Javascripts to the footer (also does it in a way that will not conflict with other scripts that are loaded by certain 
+		// modules of this plugin - like Jump Around and Lazy Load.
+		function momSEOheadscripts() {
+			remove_action('wp_head', 'wp_print_scripts'); 
+			remove_action('wp_head', 'wp_print_head_scripts', 9); 
+			remove_action('wp_head', 'wp_enqueue_scripts', 1); 			
+		}
+		add_action( 'wp_enqueue_scripts', 'momSEOheadscripts' );
+		add_action( 'wp_footer', 'wp_print_scripts', 5);
+		add_action( 'wp_footer', 'wp_enqueue_scripts', 5);
+		add_action( 'wp_footer', 'wp_print_head_scripts', 5);
+		
+		// Find the focus word of our post
+		// Compare the content of the post against the words that it has been tagged with 
+		// to find the most used word in the post that matches one of the tags
+		// and use it as the single keyword for the post 
+		function momFindfocus( ) {
+			global $post;
+			if ( is_single() ) { 
+				$content            = get_post_field( 'post_content', $postid );
+				$words              = extractCommonWords($content);
+				$focusWord          = implode(array_keys($words));
+				$theTags = get_the_tags($post->ID);
+				if ($theTags) {
+				foreach($theTags as $tag) {
+					$focusedTagLink = get_tag_link($tag->term_id);
+					$focusedTag     = strtolower($tag->name); 
+					$focusedWord    = $focusWord;
+					if ($focusedTag === $focusedWord ) { $theFocusWord = '<a href="' . $focusedTagLink . '">' . $tag->name  . '</a>'; }
+					else { $theFocusWord = $focusWord; }
+				}
+				}			
+				if ( $theFocusWord != '' ) {
+					echo "<meta name=\"keywords\" content=\"" . $theFocusWord . "\"/>\n";
+				}
+			}		
+		}
+		add_filter( 'wp_head', 'momFindfocus' );
+		
 	}
 		
 		

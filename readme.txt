@@ -1,9 +1,9 @@
 === My Optional Modules ===
 Contributors: One Billion Words
-Tags: lazy,lazy load,twitter,google+,open graph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
+Tags: scripts,javascript,footer,lazy,lazy load,twitter,google+,open graph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 5.0.7
+Stable tag: 5.0.8
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -39,6 +39,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * noarchive/nofollow on 404/search pages/archives.
 * Disables Author archives if only one author exists.
 * Disables date based archives to avoid duplicate content.
+* Moves Javascript to the footer to decrease page load times.
+* Sets a single keyword (determined by both post content and what the post has been tagged with) (if no matching tag, defaults to most used word)
 
 = Tools: =
 * Database cleaner to mass-delete trashed/revisions/drafts, unapproved/trashed/spam comments, or unused tags and categories.
@@ -53,6 +55,9 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 == Changelog ==
 = 5.0.+ =
+* 5.0.8 / Meta: Compare the tags of the post against the content of the post, filter out commonly used words, and determine the focus word of the post.
+* 5.0.8 / Meta: Canonical link taken out of header og/meta elements as this should be handled on a theme level.
+* 5.0.8 / Meta: moves scripts to the footer (in a way that doesn't interfere with other scripts being called by certain modules)
 * 5.0.7 / Hotfix for Twitter (author).
 * 5.0.6 / Hotfix for author count logic.
 * 5.0.5 / Meta disables author archives if there is only a single author with posts; disables date based archives as well.
