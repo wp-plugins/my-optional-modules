@@ -97,7 +97,7 @@
 			$featuredImage            = $featured_image[0];
 			$currentURL               = add_query_arg( $wp->query_string, '', home_url( $wp->request ) );
 			$excerpt                  = get_post_field( 'post_content', $postid );
-			$excerpt                  = htmlentities($excerpt);
+			$excerpt                  = strip_tags( htmlentities( $excerpt ) );
 			$excerpt                  = preg_replace('/\s\s+/i', '', $excerpt); // replace whitespace
 			$excerpt                  = substr( $excerpt,0,155 );
 			$excerpt_short            = substr( $excerpt, 0, strrpos( $excerpt,' ')).'...';
