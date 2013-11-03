@@ -585,7 +585,7 @@ Author URI: http://onebillionwords.com
 									echo "<li onclick=\"addText(event)\" class=\"icon fa fa-sort-numeric-desc\"><span>[font-fa i=\"sort-numeric-desc\"]</span></li>";
 									echo "<li onclick=\"addText(event)\" class=\"icon fa fa-sort-up\"><span>[font-fa i=\"sort-up\"]</span></li>";
 									echo "<li onclick=\"addText(event)\" class=\"icon fa fa-spinner\"><span>[font-fa i=\"spinner\"]</span></li>";
-									echo "<li onclick=\"addText(event)\" class=\"icon fa fa-suqare\"><span>[font-fa i=\"square\"]</span></li>";
+									echo "<li onclick=\"addText(event)\" class=\"icon fa fa-square\"><span>[font-fa i=\"square\"]</span></li>";
 									echo "<li onclick=\"addText(event)\" class=\"icon fa fa-square-o\"><span>[font-fa i=\"square-o\"]</span></li>";
 									echo "<li onclick=\"addText(event)\" class=\"icon fa fa-star\"><span>[font-fa i=\"star\"]</span></li>";
 									echo "<li onclick=\"addText(event)\" class=\"icon fa fa-star-half\"><span>[font-fa i=\"star-half\"]</span></li>";
