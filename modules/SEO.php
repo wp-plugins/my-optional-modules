@@ -1,82 +1,8 @@
 <?php
 
 	function mom_SEO_header() {
+		global $post;
 
-			function extractCommonWords($string){
-			// Could use some more common words to weed out stupid keywords
-				$stopWords = array(
-					'a','about','an','and','are','as','at','after',
-					'article','aside',
-					'b','be','by','back','but','been','being','biz',
-					'c','com','could','come','class',
-					'd','de','didn\'t','div','details',
-					'e','en','even','evens','eight',
-					'f','for','from','first','firstly','four','five',
-					'figure','footer',
-					'g','good','great','grand','get','go',
-					'h','how','his','her','have','having','haven\'t',
-					'header','html',
-					'i','in','is','it','into','if','item','id','img',
-					'j',
-					'k',
-					'l','la','li','list','like','laid','lie','lay','lying',
-					'm','more',
-					'n','never','nine','net','nav',
-					'o','of','on','or','out','our','other','others','odd','odds',
-					'object','org','ol',
-					'p','people','perhaps','place','pre',
-					'q',
-					'r',
-					's','so','some','say','see','she','she\'ll','six','seven',
-					'summary',
-					'section',
-					'slightly','seen',
-					'strong','speaks','speak','speaking','spoken','spake',
-					't','that','the','this','to','the','their','there','they\'re','two',
-					'till',
-					'too','three','ten','think','them','tags','tag',
-					'then','than','thus','thusly','they','them','than',
-					'u','und','up','use','ul',
-					'v',
-					'w','was','what','when','where','who','will','with','www',
-					'whose','who\'s','whom','we','work','which','whichever',
-					'well','we\'ll','wouldn\'t','wasn\'t','way','ways',
-					'x',
-					'y','year','your','you\re','your','yours','you',
-					'z'
-				);
-			   
-				$string = preg_replace('/\s\s+/i', '', $string); // replace whitespace
-				$string = trim($string); // trim the string
-				$string = preg_replace('/<(pre)(?:(?!<\/\1).)*?<\/\1>/s','',$string); // don't look between <pre></pre> tags
-				$string = preg_replace('/<(a)(?:(?!<\/\1).)*?<\/\1>/s','',$string); // don't look between <pre></pre> tags				
-				$string = preg_replace('/[^a-zA-Z -]/', '', $string); // only take alphanumerical characters, but keep the spaces and dashes too…
-				$string = strtolower($string); // make it lowercase
-			   
-				preg_match_all('/\b.*?\b/i', $string, $matchWords);
-				$matchWords = $matchWords[0];
-				  
-				foreach ( $matchWords as $key=>$item ) {
-					if ( $item == '' || in_array(strtolower($item), $stopWords) || strlen($item) <= 3 ) {
-						unset($matchWords[$key]);
-					}
-				}   
-				$wordCountArr = array();
-				if ( is_array($matchWords) ) {
-					foreach ( $matchWords as $key => $val ) {
-						$val = strtolower($val);
-							if ( isset($wordCountArr[$val]) ) {
-								$wordCountArr[$val]++;
-							} else {
-								$wordCountArr[$val] = 1;
-							}
-						}
-					}
-				arsort($wordCountArr);
-				$wordCountArr = array_slice($wordCountArr, 0, 1);
-				return $wordCountArr;
-			}
-	
 		// Add twitter fields to profile and general settings
 		if ( is_admin() ) {
 			function add_fields_to_profile($profile_fields) {
@@ -145,37 +71,42 @@
 		
 		// Conditional open graph and meta tag handling
 		function mom_meta_module() {
-		global $post;
+			global $post;
 			$theExcerpt               = '';
 			$theFeaturedImage         = '';
 			$Twitter_start            = '';
 			$Twitter_site             = '';
 			$Twitter_author           = '';
-			$postid                   = $post->ID;
 			$authorID                 = $post->post_author;
 			$excerpt_from             = get_post( $postid ); 
+			$postid                   = $post->ID;
+			$post_title               = get_post_field( 'post_title', $postid );			
 			$post_content             = get_post_field( 'post_content', $postid );
-			$post_title				  = get_post_field( 'post_title', $postid );
 			$publishedTime            = get_post_field( 'post_date', $postid );
 			$modifiedTime             = get_post_field( 'post_modified', $postid );
 			$post_link                = get_permalink( $post->ID );
-			$post_title               = get_post_field( 'post_title', $postid );
 			$sitename_content         = get_bloginfo( 'site_name' );
 			$description_content      = get_bloginfo( 'description' );
+			$theAuthor_first          = get_the_author_meta( 'user_firstname', $authorID );
+			$theAuthor_last           = get_the_author_meta( 'user_lastname', $authorID );
+			$theAuthor_nice           = get_the_author_meta( 'user_nicename', $authorID );
 			$twitter_personal_content = get_the_author_meta( 'twitter_personal', $authorID );
 			$twitter_site_content     = get_option( 'site_twitter' );
 			$locale_content           = get_locale();
 			$featured_image           = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' );	
 			$featuredImage            = $featured_image[0];
-			$the_excerpt              = $excerpt_from->post_excerpt;
-			$excerpt                  = htmlentities( $the_excerpt );
 			$currentURL               = add_query_arg( $wp->query_string, '', home_url( $wp->request ) );
+			$excerpt                  = get_post_field( 'post_content', $postid );
+			$excerpt                  = htmlentities($excerpt);
+			$excerpt                  = substr( $excerpt,0,155 );
+			$excerpt_short            = substr( $excerpt, 0, strrpos( $excerpt,' ')).'...';
+			
 			
 	
-			if ( $excerpt != "" ) { 
-				$theExcerpt           = "<meta property=\"og:description\" content=\"" . htmlentities( $excerpt_from->post_excerpt ) . "\"/>\n";
+			if ( $excerpt_short != "" ) { 
+				$theExcerpt           = "<meta property=\"og:description\" content=\"" . $excerpt_short . "\"/>\n";
 			} else {
-				$theExcerpt           = "<meta property=\"og:description\" content=\"" . htmlentities( get_the_excerpt() ) . "\"/>";
+				$theExcerpt           = "";
 			}
 			if ( $featuredImage != "" ) { 
 				$theFeaturedImage     = "<meta property=\"og:image\" content=\"" . $featuredImage  . "\"/>\n";
@@ -191,14 +122,15 @@
 			}
 			
 			if ( is_single() || is_page() ) {
-			    echo "\n";
-				echo "<meta name=\"og:title\" content=\""; wp_title( '|', true, 'right' ); echo "\"/>\n";
-				echo "<meta name=\"og:site_name\" content=\"" . get_bloginfo( 'site_name' ) . "\"/>\n";
-				echo $theExcerpt;
-				echo "<meta property=\"og:title\" content=\"" . htmlentities( get_post_field('post_title', $postid) ) . "\"/>\n";
+				echo "<meta property=\"og:author\" content=\"" . $theAuthor_first . " " . $theAuthor_last . " (" . $theAuthor_nice . ")" . "\"/>\n";
+				echo "<meta property=\"og:title\" content=\""; wp_title( '|', true, 'right' ); echo "\"/>\n";
+				echo "<meta property=\"og:site_name\" content=\"" . get_bloginfo( 'site_name' ) . "\"/>\n";
+				echo $theExcerpt . "";
+				echo "<meta property=\"og:entry-title\" content=\"" . htmlentities( get_post_field('post_title', $postid) ) . "\"/>\n";
 				echo "<meta property=\"og:locale\" content=\"" . $locale_content . "\"/>\n";
 				echo "<meta property=\"og:published_time\" content=\"" . $publishedTime . "\"/>\n";
 				echo "<meta property=\"og:modified_time\" content=\"" . $modifiedTime . "\"/>\n";
+				echo "<meta property=\"og:updated\" content=\"" . $modifiedTime . "\"/>\n";
 				$category_names=get_the_category($postid);
 				foreach($category_names as $categoryNames){
 					echo "<meta property=\"og:section\" content=\"" . $categoryNames->cat_name . "\"/>\n";
@@ -206,7 +138,7 @@
 				$tagNames = get_the_tags($postid);
 				if ($tagNames) {
 					foreach($tagNames as $tagName) {
-						echo "<meta property=\"og:tag\" content=\"" . $tagName->name . "\"/>\n";
+						echo "<meta property=\"og:article:tag\" content=\"" . $tagName->name . "\"/>\n";
 					}
 				}	
 				echo "<meta property=\"og:url\" content=\"" . esc_url( get_permalink( $post->ID ) ) . "\"/>\n";
@@ -215,24 +147,18 @@
                 echo $Twitter_start;
 				echo $Twitter_site;
 				echo $Twitter_author;
-				echo "\n";
 			} else {
-			    echo "\n";
-				echo "<link rel=\"canonical\" href=\"" . esc_url( $currentURL ) . "\"/>\n";
-				echo "<meta name=\"description\" content=\"" . $description_content . "\"/>\n";
+				echo "<meta property=\"og:description\" content=\"" . $description_content . "\"/>\n";
 				echo "<meta property=\"og:title\" content=\""; wp_title( '|', true, 'right' ); echo "\"/>\n";
 				echo "<meta property=\"og:locale\" content=\"" . $locale_content . "\"/>\n";
-				echo "<meta name=\"og:site_name\" content=\"" . get_bloginfo( 'site_name' ) . "\"/>\n";
+				echo "<meta property=\"og:site_name\" content=\"" . get_bloginfo( 'site_name' ) . "\"/>\n";
 				echo "<meta property=\"og:url\" content=\"" . esc_url( $currentURL ) . "\"/>\n";
 				echo "<meta property=\"og:type\" content=\"website\"/>\n";
-				echo "\n";
 			}
 			
 			if ( is_search() || is_404() || is_archive() ) {
-				echo "\n";
 				echo "<meta name=\"robots\" content=\"noarchive\"/>\n";
 				echo "<meta name=\"robots\" content=\"nofollow\"/>\n";
-				echo "\n";
 			}
 			
 		}
@@ -263,28 +189,124 @@
 		// to find the most used word in the post that matches one of the tags
 		// and use it as the single keyword for the post 
 		function momFindfocus( ) {			
-			if ( is_single() ) { 
-				$content            = get_post_field( 'post_content', $postid );
-				$words              = extractCommonWords($content);
-				$focusWord          = implode(array_keys($words));
-				$theTags = get_the_tags($post->ID);
-				if ($theTags) {
-					foreach($theTags as $tag) {
-						$focusedTagLink = get_tag_link($tag->term_id);
-						$focusedTag     = strtolower($tag->name) . ' '; 
-						$focusedWord    = $focusWord . ' ';
-						if ( strpos( $focusedWord, $focusedTag ) !== false) { 
-							echo "<meta name=\"keywords\" content=\"" . $focusedTag . "\"/>\n";
+			if ( is_single() ) {
+			$postid                   = $post->ID;
+			$post_title               = get_post_field( 'post_title', $postid );			
+			function extractCommonWords($string){
+				global $post;
+				$postid         = $post->ID;
+				$post_title     = get_post_field( 'post_title', $postid );			
+				$postTitle      = strtolower( $post_title);
+				$wordsInTitle   = preg_replace("/[^\w\ _]+/", '', $postTitle); // strip all punctuation characters, news lines, etc.
+				$wordsInTitle   = preg_split("/\s+/", $postTitle); // split by left over spaces				
+				$wordsInTitle   = preg_replace('/\"/','',$wordsInTitle);
+				
+				$htmlElementsToIgnore = array(
+					"html","body","div","span","object","iframe",
+					"h1","h2","h3","h4","h5","h6","p","blockquote","pre",
+					"abbr","address","cite","code",
+					"del","dfn","em","img","ins","kbd","q","samp",
+					"small","strong","sub","sup","var",
+					"b","i","dl","dt","dd","ol","ul","li",
+					"fieldset","form","label","legend",
+					"table","caption","tbody","tfoot","thead","tr","th","td",
+					"article","aside","canvas","details","figcaption","figure", 
+					"footer","header","hgroup","menu","nav","section","summary",
+					"time","mark","audio","video",
+					"nav","style","hr","input","title","category"
+				);
+				
+				// Could use some more common words to weed out stupid keywords
+				$wordsToSkip = array(
+					"a","about","an","and","are","as","at","after",
+					"article","aside","anything","actually","actuality","actual",
+					"around",
+					"b","be","by","back","but","been","being","biz",
+					"c","com","could","come","class",
+					"d","de","didn't","div","details",
+					"e","en","even","evens","eight","ever","everyone","everyone's",
+					"everyones","every",
+					"f","for","from","first","firstly","four","five",
+					"figure","footer",
+					"g","good","great","grand","get","go",
+					"h","how","his","her","have","having","haven't",
+					"header","html",
+					"i","in","is","it","into","if","item","id","img",
+					"important",
+					"j","just","jest",
+					"k",
+					"l","la","li","list","like","laid","lie","lay","lying",
+					"less",
+					"m","more",
+					"n","never","nine","net","nav","needs","need","needing","needy","needed",
+					"o","of","on","or","out","our","other","others","odd","odds",
+					"object","org","ol",
+					"p","people","perhaps","place","pre","post",
+					"q",
+					"r",
+					"s","so","some","say","see","she","she'll","six","seven",
+					"same",
+					"summary","section","slightly","seen",
+					"strong","speaks","speak","speaking","spoken","spake",
+					"somebody","somebodies","somebody's","somebodys",
+					"should","shoulda","should've","still",
+					"t","that","the","this","to","the","their","there","they're","two",
+					"till","those","these","time","things","take","taking","taken","took",
+					"takes","together","thee","thy","thou",
+					"too","three","ten","think","them","tags","tag",
+					"then","than","thus","thusly","they","them","than",
+					"u","und","up","use","ul","used","using","uses",
+					"v",
+					"w","was","what","when","where","who","will","with","www",
+					"whose","who's","whom","we","work","which","whichever",
+					"wanted","wanting","wants","want",
+					"well","we'll","wouldn't","wasn't","way","ways","writing",
+					"would","woulda","were","weren't","werent",
+					"written",
+					"x",
+					"y","year","your","you're","your","yours","you","you've",
+					"youre","youve",
+					"z"
+				);
+				$stopWords = array_merge($wordsInTitle, $wordsToSkip, $htmlElementsToIgnore);
+				$string = preg_replace('/\s\s+/i', '', $string); // replace whitespace
+				$string = trim($string); // trim the string
+				$string = preg_replace('/\[.+\]/U', '', $string);
+				$string = preg_replace('/<(pre)(?:(?!<\/\1).)*?<\/\1>/s','',$string); // don't look between <pre></pre> tags
+				$string = preg_replace('/<(a)(?:(?!<\/\1).)*?<\/\1>/s','',$string); // don't look between <pre></pre> tags				
+				$string = preg_replace('/[^\s\S]/', '', $string); // only take alphanumerical characters, but keep the spaces and dashes too…
+				$string = strtolower($string); // make it lowercase
+				preg_match_all('/\b.*?\b/i', $string, $matchWords);
+				$matchWords = $matchWords[0];
+				foreach ( $matchWords as $key=>$item ) {
+					if ( $item == '' || in_array(strtolower($item), $stopWords) || strlen($item) <= 3 ) {
+						unset($matchWords[$key]);
+					}
+				}
+				$wordCountArr = array();
+				if ( is_array($matchWords) ) {
+					foreach ( $matchWords as $key => $val ) {
+						$val = strtolower($val);
+							if ( isset($wordCountArr[$val]) ) {
+								$wordCountArr[$val]++;
+							} else {
+								$wordCountArr[$val] = 1;
+							}
 						}
 					}
-				}			
+				arsort($wordCountArr);
+				$wordCountArr = array_slice($wordCountArr, 0, 5);
+				return $wordCountArr;
+			}			
+				$content            = get_post_field( 'post_content', $postid );
+				$words              = extractCommonWords($content);
+				$focusWord          = implode(',', array_keys($words));
+				echo "<meta name=\"keywords\" content=\"" . $focusWord . "\"/>\n";				
 			}		
 		}
 		add_filter( 'wp_head', 'momFindfocus' );
-		
 	}
-		
-		
+	
 	mom_SEO_header();
 
 ?>

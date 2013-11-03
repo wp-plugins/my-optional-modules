@@ -3,7 +3,7 @@ Contributors: One Billion Words
 Tags: scripts,javascript,footer,lazy,lazy load,twitter,google+,open graph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 5.0.9
+Stable tag: 5.0.9.1
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -40,7 +40,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Disables Author archives if only one author exists.
 * Disables date based archives to avoid duplicate content.
 * Moves Javascript to the footer to decrease page load times.
-* Sets a single keyword (determined by both post content and what the post has been tagged with)
+* Returns 5 keywords for the post in meta:keywords, based on most used words.
 
 = Tools: =
 * Database cleaner to mass-delete trashed/revisions/drafts, unapproved/trashed/spam comments, or unused tags and categories.
@@ -55,26 +55,29 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 == Changelog ==
 = 5.0.+ =
-* 5.0.9 / Meta: hotfixed string comparison for tag -> most used word.
-* 5.0.8 / Meta: Compare the tags of the post against the content of the post, filter out commonly used words, and determine the focus word of the post.
-* 5.0.8 / Meta: Canonical link taken out of header og/meta elements as this should be handled on a theme level.
-* 5.0.8 / Meta: moves scripts to the footer (in a way that doesn't interfere with other scripts being called by certain modules)
-* 5.0.7 / Hotfix for Twitter (author).
-* 5.0.6 / Hotfix for author count logic.
-* 5.0.5 / Meta disables author archives if there is only a single author with posts; disables date based archives as well.
-* 5.0.5 / Meta noarchive/nofollows 404s and archive pages.
-* 5.0.5 / Appends "Post title" via "Site title" with link-backs to your feeds.
-* 5.0.5 / Meta embeds Open Graph (og:) protocol tags on all posts, pages, and portions of the site.
-* 5.0.4 / Hotfix.
-* 5.0.2 / Improved keyword generation for the Meta module.  It will now ignore numbers, anything inside of pre /pre, and any [shortcode] codes.
-* 5.0.1 / Better output filtering on Reviews.
-* 5.0.1 / Add Twitter username field to profile field for use in meta, keywords and site Twitter username to general settings.
-* 5.0.1 / Enable Meta keywords, description, and other meta properties (like og:title,og:image,og:description, and so-forth) automatically for posts and pages.
-* 5.0.1 / Lazy Load added; automatically converts (for those with javascript enabled) images in posts (added via gallery - single or multiple) to be loaded via Lazy Load, decreasing page load times.
-* 5.0.0 / Exclude installation bug fix.
-* 5.0.0 / Further code cleanup on remaining files that weren't previously cleaned up in the 4.0.+ series.
-* 5.0.0 / Install procedures (activate all, deactivate all, reset, nuke) corrected.
-* 5.0.0 / Module settings pages have had their CSS altered to be more uniform.
+* 5.0.9.1 / Meta: A few minor tweaks and fixes.
+* 5.0.9.1 / Meta: keywords will not be present in the title; keywords will not be html elements; list of words to ignore improved.
+* 5.0.9.1 / Meta: keywords no longer based on tags present (I just wasn't happy with the results that this approach was producing).
+* 5.0.9.0 / Meta: hotfixed string comparison for tag -> most used word.
+* 5.0.8.0 / Meta: Compare the tags of the post against the content of the post, filter out commonly used words, and determine the focus word of the post.
+* 5.0.8.0 / Meta: Canonical link taken out of header og/meta elements as this should be handled on a theme level.
+* 5.0.8.0 / Meta: moves scripts to the footer (in a way that doesn't interfere with other scripts being called by certain modules)
+* 5.0.7.0 / Hotfix for Twitter (author).
+* 5.0.6.0 / Hotfix for author count logic.
+* 5.0.5.0 / Meta disables author archives if there is only a single author with posts; disables date based archives as well.
+* 5.0.5.0 / Meta noarchive/nofollows 404s and archive pages.
+* 5.0.5.0 / Appends "Post title" via "Site title" with link-backs to your feeds.
+* 5.0.5.0 / Meta embeds Open Graph (og:) protocol tags on all posts, pages, and portions of the site.
+* 5.0.4.0 / Hotfix.
+* 5.0.2.0 / Improved keyword generation for the Meta module.  It will now ignore numbers, anything inside of pre /pre, and any [shortcode] codes.
+* 5.0.1.0 / Better output filtering on Reviews.
+* 5.0.1.0 / Add Twitter username field to profile field for use in meta, keywords and site Twitter username to general settings.
+* 5.0.1.0 / Enable Meta keywords, description, and other meta properties (like og:title,og:image,og:description, and so-forth) automatically for posts and pages.
+* 5.0.1.0 / Lazy Load added; automatically converts (for those with javascript enabled) images in posts (added via gallery - single or multiple) to be loaded via Lazy Load, decreasing page load times.
+* 5.0.0.0 / Exclude installation bug fix.
+* 5.0.0.0 / Further code cleanup on remaining files that weren't previously cleaned up in the 4.0.+ series.
+* 5.0.0.0 / Install procedures (activate all, deactivate all, reset, nuke) corrected.
+* 5.0.0.0 / Module settings pages have had their CSS altered to be more uniform.
 
 = 4.0.+ = 
 * 4.0.9.1 / CSS fixed
