@@ -65,7 +65,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * 5.0.5 / Appends "Post title" via "Site title" with link-backs to your feeds.
 * 5.0.5 / Meta embeds Open Graph (og:) protocol tags on all posts, pages, and portions of the site.
 * 5.0.4 / Hotfix.
-* 5.0.2 / Improved keyword generation for the Meta module.  It will now ignore numbers, anything inside of <pre></pre>, and any [shortcode] codes.
+* 5.0.2 / Improved keyword generation for the Meta module.  It will now ignore numbers, anything inside of pre /pre, and any [shortcode] codes.
 * 5.0.1 / Better output filtering on Reviews.
 * 5.0.1 / Add Twitter username field to profile field for use in meta, keywords and site Twitter username to general settings.
 * 5.0.1 / Enable Meta keywords, description, and other meta properties (like og:title,og:image,og:description, and so-forth) automatically for posts and pages.
