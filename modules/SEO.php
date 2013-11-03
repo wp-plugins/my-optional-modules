@@ -6,29 +6,37 @@
 			// Could use some more common words to weed out stupid keywords
 				$stopWords = array(
 					'a','about','an','and','are','as','at','after',
-					'b','be','by','back','but',
-					'c','com','could',
-					'd','de',
-					'e','en','even','evens',
-					'f','for','from','first','firstly',
+					'article','aside',
+					'b','be','by','back','but','been','being','biz',
+					'c','com','could','come','class',
+					'd','de','didn\'t','div','details',
+					'e','en','even','evens','eight',
+					'f','for','from','first','firstly','four','five',
+					'figure','footer',
 					'g','good','great','grand','get','go',
 					'h','how','his','her','have','having','haven\'t',
-					'i','in','is','it','into','if','item',
+					'header','html',
+					'i','in','is','it','into','if','item','id','img',
 					'j',
 					'k',
-					'l','la','li','list',
-					'm',
-					'n',
+					'l','la','li','list','like','laid','lie','lay','lying',
+					'm','more',
+					'n','never','nine','net','nav',
 					'o','of','on','or','out','our','other','others','odd','odds',
-					'p','people',
+					'object','org','ol',
+					'p','people','perhaps','place','pre',
 					'q',
 					'r',
-					's','so','some','say','see','she','she\'ll',
-					'strong',
+					's','so','some','say','see','she','she\'ll','six','seven',
+					'summary',
+					'section',
+					'slightly','seen',
+					'strong','speaks','speak','speaking','spoken','spake',
 					't','that','the','this','to','the','their','there','they\'re','two',
-					'them','tags','tag',
+					'till',
+					'too','three','ten','think','them','tags','tag',
 					'then','than','thus','thusly','they','them','than',
-					'u','und','up','use',
+					'u','und','up','use','ul',
 					'v',
 					'w','was','what','when','where','who','will','with','www',
 					'whose','who\'s','whom','we','work','which','whichever',
@@ -40,7 +48,9 @@
 			   
 				$string = preg_replace('/\s\s+/i', '', $string); // replace whitespace
 				$string = trim($string); // trim the string
-				$string = preg_replace('/[^a-zA-Z0-9 -]/', '', $string); // only take alphanumerical characters, but keep the spaces and dashes too…
+				$string = preg_replace('/<(pre)(?:(?!<\/\1).)*?<\/\1>/s','',$string); // don't look between <pre></pre> tags
+				$string = preg_replace('/<(a)(?:(?!<\/\1).)*?<\/\1>/s','',$string); // don't look between <pre></pre> tags				
+				$string = preg_replace('/[^a-zA-Z -]/', '', $string); // only take alphanumerical characters, but keep the spaces and dashes too…
 				$string = strtolower($string); // make it lowercase
 			   
 				preg_match_all('/\b.*?\b/i', $string, $matchWords);
@@ -252,25 +262,22 @@
 		// Compare the content of the post against the words that it has been tagged with 
 		// to find the most used word in the post that matches one of the tags
 		// and use it as the single keyword for the post 
-		function momFindfocus( ) {
-			global $post;
+		function momFindfocus( ) {			
 			if ( is_single() ) { 
 				$content            = get_post_field( 'post_content', $postid );
 				$words              = extractCommonWords($content);
 				$focusWord          = implode(array_keys($words));
 				$theTags = get_the_tags($post->ID);
 				if ($theTags) {
-				foreach($theTags as $tag) {
-					$focusedTagLink = get_tag_link($tag->term_id);
-					$focusedTag     = strtolower($tag->name); 
-					$focusedWord    = $focusWord;
-					if ($focusedTag === $focusedWord ) { $theFocusWord = '<a href="' . $focusedTagLink . '">' . $tag->name  . '</a>'; }
-					else { $theFocusWord = $focusWord; }
-				}
+					foreach($theTags as $tag) {
+						$focusedTagLink = get_tag_link($tag->term_id);
+						$focusedTag     = strtolower($tag->name) . ' '; 
+						$focusedWord    = $focusWord . ' ';
+						if ( strpos( $focusedWord, $focusedTag ) !== false) { 
+							echo "<meta name=\"keywords\" content=\"" . $focusedTag . "\"/>\n";
+						}
+					}
 				}			
-				if ( $theFocusWord != '' ) {
-					echo "<meta name=\"keywords\" content=\"" . $theFocusWord . "\"/>\n";
-				}
 			}		
 		}
 		add_filter( 'wp_head', 'momFindfocus' );
