@@ -199,7 +199,7 @@
 									<p><u>answer</u>: (alphanumeric) enter the right answer that needs to be input into the form to show the content.</p>
 									<p><u>logged</u>: (0 or 1) 1 is to show the form to everyone - even people logged in.  0 will hide the verification for people who are logged in.</p>
 									<p><u>message</u>: Message to display in the form to let users know what needs to be input.</p>
-									<p><u>gail</u>: Message that is shown when the wrong answer is given, or the age entered is too young.</p>
+									<p><u>fail</u>: Message that is shown when the wrong answer is given, or the age entered is too young.</p>
 									<p><u>logging</u>: (0 or 1 or 3) If set to 1, each unique answer given to each form will be tracked in the database, allowing access to statistical data.  Only one record per IP address per form will be saved.  3 will show (below the form) a box containing the % of right and wrong answers, and will enable logging.</p>
 									<p><u>background</u>: Hex color code for the background of the form.</p>
 									<p><u>single</u>: (0 or 1) Set to 1 to allow only one attempt.  Right or wrong, once the attempt has been made, the form will no longer show.</p>
