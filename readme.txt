@@ -56,7 +56,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 2. Database cleaner, with single button trash cleaning for post, comment, and category and tag clutter.
 3. Easily add shortcodes provided by MoM (if the modules are enabled for them) via post edit.
 4. Simple and clean admin interface provides quick access to enabled modules.
-
+5. Take control of what gets shown where and when with the Exclude module, and its ability to hide tags, cateogires, and post formats from anywhere on the blog.
+6. Sometimes, you don't really need a slew of options.  Sometimes, you just want to turn on something, and have it work, hassle-free.  
 == Changelog ==
 = 5.1.+ =
 * 5.1.1 / Hotfix for positioning of Verifier output/form.
