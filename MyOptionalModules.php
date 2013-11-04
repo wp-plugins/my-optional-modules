@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.0.9.3
+Version: 5.1.0
 Author: One Billion Words
 Author URI: http://onebillionwords.com
 */
@@ -177,6 +177,7 @@ Author URI: http://onebillionwords.com
 									echo "<li>Reddit button<span class=\"fa fa-plus-square\" onclick=\"addText(event)\">[mom_reddit]</span></li>";
 									echo "<li>Restrict<span class=\"fa fa-plus-square\" onclick=\"addText(event)\">[mom_restrict]content[/mom_restrict]</span></li>";
 									echo "<li>Progress bar<span class=\"fa fa-plus-square\" onclick=\"addText(event)\">[mom_progress level=\"\"]</span></li>";
+									echo "<li>Verifier<span class=\"fa fa-plus-square\" onclick=\"addText(event)\">[mom_verify age=\"18\"]some content[/mom_verify]</span></li>";
 								}
 								if ( get_option( 'mommaincontrol_reviews' ) == 1 ) {
 									echo "<li>Reviews<span class=\"fa fa-plus-square\" onclick=\"addText(event)\">[momreviews]</span></li>";

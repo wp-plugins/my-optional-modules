@@ -2,9 +2,11 @@
 
     function my_optional_modules_update_and_install() {
         global $wpdb;
-        $RUPs_table_name = $wpdb->prefix . $wpdb->suffix . "rotating_universal_passwords";
-        $review_table_name = $wpdb->prefix . $wpdb->suffix . "momreviews";
+        $RUPs_table_name         = $wpdb->prefix . $wpdb->suffix . "rotating_universal_passwords";
+        $review_table_name       = $wpdb->prefix . $wpdb->suffix . "momreviews";
+		$verification_table_name = $wpdb->prefix . $wpdb->suffix . "momverification";
 
+		
         //    Base options
         if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 5 || $_REQUEST["mommaincontrol_uninstall_all"] == 1 ) {
             update_option( 'mommaincontrol_obwcountplus',0);
@@ -157,6 +159,20 @@
         require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
         dbDelta( $reviews_sql );
         }    
+		
+        if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_shorts' ] == 1 ) {
+			global $wpdb;
+			$verification_table_name = $wpdb->prefix . $wpdb->suffix . "momverification";
+			$verification_sql = "CREATE TABLE $verification_table_name (
+			ID INT( 11 ) NOT NULL PRIMARY KEY AUTO_INCREMENT , 
+			POST INT( 11 ) NOT NULL, 
+			CORRECT INT( 11 ) NOT NULL, 
+			IP INT( 11 ) NOT NULL
+			);";
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			dbDelta( $verification_sql );		
+		}
+		
         
         if ($_REQUEST["mommaincontrol_uninstall_all"] == 4) {    
             update_option("mommaincontrol_obwcountplus",1);
@@ -174,6 +190,7 @@
         if ($_REQUEST[ 'mommaincontrol_uninstall_all' ] == 1 || $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 3) {    
             $wpdb->query( "DROP TABLE {$RUPs_table_name}" );
             $wpdb->query( "DROP TABLE {$review_table_name}" );
+			$wpdb->query( "DROP TABLE {$verification_table_name}" );
             delete_option( 'obwcountplus_1_countdownfrom' );
             delete_option( 'obwcountplus_2_remaining' );
             delete_option( 'obwcountplus_3_total' );

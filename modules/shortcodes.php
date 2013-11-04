@@ -19,7 +19,8 @@
                                 <p>[<a href=\"#google_maps\">map</a>] 
                                 &mdash; [<a href=\"#reddit_button\">reddit</a>] 
                                 &mdash; [<a href=\"#restrict\">restrict content to logged in users</a>] 
-								&mdash; [<a href=\"#progress_bars\">progress bars</a>]</p>
+								&mdash; [<a href=\"#progress_bars\">progress bars</a>]
+								&mdash; [<a href=\"#verifier\">verifier</a>]</p>
                             </tr>
                             <tr valign=\"top\" id=\"google_maps\">
                                 <td valign=\"top\">
@@ -185,7 +186,46 @@
                                     </tbody>
                                     </table>
                                 </td>
-                            </tr>							
+                            </tr>		
+
+                            <tr valign=\"top\" id=\"verifier\">
+                                <td valign=\"top\" style=\"max-width:300px;\">
+                                    <strong>Verifier</strong>
+                                    <br />Gate content with a customizable input prompt with optional tracking of unique right and wrong answers.<hr />
+                                    <u>Parameters</u><br />age,answer,logged,message,fail,logging,background<hr />
+                                    <u>Defaults</u><br />age:<br />answer:<br />logged:1<br />message: Please verify your age by typing it here<br />fail: You are not able to view this content at this time.<br />logging: 0<br />background: transparent<br />single: 0<br />
+									
+									<p><u>age</u>: (numeric only) set the age you want to be entered into the form to be considered valid.  (Both age and answer <strong>cannot</strong> be used together.</p>
+									<p><u>answer</u>: (alphanumeric) enter the right answer that needs to be input into the form to show the content.</p>
+									<p><u>logged</u>: (0 or 1) 1 is to show the form to everyone - even people logged in.  0 will hide the verification for people who are logged in.</p>
+									<p><u>message</u>: Message to display in the form to let users know what needs to be input.</p>
+									<p><u>gail</u>: Message that is shown when the wrong answer is given, or the age entered is too young.</p>
+									<p><u>logging</u>: (0 or 1 or 3) If set to 1, each unique answer given to each form will be tracked in the database, allowing access to statistical data.  Only one record per IP address per form will be saved.  3 will show (below the form) a box containing the % of right and wrong answers, and will enable logging.</p>
+									<p><u>background</u>: Hex color code for the background of the form.</p>
+									<p><u>single</u>: (0 or 1) Set to 1 to allow only one attempt.  Right or wrong, once the attempt has been made, the form will no longer show.</p>
+									
+									<p>Case does not matter with question and answer - they are both converted to lowercase upon comparing for correct answers.</p>
+									<p>Background <strong>can</strong> be <code>transparent</code>.</p>
+									
+									<p>You could also leave the message blank, and define logging as <code>3</code> to create a poll-type question.</p>
+									
+									<hr />
+                                    blockquote.momAgeVerification<br />
+									form.momAgeVerification<br />
+									<hr />
+
+                                </td>
+                                <td valign=\"top\">
+                                    <table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
+                                    <tbody>
+                                    <tr><td><code>[mom_verify age=\"18\"]some content[/mom_verify]</code></td><td><em>Default, correct age input 18 or over</em></td></tr>
+									<tr><td><code>[mom_verify answer=\"hank HIlL\" message=\"Who sells propane and propane accessories?\"]some content[/mom_verify]</code></td><td><em>Default, question and answer set.</em></td></tr>
+                                    <tr><td><code>[mom_verify age=\"18\" background=\"fff\"]some content[/mom_verify]</code></td><td><em>Black background, 18+ age gate</em></td></tr>
+                                    </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+							
 							
                         </tbody>
                     </table>
