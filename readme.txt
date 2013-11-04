@@ -51,6 +51,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 2. Navigate to your plugins menu in your Wordpress admin.
 3. Activate it.
 
+== Screenshots ==
+1. Reviews module, featuring TinyMCE editor and 'sticky' filtering for easy admin of reviews.
 
 
 == Changelog ==
