@@ -53,7 +53,9 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 == Screenshots ==
 1. Reviews module, featuring TinyMCE editor and 'sticky' filtering for easy admin of reviews.
-
+2. Database cleaner, with single button trash cleaning for post, comment, and category and tag clutter.
+3. Easily add shortcodes provided by MoM (if the modules are enabled for them) via post edit.
+4. Simple and clean admin interface provides quick access to enabled modules.
 
 == Changelog ==
 = 5.1.+ =
