@@ -4,25 +4,25 @@
     add_action( "pre_get_posts", "momse_filter_home" );
     
     function momse_filter_home( $query ) {    
-        $simple_announcement_with_exclusion_9 = get_option('simple_announcement_with_exclusion_9');
-        $simple_announcement_with_exclusion_9_2 = get_option('simple_announcement_with_exclusion_9_2');
-        $simple_announcement_with_exclusion_9_3 = get_option('simple_announcement_with_exclusion_9_3');
-        $simple_announcement_with_exclusion_9_4 = get_option('simple_announcement_with_exclusion_9_4');
-        $simple_announcement_with_exclusion_9_5 = get_option('simple_announcement_with_exclusion_9_5');
-        $simple_announcement_with_exclusion_9_7 = get_option('simple_announcement_with_exclusion_9_7');
-        $simple_announcement_with_exclusion_9_8 = get_option('simple_announcement_with_exclusion_9_8');
-        $simple_announcement_with_exclusion_9_9 = get_option('simple_announcement_with_exclusion_9_9');
-        $simple_announcement_with_exclusion_9_10 = get_option('simple_announcement_with_exclusion_9_10');
-        $simple_announcement_with_exclusion_9_11 = get_option('simple_announcement_with_exclusion_9_11');
-        $simple_announcement_with_exclusion_9_12 = get_option('simple_announcement_with_exclusion_9_12');
-        $simple_announcement_with_exclusion_9_13 = get_option('simple_announcement_with_exclusion_9_13');
-        $simple_announcement_with_exclusion_9_14 = get_option('simple_announcement_with_exclusion_9_14');
-        if (date("D") === "Sun") { $simple_announcement_with_exclusion_day = get_option('simple_announcement_with_exclusion_sun'); }
-        if (date("D") === "Mon") { $simple_announcement_with_exclusion_day = get_option('simple_announcement_with_exclusion_mon'); }
-        if (date("D") === "Tue") { $simple_announcement_with_exclusion_day = get_option('simple_announcement_with_exclusion_tue'); } 
-        if (date("D") === "Wed") { $simple_announcement_with_exclusion_day = get_option('simple_announcement_with_exclusion_wed'); }
-        if (date("D") === "Thu") { $simple_announcement_with_exclusion_day = get_option('simple_announcement_with_exclusion_thu'); }
-        if (date("D") === "Fri") { $simple_announcement_with_exclusion_day = get_option('simple_announcement_with_exclusion_fri'); }
+        $simple_announcement_with_exclusion_9                                  = get_option('simple_announcement_with_exclusion_9');
+        $simple_announcement_with_exclusion_9_2                                = get_option('simple_announcement_with_exclusion_9_2');
+        $simple_announcement_with_exclusion_9_3                                = get_option('simple_announcement_with_exclusion_9_3');
+        $simple_announcement_with_exclusion_9_4                                = get_option('simple_announcement_with_exclusion_9_4');
+        $simple_announcement_with_exclusion_9_5                                = get_option('simple_announcement_with_exclusion_9_5');
+        $simple_announcement_with_exclusion_9_7                                = get_option('simple_announcement_with_exclusion_9_7');
+        $simple_announcement_with_exclusion_9_8                                = get_option('simple_announcement_with_exclusion_9_8');
+        $simple_announcement_with_exclusion_9_9                                = get_option('simple_announcement_with_exclusion_9_9');
+        $simple_announcement_with_exclusion_9_10                               = get_option('simple_announcement_with_exclusion_9_10');
+        $simple_announcement_with_exclusion_9_11                               = get_option('simple_announcement_with_exclusion_9_11');
+        $simple_announcement_with_exclusion_9_12                               = get_option('simple_announcement_with_exclusion_9_12');
+        $simple_announcement_with_exclusion_9_13                               = get_option('simple_announcement_with_exclusion_9_13');
+        $simple_announcement_with_exclusion_9_14                               = get_option('simple_announcement_with_exclusion_9_14');
+        if (date("D") === "Sun") { $simple_announcement_with_exclusion_day     = get_option('simple_announcement_with_exclusion_sun'); }
+        if (date("D") === "Mon") { $simple_announcement_with_exclusion_day     = get_option('simple_announcement_with_exclusion_mon'); }
+        if (date("D") === "Tue") { $simple_announcement_with_exclusion_day     = get_option('simple_announcement_with_exclusion_tue'); } 
+        if (date("D") === "Wed") { $simple_announcement_with_exclusion_day     = get_option('simple_announcement_with_exclusion_wed'); }
+        if (date("D") === "Thu") { $simple_announcement_with_exclusion_day     = get_option('simple_announcement_with_exclusion_thu'); }
+        if (date("D") === "Fri") { $simple_announcement_with_exclusion_day     = get_option('simple_announcement_with_exclusion_fri'); }
         if (date("D") === "Sat") { $simple_announcement_with_exclusion_cat_day = get_option('simple_announcement_with_exclusion_cat_sat'); }
         if (date("D") === "Sun") { $simple_announcement_with_exclusion_cat_day = get_option('simple_announcement_with_exclusion_cat_sun'); }
         if (date("D") === "Mon") { $simple_announcement_with_exclusion_cat_day = get_option('simple_announcement_with_exclusion_cat_mon'); }

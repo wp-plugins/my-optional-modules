@@ -40,7 +40,7 @@
                     $reviews_type = sanitize_text_field( esc_html(mom_closetags( $_REQUEST[ 'reviews_type' ] ) ) );
                     $reviews_link = sanitize_text_field( esc_html(mom_closetags( $_REQUEST[ 'reviews_link' ] ) ) );
                     $reviews_title = sanitize_text_field( esc_html(mom_closetags( $_REQUEST[ 'reviews_title' ] ) ) );
-                    $reviews_reviewed = sanitize_text_field( esc_html(mom_closetags( $_REQUEST[ 'reviews_review' ] ) ) ) ;
+                    $reviews_reviewed = mom_closetags( $_REQUEST[ 'reviews_review' ] ) ;
                     $reviews_review = wpautop( $reviews_reviewed );
                     $reviews_rating = sanitize_text_field( esc_html(mom_closetags( $_REQUEST[ 'reviews_rating' ] ) ) ); 
                     $wpdb->query("INSERT INTO $reviews_table_name (ID,TYPE,LINK,TITLE,REVIEW,RATING) VALUES ('','$reviews_type','$reviews_link','$reviews_title','$reviews_review','$reviews_rating')") ;
