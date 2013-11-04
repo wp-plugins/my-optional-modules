@@ -210,7 +210,7 @@
                             <option value=\"1\" "; if (get_option("mommaincontrol_maintenance") == 1) { echo "selected=\"selected\""; } echo ">On</option>
                         </select>
                     </section>";
-					if (get_option("mommaincontrol_maintenance") == 0) { echo "<p>Set an outside URL as your maintenance redirect (for users not logged in).  Perhaps a Twitter feed?</p>"; }
+					if (get_option("mommaincontrol_maintenance") == 0) { echo "<p>Set a URL as your maintenance redirect (for users not logged in) (/local/ or external.com).  Perhaps a Twitter feed or a maintenance page?</p>"; }
                     if (get_option("mommaincontrol_maintenance") == 1) { include('maintenance.php'); }					
 				echo "
                 </div>
