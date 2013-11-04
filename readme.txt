@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazy load,twitter,google+,open graph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 5.1.3
+Stable tag: 5.1.4
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -23,6 +23,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Count++, a module to count words on the blog and countdown from an (optional) total count goal.
 * Exclude, a module to hide tags, categories, and post formats from the front page, the archives, the search results, or the feed (or all).
 * Jump Around, a module that allows users to navigate posts by pressing keys on the keyboard.
+* Maintenance, a module that allows you to specify a URL to redirect to for all non-logged in users while Maintenance Mode is active.
 * Post as Front, a module that allows you to select a specific post to be your home page, or make your home page your most recent post.
 * Passwords, a module for storing 7 unique (SHA512 salted) passwords, and then hiding content with a shortcode (and IP based lockout) that is unlockable using the current days password.
 * Reviews allows you to create custom reviews on anything you want, and display them on a post or a page.
@@ -62,6 +63,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 == Changelog ==
 = 5.1.+ =
+* 5.1.4 / An extremely simple maintenance mode has been added.
 * 5.1.3 / Bugfix: module:   Reviews now have the content of the review formatted properly.
 * 5.1.3 / Bugfix: function: obwcountplus_single().
 * 5.1.2 / Verifier: Added the option to set the correct and incorrect stats messages, providing the ability to set up impromptu 'yes/no' type polls/questions (think 'Did you find this article useful?  Yes or no.')

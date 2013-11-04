@@ -204,9 +204,15 @@
 					</div>
                 <div class=\"panel left\">
                     <section class=\"title clear\">
-                        <span><i class=\"fa fa-\"></i> </span>
-                    </section>
-                    <p></p>
+                        <span><i class=\"fa fa-clock-o\"></i> Maintenance </span>
+                        <select id=\"mommaincontrol_maintenance\" type=\"text\" name=\"mommaincontrol_maintenance\">
+                            <option value=\"0\" "; if (get_option("mommaincontrol_maintenance") == 0) { echo "selected=\"selected\""; } echo ">Off</option>
+                            <option value=\"1\" "; if (get_option("mommaincontrol_maintenance") == 1) { echo "selected=\"selected\""; } echo ">On</option>
+                        </select>
+                    </section>";
+					if (get_option("mommaincontrol_maintenance") == 0) { echo "<p>Set an outside URL as your maintenance redirect (for users not logged in).  Perhaps a Twitter feed?</p>"; }
+                    if (get_option("mommaincontrol_maintenance") == 1) { include('maintenance.php'); }					
+				echo "
                 </div>
                 <div class=\"panel left\">
                     <section class=\"title clear\">
@@ -368,13 +374,13 @@
                         } else {
                             echo "
                             <div class=\"panelSection clear plugin\">";
-                                if     ( get_option( 'mommaincontrol_focus' ) == 'count'      ) { include( plugin_dir_path( __FILE__ ) . 'countplusplus.php'); }
-                                elseif ( get_option( 'mommaincontrol_focus' ) == 'exclude'    ) { include( plugin_dir_path( __FILE__ ) . 'exclude.php');       }
-                                elseif ( get_option( 'mommaincontrol_focus' ) == 'jumparound' ) { include( plugin_dir_path( __FILE__ ) . 'jumparound.php');    }
-                                elseif ( get_option( 'mommaincontrol_focus' ) == 'passwords'  ) { include( plugin_dir_path( __FILE__ ) . 'passwords.php');     }
-                                elseif ( get_option( 'mommaincontrol_focus' ) == 'reviews'    ) { include( plugin_dir_path( __FILE__ ) . 'reviews.php');       }
-                                elseif ( get_option( 'mommaincontrol_focus' ) == 'shortcodes' ) { include( plugin_dir_path( __FILE__ ) . 'shortcodes.php');    }
-								elseif ( get_option( 'mommaincontrol_focus' ) == 'fontfa'     ) { include( plugin_dir_path( __FILE__ ) . 'fontfa.php');        }
+                                if     ( get_option( 'mommaincontrol_focus' ) == 'count'       ) { include( plugin_dir_path( __FILE__ ) . 'countplusplus.php'); }
+                                elseif ( get_option( 'mommaincontrol_focus' ) == 'exclude'     ) { include( plugin_dir_path( __FILE__ ) . 'exclude.php');       }
+                                elseif ( get_option( 'mommaincontrol_focus' ) == 'jumparound'  ) { include( plugin_dir_path( __FILE__ ) . 'jumparound.php');    }
+                                elseif ( get_option( 'mommaincontrol_focus' ) == 'passwords'   ) { include( plugin_dir_path( __FILE__ ) . 'passwords.php');     }
+                                elseif ( get_option( 'mommaincontrol_focus' ) == 'reviews'     ) { include( plugin_dir_path( __FILE__ ) . 'reviews.php');       }
+                                elseif ( get_option( 'mommaincontrol_focus' ) == 'shortcodes'  ) { include( plugin_dir_path( __FILE__ ) . 'shortcodes.php');    }
+								elseif ( get_option( 'mommaincontrol_focus' ) == 'fontfa'      ) { include( plugin_dir_path( __FILE__ ) . 'fontfa.php');        }
                             echo "
                             </div>";
                         }
@@ -390,15 +396,15 @@
 
 
         // Form handling for header location (refreshing the page was kind of rudimentary...) 
-		if( isset( $_POST[ 'MOMsave'                    ] ) ) {                                                       header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
-        if( isset( $_POST[ 'MOMclear'                   ] ) ) { update_option( 'mommaincontrol_focus',''           ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
-        if( isset( $_POST[ 'MOMexclude'                 ] ) ) { update_option( 'mommaincontrol_focus','exclude'    ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
-		if( isset( $_POST[ 'MOMfontfa'                  ] ) ) { update_option( 'mommaincontrol_focus','fontfa'     ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
-        if( isset( $_POST[ 'MOMcount'                   ] ) ) { update_option( 'mommaincontrol_focus','count'      ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
-        if( isset( $_POST[ 'MOMjumparound'              ] ) ) { update_option( 'mommaincontrol_focus','jumparound' ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
-        if( isset( $_POST[ 'MOMpasswords'               ] ) ) { update_option( 'mommaincontrol_focus','passwords'  ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
-        if( isset( $_POST[ 'MOMreviews'                 ] ) ) { update_option( 'mommaincontrol_focus','reviews'    ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
-        if( isset( $_POST[ 'MOMshortcodes'              ] ) ) { update_option( 'mommaincontrol_focus','shortcodes' ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
+		if( isset( $_POST[ 'MOMsave'                    ] ) ) {                                                        header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
+        if( isset( $_POST[ 'MOMclear'                   ] ) ) { update_option( 'mommaincontrol_focus',''            ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
+        if( isset( $_POST[ 'MOMexclude'                 ] ) ) { update_option( 'mommaincontrol_focus','exclude'     ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
+		if( isset( $_POST[ 'MOMfontfa'                  ] ) ) { update_option( 'mommaincontrol_focus','fontfa'      ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
+        if( isset( $_POST[ 'MOMcount'                   ] ) ) { update_option( 'mommaincontrol_focus','count'       ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
+        if( isset( $_POST[ 'MOMjumparound'              ] ) ) { update_option( 'mommaincontrol_focus','jumparound'  ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
+        if( isset( $_POST[ 'MOMpasswords'               ] ) ) { update_option( 'mommaincontrol_focus','passwords'   ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
+        if( isset( $_POST[ 'MOMreviews'                 ] ) ) { update_option( 'mommaincontrol_focus','reviews'     ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
+        if( isset( $_POST[ 'MOMshortcodes'              ] ) ) { update_option( 'mommaincontrol_focus','shortcodes'  ); header( "Location: " . $_SERVER[ 'REQUEST_URI' ] ); }
 		
     } 
     

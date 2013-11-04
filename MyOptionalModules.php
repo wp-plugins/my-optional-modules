@@ -3,8 +3,8 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.1.3
-Author: One Billion Words
+Version: 5.1.4
+Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 */
 
@@ -56,6 +56,7 @@ Author URI: http://onebillionwords.com
 		add_option( 'mommaincontrol_versionnumbers','0','Version numbers hidden?' );
 		add_option( 'mommaincontrol_lazyload','0','Lazy load activated?' );
 		add_option( 'mommaincontrol_meta','0','Meta acitvated?' );
+		add_optoin( 'mommaincontrol_maintenance','0','Maintenace activated?' );
 	}
 
 	// Admin stylesheet enqueue
@@ -94,6 +95,26 @@ Author URI: http://onebillionwords.com
 		add_filter( 'script_loader_src', 'mom_remove_version_numbers', 0 );
 	}	
 
+	// Maintenance mode
+	if ( get_option( 'mommaincontrol_maintenance' ) == 1 ) {
+		add_action( "wp", "momMaintenance" );
+		function momMaintenance() {	
+			if ( !is_user_logged_in() && get_option( 'momMaintenance_url' ) != '' ) {
+				$maintenanceURL = esc_url( get_option( 'momMaintenance_url' ) );
+				if ($_SERVER['REQUEST_URI'] === $maintenanceURL ) { 
+				} else {
+					header("location: " . $maintenanceURL); 
+					exit;
+				}
+			} else {
+				// If active but no URL is supplied, act like it's not active.
+			}
+		}
+	}
+		
+	
+	
+	
 	// Post as front redirection
 	if ( get_option( 'mommaincontrol_mompaf' ) == 1 ) { 
 		add_action( "wp", "mompaf_filter_home" );

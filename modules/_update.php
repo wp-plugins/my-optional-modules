@@ -21,6 +21,7 @@
             update_option( 'mommaincontrol_versionnumbers',0);
 			update_option( 'mommaincontrol_lazyload',0);
 			update_option( 'mommaincontrol_meta',0);
+			update_option( 'mommaincontrol_maintenance',0);
             update_option( 'mommaincontrol_focus','');
         } elseif ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 3 ) {
             delete_option( 'mommaincontrol_obwcountplus' );
@@ -36,6 +37,7 @@
 			delete_option( 'mommaincontrol_lazyload' );
 			delete_option( 'mommaincontrol_meta' );
             delete_option( 'mommaincontrol_focus');
+			delete_option( 'mommaincontrol_maintenance');
 		} else {
 			if ( $_REQUEST[ 'mommaincontrol_analytics' ] != get_option( 'mommaincontrol_analytics' ) ) {  update_option( 'mommaincontrol_analytics',$_REQUEST[ 'mommaincontrol_analytics' ] ); }
 			if ( $_REQUEST[ 'mommaincontrol_obwcountplus' ] != get_option( 'mommaincontrol_obwcountplus' ) ) {  update_option( 'mommaincontrol_obwcountplus',$_REQUEST[ 'mommaincontrol_obwcountplus' ] ); }
@@ -49,6 +51,7 @@
 			if ( $_REQUEST[ 'mommaincontrol_lazyload' ] != get_option( 'mommaincontrol_lazyload' ) ) {  update_option( 'mommaincontrol_lazyload',$_REQUEST[ 'mommaincontrol_lazyload' ] ); }
 			if ( $_REQUEST[ 'mommaincontrol_meta' ] != get_option( 'mommaincontrol_meta' ) ) {  update_option( 'mommaincontrol_meta',$_REQUEST[ 'mommaincontrol_meta' ] ); }
 			if ( $_REQUEST[ 'mommaincontrol_mompaf' ] != get_option( 'mommaincontrol_mompaf' ) ) {  update_option( 'mommaincontrol_mompaf',$_REQUEST[ 'mommaincontrol_mompaf' ] ); }
+			if ( $_REQUEST[ 'mommaincontrol_maintenance' ] != get_option( 'mommaincontrol_maintenance' ) ) {  update_option( 'mommaincontrol_maintenance',$_REQUEST[ 'mommaincontrol_maintenance' ] ); }
 		}
 
         //    Analytics
@@ -173,20 +176,27 @@
 			dbDelta( $verification_sql );		
 		}
 		
+		if ( $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 4 || $_REQUEST[ 'mommaincontrol_maintenance' ] == 1 ) {
+			add_option( 'momMaintenance_url','','Maintenance URL to redirect to when in maintenance mode.' );
+		}
+		
         
         if ($_REQUEST["mommaincontrol_uninstall_all"] == 4) {    
-            update_option("mommaincontrol_obwcountplus",1);
-            update_option("mommaincontrol_momrups",1);
-            update_option("mommaincontrol_momse",1);
-            update_option("mommaincontrol_mompaf",1);
-            update_option("mommaincontrol_momja",1);            
-            update_option("mommaincontrol_shorts",1);
-            update_option("mommaincontrol_analytics",1);
-            update_option("mommaincontrol_reviews",1);
-            update_option("mommaincontrol_fontawesome",1);
-            update_option("mommaincontrol_versionnumbers",1);
+            update_option( 'mommaincontrol_obwcountplus',1);
+            update_option( 'mommaincontrol_momrups',1);
+            update_option( 'mommaincontrol_momse',1);
+            update_option( 'mommaincontrol_mompaf',1);
+            update_option( 'mommaincontrol_momja',1);            
+            update_option( 'mommaincontrol_shorts',1);
+            update_option( 'mommaincontrol_analytics',1);
+            update_option( 'mommaincontrol_reviews',1);
+            update_option( 'mommaincontrol_fontawesome',1);
+            update_option( 'mommaincontrol_versionnumbers',1);
+			update_option( 'mommaincontrol_lazyload',1);
+			update_option( 'mommaincontrol_meta',1);
+			update_option( 'mommaincontrol_maintenance',1);
         }
-
+		
         if ($_REQUEST[ 'mommaincontrol_uninstall_all' ] == 1 || $_REQUEST[ 'mommaincontrol_uninstall_all' ] == 3) {    
             $wpdb->query( "DROP TABLE {$RUPs_table_name}" );
             $wpdb->query( "DROP TABLE {$review_table_name}" );
@@ -243,6 +253,7 @@
             delete_option( 'momanalytics_code' );            
             delete_option( 'momreviews_css' );
             delete_option( 'momreviews_search' );
+			delete_option( 'momMaintenance_url' );
         }
     }
 ?>
