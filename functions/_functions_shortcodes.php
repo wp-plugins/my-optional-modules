@@ -149,6 +149,7 @@
 			$theIP = 0;
 		}
 		// Shortcode arguments
+		ob_start();
         extract(
             shortcode_atts(array(
                 "age"          => '',
@@ -189,7 +190,6 @@
 			}
 		}
 		
-		ob_start();
 		// Question/verification form and logic
 		if ( is_numeric($isLogged) && $isLogged == 0 && is_user_logged_in() ) {
 			$isCorrect = 1;
@@ -197,7 +197,7 @@
 			
 			if ( $alreadyAttempted != 1 ) {
 				if ( !$_REQUEST[ 'ageVerification' . $momverifier_verification_step . $thePostId . '' ] != '' ) {
-				echo "
+				return "
 				<blockquote style=\"display:block;clear:both;margin:5px auto 5px auto;padding:5px;font-size:25px;\">
 				<p>" . $theMessage . "</p>
 				<form style=\"clear:both;display:block;padding:5px;margin:0 auto 5px auto;width:98%;overflow:hidden;border-radius:3px;background-color:#" . $theBackground . ";\" class=\"momAgeVerification\" method=\"post\" action=\"" . get_permalink() . "\">
@@ -268,13 +268,13 @@
 				$percentCorrect   = ( $correctCount/$totalCount * 100 );
 				$percentIncorrect = ( $incorrectCount/$totalCount * 100 );
 				if ( $statsMessage == '' ) { $statsMessage = $theMessage; }
-				echo "<div style=\"clear:both;display:block;width:99%;margin:10px auto 10px auto;overflow:auto;background-color:#f6fbff;border:1px solid #4a5863;border-radius:3px;padding:5px;\"><p>" . $statsMessage . "</p><div class=\"mom_progress\" style=\"clear:both; height:20px; display: block; width:95%;  margin:5px auto 5px auto; background-color:#ff0000\"><div title=\"" . $correctCount . "\" style=\"display: block; height:20px; width:" . $percentCorrect . "%; background-color:#1eff00;\"></div></div><div style=\"font-size:15px;margin:-5px auto;width:95%;\"><span style=\"float:left;text-align:left;\">Correct (" . $percentCorrect . "%)</span><span style=\"float:right;text-align:right;\">Incorrect (" . $percentIncorrect . "%)</span></div></div>";
+				return "<div style=\"clear:both;display:block;width:99%;margin:10px auto 10px auto;overflow:auto;background-color:#f6fbff;border:1px solid #4a5863;border-radius:3px;padding:5px;\"><p>" . $statsMessage . "</p><div class=\"mom_progress\" style=\"clear:both; height:20px; display: block; width:95%;  margin:5px auto 5px auto; background-color:#ff0000\"><div title=\"" . $correctCount . "\" style=\"display: block; height:20px; width:" . $percentCorrect . "%; background-color:#1eff00;\"></div></div><div style=\"font-size:15px;margin:-5px auto;width:95%;\"><span style=\"float:left;text-align:left;\">Correct (" . $percentCorrect . "%)</span><span style=\"float:right;text-align:right;\">Incorrect (" . $percentIncorrect . "%)</span></div></div>";
 			}
 		}
 		if ( $isCorrect == 1 ) {
 			return $content;
 		} elseif ( $isCorrect == 0 ) {
-			echo "<blockquote class=\"momAgeVerification\">" . $failMessage . "</blockquote>";
+			return "<blockquote class=\"momAgeVerification\">" . $failMessage . "</blockquote>";
 		}
         return ob_get_clean();
     }	
