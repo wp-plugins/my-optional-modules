@@ -160,25 +160,31 @@
 				"logging"      => 0,
 				"background"   => 'transparent',
 				"stats"        => '',
-				"single"       => 0
+				"single"       => 0,
+				"cmessage"     => 'Correct',
+				"imessage"     => 'Incorrect',
+				"deactivate"   => 0
             ), $atts)
         );
 		// sanitization techniques for all inputs
 		global $momverifier_verification_step;
 		$momverifier_verification_step++;
-		$thePostId             = $post->ID;
-		$theBackground         = sanitize_text_field( strip_tags( htmlentities( $background ) ) );
-		$theAge                = sanitize_text_field( strip_tags( htmlentities( $age        ) ) );
-		$isLogged              = sanitize_text_field( strip_tags( htmlentities( $logged     ) ) );
-		$theMessage            = sanitize_text_field( strip_tags( htmlentities( $message    ) ) );
-		$theAnswer             = sanitize_text_field( strip_tags( htmlentities( $answer     ) ) );
-		$failMessage           = sanitize_text_field( strip_tags( htmlentities( $fail       ) ) );
-		$isLogged              = sanitize_text_field( strip_tags( htmlentities( $logged     ) ) );
-		$isLogging             = sanitize_text_field( strip_tags( htmlentities( $logging    ) ) );
-		$attempts              = sanitize_text_field( strip_tags( htmlentities( $single     ) ) );
-		$verificationID        = $momverifier_verification_step . '' . $thePostId;
-		$statsMessage          = sanitize_text_field( strip_tags( htmlentities( $stats      ) ) );
-        $alreadyAttempted      = 0;
+		$thePostId              = $post->ID;
+		$theBackground          = sanitize_text_field( strip_tags( htmlentities( $background ) ) );
+		$theAge                 = sanitize_text_field( strip_tags( htmlentities( $age        ) ) );
+		$isLogged               = sanitize_text_field( strip_tags( htmlentities( $logged     ) ) );
+		$theMessage             = sanitize_text_field( strip_tags( htmlentities( $message    ) ) );
+		$theAnswer              = sanitize_text_field( strip_tags( htmlentities( $answer     ) ) );
+		$failMessage            = sanitize_text_field( strip_tags( htmlentities( $fail       ) ) );
+		$isLogged               = sanitize_text_field( strip_tags( htmlentities( $logged     ) ) );
+		$isLogging              = sanitize_text_field( strip_tags( htmlentities( $logging    ) ) );
+		$attempts               = sanitize_text_field( strip_tags( htmlentities( $single     ) ) );
+		$correctResultMessage   = sanitize_text_field( strip_tags( htmlentities( $cmessage   ) ) );
+		$incorrectResultMessage = sanitize_text_field( strip_tags( htmlentities( $imessage   ) ) );
+		$isDeactivated          = sanitize_text_field( strip_tags( htmlentities( $deactivate ) ) );
+		$verificationID         = $momverifier_verification_step . '' . $thePostId;
+		$statsMessage           = sanitize_text_field( strip_tags( htmlentities( $stats      ) ) );
+        $alreadyAttempted       = 0;
 		
 		if ( is_numeric( $attempts ) && $attempts == 1 ) {
 			global $wpdb;
@@ -196,7 +202,7 @@
 		} elseif ( is_numeric( $isLogged ) && $isLogged == 1 ) {		
 			
 			if ( $alreadyAttempted != 1 ) {
-				if ( !$_REQUEST[ 'ageVerification' . $momverifier_verification_step . $thePostId . '' ] != '' ) {
+				if ( !$_REQUEST[ 'ageVerification' . $momverifier_verification_step . $thePostId . '' ] != '' && $isDeactivated != 1 ) {
 				return "
 				<blockquote style=\"display:block;clear:both;margin:5px auto 5px auto;padding:5px;font-size:25px;\">
 				<p>" . $theMessage . "</p>
@@ -230,7 +236,7 @@
 			}			
 		}
 		// Logging
-		if ( is_numeric( $isLogging ) && $isLogging == 1 || is_numeric( $isLogging ) && $isLogging == 3 || is_numeric( $isLogging ) && $isLogging == 4 || is_numeric( $attempts ) && $attempts == 1 ) {
+		if ( is_numeric( $isLogging ) && $isLogging == 1 || is_numeric( $isLogging ) && $isLogging == 3 || is_numeric( $attempts ) && $attempts == 1 ) {
 			global $wpdb;
 			$verification_table_name    = $wpdb->prefix . $wpdb->suffix . "momverification";
 			$getIPforCurrentTransaction = $wpdb->get_results ("SELECT IP,POST FROM $verification_table_name WHERE IP = '".$theIP."' AND POST = '" . $verificationID . "'");
@@ -259,7 +265,7 @@
 				}
 			}
 			// Statistics
-			if ( $_REQUEST[ 'ageVerification' . $momverifier_verification_step . $thePostId . '' ] != '' || $isLogging == 4 && !$_REQUEST[ 'ageVerification' . $momverifier_verification_step . $thePostId . '' ] ) {
+			if ( $isLogging != 1 ) {
 				$incorrect            = $wpdb->get_results ("SELECT CORRECT FROM $verification_table_name WHERE POST = '" . $verificationID . "' AND CORRECT = '0' ");
 				$correct              = $wpdb->get_results ("SELECT CORRECT FROM $verification_table_name WHERE POST = '" . $verificationID . "' AND CORRECT = '1' ");
 				$incorrectCount   = count ( $incorrect );
@@ -268,12 +274,12 @@
 				$percentCorrect   = ( $correctCount/$totalCount * 100 );
 				$percentIncorrect = ( $incorrectCount/$totalCount * 100 );
 				if ( $statsMessage == '' ) { $statsMessage = $theMessage; }
-				return "<div style=\"clear:both;display:block;width:99%;margin:10px auto 10px auto;overflow:auto;background-color:#f6fbff;border:1px solid #4a5863;border-radius:3px;padding:5px;\"><p>" . $statsMessage . "</p><div class=\"mom_progress\" style=\"clear:both; height:20px; display: block; width:95%;  margin:5px auto 5px auto; background-color:#ff0000\"><div title=\"" . $correctCount . "\" style=\"display: block; height:20px; width:" . $percentCorrect . "%; background-color:#1eff00;\"></div></div><div style=\"font-size:15px;margin:-5px auto;width:95%;\"><span style=\"float:left;text-align:left;\">Correct (" . $percentCorrect . "%)</span><span style=\"float:right;text-align:right;\">Incorrect (" . $percentIncorrect . "%)</span></div></div>";
+				return "<div style=\"clear:both;display:block;width:99%;margin:10px auto 10px auto;overflow:auto;background-color:#f6fbff;border:1px solid #4a5863;border-radius:3px;padding:5px;\"><p>" . $statsMessage . "</p><div class=\"mom_progress\" style=\"clear:both; height:20px; display: block; width:95%;  margin:5px auto 5px auto; background-color:#ff0000\"><div title=\"" . $correctCount . "\" style=\"display: block; height:20px; width:" . $percentCorrect . "%; background-color:#1eff00;\"></div></div><div style=\"font-size:15px;margin:-5px auto;width:95%;\"><span style=\"float:left;text-align:left;\">" . $correctResultMessage . " (" . $percentCorrect . "%)</span><span style=\"float:right;text-align:right;\">" . $incorrectResultMessage . " (" . $percentIncorrect . "%)</span></div></div>";
 			}
 		}
 		if ( $isCorrect == 1 ) {
 			return $content;
-		} elseif ( $isCorrect == 0 ) {
+		} elseif ( $isCorrect == 0 && $deactivate != 1 ) {
 			return "<blockquote class=\"momAgeVerification\">" . $failMessage . "</blockquote>";
 		}
         return ob_get_clean();
