@@ -58,6 +58,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 4. Simple and clean admin interface provides quick access to enabled modules.
 5. Take control of what gets shown where and when with the Exclude module, and its ability to hide tags, cateogires, and post formats from anywhere on the blog.
 6. Sometimes, you don't really need a slew of options.  Sometimes, you just want to turn on something, and have it work, hassle-free.  
+7. Yes, there is a plugin page on my domain with information and documentation, but sometimes, just explaining things thoroughly enough from within the plugin itself can be useful as well.
+
 == Changelog ==
 = 5.1.+ =
 * 5.1.1 / Hotfix for positioning of Verifier output/form.
