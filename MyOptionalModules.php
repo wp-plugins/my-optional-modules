@@ -44,7 +44,7 @@ Author URI: http://onebillionwords.com
 			return;
 		$momCurrentVersion         = $plugin_data['version'];
 		global $MyOptionalModulesVersionNumber;
-		if ( $MyOptionalModulesVersionNumber <= $momCurrentVersion ) { echo "<li>Version " . $momCurrentVersion . " now available.  You are using version " . $MyOptionalModulesVersionNumber . ".</li>"; }
+		if ( $MyOptionalModulesVersionNumber < $momCurrentVersion ) { echo "<li>Version " . $momCurrentVersion . " now available.  You are using version " . $MyOptionalModulesVersionNumber . ".</li>"; }
 		else { echo "<li>Plugin version " . $MyOptionalModulesVersionNumber . " (current stable version)."; }
 	}
 	function mom_get_repo_information()
