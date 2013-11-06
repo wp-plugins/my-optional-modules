@@ -53,13 +53,11 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 3. Activate it.
 
 == Screenshots ==
-1. Reviews module, featuring TinyMCE editor and 'sticky' filtering for easy admin of reviews.
-2. Database cleaner, with single button trash cleaning for post, comment, and category and tag clutter.
-3. Easily add shortcodes provided by MoM (if the modules are enabled for them) via post edit.
-4. Simple and clean admin interface provides quick access to enabled modules.
-5. Take control of what gets shown where and when with the Exclude module, and its ability to hide tags, cateogires, and post formats from anywhere on the blog.
-6. Sometimes, you don't really need a slew of options.  Sometimes, you just want to turn on something, and have it work, hassle-free.  
-7. Yes, there is a plugin page on my domain with information and documentation, but sometimes, just explaining things thoroughly enough from within the plugin itself can be useful as well.
+1. Settings page.
+2. Modules with additional settings or options will present new configuration buttons to navigate to their settings page with.
+3. Navigating to a settings page will still allow you to activate and deactivate modules.  (Reviews module shown, which features searchable reviews table and media enabled posting box.)
+4. Some modules are activated as easily as simply pressing a button; others still only require a single settings to fully function.
+5. Two-step uninstallation procedure wipes all options and settings that were enabled by the plugin, allowing a fresh start or for easy deactivation and removal of the plugin from your installation.
 
 == Changelog ==
 = 5.1.+ =
