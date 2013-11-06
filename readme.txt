@@ -63,6 +63,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 == Changelog ==
 = 5.1.+ =
+* 5.1.5 / UI changed.  Should be more intuitive, easier to navigate, and easier to activate and deactivate modules.
+* 5.1.5 / Compatability check added to make sure there are no conflicting functions between other plugins and themes and the functions used in MOM.
 * 5.1.4 / An extremely simple maintenance mode has been added.
 * 5.1.3 / Bugfix: module:   Reviews now have the content of the review formatted properly.
 * 5.1.3 / Bugfix: function: obwcountplus_single().

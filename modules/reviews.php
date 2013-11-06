@@ -103,9 +103,8 @@
             
             function reviews_page_content() {
                 echo "    
-                <div class=\"wrap\">
 					<div class=\"settings\">
-						<div class=\"settingsInfo\">
+						<div class=\"settingsInfo taller\">
 								<h2>Usage</h2>
                                     <blockquote><ol>
                                         <li>Review title is the title of the review.</li>
@@ -186,7 +185,7 @@
                                     </article>
                                 </div>";
                     echo "
-                    <form method=\"post\"><input class=\"deleteSubmit\" type=\"submit\" name=\"$this_ID\" value=\"Delete\"></form>";
+                    <form method=\"post\"><input class=\"deleteSubmit\" type=\"submit\" name=\"$this_ID\" value=\"X\"></form>";
                     if(isset($_POST[$this_ID])){
                         $current = plugin_basename(__FILE__);
                         $wpdb->query("DELETE FROM $mom_reviews_table_name WHERE ID = '$this_ID'");

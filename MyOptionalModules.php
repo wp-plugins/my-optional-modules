@@ -39,25 +39,47 @@ Author URI: http://onebillionwords.com
 
 	// Disallow individual file loading
 	define( 'MyOptionalModules', TRUE );
-	
+	$MyOptionalModulesVersionNumber = '5.1.5';
+
 	// Activation hook for plugin
 	register_activation_hook( __FILE__, "my_optional_modules_main_control_install" );
 	function my_optional_modules_main_control_install() {
-		add_option( 'mommaincontrol_focus','','Focus module' );
-		add_option( 'mommaincontrol_obwcountplus','0','Count++ activated?' );
-		add_option( 'mommaincontrol_momrups','0','RUPs activated?' );
-		add_option( 'mommaincontrol_momse','0','Simply Exclude activated?' );
-		add_option( 'mommaincontrol_mompaf','0','Post as Front activated?' );
-		add_option( 'mommaincontrol_momja','0','Jump Around activated?' );
-		add_option( 'mommaincontrol_shorts','0','Shortcodes! activated?' );
-		add_option( 'mommaincontrol_analytics','0','Analytics activated?' );
-		add_option( 'mommaincontrol_reviews','0','Reviews activated?' );
-		add_option( 'mommaincontrol_fontawesome','0','Font Awesome activated?' );
-		add_option( 'mommaincontrol_versionnumbers','0','Version numbers hidden?' );
-		add_option( 'mommaincontrol_lazyload','0','Lazy load activated?' );
-		add_option( 'mommaincontrol_meta','0','Meta acitvated?' );
-		add_optoin( 'mommaincontrol_maintenance','0','Maintenace activated?' );
+		add_option( 'mommaincontrol_focus','0','Focus module' );
 	}
+	
+	function mom_check_repo_version( $echo = true )
+	{
+		$plugin_data = mom_get_repo_information();
+		if( false === $plugin_data )
+			return;
+		$momCurrentVersion         = $plugin_data['version'];
+		global $MyOptionalModulesVersionNumber;
+		if ( $MyOptionalModulesVersionNumber <= $momCurrentVersion ) { echo "<li>Version " . $momCurrentVersion . " now available.  You are using version " . $MyOptionalModulesVersionNumber . ".</li>"; }
+		else { echo "<li>Plugin version " . $MyOptionalModulesVersionNumber . " (current stable version)."; }
+	}
+	function mom_get_repo_information()
+	{
+		$plugin_url = 'http://wpapi.org/api/plugin/my-optional-modules.json';
+		$cache = get_transient( 'my_plugin_transient' );
+		if( false !== $cache )
+			return $cache;
+		if( $response = wp_remote_retrieve_body( wp_remote_get( $plugin_url ) ) )
+		{
+			if( $response = json_decode( $response, true ) )
+			{
+				if( !empty( $response['added'] ) )
+				{
+					set_transient( 'my_plugin_transient', $response, 720 );
+					return $response;
+				}
+			}
+		}
+		return false;
+	}
+		
+	
+	// Activation hook for plugin
+	register_activation_hook( __FILE__, "my_optional_modules_main_control_install" );
 
 	// Admin stylesheet enqueue
 	function mom_list_styles() {

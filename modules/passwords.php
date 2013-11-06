@@ -157,7 +157,7 @@
 
             function rotating_universal_passwords_page_content() { 
                 echo "    
-                    <div class=\"wrap\">
+                    
 						<div class=\"settings\">
                             <div class=\"settingsInfo\">
 								<strong>Usage</strong><br />

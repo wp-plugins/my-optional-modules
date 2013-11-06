@@ -255,7 +255,7 @@
 
             function momja_page_content() { 
                 echo "
-                <div class=\"wrap\">
+                
 					<div class=\"settings\">
 							<form method=\"post\">
 								<div class=\"settingsInfo\">

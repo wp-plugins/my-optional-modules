@@ -9,7 +9,6 @@
 
             function mom_shortcodes_page_content() {
                 echo "
-                <div class=\"wrap\">
 					<div class=\"settings\">
 					
                     <table class=\"form-table\" border=\"1\">
@@ -158,7 +157,7 @@
                             </tr>
 							
                             <tr valign=\"top\" id=\"progress_bars\">
-                                <td valign=\"top\" style=\"max-width:300px;\">
+                                <td valign=\"top\">
                                     <strong>Progress bars</strong>
                                     <br />Create bars that fill up, based on your parameters, to show progression towards a goal.<hr />
                                     <u>Parameters</u><br />align, fillcolor, maincolor, 
@@ -189,7 +188,7 @@
                             </tr>		
 
                             <tr valign=\"top\" id=\"verifier\">
-                                <td valign=\"top\" style=\"max-width:300px;\">
+                                <td valign=\"top\">
                                     <strong>Verifier</strong>
                                     <br />Gate content with a customizable input prompt with optional tracking of unique right and wrong answers.<hr />
                                     <u>Parameters</u><br />age,answer,logged,message,fail,logging,background<hr />
@@ -239,8 +238,7 @@
 							
                         </tbody>
                     </table>
-				</div>
-                </div>";
+				</div>";
             }
             
             mom_shortcodes_page_content();

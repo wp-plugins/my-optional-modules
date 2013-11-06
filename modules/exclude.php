@@ -255,15 +255,13 @@
 
             function momse_page_content() {
                 echo "
-                <div class=\"wrap\">
                     <form method=\"post\">
                         <div class=\"settings\">";
                         momse_form();
                         echo "
                         <input id=\"momsesave\" type=\"submit\" value=\"Save Changes\" name=\"momsesave\">
 						</div>
-                    </form>
-                </div>";
+                    </form>";
             }
 			
             if( isset( $_POST[ 'momsesave' ] ) ) { update_momse_options(); }

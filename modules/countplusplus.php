@@ -77,14 +77,12 @@
 
 
             function obwcountplus_page_content() {
-                echo "
-                <div class=\"wrap\">";
                     echo "
                     <form method=\"post\">
 						<div class=\"settings\">
 							<div class=\"settingsInfo\">
 								<p>Count++ is adapted from <a href=\"http://wordpress.org/plugins/post-word-count/\">Post Word Count</a> by <a href=\"http://profiles.wordpress.org/nickmomrik/\">Nick Momrik</a>.</p>
-								<h3 class=\"title\">Usage</h3>
+								<strong>Usage</strong>
 								<p><em>Custom output</em><br />
 								<code>&lt;?php if(function_exists('countsplusplus')){ countsplusplus(); } ?&gt;</code></p>
 								<p><em>Total words + remaining</em><br />
@@ -100,8 +98,7 @@
                         obwcountplus_form();
                         echo "<input id=\"obwcountsave\" type=\"submit\" value=\"Save Changes\" name=\"obwcountsave\">
 						</div>
-                    </form>
-                </div>";
+                    </form>";
             }
 
 

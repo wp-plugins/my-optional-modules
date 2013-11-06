@@ -5,22 +5,22 @@
 
 		// Add twitter fields to profile and general settings
 		if ( is_admin() ) {
-			function add_fields_to_profile($profile_fields) {
+			function momSEO_add_fields_to_profile($profile_fields) {
 				$profile_fields[ 'twitter_personal' ] = 'Twitter Username';
 				return $profile_fields;
 			}
-			function add_fields_to_general() {
+			function momSEO_add_fields_to_general() {
 				register_setting( 'general', 'site_twitter', 'esc_attr' );
-				add_settings_field( 'site_twitter', '<label for="site_twitter">'.__('Twitter Site username' , 'site_twitter' ).'</label>' , 'add_twitter_to_general_html', 'general' );				
+				add_settings_field( 'site_twitter', '<label for="site_twitter">'.__('Twitter Site username' , 'site_twitter' ).'</label>' , 'mom_SEO_add_twitter_to_general_html', 'general' );				
 				
 			}			
-			function add_twitter_to_general_html() {
+			function mom_SEO_add_twitter_to_general_html() {
 			$twitter = get_option( 'site_twitter', '');
 			echo '<input id="site_twitter" name="site_twitter" value="' . $twitter . '"/>';
 			}
 			
-			add_filter( 'admin_init', 'add_fields_to_general');
-			add_filter( 'user_contactmethods', 'add_fields_to_profile');
+			add_filter( 'admin_init', 'momSEO_add_fields_to_general');
+			add_filter( 'user_contactmethods', 'momSEO_add_fields_to_profile');
 		}
 		
 		// Disable author archive if only one author
@@ -194,7 +194,7 @@
 			if ( is_single() ) {
 			$postid                   = $post->ID;
 			$post_title               = get_post_field( 'post_title', $postid );			
-			function extractCommonWords($string){
+			function momSEO_extractCommonWords($string){
 				global $post;
 				$postid         = $post->ID;
 				$post_title     = get_post_field( 'post_title', $postid );			
@@ -301,7 +301,7 @@
 				return $wordCountArr;
 			}			
 				$content            = get_post_field( 'post_content', $postid );
-				$words              = extractCommonWords($content);
+				$words              = momSEO_extractCommonWords($content);
 				$focusWord          = implode(',', array_keys($words));
 				echo "<meta name=\"keywords\" content=\"" . $focusWord . "\"/>\n";				
 			}		
