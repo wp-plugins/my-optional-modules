@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: redirect,maintenance mode,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazy load,twitter,google+,open graph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,logged in, hide comments, hide, comments, restrict, comment form, comment template, reddit, google maps, google, submit, button, share, gps, coords, embed, keyboard navigation, post, home page, front page, home, navigate, word count, word goal, countdown, total, rups, rotating universal passwords, sha512, encyrption, salt, exclusion, exclude, tags, categories, archives, post formats, post-formats, formats, hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 5.1.5
+Stable tag: 5.1.6
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -61,6 +61,10 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 == Changelog ==
 = 5.1.+ =
+* 5.1.6 / Deactivate/activate the Exclude module after updating.
+* 5.1.6 / Exclude: Hide specific posts and tags from people who aren't logged in. (This will hide them from the feed as well)
+* 5.1.6 / Exclude: If you are hiding tags or categories from non logged in users, the content returned will be from your 404 template.
+* 5.1.6 / Bugfix: module: Jump Around has had its installation procedure fixed.
 * 5.1.5 / UI changed.  Should be more intuitive, easier to navigate, and easier to activate and deactivate modules.
 * 5.1.5 / Compatability check added to make sure there are no conflicting functions between other plugins and themes and the functions used in MOM.
 * 5.1.4 / An extremely simple maintenance mode has been added.

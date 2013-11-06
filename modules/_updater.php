@@ -82,6 +82,8 @@
 		delete_option( 'momreviews_css' );
 		delete_option( 'momreviews_search' );
 		delete_option( 'momMaintenance_url' );
+		delete_option('simple_announcement_with_exclusion_cat_visitor');
+		delete_option('simple_announcement_with_exclusion_tag_visitor');
 	
 	} else {	
 	
@@ -147,15 +149,19 @@
 		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_cat_thu','','Exclude categories Thursday' ); } 
 		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_cat_fri','','Exclude categories Friday' ); } 
 		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_cat_sat','','Exclude categories Saturday' ); }     
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'jump_around_0','post','Post wrap' ); }
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'jump_around_1','entry-title','Link wrap' ); }
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'jump_around_2','previous-link','Previous link' ); }
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'jump_around_3','next-link','Next link' ); }
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'jump_around_4',65,'Previous' ); }
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'jump_around_5',83,'View' ); }
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'jump_around_6',68,'Next' ); }
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'jump_around_7',90,'Older posts' ); }
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'jump_around_8',88,'Newer posts' ); }
+		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_cat_visitor','');}
+		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_tag_visitor','');}
+		
+		
+		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_0','post','Post wrap' ); }
+		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_1','entry-title','Link wrap' ); }
+		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_2','previous-link','Previous link' ); }
+		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_3','next-link','Next link' ); }
+		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_4',65,'Previous' ); }
+		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_5',83,'View' ); }
+		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_6',68,'Next' ); }
+		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_7',90,'Older posts' ); }
+		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_8',88,'Newer posts' ); }
 		if ( $_POST[ 'mom_passwords_mode_submit'      ] ) { add_option( 'rotating_universal_passwords_1','','Sun password' ); }
 		if ( $_POST[ 'mom_passwords_mode_submit'      ] ) { add_option( 'rotating_universal_passwords_2','','Mon password' ); }
 		if ( $_POST[ 'mom_passwords_mode_submit'      ] ) { add_option( 'rotating_universal_passwords_3','','Tue password' ); }

@@ -11,6 +11,12 @@
 
             function update_momse_options() {
                 if ( isset( $_POST[ 'momsesave' ] ) ) {
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_cat_visitor'       ] != '' . get_option( 'simple_announcement_with_exclusion_cat_visitor'       ) . '' ) {
+                        update_option( 'simple_announcement_with_exclusion_cat_visitor',$_REQUEST[ 'simple_announcement_with_exclusion_cat_visitor' ] ); 
+                    }
+                    if ( $_REQUEST[ 'simple_announcement_with_exclusion_tag_visitor'       ] != '' . get_option( 'simple_announcement_with_exclusion_tag_visitor'       ) . '' ) {
+                        update_option( 'simple_announcement_with_exclusion_tag_visitor',$_REQUEST[ 'simple_announcement_with_exclusion_tag_visitor' ] ); 
+                    }
                     if ( $_REQUEST[ 'simple_announcement_with_exclusion_9'       ] != '' . get_option( 'simple_announcement_with_exclusion_9'       ) . '' ) {
                         update_option( 'simple_announcement_with_exclusion_9',$_REQUEST[ 'simple_announcement_with_exclusion_9' ] ); 
                     }
@@ -111,6 +117,8 @@
 				</div>
 				<div class=\"settingsInput\">
 					<section>Comma separate multiple IDs (1,2,3)</section>
+					<section><label for=\"simple_announcement_with_exclusion_cat_visitor\">Hide posts (in) from logged out</label>
+                    <input type=\"text\" id=\"simple_announcement_with_exclusion_cat_visitor\" name=\"simple_announcement_with_exclusion_cat_visitor\" value=\"" . get_option( 'simple_announcement_with_exclusion_cat_visitor' ) . "\"></section>
 					<section><label for=\"simple_announcement_with_exclusion_9_12\">Hide from RSS</label>
                     <input type=\"text\" id=\"simple_announcement_with_exclusion_9_12\" name=\"simple_announcement_with_exclusion_9_12\" value=\"" . get_option( 'simple_announcement_with_exclusion_9_12' ) . "\"></section>
                     <section><label for=\"simple_announcement_with_exclusion_9\">Hide from front page</label>
@@ -147,6 +155,8 @@
 				</div>
                 <div class=\"settingsInput\">
 				<section>Comma separate multiple IDs (1,2,3)</section>
+				<section><label for=\"simple_announcement_with_exclusion_tag_visitor\">Hide posts (in) from logged out</label>
+                <input type=\"text\" id=\"simple_announcement_with_exclusion_tag_visitor\" name=\"simple_announcement_with_exclusion_tag_visitor\" value=\"" . get_option( 'simple_announcement_with_exclusion_tag_visitor' ) . "\"></section>				
 				<section><label for=\"simple_announcement_with_exclusion_9_13\">Hide from RSS</label>
                 <input type=\"text\" id=\"simple_announcement_with_exclusion_9_13\" name=\"simple_announcement_with_exclusion_9_13\" value=\"" . get_option( 'simple_announcement_with_exclusion_9_13' ) . "\"></section>
                 <section><label for=\"simple_announcement_with_exclusion_9_4\">Hide from front page</label>
