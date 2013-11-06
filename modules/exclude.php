@@ -117,7 +117,7 @@
 				</div>
 				<div class=\"settingsInput\">
 					<section>Comma separate multiple IDs (1,2,3)</section>
-					<section><label for=\"simple_announcement_with_exclusion_cat_visitor\">Hide posts (in) from logged out</label>
+					<section><label for=\"simple_announcement_with_exclusion_cat_visitor\">Hide from logged out</label>
                     <input type=\"text\" id=\"simple_announcement_with_exclusion_cat_visitor\" name=\"simple_announcement_with_exclusion_cat_visitor\" value=\"" . get_option( 'simple_announcement_with_exclusion_cat_visitor' ) . "\"></section>
 					<section><label for=\"simple_announcement_with_exclusion_9_12\">Hide from RSS</label>
                     <input type=\"text\" id=\"simple_announcement_with_exclusion_9_12\" name=\"simple_announcement_with_exclusion_9_12\" value=\"" . get_option( 'simple_announcement_with_exclusion_9_12' ) . "\"></section>
@@ -155,7 +155,7 @@
 				</div>
                 <div class=\"settingsInput\">
 				<section>Comma separate multiple IDs (1,2,3)</section>
-				<section><label for=\"simple_announcement_with_exclusion_tag_visitor\">Hide posts (in) from logged out</label>
+				<section><label for=\"simple_announcement_with_exclusion_tag_visitor\">Hide from logged out</label>
                 <input type=\"text\" id=\"simple_announcement_with_exclusion_tag_visitor\" name=\"simple_announcement_with_exclusion_tag_visitor\" value=\"" . get_option( 'simple_announcement_with_exclusion_tag_visitor' ) . "\"></section>				
 				<section><label for=\"simple_announcement_with_exclusion_9_13\">Hide from RSS</label>
                 <input type=\"text\" id=\"simple_announcement_with_exclusion_9_13\" name=\"simple_announcement_with_exclusion_9_13\" value=\"" . get_option( 'simple_announcement_with_exclusion_9_13' ) . "\"></section>
