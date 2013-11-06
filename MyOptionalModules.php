@@ -27,21 +27,11 @@ Author URI: http://onebillionwords.com
 	//	admin@onebillionwords.com (subject line: My Optional Modules bug).
 	//	Your feedback and help is greatly appreciated.
 
-	// CONTENTS
-	//	Disallow individual file loading
-	//	Activation hook for plugin
-	//	Admin stylesheet enqueue
-	//	Font awesome enqueue
-	//	Hide version numbers from enqueue scripts and stylesheets
-	//	Post as front redirection
-	//	Google Analytics code injection
-	//	Conditionally load modules; load main control panel for plugin
 
-	// Disallow individual file loading
 	define( 'MyOptionalModules', TRUE );
 	$MyOptionalModulesVersionNumber = '5.1.5';
 
-	// Activation hook for plugin
+
 	register_activation_hook( __FILE__, "my_optional_modules_main_control_install" );
 	function my_optional_modules_main_control_install() {
 		add_option( 'mommaincontrol_focus','0','Focus module' );
@@ -77,11 +67,6 @@ Author URI: http://onebillionwords.com
 		return false;
 	}
 		
-	
-	// Activation hook for plugin
-	register_activation_hook( __FILE__, "my_optional_modules_main_control_install" );
-
-	// Admin stylesheet enqueue
 	function mom_list_styles() {
 		wp_register_style( 'roboto', 'http://fonts.googleapis.com/css?family=Roboto' );
 		wp_register_style( 'mom_admin_css', plugins_url() . "/" . plugin_basename(dirname(__FILE__)) . "/includes/adminstyle/css.css" );
