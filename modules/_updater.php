@@ -38,34 +38,37 @@
 		delete_option( 'rotating_universal_passwords_6' );
 		delete_option( 'rotating_universal_passwords_7' );
 		delete_option( 'rotating_universal_passwords_8' );    
-		delete_option( 'simple_announcement_with_exclusion_9' );
-		delete_option( 'simple_announcement_with_exclusion_9_2' );
-		delete_option( 'simple_announcement_with_exclusion_9_3' );
-		delete_option( 'simple_announcement_with_exclusion_9_4' );
-		delete_option( 'simple_announcement_with_exclusion_9_5' );
-		delete_option( 'simple_announcement_with_exclusion_9_7' );
-		delete_option( 'simple_announcement_with_exclusion_9_8' );
-		delete_option( 'simple_announcement_with_exclusion_9_9' );
-		delete_option( 'simple_announcement_with_exclusion_9_10' );
-		delete_option( 'simple_announcement_with_exclusion_9_11' );
-		delete_option( 'simple_announcement_with_exclusion_9_12' );
-		delete_option( 'simple_announcement_with_exclusion_9_13' );
-		delete_option( 'simple_announcement_with_exclusion_9_14' );        
-		delete_option( 'simple_announcement_with_exclusion_cat_sun' );
-		delete_option( 'simple_announcement_with_exclusion_cat_mon' );
-		delete_option( 'simple_announcement_with_exclusion_cat_tue' );
-		delete_option( 'simple_announcement_with_exclusion_cat_wed' );
-		delete_option( 'simple_announcement_with_exclusion_cat_thu' );
-		delete_option( 'simple_announcement_with_exclusion_cat_fri' );
-		delete_option( 'simple_announcement_with_exclusion_cat_sat' );                                                
-		delete_option( 'simple_announcement_with_exclusion_sun' );
-		delete_option( 'simple_announcement_with_exclusion_mon' );
-		delete_option( 'simple_announcement_with_exclusion_tue' );
-		delete_option( 'simple_announcement_with_exclusion_wed' );
-		delete_option( 'simple_announcement_with_exclusion_thu' );
-		delete_option( 'simple_announcement_with_exclusion_fri' );
-		delete_option( 'simple_announcement_with_exclusion_sat' );
-		delete_option( 'simple_announcement_with_exclusion_feed' );
+		
+		delete_option('MOM_Exclude_VisitorCategories');
+		delete_option('MOM_Exclude_VisitorTags');
+		delete_option('MOM_Exclude_Categories_Front');
+		delete_option('MOM_Exclude_Categories_TagArchives');
+		delete_option('MOM_Exclude_Categories_SearchResults');
+		delete_option('MOM_Exclude_Tags_Front');
+		delete_option('MOM_Exclude_Tags_CategoryArchives');
+		delete_option('MOM_Exclude_Tags_SearchResults');
+		delete_option('MOM_Exclude_PostFormats_Front');
+		delete_option('MOM_Exclude_PostFormats_CategoryArchives');
+		delete_option('MOM_Exclude_PostFormats_TagArchives');
+		delete_option('MOM_Exclude_PostFormats_SearchResults');
+		delete_option('MOM_Exclude_Categories_RSS');
+		delete_option('MOM_Exclude_Tags_RSS');
+		delete_option('MOM_Exclude_PostFormats_RSS');
+		delete_option('MOM_Exclude_TagsSun');
+		delete_option('MOM_Exclude_TagsMon');
+		delete_option('MOM_Exclude_TagsTue');
+		delete_option('MOM_Exclude_TagsWed');
+		delete_option('MOM_Exclude_TagsThu');
+		delete_option('MOM_Exclude_TagsFri');
+		delete_option('MOM_Exclude_TagsSat');
+		delete_option('MOM_Exclude_CategoriesSun');
+		delete_option('MOM_Exclude_CategoriesMon');
+		delete_option('MOM_Exclude_CategoriesTue');
+		delete_option('MOM_Exclude_CategoriesWed');
+		delete_option('MOM_Exclude_CategoriesThu');
+		delete_option('MOM_Exclude_CategoriesFri');
+		delete_option('MOM_Exclude_CategoriesSat');
+		
 		delete_option( 'mommaincontrol_setfocus' );
 		delete_option( 'mommaincontrol' );
 		delete_option( 'mompaf_post' );
@@ -122,35 +125,6 @@
 		if ( $_POST[ 'mom_count_mode_submit' ] ) { add_option( 'obwcountplus_2_remaining','remaining','Word to describe remaining amount of words until goal.' ); }
 		if ( $_POST[ 'mom_count_mode_submit' ] ) { add_option( 'obwcountplus_3_total','total','Word to describe words total present on blog.' ); }
 		if ( $_POST[ 'mom_count_mode_submit' ] ) { add_option( 'obwcountplus_4_custom','','Custom output.' ); }    
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_9','','Categories front' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_9_2','','Categories front and tag' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_9_3','','Categories everywhere' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_9_4','','tags front' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_9_5','','tags front and category' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_9_7','','tags everywhere' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_9_8','','format everywhere' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_9_9','','format everywhere' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_9_10','','format everywhere' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_9_11','','format everywhere' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_9_12','','Exclude cats from feed' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_9_13','','Exclude tags from feed' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_9_14','','Exclude post-format from feed' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_sun','','Exclude Sunday' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_mon','','Exclude Monday' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_tue','','Exclude Tuesday' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_wed','','Exclude Wednesday' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_thu','','Exclude Thursday' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_fri','','Exclude Friday' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_sat','','Exclude Saturday' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_cat_sun','','Exclude categories Sunday' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_cat_mon','','Exclude categories Monday' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_cat_tue','','Exclude categories Tuesday' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_cat_wed','','Exclude categories Wednesday' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_cat_thu','','Exclude categories Thursday' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_cat_fri','','Exclude categories Friday' ); } 
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_cat_sat','','Exclude categories Saturday' ); }     
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_cat_visitor','');}
-		if ( $_POST[ 'mom_exclude_mode_submit'        ] ) { add_option( 'simple_announcement_with_exclusion_tag_visitor','');}
 		
 		
 		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_0','post','Post wrap' ); }

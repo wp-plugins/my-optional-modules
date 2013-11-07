@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 5.1.6
+Stable tag: 5.1.7
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -61,6 +61,10 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 == Changelog ==
 = 5.1.+ =
+* 5.1.7 / Modified: code: Exclude: unnecessary whitespace/characters removed.
+* 5.1.7 / Modified: code: Exclude: form have been 'idiot-proofed'.
+* 5.1.7 / Modified: code: Exclude: upon upgrading to 5.1.7, you may (or may not) want to do a 'resubmit' on your current data-set.  Simply go to the Exclude settings page, and press the save button.  This will resubmit your current data using the new functionality.
+* 5.1.7 / Bugfix: module: Exclude: a couple of exclusion rules were left out by mistake.  This mistake has been rectified.
 * 5.1.6 / Deactivate/activate the Exclude module after updating.
 * 5.1.6 / Exclude: Hide specific posts and tags from people who aren't logged in. (This will hide them from the feed as well)
 * 5.1.6 / Exclude: If you are hiding tags or categories from non logged in users, the content returned will be from your 404 template.
@@ -68,7 +72,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * 5.1.5 / UI changed.  Should be more intuitive, easier to navigate, and easier to activate and deactivate modules.
 * 5.1.5 / Compatability check added to make sure there are no conflicting functions between other plugins and themes and the functions used in MOM.
 * 5.1.4 / An extremely simple maintenance mode has been added.
-* 5.1.3 / Bugfix: module:   Reviews now have the content of the review formatted properly.
+* 5.1.3 / Bugfix: module: Reviews now have the content of the review formatted properly.
 * 5.1.3 / Bugfix: function: obwcountplus_single().
 * 5.1.2 / Verifier: Added the option to set the correct and incorrect stats messages, providing the ability to set up impromptu 'yes/no' type polls/questions (think 'Did you find this article useful?  Yes or no.')
 * 5.1.1 / Hotfix for positioning of Verifier output/form.

@@ -16,5 +16,5 @@
         echo "<i class=\"fa fa-" . $iconfinal . "\"></i>";
         return ob_get_clean();    
     }
-    
+ 
 ?>

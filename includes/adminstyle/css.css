@@ -39,7 +39,7 @@
 	.wrap .settings section input[type='submit'], .wrap .settings input[type='submit'] { width: 100%; margin: 3px auto; display: block; clear: both; }
 	.wrap .settingsInput { display: block; width: 50%; margin:0 2px auto; padding: 5px; background-color: #f1faff; border-radius: 3px; text-shadow:-1px -1px 0 #f7fcff; float: left; }
 	.full { width: 98% !important;}
-	.wrap .settingsInfo { display: block; width: 45%; margin:0 2px auto; padding: 5px; background-color: #fffcf4; border-radius: 3px; text-shadow:-1px -1px 0 #deeaf2; float: left; max-height:345px; overflow-y:auto; overflow-x:hidden;}
+	.wrap .settingsInfo { display: block; width: 45%; margin:0 2px auto; padding: 5px; background-color: #fffcf4; border-radius: 3px; text-shadow:-1px -1px 0 #deeaf2; float: left; max-height:375px; overflow-y:auto; overflow-x:hidden;}
 	.taller { max-height: 850px !important; }
 	.wrap .settingsInfo .list  { padding: 5px; margin: 0 auto; display: block; clear: both; width: 95%;  background-color: #fff5bf; overflow: auto; }
 	.wrap .settingsInfo span { padding: 5px; margin-right: 5px; display: block; float: left; width: 95px;  background-color: #fff5bf; }
