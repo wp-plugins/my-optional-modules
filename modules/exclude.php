@@ -1,18 +1,7 @@
 <?php if(!defined('MyOptionalModules')){die('You can not call this file directly.');}
-
-	//	MY OPTIONAL MODULES
-	//		MODULE: EXCLUDE
-
 	if(is_admin()){ 
-
-		// Upgrade exclude option names if old options are still present and new option names don't yet exist (in database)
-		function MOMExcludeUpgrade(){$MOMExclude01 = (get_option('simple_announcement_with_exclusion_cat_visitor'));$MOMExclude02 = (get_option('simple_announcement_with_exclusion_tag_visitor'));$MOMExclude03 = (get_option('simple_announcement_with_exclusion_9'));$MOMExclude04 = (get_option('simple_announcement_with_exclusion_9_2'));$MOMExclude05 = (get_option('simple_announcement_with_exclusion_9_3'));$MOMExclude06 = (get_option('simple_announcement_with_exclusion_9_4'));$MOMExclude07 = (get_option('simple_announcement_with_exclusion_9_5'));$MOMExclude08 = (get_option('simple_announcement_with_exclusion_9_7'));$MOMExclude09 = (get_option('simple_announcement_with_exclusion_9_8'));$MOMExclude10 = (get_option('simple_announcement_with_exclusion_9_9'));$MOMExclude11 = (get_option('simple_announcement_with_exclusion_9_10'));$MOMExclude12 = (get_option('simple_announcement_with_exclusion_9_11'));$MOMExclude13 = (get_option('simple_announcement_with_exclusion_9_12'));$MOMExclude14 = (get_option('simple_announcement_with_exclusion_9_13'));$MOMExclude15 = (get_option('simple_announcement_with_exclusion_9_14'));$MOMExclude16 = (get_option('simple_announcement_with_exclusion_sun'));$MOMExclude17 = (get_option('simple_announcement_with_exclusion_mon'));$MOMExclude18 = (get_option('simple_announcement_with_exclusion_tue'));$MOMExclude19 = (get_option('simple_announcement_with_exclusion_wed'));$MOMExclude20 = (get_option('simple_announcement_with_exclusion_thu'));$MOMExclude21 = (get_option('simple_announcement_with_exclusion_fri'));$MOMExclude22 = (get_option('simple_announcement_with_exclusion_sat'));$MOMExclude23 = (get_option('simple_announcement_with_exclusion_cat_sun'));$MOMExclude24 = (get_option('simple_announcement_with_exclusion_cat_mon'));$MOMExclude25 = (get_option('simple_announcement_with_exclusion_cat_tue'));$MOMExclude26 = (get_option('simple_announcement_with_exclusion_cat_wed'));$MOMExclude27 = (get_option('simple_announcement_with_exclusion_cat_thu'));$MOMExclude28 = (get_option('simple_announcement_with_exclusion_cat_fri'));$MOMExclude29 = (get_option('simple_announcement_with_exclusion_cat_sat'));if(get_option('simple_announcement_with_exclusion_cat_visitor')){add_option('MOM_Exclude_VisitorCategories',$MOMExclude01);delete_option('simple_announcement_with_exclusion_cat_visitor');}if(get_option('simple_announcement_with_exclusion_tag_visitor')){add_option('MOM_Exclude_VisitorTags',$MOMExclude02);delete_option('simple_announcement_with_exclusion_tag_visitor');}if(get_option('simple_announcement_with_exclusion_9')){add_option('MOM_Exclude_Categories_Front',$MOMExclude03);delete_option('simple_announcement_with_exclusion_9');}if(get_option('simple_announcement_with_exclusion_9_2')){add_option('MOM_Exclude_Categories_TagArchives',$MOMExclude04);delete_option('simple_announcement_with_exclusion_9_2');}if(get_option('simple_announcement_with_exclusion_9_3')){add_option('MOM_Exclude_Categories_SearchResults',$MOMExclude05);delete_option('simple_announcement_with_exclusion_9_3');}if(get_option('simple_announcement_with_exclusion_9_4')){add_option('MOM_Exclude_Tags_Front',$MOMExclude06);delete_option('simple_announcement_with_exclusion_9_4');}if(get_option('simple_announcement_with_exclusion_9_5')){add_option('MOM_Exclude_Tags_CategoryArchives',$MOMExclude07);delete_option('simple_announcement_with_exclusion_9_5');}if(get_option('simple_announcement_with_exclusion_9_7')){add_option('MOM_Exclude_Tags_SearchResults',$MOMExclude08);delete_option('simple_announcement_with_exclusion_9_7');}if(get_option('simple_announcement_with_exclusion_9_8')){add_option('MOM_Exclude_PostFormats_Front',$MOMExclude09);delete_option('simple_announcement_with_exclusion_9_8');}if(get_option('simple_announcement_with_exclusion_9_9')){add_option('MOM_Exclude_PostFormats_CategoryArchives',$MOMExclude10);delete_option('simple_announcement_with_exclusion_9_9');}if(get_option('simple_announcement_with_exclusion_9_10')){add_option('MOM_Exclude_PostFormats_TagArchives',$MOMExclude11);delete_option('simple_announcement_with_exclusion_9_10');}if(get_option('simple_announcement_with_exclusion_9_11')){add_option('MOM_Exclude_PostFormats_SearchResults',$MOMExclude12);delete_option('simple_announcement_with_exclusion_9_11');}if(get_option('simple_announcement_with_exclusion_9_12')){add_option('MOM_Exclude_Categories_RSS',$MOMExclude13);delete_option('simple_announcement_with_exclusion_9_12');}if(get_option('simple_announcement_with_exclusion_9_13')){add_option('MOM_Exclude_Tags_RSS',$MOMExclude14);delete_option('simple_announcement_with_exclusion_9_13');}if(get_option('simple_announcement_with_exclusion_9_14')){add_option('MOM_Exclude_PostFormats_RSS',$MOMExclude15);delete_option('simple_announcement_with_exclusion_9_14');}if(get_option('simple_announcement_with_exclusion_sun')){add_option('MOM_Exclude_TagsSun',$MOMExclude16);delete_option('simple_announcement_with_exclusion_sun');}if(get_option('simple_announcement_with_exclusion_mon')){add_option('MOM_Exclude_TagsMon',$MOMExclude17);delete_option('simple_announcement_with_exclusion_mon');}if(get_option('simple_announcement_with_exclusion_tue')){add_option('MOM_Exclude_TagsTue',$MOMExclude18);delete_option('simple_announcement_with_exclusion_tue');}if(get_option('simple_announcement_with_exclusion_wed')){add_option('MOM_Exclude_TagsWed',$MOMExclude19);delete_option('simple_announcement_with_exclusion_wed');}if(get_option('simple_announcement_with_exclusion_thu')){add_option('MOM_Exclude_TagsThu',$MOMExclude20);delete_option('simple_announcement_with_exclusion_thu');}if(get_option('simple_announcement_with_exclusion_fri')){add_option('MOM_Exclude_TagsFri',$MOMExclude21);delete_option('simple_announcement_with_exclusion_fri');}if(get_option('simple_announcement_with_exclusion_sat')){add_option('MOM_Exclude_TagsSat',$MOMExclude22);delete_option('simple_announcement_with_exclusion_sat');}if(get_option('simple_announcement_with_exclusion_cat_sun')){add_option('MOM_Exclude_CategoriesSun',$MOMExclude23);delete_option('simple_announcement_with_exclusion_cat_sun');}if(get_option('simple_announcement_with_exclusion_cat_mon')){add_option('MOM_Exclude_CategoriesMon',$MOMExclude24);delete_option('simple_announcement_with_exclusion_cat_mon');}if(get_option('simple_announcement_with_exclusion_cat_tue')){add_option('MOM_Exclude_CategoriesTue',$MOMExclude25);delete_option('simple_announcement_with_exclusion_cat_tue');}if(get_option('simple_announcement_with_exclusion_cat_wed')){add_option('MOM_Exclude_CategoriesWed',$MOMExclude26);delete_option('simple_announcement_with_exclusion_cat_wed');}if(get_option('simple_announcement_with_exclusion_cat_thu')){add_option('MOM_Exclude_CategoriesThu',$MOMExclude27);delete_option('simple_announcement_with_exclusion_cat_thu');}if(get_option('simple_announcement_with_exclusion_cat_fri')){add_option('MOM_Exclude_CategoriesFri',$MOMExclude28);delete_option('simple_announcement_with_exclusion_cat_fri');}if(get_option('simple_announcement_with_exclusion_cat_sat')){add_option('MOM_Exclude_CategoriesSat',$MOMExclude29);delete_option('simple_announcement_with_exclusion_cat_sat');}}
-		if (!get_option('MOM_Exclude_VisitorCategories') || get_option('MOM_Exclude_VisitorCategories') != '' ||!get_option('MOM_Exclude_VisitorCategories') || get_option('MOM_Exclude_VisitorCategories') != '' || !get_option('MOM_Exclude_VisitorTags') || get_option('MOM_Exclude_VisitorTags') != '' || !get_option('MOM_Exclude_Categories_Front') || get_option('MOM_Exclude_Categories_Front') != '' || !get_option('MOM_Exclude_Categories_TagArchives') || get_option('MOM_Exclude_Categories_TagArchives') != '' || !get_option('MOM_Exclude_Categories_SearchResults') || get_option('MOM_Exclude_Categories_SearchResults') != '' || !get_option('MOM_Exclude_Tags_Front') || get_option('MOM_Exclude_Tags_Front') != '' || !get_option('MOM_Exclude_Tags_CategoryArchives') || get_option('MOM_Exclude_Tags_CategoryArchives') != '' || !get_option('MOM_Exclude_Tags_SearchResults') || get_option('MOM_Exclude_Tags_SearchResults') != '' || !get_option('MOM_Exclude_PostFormats_Front') || get_option('MOM_Exclude_PostFormats_Front') != '' || !get_option('MOM_Exclude_PostFormats_CategoryArchives') || get_option('MOM_Exclude_PostFormats_CategoryArchives') != '' || !get_option('MOM_Exclude_PostFormats_TagArchives') || get_option('MOM_Exclude_PostFormats_TagArchives') != '' || !get_option('MOM_Exclude_PostFormats_SearchResults') || get_option('MOM_Exclude_PostFormats_SearchResults') != '' || !get_option('MOM_Exclude_Categories_RSS') || get_option('MOM_Exclude_Categories_RSS') != '' || !get_option('MOM_Exclude_Tags_RSS') || get_option('MOM_Exclude_Tags_RSS') != '' || !get_option('MOM_Exclude_PostFormats_RSS') || get_option('MOM_Exclude_PostFormats_RSS') != '' || !get_option('MOM_Exclude_TagsSun') || get_option('MOM_Exclude_TagsSun') != '' || !get_option('MOM_Exclude_TagsMon') || get_option('MOM_Exclude_TagsMon') != '' || !get_option('MOM_Exclude_TagsTue') || get_option('MOM_Exclude_TagsTue') != '' || !get_option('MOM_Exclude_TagsWed') || get_option('MOM_Exclude_TagsWed') != '' || !get_option('MOM_Exclude_TagsThu') || get_option('MOM_Exclude_TagsThu') != '' || !get_option('MOM_Exclude_TagsFri') || get_option('MOM_Exclude_TagsFri') != '' || !get_option('MOM_Exclude_TagsSat') || get_option('MOM_Exclude_TagsSat') != '' || !get_option('MOM_Exclude_CategoriesSun') || get_option('MOM_Exclude_CategoriesSun') != '' || !get_option('MOM_Exclude_CategoriesMon') || get_option('MOM_Exclude_CategoriesMon') != '' || !get_option('MOM_Exclude_CategoriesTue') || get_option('MOM_Exclude_CategoriesTue') != '' || !get_option('MOM_Exclude_CategoriesWed') || get_option('MOM_Exclude_CategoriesWed') != '' || !get_option('MOM_Exclude_CategoriesThu') || get_option('MOM_Exclude_CategoriesThu') != '' || !get_option('MOM_Exclude_CategoriesFri') || get_option('MOM_Exclude_CategoriesFri') != '' || !get_option('MOM_Exclude_CategoriesSat') || get_option('MOM_Exclude_CategoriesSat')){MOMExcludeUpgrade();}
-
 		function my_optional_modules_exclude_module(){
-		
 			add_theme_support('post-formats',array('aside','gallery','link','image','quote','status','video','audio','chat'));
-		
 			function update_momse_options(){
 				if(isset($_POST['momsesave'])){
 					update_option('MOM_Exclude_VisitorCategories',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_VisitorCategories']))))))));
@@ -46,7 +35,6 @@
 					update_option('MOM_Exclude_CategoriesSat',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_CategoriesSat']))))))));
 				}
 			}
-
 			function momse_form(){
 				echo '
 				<div class="settingsInfo">
@@ -75,7 +63,6 @@
 					<section><label for="MOM_Exclude_CategoriesFri">Hide on Friday</label><input type="text" id="MOM_Exclude_CategoriesFri" name="MOM_Exclude_CategoriesFri" value="'.get_option('MOM_Exclude_CategoriesFri').'"></section>
 					<section><label for="MOM_Exclude_CategoriesSat">Hide on Saturday</label><input type="text" id="MOM_Exclude_CategoriesSat" name="MOM_Exclude_CategoriesSat" value="'.get_option('MOM_Exclude_CategoriesSat').'"></section>
 				</div>';
-				
 				echo '
 				<div class="clear top"></div>
 				<div class="settingsInfo">
@@ -108,7 +95,6 @@
 				<h2>Post Formats</h2>
 				</div>
 				<div class="settingsInput">';
-				
 				echo '
 				<section>
 					<label for=\"MOM_Exclude_PostFormats_RSS\">Hide from RSS</label>
@@ -125,7 +111,6 @@
 						<option value="post-format-chat"';if(get_option('MOM_Exclude_PostFormats_RSS') === 'post-format-chat'){echo ' selected="selected"';}echo '>Chat</option>
 					</select>
 				</section>
-				
 				<section>
 					<label for="MOM_Exclude_PostFormats_Front">Hide from front page</label>
 					<select name="MOM_Exclude_PostFormats_Front" id="MOM_Exclude_PostFormats_Front">
@@ -141,7 +126,6 @@
 						<option value="post-format-chat"';if(get_option('MOM_Exclude_PostFormats_Front') === 'post-format-chat'){echo ' selected="selected"';}echo '>Chat</option>
 					</select>
 				</section>
-				
 				<section>
 					<label for="MOM_Exclude_PostFormats_CategoryArchives">Hide from archives</label>
 					<select name="MOM_Exclude_PostFormats_CategoryArchives" id="MOM_Exclude_PostFormats_CategoryArchives">
@@ -157,7 +141,6 @@
 						<option value="post-format-chat"';if(get_option('MOM_Exclude_PostFormats_CategoryArchives') === 'post-format-chat'){echo ' selected="selected"';}echo '>Chat</option>
 					</select>
 				</section>
-				
 				<section>
 					<label for="MOM_Exclude_PostFormats_TagArchives">Hide from tag archives</label>
 					<select name="MOM_Exclude_PostFormats_TagArchives" id="MOM_Exclude_PostFormats_TagArchives">
@@ -173,7 +156,6 @@
 						<option value="post-format-chat"';if(get_option('MOM_Exclude_PostFormats_TagArchives') === 'post-format-chat'){ echo ' selected="selected"';} echo '>Chat</option>
 					</select>
 				</section>
-				
 				<section>
 					<label for="MOM_Exclude_PostFormats_SearchResults">Hide from search results</label>
 					<select name="MOM_Exclude_PostFormats_SearchResults" id="MOM_Exclude_PostFormats_SearchResults">
@@ -189,11 +171,9 @@
 						<option value="post-format-chat"';if(get_option('MOM_Exclude_PostFormats_SearchResults') === 'post-format-chat'){echo ' selected="selected"';}echo '>Chat</option>
 					</select>
 				</section>
-
 				</div>
 				';
 			}
-
 			function momse_page_content(){
 				echo '
 				<form method="post">
@@ -207,8 +187,6 @@
 			if(isset($_POST['momsesave'])){update_momse_options();}
 			momse_page_content();
 		}
-		
 		my_optional_modules_exclude_module();
 	}
-
 ?>

@@ -1,5 +1,4 @@
-<?php 
-
+<?php if(!defined('MyOptionalModules')){ die('You can not call this file directly.');}
 	require_once(ABSPATH.'wp-includes/pluggable.php');
 	if(!is_user_logged_in()){
 		function exclude_post_by_category($query){
@@ -64,7 +63,6 @@
 		add_action('pre_get_posts','exclude_post_by_category');
 		add_action('pre_get_posts','exclude_post_by_category');
 	}
-
 	add_action('pre_get_posts','momse_filter_home');
 	function momse_filter_home($query){
 		$MOM_Exclude_Categories_Front = get_option('MOM_Exclude_Categories_Front');
@@ -94,10 +92,8 @@
 		if (date('D') === 'Thu'){$simple_announcement_with_exclusion_cat_day = get_option('MOM_Exclude_CategoriesThu');}
 		if (date('D') === 'Fri'){$simple_announcement_with_exclusion_cat_day = get_option('MOM_Exclude_CategoriesFri');}
 		if (date('D') === 'Sat'){$simple_announcement_with_exclusion_cat_day = get_option('MOM_Exclude_CategoriesSat');}		
-
 		$loggedOutCats = get_option('MOM_Exclude_VisitorCategories');
 		$loggedOutTags = get_option('MOM_Exclude_VisitorTags');
-
 		$rss_day = explode(',',$simple_announcement_with_exclusion_day);
 		foreach ($rss_day as &$rss_day_1){$rss_day_1 = ''.$rss_day_1.',';}
 		$rss_day_1 = implode($rss_day);
@@ -106,7 +102,6 @@
 		foreach ($rss_day_cat as &$rss_day_1_cat){$rss_day_1_cat = ''.$rss_day_1_cat.',';}
 		$rss_day_1_cat = implode($rss_day_cat);
 		$rssday_cat = explode(',', str_replace(' ','',$rss_day_1_cat));		
-
 		if(!is_user_logged_in()){
 			$c1 = explode(',',$loggedOutCats);
 			foreach($c1 as &$C1){ $C1 = ''.$C1.',';}
@@ -117,7 +112,6 @@
 			$t11 = rtrim(implode($t1),',');
 			$hideLoggedOutTags = explode(',',str_replace(' ','',$t11));
 		}else{
-			
 			if ( $query->is_feed){$c1 = explode(',',$MOM_Exclude_Categories_RSS);}
 			if ( $query->is_feed){$t1 = explode(',',$MOM_Exclude_Tags_RSS);}
 			if ( $query->is_home){$c1 = explode(',',$MOM_Exclude_Categories_Front);}
@@ -125,9 +119,7 @@
 			if ( $query->is_category){$t1 = explode(',',$MOM_Exclude_Tags_CategoryArchives);}
 			if ( $query->is_tag){$c1 = explode(',',$MOM_Exclude_Categories_TagArchives);}
 			if ( $query->is_search){$c1 = explode(',',$MOM_Exclude_Categories_SearchResults);}
-			if ( $query->is_search){$t1 = explode(',',$MOM_Exclude_Tags_SearchResults);}			
-
-			
+			if ( $query->is_search){$t1 = explode(',',$MOM_Exclude_Tags_SearchResults);}
 			foreach($c1 as &$C1){$C1 = ''.$C1.',';}
 			$c_1 = rtrim(implode($c1),',');
 			$hideLoggedOutCats = explode(',',str_replace(' ','',$c_1));
@@ -135,7 +127,6 @@
 			$t11 = rtrim(implode($t1),',');
 			$hideLoggedOutTags = explode(',',str_replace(' ','',$t_1));
 		}
-
 		if ($query->is_feed){
 			$rss1 = explode(',',$MOM_Exclude_Categories_RSS);
 			foreach($rss1 as &$RSS1){$RSS1 = ''.$RSS1.',';}
@@ -192,7 +183,6 @@
 			);
 			$query->set('tax_query',$tax_query);
 		}
-
 		if($query->is_main_query() && !is_admin()){
 			if($query->is_home()){
 				$tax_query = array(
@@ -230,7 +220,6 @@
 				);
 				$query->set( 'tax_query', $tax_query );
 			}
-			
 			elseif ($query->is_category()){
 				$tax_query = array(
 					'relation' => 'AND OR',
@@ -267,7 +256,6 @@
 				);
 				$query->set('tax_query',$tax_query);
 			}
-
 			elseif ($query->is_tag()){
 				$tax_query = array(
 					'relation' => 'AND OR',
@@ -304,7 +292,6 @@
 				);
 				$query->set('tax_query',$tax_query);
 			}
-
 			elseif ($query->is_search()){
 				$tax_query = array(
 					'relation' => 'AND OR',
@@ -343,5 +330,4 @@
 			}
 		}
 	}
-	
 ?>

@@ -1,7 +1,4 @@
-<?php 
-
-	// Don't call this file directly or the world will explode
-	if( !defined( 'MyOptionalModules' )                 ) { die( 'You can not call this file directly.' );                                                                                  }
+<?php if(!defined('MyOptionalModules')){die('You can not call this file directly.');}
 
     global $wpdb;
     $RUPs_table_name         = $wpdb->prefix . $wpdb->suffix . "rotating_universal_passwords";
@@ -26,10 +23,12 @@
 		delete_option( 'mommaincontrol_meta' );
         delete_option( 'mommaincontrol_focus');
 		delete_option( 'mommaincontrol_maintenance');		
+
 		delete_option( 'obwcountplus_1_countdownfrom' );
 		delete_option( 'obwcountplus_2_remaining' );
 		delete_option( 'obwcountplus_3_total' );
 		delete_option( 'obwcountplus_4_custom' );
+
 		delete_option( 'rotating_universal_passwords_1' );
 		delete_option( 'rotating_universal_passwords_2' );
 		delete_option( 'rotating_universal_passwords_3' );
@@ -72,6 +71,7 @@
 		delete_option( 'mommaincontrol_setfocus' );
 		delete_option( 'mommaincontrol' );
 		delete_option( 'mompaf_post' );
+
 		delete_option( 'jump_around_0' );
 		delete_option( 'jump_around_1' );
 		delete_option( 'jump_around_2' );
@@ -91,59 +91,46 @@
 	} else {	
 	
 		// Form handling for options a
-		if( isset( $_POST[ 'MOMsave'                      ] ) ) {                                                        header( "Location: " . $_SERVER[ 'REQUEST_URI'                    ] ); }
-		if( isset ($_POST[ 'mom_count_mode_submit'        ] ) ) { update_option( 'mommaincontrol_obwcountplus',$_REQUEST[ 'countplus' ] ); header( "Location: " . $_SERVER[ 'REQUEST_URI'  ] ); }
-		if( isset ($_POST[ 'mom_exclude_mode_submit'      ] ) ) { update_option( 'mommaincontrol_momse',$_REQUEST[ 'exclude' ] ); header( "Location: " . $_SERVER[ 'REQUEST_URI'           ] ); }
-		if( isset ($_POST[ 'mom_jumparound_mode_submit'   ] ) ) { update_option( 'mommaincontrol_momja',$_REQUEST[ 'jumparound' ] ); header( "Location: " . $_SERVER[ 'REQUEST_URI'        ] ); }
-		if( isset ($_POST[ 'mom_passwords_mode_submit'    ] ) ) { update_option( 'mommaincontrol_momrups',$_REQUEST[ 'passwords' ] ); header( "Location: " . $_SERVER[ 'REQUEST_URI'       ] ); }
-		if( isset ($_POST[ 'mom_reviews_mode_submit'      ] ) ) { update_option( 'mommaincontrol_reviews',$_REQUEST[ 'reviews' ] ); header( "Location: " . $_SERVER[ 'REQUEST_URI'         ] ); }
-		if( isset ($_POST[ 'mom_shortcodes_mode_submit'   ] ) ) { update_option( 'mommaincontrol_shorts',$_REQUEST[ 'shortcodes' ] ); header( "Location: " . $_SERVER[ 'REQUEST_URI'       ] ); }
-		if( isset ($_POST[ 'MOMclear'                     ] ) ) { update_option( 'mommaincontrol_focus',''            ); header( "Location: " . $_SERVER[ 'REQUEST_URI'                    ] ); }
-		if( isset ($_POST[ 'MOMexclude'                   ] ) ) { update_option( 'mommaincontrol_focus','exclude'     ); header( "Location: " . $_SERVER[ 'REQUEST_URI'                    ] ); }
-		if( isset ($_POST[ 'MOMfontfa'                    ] ) ) { update_option( 'mommaincontrol_focus','fontfa'      ); header( "Location: " . $_SERVER[ 'REQUEST_URI'                    ] ); }
-		if( isset ($_POST[ 'MOMcount'                     ] ) ) { update_option( 'mommaincontrol_focus','count'       ); header( "Location: " . $_SERVER[ 'REQUEST_URI'                    ] ); }
-		if( isset ($_POST[ 'MOMjumparound'                ] ) ) { update_option( 'mommaincontrol_focus','jumparound'  ); header( "Location: " . $_SERVER[ 'REQUEST_URI'                    ] ); }
-		if( isset ($_POST[ 'MOMpasswords'                 ] ) ) { update_option( 'mommaincontrol_focus','passwords'   ); header( "Location: " . $_SERVER[ 'REQUEST_URI'                    ] ); }
-		if( isset ($_POST[ 'MOMreviews'                   ] ) ) { update_option( 'mommaincontrol_focus','reviews'     ); header( "Location: " . $_SERVER[ 'REQUEST_URI'                    ] ); }
-		if( isset ($_POST[ 'MOMshortcodes'                ] ) ) { update_option( 'mommaincontrol_focus','shortcodes'  ); header( "Location: " . $_SERVER[ 'REQUEST_URI'                    ] ); }
-		if( isset ($_POST[ 'mom_maintenance_url_submit'   ] ) ) { update_option( 'momMaintenance_url',$_REQUEST[ 'momMaintenance_url'                                                      ] ); }
-		if( isset ($_POST[ 'mom_analytics_code_submit'    ] ) ) { update_option( 'momanalytics_code',$_REQUEST[ 'momanalytics_code'                                                        ] ); }
-		if( isset ($_POST[ 'mom_postasfront_post_submit'  ] ) ) { update_option( 'mompaf_post',$_REQUEST[ 'mompaf_post'                                                                    ] ); }
-		if( isset ($_POST[ 'mom_fontawesome_mode_submit'  ] ) ) { update_option( 'mommaincontrol_fontawesome',$_REQUEST[ 'mommaincontrol_fontawesome'                                      ] ); }
-		if( isset ($_POST[ 'mom_lazy_mode_submit'         ] ) ) { update_option( 'mommaincontrol_lazyload',$_REQUEST[ 'mommaincontrol_lazyload'                                            ] ); }
-		if( isset ($_POST[ 'mom_versions_submit'          ] ) ) { update_option( 'mommaincontrol_versionnumbers',$_REQUEST[ 'mommaincontrol_versionnumbers'                                ] ); }
-		if( isset ($_POST[ 'mom_meta_mode_submit'         ] ) ) { update_option( 'mommaincontrol_meta',$_REQUEST[ 'mommaincontrol_meta'                                                    ] ); }
-		if( isset ($_POST[ 'mom_maintenance_mode_submit'  ] ) ) { update_option( 'mommaincontrol_maintenance',$_REQUEST[ 'maintenanceMode'                                                 ] );
-		if( !get_option( 'momMaintenance_url'               ) ) { add_option( 'momMaintenance_url','','Maintenance URL to redirect to when in maintenance mode.'                             ); } }
-		if( isset ($_POST[ 'mom_analytics_mode_submit'    ] ) ) { update_option( 'mommaincontrol_analytics',$_REQUEST[ 'analytics'                                                         ] );
-		if( !get_option( 'mommaincontrol_analytics'         ) ) { add_option( 'mommaincontrol_analytics','','Tracking ID.'                                                                   ); } }
-		if( isset ($_POST[ 'mom_postasfront_mode_submit'  ] ) ) { update_option( 'mommaincontrol_mompaf',$_REQUEST[ 'postasfront'                                                          ] );
-		if( !get_option( 'mommaincontrol_mompaf'            ) ) { add_option( 'mompaf_post',0,'Post ID to use as front page'                                                                 ); } }
-
-		if ( $_POST[ 'mom_analytics_code_submit'    ] ) { add_option( 'momanalytics_code','','Tracking ID' ); }    
-		if ( $_POST[ 'mom_count_mode_submit' ] ) { add_option( 'obwcountplus_1_countdownfrom','0','Word goal to count down to?' ); }
-		if ( $_POST[ 'mom_count_mode_submit' ] ) { add_option( 'obwcountplus_2_remaining','remaining','Word to describe remaining amount of words until goal.' ); }
-		if ( $_POST[ 'mom_count_mode_submit' ] ) { add_option( 'obwcountplus_3_total','total','Word to describe words total present on blog.' ); }
-		if ( $_POST[ 'mom_count_mode_submit' ] ) { add_option( 'obwcountplus_4_custom','','Custom output.' ); }    
+		if(isset($_POST['MOMsave'])){}
+		if(isset($_POST['mom_count_mode_submit'])){update_option('mommaincontrol_obwcountplus',$_REQUEST['countplus']);}
+		if(isset($_POST['mom_exclude_mode_submit'])){update_option('mommaincontrol_momse',$_REQUEST['exclude']);}
+		if(isset($_POST['mom_jumparound_mode_submit'])){update_option('mommaincontrol_momja',$_REQUEST['jumparound']);}
+		if(isset($_POST['mom_passwords_mode_submit'])){update_option('mommaincontrol_momrups',$_REQUEST['passwords']);}
+		if(isset($_POST['mom_reviews_mode_submit'])){update_option('mommaincontrol_reviews',$_REQUEST['reviews']); }
+		if(isset($_POST['mom_shortcodes_mode_submit'])){update_option('mommaincontrol_shorts',$_REQUEST['shortcodes']);}
+		if(isset($_POST['MOMclear'])){update_option('mommaincontrol_focus','');}
+		if(isset($_POST['MOMexclude'])){update_option('mommaincontrol_focus','exclude');}
+		if(isset($_POST['MOMfontfa'])){update_option('mommaincontrol_focus','fontfa');}
+		if(isset($_POST['MOMcount'])){update_option('mommaincontrol_focus','count');}
+		if(isset($_POST['MOMjumparound'])){update_option('mommaincontrol_focus','jumparound');}
+		if(isset($_POST['MOMpasswords'])){update_option('mommaincontrol_focus','passwords');}
+		if(isset($_POST['MOMreviews'])){update_option('mommaincontrol_focus','reviews'); }
+		if(isset($_POST['MOMshortcodes'])){update_option('mommaincontrol_focus','shortcodes');}
+		if(isset($_POST['mom_maintenance_url_submit'])){update_option('momMaintenance_url',$_REQUEST['momMaintenance_url']);}
+		if(isset($_POST['mom_analytics_code_submit'])){update_option('momanalytics_code',$_REQUEST['momanalytics_code']);}
+		if(isset($_POST['mom_postasfront_post_submit'])){update_option('mompaf_post',$_REQUEST['mompaf_post']);}
+		if(isset($_POST['mom_fontawesome_mode_submit'])){update_option('mommaincontrol_fontawesome',$_REQUEST['mommaincontrol_fontawesome']);}
+		if(isset($_POST['mom_lazy_mode_submit'])){update_option('mommaincontrol_lazyload',$_REQUEST['mommaincontrol_lazyload']);}
+		if(isset($_POST['mom_versions_submit'])){update_option('mommaincontrol_versionnumbers',$_REQUEST['mommaincontrol_versionnumbers']);}
+		if(isset($_POST['mom_meta_mode_submit'])){update_option('mommaincontrol_meta',$_REQUEST['mommaincontrol_meta']);}
+		if(isset($_POST['mom_maintenance_mode_submit'])){update_option('mommaincontrol_maintenance',$_REQUEST['maintenanceMode']);}
+		if(isset($_POST['mom_analytics_mode_submit'])){update_option('mommaincontrol_analytics',$_REQUEST['analytics']);}
+		if(isset($_POST['mom_postasfront_mode_submit'])){update_option('mommaincontrol_mompaf',$_REQUEST['postasfront']);
+		if(!get_option('mommaincontrol_mompaf')){add_option('mompaf_post',0);}}
+		if($_POST['mom_count_mode_submit']){add_option('obwcountplus_1_countdownfrom',0);}
+		if($_POST['mom_count_mode_submit']){add_option('obwcountplus_2_remaining','remaining');}
+		if($_POST['mom_count_mode_submit']){add_option('obwcountplus_3_total','total');}
+		if($_POST['mom_jumparound_mode_submit']){add_option('jump_around_0','post');}
+		if($_POST['mom_jumparound_mode_submit']){add_option('jump_around_1','entry-title');}
+		if($_POST['mom_jumparound_mode_submit']){add_option('jump_around_2','previous-link');}
+		if($_POST['mom_jumparound_mode_submit']){add_option('jump_around_3','next-link');}
+		if($_POST['mom_jumparound_mode_submit']){add_option('jump_around_4',65);}
+		if($_POST['mom_jumparound_mode_submit']){add_option('jump_around_5',83);}
+		if($_POST['mom_jumparound_mode_submit']){add_option('jump_around_6',68);}
+		if($_POST['mom_jumparound_mode_submit']){add_option('jump_around_7',90);}
+		if($_POST['mom_jumparound_mode_submit']){add_option('jump_around_8',88);}
+		if($_POST[ 'mom_passwords_mode_submit']){add_option('rotating_universal_passwords_8','7');}    
 		
-		
-		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_0','post','Post wrap' ); }
-		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_1','entry-title','Link wrap' ); }
-		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_2','previous-link','Previous link' ); }
-		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_3','next-link','Next link' ); }
-		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_4',65,'Previous' ); }
-		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_5',83,'View' ); }
-		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_6',68,'Next' ); }
-		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_7',90,'Older posts' ); }
-		if ( $_POST[ 'mom_jumparound_mode_submit'        ] ) { add_option( 'jump_around_8',88,'Newer posts' ); }
-		if ( $_POST[ 'mom_passwords_mode_submit'      ] ) { add_option( 'rotating_universal_passwords_1','','Sun password' ); }
-		if ( $_POST[ 'mom_passwords_mode_submit'      ] ) { add_option( 'rotating_universal_passwords_2','','Mon password' ); }
-		if ( $_POST[ 'mom_passwords_mode_submit'      ] ) { add_option( 'rotating_universal_passwords_3','','Tue password' ); }
-		if ( $_POST[ 'mom_passwords_mode_submit'      ] ) { add_option( 'rotating_universal_passwords_4','','Wed password' ); }
-		if ( $_POST[ 'mom_passwords_mode_submit'      ] ) { add_option( 'rotating_universal_passwords_5','','Thu password' ); }
-		if ( $_POST[ 'mom_passwords_mode_submit'      ] ) { add_option( 'rotating_universal_passwords_6','','Fri password' ); }
-		if ( $_POST[ 'mom_passwords_mode_submit'      ] ) { add_option( 'rotating_universal_passwords_7','','Sat password' ); }
-		if ( $_POST[ 'mom_passwords_mode_submit'      ] ) { add_option( 'rotating_universal_passwords_8','7','Attempts' ); }    
 		if ( $_POST[ 'mom_passwords_mode_submit'      ] ) {
 			$RUPs_sql = "CREATE TABLE $RUPs_table_name (
 				ID INT( 11 ) NOT NULL PRIMARY KEY AUTO_INCREMENT , 
@@ -155,7 +142,7 @@
 			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 			dbDelta( $RUPs_sql );    
 		}
-		if ( $_POST[ 'mom_postasfront_mode_submit' ] ) { add_option( 'mompaf_post',0,'Post ID to use as front page'); }    
+		if($_POST['mom_postasfront_mode_submit']){add_option('mompaf_post',0); }    
 		if ( $_POST[ 'mom_reviews_mode_submit' ] ) {
 		add_option("momreviews_search", "");
 		add_option( 'momreviews_css','
