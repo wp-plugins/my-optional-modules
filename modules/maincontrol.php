@@ -420,7 +420,9 @@
 																<input name="mompaf_post" id="mompaf_0" type="radio" value="0" '; if (get_option('mompaf_post') == 0){echo 'checked';} echo '/><label class="selectlabel" for="mompaf_0">Latest post</label>';
 																	$showmeposts = get_posts(array('posts_per_page' => -1)); 
 																	foreach ($showmeposts as $postsshown){
-																		echo '<input name="mompaf_post" type="radio" id="mompaf_"' . $postsshown->ID . '" value="' . $postsshown->ID; if (get_option('mompaf_post') == $postsshown->ID){echo ' checked';} echo '><label class="selectlabel" for="mompaf_"' . $postsshown->ID .'">$postsshown->post_title</label>';
+																		echo '<input name="mompaf_post" type="radio" id="mompaf_'.$postsshown->ID.'" value="'.$postsshown->ID.'"'; 
+																		if (get_option('mompaf_post') == $postsshown->ID){echo ' checked';} echo '>
+																		<label class="selectlabel" for="mompaf_' . $postsshown->ID .'">'.$postsshown->post_title.'</label>';
 																	}
 																	echo '
 																	</div>
