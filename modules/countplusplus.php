@@ -40,35 +40,23 @@
 
 			function obwcountplus_form() {
                 echo "
-				<div class=\"settingsInput\">
+				<div class=\"countplus\">
 				    <section>
                         <label for=\"obwcountplus_countdownfrom\">Goal (<em>0</em> for none)</label>
-                        <input id=\"obwcountplus_countdownfrom\" class=\"regular-text\" type=\"text\" value=\"". get_option( 'obwcountplus_1_countdownfrom' ) . "\" name=\"obwcountplus_countdownfrom\">
+                        <input id=\"obwcountplus_countdownfrom\" type=\"text\" value=\"". get_option( 'obwcountplus_1_countdownfrom' ) . "\" name=\"obwcountplus_countdownfrom\">
                     </section>
 				    <section>
                         <label for=\"obwcountplus_remaining\">Text for remaining</label>
-                        <input id=\"obwcountplus_remaining\" class=\"regular-text\" type=\"text\" value=\"". get_option( 'obwcountplus_2_remaining' ) . "\" name=\"obwcountplus_remaining\">
+                        <input id=\"obwcountplus_remaining\" type=\"text\" value=\"". get_option( 'obwcountplus_2_remaining' ) . "\" name=\"obwcountplus_remaining\">
                     </section>
 				    <section>
                         <label for=\"obwcountplus_total\">Text for published</label>
-                        <input id=\"obwcountplus_total\" class=\"regular-text\" type=\"text\" value=\"". get_option( 'obwcountplus_3_total' ) . "\" name=\"obwcountplus_total\">
+                        <input id=\"obwcountplus_total\" type=\"text\" value=\"". get_option( 'obwcountplus_3_total' ) . "\" name=\"obwcountplus_total\">
                     </section>
                     <section>				
                         <label for=\"obwcountplus_custom\">Custom output</label>
-                        <input id=\"obwcountplus_custom\" class=\"regular-text\" type=\"text\" value=\"". get_option( 'obwcountplus_4_custom' ) . "\" name=\"obwcountplus_custom\">
+                        <input id=\"obwcountplus_custom\" type=\"text\" value=\"". get_option( 'obwcountplus_4_custom' ) . "\" name=\"obwcountplus_custom\">
                     </section>    
-				    <section>
-                        <p>How to use custom output<br />
-                        %total% will be replaced with the total words on the blog<br />
-                        %remain% will be replaced with the remaining words of the total</p>
-                    </section>
-				    <section>
-    				    <p>Examples:<br />
-                        <code>There are %total% words with %remain% left to go!</code><br /> will output 
-                        <em>There are 90 words with 10 left to go!</em> (if you have a goal of 100 words 
-                        set and there are currently 90 words published.</p>
-                        <p>If you've already reached your goal, %remain% will be a negative number.</p>
-				    </section>
                 </div>";
             }
 
@@ -79,26 +67,30 @@
             function obwcountplus_page_content() {
                     echo "
                     <form method=\"post\">
-						<div class=\"settings\">
-							<div class=\"settingsInfo\">
-								<p>Count++ is adapted from <a href=\"http://wordpress.org/plugins/post-word-count/\">Post Word Count</a> by <a href=\"http://profiles.wordpress.org/nickmomrik/\">Nick Momrik</a>.</p>
-								<strong>Usage</strong>
-								<p><em>Custom output</em><br />
-								<code>&lt;?php if(function_exists('countsplusplus')){ countsplusplus(); } ?&gt;</code></p>
-								<p><em>Total words + remaining</em><br />
-								<code>&lt;?php if(function_exists('obwcountplus_count')){ obwcountplus_count(); } ?&gt;</code></p>
-								<p><em>Total words</em><br />
-								<code>&lt;?php if(function_exists('obwcountplus_total')){ obwcountplus_total(); } ?&gt;</code></p>
-								<p><em>Remainig (total if goal reached)</em><br />
-								<code>&lt;?php if(function_exists('obwcountplus_remaining')){ obwcountplus_remaining(); } ?&gt;</code></p>
-								<p><em>Total words in post (single)</em><br />
-								<code>&lt;?php if(function_exists('obwcountplus_single')){ obwcountplus_single(); } ?&gt;</code></p>
-							</div>
-                        ";
+						<span class=\"moduletitle\">__count++<em>let's play the counting game</em></span>
+						<div class=\"clear\"></div>				
+						<div class=\"settings\">";
                         obwcountplus_form();
                         echo "<input id=\"obwcountsave\" type=\"submit\" value=\"Save Changes\" name=\"obwcountsave\">
-						</div>
-                    </form>";
+						
+                    </form>
+					
+					<div class=\"templatetags\">
+					<section>Custom output example: (with goal)<span class=\"right\">%total% words of %remain% published</span></section>
+					<section>Custom output example: (without goal) <span class=\"right\">%total% words published</span></section>
+					<section>Custom output example: (numbers only)(total on blog) <span class=\"right\">%total%</span></section>
+					<section>Custom output example: (numbers only)(total remain of goal) <span class=\"right\">%remain%</span></section>
+					<section>Template tag: (single post word count)<span class=\"right\"><code>obwcountplus_total();</code></span></section>
+					<section>Custom output:<span class=\"right\"><code>countsplusplus();</code></span></section>
+					<section>Total words + remaining:<span class=\"right\"><code>obwcountplus_count();</code></span></section>
+					<section>Total words:<span class=\"right\"><code>obwcountplus_total();</code></span></section>
+					<section>Remainig:(displays total published if goal reached)<span class=\"right\"><code>obwcountplus_remaining();</code></span></section>
+					</div>
+
+					<p class=\"creditlink\">Count++ is adapted from <a href=\"http://wordpress.org/plugins/post-word-count/\">Post Word Count</a> by <a href=\"http://profiles.wordpress.org/nickmomrik/\">Nick Momrik</a>.</p>
+					
+					
+					";
             }
 
 

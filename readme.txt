@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 5.1.9.1
+Stable tag: 5.2.0
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -53,13 +53,19 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 3. Activate it.
 
 == Screenshots ==
-1. Settings page.
-2. Modules with additional settings or options will present new configuration buttons to navigate to their settings page with.
-3. Navigating to a settings page will still allow you to activate and deactivate modules.  (Reviews module shown, which features searchable reviews table and media enabled posting box.)
-4. Some modules are activated as easily as simply pressing a button; others still only require a single settings to fully function.
-5. Two-step uninstallation procedure wipes all options and settings that were enabled by the plugin, allowing a fresh start or for easy deactivation and removal of the plugin from your installation.
+1. Setting page on a fresh installation, with everything directly at your fingertips.
+2. Reviews module (after a module with settings is activated, it will appear in the menu opposite of uninstall).
+3. Reviews module (again) with a look at the edit feature.
+4. The Exclude module is now even easier to hide categories, tags, and post formats.
+5. Continuing in the fashion of the one-click enabling, settings for the modules that only have one will be shown, regardless of whether or not they are activated for ease of use.  
+6. Trash collection is provided by the 4 trash icons, along with the items that are present to be purged and what those items belong to.
+7. Uninstalling is still just two clicks away (should you ever wish to discontinue using MOM).  Simply double-tap that button, deactivate, and delete.
+
 
 == Changelog ==
+= 5.2.+ =
+* 5.2.0 / Complete UI rehaul.  Now with even more... thing.
+
 = 5.1.+ =
 * 5.1.9.1 / Ability to add html to reviews fields for a wider variety of display types added.
 * 5.1.9.0 / Bugfix: module: Post as Front

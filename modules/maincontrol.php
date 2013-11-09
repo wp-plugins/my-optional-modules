@@ -31,13 +31,442 @@
 			if(get_option('mommaincontrol_shorts') == 0){if(function_exists('my_optional_modules_shortcodes_module') || function_exists('mom_shortcodes_page_content') || function_exists('mom_google_map_shortcode') || function_exists('mom_reddit_shortcode') || function_exists('mom_restrict_shortcode') || function_exists('restricted_comments_view') || function_exists('restricted_comments_form') || function_exists('mom_progress_shortcode') || function_exists('mom_verify_shortcode')){$shortcodesConflict = 1;}}
 				echo '
 				<div class="wrap">
-					<h2>My Optional Modules</h2>
-					<div class="postbox-container" style="width:685px;margin-right:5px;">
+					<span class="moduletitlemain">my optional modules<em>this <strong>is</strong> the pro version.</em></span>
+					<div class="new"></div>
+					<div class="reminder">
+					<i class="fa fa-heart-o"></i> <a href="http://wordpress.org/support/view/plugin-reviews/my-optional-modules">take 5 seconds and review it, won\'t you?</a><span class="right"><strong>remember!  <i class="fa fa-check-square-o"></i> means that it\'s <u>activated</u> and <i class="fa fa-square-o"></i> means that it\'s <u>not</u>.</strong></span>
+					</div>
+					<div class="powerstation">
+						<section class="powerstationbutton">
+						<label class="fa fa-bolt"></label>
+						</section>
+						<section class="formbutton">
+							<label class="title">fullmods</label>
+						</section>						
+						<section class="formbutton">
+							<form method="post" name="momReviews">
+							<label for="mom_reviews_mode_submit" class="';
+								if(get_option('mommaincontrol_reviews') == 1){echo 'on';}
+								if(get_option('mommaincontrol_reviews') == 0){echo 'off';}
+							echo '">
+								<i class="';
+								if(get_option('mommaincontrol_reviews') == 1){echo 'fa fa-check-square-o';}
+								if(get_option('mommaincontrol_reviews') == 0){echo 'fa fa-square-o';}												
+								echo '
+								"></i>Reviews
+							</label>
+							<input type="text" value="';
+								if(get_option('mommaincontrol_reviews') == 1){echo '0';}
+								if(get_option('mommaincontrol_reviews') == 0){echo '1';}
+							echo '
+							" name="reviews" class="hide" />
+							<input type="submit" id="mom_reviews_mode_submit" name="mom_reviews_mode_submit" class="hide" value="Submit" />
+							</form>
+						</section>
+						';
+						// Count++ form section
+						echo '
+						<section class="formbutton">
+							<form method="post" action="" name="momCount">
+							<label for="mom_count_mode_submit" class="';
+								if(get_option('mommaincontrol_obwcountplus') == 1){echo 'on';}
+								if(get_option('mommaincontrol_obwcountplus') == 0){echo 'off';}
+							echo '">
+								<i class="';
+								if(get_option('mommaincontrol_obwcountplus') == 1){echo 'fa fa-check-square-o';}
+								if(get_option('mommaincontrol_obwcountplus') == 0){echo 'fa fa-square-o';}												
+								echo '
+								"></i>Count++
+							</label>
+							<input type="text" value="';
+								if(get_option('mommaincontrol_obwcountplus') == 1){echo '0';}
+								if(get_option('mommaincontrol_obwcountplus') == 0){echo '1';}
+							echo '
+							" name="countplus" class="hide" />
+							<input type="submit" id="mom_count_mode_submit" name="mom_count_mode_submit" class="hide" value="Submit" />
+							</form>
+						</section>';
+						// Exclude form section
+						echo '
+						<section class="formbutton">
+							<form method="post" action="" name="momExclude">
+							<label for="mom_exclude_mode_submit" class="';
+								if(get_option('mommaincontrol_momse') == 1){echo 'on';}
+								if(get_option('mommaincontrol_momse') == 0){echo 'off';}
+							echo '">
+								<i class="';
+								if(get_option('mommaincontrol_momse') == 1){echo 'fa fa-check-square-o';}
+								if(get_option('mommaincontrol_momse') == 0){echo 'fa fa-square-o';}												
+								echo '"></i>Exclude
+							</label>
+							<input type="text" value="';
+								if(get_option('mommaincontrol_momse') == 1){echo '0';}
+								if(get_option('mommaincontrol_momse') == 0){echo '1';}
+							echo '" name="exclude" class="hide" />
+							<input type="submit" id="mom_exclude_mode_submit" name="mom_exclude_mode_submit" class="hide" value="Submit" />
+							</form>
+						</section>';
+						// Jump Around form section
+						echo '
+						<section class="formbutton">
+							<form method="post" action="" name="momJumpAround">
+							<label for="mom_jumparound_mode_submit" class="';
+								if(get_option('mommaincontrol_momja') == 1){echo 'on';}
+								if(get_option('mommaincontrol_momja') == 0){echo 'off';}
+							echo '">
+								<i class="';
+								if(get_option('mommaincontrol_momja') == 1){echo 'fa fa-check-square-o';}
+								if(get_option('mommaincontrol_momja') == 0){echo 'fa fa-square-o';}												
+								echo '"></i>Jump Around
+							</label>
+							<input type="text" value="';
+								if(get_option('mommaincontrol_momja') == 1){echo '0';}
+								if(get_option('mommaincontrol_momja') == 0){echo '1';}
+							echo '
+							" name="jumparound" class="hide" />
+							<input type="submit" id="mom_jumparound_mode_submit" name="mom_jumparound_mode_submit" class="hide" value="Submit" />
+							</form>
+						</section>';
+						// Passwords form section
+						echo '
+						<section class="formbutton">
+							<form method="post" action="" name="momPasswords">
+							<label for="mom_passwords_mode_submit" class="';
+								if(get_option('mommaincontrol_momrups') == 1){echo 'on';}
+								if(get_option('mommaincontrol_momrups') == 0){echo 'off';}
+							echo '">
+								<i class="';
+								if(get_option('mommaincontrol_momrups') == 1){echo 'fa fa-check-square-o';}
+								if(get_option('mommaincontrol_momrups') == 0){echo 'fa fa-square-o';}												
+								echo '
+								"></i>Passwords
+							</label>
+							<input type="text" value="';
+								if(get_option('mommaincontrol_momrups') == 1){echo '0';}
+								if(get_option('mommaincontrol_momrups') == 0){echo '1';}
+							echo '
+							" name="passwords" class="hide" />
+							<input type="submit" id="mom_passwords_mode_submit" name="mom_passwords_mode_submit" class="hide" value="Submit" />
+							</form>
+						</section>';
+						// Shortcodes! form section
+						echo '
+						<section class="formbutton">
+							<form method="post" action="" name="momShortcodes">
+							<label for="mom_shortcodes_mode_submit" class="';
+								if(get_option('mommaincontrol_shorts') == 1){echo 'on';}
+								if(get_option('mommaincontrol_shorts') == 0){echo 'off';}
+							echo '">
+								<i class="';
+								if(get_option('mommaincontrol_shorts') == 1){echo 'fa fa-check-square-o';}
+								if(get_option('mommaincontrol_shorts') == 0){echo 'fa fa-square-o';}												
+								echo '
+								"></i>Shortcodes
+							</label>
+							<input type="text" value="';
+								if(get_option('mommaincontrol_shorts') == 1){echo '0';}
+								if(get_option('mommaincontrol_shorts') == 0){echo '1';}
+							echo '
+							" name="shortcodes" class="hide" />
+							<input type="submit" id="mom_shortcodes_mode_submit" name="mom_shortcodes_mode_submit" class="hide" value="Submit" />
+							</form>
+						</section>
+						<section class="clear"></section>';						
+						
+					
+												// Font Awesome section
+												echo '
+												<section class="formbutton">
+												<label class="title">automods</label>
+												</section>
+												<section class="formbutton">
+													<form method="post" action="" name="fontawesome">
+													<label for="mom_fontawesome_mode_submit" class="';
+														if(get_option('mommaincontrol_fontawesome') == 1){echo 'on';}
+														if(get_option('mommaincontrol_fontawesome') == 0){echo 'off';}
+													echo '">
+														<i class="';
+														if(get_option('mommaincontrol_fontawesome') == 1){echo 'fa fa-check-square-o';}
+														if(get_option('mommaincontrol_fontawesome') == 0){echo 'fa fa-square-o';}	
+														echo '
+														"></i>Font Awesome
+													</label>
+													<input type="text" value="';
+														if(get_option('mommaincontrol_fontawesome') == 1){echo '0';}
+														if(get_option('mommaincontrol_fontawesome') == 0){echo '1';}
+													echo '
+													" name="mommaincontrol_fontawesome" class="hide" />
+													<input type="submit" id="mom_fontawesome_mode_submit" name="mom_fontawesome_mode_submit" class="hide" value="Submit" />
+													</form>
+												</section>';	
+												// Hide WP versions section
+												echo '
+												<section class="formbutton">
+													<form method="post" action="" name="hidewpversions">
+													<label for="mom_versions_submit" class="';
+														if(get_option('mommaincontrol_versionnumbers') == 1){echo 'on';}
+														if(get_option('mommaincontrol_versionnumbers') == 0){echo 'off';}
+													echo '">
+														<i class="';
+														if(get_option('mommaincontrol_versionnumbers') == 1){echo 'fa fa-check-square-o';}
+														if(get_option('mommaincontrol_versionnumbers') == 0){echo 'fa fa-square-o';}	
+														echo '
+														"></i>Hide WP Version
+													</label>
+													<input type="text" value="';
+														if(get_option('mommaincontrol_versionnumbers') == 1){echo '0';}
+														if(get_option('mommaincontrol_versionnumbers') == 0){echo '1';}
+													echo '
+													" name="mommaincontrol_versionnumbers" class="hide" />
+													<input type="submit" id="mom_versions_submit" name="mom_versions_submit" class="hide" value="Submit" />
+													</form>
+												</section>';	
+												// Lazy Load section
+												echo '
+												<section class="formbutton">
+													<form method="post" action="" name="lazyload">
+													<label for="mom_lazy_mode_submit" class="';
+														if(get_option('mommaincontrol_lazyload') == 1){echo 'on';}
+														if(get_option('mommaincontrol_lazyload') == 0){echo 'off';}
+													echo '">
+														<i class="';
+														if(get_option('mommaincontrol_lazyload') == 1){echo 'fa fa-check-square-o';}
+														if(get_option('mommaincontrol_lazyload') == 0){echo 'fa fa-square-o';}	
+														echo '
+														"></i>Lazy Load
+													</label>
+													<input type="text" value="';
+														if(get_option('mommaincontrol_lazyload') == 1){echo '0';}
+														if(get_option('mommaincontrol_lazyload') == 0){echo '1';}
+													echo '
+													" name="mommaincontrol_lazyload" class="hide" />
+													<input type="submit" id="mom_lazy_mode_submit" name="mom_lazy_mode_submit" class="hide" value="Submit" />
+													</form>
+												</section>';	
+												// Meta section
+												echo '<section class="formbutton">
+													<form method="post" action="" name="meta">
+													<label for="mom_meta_mode_submit" class="';
+														if(get_option('mommaincontrol_meta') == 1){echo 'on';}
+														if(get_option('mommaincontrol_meta') == 0){echo 'off';}
+													echo '">
+														<i class="';
+														if(get_option('mommaincontrol_meta') == 1){echo 'fa fa-check-square-o';}
+														if(get_option('mommaincontrol_meta') == 0){echo 'fa fa-square-o';}	
+														echo '
+														"></i>Meta
+													</label>
+													<input type="text" value="';
+														if(get_option('mommaincontrol_meta') == 1){echo '0';}
+														if(get_option('mommaincontrol_meta') == 0){echo '1';}
+													echo '" name="mommaincontrol_meta" class="hide" />
+													<input type="submit" id="mom_meta_mode_submit" name="mom_meta_mode_submit" class="hide" value="Submit" />
+													</form>
+												</section>';						
+						
+					echo '</div>
+					
+					<div class="simplemods">';
+												// Analytics form section
+												echo '
+												<section class="formbutton simple">
+													<form method="post" action="" name="momAnalytics">
+													<label for="mom_analytics_mode_submit" class="';
+														if(get_option('mommaincontrol_analytics') == 1){echo 'on';}
+														if(get_option('mommaincontrol_analytics') == 0){echo 'off';}
+													echo '">
+														<i class="';
+														if(get_option('mommaincontrol_analytics') == 1){echo 'fa fa-check-square-o';}
+														if(get_option('mommaincontrol_analytics') == 0){echo 'fa fa-square-o';}												
+														echo '
+														"></i>Analytics
+													</label>
+													<input type="text" value="';
+														if(get_option('mommaincontrol_analytics') == 1){echo '0';}
+														if(get_option('mommaincontrol_analytics') == 0){echo '1';}
+													echo '
+													" name="analytics" class="hide" />
+													<input type="submit" id="mom_analytics_mode_submit" name="mom_analytics_mode_submit" class="hide" value="Submit" />
+													</form>';
+													
+														echo '
+														<form class="setting" method="post" action="">
+														<input onClick="this.select();" type="text" value="' . get_option('momanalytics_code') . '" name="momanalytics_code" class="setting" placeholder="UA-XXXXXXXX-X" />
+														<input type="submit" id="mom_analytics_code_submit" name="mom_analytics_code_submit" value="Submit" class="hide">
+														</form>
+														';
+													
+												echo '
+												</section>';
+												// Maintenance mode form section
+												echo '
+												<section class="formbutton simple">
+													<form method="post" action="" name="momMaintenance">
+													<label for="mom_maintenance_mode_submit" class="';
+														if(get_option('mommaincontrol_maintenance') == 1){echo 'on';}
+														if(get_option('mommaincontrol_maintenance') == 0){echo 'off';}
+													echo '">
+														<i class="';
+														if(get_option('mommaincontrol_maintenance') == 1){echo 'fa fa-check-square-o';}
+														if(get_option('mommaincontrol_maintenance') == 0){echo 'fa fa-square-o';}												
+														echo '
+														"></i>Maintenance
+													</label>
+													<input type="text" value="';
+														if(get_option('mommaincontrol_maintenance') == 1){echo '0';}
+														if(get_option('mommaincontrol_maintenance') == 0){echo '1';}
+													echo '
+													" name="maintenanceMode" class="hide" />
+													<input type="submit" id="mom_maintenance_mode_submit" name="mom_maintenance_mode_submit" class="hide" value="Submit" />
+													</form>';
+													
+														echo '
+														<form class="setting" method="post" action="">
+														<input placeholder="http://url.tld" onClick="this.select();" type="text" value="' . get_option('momMaintenance_url') . '" name="momMaintenance_url" class="setting" />
+														<input type="submit" id="mom_maintenance_url_submit" name="mom_maintenance_url_submit" value="Submit" class="hide">
+														</form>
+														';
+													
+												echo '
+												</section>';
+												// Post as front form section
+												echo '
+												<section class="formbutton simple">
+													<form method="post" action="" name="mompaf">
+													<label for="mom_postasfront_mode_submit" class="';
+														if(get_option('mommaincontrol_mompaf') == 1){echo 'on';}
+														if(get_option('mommaincontrol_mompaf') == 0){echo 'off';}
+													echo '">
+														<i class="';
+														if(get_option('mommaincontrol_mompaf') == 1){echo 'fa fa-check-square-o';}
+														if(get_option('mommaincontrol_mompaf') == 0){echo 'fa fa-square-o';}	
+														echo '
+														"></i>Post as Front
+													</label>
+													<input type="text" value="';
+														if(get_option('mommaincontrol_mompaf') == 1){echo '0';}
+														if(get_option('mommaincontrol_mompaf') == 0){echo '1';}
+													echo '
+													" name="postasfront" class="hide" />
+													<input type="submit" id="mom_postasfront_mode_submit" name="mom_postasfront_mode_submit" class="hide" value="Submit" />
+													</form>';
+													
+														echo '
+														<form class="setting" method="post" action="">
+																
+																<select name="mompaf_post" class="setting" id="mompaf_0">
+																<option value="0" '; if (get_option('mompaf_post') == 0){echo 'selected="selected"';} echo '/>Latest post</option>';
+																	$showmeposts = get_posts(array('posts_per_page' => -1)); 
+																	foreach ($showmeposts as $postsshown){
+																		echo '<option name="mompaf_post" id="mompaf_'.$postsshown->ID.'" value="'.$postsshown->ID.'"'; 
+																		if (get_option('mompaf_post') == $postsshown->ID){echo ' selected="selected"';} echo '>
+																		'.$postsshown->post_title.'</option>';
+																	}
+																	echo '
+																	</select>
+														<label for="mom_postasfront_post_submit" class="select"><i class="fa fa-save"></i>Save</label>
+														<input type="submit" id="mom_postasfront_post_submit" name="mom_postasfront_post_submit" value="Submit" class="hide">
+														</form>
+														';
+													
+												echo '
+												</section>
+					
+					</div>
+					
+					<div class="databasecleaner">';
+					include(plugin_dir_path(__FILE__).'databasecleaner.php');
+					echo '</div>';
+					
+					if(!isset($_POST['introduction'])){
+					echo '
+					<form class="introduction" method="post">
+					<input type="submit" value="Having trouble?" name="introduction">
+					</form>';
+					}else{
+					echo '
+					<form class="introduction" method="post">
+					<input type="submit" value="Problem solved?" name="cancel">
+					</form>
+					';
+					}
+					if(isset($_POST['introduction'])){
+					echo '
+					<div class="introduction">
+					<p>questions?  bug reports?  comments?<br /><a href="http://www.onebillionwords.com/my-optional-modules/">my optional modules</a> official plugin page.</p>
+					</div>
+					';
+					}
+					echo '
+					<div class="postbox-container" style="width:798px;margin-right:5px;">
 						<div class="metabox-holder">
 							<div class="meta-box-sortables ui-sortable">
-								<div id="modules" class="postbox" >
-									<h3 class="hndle"><span>Control Panel</span></h3>
+								<div id="modules" class="postbox">';
+									
+											if(!isset($_POST['mom_delete_step_one'])){
+											echo '
+											<section>
+												<form class="uninstall" method="post" action="" name="mom_delete_step_one">
+												<label for="mom_delete_step_one" class="off">
+													<i class="fa fa-warning"></i> Click to Uninstall
+												</label>
+												<input type="submit" id="mom_delete_step_one" name="mom_delete_step_one" class="hide" value="Submit" />
+												</form>
+											</section>';
+											}
+											if(isset($_POST['mom_delete_step_one'])){
+											echo '
+											<section>
+												<form class="uninstall" method="post" action="" name="MOM_UNINSTALL_EVERYTHING">
+												<label for="MOM_UNINSTALL_EVERYTHING" class="off">
+													<i class="fa fa-warning"></i> Confirm Uninstall
+												</label>
+												<input type="submit" id="MOM_UNINSTALL_EVERYTHING" name="MOM_UNINSTALL_EVERYTHING" class="hide" value="Submit" />
+												</form>
+											</section>';
+											}																				
+									
+									
+											echo '
+											<form method="post" class="topnavigation">
+												<section><label class="configurationlabel" for="MOMclear">Home</label>
+												<input id="MOMclear" name="MOMclear" class="hidden" type="submit"></section>
+											';
+											if (
+												get_option('mommaincontrol_obwcountplus') == 1 || 
+												get_option('mommaincontrol_momse') == 1 || 
+												get_option('mommaincontrol_momrups') == 1 || 
+												get_option('mommaincontrol_momja') == 1 || 
+												get_option('mommaincontrol_shorts') == 1 || 
+												get_option('mommaincontrol_reviews') == 1 
+											){
+												if(get_option('mommaincontrol_obwcountplus') == 1){ 
+													echo '<section><label class="configurationlabel" for="MOMcount"></i>Count++</label><input id="MOMcount" name="MOMcount" class="hidden" type="submit"></section>';
+												}
+												if(get_option('mommaincontrol_momse') == 1){
+													echo '<section><label class="configurationlabel" for="MOMexclude">Exclude</label><input id="MOMexclude" name="MOMexclude" class="hidden" type="submit"></section>';
+												}
+												if(get_option('mommaincontrol_momrups') == 1){
+													echo '<section><label class="configurationlabel" for="MOMpasswords">Passwords</label><input id="MOMpasswords" name="MOMpasswords" class="hidden" type="submit"></section>';
+												}
+												if(get_option('mommaincontrol_momja') == 1){
+													echo '<section><label class="configurationlabel" for="MOMjumparound">Jump Around</label><input id="MOMjumparound" name="MOMjumparound" class="hidden" type="submit"></section>'; 
+												}
+												if (get_option('mommaincontrol_reviews') == 1){
+													echo '<section><label class="configurationlabel" for="MOMreviews">Reviews</label><input id="MOMreviews" name="MOMreviews" class="hidden" type="submit"></section>'; 
+												}
+												if (get_option('mommaincontrol_shorts') == 1){
+													echo '<section><label class="configurationlabel" for="MOMshortcodes"></i>Shortcodes</label><input id="MOMshortcodes" name="MOMshortcodes" class="hidden" type="submit"></section>'; 
+												}
+											}		
+											echo '</form>									
+									
+									
+									
 									<div class="inside">';
+									
+									
+									
 										if(get_option('mommaincontrol_focus') == ''){
 											// Upgrade from old option names to new option names and transfer all previous settings to the new ones
 											if(get_option('mommaincontrol_momse') == 1){
@@ -47,9 +476,7 @@
 												<form method="post"><input id="MOMExcludeUpgrade" name="MOMExcludeUpgrade" type="submit" value="Submit" class="hidden"/></form>';
 												if(isset($_POST['MOMExcludeUpgrade'])){MOMExcludeUpgrade();echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";}}
 											}
-											echo '<blockquote>';
-											include(plugin_dir_path(__FILE__).'databasecleaner.php');
-											echo '</blockquote>
+											echo '
 											<div class="panelSection clear plugin">
 												<blockquote>
 												<p>';
@@ -102,427 +529,6 @@
 											echo '</div>';
 										}
 									echo '
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="postbox-container side" style="width:200px;">
-						<div class="metabox-holder">
-							<div class="meta-box-sortables ui-sortable">
-								<div id="information" class="postbox">
-									<h3 class="hdnle"><span>Modules</span></h3>
-									<div class="inside">
-										<div class="moduleform">';
-											
-											if(!isset($_POST['mom_delete_step_one'])){
-											echo '
-											<section>
-												<form method="post" action="" name="mom_delete_step_one">
-												<label for="mom_delete_step_one" class="off">
-													<i class="fa fa-trash-o"></i> Uninstall Step 1 of 2
-												</label>
-												<input type="submit" id="mom_delete_step_one" name="mom_delete_step_one" class="hide" value="Submit" />
-												</form>
-											</section>';
-											}
-											if(isset($_POST['mom_delete_step_one'])){
-											echo '
-											<section>
-												<form method="post" action="" name="MOM_UNINSTALL_EVERYTHING">
-												<label for="MOM_UNINSTALL_EVERYTHING" class="off">
-													<i class="fa fa-trash-o"></i> Confirm Step 2 of 2
-												</label>
-												<input type="submit" id="MOM_UNINSTALL_EVERYTHING" name="MOM_UNINSTALL_EVERYTHING" class="hide" value="Submit" />
-												</form>
-											</section>';
-											}											
-										
-											echo '
-											<form method="post">
-												<section><label class="configurationlabel" for="MOMclear"><i class="fa fa-home"></i>Home</label>
-												<input id="MOMclear" name="MOMclear" class="hidden" type="submit"></section>
-											';
-											if (
-												get_option('mommaincontrol_obwcountplus') == 1 || 
-												get_option('mommaincontrol_momse') == 1 || 
-												get_option('mommaincontrol_momrups') == 1 || 
-												get_option('mommaincontrol_momja') == 1 || 
-												get_option('mommaincontrol_shorts') == 1 || 
-												get_option('mommaincontrol_reviews') == 1 
-											){
-												echo '<section><label class="labeltitle"><i class="fa fa-level-down"></i><span>Configuration</span></label></section>';
-												if(get_option('mommaincontrol_obwcountplus') == 1){ 
-													echo '<section><label class="configurationlabel" for="MOMcount"><i title="Count++ settings" class="fa fa-cog';
-													if(get_option('mommaincontrol_focus') == 'count'){
-														echo ' active';
-													}
-													echo '"></i>Count++</label><input id="MOMcount" name="MOMcount" class="hidden" type="submit"></section>';
-												}
-												if(get_option('mommaincontrol_momse') == 1){
-													echo '<section><label class="configurationlabel" for="MOMexclude"><i title="Exclude settings" class="fa fa-cog';
-													if(get_option('mommaincontrol_focus') == 'exclude'){
-														echo ' active';
-													}
-													echo '"></i>Exclude</label><input id="MOMexclude" name="MOMexclude" class="hidden" type="submit"></section>';
-												}
-												if(get_option('mommaincontrol_momrups') == 1){
-													echo '<section><label class="configurationlabel" for="MOMpasswords"><i title="Passwords settings" class="fa fa-cog';
-													if(get_option('mommaincontrol_focus') == 'passwords'){
-														echo ' active';
-													}
-													echo '"></i>Passwords</label><input id="MOMpasswords" name="MOMpasswords" class="hidden" type="submit"></section>';
-												}
-												if(get_option('mommaincontrol_momja') == 1){
-													echo '<section><label class="configurationlabel" for="MOMjumparound"><i title="Jump Around settings" class="fa fa-cog';
-													if(get_option('mommaincontrol_focus') == 'jumparound'){
-														echo ' active';
-													}
-													echo '"></i>Jump Around</label><input id="MOMjumparound" name="MOMjumparound" class="hidden" type="submit"></section>'; 
-												}
-												if (get_option('mommaincontrol_reviews') == 1){
-													echo '<section><label class="configurationlabel" for="MOMreviews"><i title="Reviews settings" class="fa fa-cog'; 
-													if (get_option('mommaincontrol_focus') == "reviews"){
-														echo ' active'; 
-													}
-													echo '"></i>Reviews</label><input id="MOMreviews" name="MOMreviews" class="hidden" type="submit"></section>'; 
-												}
-												if (get_option('mommaincontrol_shorts') == 1){
-													echo '<section><label class="configurationlabel" for="MOMshortcodes"><i title="Shortcodes settings" class="fa fa-cog'; 
-													if (get_option('mommaincontrol_focus') == "shortcodes"){
-														echo ' active'; 
-													}
-													echo '"></i>Shortcodes</label><input id="MOMshortcodes" name="MOMshortcodes" class="hidden" type="submit"></section>'; 
-												}
-											}		
-											echo '</form>';
-											echo '<div class="clear new"></div>';
-											echo '<section><label class="labeltitle"><i class="fa fa-level-down"></i><span>FullMods</span></label></section>';										
-											
-												// Count++ form section
-												echo '
-												<section>
-													<form method="post" action="" name="momCount">
-													<label for="mom_count_mode_submit" class="';
-														if(get_option('mommaincontrol_obwcountplus') == 1){echo 'on';}
-														if(get_option('mommaincontrol_obwcountplus') == 0){echo 'off';}
-													echo '">
-														<i class="';
-														if(get_option('mommaincontrol_obwcountplus') == 1){echo 'fa fa-check-square-o';}
-														if(get_option('mommaincontrol_obwcountplus') == 0){echo 'fa fa-square-o';}												
-														echo '
-														"></i>Count++
-													</label>
-													<input type="text" value="';
-														if(get_option('mommaincontrol_obwcountplus') == 1){echo '0';}
-														if(get_option('mommaincontrol_obwcountplus') == 0){echo '1';}
-													echo '
-													" name="countplus" class="hide" />
-													<input type="submit" id="mom_count_mode_submit" name="mom_count_mode_submit" class="hide" value="Submit" />
-													</form>
-												</section>';
-												// Exclude form section
-												echo '
-												<section>
-													<form method="post" action="" name="momExclude">
-													<label for="mom_exclude_mode_submit" class="';
-														if(get_option('mommaincontrol_momse') == 1){echo 'on';}
-														if(get_option('mommaincontrol_momse') == 0){echo 'off';}
-													echo '">
-														<i class="';
-														if(get_option('mommaincontrol_momse') == 1){echo 'fa fa-check-square-o';}
-														if(get_option('mommaincontrol_momse') == 0){echo 'fa fa-square-o';}												
-														echo '"></i>Exclude
-													</label>
-													<input type="text" value="';
-														if(get_option('mommaincontrol_momse') == 1){echo '0';}
-														if(get_option('mommaincontrol_momse') == 0){echo '1';}
-													echo '" name="exclude" class="hide" />
-													<input type="submit" id="mom_exclude_mode_submit" name="mom_exclude_mode_submit" class="hide" value="Submit" />
-													</form>
-												</section>';
-												// Jump Around form section
-												echo '
-												<section>
-													<form method="post" action="" name="momJumpAround">
-													<label for="mom_jumparound_mode_submit" class="';
-														if(get_option('mommaincontrol_momja') == 1){echo 'on';}
-														if(get_option('mommaincontrol_momja') == 0){echo 'off';}
-													echo '">
-														<i class="';
-														if(get_option('mommaincontrol_momja') == 1){echo 'fa fa-check-square-o';}
-														if(get_option('mommaincontrol_momja') == 0){echo 'fa fa-square-o';}												
-														echo '"></i>Jump Around
-													</label>
-													<input type="text" value="';
-														if(get_option('mommaincontrol_momja') == 1){echo '0';}
-														if(get_option('mommaincontrol_momja') == 0){echo '1';}
-													echo '
-													" name="jumparound" class="hide" />
-													<input type="submit" id="mom_jumparound_mode_submit" name="mom_jumparound_mode_submit" class="hide" value="Submit" />
-													</form>
-												</section>';
-												// Passwords form section
-												echo '
-												<section>
-													<form method="post" action="" name="momPasswords">
-													<label for="mom_passwords_mode_submit" class="';
-														if(get_option('mommaincontrol_momrups') == 1){echo 'on';}
-														if(get_option('mommaincontrol_momrups') == 0){echo 'off';}
-													echo '">
-														<i class="';
-														if(get_option('mommaincontrol_momrups') == 1){echo 'fa fa-check-square-o';}
-														if(get_option('mommaincontrol_momrups') == 0){echo 'fa fa-square-o';}												
-														echo '
-														"></i>Passwords
-													</label>
-													<input type="text" value="';
-														if(get_option('mommaincontrol_momrups') == 1){echo '0';}
-														if(get_option('mommaincontrol_momrups') == 0){echo '1';}
-													echo '
-													" name="passwords" class="hide" />
-													<input type="submit" id="mom_passwords_mode_submit" name="mom_passwords_mode_submit" class="hide" value="Submit" />
-													</form>
-												</section>';
-												// Reviews form section
-												echo '
-												<section>
-													<form method="post" action="" name="momReviews">
-													<label for="mom_reviews_mode_submit" class="';
-														if(get_option('mommaincontrol_reviews') == 1){echo 'on';}
-														if(get_option('mommaincontrol_reviews') == 0){echo 'off';}
-													echo '">
-														<i class="';
-														if(get_option('mommaincontrol_reviews') == 1){echo 'fa fa-check-square-o';}
-														if(get_option('mommaincontrol_reviews') == 0){echo 'fa fa-square-o';}												
-														echo '
-														"></i>Reviews
-													</label>
-													<input type="text" value="';
-														if(get_option('mommaincontrol_reviews') == 1){echo '0';}
-														if(get_option('mommaincontrol_reviews') == 0){echo '1';}
-													echo '
-													" name="reviews" class="hide" />
-													<input type="submit" id="mom_reviews_mode_submit" name="mom_reviews_mode_submit" class="hide" value="Submit" />
-													</form>
-												</section>';
-												// Shortcodes! form section
-												echo '
-												<section>
-													<form method="post" action="" name="momShortcodes">
-													<label for="mom_shortcodes_mode_submit" class="';
-														if(get_option('mommaincontrol_shorts') == 1){echo 'on';}
-														if(get_option('mommaincontrol_shorts') == 0){echo 'off';}
-													echo '">
-														<i class="';
-														if(get_option('mommaincontrol_shorts') == 1){echo 'fa fa-check-square-o';}
-														if(get_option('mommaincontrol_shorts') == 0){echo 'fa fa-square-o';}												
-														echo '
-														"></i>Shortcodes
-													</label>
-													<input type="text" value="';
-														if(get_option('mommaincontrol_shorts') == 1){echo '0';}
-														if(get_option('mommaincontrol_shorts') == 0){echo '1';}
-													echo '
-													" name="shortcodes" class="hide" />
-													<input type="submit" id="mom_shortcodes_mode_submit" name="mom_shortcodes_mode_submit" class="hide" value="Submit" />
-													</form>
-												</section>';											
-											echo '<div class="clear new"></div>';
-											echo '<section><label class="labeltitle"><i class="fa fa-level-down"></i><span>SimpleMods</span></label></section>';
-												// Analytics form section
-												echo '
-												<section>
-													<form method="post" action="" name="momAnalytics">
-													<label for="mom_analytics_mode_submit" class="';
-														if(get_option('mommaincontrol_analytics') == 1){echo 'on';}
-														if(get_option('mommaincontrol_analytics') == 0){echo 'off';}
-													echo '">
-														<i class="';
-														if(get_option('mommaincontrol_analytics') == 1){echo 'fa fa-check-square-o';}
-														if(get_option('mommaincontrol_analytics') == 0){echo 'fa fa-square-o';}												
-														echo '
-														"></i>Analytics
-													</label>
-													<input type="text" value="';
-														if(get_option('mommaincontrol_analytics') == 1){echo '0';}
-														if(get_option('mommaincontrol_analytics') == 0){echo '1';}
-													echo '
-													" name="analytics" class="hide" />
-													<input type="submit" id="mom_analytics_mode_submit" name="mom_analytics_mode_submit" class="hide" value="Submit" />
-													</form>';
-													if(get_option('mommaincontrol_analytics') == 1){
-														echo '
-														<form class="setting" method="post" action="">
-														<input onClick="this.select();" type="text" value="' . get_option('momanalytics_code') . '" name="momanalytics_code" class="setting" placeholder="UA-XXXXXXXX-X" />
-														<input type="submit" id="mom_analytics_code_submit" name="mom_analytics_code_submit" value="Submit" class="hide">
-														</form>
-														';
-													}
-												echo '
-												</section>';
-												// Maintenance mode form section
-												echo '
-												<section>
-													<form method="post" action="" name="momMaintenance">
-													<label for="mom_maintenance_mode_submit" class="';
-														if(get_option('mommaincontrol_maintenance') == 1){echo 'on';}
-														if(get_option('mommaincontrol_maintenance') == 0){echo 'off';}
-													echo '">
-														<i class="';
-														if(get_option('mommaincontrol_maintenance') == 1){echo 'fa fa-check-square-o';}
-														if(get_option('mommaincontrol_maintenance') == 0){echo 'fa fa-square-o';}												
-														echo '
-														"></i>Maintenance
-													</label>
-													<input type="text" value="';
-														if(get_option('mommaincontrol_maintenance') == 1){echo '0';}
-														if(get_option('mommaincontrol_maintenance') == 0){echo '1';}
-													echo '
-													" name="maintenanceMode" class="hide" />
-													<input type="submit" id="mom_maintenance_mode_submit" name="mom_maintenance_mode_submit" class="hide" value="Submit" />
-													</form>';
-													if(get_option('mommaincontrol_maintenance') == 1){
-														echo '
-														<form class="setting" method="post" action="">
-														<input onClick="this.select();" type="text" value="' . get_option('momMaintenance_url') . '" name="momMaintenance_url" class="setting" />
-														<input type="submit" id="mom_maintenance_url_submit" name="mom_maintenance_url_submit" value="Submit" class="hide">
-														</form>
-														';
-													}
-												echo '
-												</section>';
-												// Post as front form section
-												echo '
-												<section>
-													<form method="post" action="" name="mompaf">
-													<label for="mom_postasfront_mode_submit" class="';
-														if(get_option('mommaincontrol_mompaf') == 1){echo 'on';}
-														if(get_option('mommaincontrol_mompaf') == 0){echo 'off';}
-													echo '">
-														<i class="';
-														if(get_option('mommaincontrol_mompaf') == 1){echo 'fa fa-check-square-o';}
-														if(get_option('mommaincontrol_mompaf') == 0){echo 'fa fa-square-o';}	
-														echo '
-														"></i>Post as Front
-													</label>
-													<input type="text" value="';
-														if(get_option('mommaincontrol_mompaf') == 1){echo '0';}
-														if(get_option('mommaincontrol_mompaf') == 0){echo '1';}
-													echo '
-													" name="postasfront" class="hide" />
-													<input type="submit" id="mom_postasfront_mode_submit" name="mom_postasfront_mode_submit" class="hide" value="Submit" />
-													</form>';
-													if(get_option('mommaincontrol_mompaf') == 1){
-														echo '
-														<form class="setting" method="post" action="">
-																<div class="overflow">
-																<input name="mompaf_post" id="mompaf_0" type="radio" value="0" '; if (get_option('mompaf_post') == 0){echo 'checked';} echo '/><label class="selectlabel" for="mompaf_0">Latest post</label>';
-																	$showmeposts = get_posts(array('posts_per_page' => -1)); 
-																	foreach ($showmeposts as $postsshown){
-																		echo '<input name="mompaf_post" type="radio" id="mompaf_'.$postsshown->ID.'" value="'.$postsshown->ID.'"'; 
-																		if (get_option('mompaf_post') == $postsshown->ID){echo ' checked';} echo '>
-																		<label class="selectlabel" for="mompaf_' . $postsshown->ID .'">'.$postsshown->post_title.'</label>';
-																	}
-																	echo '
-																	</div>
-														<label for="mom_postasfront_post_submit" class="select"><i class="fa fa-save"></i>Save</label>
-														<input type="submit" id="mom_postasfront_post_submit" name="mom_postasfront_post_submit" value="Submit" class="hidden">
-														</form>
-														';
-													}
-												echo '
-												</section>';	
-											echo '<div class="clear new"></div>';
-											echo '<section><label class="labeltitle"><i class="fa fa-level-down"></i><span>AutoMods</span></label></section>';
-												// Font Awesome section
-												echo '
-												<section>
-													<form method="post" action="" name="fontawesome">
-													<label for="mom_fontawesome_mode_submit" class="';
-														if(get_option('mommaincontrol_fontawesome') == 1){echo 'on';}
-														if(get_option('mommaincontrol_fontawesome') == 0){echo 'off';}
-													echo '">
-														<i class="';
-														if(get_option('mommaincontrol_fontawesome') == 1){echo 'fa fa-check-square-o';}
-														if(get_option('mommaincontrol_fontawesome') == 0){echo 'fa fa-square-o';}	
-														echo '
-														"></i>Font Awesome
-													</label>
-													<input type="text" value="';
-														if(get_option('mommaincontrol_fontawesome') == 1){echo '0';}
-														if(get_option('mommaincontrol_fontawesome') == 0){echo '1';}
-													echo '
-													" name="mommaincontrol_fontawesome" class="hide" />
-													<input type="submit" id="mom_fontawesome_mode_submit" name="mom_fontawesome_mode_submit" class="hide" value="Submit" />
-													</form>
-												</section>';	
-												// Hide WP versions section
-												echo '
-												<section>
-													<form method="post" action="" name="hidewpversions">
-													<label for="mom_versions_submit" class="';
-														if(get_option('mommaincontrol_versionnumbers') == 1){echo 'on';}
-														if(get_option('mommaincontrol_versionnumbers') == 0){echo 'off';}
-													echo '">
-														<i class="';
-														if(get_option('mommaincontrol_versionnumbers') == 1){echo 'fa fa-check-square-o';}
-														if(get_option('mommaincontrol_versionnumbers') == 0){echo 'fa fa-square-o';}	
-														echo '
-														"></i>Hide WP Version
-													</label>
-													<input type="text" value="';
-														if(get_option('mommaincontrol_versionnumbers') == 1){echo '0';}
-														if(get_option('mommaincontrol_versionnumbers') == 0){echo '1';}
-													echo '
-													" name="mommaincontrol_versionnumbers" class="hide" />
-													<input type="submit" id="mom_versions_submit" name="mom_versions_submit" class="hide" value="Submit" />
-													</form>
-												</section>';	
-												// Lazy Load section
-												echo '
-												<section>
-													<form method="post" action="" name="lazyload">
-													<label for="mom_lazy_mode_submit" class="';
-														if(get_option('mommaincontrol_lazyload') == 1){echo 'on';}
-														if(get_option('mommaincontrol_lazyload') == 0){echo 'off';}
-													echo '">
-														<i class="';
-														if(get_option('mommaincontrol_lazyload') == 1){echo 'fa fa-check-square-o';}
-														if(get_option('mommaincontrol_lazyload') == 0){echo 'fa fa-square-o';}	
-														echo '
-														"></i>Lazy Load
-													</label>
-													<input type="text" value="';
-														if(get_option('mommaincontrol_lazyload') == 1){echo '0';}
-														if(get_option('mommaincontrol_lazyload') == 0){echo '1';}
-													echo '
-													" name="mommaincontrol_lazyload" class="hide" />
-													<input type="submit" id="mom_lazy_mode_submit" name="mom_lazy_mode_submit" class="hide" value="Submit" />
-													</form>
-												</section>';	
-												// Meta section
-												echo '<section>
-													<form method="post" action="" name="meta">
-													<label for="mom_meta_mode_submit" class="';
-														if(get_option('mommaincontrol_meta') == 1){echo 'on';}
-														if(get_option('mommaincontrol_meta') == 0){echo 'off';}
-													echo '">
-														<i class="';
-														if(get_option('mommaincontrol_meta') == 1){echo 'fa fa-check-square-o';}
-														if(get_option('mommaincontrol_meta') == 0){echo 'fa fa-square-o';}	
-														echo '
-														"></i>Meta
-													</label>
-													<input type="text" value="';
-														if(get_option('mommaincontrol_meta') == 1){echo '0';}
-														if(get_option('mommaincontrol_meta') == 0){echo '1';}
-													echo '" name="mommaincontrol_meta" class="hide" />
-													<input type="submit" id="mom_meta_mode_submit" name="mom_meta_mode_submit" class="hide" value="Submit" />
-													</form>
-												</section>';
-										echo '
-										</div>
 									</div>
 								</div>
 							</div>

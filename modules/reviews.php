@@ -60,101 +60,42 @@
 					<div class=\"settingsInput\">
 					
 					<form method=\"post\" class=\"addForm\">
-								<section><label>Review title</label><input type=\"text\" name=\"reviews_title\" placeholder=\"Review title\"></section>
-								<section><label>Review type</label><input type=\"text\" name=\"reviews_type\" placeholder=\"Review type\"></section>
-								<section><label>Relevant URL</label><input type=\"text\" name=\"reviews_link\" placeholder=\"Relevant URL\" ></section>
-								
+								<section>title<input type=\"text\" name=\"reviews_title\" placeholder=\"Enter title here\"></section>
+								<section>type<input type=\"text\" name=\"reviews_type\" placeholder=\"Review type\"></section>
+								<section>url<input type=\"text\" name=\"reviews_link\" placeholder=\"Relevant URL\" ></section>
+								<section class=\"editor\">
 									";
-										the_editor($content, $name = 'reviews_review', $id = 'reviews_review', $prev_id = 'title', $media_buttons = true, $tab_index = 2);
+										wp_editor($content, $name = 'reviews_review', $id = 'reviews_review', $prev_id = 'title', $media_buttons = true, $tab_index = 2);
 									echo "
-								
-								<section><label>Your rating</label><input type=\"text\" name=\"reviews_rating\" placeholder=\"Your rating\"></section>
-								<section><input id=\"reviewsubmit\" type=\"submit\" value=\"Add review\" name=\"reviewsubmit\"></input></section>
+								</section>
+								<section><label>rating</label><input type=\"text\" name=\"reviews_rating\" placeholder=\"Your rating\"></section>
+								<section><input id=\"reviewsubmit\" type=\"submit\" value=\"Add review\" name=\"reviewsubmit\"/></section>
 					</form>
-					
-					<div class=\"clear new\">				
-						<div class=\"momreview\">
-							<article class=\"block\">
-								<input type=\"checkbox\" name=\"momreview\" id=\"test\" />
-								<label for=\"test\">Title<span>+</span><span>-</span></label>
-								<section class=\"reviewed\">
-								<em>Review type</em> &mdash;
-								<a href=\"http://onebillionwords.com/\">#</a>
-								<hr />
-								<p>This is your review.  It will be formatted with the appropriate HTML, and 
-								even images (if you have added any).</p>
-								<p>This is just a <em>display purposes only</em> block to show you how your css
-								will affect the display.</p>
-								<p><em>Helpful</em></p>
-							</section>
-						</article>
 					</div>
-					<form method=\"post\">
+						
+					<form method=\"post\" class=\"csssubmit\">
 						<section><textarea name=\"css\">" . get_option('momreviews_css') . "</textarea></section>
 						<section><input id=\"csssubmit\" type=\"submit\" value=\"Save CSS\" name=\"csssubmit\"></input></section>
 					</form>
-				</div>";
+					</div>
+				";
 			}
 			
 			function reviews_page_content() {
 				echo "	
+					<span class=\"moduletitle\">__reviews<em>[momreviews]</em></span>
+					<div class=\"clear\"></div>
 					<div class=\"settings\">
-						<div class=\"settingsInfo taller\">
-								<h2>Usage</h2>
-									<blockquote>
-								<ol>
-									<li>Title is the subject of your review.</li>
-									<li>Type is the category.</li>
-									<li>Relevant URL is a link (optional) to something relevant to your review. (URL only.)</li>
-									<li>Treat the post box as you would the post editor when writing a new page or post.</li>
-									<li>Rating can be anything from an image to a text-string.  Use HTML to insert images or Font Awesome icons if Font Awesome is enabled.</li>
-									<li>Review title, type, and rating accept html.  \"s will be converted to 's.</li>
-									<li>Use the table below to edit or delete specific reviews.</li>
-								</ol>
-								<ol>
-									<li><code>[momreviews]</code> = all reviews</li>
-									<li><code>[momreviews type=\"'type'\"]</code> / <code>[momreviews type=\"'1'\"]</code> = reviews from review type <em>type</em></li>
-									<li><code>[momreviews type=\"'type1','type2','type3'\"]</code> /  <code>[momreviews type=\"'1','2','3'\"]</code> = reviews from reviews types <em>type1, type2, and type3</em>. <strong>or</strong> with the IDs 1, 2, and 3.</code>.</li>
-								</ol>
-								<ol>
-									<li>The shortcode accepts a variety of options.:</li>
-									<li> &mdash; type <strong>or</strong> id (default is blank) : parameters explained above (see code with list of types or single type usage above.) <strong>or</strong> the id(s) of the particular review you want to display (as found in the table below).  (Either or, but not both type and id can be used.)</li>
-									<li> &mdash; orderby (default is ID) : available parameters: ID,TYPE,LINK,TITLE,REVIEW,RATING.  Usage: <code>[momreviews orderby=\"LINK\"]</code></li>
-									<li> &mdash;&mdash; ID is the ID of the review, and will increment by 1 sequentially with each new review added to the database. </li>
-									<li> &mdash;&mdash; TYPE is the kind of review you are adding (if any).</li>
-									<li> &mdash;&mdash; LINK is the relevant URL you have attached to your review (if any).</li>
-									<li> &mdash;&mdash; TITLE is the title of the review (if any).</li>
-									<li> &mdash;&mdash; REVIEW is the review itself for the item in question (if any).</li>
-									<li> &mdash;&mdash; RATING is the rating you gave it (if any).</li>
-									<li> &mdash; order (default is DESC) : available parameters: DESC or ASC. Usage: <code>[momreviews order=\"DESC\"]</code></li>
-									<li> &mdash; meta (default is 1) : 1 is to show meta values (review type, rating, and relevant link).  0 is to hide this section altogether.  Usage: <code>[momreviews meta=\"1\"]</code></li>
-									<li> &mdash; expand (default is +) : what to show (on the right) when a review is collapsed.</li>
-									<li> &mdash; retract (default is -) : what to show (on the right) when a review is expanded.</li>
-									<li> &mdash;&mdash; if using Font Awesome, use <code>expand=\"&lt;i class='fa fa-arrow-down'>&lt;/i>\"</code> and <code>retract=\"&lt;i class='fa fa-arrow-up'>&lt;/i>\"</code> (examples) as your expand and retract display.</li>
-									<li>Multiple parameter usage: <code>[momreviews type=\"'book'\" orderby=\"TITLE\" order=\"DESC\" meta=\"0\" expand=\"Show\" retract=\"Hide\"]</code>
-								</blockquote>
-							</div>";
-					print_mom_reviews_form();
-					echo "
 					
-						</div>
-						
-						<div class=\"clear new\"></div>
-						<div class=\"settingsInput full\">
-						<section><label>Filter these results</label>
+						<div class=\"settingsInfo taller\">
 						<form method=\"post\" class=\"reviews_item_form\">
-							<input type=\"text\" name=\"filterResults_type\" placeholder=\"Filter by type (or blank for all results)\""; if ( get_option("momreviews_search") != "") echo "value=\"" . get_option("momreviews_search") . "\""; echo ">
+							<input type=\"text\" name=\"filterResults_type\" placeholder=\"Filter by type\""; if ( get_option("momreviews_search") != "") echo "value=\"" . get_option("momreviews_search") . "\""; echo ">
 							<input type=\"submit\" name=\"filterResults\" value=\"Accept\">
 						</form>
-						</section>
-					
-						<style>
-						textarea, input[type='text'] { width: 100%; display:block; cursor:pointer;}
-						textarea { height: 250px; }
-						" . get_option('momreviews_css') . "
-						</style>";
+						";
 						
-						global $wpdb;
+						
+					global $wpdb;
 						$mom_reviews_table_name = $wpdb->prefix . "momreviews";
 						$filtered_search = get_option('momreviews_search');
 						
@@ -163,36 +104,39 @@
 						} else {
 							$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name ORDER BY ID DESC");
 						}
-						
+						echo '<div class="momresults">';
 						foreach ($reviews as $reviews_results) {
 							$this_ID = $reviews_results->ID;
 								echo "<div class=\"momdata\">";
-								if(!isset($_POST['edit_'.$this_ID.''])){
+								
 								echo "
-								<div class=\"momreview\">
-									<article class=\"block\">
-										<input type=\"checkbox\" name=\"momreview\" id=\"" . $this_ID . "\" />
-										<label for=\"" . $this_ID . "\">" .  $reviews_results->TITLE . " ( ID: " . $this_ID . " / TYPE: " . $reviews_results->TYPE . ") <span>+</span><span>-</span></label>
-										<section class=\"reviewed\">
-											<em>" . $reviews_results->TYPE . "</em> &mdash; ";
-											if ($reviews_results->LINK != "") { echo "<a href=\"" . esc_url( $reviews_results->LINK ) . "\">#</a> &mdash;"; }
-											echo "<em>" . $reviews_results->RATING . "</em> <hr />" . $reviews_results->REVIEW . "
-										</section>
-									</article>
+								<div class=\"reviewitem\">
+										<section class=\"id\">id:".$reviews_results->ID."</section>
+										<span class=\"review\">".$reviews_results->TITLE."</span>
+										
+									";
+					if(!isset($_POST['edit_'.$this_ID.''])){ 
+					if(!isset($_POST['delete_'.$this_ID.''])){ echo "<form method=\"post\"><input class=\"deleteSubmit\" type=\"submit\" name=\"delete_".$this_ID."\" value=\"Delete\"></form>"; }
+					else{echo "<form class=\"confirm\" method=\"post\"><input type=\"submit\" name=\"cancel\" id\"cancel\" value=\"Nevermind, I'd like to keep it.\"/><input class=\"deleteSubmit\" type=\"submit\" name=\"delete_confirm_".$this_ID."\" value=\"Confirm your deletion of item ".$reviews_results->ID."\"/></form>";}
+					echo "<form method=\"post\"><input class=\"editSubmit\" type=\"submit\" name=\"edit_".$this_ID."\" value=\"Edit\"></form>";
+					}	echo "								
+								<section class=\"type\">type: ".$reviews_results->TYPE."</section>
 								</div>";
-							}else{
+							if(isset($_POST['edit_'.$this_ID.''])){
 								echo "
-								<form method=\"post\" class=\"editingForm\">
-											<section><label>Review title</label><input type=\"text\" name=\"reviews_title_".$this_ID."\" placeholder=\"Review title\" value=\"".$reviews_results->TITLE."\"></input></section>
-											<section><label>Review type</label><input type=\"text\" name=\"reviews_type_".$this_ID."\" placeholder=\"Review type\" value=\"".$reviews_results->TYPE."\"></input></section>
-											<section><label>Relevant URL</label><input type=\"text\" name=\"reviews_link_".$this_ID."\" placeholder=\"Relevant URL\" value=\"".$reviews_results->LINK."\"></input></section>
+								<div class=\"editing\">
+								<form method=\"post\" class=\"addForm\">
+											<section>title<input type=\"text\" name=\"reviews_title_".$this_ID."\" placeholder=\"Enter title here\" value=\"".$reviews_results->TITLE."\"/></section>
+											<section>type<input type=\"text\" name=\"reviews_type_".$this_ID."\" placeholder=\"Review type\" value=\"".$reviews_results->TYPE."\"/></section>
+											<section>url<input type=\"text\" name=\"reviews_link_".$this_ID."\" placeholder=\"Relevant URL\" value=\"".$reviews_results->LINK."\"/></section>
 											<section class=\"editor\">
 												";
-													the_editor($content = $reviews_results->REVIEW, $name = 'edit_review_'.$this_ID.'', $id = 'edit_review_'.$this_ID.'', $prev_id = 'title', $media_buttons = true, $tab_index = 1);
+													wp_editor($content = $reviews_results->REVIEW, $name = 'edit_review_'.$this_ID.'', $id = 'edit_review_'.$this_ID.'', $prev_id = 'title', $media_buttons = true, $tab_index = 1);
 												echo "</section>
-											<section><label>Your rating</label><input type=\"text\" name=\"reviews_rating_".$this_ID."\" placeholder=\"Your rating\" value=\"".$reviews_results->RATING."\"></input></section>
-											<section><input id=\"submit_edit_".$this_ID."\" type=\"submit\" value=\"Save these edits\" name=\"submit_edit_".$this_ID."\"><input type=\"submit\" name=\"cancel\" id\"cancel\" value=\"Nevermind, don't edit anything.\"/></input></section>
-								</form>";
+											<section>rating<input type=\"text\" name=\"reviews_rating_".$this_ID."\" placeholder=\"Your rating\" value=\"".$reviews_results->RATING."\"/></section>
+											<section><input id=\"submit_edit_".$this_ID."\" type=\"submit\" value=\"Save these edits\" name=\"submit_edit_".$this_ID."\"><input type=\"submit\" name=\"cancel\" id\"cancel\" value=\"Nevermind, don't edit anything.\"/></section>
+								</form>
+								</div>";
 							}
 					if(isset($_POST['submit_edit_'.$this_ID.''])){
 						global $table_prefix, $table_suffix, $wpdb;
@@ -206,11 +150,7 @@
 							$wpdb->query("UPDATE $reviews_table_name SET TYPE = '$edit_type', LINK = '$edit_link', TITLE = '$edit_title', REVIEW = '$edit_review', RATING = '$edit_rating' WHERE ID = $this_ID") ;
 							echo "<meta http-equiv=\"refresh\" content=\"0;url=\"$current\" />";
 					}
-					if(!isset($_POST['edit_'.$this_ID.''])){ 
-					if(!isset($_POST['delete_'.$this_ID.''])){ echo "<form method=\"post\"><input class=\"deleteSubmit\" type=\"submit\" name=\"delete_".$this_ID."\" value=\"Delete item ".$reviews_results->ID."\"></form>"; }
-					else{echo "<form class=\"confirm\" method=\"post\"><input type=\"submit\" name=\"cancel\" id\"cancel\" value=\"Nevermind, I'd like to keep it.\"/><input class=\"deleteSubmit\" type=\"submit\" name=\"delete_confirm_".$this_ID."\" value=\"Confirm your deletion of item ".$reviews_results->ID."\"/></form>";}
-					echo "<form method=\"post\"><input class=\"editSubmit\" type=\"submit\" name=\"edit_".$this_ID."\" value=\"Edit item ".$reviews_results->ID."\"></form>";
-					}
+
 					if(isset($_POST['delete_confirm_'.$this_ID.''])){
 						$current = plugin_basename(__FILE__);
 						$wpdb->query("DELETE FROM $mom_reviews_table_name WHERE ID = '$this_ID'");
@@ -222,8 +162,15 @@
 						
 					
 					echo "</div>";
-					}
-					echo "</div></div>";
+					}	
+					echo '</div>';
+	
+							echo "</div>";
+					print_mom_reviews_form();
+					echo '</div>';
+						
+	
+					
 			}
 			
 			reviews_page_content();

@@ -25,19 +25,19 @@
 			$totalClutter = ($terms_count + $comments_count + $revisions_count);
 			echo '
 			<section class="trash">
-			<label for="deleteAllClutter"><i class="fa fa-trash-o"></i><span>Clear Post, Comment, and Tag/Category clutter.</span><em>'.$totalClutter.'</em></label>
+			<label for="deleteAllClutter"><i class="fa fa-trash-o"></i><span>All clutter</span><em>'.$totalClutter.'</em></label>
 			<form method="post"><input class="hidden" id="deleteAllClutter" type="submit" value="Go" name="deleteAllClutter"></form>
 			</section>
 			<section class="trash">
-			<label for="delete_post_revisions"><i class="fa fa-trash-o"></i><span>Clear auto-drafts, trashed posts, and revisions.</span><em>'.$revisions_count.'</em></label>
+			<label for="delete_post_revisions"><i class="fa fa-trash-o"></i><span>Autodrafts/revisions and trash posts</span><em>'.$revisions_count.'</em></label>
 			<form method="post"><input class="hidden" id="delete_post_revisions" type="submit" value="Go" name="delete_post_revisions"></form>
 			</section>
 			<section class="trash">
-			<label for="delete_unapproved_comments"><i class="fa fa-trash-o"></i><span>Clear spam comments, trashed comments, and unapproved comments.</span><em>'.$comments_count.'</em></label>
+			<label for="delete_unapproved_comments"><i class="fa fa-trash-o"></i><span>Spam,trashed,unapproved comments</span><em>'.$comments_count.'</em></label>
 			<form method="post"><input class="hidden" id="delete_unapproved_comments" type="submit" value="Go" name="delete_unapproved_comments"></form>
 			</section>
 			<section class="trash">
-			<label for="delete_unused_terms"><i class="fa fa-trash-o"></i><span>Clear tags and categories that have no associated posts.</span><em>'.$terms_count.'</em></label>
+			<label for="delete_unused_terms"><i class="fa fa-trash-o"></i><span>Orphan tags and categories</span><em>'.$terms_count.'</em></label>
 			<form method="post"><input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms"></form>
 			</section>
 			';
