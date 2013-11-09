@@ -34,7 +34,7 @@
 					$reviews_type = str_replace('"','\'',($_REQUEST[ 'reviews_type' ]));
 					$reviews_link = str_replace('"','\'',($_REQUEST[ 'reviews_link' ]));
 					$reviews_title = str_replace('"','\'',($_REQUEST[ 'reviews_title' ]));
-					$reviews_reviewed = mom_closetags( $_REQUEST[ 'reviews_review' ] ) ;
+					$reviews_reviewed = $_REQUEST[ 'reviews_review' ];
 					$reviews_review = wpautop( $reviews_reviewed );
 					$reviews_rating = str_replace('"','\'',($_REQUEST[ 'reviews_rating' ]));
 					$wpdb->query("INSERT INTO $reviews_table_name (ID,TYPE,LINK,TITLE,REVIEW,RATING) VALUES ('','$reviews_type','$reviews_link','$reviews_title','$reviews_review','$reviews_rating')") ;
@@ -131,7 +131,8 @@
 											<section>url<input type=\"text\" name=\"reviews_link_".$this_ID."\" placeholder=\"Relevant URL\" value=\"".$reviews_results->LINK."\"/></section>
 											<section class=\"editor\">
 												";
-													wp_editor($content = $reviews_results->REVIEW, $name = 'edit_review_'.$this_ID.'', $id = 'edit_review_'.$this_ID.'', $prev_id = 'title', $media_buttons = true, $tab_index = 1);
+													$thisContent = $reviews_results->REVIEW;
+													wp_editor($content = $thisContent, $name = 'edit_review_'.$this_ID.'', $id = 'edit_review_'.$this_ID.'', $prev_id = 'title', $media_buttons = true, $tab_index = 1);
 												echo "</section>
 											<section>rating<input type=\"text\" name=\"reviews_rating_".$this_ID."\" placeholder=\"Your rating\" value=\"".$reviews_results->RATING."\"/></section>
 											<section><input id=\"submit_edit_".$this_ID."\" type=\"submit\" value=\"Save these edits\" name=\"submit_edit_".$this_ID."\"><input type=\"submit\" name=\"cancel\" id\"cancel\" value=\"Nevermind, don't edit anything.\"/></section>
@@ -144,8 +145,8 @@
 							$edit_type = str_replace('"','\'',($_REQUEST[ 'reviews_type_'.$this_ID.'' ]));
 							$edit_link = str_replace('"','\'',($_REQUEST[ 'reviews_link_'.$this_ID.'' ]));
 							$edit_title = str_replace('"','\'',($_REQUEST[ 'reviews_title_'.$this_ID.'' ]));
-							$edit_reviewed = mom_closetags( $_REQUEST[ 'edit_review_'.$this_ID.'' ] ) ;
-							$edit_review = wpautop( $reviews_reviewed );
+							$edit_reviewed = $_REQUEST[ 'edit_review_'.$this_ID.'' ];
+							$edit_review = wpautop( $edit_reviewed );
 							$edit_rating = str_replace('"','\'',($_REQUEST[ 'reviews_rating_'.$this_ID.'' ]));
 							$wpdb->query("UPDATE $reviews_table_name SET TYPE = '$edit_type', LINK = '$edit_link', TITLE = '$edit_title', REVIEW = '$edit_review', RATING = '$edit_rating' WHERE ID = $this_ID") ;
 							echo "<meta http-equiv=\"refresh\" content=\"0;url=\"$current\" />";
