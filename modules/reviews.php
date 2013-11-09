@@ -31,12 +31,12 @@
 			function update_mom_reviews() {
 				global $table_prefix, $table_suffix, $wpdb;
 				$reviews_table_name = $table_prefix . $table_suffix . 'momreviews';			
-					$reviews_type = sanitize_text_field( esc_html(mom_closetags( $_REQUEST[ 'reviews_type' ] ) ) );
-					$reviews_link = sanitize_text_field( esc_html(mom_closetags( $_REQUEST[ 'reviews_link' ] ) ) );
-					$reviews_title = sanitize_text_field( esc_html(mom_closetags( $_REQUEST[ 'reviews_title' ] ) ) );
+					$reviews_type = str_replace('"','\'',($_REQUEST[ 'reviews_type' ]));
+					$reviews_link = str_replace('"','\'',($_REQUEST[ 'reviews_link' ]));
+					$reviews_title = str_replace('"','\'',($_REQUEST[ 'reviews_title' ]));
 					$reviews_reviewed = mom_closetags( $_REQUEST[ 'reviews_review' ] ) ;
 					$reviews_review = wpautop( $reviews_reviewed );
-					$reviews_rating = sanitize_text_field( esc_html(mom_closetags( $_REQUEST[ 'reviews_rating' ] ) ) ); 
+					$reviews_rating = str_replace('"','\'',($_REQUEST[ 'reviews_rating' ]));
 					$wpdb->query("INSERT INTO $reviews_table_name (ID,TYPE,LINK,TITLE,REVIEW,RATING) VALUES ('','$reviews_type','$reviews_link','$reviews_title','$reviews_review','$reviews_rating')") ;
 					echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
 			}
@@ -101,15 +101,15 @@
 					<div class=\"settings\">
 						<div class=\"settingsInfo taller\">
 								<h2>Usage</h2>
-									<blockquote><ol>
-										<li>Review title is the title of the review.</li>
-										<li>Review type can be anything: book, movie, cd, ponytail, whatever.</li>
-										<li>Relevant URL (if used) should link to something relevant to the review; if you're reviewing a film, link 
-										to the IMDB page.  If you're reviewing a book, link to the author's website.  It's optional, however.</li>
-										<li>Use the text field to write a review.  Use HTML if you want to.</li>
-										<li>Rating can be anything: It sucked!, 5 out of 10, jolly rancher!, whatever.</li>
-										<li>Use the table below to delete specific reviews.</li>
-										<li>Shortcodes may not execute properly in the review table below, although they may display normally on your live site. (Check and make sure before you delete a review thinking you've made a mistake.)</li>
+									<blockquote>
+								<ol>
+									<li>Title is the subject of your review.</li>
+									<li>Type is the category.</li>
+									<li>Relevant URL is a link (optional) to something relevant to your review. (URL only.)</li>
+									<li>Treat the post box as you would the post editor when writing a new page or post.</li>
+									<li>Rating can be anything from an image to a text-string.  Use HTML to insert images or Font Awesome icons if Font Awesome is enabled.</li>
+									<li>Review title, type, and rating accept html.  \"s will be converted to 's.</li>
+									<li>Use the table below to edit or delete specific reviews.</li>
 								</ol>
 								<ol>
 									<li><code>[momreviews]</code> = all reviews</li>
@@ -197,12 +197,12 @@
 					if(isset($_POST['submit_edit_'.$this_ID.''])){
 						global $table_prefix, $table_suffix, $wpdb;
 						$reviews_table_name = $table_prefix . $table_suffix . 'momreviews';			
-							$edit_type = sanitize_text_field( esc_html(mom_closetags( $_REQUEST[ 'reviews_type_'.$this_ID.'' ] ) ) );
-							$edit_link = sanitize_text_field( esc_html(mom_closetags( $_REQUEST[ 'reviews_link_'.$this_ID.'' ] ) ) );
-							$edit_title = sanitize_text_field( esc_html(mom_closetags( $_REQUEST[ 'reviews_title_'.$this_ID.'' ] ) ) );
+							$edit_type = str_replace('"','\'',($_REQUEST[ 'reviews_type_'.$this_ID.'' ]));
+							$edit_link = str_replace('"','\'',($_REQUEST[ 'reviews_link_'.$this_ID.'' ]));
+							$edit_title = str_replace('"','\'',($_REQUEST[ 'reviews_title_'.$this_ID.'' ]));
 							$edit_reviewed = mom_closetags( $_REQUEST[ 'edit_review_'.$this_ID.'' ] ) ;
-							$edit_review = wpautop( $edit_reviewed );
-							$edit_rating = sanitize_text_field( esc_html(mom_closetags( $_REQUEST[ 'reviews_rating_'.$this_ID.'' ] ) ) ); 
+							$edit_review = wpautop( $reviews_reviewed );
+							$edit_rating = str_replace('"','\'',($_REQUEST[ 'reviews_rating_'.$this_ID.'' ]));
 							$wpdb->query("UPDATE $reviews_table_name SET TYPE = '$edit_type', LINK = '$edit_link', TITLE = '$edit_title', REVIEW = '$edit_review', RATING = '$edit_rating' WHERE ID = $this_ID") ;
 							echo "<meta http-equiv=\"refresh\" content=\"0;url=\"$current\" />";
 					}

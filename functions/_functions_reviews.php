@@ -9,13 +9,13 @@
 		ob_start();
 		extract(
 			shortcode_atts(array(
-				"type" => '',
-				"orderby" => 'ID',
-				"order" => 'ASC',
-				"meta" => '1',
-				"expand" => "+",
-				"retract" => "-",
-				"id" => "",
+				'type' => '',
+				'orderby' => 'ID',
+				'order' => 'ASC',
+				'meta' => 1,
+				'expand' => '+',
+				'retract' => '-',
+				'id' => '',
 			), $atts)
 		);	
 		$id_fetch_att = $id;
@@ -39,7 +39,7 @@
 		}
 		foreach($reviews as $reviews_results){
 			$this_ID = $reviews_results->ID;
-				echo "<div "; if($result_type != ''){echo "id=\"" . $result_type . "\"";}echo " class=\"momreview\"><article class=\"block\"><input type=\"checkbox\" name=\"review\" id=\"".$this_ID."".$mom_review_global."\" /><label for=\"".$this_ID."".$mom_review_global."\">";if($reviews_results->TITLE != ''){echo $reviews_results->TITLE;}echo "<span>".$expand_this."</span><span>".$retract_this."</span></label><section class=\"reviewed\">";if($meta_show == 1){if($reviews_results->TYPE != ''){echo " [ <em>".$reviews_results->TYPE."</em> ] ";}if($reviews_results->LINK != ''){echo " [ <a href=\"".esc_url($reviews_results->LINK)."\">#</a> ] ";}}if($reviews_results->REVIEW != ''){echo "<hr />".$reviews_results->REVIEW."";}if($reviews_results->RATING != ''){echo " <p><em>".$reviews_results->RATING."</em></p> ";}echo "</section></article></div>";
+				echo "<div "; if($result_type != ''){echo "id=\"" . $result_type . "\"";}echo " class=\"momreview\"><article class=\"block\"><input type=\"checkbox\" name=\"review\" id=\"".$this_ID."".$mom_review_global."\" /><label for=\"".$this_ID."".$mom_review_global."\">";if($reviews_results->TITLE != ''){echo $reviews_results->TITLE;}echo "<span>".$expand_this."</span><span>".$retract_this."</span></label><section class=\"reviewed\">";if($meta_show == 1){if($reviews_results->TYPE != ''){echo " [ <em>".$reviews_results->TYPE."</em> ] ";}if($reviews_results->LINK != ''){echo " [ <a href=\"".esc_url($reviews_results->LINK)."\">#</a> ] ";}}if($reviews_results->REVIEW != ''){echo "<hr />".$reviews_results->REVIEW."";}if($reviews_results->RATING != ''){echo " <p>".$reviews_results->RATING."</p> ";}echo "</section></article></div>";
 		}		
 		return ob_get_clean();
 	}

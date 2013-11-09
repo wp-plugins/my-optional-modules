@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 5.1.9
+Stable tag: 5.1.9.1
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -61,28 +61,29 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 == Changelog ==
 = 5.1.+ =
-* 5.1.9 / Bugfix: module: Post as Front
-* 5.1.8 / Ability to edit reviews has been added, as well as delete confirm for items.
-* 5.1.8 / Some files have had unnecessary whitespace removed.
-* 5.1.7 / Modified: code: Exclude: forms have been 'idiot-proofed'.
-* 5.1.7 / Modified: code: Exclude: upon upgrading to 5.1.7, you may (or may not) want to do a 'resubmit' on your current data-set.  Simply go to the Exclude settings page, and press the save button.  This will resubmit your current data using the new functionality.
-* 5.1.7 / Bugfix: module: Exclude: a couple of exclusion rules were left out by mistake.  This mistake has been rectified.
-* 5.1.6 / Deactivate/activate the Exclude module after updating.
-* 5.1.6 / Exclude: Hide specific posts and tags from people who aren't logged in. (This will hide them from the feed as well)
-* 5.1.6 / Exclude: If you are hiding tags or categories from non logged in users, the content returned will be from your 404 template.
-* 5.1.6 / Bugfix: module: Jump Around has had its installation procedure fixed.
-* 5.1.5 / UI changed.  Should be more intuitive, easier to navigate, and easier to activate and deactivate modules.
-* 5.1.5 / Compatability check added to make sure there are no conflicting functions between other plugins and themes and the functions used in MOM.
-* 5.1.4 / An extremely simple maintenance mode has been added.
-* 5.1.3 / Bugfix: module: Reviews now have the content of the review formatted properly.
-* 5.1.3 / Bugfix: function: obwcountplus_single().
-* 5.1.2 / Verifier: Added the option to set the correct and incorrect stats messages, providing the ability to set up impromptu 'yes/no' type polls/questions (think 'Did you find this article useful?  Yes or no.')
-* 5.1.1 / Hotfix for positioning of Verifier output/form.
-* 5.1.0 / Disable/renable the Shortcodes! module for changes to take effect.
-* 5.1.0 / Verifier shortcode added.  This one is a bit of a beast, so best to check the documentation.
-* 5.1.0 / Verifier: gate content with an age check, or a question.
-* 5.1.0 / Verifier: log unique correct and incorrect answers and optionally show these stats.
-* 5.1.0 / Verifier: ability to set a gate as a one time event or not.
+* 5.1.9.1 / Ability to add html to reviews fields for a wider variety of display types added.
+* 5.1.9.0 / Bugfix: module: Post as Front
+* 5.1.8.0 / Ability to edit reviews has been added, as well as delete confirm for items.
+* 5.1.8.0 / Some files have had unnecessary whitespace removed.
+* 5.1.7.0 / Modified: code: Exclude: forms have been 'idiot-proofed'.
+* 5.1.7.0 / Modified: code: Exclude: upon upgrading to 5.1.7, you may (or may not) want to do a 'resubmit' on your current data-set.  Simply go to the Exclude settings page, and press the save button.  This will resubmit your current data using the new functionality.
+* 5.1.7.0 / Bugfix: module: Exclude: a couple of exclusion rules were left out by mistake.  This mistake has been rectified.
+* 5.1.6.0 / Deactivate/activate the Exclude module after updating.
+* 5.1.6.0 / Exclude: Hide specific posts and tags from people who aren't logged in. (This will hide them from the feed as well)
+* 5.1.6.0 / Exclude: If you are hiding tags or categories from non logged in users, the content returned will be from your 404 template.
+* 5.1.6.0 / Bugfix: module: Jump Around has had its installation procedure fixed.
+* 5.1.5.0 / UI changed.  Should be more intuitive, easier to navigate, and easier to activate and deactivate modules.
+* 5.1.5.0 / Compatability check added to make sure there are no conflicting functions between other plugins and themes and the functions used in MOM.
+* 5.1.4.0 / An extremely simple maintenance mode has been added.
+* 5.1.3.0 / Bugfix: module: Reviews now have the content of the review formatted properly.
+* 5.1.3.0 / Bugfix: function: obwcountplus_single().
+* 5.1.2.0 / Verifier: Added the option to set the correct and incorrect stats messages, providing the ability to set up impromptu 'yes/no' type polls/questions (think 'Did you find this article useful?  Yes or no.')
+* 5.1.1.0 / Hotfix for positioning of Verifier output/form.
+* 5.1.0.0 / Disable/renable the Shortcodes! module for changes to take effect.
+* 5.1.0.0 / Verifier shortcode added.  This one is a bit of a beast, so best to check the documentation.
+* 5.1.0.0 / Verifier: gate content with an age check, or a question.
+* 5.1.0.0 / Verifier: log unique correct and incorrect answers and optionally show these stats.
+* 5.1.0.0 / Verifier: ability to set a gate as a one time event or not.
 
 = 5.0.+ =
 * 5.0.9 / Title rewrites removed (this really should be handled on a theme level, in my opinion.)
