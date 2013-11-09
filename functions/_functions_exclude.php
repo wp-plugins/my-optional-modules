@@ -2,6 +2,7 @@
 	require_once(ABSPATH.'wp-includes/pluggable.php');
 	if(!is_user_logged_in()){
 		function exclude_post_by_category($query){
+			if(get_option('MOM_Exclude_VisitorCategories') == ''){$loggedOutCats = '0,0';}
 			$loggedOutCats = get_option('MOM_Exclude_VisitorCategories');
 			$c1 = explode(',',$loggedOutCats);
 			foreach($c1 as &$C1) { $C1 = ''.$C1.',';}
@@ -32,6 +33,7 @@
 			}
 		}
 		function exclude_post_by_tag($query){
+			if(get_option('MOM_Exclude_VisitorTags') == ''){$loggedOutTags = '0,0';}
 			$loggedOutTags = get_option('MOM_Exclude_VisitorTags');
 				$t1 = explode(',',$loggedOutTags);
 				foreach ($t1 as &$T1){$T1 = ''.$T1.',';}
@@ -60,11 +62,30 @@
 				}
 			}
 		}
-		add_action('pre_get_posts','exclude_post_by_category');
+		add_action('pre_get_posts','exclude_post_by_tag');
 		add_action('pre_get_posts','exclude_post_by_category');
 	}
 	add_action('pre_get_posts','momse_filter_home');
 	function momse_filter_home($query){
+		if(get_option('MOM_Exclude_Categories_Front') == ''){$MOM_Exclude_Categories_Front = '0,0';}
+		if(get_option('MOM_Exclude_Tags_Front') == ''){$MOM_Exclude_Tags_Front = '0,0';}
+		if(get_option('MOM_Exclude_Categories_TagArchives') == ''){$MOM_Exclude_Categories_TagArchives = '0,0';}
+		if(get_option('MOM_Exclude_Categories_SearchResults') == ''){$MOM_Exclude_Categories_SearchResults = '0,0';}
+		if(get_option('MOM_Exclude_Tags_CategoryArchives') == ''){$MOM_Exclude_Tags_CategoryArchives = '0,0';}
+		if(get_option('MOM_Exclude_Tags_SearchResults') == ''){$MOM_Exclude_Tags_SearchResults = '0,0';}
+		if(get_option('MOM_Exclude_PostFormats_Front') == ''){$MOM_Exclude_PostFormats_Front = '0,0';}
+		if(get_option('MOM_Exclude_PostFormats_CategoryArchives') == ''){$MOM_Exclude_PostFormats_CategoryArchives = '0,0';}
+		if(get_option('MOM_Exclude_PostFormats_TagArchives') == ''){$MOM_Exclude_PostFormats_TagArchives = '0,0';}
+		if(get_option('MOM_Exclude_PostFormats_SearchResults') == ''){$MOM_Exclude_PostFormats_SearchResults = '0,0';}
+		if(get_option('MOM_Exclude_Categories_RSS') == ''){$MOM_Exclude_Categories_RSS = '0,0';}
+		if(get_option('MOM_Exclude_Tags_RSS') == ''){$MOM_Exclude_Tags_RSS = '0,0';}
+		if(get_option('MOM_Exclude_PostFormats_RSS') == ''){$MOM_Exclude_PostFormats_RSS = '0,0';}
+		if(get_option('MOM_Exclude_Tags_Day') == ''){$MOM_Exclude_Tags_Day = '0,0';}
+		if(get_option('MOM_Exclude_Cats_Day') == ''){$MOM_Exclude_Cats_Day = '0,0';}
+		if(get_option('MOM_Exclude_VisitorCategories') == ''){$loggedOutCats = '0,0';}
+		if(get_option('MOM_Exclude_VisitorTags') == ''){$loggedOutTags = '0,0';}
+		
+		
 		$MOM_Exclude_Categories_Front = get_option('MOM_Exclude_Categories_Front');
 		$MOM_Exclude_Tags_Front = get_option('MOM_Exclude_Tags_Front');
 		$MOM_Exclude_Categories_TagArchives = get_option('MOM_Exclude_Categories_TagArchives');
@@ -78,27 +99,27 @@
 		$MOM_Exclude_Categories_RSS = get_option('MOM_Exclude_Categories_RSS');
 		$MOM_Exclude_Tags_RSS = get_option('MOM_Exclude_Tags_RSS');
 		$MOM_Exclude_PostFormats_RSS = get_option('MOM_Exclude_PostFormats_RSS');
-		if (date('D') === 'Sun'){$simple_announcement_with_exclusion_day = get_option('MOM_Exclude_TagsSun');}
-		if (date('D') === 'Mon'){$simple_announcement_with_exclusion_day = get_option('MOM_Exclude_TagsMon');}
-		if (date('D') === 'Tue'){$simple_announcement_with_exclusion_day = get_option('MOM_Exclude_TagsTue');} 
-		if (date('D') === 'Wed'){$simple_announcement_with_exclusion_day = get_option('MOM_Exclude_TagsWed');}
-		if (date('D') === 'Thu'){$simple_announcement_with_exclusion_day = get_option('MOM_Exclude_TagsThu');}
-		if (date('D') === 'Fri'){$simple_announcement_with_exclusion_day = get_option('MOM_Exclude_TagsFri');}
-		if (date('D') === 'Sat'){$simple_announcement_with_exclusion_day = get_option('MOM_Exclude_TagsSun');}
-		if (date('D') === 'Sun'){$simple_announcement_with_exclusion_cat_day = get_option('MOM_Exclude_CategoriesSun');}
-		if (date('D') === 'Mon'){$simple_announcement_with_exclusion_cat_day = get_option('MOM_Exclude_CategoriesMon');}
-		if (date('D') === 'Tue'){$simple_announcement_with_exclusion_cat_day = get_option('MOM_Exclude_CategoriesTue');} 
-		if (date('D') === 'Wed'){$simple_announcement_with_exclusion_cat_day = get_option('MOM_Exclude_CategoriesWed');}
-		if (date('D') === 'Thu'){$simple_announcement_with_exclusion_cat_day = get_option('MOM_Exclude_CategoriesThu');}
-		if (date('D') === 'Fri'){$simple_announcement_with_exclusion_cat_day = get_option('MOM_Exclude_CategoriesFri');}
-		if (date('D') === 'Sat'){$simple_announcement_with_exclusion_cat_day = get_option('MOM_Exclude_CategoriesSat');}		
+		if(date('D') === 'Sun'){$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsSun');}
+		if(date('D') === 'Mon'){$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsMon');}
+		if(date('D') === 'Tue'){$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsTue');} 
+		if(date('D') === 'Wed'){$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsWed');}
+		if(date('D') === 'Thu'){$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsThu');}
+		if(date('D') === 'Fri'){$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsFri');}
+		if(date('D') === 'Sat'){$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsSun');}
+		if(date('D') === 'Sun'){$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesSun');}
+		if(date('D') === 'Mon'){$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesMon');}
+		if(date('D') === 'Tue'){$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesTue');} 
+		if(date('D') === 'Wed'){$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesWed');}
+		if(date('D') === 'Thu'){$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesThu');}
+		if(date('D') === 'Fri'){$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesFri');}
+		if(date('D') === 'Sat'){$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesSat');}		
 		$loggedOutCats = get_option('MOM_Exclude_VisitorCategories');
 		$loggedOutTags = get_option('MOM_Exclude_VisitorTags');
-		$rss_day = explode(',',$simple_announcement_with_exclusion_day);
+		$rss_day = explode(',',$MOM_Exclude_Tags_Day);
 		foreach ($rss_day as &$rss_day_1){$rss_day_1 = ''.$rss_day_1.',';}
 		$rss_day_1 = implode($rss_day);
 		$rssday = explode(',',str_replace(' ','',$rss_day_1));
-		$rss_day_cat = explode(',',$simple_announcement_with_exclusion_cat_day);
+		$rss_day_cat = explode(',',$MOM_Exclude_Cats_Day);
 		foreach ($rss_day_cat as &$rss_day_1_cat){$rss_day_1_cat = ''.$rss_day_1_cat.',';}
 		$rss_day_1_cat = implode($rss_day_cat);
 		$rssday_cat = explode(',', str_replace(' ','',$rss_day_1_cat));		
