@@ -12,7 +12,6 @@
 			get_currentuserinfo();
 			global $user_level;
 			$loggedOutCats = '0,0';
-			$loggedOutTags = '0,0';
 			if    ($user_level == 0) {$loggedOutCats = get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
 			elseif($user_level == 1) {$loggedOutCats = get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
 			elseif($user_level == 2) {$loggedOutCats = get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
@@ -35,13 +34,6 @@
 						global $wpdb;
 						$page = $wpdb->get_var($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_name = %s AND post_type= %s AND post_status = 'publish'",$page_slug,$post_type));
 					}
-					if(get_option('MOM_Exclude_URL') != ''){
-						$maintenanceURL = esc_url(get_option('momMaintenance_url'));
-						$MOMExcludeURL = get_option('MOM_Exclude_URL');
-							header('location:'.get_permalink($MOMExcludeURL)); 
-							exit;
-					} else {}					
-					
 					if ($page) {
 						$post_categories = wp_get_post_categories($page);
 						foreach ($excluded_category_ids as $category_id){
@@ -81,12 +73,6 @@
 						global $wpdb;
 						$page = $wpdb->get_var($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_name = %s AND post_type= %s AND post_status = 'publish'",$page_slug, $post_type));
 					}
-					if(get_option('MOM_Exclude_URL') != ''){
-						$maintenanceURL = esc_url(get_option('momMaintenance_url'));
-						$MOMExcludeURL = get_option('MOM_Exclude_URL');
-							header('location:'.get_permalink($MOMExcludeURL)); 
-							exit;
-					} else {}					
 					if($page){
 						$post_tags = wp_get_post_tags($page);
 						foreach($excluded_tag_ids as $tag_id){
