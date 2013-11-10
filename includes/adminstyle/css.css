@@ -2,7 +2,8 @@
 	(since version 4.0.5) */
     div,i,section,label,a,input { -webkit-transition: all .6s ease-in-out; -moz-transition: all .6s ease-in-out; -o-transition: all .6s ease-in-out; transition: all .6s ease-in-out; }	
 	input,select { cursor:pointer; }
-	.new { margin: 40px 0 10px 0; display: block; }
+	.new {margin:40px 0 10px 0;display:block;}
+	.break {margin:30px 0 10px 0;display:block;clear:both;height:20px;}
 	.wrap { line-height:17px; display:block; clear:both; width: 890px}
 	.moduleform section { width:95%; background-color:#1e292c; padding:5px; margin:5px auto; border-radius:3px; overflow:hidden; border:1px solid #a3aab0; font-size:20px; color:#f2fcff;}
 	.moduleform section p { width:95%; margin:5px auto; font-size:15px; color:#a2afb3; }
@@ -13,7 +14,7 @@
 	.moduleform section label.on { color:#67cf5d; }
 	.moduleform section label.off:hover { color:#67cf5d; }
 	.moduleform section label.on:hover { color:#cf5d5d; }
-	
+	select.allpages{width:60px; display:block;}
 	.moduleform section .select { clear:both; width:auto; padding:5px; margin:5px auto; height:20px; cursor:pointer; background-color:transparent; color:#e3ffe3; text-align:left;}
 	.moduleform section .select:hover { color:#ffacac; }
 	.moduleform section .labeltitle { background-color:#474749; color:#fff; text-shadow:none; line-height:20px;}
@@ -116,12 +117,11 @@
 	section.formbutton input[type='submit'],
 	section.formbutton input[type='text']{display:none;visibility:hidden;}
 	section.formbutton i{float:left;margin:9px 5px auto;}
-	.simplemods{margin:0;width:798px;display:block;background-color:#fff;height:80px;border-left:1px solid #201919;border-right:1px solid #201919;border-left:1px solid #201919;border-top:1px solid #201919;}
+	.simplemods{margin:0;width:798px;display:block;background-color:#fff;height:80px;border-left:1px solid #201919;border-right:1px solid #201919;border-left:1px solid #201919;border-top:1px solid #201919;overflow:hidden;}
 	.simple{width:250px !important;height:60px !important;padding:5px;background-color:#fff;margin-right:-10px;}
 	.simple .setting{display:block !important;visibility:visible !important;margin:-5px 0;}
 	.simple select{width:180px;display:block;}
 	.simple .select{float:right;margin:-25px -190px 0;}
-	
 	
 	form.csssubmit{width:255px;margin:-254px 3px 0;float:left;}
 	form.csssubmit textarea{width:255px;height:210px;padding:0;font-size:12px;}
@@ -148,7 +148,7 @@
 	.exclude{width:250px;float:left;margin-right:10px;}
 	.exclude input[type='text'],
 	.exclude select{float:right;}
-	#momsesave{margin-top:175px;}
+	#momsesave{margin:30px auto;}
 	.exclude input[type='text']{width:100px;}
 	.templatetags{width:770px;padding:5px;display:block;clear:both;padding-top:50px !important;}
 	.templatetags section{line-height:30px;clear:both;display:block;height:20px;}	
@@ -166,7 +166,7 @@
 	.addForm section {clear:both;line-height:30px;font-size:15px;text-indent:5px;}
 	.addForm section.editor{margin:10px auto 10px auto !important;display:block;clear:both;}
 	.addForm input[type='text']{width:350px !important;float:right;}
-	
+	.allitems{float:left;width:391px;margin:-5px 0 5px 0;}
 	form.introduction{clear:both;height:30px;width:800px;display:block;background-color:#fff;}
 	div.introduction{clear:both;height:140px;width:788px;display:block;background-color:#f2f2f2;padding:5px;border-left:1px solid #000;border-right:1px solid #000;overflow:hidden;text-align:center;}
 	div.introduction p{clear:both;margin:30px 5px 5px 0;padding:5px;font-size:30px;line-height:40px;text-shadow:-1px -1px 0 #6d8c95;color:#000;}

@@ -64,6 +64,10 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 == Changelog ==
 = 5.2.+ =
+* 5.2.2 / Module: Exclude: Hide Post Formats from logged out added.
+* 5.2.2 / Module: Exclude: Post formats now properly added to edit post screen. (Will not hide single post view like logged out cat and tag hiding does.)
+* 5.2.2 / Module: Exclude: Hide categories and tags from users based on level (0,1,2,7 / subscriber,contributor,author,editor).  Any categories and tags hidden by user level will subsequently be hidden from all users not currently logged in.
+* 5.2.2 / Module: Exclude: Redirect viewers who don't meet the level requirements (based on hidden by user level/logged out) to a specific page.
 * 5.2.1 / Hotfix: Exclude -> Filter tags for logged out visitors was not being called.  If options are empty, variables will be preset to suppress errors.
 * 5.2.1 / Hotfix: Reviews.
 * 5.2.0 / Complete UI rehaul.  Now with even more... thing.

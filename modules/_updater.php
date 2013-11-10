@@ -67,6 +67,17 @@
 		delete_option('MOM_Exclude_CategoriesThu');
 		delete_option('MOM_Exclude_CategoriesFri');
 		delete_option('MOM_Exclude_CategoriesSat');
+		delete_option('MOM_Exclude_level0Categories');
+		delete_option('MOM_Exclude_level1Categories');
+		delete_option('MOM_Exclude_level2Categories');
+		delete_option('MOM_Exclude_level7Categories');
+		delete_option('MOM_Exclude_level0Tags');
+		delete_option('MOM_Exclude_level1Tags');
+		delete_option('MOM_Exclude_level2Tags');
+		delete_option('MOM_Exclude_level7Tags');
+		delete_option('MOM_Exclude_URL');
+		delete_option('MOM_Exclude_PostFormats_Visitor');
+
 		
 		delete_option( 'mommaincontrol_setfocus' );
 		delete_option( 'mommaincontrol' );

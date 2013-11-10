@@ -1,7 +1,6 @@
 <?php if(!defined('MyOptionalModules')){die('You can not call this file directly.');}
 	if(is_admin()){ 
 		function my_optional_modules_exclude_module(){
-			add_theme_support('post-formats',array('aside','gallery','link','image','quote','status','video','audio','chat'));
 			function update_momse_options(){
 				if(isset($_POST['momsesave'])){
 					update_option('MOM_Exclude_VisitorCategories',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_VisitorCategories']))))))));
@@ -14,6 +13,7 @@
 					update_option('MOM_Exclude_Tags_Front',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Tags_Front'])))))))));
 					update_option('MOM_Exclude_Tags_CategoryArchives',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Tags_CategoryArchives'])))))))));
 					update_option('MOM_Exclude_Tags_SearchResults',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Tags_SearchResults'])))))))));
+					update_option('MOM_Exclude_PostFormats_Visitor',sanitize_text_field($_REQUEST['MOM_Exclude_PostFormats_Visitor']));
 					update_option('MOM_Exclude_PostFormats_RSS',sanitize_text_field($_REQUEST['MOM_Exclude_PostFormats_RSS']));
 					update_option('MOM_Exclude_PostFormats_Front',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_Front'])));
 					update_option('MOM_Exclude_PostFormats_CategoryArchives',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_CategoryArchives'])));
@@ -33,6 +33,16 @@
 					update_option('MOM_Exclude_CategoriesThu',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_CategoriesThu']))))))));
 					update_option('MOM_Exclude_CategoriesFri',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_CategoriesFri']))))))));
 					update_option('MOM_Exclude_CategoriesSat',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_CategoriesSat']))))))));
+					update_option('MOM_Exclude_level0Categories',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level0Categories']))))))));
+					update_option('MOM_Exclude_level1Categories',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level1Categories']))))))));
+					update_option('MOM_Exclude_level2Categories',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level2Categories']))))))));
+					update_option('MOM_Exclude_level7Categories',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level7Categories']))))))));
+					update_option('MOM_Exclude_level0Tags',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level0Tags']))))))));
+					update_option('MOM_Exclude_level1Tags',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level1Tags']))))))));
+					update_option('MOM_Exclude_level2Tags',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level2Tags']))))))));
+					update_option('MOM_Exclude_level7Tags',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level7Tags']))))))));
+					update_option('MOM_Exclude_URL',$_REQUEST['MOM_Exclude_URL']);
+					
 				}
 			}
 			function momse_form(){
@@ -54,44 +64,77 @@
 				echo '
 				</div>
 				</div>				
-				
+				<input class="allitems" type="text" onclick="this.select();" value="';
+				foreach($showmecats as $catsall){
+					echo $catsall->cat_ID.',';
+				}
+				echo '"/>
+				<input class="allitems" type="text" onclick="this.select();" value="';
+				foreach ($showmetags as $tagsall){
+					echo $tagsall->cat_ID.',';
+				}				
+				echo '"/>
+				<div class="clear"></div>
 				
 				<div class="exclude">
-					<section><i class="fa fa-eye-slash"></i> hide categories</section>
-					<section><label for="MOM_Exclude_VisitorCategories">...from logged out</label><input type="text" id="MOM_Exclude_VisitorCategories" name="MOM_Exclude_VisitorCategories" value="'.get_option('MOM_Exclude_VisitorCategories').'"></section>
-					<section><label for="MOM_Exclude_Categories_RSS">...from RSS</label><input type="text" id="MOM_Exclude_Categories_RSS" name="MOM_Exclude_Categories_RSS" value="'.get_option('MOM_Exclude_Categories_RSS').'"></section>
-					<section><label for="MOM_Exclude_Categories_Front">...from front page</label><input type="text" id="MOM_Exclude_Categories_Front" name="MOM_Exclude_Categories_Front" value="'.get_option('MOM_Exclude_Categories_Front').'"></section>
-					<section><label for="MOM_Exclude_Categories_TagArchives">...from tag archives</label><input type="text" id="MOM_Exclude_Categories_TagArchives" name="MOM_Exclude_Categories_TagArchives" value="'.get_option('MOM_Exclude_Categories_TagArchives').'"></section>
-					<section><label for="MOM_Exclude_Categories_SearchResults">...from search results</label><input type="text" id="MOM_Exclude_Categories_SearchResults" name="MOM_Exclude_Categories_SearchResults" value="'.get_option('MOM_Exclude_Categories_SearchResults').'"></section>
-					<section><label for="MOM_Exclude_CategoriesSun">...on Sunday</label><input type="text" id="MOM_Exclude_CategoriesSun" name="MOM_Exclude_CategoriesSun" value="'.get_option('MOM_Exclude_CategoriesSun').'"></section>
-					<section><label for="MOM_Exclude_CategoriesMon">...on Monday</label><input type="text" id="MOM_Exclude_CategoriesMon" name="MOM_Exclude_CategoriesMon" value="'.get_option('MOM_Exclude_CategoriesMon').'"></section>
-					<section><label for="MOM_Exclude_CategoriesTue">...on Tuesday</label><input type="text" id="MOM_Exclude_CategoriesTue" name="MOM_Exclude_CategoriesTue" value="'.get_option('MOM_Exclude_CategoriesTue').'"></section>
-					<section><label for="MOM_Exclude_CategoriesWed">...on Wednesday</label><input type="text" id="MOM_Exclude_CategoriesWed" name="MOM_Exclude_CategoriesWed" value="'.get_option('MOM_Exclude_CategoriesWed').'"></section>
-					<section><label for="MOM_Exclude_CategoriesThu">...on Thursday</label><input type="text" id="MOM_Exclude_CategoriesThu" name="MOM_Exclude_CategoriesThu" value="'.get_option('MOM_Exclude_CategoriesThu').'"></section>
-					<section><label for="MOM_Exclude_CategoriesFri">...on Friday</label><input type="text" id="MOM_Exclude_CategoriesFri" name="MOM_Exclude_CategoriesFri" value="'.get_option('MOM_Exclude_CategoriesFri').'"></section>
-					<section><label for="MOM_Exclude_CategoriesSat">...on Saturday</label><input type="text" id="MOM_Exclude_CategoriesSat" name="MOM_Exclude_CategoriesSat" value="'.get_option('MOM_Exclude_CategoriesSat').'"></section>
+					<section><i class="fa fa-eye-slash"></i><span class="right">hide categories</span></section>
+					<section class="break"><span class="right"></span></section>
+					<section><hr/></section>	
+					<section><label for="MOM_Exclude_Categories_RSS">RSS</label><input type="text" id="MOM_Exclude_Categories_RSS" name="MOM_Exclude_Categories_RSS" value="'.get_option('MOM_Exclude_Categories_RSS').'"></section>
+					<section><label for="MOM_Exclude_Categories_Front">front page</label><input type="text" id="MOM_Exclude_Categories_Front" name="MOM_Exclude_Categories_Front" value="'.get_option('MOM_Exclude_Categories_Front').'"></section>
+					<section><label for="MOM_Exclude_Categories_TagArchives">tag archives</label><input type="text" id="MOM_Exclude_Categories_TagArchives" name="MOM_Exclude_Categories_TagArchives" value="'.get_option('MOM_Exclude_Categories_TagArchives').'"></section>
+					<section><label for="MOM_Exclude_Categories_SearchResults">search results</label><input type="text" id="MOM_Exclude_Categories_SearchResults" name="MOM_Exclude_Categories_SearchResults" value="'.get_option('MOM_Exclude_Categories_SearchResults').'"></section>
+					<section class="break"><span class="right"></span></section>					
+					<section><hr/></section>	
+					<section><label for="MOM_Exclude_CategoriesSun">Sunday</label><input type="text" id="MOM_Exclude_CategoriesSun" name="MOM_Exclude_CategoriesSun" value="'.get_option('MOM_Exclude_CategoriesSun').'"></section>
+					<section><label for="MOM_Exclude_CategoriesMon">Monday</label><input type="text" id="MOM_Exclude_CategoriesMon" name="MOM_Exclude_CategoriesMon" value="'.get_option('MOM_Exclude_CategoriesMon').'"></section>
+					<section><label for="MOM_Exclude_CategoriesTue">Tuesday</label><input type="text" id="MOM_Exclude_CategoriesTue" name="MOM_Exclude_CategoriesTue" value="'.get_option('MOM_Exclude_CategoriesTue').'"></section>
+					<section><label for="MOM_Exclude_CategoriesWed">Wednesday</label><input type="text" id="MOM_Exclude_CategoriesWed" name="MOM_Exclude_CategoriesWed" value="'.get_option('MOM_Exclude_CategoriesWed').'"></section>
+					<section><label for="MOM_Exclude_CategoriesThu">Thursday</label><input type="text" id="MOM_Exclude_CategoriesThu" name="MOM_Exclude_CategoriesThu" value="'.get_option('MOM_Exclude_CategoriesThu').'"></section>
+					<section><label for="MOM_Exclude_CategoriesFri">Friday</label><input type="text" id="MOM_Exclude_CategoriesFri" name="MOM_Exclude_CategoriesFri" value="'.get_option('MOM_Exclude_CategoriesFri').'"></section>
+					<section><label for="MOM_Exclude_CategoriesSat">Saturday</label><input type="text" id="MOM_Exclude_CategoriesSat" name="MOM_Exclude_CategoriesSat" value="'.get_option('MOM_Exclude_CategoriesSat').'"></section>
+					<section class="break"><span class="right"></span></section>
+					<section><hr/></section>	
+					<section><label for="MOM_Exclude_VisitorCategories">logged out</label><input type="text" id="MOM_Exclude_VisitorCategories" name="MOM_Exclude_VisitorCategories" value="'.get_option('MOM_Exclude_VisitorCategories').'"></section>
+					<section><label for="MOM_Exclude_level0Categories">subscriber</label><input type="text" id="MOM_Exclude_level0Categories" name="MOM_Exclude_level0Categories" value="'.get_option('MOM_Exclude_level0Categories').'"></section>
+					<section><label for="MOM_Exclude_level1Categories">contributor</label><input type="text" id="MOM_Exclude_level1Categories" name="MOM_Exclude_level1Categories" value="'.get_option('MOM_Exclude_level1Categories').'"></section>
+					<section><label for="MOM_Exclude_level2Categories">author</label><input type="text" id="MOM_Exclude_level2Categories" name="MOM_Exclude_level2Categories" value="'.get_option('MOM_Exclude_level2Categories').'"></section>
+					<section><label for="MOM_Exclude_level7Categories">editor</label><input type="text" id="MOM_Exclude_level7Categories" name="MOM_Exclude_level7Categories" value="'.get_option('MOM_Exclude_level7Categories').'"></section>
+					
 				</div>';
 				echo '
 				<div class="exclude">
-					<section><i class="fa fa-eye-slash"></i> hide tags</section>
-					<section><label for="MOM_Exclude_VisitorTags">...from logged out</label><input type="text" id="MOM_Exclude_VisitorTags" name="MOM_Exclude_VisitorTags" value="'.get_option('MOM_Exclude_VisitorTags').'"></section>				
-					<section><label for="MOM_Exclude_Tags_RSS">...from RSS</label><input type="text" id="MOM_Exclude_Tags_RSS" name="MOM_Exclude_Tags_RSS" value="'.get_option('MOM_Exclude_Tags_RSS').'"></section>
-					<section><label for="MOM_Exclude_Tags_Front">...from front page</label><input type="text" id="MOM_Exclude_Tags_Front" name="MOM_Exclude_Tags_Front" value="'.get_option('MOM_Exclude_Tags_Front').'"></section>
-					<section><label for="MOM_Exclude_Tags_CategoryArchives">...from categories</label><input type="text" id="MOM_Exclude_Tags_CategoryArchives" name="MOM_Exclude_Tags_CategoryArchives" value="'.get_option('MOM_Exclude_Tags_CategoryArchives').'"></section>
-					<section><label for="MOM_Exclude_Tags_SearchResults">...from search results</label><input type="text" id="MOM_Exclude_Tags_SearchResults" name="MOM_Exclude_Tags_SearchResults" value="'.get_option('MOM_Exclude_Tags_SearchResults').'"></section>
-					<section><label for="MOM_Exclude_TagsSun">...on Sunday</label><input type="text" id="MOM_Exclude_TagsSun" name="MOM_Exclude_TagsSun" value="'.get_option('MOM_Exclude_TagsSun').'"></section>
-					<section><label for="MOM_Exclude_TagsMon">...on Monday</label><input type="text" id="MOM_Exclude_TagsMon" name="MOM_Exclude_TagsMon" value="'.get_option('MOM_Exclude_TagsMon').'"></section>
-					<section><label for="MOM_Exclude_TagsTue">...on Tuesday</label><input type="text" id="MOM_Exclude_TagsTue" name="MOM_Exclude_TagsTue" value="'.get_option('MOM_Exclude_TagsTue').'"></section>
-					<section><label for="MOM_Exclude_TagsWed">...on Wednesday</label><input type="text" id="MOM_Exclude_TagsWed" name="MOM_Exclude_TagsWed" value="'.get_option('MOM_Exclude_TagsWed').'"></section>
-					<section><label for="MOM_Exclude_TagsThu">...on Thursday</label><input type="text" id="MOM_Exclude_TagsThu" name="MOM_Exclude_TagsThu" value="'.get_option('MOM_Exclude_TagsThu').'"></section>
-					<section><label for="MOM_Exclude_TagsFri">...on Friday</label><input type="text" id="MOM_Exclude_TagsFri" name="MOM_Exclude_TagsFri" value="'.get_option('MOM_Exclude_TagsFri').'"></section>
-					<section><label for="MOM_Exclude_TagsSat">...on Saturday</label><input type="text" id="MOM_Exclude_TagsSat" name="MOM_Exclude_TagsSat" value="'.get_option('MOM_Exclude_TagsSat').'"></section>
+					<section><i class="fa fa-eye-slash"></i><span class="right">hide tags</span></section>
+					<section class="break"><span class="right">from area</span></section>				
+					<section><hr/></section>					
+					<section><label for="MOM_Exclude_Tags_RSS">RSS</label><input type="text" id="MOM_Exclude_Tags_RSS" name="MOM_Exclude_Tags_RSS" value="'.get_option('MOM_Exclude_Tags_RSS').'"></section>
+					<section><label for="MOM_Exclude_Tags_Front">front page</label><input type="text" id="MOM_Exclude_Tags_Front" name="MOM_Exclude_Tags_Front" value="'.get_option('MOM_Exclude_Tags_Front').'"></section>
+					<section><label for="MOM_Exclude_Tags_CategoryArchives">categories</label><input type="text" id="MOM_Exclude_Tags_CategoryArchives" name="MOM_Exclude_Tags_CategoryArchives" value="'.get_option('MOM_Exclude_Tags_CategoryArchives').'"></section>
+					<section><label for="MOM_Exclude_Tags_SearchResults">search results</label><input type="text" id="MOM_Exclude_Tags_SearchResults" name="MOM_Exclude_Tags_SearchResults" value="'.get_option('MOM_Exclude_Tags_SearchResults').'"></section>
+					<section class="break"><span class="right">from day</span></section>					
+					<section><hr/></section>	
+					<section><label for="MOM_Exclude_TagsSun">Sunday</label><input type="text" id="MOM_Exclude_TagsSun" name="MOM_Exclude_TagsSun" value="'.get_option('MOM_Exclude_TagsSun').'"></section>
+					<section><label for="MOM_Exclude_TagsMon">Monday</label><input type="text" id="MOM_Exclude_TagsMon" name="MOM_Exclude_TagsMon" value="'.get_option('MOM_Exclude_TagsMon').'"></section>
+					<section><label for="MOM_Exclude_TagsTue">Tuesday</label><input type="text" id="MOM_Exclude_TagsTue" name="MOM_Exclude_TagsTue" value="'.get_option('MOM_Exclude_TagsTue').'"></section>
+					<section><label for="MOM_Exclude_TagsWed">Wednesday</label><input type="text" id="MOM_Exclude_TagsWed" name="MOM_Exclude_TagsWed" value="'.get_option('MOM_Exclude_TagsWed').'"></section>
+					<section><label for="MOM_Exclude_TagsThu">Thursday</label><input type="text" id="MOM_Exclude_TagsThu" name="MOM_Exclude_TagsThu" value="'.get_option('MOM_Exclude_TagsThu').'"></section>
+					<section><label for="MOM_Exclude_TagsFri">Friday</label><input type="text" id="MOM_Exclude_TagsFri" name="MOM_Exclude_TagsFri" value="'.get_option('MOM_Exclude_TagsFri').'"></section>
+					<section><label for="MOM_Exclude_TagsSat">Saturday</label><input type="text" id="MOM_Exclude_TagsSat" name="MOM_Exclude_TagsSat" value="'.get_option('MOM_Exclude_TagsSat').'"></section>
+					<section class="break"><span class="right">from user level</span></section>
+					<section><hr/></section>	
+					<section><label for="MOM_Exclude_VisitorTags">logged out</label><input type="text" id="MOM_Exclude_VisitorTags" name="MOM_Exclude_VisitorTags" value="'.get_option('MOM_Exclude_VisitorTags').'"></section>				
+					<section><label for="MOM_Exclude_level0Tags">subscriber</label><input type="text" id="MOM_Exclude_level0Tags" name="MOM_Exclude_level0Tags" value="'.get_option('MOM_Exclude_level0Tags').'"></section>
+					<section><label for="MOM_Exclude_level1Tags">contributor</label><input type="text" id="MOM_Exclude_level1Tags" name="MOM_Exclude_level1Tags" value="'.get_option('MOM_Exclude_level1Tags').'"></section>
+					<section><label for="MOM_Exclude_level2Tags">author</label><input type="text" id="MOM_Exclude_level2Tags" name="MOM_Exclude_level2Tags" value="'.get_option('MOM_Exclude_level2Tags').'"></section>
+					<section><label for="MOM_Exclude_level7Tags">editor</label><input type="text" id="MOM_Exclude_level7Tags" name="MOM_Exclude_level7Tags" value="'.get_option('MOM_Exclude_level7Tags').'"></section>
 				</div>
 				<div class="exclude">';
 				echo '
-				<section><i class="fa fa-eye-slash"></i> hide post formats</section>
+				<section><i class="fa fa-eye-slash"></i><span class="right">hide post formats</span></section>
+				<section class="break"><span class="right">from area</span></section>
+				<section><hr/></section>
 				<section>
-					<label for="MOM_Exclude_PostFormats_RSS">...from RSS</label>
+					<label for="MOM_Exclude_PostFormats_RSS">RSS</label>
 					<select name="MOM_Exclude_PostFormats_RSS" id="MOM_Exclude_PostFormats_RSS">
 						<option value="">none</option>
 						<option value="post-format-aside"';if(get_option('MOM_Exclude_PostFormats_RSS') === 'post-format-aside'){echo ' selected="selected"';}echo '>Aside</option>
@@ -106,7 +149,7 @@
 					</select>
 				</section>
 				<section>
-					<label for="MOM_Exclude_PostFormats_Front">...from front page</label>
+					<label for="MOM_Exclude_PostFormats_Front">front page</label>
 					<select name="MOM_Exclude_PostFormats_Front" id="MOM_Exclude_PostFormats_Front">
 						<option value="">none</option>
 						<option value="post-format-aside"';if(get_option('MOM_Exclude_PostFormats_Front') === 'post-format-aside'){echo ' selected="selected"';}echo '>Aside</option>
@@ -121,7 +164,7 @@
 					</select>
 				</section>
 				<section>
-					<label for="MOM_Exclude_PostFormats_CategoryArchives">...from archives</label>
+					<label for="MOM_Exclude_PostFormats_CategoryArchives">archives</label>
 					<select name="MOM_Exclude_PostFormats_CategoryArchives" id="MOM_Exclude_PostFormats_CategoryArchives">
 						<option value="">none</option>
 						<option value="post-format-aside"';if(get_option('MOM_Exclude_PostFormats_CategoryArchives') === 'post-format-aside'){echo ' selected="selected"';}echo '>Aside</option>
@@ -136,7 +179,7 @@
 					</select>
 				</section>
 				<section>
-					<label for="MOM_Exclude_PostFormats_TagArchives">...from tags</label>
+					<label for="MOM_Exclude_PostFormats_TagArchives">tags</label>
 					<select name="MOM_Exclude_PostFormats_TagArchives" id="MOM_Exclude_PostFormats_TagArchives">
 						<option value="">none</option>
 						<option value="post-format-aside"';if(get_option('MOM_Exclude_PostFormats_TagArchives') === 'post-format-aside'){ echo ' selected="selected"';} echo '>Aside</option>
@@ -151,7 +194,7 @@
 					</select>
 				</section>
 				<section>
-					<label for="MOM_Exclude_PostFormats_SearchResults">...from search results</label>
+					<label for="MOM_Exclude_PostFormats_SearchResults">search results</label>
 					<select name="MOM_Exclude_PostFormats_SearchResults" id="MOM_Exclude_PostFormats_SearchResults">
 						<option value="">none</option>
 						<option value="post-format-aside"';if(get_option('MOM_Exclude_PostFormats_SearchResults') === 'post-format-aside'){echo ' selected="selected"';}echo '>Aside</option>
@@ -165,6 +208,39 @@
 						<option value="post-format-chat"';if(get_option('MOM_Exclude_PostFormats_SearchResults') === 'post-format-chat'){echo ' selected="selected"';}echo '>Chat</option>
 					</select>
 				</section>
+				<section>
+					<label for="MOM_Exclude_PostFormats_Visitor">logged out</label>
+					<select name="MOM_Exclude_PostFormats_Visitor" id="MOM_Exclude_PostFormats_Visitor">
+						<option value="">none</option>
+						<option value="post-format-aside"';if(get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-aside'){echo ' selected="selected"';}echo '>Aside</option>
+						<option value="post-format-gallery"';if(get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-gallery'){echo ' selected="selected"';}echo '>Gallery</option>
+						<option value="post-format-link"';if(get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-link'){echo ' selected="selected"';}echo '>Link</option>
+						<option value="post-format-image"';if(get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-image'){echo ' selected="selected"';}echo '>Image</option>
+						<option value="post-format-quote"';if(get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-quote'){echo ' selected="selected"';}echo '>Quote</option>
+						<option value="post-format-status"';if(get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-status'){echo ' selected="selected"';}echo '>Status</option>
+						<option value="post-format-video"';if( get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-video'){echo ' selected="selected"';}echo '>Video</option>
+						<option value="post-format-audio"';if(get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-audio'){echo ' selected="selected"';}echo '>Audio</option>
+						<option value="post-format-chat"';if(get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-chat'){echo ' selected="selected"';}echo '>Chat</option>
+					</select>
+				</section>								
+
+
+				<section class="break"><i class="fa fa-plus"></i><span class="right">additional settings</span></section>
+				<section><hr/></section>
+				<section>
+				<label for="MOM_Exclude_URL">Redirect blocked single views</label>
+				<select name="MOM_Exclude_URL" class="allpages" id="MOM_Exclude_URL">
+					<option value=""/>404</option>';
+					$showmepages = get_pages(); 
+					foreach ($showmepages as $pagesshown){
+						echo '<option name="MOM_Exclude_URL" id="mompaf_'.$pagesshown->ID.'" value="'.$pagesshown->ID.'"'; 
+						if (get_option('MOM_Exclude_URL') == $pagesshown->ID){echo ' selected="selected"';} echo '>
+						'.$pagesshown->post_title.'</option>';
+					}
+					echo '
+				</select>
+				</section>
+				
 				';
 			}
 			function momse_page_content(){

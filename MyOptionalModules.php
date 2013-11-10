@@ -30,7 +30,12 @@ Author URI: http://onebillionwords.com
 	require_once( plugin_dir_path( __FILE__ ).'modules/maincontrol.php');
 	add_action('admin_enqueue_scripts','mom_styles');
 	if(get_option('mommaincontrol_obwcountplus') == 1){include(plugin_dir_path( __FILE__ ).'functions/_functions_countplusplus.php');}
-	if(get_option('mommaincontrol_momse') == 1){include(plugin_dir_path( __FILE__ ).'functions/_functions_exclude.php');}	
+	if(get_option('mommaincontrol_momse') == 1){include(plugin_dir_path( __FILE__ ).'functions/_functions_exclude.php');
+		add_action( 'after_setup_theme', 'mom_exclude_postformat_theme_support' );
+		function mom_exclude_postformat_theme_support(){
+			add_theme_support( 'post-formats', array( 'aside', 'gallery', 'link', 'image', 'quote', 'status', 'video', 'audio', 'chat') );
+		}		
+	}
 	if(get_option('mommaincontrol_momja') == 1){include(plugin_dir_path( __FILE__ ).'functions/_functions_jumparound.php');}	
 	if(get_option('mommaincontrol_momrups') == 1){include(plugin_dir_path( __FILE__ ).'functions/_functions_passwords.php');}
 	if(get_option('mommaincontrol_reviews') == 1){include(plugin_dir_path( __FILE__ ).'functions/_functions_reviews.php');}
