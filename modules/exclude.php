@@ -224,24 +224,24 @@
 					</select>
 				</section>								
 
+				
+				<section class="break"><i class="fa fa-plus"></i><span class="right">additional settings</span></section>
+				<section><hr/></section>
+				<section>
+				<label for="MOM_Exclude_URL">Redirect 404s</label>
+				<select name="MOM_Exclude_URL" class="allpages" id="MOM_Exclude_URL">
+					<option value=""/>Home page</option>';
+					$showmepages = get_pages(); 
+					foreach ($showmepages as $pagesshown){
+						echo '<option name="MOM_Exclude_URL" id="mompaf_'.$pagesshown->ID.'" value="'.$pagesshown->ID.'"'; 
+						if (get_option('MOM_Exclude_URL') == $pagesshown->ID){echo ' selected="selected"';} echo '>
+						'.$pagesshown->post_title.'</option>';
+					}
+					echo '
+				</select>
+				</section>
+				
 				';
-				//<section class="break"><i class="fa fa-plus"></i><span class="right">additional settings</span></section>
-				//<section><hr/></section>
-				//<section>
-				//<label for="MOM_Exclude_URL">Redirect blocked single views</label>
-				//<select name="MOM_Exclude_URL" class="allpages" id="MOM_Exclude_URL">
-				//	<option value=""/>404</option>';
-				//	$showmepages = get_pages(); 
-				//	foreach ($showmepages as $pagesshown){
-				//		echo '<option name="MOM_Exclude_URL" id="mompaf_'.$pagesshown->ID.'" value="'.$pagesshown->ID.'"'; 
-				//		if (get_option('MOM_Exclude_URL') == $pagesshown->ID){echo ' selected="selected"';} echo '>
-				//		'.$pagesshown->post_title.'</option>';
-				//	}
-				//	echo '
-				//</select>
-				//</section>
-				//
-				//';
 			}
 			function momse_page_content(){
 				echo '

@@ -12,11 +12,10 @@
 			get_currentuserinfo();
 			global $user_level;
 			$loggedOutCats = '0,0';
-			if    ($user_level == 0) {$loggedOutCats = get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
-			elseif($user_level == 1) {$loggedOutCats = get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
-			elseif($user_level == 2) {$loggedOutCats = get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
-			elseif($user_level == 7) {$loggedOutCats = get_option('MOM_Exclude_level7Categories');}
-			else{$loggedOutCats = '0,0';}
+			if($user_level == 0) {$loggedOutCats = get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
+			if($user_level <= 1) {$loggedOutCats = get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
+			if($user_level <= 2) {$loggedOutCats = get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
+			if($user_level <= 7) {$loggedOutCats = get_option('MOM_Exclude_level7Categories');}
 		}
 			$c1 = explode(',',$loggedOutCats);
 			foreach($c1 as &$C1) { $C1 = ''.$C1.',';}
@@ -52,11 +51,10 @@
 			$loggedOutTags = get_option('MOM_Exclude_VisitorTags').','.get_option('MOM_Exclude_level0Tags').','.get_option('MOM_Exclude_level1Tags').','.get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');
 		}else{
 			get_currentuserinfo();
-			if    ($user_level == 0) {$loggedOutTags = get_option('MOM_Exclude_level0Tags').','.get_option('MOM_Exclude_level1Tags').','.get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');}
-			elseif($user_level == 1) {$loggedOutTags = get_option('MOM_Exclude_level1Tags').','.get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');}
-			elseif($user_level == 2) {$loggedOutTags = get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');}
-			elseif($user_level == 7) {$loggedOutTags = get_option('MOM_Exclude_level7Tags');}
-			else{$loggedOutTags = '0,0';}
+			if($user_level == 0) {$loggedOutTags = get_option('MOM_Exclude_level0Tags').','.get_option('MOM_Exclude_level1Tags').','.get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');}
+			if($user_level <= 1) {$loggedOutTags = get_option('MOM_Exclude_level1Tags').','.get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');}
+			if($user_level <= 2) {$loggedOutTags = get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');}
+			if($user_level <= 7) {$loggedOutTags = get_option('MOM_Exclude_level7Tags');}
 		}
 				$t1 = explode(',',$loggedOutTags);
 				foreach ($t1 as &$T1){$T1 = ''.$T1.',';}
