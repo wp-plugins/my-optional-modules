@@ -72,8 +72,6 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Shortcode Verifier (added); Maintenance Mode (added); Plugin compatability check (added)
 * (Some files) have had 'unnecessary' whitespace removed
 * Interface overhaul (2)
-
-= 5 =
 * Minor bug fixes
 * Cleanup from 4.x.x
 * Lazy Load (added); Meta (added)
