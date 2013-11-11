@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 5.2.5
+Stable tag: 5.2.6
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -20,8 +20,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Google Maps in the Shortcodes! module adapted from [Very Simple Google Maps](http://wordpress.org/plugins/very-simple-google-maps/) by [Michael Araonoff](http://profiles.wordpress.org/masterk/).
 
 = Modules: =
+* Exclude: hide tags, categories, and post formats from areas of the site (rss, front page, archives, search) with ability to also hide based on user level and whether or not the viewer is logged in.  Hide tags and categories based on what day of the week it is.  Custom 404 redirects for viewers who are logged in and viewers who are not.  Ability to hide the dashboard for everyone but admin.  Template function to display all categories except those that are hidden, which is also based on whether or not the user is logged in.  Ability to apply no follow, no index to hidden categories and all links in posts inside of those categories.
 * Count++, a module to count words on the blog and countdown from an (optional) total count goal.
-* Exclude, a module to hide tags, categories, and post formats from the front page, the archives, the search results, or the feed (or all).
 * Jump Around, a module that allows users to navigate posts by pressing keys on the keyboard.
 * Maintenance, a module that allows you to specify a URL to redirect to for all non-logged in users while Maintenance Mode is active.
 * Post as Front, a module that allows you to select a specific post to be your home page, or make your home page your most recent post.
@@ -63,8 +63,11 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= 5.2.5 =
-* 5.2.5 / Redirecting unatuhorized viewers from posts based on user level is now applied to all 404s.  You may choose whether to redirect to the front page or to a specific page.  Tied to the Exclude module so 404 redirection is only active when Exclude is active.
+= 5.2.6 =
+* Template tag added: mom_exclude_list_categories(); / use in place of wp_list_categories to display all categories that aren't excluded via settings.
+* Redirect 404s now gives you 2 options: one 404 redirect for logged in viewers, one for viewers who aren't (logged in).
+* A slight oversight has been fixed for the Exclude module not properly hiding the items that weren't user level based.
+* Ability to hide dashboard access from non-admin while still allowing those users to access their other role-appropriate areas, like profiles and posting.
 
 = 5 =
 * Minor bug fixes

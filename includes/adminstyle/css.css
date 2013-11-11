@@ -14,7 +14,7 @@
 	.moduleform section label.on { color:#67cf5d; }
 	.moduleform section label.off:hover { color:#67cf5d; }
 	.moduleform section label.on:hover { color:#cf5d5d; }
-	select.allpages{width:60px; display:block;}
+	select.allpages{width:70px; display:block;}
 	.moduleform section .select { clear:both; width:auto; padding:5px; margin:5px auto; height:20px; cursor:pointer; background-color:transparent; color:#e3ffe3; text-align:left;}
 	.moduleform section .select:hover { color:#ffacac; }
 	.moduleform section .labeltitle { background-color:#474749; color:#fff; text-shadow:none; line-height:20px;}

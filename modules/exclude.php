@@ -4,11 +4,11 @@
 			function update_momse_options(){
 				if(isset($_POST['momsesave'])){
 					update_option('MOM_Exclude_VisitorCategories',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_VisitorCategories']))))))));
+					update_option('MOM_Exclude_VisitorTags',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_VisitorTags'])))))))));
 					update_option('MOM_Exclude_Categories_RSS',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Categories_RSS'])))))))));
 					update_option('MOM_Exclude_Categories_Front',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Categories_Front'])))))))));
 					update_option('MOM_Exclude_Categories_TagArchives',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Categories_TagArchives'])))))))));
 					update_option('MOM_Exclude_Categories_SearchResults',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Categories_SearchResults'])))))))));
-					update_option('MOM_Exclude_VisitorTags',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_VisitorTags'])))))))));
 					update_option('MOM_Exclude_Tags_RSS',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Tags_RSS'])))))))));
 					update_option('MOM_Exclude_Tags_Front',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Tags_Front'])))))))));
 					update_option('MOM_Exclude_Tags_CategoryArchives',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Tags_CategoryArchives'])))))))));
@@ -42,7 +42,9 @@
 					update_option('MOM_Exclude_level2Tags',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level2Tags']))))))));
 					update_option('MOM_Exclude_level7Tags',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level7Tags']))))))));
 					update_option('MOM_Exclude_URL',$_REQUEST['MOM_Exclude_URL']);
-					
+					update_option('MOM_Exclude_URL_User',$_REQUEST['MOM_Exclude_URL_User']);
+					update_option('MOM_Exclude_NoFollow',$_REQUEST['MOM_Exclude_NoFollow']);
+					update_option('MOM_Exclude_Hide_Dashboard',$_REQUEST['MOM_Exclude_Hide_Dashboard']);
 				}
 			}
 			function momse_form(){
@@ -77,7 +79,7 @@
 				<div class="clear"></div>
 				
 				<div class="exclude">
-					<section><i class="fa fa-eye-slash"></i><span class="right">hide categories</span></section>
+					<section><span class="left">hide categories</span></section>
 					<section class="break"><span class="right"></span></section>
 					<section><hr/></section>	
 					<section><label for="MOM_Exclude_Categories_RSS">RSS</label><input type="text" id="MOM_Exclude_Categories_RSS" name="MOM_Exclude_Categories_RSS" value="'.get_option('MOM_Exclude_Categories_RSS').'"></section>
@@ -104,7 +106,7 @@
 				</div>';
 				echo '
 				<div class="exclude">
-					<section><i class="fa fa-eye-slash"></i><span class="right">hide tags</span></section>
+					<section><span class="left">hide tags</span></section>
 					<section class="break"><span class="right">from area</span></section>				
 					<section><hr/></section>					
 					<section><label for="MOM_Exclude_Tags_RSS">RSS</label><input type="text" id="MOM_Exclude_Tags_RSS" name="MOM_Exclude_Tags_RSS" value="'.get_option('MOM_Exclude_Tags_RSS').'"></section>
@@ -130,7 +132,7 @@
 				</div>
 				<div class="exclude">';
 				echo '
-				<section><i class="fa fa-eye-slash"></i><span class="right">hide post formats</span></section>
+				<section><span class="left">hide post formats</span></section>
 				<section class="break"><span class="right">from area</span></section>
 				<section><hr/></section>
 				<section>
@@ -222,16 +224,29 @@
 						<option value="post-format-audio"';if(get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-audio'){echo ' selected="selected"';}echo '>Audio</option>
 						<option value="post-format-chat"';if(get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-chat'){echo ' selected="selected"';}echo '>Chat</option>
 					</select>
-				</section>								
-
-				
-				<section class="break"><i class="fa fa-plus"></i><span class="right">additional settings</span></section>
+				</section>';
+				$showmepages = get_pages(); 
+				echo '
+				<section class="break"><span class="right">additional settings</span></section>
 				<section><hr/></section>
 				<section>
-				<label for="MOM_Exclude_URL">Redirect 404s</label>
+				<label for="MOM_Exclude_Hide_Dashboard">Hide Dash for all but admin</label>
+				<select name="MOM_Exclude_Hide_Dashboard" class="allpages" id="MOM_Exclude_Hide_Dashboard">
+				<option ';if(get_option('MOM_Exclude_Hide_Dashboard') == 1){echo ' selected="selected" ';} echo 'value="1">Yes</option>
+				<option ';if(get_option('MOM_Exclude_Hide_Dashboard') == 0){echo ' selected="selected" ';} echo 'value="0">No</option>
+				</select>
+				</section>
+				<section>
+				<label for="MOM_Exclude_NoFollow">No Follow User Level Hidden</label>
+				<select name="MOM_Exclude_NoFollow" class="allpages" id="MOM_Exclude_NoFollow">
+				<option ';if(get_option('MOM_Exclude_NoFollow') == 1){echo ' selected="selected" ';} echo 'value="1">Yes</option>
+				<option ';if(get_option('MOM_Exclude_NoFollow') == 0){echo ' selected="selected" ';} echo 'value="0">No</option>
+				</select>
+				</section>
+				<section>
+				<label for="MOM_Exclude_URL">Redirect 404s (logged in)</label>
 				<select name="MOM_Exclude_URL" class="allpages" id="MOM_Exclude_URL">
-					<option value=""/>Home page</option>';
-					$showmepages = get_pages(); 
+					<option value="">Home page</option>';
 					foreach ($showmepages as $pagesshown){
 						echo '<option name="MOM_Exclude_URL" id="mompaf_'.$pagesshown->ID.'" value="'.$pagesshown->ID.'"'; 
 						if (get_option('MOM_Exclude_URL') == $pagesshown->ID){echo ' selected="selected"';} echo '>
@@ -240,7 +255,18 @@
 					echo '
 				</select>
 				</section>
-				
+				<section>
+				<label for="MOM_Exclude_URL_User">Redirect 404s (logged out)</label>
+				<select name="MOM_Exclude_URL_User" class="allpages" id="MOM_Exclude_URL_User">
+					<option value=""/>Home page</option>';
+					foreach ($showmepages as $pagesshownuser){
+						echo '<option name="MOM_Exclude_URL_User" id="mompaf_'.$pagesshownuser->ID.'" value="'.$pagesshown->ID.'"'; 
+						if (get_option('MOM_Exclude_URL_User') == $pagesshownuser->ID){echo ' selected="selected"';} echo '>
+						'.$pagesshownuser->post_title.'</option>';
+					}
+					echo '
+				</select>
+				</section>
 				';
 			}
 			function momse_page_content(){

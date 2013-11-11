@@ -76,7 +76,9 @@
 		delete_option('MOM_Exclude_level2Tags');
 		delete_option('MOM_Exclude_level7Tags');
 		delete_option('MOM_Exclude_URL');
+		delete_option('MOM_Exclude_URL_User');
 		delete_option('MOM_Exclude_PostFormats_Visitor');
+		delete_option('MOM_Exclude_NoFollow');
 
 		
 		delete_option( 'mommaincontrol_setfocus' );
