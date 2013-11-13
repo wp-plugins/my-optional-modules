@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.2.8
+Version: 5.2.9
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 */
@@ -40,7 +40,6 @@ Author URI: http://onebillionwords.com
 			add_theme_support( 'post-formats', array( 'aside', 'gallery', 'link', 'image', 'quote', 'status', 'video', 'audio', 'chat') );
 		}		
 	}
-	if(get_option('mommaincontrol_momja') == 1){include(plugin_dir_path( __FILE__ ).'functions/_functions_jumparound.php');}	
 	if(get_option('mommaincontrol_momrups') == 1){include(plugin_dir_path( __FILE__ ).'functions/_functions_passwords.php');}
 	if(get_option('mommaincontrol_reviews') == 1){include(plugin_dir_path( __FILE__ ).'functions/_functions_reviews.php');}
 	if(get_option('mommaincontrol_shorts') == 1){include(plugin_dir_path( __FILE__ ).'functions/_functions_shortcodes.php');}

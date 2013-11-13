@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 5.2.8
+Stable tag: 5.2.9
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -65,15 +65,16 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= 5.2.8 =
-* Fitvid now available sitewide via Theme Takeover (set your video classes, fitvid does the rest)
-* Theme Takeover: Page/Post List (added) - take any element (like h1s or h3s) from a post or page and create a list of anchor-links at the top of the page/post (automatically).  (uses javascript)
-* All scripts (.js,script) moved to a single file, enqueued)
+= 5.2.9 =
+* Page/post lists fixed to not include headers from things like the sharing module from Jetpack
+* Fixed Navbar being overlapped by certain div elements in certain themesetups.
+* Reviews module shortcode paramater added: open (0/1) (default is 0: closed) set to 1 to display all items expanded by default.
 
 = 5 =
+* All scripts (.js,script) moved to a single file, enqueued)
 * Minor bug fixes
 * 'Module Breaking' bug squashed
-* Shortcode Verifier (added); Maintenance Mode (added); Plugin compatability check (added)
+* Shortcode Verifier (added); Maintenance Mode (added); Plugin compatability check (added); FitVid (added); Page/Post lists from headers (added);
 * (Some files) have had 'unnecessary' whitespace removed
 * Interface overhaul (2)
 * Minor bug fixes

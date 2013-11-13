@@ -32,6 +32,107 @@
 			';
 		}			
 		echo 'jQuery(document).ready(function ($){';
+		if(get_option('mommaincontrol_momja') == 1){
+			if (is_archive() || is_home() || is_search() ) { 
+				echo '
+				$(\'input,textarea\').keydown( function(e) {
+					e.stopPropagation();
+				});
+				var hash = window.location.hash.substr(1);
+				if(hash != false && hash != \'undefined\') {
+					$(\'#\'+hash+\'\').addClass(\'current\');
+					$(document).keydown(function(e){
+					switch(e.which) {
+						case '.get_option('jump_around_4').':
+							var $current = $(\''.get_option('jump_around_0').'.current\'),
+							$prev_embed = $current.prev();
+							$(\'html, body\').animate({scrollTop:$prev_embed.offset().top - 100}, 500);
+							$current.removeClass(\'current\');
+							$prev_embed.addClass(\'current\');
+							window.location.hash = $(\''.get_option('jump_around_0').'.current\').attr(\'id\');
+							e.preventDefault();
+							return;
+						break;
+						case '.get_option('jump_around_6').': 
+							var $current = $(\''.get_option('jump_around_0').'.current\'),
+							$next_embed = $current.next(\''.get_option('jump_around_0').'\');
+							$(\'html, body\').animate({scrollTop:$next_embed.offset().top - 100}, 500);
+							$current.removeClass(\'current\');
+							$next_embed.addClass(\'current\');
+							window.location.hash = $(\''.get_option('jump_around_0').'.current\').attr(\'id\');
+							e.preventDefault();
+							return;
+						break;
+						case '.get_option('jump_around_5').': 
+								if(jQuery(\'.current '.get_option('jump_around_1').'\').attr(\'href\'))
+								document.location.href=jQuery(\'.current '.get_option('jump_around_1').'\').attr(\'href\');
+								e.preventDefault();
+								return;
+								break;
+						default: return; 
+					}
+				});
+				}else{
+				$(\''.get_option('jump_around_0').':eq(0)\').addClass(\'current\');
+				$(document).keydown(function(e){
+					switch(e.which) {
+						case '.get_option('jump_around_4').': 
+							var $current = $(\''.get_option('jump_around_0').'.current\'),
+							$prev_embed = $current.prev();
+							$(\'html, body\').animate({scrollTop:$prev_embed.offset().top - 100}, 500);
+							$current.removeClass(\'current\');
+							$prev_embed.addClass(\'current\');
+							window.location.hash = $(\''.get_option('jump_around_0').'.current\').attr(\'id\');
+							e.preventDefault();
+							return;
+						break;
+						case '.get_option('jump_around_6').': 
+							var $current = $(\''.get_option('jump_around_0').'.current\'),
+							$next_embed = $current.next(\''.get_option('jump_around_0').'\');
+							$(\'html, body\').animate({scrollTop:$next_embed.offset().top - 100}, 500);
+							$current.removeClass(\'current\');
+							$next_embed.addClass(\'current\');
+							window.location.hash = $(\''.get_option('jump_around_0').'.current\').attr(\'id\');
+							e.preventDefault();
+							return;
+						break;
+						case '.get_option('jump_around_5').': 
+								if(jQuery(\'.current '.get_option('jump_around_1').'\').attr(\'href\'))
+								document.location.href=jQuery(\'.current '.get_option('jump_around_1').'\').attr(\'href\');
+								e.preventDefault();
+								return;
+								break;
+					}
+					
+				});
+				}
+				if ($(\''.get_option('jump_around_2').'\').is(\'*\')) {
+				$(document).keydown(function(e){
+					switch(e.which) {
+						case '.get_option('jump_around_7').': 
+							document.location.href=jQuery(\''.get_option('jump_around_2').'\').attr(\'href\');
+							e.preventDefault();
+							return;
+							break;
+					}
+					
+				});
+				}
+				if ($(\''.get_option('jump_around_3').'\').is(\'*\')) {
+				$(document).keydown(function(e){
+					switch(e.which) {
+						case '.get_option('jump_around_8').': 
+							document.location.href=jQuery(\''.get_option('jump_around_3').'\').attr(\'href\');
+							e.preventDefault();
+							return;
+							break;
+					}
+					
+				});
+				}
+				';
+			}
+		}
 		// Fitvids
 		if(get_option('MOM_themetakeover_fitvids') != ''){
 			$fitvidContainer = get_option('MOM_themetakeover_fitvids');
@@ -57,7 +158,7 @@
 			echo '
 			$(window).scroll(function() {
 				var scroll = $(window).scrollTop();
-					if (scroll >= 100) {
+					if (scroll >= 0) {
 						$(".momnavbar").addClass("stucktothetop");
 				} else {
 						$(".momnavbar").removeClass("stucktothetop");
@@ -72,7 +173,7 @@
 				$entrytoggle = esc_attr(get_option('MOM_themetakeover_posttoggle'));
 				echo '
 				$("body").append("<div class=\'scrolltotop\'><a href=\'#top\'><i class=\'fa fa-arrow-up\'></i></a></div>"); 
-				if($("'.$entrydiv.' '.$entryele.'").length){
+				if($("'.$entrydiv.' > '.$entryele.'").length){
 					$("'.$entrydiv.'").prepend("<hr /><span id=\'createalisttog\'><i class=\'fa fa-angle-up\'></i> '.$entrytoggle.'</span><span id=\'createalisttogd\' class=\'hidden\'><i class=\'fa fa-angle-down\'></i> '.$entrytoggle.'</span><div class=\'createalist_listitems hidden\'><ol></ol></div><hr />"); 
 					$(function() {
 						var list = $(\'.createalist_listitems ol\');

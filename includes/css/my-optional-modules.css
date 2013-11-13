@@ -12,10 +12,10 @@
 	div.momlistcategories span{float:right;}
 	div.momlistcategories section{clear:both;margin:5px auto;width:100%;font-size:14px;}
 	div.momlistcategories section article{clear:both;margin:0 auto;width:100%;font-size:15px;line-height:18px;}
-	.stucktothetop{position:fixed !important;top:0 !important;left:0 !important;}
+	.stucktothetop{position:fixed !important;top:0 !important;left:0 !important;z-index:99999 !important;}
 	
 	/* Heading List */
-	.scrolltotop{position:fixed;right:10px;bottom:10px;z-index:999;display:none;visibility:hidden;}
+	.scrolltotop{position:fixed;right:10px;bottom:10px;z-index:99999;display:none;visibility:hidden;}
 	.show{visibility:visible;display:block;}
 	.hidden{display:none;visibility:hidden;}
 	span#createalisttog,span#createalisttogd{margin:0 auto;cursor:pointer;}
