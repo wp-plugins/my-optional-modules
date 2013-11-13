@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.2.6
+Version: 5.2.7
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 */
@@ -41,6 +41,7 @@ Author URI: http://onebillionwords.com
 	if(get_option('mommaincontrol_reviews') == 1){include(plugin_dir_path( __FILE__ ).'functions/_functions_reviews.php');}
 	if(get_option('mommaincontrol_shorts') == 1){include(plugin_dir_path( __FILE__ ).'functions/_functions_shortcodes.php');}
 	if(get_option('mommaincontrol_meta') == 1){include(plugin_dir_path( __FILE__ ).'modules/SEO.php');}
+	if(get_option('mommaincontrol_themetakeover') == 1){include(plugin_dir_path( __FILE__ ).'functions/_functions_themetakeover.php');}
 	register_activation_hook( __FILE__,'my_optional_modules_main_control_install');
 	function my_optional_modules_main_control_install(){
 	update_option('mommaincontrol_focus','');}
@@ -145,7 +146,7 @@ Author URI: http://onebillionwords.com
 		add_action('wp_enqueue_scripts','mom_jquery');
 		add_action('wp_footer','mom_lazy_load');   
 	}
-	if(get_option('mommaincontrol_momse') == 1){
+	if(get_option('mommaincontrol_momse') == 1 && get_option('MOM_themetakeover_youtubefrontpage') == ''){
 		function MOMExclude404Redirection() {
 			if(!is_user_logged_in()){
 				if(get_option('MOM_Exclude_URL') != ''){ $RedirectURL = get_permalink(get_option('MOM_Exclude_URL')); }else{ $RedirectURL = get_bloginfo('wpurl');}

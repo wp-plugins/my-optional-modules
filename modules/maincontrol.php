@@ -170,8 +170,33 @@
 							" name="shortcodes" class="hide" />
 							<input type="submit" id="mom_shortcodes_mode_submit" name="mom_shortcodes_mode_submit" class="hide" value="Submit" />
 							</form>
-						</section>
-						<section class="clear"></section>';						
+						</section>';
+						echo '<section class="clear"></section>';
+						echo '<section class="formbutton"><label class="title">fullmods</label></section>';
+						// Theme Takeover form section
+						echo '<section class="formbutton">
+							<form method="post" action="" name="momThemTakeover">
+							<label for="mom_themetakeover_mode_submit" class="';
+								if(get_option('mommaincontrol_themetakeover') == 1){echo 'on';}
+								if(get_option('mommaincontrol_themetakeover') == 0){echo 'off';}
+							echo '">
+								<i class="';
+								if(get_option('mommaincontrol_themetakeover') == 1){echo 'fa fa-check-square-o';}
+								if(get_option('mommaincontrol_themetakeover') == 0){echo 'fa fa-square-o';}												
+								echo '
+								"></i>Theme Takeover
+							</label>
+							<input type="text" value="';
+								if(get_option('mommaincontrol_themetakeover') == 1){echo '0';}
+								if(get_option('mommaincontrol_themetakeover') == 0){echo '1';}
+							echo '
+							" name="themetakeover" class="hide" />
+							<input type="submit" id="mom_themetakeover_mode_submit" name="mom_themetakeover_mode_submit" class="hide" value="Submit" />
+							</form>
+						</section>';
+						
+						
+						echo '<section class="clear"></section>';						
 						
 					
 												// Font Awesome section
@@ -438,7 +463,8 @@
 												get_option('mommaincontrol_momrups') == 1 || 
 												get_option('mommaincontrol_momja') == 1 || 
 												get_option('mommaincontrol_shorts') == 1 || 
-												get_option('mommaincontrol_reviews') == 1 
+												get_option('mommaincontrol_reviews') == 1 || 
+												get_option('mommaincontrol_themetakeover') == 1
 											){
 												if(get_option('mommaincontrol_obwcountplus') == 1){ 
 													echo '<section><label class="configurationlabel" for="MOMcount"></i>Count++</label><input id="MOMcount" name="MOMcount" class="hidden" type="submit"></section>';
@@ -458,6 +484,9 @@
 												if (get_option('mommaincontrol_shorts') == 1){
 													echo '<section><label class="configurationlabel" for="MOMshortcodes"></i>Shortcodes</label><input id="MOMshortcodes" name="MOMshortcodes" class="hidden" type="submit"></section>'; 
 												}
+												if (get_option('mommaincontrol_themetakeover') == 1){
+													echo '<section><label class="configurationlabel" for="MOMthemetakeover"></i>Takeover</label><input id="MOMthemetakeover" name="MOMthemetakeover" class="hidden" type="submit"></section>'; 
+												}												
 											}		
 											echo '</form>									
 									
@@ -479,23 +508,6 @@
 											echo '
 											<div class="panelSection clear plugin">
 												<blockquote>
-												<p>';
-												echo 'Module information<br />';
-												if(!get_option('mommaincontrol_analytics')){echo 'Analytics has never been activated.<br />';}else{echo 'Analytics has been activated/deactivated at least once.<br />';}
-												if(!get_option('mommaincontrol_obwcountplus')){echo 'Count++ has never been activated.<br />';}else{echo 'Count++ has been activated/deactivated at least once.<br />';}
-												if(!get_option('mommaincontrol_momse')){echo 'Exclude has never been activated.<br />';}else{echo 'Exclude has been activated/deactivated at least once.<br />';}
-												if(!get_option('mommaincontrol_fontawesome')){echo 'Font Awesome has never been activated.<br />';}else{echo 'Font Awesome has been activated/deactivated at least once.<br />';}
-												if(!get_option('mommaincontrol_versionnumbers')){echo 'Hide WP Version has never been activated..<br />';}else{echo 'Hide WP Version has been activated/deactivated at least once.<br />';}
-												if(!get_option('mommaincontrol_momja')){echo 'Jump Around has never been activated.<br />';}else{echo 'Jump Around has been activated/deactivated at least once.<br />';}
-												if(!get_option('mommaincontrol_lazyload')){echo 'Lazy Load has never been activated.<br />';}else{echo 'Lazy Load has been activated/deactivated at least once.<br />';}
-												if(!get_option('mommaincontrol_maintenance')){echo 'Maintenance Mode has never been activated.<br />';}else{echo 'Maintenance Mode has been activated/deactivated at least once.<br />';}
-												if(!get_option('mommaincontrol_meta')){echo 'Meta has never been activated.<br />';}else{echo 'Meta has been activated/deactivated at least once.<br />';}
-												if(!get_option('mommaincontrol_momrups')){echo 'Passwords has never been activated.<br />';}else{echo 'Passwords has been activated/deactivated at least once.<br />';}
-												if(!get_option('mommaincontrol_mompaf')){echo 'Post as Front has never been activated.<br />';}else{echo 'Post as Front has been activated/deactivated at least once.<br />';}
-												if(!get_option('mommaincontrol_reviews')){echo 'Reviews has never been activated.<br />';}else{echo 'Reviews has been activated/deactivated at least once.<br />';}
-												if(!get_option('mommaincontrol_shorts')){echo 'Shortcodes has never been activated.<br />';}else{echo 'Shortcodes has been activated/deactivated at least once.<br />';}
-												echo '
-												</p>
 												<p>';
 												$checkSalt = wp_salt();if($checkSalt == ''){echo 'No salt detected for Module: Passwords.<br />';}
 												$momConflicts = 0;
@@ -526,6 +538,7 @@
 												elseif(get_option('mommaincontrol_momrups') == 1 && get_option('mommaincontrol_focus') == 'passwords'){include(plugin_dir_path(__FILE__).'passwords.php');}
 												elseif(get_option('mommaincontrol_reviews') == 1 && get_option('mommaincontrol_focus') == 'reviews'){include(plugin_dir_path(__FILE__).'reviews.php');}
 												elseif(get_option('mommaincontrol_shorts') == 1 && get_option('mommaincontrol_focus') == 'shortcodes'){include(plugin_dir_path(__FILE__).'shortcodes.php');}
+												elseif(get_option('mommaincontrol_themetakeover') == 1 && get_option('mommaincontrol_focus') == 'themetakeover'){include(plugin_dir_path(__FILE__).'themetakeover.php');}
 											echo '</div>';
 										}
 									echo '

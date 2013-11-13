@@ -1,9 +1,9 @@
 === My Optional Modules ===
 Contributors: boyevul
-Tags: redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
+Tags: navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 5.2.6
+Stable tag: 5.2.7
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -28,6 +28,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Passwords, a module for storing 7 unique (SHA512 salted) passwords, and then hiding content with a shortcode (and IP based lockout) that is unlockable using the current days password.
 * Reviews allows you to create custom reviews on anything you want, and display them on a post or a page.
 * Shortcodes!, a module that adds useful shortcodes for posts and pages.
+* Theme Takeover: Youtube 404; navbar that disables the Wordpress Admin Bar and gives you a bar similar to RES (with limited functionality)
+
 
 = Tweaks: =
 * Analaytics automatic embedding.
@@ -41,7 +43,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Disables Author archives if only one author exists.
 * Disables date based archives to avoid duplicate content.
 * Moves Javascript to the footer to decrease page load times.
-* Returns 5 keywords for the post in meta:keywords, based on most used words.
+* Disables Jetpack open graph.
 
 = Tools: =
 * Database cleaner to mass-delete trashed/revisions/drafts, unapproved/trashed/spam comments, or unused tags and categories.
@@ -63,11 +65,10 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= 5.2.6 =
-* Template tag added: mom_exclude_list_categories(); / use in place of wp_list_categories to display all categories that aren't excluded via settings.
-* Redirect 404s now gives you 2 options: one 404 redirect for logged in viewers, one for viewers who aren't (logged in).
-* A slight oversight has been fixed for the Exclude module not properly hiding the items that weren't user level based.
-* Ability to hide dashboard access from non-admin while still allowing those users to access their other role-appropriate areas, like profiles and posting.
+= 5.2.7 =
+* Module: Meta: Keyword(s) generator removed; meta keywords removed.
+* Module: Meta: single author archive disabling improved.  should properly redirect if certain conditions are met that were keeping it from properly redirecting in previous versions.
+* Module: Theme Takeover (added) (navbar,youtube404)(check official plugin page for more information)
 
 = 5 =
 * Minor bug fixes

@@ -1,8 +1,7 @@
 <?php if(!defined('MyOptionalModules')){die('You can not call this file directly.');}
 	function countsplusplus(){
 		global $wpdb;
-		$now = gmdate('Y-m-d H:i:s',time());
-		$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_date < '$now' AND post_type = 'post'";
+		$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post'";
 		$words = $wpdb->get_results($query);
 		if($words){
 			foreach($words as $word){
@@ -24,8 +23,7 @@
 	function obwcountplus_single(){
 		global $wpdb, $post;
 		$postid	= $post->ID;
-		$now = gmdate('Y-m-d H:i:s',time() );
-		$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_date < '$now' AND post_type = 'post' AND ID = '$postid'";
+		$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post' AND ID = '$postid'";
 		$words = $wpdb->get_results($query);
 		if($words){
 			foreach($words as $word){
@@ -39,13 +37,12 @@
 			$totalcount=0;
 		}
 		if(is_single()){
-			echo number_format($totalcount);
+			echo esc_attr(number_format($totalcount));
 		}
 	}
 	function obwcountplus_remaining(){
 		global $wpdb;
-		$now   = gmdate('Y-m-d H:i:s',time());
-		$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_date < '$now' AND post_type = 'post'";
+		$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post'";
 		$words = $wpdb->get_results($query);
 		if($words){
 			foreach($words as $word){
@@ -62,15 +59,14 @@
 			$totalcount >= get_option('obwcountplus_1_countdownfrom') ||
 			get_option('obwcountplus_1_countdownfrom') == 0
 		   ){
-			echo number_format($totalcount);
+			echo esc_attr(number_format($totalcount));
 		}else{
-			echo number_format(get_option('obwcountplus_1_countdownfrom') - $totalcount);
+			echo esc_attr(number_format(get_option('obwcountplus_1_countdownfrom') - $totalcount));
 		}
 	}
 	function obwcountplus_total(){
 		global $wpdb;
-		$now = gmdate('Y-m-d H:i:s',time());
-		$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_date < '$now' AND post_type = 'post'";
+		$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post'";
 		$words = $wpdb->get_results($query);
 		if($words){
 			foreach($words as $word){
@@ -83,12 +79,11 @@
 		} else {
 			$totalcount=0;
 		}
-		echo number_format($totalcount);
+		echo esc_attr(number_format($totalcount));
 	}
 	function obwcountplus_count(){
 		global $wpdb;
-		$now = gmdate('Y-m-d H:i:s',time());
-		$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_date < '$now' AND post_type = 'post'";
+		$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post'";
 		$words = $wpdb->get_results($query);
 		if($words){
 			foreach($words as $word){
@@ -105,9 +100,9 @@
 			$totalcount >= get_option('obwcountplus_1_countdownfrom') ||
 			get_option('obwcountplus_1_countdownfrom') == 0
 		   ) {
-			echo number_format($totalcount)." ".get_option('obwcountplus_3_total');
+			echo esc_attr(number_format($totalcount)." ".get_option('obwcountplus_3_total'));
 		   } else {
-			echo number_format(get_option('obwcountplus_1_countdownfrom') - $totalcount).' '.get_option('obwcountplus_2_remaining').' ('.number_format($totalcount).' '.get_option('obwcountplus_3_total' ).')';
+			echo esc_attr(number_format(get_option('obwcountplus_1_countdownfrom') - $totalcount).' '.get_option('obwcountplus_2_remaining').' ('.number_format($totalcount).' '.get_option('obwcountplus_3_total' ).')');
 		}
 	}
 ?>
