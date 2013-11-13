@@ -219,7 +219,7 @@
 		$rss_day_1 = implode($rss_day);
 		$rssday = explode(',',str_replace(' ','',$rss_day_1));
 		$rss_day_cat = explode(',',$MOM_Exclude_Cats_Day);
-		foreach ($rss_day_cat as &$rss_day_1_cat){$rss_day_1_cat = ''.$rss_day_1_cat.',';}
+		if(is_array($rss_day_cat)){foreach ($rss_day_cat as &$rss_day_1_cat){$rss_day_1_cat = ''.$rss_day_1_cat.',';}}
 		$rss_day_1_cat = implode($rss_day_cat);
 		$rssday_cat = explode(',', str_replace(' ','',$rss_day_1_cat));		
 		if(!is_user_logged_in()){

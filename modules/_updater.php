@@ -80,6 +80,10 @@
 		delete_option('MOM_themetakeover_youtubefrontpage');
 		delete_option('MOM_themetakeover_topbar');
 		delete_option('MOM_themetakeover_archivepage');
+		delete_option('MOM_themetakeover_fitvids');
+		delete_option('MOM_themetakeover_postdiv');
+		delete_option('MOM_themetakeover_postelement');
+		delete_option('MOM_themetakeover_posttoggle');
 		delete_option( 'mommaincontrol_setfocus' );
 		delete_option( 'mommaincontrol' );
 		delete_option( 'mompaf_post' );

@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.2.7
+Version: 5.2.8
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 */
@@ -28,7 +28,11 @@ Author URI: http://onebillionwords.com
 	define('MyOptionalModules', TRUE );
 	require_once( plugin_dir_path( __FILE__ ).'_postedit.php');
 	require_once( plugin_dir_path( __FILE__ ).'modules/maincontrol.php');
+	function enqueueMOMscriptsFooter(){include(plugin_dir_path( __FILE__ ).'functions/_mainjavascript.php');}
+	add_action('wp','enqueueMOMscriptsFooter');
 	add_action('admin_enqueue_scripts','mom_styles');
+	wp_register_style('my_optional_modules',plugins_url().'/'.plugin_basename(dirname(__FILE__)).'/includes/css/my-optional-modules.css');
+	wp_enqueue_style('my_optional_modules');
 	if(get_option('mommaincontrol_obwcountplus') == 1){include(plugin_dir_path( __FILE__ ).'functions/_functions_countplusplus.php');}
 	if(get_option('mommaincontrol_momse') == 1){include(plugin_dir_path( __FILE__ ).'functions/_functions_exclude.php');
 		add_action( 'after_setup_theme', 'mom_exclude_postformat_theme_support' );
@@ -100,52 +104,6 @@ Author URI: http://onebillionwords.com
 			}
 		}	
 	}	
-	if(get_option('mommaincontrol_analytics') == 1 && get_option('momanalytics_code') != ''){
-		function mom_analytics(){
-			echo '<script>
-						(function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){
-						(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-						m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-						})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');
-						ga(\'create\',\''.get_option('momanalytics_code').'\',\''.home_url('/').'\');
-						ga(\'send\',\'pageview\');
-				</script>';
-		}
-		add_action('wp_footer','mom_analytics');
-	}
-	if(get_option('mommaincontrol_lazyload') == 1 ){
-		function mom_jquery(){
-			wp_deregister_script('jquery');
-			wp_register_script('jquery', "http".($_SERVER['SERVER_PORT'] == 443 ? "s" : "")."://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js",'','', null, false);
-			wp_enqueue_script('jquery');		
-		}
-		function mom_lazy_load(){
-			$lazyLoad = '//cdn.jsdelivr.net/jquery.lazyload/1.9.0/jquery.lazyload.min.js';
-			$placeholder = plugins_url().'/'.plugin_basename(dirname(__FILE__)).'/includes/javascript/placeholder.png';
-			echo '
-			<script type=\'text/javascript\' src=\''.$lazyLoad.'\'></script>
-			<script>
-				$(document).ready(function (){
-					$("img").wrap(function(){
-						$(this).wrap(function(){
-							var newimg = \'<img src="'.$placeholder.'" data-original="\' + $(this).attr(\'src\') + \'" width="\' + $(this).attr(\'width\') + \'" height="\' + $(this).attr(\'height\') + \'" class="lazy \' + $(this).attr(\'class\') + \'">\';
-							return newimg;  
-						});
-						return \'<noscript>\';
-					});
-				});
-			</script>
-			<script>
-				jQuery(document).ready(function ($){
-					$("img.lazy").lazyload(
-					{data_attribute: "original" 
-					});
-				});
-			</script>';
-		}
-		add_action('wp_enqueue_scripts','mom_jquery');
-		add_action('wp_footer','mom_lazy_load');   
-	}
 	if(get_option('mommaincontrol_momse') == 1 && get_option('MOM_themetakeover_youtubefrontpage') == ''){
 		function MOMExclude404Redirection() {
 			if(!is_user_logged_in()){

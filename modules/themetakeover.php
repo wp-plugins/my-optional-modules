@@ -6,6 +6,10 @@
 					update_option('MOM_themetakeover_youtubefrontpage',$_REQUEST['MOM_themetakeover_youtubefrontpage']);
 					update_option('MOM_themetakeover_topbar',$_REQUEST['MOM_themetakeover_topbar']);
 					update_option('MOM_themetakeover_archivepage',$_REQUEST['MOM_themetakeover_archivepage']);
+					update_option('MOM_themetakeover_fitvids',$_REQUEST['MOM_themetakeover_fitvids']);
+					update_option('MOM_themetakeover_postdiv',$_REQUEST['MOM_themetakeover_postdiv']);
+					update_option('MOM_themetakeover_postelement',$_REQUEST['MOM_themetakeover_postelement']);
+					update_option('MOM_themetakeover_posttoggle',$_REQUEST['MOM_themetakeover_posttoggle']);
 				}
 			}
 			function mom_themetakeover_form(){
@@ -13,6 +17,10 @@
 				
 				<div class="exclude">
 					<section><label for="MOM_themetakeover_youtubefrontpage">Youtube URL for 404s</label><input type="text" id="MOM_themetakeover_youtubefrontpage" name="MOM_themetakeover_youtubefrontpage" value="'.get_option('MOM_themetakeover_youtubefrontpage').'"></section>
+					<section><label for="MOM_themetakeover_fitvids"><a href="http://fitvidsjs.com/">Fitvid</a> .class</label><input type="text" id="MOM_themetakeover_fitvids" name="MOM_themetakeover_fitvids" value="'.get_option('MOM_themetakeover_fitvids').'"></section>
+					<section><label for="MOM_themetakeover_postdiv">Post content .div</label><input type="text" placeholder=".entry" id="MOM_themetakeover_postdiv" name="MOM_themetakeover_postdiv" value="'.get_option('MOM_themetakeover_postdiv').'"></section>
+					<section><label for="MOM_themetakeover_postelement">Post title .element</label><input type="text" placeholder="h1" id="MOM_themetakeover_postelement" name="MOM_themetakeover_postelement" value="'.get_option('MOM_themetakeover_postelement').'"></section>
+					<section><label for="MOM_themetakeover_posttoggle">Toggle text</label><input type="text" placeholder="Toggle contents" id="MOM_themetakeover_posttoggle" name="MOM_themetakeover_posttoggle" value="'.get_option('MOM_themetakeover_posttoggle').'"></section>
 				</div>';
 				echo '
 				<div class="exclude">

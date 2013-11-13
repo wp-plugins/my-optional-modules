@@ -1,5 +1,4 @@
-<?php if(!defined('MyOptionalModules')){ die('You can not call this file directly.');}$themetakeover_youtubeurl = get_option('MOM_themetakeover_youtubefrontpage');$themetakeoverfindvideoid = $themetakeover_youtubeurl;parse_str(parse_url($themetakeoverfindvideoid,PHP_URL_QUERY),$thevideoidforyoutube);$thevideoid = $thevideoidforyoutube['v'];  	$themetakeover_youtubedivs = get_option('MOM_themetakeover_youtubedivs');
-$fitvids = plugins_url().'/my-optional-modules/includes/javascript/fitvids.js';?>
+<?php if(!defined('MyOptionalModules')){ die('You can not call this file directly.');}$themetakeover_youtubeurl = get_option('MOM_themetakeover_youtubefrontpage');$themetakeoverfindvideoid = $themetakeover_youtubeurl;parse_str(parse_url($themetakeoverfindvideoid,PHP_URL_QUERY),$thevideoidforyoutube);$thevideoid = $thevideoidforyoutube['v'];$fitvids = plugins_url().'/my-optional-modules/includes/javascript/fitvids.js';?>
 <!DOCTYPE html>
 	<html <?php language_attributes();?>>
 	<head>

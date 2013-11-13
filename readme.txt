@@ -1,9 +1,9 @@
 === My Optional Modules ===
 Contributors: boyevul
-Tags: navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
+Tags: fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.6
 Tested up to: 3.6.1
-Stable tag: 5.2.7
+Stable tag: 5.2.8
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -65,10 +65,10 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= 5.2.7 =
-* Module: Meta: Keyword(s) generator removed; meta keywords removed.
-* Module: Meta: single author archive disabling improved.  should properly redirect if certain conditions are met that were keeping it from properly redirecting in previous versions.
-* Module: Theme Takeover (added) (navbar,youtube404)(check official plugin page for more information)
+= 5.2.8 =
+* Fitvid now available sitewide via Theme Takeover (set your video classes, fitvid does the rest)
+* Theme Takeover: Page/Post List (added) - take any element (like h1s or h3s) from a post or page and create a list of anchor-links at the top of the page/post (automatically).  (uses javascript)
+* All scripts (.js,script) moved to a single file, enqueued)
 
 = 5 =
 * Minor bug fixes
@@ -78,7 +78,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Interface overhaul (2)
 * Minor bug fixes
 * Cleanup from 4.x.x
-* Lazy Load (added); Meta (added)
+* Lazy Load (added); Meta (added); Theme Takeover(added)
 
 = 4 = 
 * Minor bug fixes
