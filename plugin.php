@@ -1604,15 +1604,15 @@ function mom_reviews_shortcode($atts, $content = null){
 			'open' => 0,
 		), $atts)
 	);	
-	$id_fetch_att = esc_attr($id);
+	$id_fetch_att = $id;
 	if(is_numeric($id_fetch_att)){$id_fetch = $id_fetch_att;}
-	$result_type = esc_attr($type);
-	$order_by = esc_attr($orderby);
-	$order_dir = esc_attr($order);
-	$meta_show = esc_attr($meta);
-	$expand_this = esc_attr($expand);
-	$retract_this = esc_attr($retract);
-	$is_open = esc_attr($open);
+	$result_type = $type;
+	$order_by = $orderby;
+	$order_dir = $order;
+	$meta_show = $meta;
+	$expand_this = $expand;
+	$retract_this = $retract;
+	$is_open = $open;
 	global $wpdb;
 	$mom_reviews_table_name = $wpdb->prefix . "momreviews";
 	if($id_fetch != ''){
