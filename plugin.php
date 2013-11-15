@@ -494,6 +494,7 @@ if($mommodule_meta			=== true)mom_SEO_header();
 /**********************************************************************************
 (B4) Options saving/deleting
 **********************************************************************************/
+if(is_admin()){
 global $wpdb;
 $RUPs_table_name			= $wpdb->prefix.'rotating_universal_passwords';
 $review_table_name			= $wpdb->prefix.'momreviews';
@@ -646,6 +647,7 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 	if(isset($_POST['mom_maintenance_mode_submit'])){
 			add_option('momMaintenance_url','');
 		}
+}
 }
 
 
