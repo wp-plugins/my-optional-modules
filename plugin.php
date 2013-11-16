@@ -2,97 +2,100 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.1
+Version: 5.3.2
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
-
+*******************************
 LICENSE
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as 
 published by the Free Software Foundation.
-
+*******************************
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
-
+*******************************
 You should have received a copy of the GNU General Public License
 along with this program;if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-
-/**********************************************************************************
-
-+---------------------------+
-+    (00) Contents          +
-+---------------------------+
-+    SECTION A              +    ~> Minor dependencies
-+---------------------------+
-+    SECTION B              +    ~> Overall
-+    (B0) Install           +    ~> When plugin is activated, do stuff
-+    (B1) Variables         +    ~> Set variables for main modules
-+    (B2) Main functions    +    ~> Define functions that we need immediately
-+    (B3) Includes          +    ~> Include files if the modules are active
-+---------------------------+
-+    SECTION C              +    ~> Settings page
-+---------------------------+
-+    SECTION D              +    ~> Passwords
-+    (D0) Settings          +    ~> Settings page
-+    (D1) Functions         +    ~> Functions([shortcode])
-+---------------------------+
-+    SECTION E              +    ~> Reviews
-+    (E0) Settings          +    ~> Settings page
-+    (E1) Functions         +    ~> Reviews functions,[shortcode]
-+---------------------------+
-+    SECTION F              +    ~> Shortcodes
-+    (F0) Settings          +    ~> Settings display (informational purposes screen)
-+    (F1) Shortcodes        +    ~> [shortcodes]
-+---------------------------+
-+    SECTION G              +    ~> Meta
-+    (G0) Functions         +    ~> Meta functions
-+---------------------------+
-+    SECTION H              +    ~> Theme Takeover
-+    (H0) Settings          +    ~> Settings page
-+    (H1) Functions         +    ~> Theme Takeover functions
-+---------------------------+
-+    SECTION I              +    ~> Font Awesome
-+    (I0) Shortcode         +    ~> [font-fa] shortcode for Font Awesome <i></i>
-+---------------------------+
-+    SECTION J              +    ~> Count++
-+    (J0) Settings          +    ~> Settings page
-+    (J1) Functions         +    ~> Count++ Theme functions
-+---------------------------+
-+    SECTION K              +    ~> Exclude
-+    (K0) Settings          +    ~> Settings page
-+    (K1) Functions         +    ~> Exclude functions
-+---------------------------+
-+    Section L              +    ~> Jump Around
-+    (L0) Settings          +    ~> Settings page
-+---------------------------+
-+    SECTION W              +    ~> Misc. thiings not covered anywhere else
-+---------------------------+
-+    SECTION X              +    ~> Database cleaner
-+---------------------------+
-+    SECTION Y              +    ~> Post edit buttons
-+---------------------------+
-+    SECTION Z              +    ~> Additional information
-+---------------------------+
-
-**********************************************************************************
-/* SECTION A *********************************************************************
-*********************************************************************************/
+/******************************
++-----------------------------+
++    (00) Contents            +
++-----------------------------+
++    SECTION A                + ~> Minor dependencies
++-----------------------------+
++    SECTION B                + ~> Overall
++    (B0) Install             + ~> When plugin is activated, do stuff
++    (B1) Variables           + ~> Set variables for main modules
++    (B2) Main functions      + ~> Define functions that we need immediately
++    (B3) Options             + ~> Saving and deleting
++-----------------------------+
++    SECTION C                + ~> Settings page
++-----------------------------+
++    SECTION D                + ~> Passwords
++    (D0) Settings            + ~> Settings page
++    (D1) Functions           + ~> Functions([shortcode])
++-----------------------------+
++    SECTION E                + ~> Reviews
++    (E0) Settings            + ~> Settings page
++    (E1) Functions           + ~> Reviews functions,[shortcode]
++-----------------------------+
++    SECTION F                + ~> Shortcodes
++    (F0) Settings            + ~> Settings display (informational purposes screen)
++    (F1) Shortcodes          + ~> [shortcodes]
++-----------------------------+
++    SECTION G                + ~> Meta
++    (G0) Functions           + ~> Meta functions
++-----------------------------+
++    SECTION H                + ~> Theme Takeover
++    (H0) Settings            + ~> Settings page
++    (H1) Functions           + ~> Theme Takeover functions
++-----------------------------+
++    SECTION I                + ~> Font Awesome
++    (I0) Shortcode           + ~> [font-fa] shortcode for Font Awesome <i></i>
++-----------------------------+
++    SECTION J                + ~> Count++
++    (J0) Settings            + ~> Settings page
++    (J1) Functions           + ~> Count++ Theme functions
++-----------------------------+
++    SECTION K                + ~> Exclude
++    (K0) Settings            + ~> Settings page
++    (K1) Functions           + ~> Exclude functions
++-----------------------------+
++    Section L                + ~> Jump Around
++    (L0) Settings            + ~> Settings page
++-----------------------------+
++    SECTION X                + ~> Database cleaner
++-----------------------------+
++    SECTION Y                + ~> Post edit buttons
++-----------------------------+
++    SECTION Z                + ~> Additional information
++-----------------------------+
+/*****************************/
+/* Divider                   */
+/*****************************/
+/* SECTION A                 */
+/* Dependencies              */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
 define('MyOptionalModules',true);
 require_once(ABSPATH.'wp-includes/pluggable.php');
-$my_optional_modules_passwords_salt     = wp_salt();
-
-
-
-
-
-/* SECTION B **********************************************************************
-***********************************************************************************
-(B0) Install
-**********************************************************************************/
+$my_optional_modules_passwords_salt = wp_salt();
+/*****************************/
+/* Divider                   */
+/*****************************/
+/* SECTION B                 */
+/* (B0) Install              */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
 register_activation_hook(__FILE__,'my_optional_modules_main_control_install');
+add_action('wp','enqueueMOMscriptsFooter');
+add_action('admin_enqueue_scripts','mom_styles');
+add_action('admin_enqueue_scripts','MOMFontAwesomeIncluded');
+add_action('wp_print_styles', 'MOMMainCSS');
 function mom_styles($hook){
     if('settings_page_mommaincontrol' != $hook)
     return;
@@ -107,91 +110,104 @@ function MOMFontAwesomeIncluded(){
     wp_register_style('font_awesome',plugins_url().'/'.plugin_basename(dirname(__FILE__)).'/includes/fontawesome/css/font-awesome.css');
     wp_enqueue_style('font_awesome');
 }
-add_action('wp','enqueueMOMscriptsFooter');
-add_action('admin_enqueue_scripts','mom_styles');
-add_action('admin_enqueue_scripts','MOMFontAwesomeIncluded');
-
-add_action('wp_print_styles', 'MOMMainCSS');
 function MOMMainCSS() {
         $myStyleFile = WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules.css';
         wp_register_style('my_optional_modules',$myStyleFile);
         wp_enqueue_style('my_optional_modules');
 }
-
-
-/**********************************************************************************
-(B1) Variables
-**********************************************************************************/
-$mommodule_count             = esc_attr(get_option('mommaincontrol_obwcountplus'));
-$mommodule_passwords         = esc_attr(get_option('mommaincontrol_momrups'));
-$mommodule_exclude           = esc_attr(get_option('mommaincontrol_momse'));
-$mommodule_postasfront       = esc_attr(get_option('mommaincontrol_mompaf'));
-$mommodule_jumparound        = esc_attr(get_option('mommaincontrol_momja'));
-$mommodule_shortcodes        = esc_attr(get_option('mommaincontrol_shorts'));
-$mommodule_analytics         = esc_attr(get_option('mommaincontrol_analytics'));
-$mommodule_reviews           = esc_attr(get_option('mommaincontrol_reviews'));
-$mommodule_fontawesome       = esc_attr(get_option('mommaincontrol_fontawesome'));
-$mommodule_versionnumbers    = esc_attr(get_option('mommaincontrol_versionnumbers'));
-$mommodule_lazyload          = esc_attr(get_option('mommaincontrol_lazyload'));
-$mommodule_meta              = esc_attr(get_option('mommaincontrol_meta'));
-$mommodule_focus             = esc_attr(get_option('mommaincontrol_focus'));
-$mommodule_maintenance       = esc_attr(get_option('mommaincontrol_maintenance'));
-$mommodule_themetakeover     = esc_attr(get_option('mommaincontrol_themetakeover'));
-
-if($mommodule_count          == 1)$mommodule_count            = true;
-if($mommodule_passwords      == 1)$mommodule_passwords        = true;
-if($mommodule_exclude        == 1)$mommodule_exclude          = true;
-if($mommodule_postasfront    == 1)$mommodule_postasfront      = true;
-if($mommodule_jumparound     == 1)$mommodule_jumparound       = true;
-if($mommodule_shortcodes     == 1)$mommodule_shortcodes       = true;
-if($mommodule_analytics      == 1)$mommodule_analytics        = true;
-if($mommodule_reviews        == 1)$mommodule_reviews          = true;
-if($mommodule_fontawesome    == 1)$mommodule_fontawesome      = true;
-if($mommodule_versionnumbers == 1)$mommodule_versionnumbers   = true;
-if($mommodule_lazyload       == 1)$mommodule_lazyload         = true;
-if($mommodule_meta           == 1)$mommodule_meta             = true;
-if($mommodule_focus          == 1)$mommodule_focus            = true;
-if($mommodule_maintenance    == 1)$mommodule_maintenance      = true;
-if($mommodule_themetakeover  == 1)$mommodule_themetakeover    = true;
-
+/*****************************/
+/* Divider                   */
+/*****************************/
+/* SECTION B                 */
+/* (B1) Variables            */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
+$mommodule_analytics             = false;
+$mommodule_count                 = false;
+$mommodule_exclude               = false;
+$mommodule_focus                 = false;
+$mommodule_fontawesome           = false;
+$mommodule_jumparound            = false;
+$mommodule_lazyload              = false;
+$mommodule_maintenance           = false;
+$mommodule_meta                  = false;
+$mommodule_passwords             = false;
+$mommodule_postasfront           = false;
+$mommodule_reviews               = false;
+$mommodule_shortcodes            = false;
+$mommodule_themetakeover         = false;
+$mommodule_versionnumbers        = false;
+$mommodule_analytics             = esc_attr(get_option('mommaincontrol_analytics'));                                       
+    if($mommodule_analytics      == 1)$mommodule_analytics = true;
+$mommodule_count                 = esc_attr(get_option('mommaincontrol_obwcountplus'));
+    if($mommodule_count          == 1)$mommodule_count = true;
+$mommodule_exclude               = esc_attr(get_option('mommaincontrol_momse'));
+    if($mommodule_exclude        == 1)$mommodule_exclude = true;
+    if($mommodule_exclude        === true)add_action('after_setup_theme','mom_exclude_postformat_theme_support');
+$mommodule_focus                 = esc_attr(get_option('mommaincontrol_focus'));
+    if($mommodule_focus          == 1)$mommodule_focus = true;
+$mommodule_fontawesome           = esc_attr(get_option('mommaincontrol_fontawesome'));
+    if($mommodule_fontawesome    == 1)$mommodule_fontawesome = true;
+    if($mommodule_fontawesome    === true)add_action('wp_enqueue_scripts','mom_plugin_scripts');
+    if($mommodule_fontawesome    === true)add_shortcode('font-fa','font_fa_shortcode');
+    if($mommodule_fontawesome    === true)add_filter('the_content','do_shortcode','font_fa_shortcode');
+$mommodule_jumparound            = esc_attr(get_option('mommaincontrol_momja'));
+    if($mommodule_jumparound     == 1)$mommodule_jumparound = true;
+$mommodule_lazyload              = esc_attr(get_option('mommaincontrol_lazyload'));
+    if($mommodule_lazyload       == 1)$mommodule_lazyload = true;
+$mommodule_maintenance           = esc_attr(get_option('mommaincontrol_maintenance'));
+    if($mommodule_maintenance    == 1)$mommodule_maintenance = true;
+    if($mommodule_maintenance    === true)add_action('wp','momMaintenance');
+$mommodule_meta                  = esc_attr(get_option('mommaincontrol_meta'));
+    if($mommodule_meta           == 1)$mommodule_meta = true;
+    if($mommodule_meta           === true)add_filter('admin_init','momSEO_add_fields_to_general');
+    if($mommodule_meta           === true)add_filter('user_contactmethods','momSEO_add_fields_to_profile');
+    if($mommodule_meta            === true)mom_SEO_header();
+$mommodule_passwords             = esc_attr(get_option('mommaincontrol_momrups'));
+    if($mommodule_passwords      == 1)$mommodule_passwords = true;
+    if($mommodule_passwords      === true)add_shortcode('rups','rotating_universal_passwords_shortcode');
+    if($mommodule_passwords      === true)add_filter('the_content','do_shortcode','rotating_universal_passwords_shortcode');
+$mommodule_postasfront           = esc_attr(get_option('mommaincontrol_mompaf'));
+    if($mommodule_postasfront    == 1)$mommodule_postasfront = true;
+    if($mommodule_postasfront    === true)add_action('wp','mompaf_filter_home');
+$mommodule_reviews               = esc_attr(get_option('mommaincontrol_reviews'));
+    if($mommodule_reviews        == 1)$mommodule_reviews = true;
+    if($mommodule_reviews        === true)add_shortcode('momreviews','mom_reviews_shortcode');    
+    if($mommodule_reviews        === true)add_filter('the_content','do_shortcode','mom_reviews_shortcode');    
+$mommodule_shortcodes            = esc_attr(get_option('mommaincontrol_shorts'));
+    if($mommodule_shortcodes     == 1)$mommodule_shortcodes = true;
+    if($mommodule_shortcodes     === true)add_shortcode('mom_archives','mom_archives');
+    if($mommodule_shortcodes     === true)add_shortcode('mom_map','mom_google_map_shortcode');
+    if($mommodule_shortcodes     === true)add_shortcode('mom_reddit','mom_reddit_shortcode');
+    if($mommodule_shortcodes     === true)add_shortcode('mom_restrict','mom_restrict_shortcode');
+    if($mommodule_shortcodes     === true)add_shortcode('mom_progress','mom_progress_shortcode');
+    if($mommodule_shortcodes     === true)add_shortcode('mom_verify','mom_verify_shortcode');
+    if($mommodule_shortcodes     === true)add_filter('the_content','do_shortcode','mom_archives');
+    if($mommodule_shortcodes     === true)add_filter('the_content','do_shortcode','mom_map');
+    if($mommodule_shortcodes     === true)add_filter('the_content','do_shortcode','mom_reddit');
+    if($mommodule_shortcodes     === true)add_filter('the_content','do_shortcode','mom_restrict');
+    if($mommodule_shortcodes     === true)add_filter('the_content','do_shortcode','mom_progress');
+    if($mommodule_shortcodes     === true)add_filter('the_content','do_shortcode','mom_verify');
+$mommodule_themetakeover         = esc_attr(get_option('mommaincontrol_themetakeover'));
+    if($mommodule_themetakeover  == 1)$mommodule_themetakeover = true;
+$mommodule_versionnumbers        = esc_attr(get_option('mommaincontrol_versionnumbers'));
+    if($mommodule_versionnumbers == 1)$mommodule_versionnumbers = true;
+    if($mommodule_versionnumbers === true)add_filter('style_loader_src','mom_remove_version_numbers',0);
+    if($mommodule_versionnumbers === true)add_filter('script_loader_src','mom_remove_version_numbers',0);
 $momthemetakeover_youtube        = esc_url(get_option('MOM_themetakeover_youtubefrontpage'));
-
-if($mommodule_passwords      === true)add_shortcode('rups','rotating_universal_passwords_shortcode');
-if($mommodule_passwords      === true)add_filter('the_content','do_shortcode','rotating_universal_passwords_shortcode');
-if($mommodule_reviews        === true)add_shortcode('momreviews','mom_reviews_shortcode');    
-if($mommodule_reviews        === true)add_filter('the_content','do_shortcode','mom_reviews_shortcode');    
-if($mommodule_postasfront    === true)add_action('wp','mompaf_filter_home');
-if($mommodule_maintenance    === true)add_action('wp','momMaintenance');
-if($mommodule_versionnumbers === true)add_filter('style_loader_src','mom_remove_version_numbers',0);
-if($mommodule_versionnumbers === true)add_filter('script_loader_src','mom_remove_version_numbers',0);
-if($mommodule_fontawesome    === true)add_action('wp_enqueue_scripts','mom_plugin_scripts');
-if($mommodule_fontawesome    === true)add_shortcode('font-fa','font_fa_shortcode');
-if($mommodule_fontawesome    === true)add_filter('the_content','do_shortcode','font_fa_shortcode');
-if($mommodule_exclude        === true)add_action('after_setup_theme','mom_exclude_postformat_theme_support');
-if($mommodule_shortcodes     === true)add_shortcode('mom_archives','mom_archives');
-if($mommodule_shortcodes     === true)add_shortcode('mom_map','mom_google_map_shortcode');
-if($mommodule_shortcodes     === true)add_shortcode('mom_reddit','mom_reddit_shortcode');
-if($mommodule_shortcodes     === true)add_shortcode('mom_restrict','mom_restrict_shortcode');
-if($mommodule_shortcodes     === true)add_shortcode('mom_progress','mom_progress_shortcode');
-if($mommodule_shortcodes     === true)add_shortcode('mom_verify','mom_verify_shortcode');
-if($mommodule_shortcodes     === true)add_filter('the_content','do_shortcode','mom_archives');
-if($mommodule_shortcodes     === true)add_filter('the_content','do_shortcode','mom_map');
-if($mommodule_shortcodes     === true)add_filter('the_content','do_shortcode','mom_reddit');
-if($mommodule_shortcodes     === true)add_filter('the_content','do_shortcode','mom_restrict');
-if($mommodule_shortcodes     === true)add_filter('the_content','do_shortcode','mom_progress');
-if($mommodule_shortcodes     === true)add_filter('the_content','do_shortcode','mom_verify');
-if($mommodule_meta           === true)add_filter('admin_init','momSEO_add_fields_to_general');
-if($mommodule_meta           === true)add_filter('user_contactmethods','momSEO_add_fields_to_profile');
-
-/**********************************************************************************
-(B2) Main functions
-**********************************************************************************/
+/*****************************/
+/* SECTION B                 */
+/* (B2) Main Functions       */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
 if($mommodule_exclude == 1){
     function mom_exclude_list_categories(){
     get_currentuserinfo();
     global $user_level;
+	$nofollowCats = array('0,0');
         if(!is_user_logged_in()){
-            $nofollowCats = '';
             $nofollowCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');    
         }
         if(is_user_logged_in()){
@@ -487,19 +503,17 @@ function mom_plugin_scripts(){
 function mom_exclude_postformat_theme_support(){
     add_theme_support('post-formats', array('aside','gallery','link','image','quote','status','video','audio','chat'));
 }
-/**********************************************************************************
-(B3) Includes
-**********************************************************************************/
-if($mommodule_meta            === true)mom_SEO_header();
-/**********************************************************************************
-(B4) Options saving/deleting
-**********************************************************************************/
-if(is_admin()){
+/*****************************/
+/* SECTION B                 */
+/* (B3) Options              */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
+if(current_user_can('manage_options')){
 global $wpdb;
-$RUPs_table_name            = $wpdb->prefix.'rotating_universal_passwords';
-$review_table_name            = $wpdb->prefix.'momreviews';
-$verification_table_name    = $wpdb->prefix.'momverification';
-
+$RUPs_table_name         = $wpdb->prefix.'rotating_universal_passwords';
+$review_table_name       = $wpdb->prefix.'momreviews';
+$verification_table_name = $wpdb->prefix.'momverification';
 if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
     $wpdb->query("DROP TABLE ".$RUPs_table_name."");                        $wpdb->query("DROP TABLE ".$review_table_name."");
     $wpdb->query("DROP TABLE ".$verification_table_name."");
@@ -616,7 +630,7 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
     if(isset($_POST['mom_postasfront_mode_submit'])){add_option('mompaf_post',0);}    
     if(isset($_POST['mom_reviews_mode_submit'])){
     add_option('momreviews_search','');
-    add_option('momreviews_css',"/* Colors */\n.momreview .block {background-color: #fff; color: #000;}\n.momreview section.reviewed {background-color: #fff; color: #000;}\n.momreview ::selection {background: #222; color: #fff;}\n.momreview label {color: #111; text-shadow: 1px 1px 2px #ccc;}\n/* Containers */\n.momreview {margin: 0 auto; width: 95%;}\n.momreview .block {padding-top: 5px; margin: 0 auto 0 auto;}\n.momreview label {width: 95%; min-height: 35px; margin: 0 auto; display: block; cursor: pointer;}\n.momreview .reviewed {width: 93%; height: 0; padding: 0 15px 0 15px; display: block; overflow: hidden; box-sizing: border-box; margin: auto;}\n/* Do not edit below this line */\n/* unless you know what you\'re doing. */\n.momreview label span {font-weight: bold; float:right;}\n.momreview input[type=\'checkbox\']  {display: none;}\n.momreview .block input[type=\'checkbox\']:checked ~ .reviewed {height: auto; margin: -25px auto 5px auto;}\n.momreview .block input[type=\'checkbox\'] ~ label span:first-of-type {display:block; visibility:visible; float:right; margin:0 -5px 0 0;}\n.momreview .block input[type=\'checkbox\'] ~ label span:last-of-type,\n.momreview .block input[type=\'checkbox\']:checked ~ label span:first-of-type {display:none; visibility:hidden; float:right;}\n.momreview .block input[type=\'checkbox\']:checked ~ label span:last-of-type {display:block; visibility:visible; float:right;}\n");
+    add_option('momreviews_css',"/* Colors */\n.momreview .block {background-color: #fff; color: #000;}\n.momreview section.reviewed {background-color: #fff; color: #000;}\n.momreview ::selection {background: #222; color: #fff;}\n.momreview label {color: #111; text-shadow: 1px 1px 2px #ccc;}\n/* Containers */\n.momreview {margin: 0 auto; width: 95%;}\n.momreview .block {padding-top: 5px; margin: 0 auto 0 auto;}\n.momreview label {width: 95%; min-height: 35px; margin: 0 auto; display: block; cursor: pointer;}\n.momreview .reviewed {width: 93%; height: 0; padding: 0 15px 0 15px; display: block; overflow: hidden; box-sizing: border-box; margin: auto;}\n/* Do not edit below this line */\n/* unless you know what you're doing. */\n.momreview label span {font-weight: bold; float:right;}\n.momreview input[type='checkbox']  {display: none;}\n.momreview .block input[type='checkbox']:checked ~ .reviewed {height: auto; margin: -25px auto 5px auto;}\n.momreview .block input[type='checkbox'] ~ label span:first-of-type {display:block; visibility:visible; float:right; margin:0 -5px 0 0;}\n.momreview .block input[type='checkbox'] ~ label span:last-of-type,\n.momreview .block input[type='checkbox']:checked ~ label span:first-of-type {display:none; visibility:hidden; float:right;}\n.momreview .block input[type='checkbox']:checked ~ label span:last-of-type {display:block; visibility:visible; float:right;}\n");
     global $wpdb;
     $review_table_name = $wpdb->prefix.'momreviews';
     $reviews_sql = "CREATE TABLE $review_table_name (
@@ -648,15 +662,159 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
             add_option('momMaintenance_url','');
         }
 }
+    if(isset($_POST['passwordsSave'])){
+        global $my_optional_modules_passwords_salt;
+        $pass1 = $_REQUEST['rotating_universal_passwords_1'];
+        $pass2 = $_REQUEST['rotating_universal_passwords_2'];
+        $pass3 = $_REQUEST['rotating_universal_passwords_3'];
+        $pass4 = $_REQUEST['rotating_universal_passwords_4'];
+        $pass5 = $_REQUEST['rotating_universal_passwords_5'];
+        $pass6 = $_REQUEST['rotating_universal_passwords_6'];
+        $pass7 = $_REQUEST['rotating_universal_passwords_7'];
+        $pass_final_1 = hash('sha512',$my_optional_modules_passwords_salt.$pass1);
+        $pass_final_2 = hash('sha512',$my_optional_modules_passwords_salt.$pass2);
+        $pass_final_3 = hash('sha512',$my_optional_modules_passwords_salt.$pass3);
+        $pass_final_4 = hash('sha512',$my_optional_modules_passwords_salt.$pass4);
+        $pass_final_5 = hash('sha512',$my_optional_modules_passwords_salt.$pass5);
+        $pass_final_6 = hash('sha512',$my_optional_modules_passwords_salt.$pass6);
+        $pass_final_7 = hash('sha512',$my_optional_modules_passwords_salt.$pass7);
+        if($pass1 !== '')update_option('rotating_universal_passwords_1',$pass_final_1);
+        if($pass2 !== '')update_option('rotating_universal_passwords_2',$pass_final_2);
+        if($pass3 !== '')update_option('rotating_universal_passwords_3',$pass_final_3);
+        if($pass4 !== '')update_option('rotating_universal_passwords_4',$pass_final_4);
+        if($pass5 !== '')update_option('rotating_universal_passwords_5',$pass_final_5);
+        if($pass6 !== '')update_option('rotating_universal_passwords_6',$pass_final_6);
+        if($pass7 !== '')update_option('rotating_universal_passwords_7',$pass_final_7);
+        update_option('rotating_universal_passwords_8',$_REQUEST['rotating_universal_passwords_8']);
+    }
+    if(isset($_POST['reset_rups'])){
+        delete_option('rotating_universal_passwords_1');
+        delete_option('rotating_universal_passwords_2');
+        delete_option('rotating_universal_passwords_3');
+        delete_option('rotating_universal_passwords_4');
+        delete_option('rotating_universal_passwords_5');
+        delete_option('rotating_universal_passwords_6');
+        delete_option('rotating_universal_passwords_7');    
+        add_option('rotating_universal_passwords_1','');
+        add_option('rotating_universal_passwords_2','');
+        add_option('rotating_universal_passwords_3','');
+        add_option('rotating_universal_passwords_4','');
+        add_option('rotating_universal_passwords_5','');
+        add_option('rotating_universal_passwords_6','');
+        add_option('rotating_universal_passwords_7','');    
+    }
+    if(isset($_POST['update_JA'])){
+        update_option('jump_around_0',$_REQUEST['jump_around_0']);
+        update_option('jump_around_1',$_REQUEST['jump_around_1']);
+        update_option('jump_around_2',$_REQUEST['jump_around_2']);
+        update_option('jump_around_3',$_REQUEST['jump_around_3']);
+        update_option('jump_around_4',$_REQUEST['jump_around_4']);
+        update_option('jump_around_5',$_REQUEST['jump_around_5']);
+        update_option('jump_around_6',$_REQUEST['jump_around_6']);
+        update_option('jump_around_7',$_REQUEST['jump_around_7']);
+        update_option('jump_around_8',$_REQUEST['jump_around_8']);
+    }    
+    if(isset($_POST['momsesave'])){
+        update_option('MOM_Exclude_VisitorCategories',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_VisitorCategories']))))))));
+        update_option('MOM_Exclude_VisitorTags',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_VisitorTags'])))))))));
+        update_option('MOM_Exclude_Categories_RSS',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Categories_RSS'])))))))));
+        update_option('MOM_Exclude_Categories_Front',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Categories_Front'])))))))));
+        update_option('MOM_Exclude_Categories_TagArchives',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Categories_TagArchives'])))))))));
+        update_option('MOM_Exclude_Categories_SearchResults',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Categories_SearchResults'])))))))));
+        update_option('MOM_Exclude_Tags_RSS',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Tags_RSS'])))))))));
+        update_option('MOM_Exclude_Tags_Front',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Tags_Front'])))))))));
+        update_option('MOM_Exclude_Tags_CategoryArchives',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Tags_CategoryArchives'])))))))));
+        update_option('MOM_Exclude_Tags_SearchResults',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Tags_SearchResults'])))))))));
+        update_option('MOM_Exclude_PostFormats_Visitor',sanitize_text_field($_REQUEST['MOM_Exclude_PostFormats_Visitor']));
+        update_option('MOM_Exclude_PostFormats_RSS',sanitize_text_field($_REQUEST['MOM_Exclude_PostFormats_RSS']));
+        update_option('MOM_Exclude_PostFormats_Front',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_Front'])));
+        update_option('MOM_Exclude_PostFormats_CategoryArchives',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_CategoryArchives'])));
+        update_option('MOM_Exclude_PostFormats_TagArchives',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_TagArchives'])));
+        update_option('MOM_Exclude_PostFormats_SearchResults',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_SearchResults'])));
+        update_option('MOM_Exclude_TagsSun',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_TagsSun'])))))));
+        update_option('MOM_Exclude_TagsMon',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_TagsMon'])))))));
+        update_option('MOM_Exclude_TagsTue',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_TagsTue'])))))));
+        update_option('MOM_Exclude_TagsWed',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_TagsWed'])))))));
+        update_option('MOM_Exclude_TagsThu',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_TagsThu'])))))));
+        update_option('MOM_Exclude_TagsFri',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_TagsFri'])))))));
+        update_option('MOM_Exclude_TagsSat',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_TagsSat'])))))));
+        update_option('MOM_Exclude_CategoriesSun',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_CategoriesSun']))))))));
+        update_option('MOM_Exclude_CategoriesMon',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_CategoriesMon']))))))));
+        update_option('MOM_Exclude_CategoriesTue',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_CategoriesTue']))))))));
+        update_option('MOM_Exclude_CategoriesWed',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_CategoriesWed']))))))));
+        update_option('MOM_Exclude_CategoriesThu',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_CategoriesThu']))))))));
+        update_option('MOM_Exclude_CategoriesFri',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_CategoriesFri']))))))));
+        update_option('MOM_Exclude_CategoriesSat',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_CategoriesSat']))))))));
+        update_option('MOM_Exclude_level0Categories',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level0Categories']))))))));
+        update_option('MOM_Exclude_level1Categories',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level1Categories']))))))));
+        update_option('MOM_Exclude_level2Categories',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level2Categories']))))))));
+        update_option('MOM_Exclude_level7Categories',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level7Categories']))))))));
+        update_option('MOM_Exclude_level0Tags',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level0Tags']))))))));
+        update_option('MOM_Exclude_level1Tags',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level1Tags']))))))));
+        update_option('MOM_Exclude_level2Tags',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level2Tags']))))))));
+        update_option('MOM_Exclude_level7Tags',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level7Tags']))))))));
+        update_option('MOM_Exclude_URL',$_REQUEST['MOM_Exclude_URL']);
+        update_option('MOM_Exclude_URL_User',$_REQUEST['MOM_Exclude_URL_User']);
+        update_option('MOM_Exclude_NoFollow',$_REQUEST['MOM_Exclude_NoFollow']);
+        update_option('MOM_Exclude_Hide_Dashboard',$_REQUEST['MOM_Exclude_Hide_Dashboard']);
+    }
+    if(
+        isset($_POST['delete_unused_terms']) || 
+        isset($_POST['delete_post_revisions']) || 
+        isset($_POST['delete_unapproved_comments']) || 
+        isset($_POST['deleteAllClutter'])) 
+    {
+        $postsTable      = $table_prefix.'posts';
+        $commentsTable   = $table_prefix.'comments';
+        $termsTable2     = $table_prefix.'terms';
+        $termsTable      = $table_prefix.'term_taxonomy';
+        if(isset($_POST['delete_post_revisions'])){
+            $wpdb->query("DELETE FROM `".$postsTable."` WHERE `post_type` = 'revision' OR `post_type` = 'auto-draft' OR `post_status` = 'trash'");
+        }
+        if(isset($_POST['delete_unapproved_comments'])){
+            $wpdb->query("DELETE FROM `".$commentsTable."` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'");
+        }
+        if(isset($_POST['delete_unused_terms'])){
+            $wpdb->query("DELETE FROM `".$termsTable2."` WHERE `term_id` IN (select `term_id` from `".$termsTable."` WHERE `count` = 0)");
+            $wpdb->query("DELETE FROM `".$termsTable."` WHERE `count` = 0");
+        }
+        if(isset($_POST['deleteAllClutter'])){
+            $wpdb->query("DELETE FROM `".$postsTable."` WHERE `post_type` = 'revision' OR `post_type` = 'auto-draft' OR `post_status` = 'trash'");
+            $wpdb->query("DELETE FROM `".$commentsTable."` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'");
+            $wpdb->query("DELETE FROM `".$termsTable2."` WHERE `term_id` IN (select `term_id` from `".$termsTable."` WHERE `count` = 0)");
+            $wpdb->query("DELETE FROM `".$termsTable."` WHERE `count` = 0");
+        }
+    }
+    if(isset($_POST['obwcountsave'])){
+        if($_REQUEST['obwcountplus_countdownfrom'])update_option('obwcountplus_1_countdownfrom',$_REQUEST['obwcountplus_countdownfrom']);
+        if($_REQUEST['obwcountplus_remaining'])update_option('obwcountplus_2_remaining',$_REQUEST['obwcountplus_remaining']);
+        if($_REQUEST['obwcountplus_total'])update_option('obwcountplus_3_total',$_REQUEST['obwcountplus_total']);
+        if($_REQUEST['obwcountplus_custom'])update_option('obwcountplus_4_custom',$_REQUEST['obwcountplus_custom']);
+        if($_REQUEST['obwcountplus_countdownfrom'] == '')update_option('obwcountplus_1_countdownfrom','0');
+        if($_REQUEST['obwcountplus_remaining'] == '')update_option('obwcountplus_2_remaining','remaining');
+        if($_REQUEST['obwcountplus_total'] == '')update_option('obwcountplus_3_total','total');
+        if($_REQUEST['obwcountplus_custom'] == '')update_option('obwcountplus_4_custom','');
+    }
+    if(isset($_POST['momthemetakeoversave'])){
+        update_option('MOM_themetakeover_youtubefrontpage',$_REQUEST['MOM_themetakeover_youtubefrontpage']);
+        update_option('MOM_themetakeover_topbar',$_REQUEST['MOM_themetakeover_topbar']);
+        update_option('MOM_themetakeover_archivepage',$_REQUEST['MOM_themetakeover_archivepage']);
+        update_option('MOM_themetakeover_fitvids',$_REQUEST['MOM_themetakeover_fitvids']);
+        update_option('MOM_themetakeover_postdiv',$_REQUEST['MOM_themetakeover_postdiv']);
+        update_option('MOM_themetakeover_postelement',$_REQUEST['MOM_themetakeover_postelement']);
+        update_option('MOM_themetakeover_posttoggle',$_REQUEST['MOM_themetakeover_posttoggle']);
+    }
 }
-
-
-
-
-
-/* SECTION C *********************************************************************/
-if(is_admin()){
-    memory_get_usage();
+/*****************************/
+/* Divider                   */
+/*****************************/
+/* SECTION C                 */
+/* (C0) Settings             */
+/* Main Plugin Page          */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
+if(current_user_can('manage_options')){
     // Add options page for plugin to Wordpress backend
     add_action('admin_menu','my_optional_modules_add_options_page');
     function my_optional_modules_add_options_page(){
@@ -1161,174 +1319,117 @@ if(is_admin()){
             <div class="clear"></div>';
     }
 }
-
-
-
-
-
-/* SECTION D **********************************************************************
-***********************************************************************************
-(D0) Settings
-**********************************************************************************/
-if(is_admin()){
+/*****************************/
+/* Divider                   */
+/*****************************/
+/* SECTION D                 */
+/* (D0) Settings             */
+/* Passwords                 */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
+if(current_user_can('manage_options')){
     function my_optional_modules_passwords_module(){
-        function update_rotating_universal_passwords(){
-            global $my_optional_modules_passwords_salt;
-            $pass1 = $_REQUEST['rotating_universal_passwords_1'];
-            $pass2 = $_REQUEST['rotating_universal_passwords_2'];
-            $pass3 = $_REQUEST['rotating_universal_passwords_3'];
-            $pass4 = $_REQUEST['rotating_universal_passwords_4'];
-            $pass5 = $_REQUEST['rotating_universal_passwords_5'];
-            $pass6 = $_REQUEST['rotating_universal_passwords_6'];
-            $pass7 = $_REQUEST['rotating_universal_passwords_7'];
-            $pass_final_1 = hash('sha512',$my_optional_modules_passwords_salt.$pass1);
-            $pass_final_2 = hash('sha512',$my_optional_modules_passwords_salt.$pass2);
-            $pass_final_3 = hash('sha512',$my_optional_modules_passwords_salt.$pass3);
-            $pass_final_4 = hash('sha512',$my_optional_modules_passwords_salt.$pass4);
-            $pass_final_5 = hash('sha512',$my_optional_modules_passwords_salt.$pass5);
-            $pass_final_6 = hash('sha512',$my_optional_modules_passwords_salt.$pass6);
-            $pass_final_7 = hash('sha512',$my_optional_modules_passwords_salt.$pass7);
-            if(isset($_POST['rotating_universal_passwords_1']) !== '')update_option('rotating_universal_passwords_1',$pass_final_1);
-            if(isset($_POST['rotating_universal_passwords_2']) !== '')update_option('rotating_universal_passwords_2',$pass_final_2);
-            if(isset($_POST['rotating_universal_passwords_3']) !== '')update_option('rotating_universal_passwords_3',$pass_final_3);
-            if(isset($_POST['rotating_universal_passwords_4']) !== '')update_option('rotating_universal_passwords_4',$pass_final_4);
-            if(isset($_POST['rotating_universal_passwords_5']) !== '')update_option('rotating_universal_passwords_5',$pass_final_5);
-            if(isset($_POST['rotating_universal_passwords_6']) !== '')update_option('rotating_universal_passwords_6',$pass_final_6);
-            if(isset($_POST['rotating_universal_passwords_7']) !== '')update_option('rotating_universal_passwords_7',$pass_final_7);
-            if(isset($_POST['rotating_universal_passwords_8']) !== '')update_option('rotating_universal_passwords_8',$_REQUEST['rotating_universal_passwords_8']);
-            echo '<meta http-equiv="refresh" content="0;url="'.plugin_basename(__FILE__).'" />';
-        }
-        if(isset($_POST['passwordsSave']))update_rotating_universal_passwords();
-        
-        function print_rotating_universal_passwords_form(){
-            global $my_optional_modules_passwords_salt;
-            echo '
-                <form method="post">
-                    <div class="countplus">
-                        <section><label for="rotating_universal_passwords_1">Sunday:</label>
-                        <input type="text" name="rotating_universal_passwords_1" '; 
-                        if(get_option('rotating_universal_passwords_1') !== ''){
-                            echo 'placeholder="Hashed and set."'; 
-                        }else{
-                        echo 'class="notset" placeholder="password not set"';}
-                        echo ' /></section>
-                        <section><label for="rotating_universal_passwords_2">Monday:</label>
-                        <input type="text" name="rotating_universal_passwords_2" ';
-                        if(get_option('rotating_universal_passwords_2') !== ''){
-                            echo 'placeholder="Hashed and set."';
-                        }else{
-                        echo 'class="notset" placeholder="password not set"';}
-                        echo ' /></section>
-                        <section><label for="rotating_universal_passwords_3">Tuesday:</label>
-                        <input type="text" name="rotating_universal_passwords_3" '; 
-                        if(get_option('rotating_universal_passwords_3') !== ''){
-                            echo 'placeholder="Hashed and set."'; 
-                        }else{
-                        echo 'class="notset" placeholder="password not set"';}
-                        echo ' /></section>
-                        <section><label for="rotating_universal_passwords_4">Wednesday:</label>
-                        <input type="text" name="rotating_universal_passwords_4" '; 
-                        if(get_option('rotating_universal_passwords_4') !== ''){
-                            echo 'placeholder="Hashed and set."'; 
-                        }else{
-                        echo 'class="notset" placeholder="password not set"';}
-                        echo ' /></section>
-                        <section><label for="rotating_universal_passwords_5">Thursday:</label>
-                        <input type="text" name="rotating_universal_passwords_5" '; 
-                        if(get_option('rotating_universal_passwords_5') !== ''){
-                            echo 'placeholder="Hashed and set."'; 
-                        }else{
-                        echo 'class="notset" placeholder="password not set"';}
-                        echo ' /></section>
-                        <section><label for="rotating_universal_passwords_6">Friday:</label>
-                        <input type="text" name="rotating_universal_passwords_6" '; 
-                        if(get_option('rotating_universal_passwords_6') !== ''){
-                            echo 'placeholder="Hashed and set."'; 
-                        }else{
-                        echo 'class="notset" placeholder="password not set"';}
-                        echo ' /></section>
-                        <section><label for="rotating_universal_passwords_7">Saturday:</label>
-                        <input type="text" name="rotating_universal_passwords_7" '; 
-                        if(get_option('rotating_universal_passwords_7') !== ''){
-                            echo 'placeholder="Hashed and set."'; 
-                        }else{
-                        echo 'class="notset" placeholder="password not set"';}
-                        echo ' /></section>
-                        <section><label for="rotating_universal_passwords_8">Attempts before lockout:</label>
-                        <input type="text" name="rotating_universal_passwords_8" value="'; 
-                        if(get_option('rotating_universal_passwords_8') !== ''){
-                            echo get_option('rotating_universal_passwords_8');
-                        }echo '" /></section>
-                        </div>
-                        <input type="submit" name="passwordsSave" id="passwordsSave" value="Save changes" />
-                        <input type="submit" name="reset_rups" id="reset_rups" value="Reset passwords" />
-                </form>
-                <div class="clear new">
-                <div class="lockouts">
-                <h2>Current locks</h2>
-                    <div class="clear locked">
-                        <span><strong>Date/time</strong></span>
-                        <span>User ID</span>
-                        <span>Originating post</span>
-                        <span>Clear</span>
+        echo '<span class="moduletitle">__passwords<em>[rups]hide this content[/rups]</em></span><div class="clear"></div><div class="settings">';
+        echo '
+            <form method="post">
+                <div class="countplus">
+                    <section><label for="rotating_universal_passwords_1">Sunday:</label>
+                    <input type="text" name="rotating_universal_passwords_1" '; 
+                    if(get_option('rotating_universal_passwords_1') !== ''){
+                        echo 'placeholder="Hashed and set."'; 
+                    }else{
+                    echo 'class="notset" placeholder="password not set"';}
+                    echo ' /></section>
+                    <section><label for="rotating_universal_passwords_2">Monday:</label>
+                    <input type="text" name="rotating_universal_passwords_2" ';
+                    if(get_option('rotating_universal_passwords_2') !== ''){
+                        echo 'placeholder="Hashed and set."';
+                    }else{
+                    echo 'class="notset" placeholder="password not set"';}
+                    echo ' /></section>
+                    <section><label for="rotating_universal_passwords_3">Tuesday:</label>
+                    <input type="text" name="rotating_universal_passwords_3" '; 
+                    if(get_option('rotating_universal_passwords_3') !== ''){
+                        echo 'placeholder="Hashed and set."'; 
+                    }else{
+                    echo 'class="notset" placeholder="password not set"';}
+                    echo ' /></section>
+                    <section><label for="rotating_universal_passwords_4">Wednesday:</label>
+                    <input type="text" name="rotating_universal_passwords_4" '; 
+                    if(get_option('rotating_universal_passwords_4') !== ''){
+                        echo 'placeholder="Hashed and set."'; 
+                    }else{
+                    echo 'class="notset" placeholder="password not set"';}
+                    echo ' /></section>
+                    <section><label for="rotating_universal_passwords_5">Thursday:</label>
+                    <input type="text" name="rotating_universal_passwords_5" '; 
+                    if(get_option('rotating_universal_passwords_5') !== ''){
+                        echo 'placeholder="Hashed and set."'; 
+                    }else{
+                    echo 'class="notset" placeholder="password not set"';}
+                    echo ' /></section>
+                    <section><label for="rotating_universal_passwords_6">Friday:</label>
+                    <input type="text" name="rotating_universal_passwords_6" '; 
+                    if(get_option('rotating_universal_passwords_6') !== ''){
+                        echo 'placeholder="Hashed and set."'; 
+                    }else{
+                    echo 'class="notset" placeholder="password not set"';}
+                    echo ' /></section>
+                    <section><label for="rotating_universal_passwords_7">Saturday:</label>
+                    <input type="text" name="rotating_universal_passwords_7" '; 
+                    if(get_option('rotating_universal_passwords_7') !== ''){
+                        echo 'placeholder="Hashed and set."'; 
+                    }else{
+                    echo 'class="notset" placeholder="password not set"';}
+                    echo ' /></section>
+                    <section><label for="rotating_universal_passwords_8">Attempts before lockout:</label>
+                    <input type="text" name="rotating_universal_passwords_8" value="'; 
+                    if(get_option('rotating_universal_passwords_8') !== ''){
+                        echo get_option('rotating_universal_passwords_8');
+                    }echo '" /></section>
                     </div>
-                ';
-                            
-                    global $wpdb;
-                    $RUPs_attempts_amount = get_option('rotating_universal_passwords_8');
-                    $RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
-                    $RUPs_locks = $wpdb->get_results ("SELECT ID,DATE,IP,URL FROM $RUPs_table_name WHERE ATTEMPTS >= $RUPs_attempts_amount ORDER BY ID DESC");
-                    foreach ($RUPs_locks as $RUPs_locks_admin){
-                        $this_ID = $RUPs_locks_admin->ID;
-                            echo "
-                            <div class=\"clear locked\">
-                                <span><strong>",$RUPs_locks_admin->DATE,"</strong></span>
-                                <span>",$RUPs_locks_admin->IP,"</span>
-                                <span><a href=\"",$RUPs_locks_admin->URL,"\">Link</a></span>
-                                <span><form method=\"post\" class=\"RUPs_item_form\"><input type=\"submit\" name=\"$this_ID\" value=\"Clear lock\"></span></form>
-                            </div>
-                            ";
-                            if(isset($_POST[$this_ID])){
-                                $wpdb->query("DELETE FROM $RUPs_table_name WHERE ID = '$this_ID'");
-                            }
-                    }
-                    echo "
-                    </div>";
-            
-            
-        
-            if(isset($_POST['reset_rups'])){
-                delete_option('rotating_universal_passwords_1');
-                delete_option('rotating_universal_passwords_2');
-                delete_option('rotating_universal_passwords_3');
-                delete_option('rotating_universal_passwords_4');
-                delete_option('rotating_universal_passwords_5');
-                delete_option('rotating_universal_passwords_6');
-                delete_option('rotating_universal_passwords_7');    
-                add_option('rotating_universal_passwords_1','');
-                add_option('rotating_universal_passwords_2','');
-                add_option('rotating_universal_passwords_3','');
-                add_option('rotating_universal_passwords_4','');
-                add_option('rotating_universal_passwords_5','');
-                add_option('rotating_universal_passwords_6','');
-                add_option('rotating_universal_passwords_7','');    
-            }
-            
-        }
-        function rotating_universal_passwords_page_content(){
-            echo "<span class=\"moduletitle\">__passwords<em>[rups]hide this content[/rups]</em></span>
-            <div class=\"clear\"></div>                        
-            <div class=\"settings\">";
-            print_rotating_universal_passwords_form();
-                                echo "</div></div>";
-        }
-        rotating_universal_passwords_page_content();
+                    <input type="submit" name="passwordsSave" id="passwordsSave" value="Save changes" />
+                    <input type="submit" name="reset_rups" id="reset_rups" value="Reset passwords" />
+            </form>
+            <div class="clear new">
+            <div class="lockouts">
+            <h2>Current locks</h2>
+                <div class="clear locked">
+                    <span><strong>Date/time</strong></span>
+                    <span>User ID</span>
+                    <span>Originating post</span>
+                    <span>Clear</span>
+                </div>
+            ';
+                global $wpdb;
+                $RUPs_attempts_amount = get_option('rotating_universal_passwords_8');
+                $RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
+                $RUPs_locks = $wpdb->get_results ("SELECT ID,DATE,IP,URL FROM $RUPs_table_name WHERE ATTEMPTS >= $RUPs_attempts_amount ORDER BY ID DESC");
+                foreach ($RUPs_locks as $RUPs_locks_admin){
+                    $this_ID = $RUPs_locks_admin->ID;
+                        echo "
+                        <div class=\"clear locked\">
+                            <span><strong>",$RUPs_locks_admin->DATE,"</strong></span>
+                            <span>",$RUPs_locks_admin->IP,"</span>
+                            <span><a href=\"",$RUPs_locks_admin->URL,"\">Link</a></span>
+                            <span><form method=\"post\" class=\"RUPs_item_form\"><input type=\"submit\" name=\"$this_ID\" value=\"Clear lock\"></span></form>
+                        </div>
+                        ";
+                        if(isset($_POST[$this_ID])){
+                            $wpdb->query("DELETE FROM $RUPs_table_name WHERE ID = '$this_ID'");
+                        }
+                }
+        echo '</div></div></div>';
     }
 }
-
-/**********************************************************************************
-(D1) Functions
-**********************************************************************************/
+/*****************************/
+/* SECTION D                 */
+/* (D1) Functions            */
+/* Passwords                 */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
 function rotating_universal_passwords_shortcode($atts, $content = null){
     ob_start();
     global $my_optional_modules_passwords_salt;
@@ -1407,16 +1508,16 @@ function rotating_universal_passwords_shortcode($atts, $content = null){
     }
     return ob_get_clean();
 }
-
-
-
-
-
-/* SECTION E **********************************************************************
-***********************************************************************************
-(E0) Settings
-**********************************************************************************/
-if(is_admin()){
+/*****************************/
+/* Divider                   */
+/*****************************/
+/* SECTION E                 */
+/* (E0) Settings             */
+/* Reviews                   */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
+if(current_user_can('manage_options')){
     function my_optional_modules_reviews_module(){
         function mom_closetags($html){
             // http://stackoverflow.com/questions/3059398/how-to-close-unclosed-html-tags
@@ -1466,14 +1567,11 @@ if(is_admin()){
             update_option('momreviews_css',$newCSS); 
             echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
         }
-        
-        if($_REQUEST['reviewsubmit']){update_mom_reviews();}
-        if($_REQUEST['csssubmit']){update_mom_css();}
-
+        if(isset($_POST['reviewsubmit']))update_mom_reviews();
+        if(isset($_POST['csssubmit']))update_mom_css();
         function print_mom_reviews_form(){
             echo "
                 <div class=\"settingsInput\">
-                
                 <form method=\"post\" class=\"addForm\">
                             <section>title<input type=\"text\" name=\"reviews_title\" placeholder=\"Enter title here\"></section>
                             <section>type<input type=\"text\" name=\"reviews_type\" placeholder=\"Review type\"></section>
@@ -1487,7 +1585,6 @@ if(is_admin()){
                             <section><input id=\"reviewsubmit\" type=\"submit\" value=\"Add review\" name=\"reviewsubmit\"/></section>
                 </form>
                 </div>
-                    
                 <form method=\"post\" class=\"csssubmit\">
                     <section><textarea name=\"css\">" . get_option('momreviews_css') . "</textarea></section>
                     <section><input id=\"csssubmit\" type=\"submit\" value=\"Save CSS\" name=\"csssubmit\"></input></section>
@@ -1495,21 +1592,17 @@ if(is_admin()){
                 </div>
             ";
         }
-        
         function reviews_page_content(){
             echo "    
                 <span class=\"moduletitle\">__reviews<em>[momreviews]</em></span>
                 <div class=\"clear\"></div>
                 <div class=\"settings\">
-                
                     <div class=\"settingsInfo taller\">
                     <form method=\"post\" class=\"reviews_item_form\">
                         <input type=\"text\" name=\"filterResults_type\" placeholder=\"Filter by type\"";if(get_option('momreviews_search') != "")echo "value=\"" . get_option('momreviews_search') . "\""; echo ">
                         <input type=\"submit\" name=\"filterResults\" value=\"Accept\">
                     </form>
                     ";
-                    
-                    
                 global $wpdb;
                     $mom_reviews_table_name = $wpdb->prefix . "momreviews";
                     $filtered_search = get_option('momreviews_search');
@@ -1527,8 +1620,7 @@ if(is_admin()){
                             echo "
                             <div class=\"reviewitem\">
                                     <section class=\"id\">id:".$reviews_results->ID."</section>
-                                    <span class=\"review\">".$reviews_results->TITLE."</span>
-                                    
+                                    <span class=\"review\">".$reviews_results->TITLE."</span>    
                                 ";
                 if(!isset($_POST['edit_'.$this_ID.''])){
                 if(!isset($_POST['delete_'.$this_ID.''])){echo "<form method=\"post\"><input class=\"deleteSubmit\" type=\"submit\" name=\"delete_".$this_ID."\" value=\"Delete\"></form>";}
@@ -1583,9 +1675,13 @@ if(is_admin()){
         reviews_page_content();
     }
 }    
-/**********************************************************************************
-(E1) Functions
-**********************************************************************************/
+/*****************************/
+/* SECTION E                 */
+/* (E1) Functions            */
+/* Reviews                   */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
 $mom_review_global = 0;
 function mom_reviews_shortcode($atts, $content = null){
     global $mom_review_global;
@@ -1594,27 +1690,27 @@ function mom_reviews_shortcode($atts, $content = null){
     ob_start();
     extract(
         shortcode_atts(array(
-            'type' => '',
+            'type'    => '',
             'orderby' => 'ID',
-            'order' => 'ASC',
-            'meta' => 1,
-            'expand' => '+',
+            'order'   => 'ASC',
+            'meta'    => 1,
+            'expand'  => '+',
             'retract' => '-',
-            'id' => '',
-            'open' => 0,
+            'id'      => '',
+            'open'    => 0,
         ), $atts)
     );    
-    $id_fetch_att = $id;
+    $id_fetch_att                           = esc_attr($id);
     if(is_numeric($id_fetch_att)){$id_fetch = $id_fetch_att;}
-    $result_type = $type;
-    $order_by = $orderby;
-    $order_dir = $order;
-    $meta_show = $meta;
-    $expand_this = $expand;
-    $retract_this = $retract;
-    $is_open = $open;
+    $result_type                            = $type;
+    $order_by                               = $orderby;
+    $order_dir                              = $order;
+    $meta_show                              = $meta;
+    $expand_this                            = $expand;
+    $retract_this                           = $retract;
+    $is_open                                = $open;
     global $wpdb;
-    $mom_reviews_table_name = $wpdb->prefix . "momreviews";
+    $mom_reviews_table_name = $wpdb->prefix.'momreviews';
     if($id_fetch != ''){
         $reviews = $wpdb->get_results("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE ID IN ($id_fetch) ORDER BY $order_by $order_dir");
     }else{
@@ -1624,271 +1720,251 @@ function mom_reviews_shortcode($atts, $content = null){
             $reviews = $wpdb->get_results("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name ORDER BY $order_by $order_dir");
         }
     }
-    foreach($reviews as $reviews_results){
-        $this_ID = $reviews_results->ID;
-            echo "<div ";if($result_type != ''){echo "id=\"" . $result_type . "\"";}echo " class=\"momreview\"><article class=\"block\"><input type=\"checkbox\" name=\"review\" id=\"".$this_ID."".$mom_review_global."\" ";if($is_open == 1){echo " checked";}echo "/><label for=\"".$this_ID."".$mom_review_global."\">";if($reviews_results->TITLE != ''){echo $reviews_results->TITLE;}echo "<span>".$expand_this."</span><span>".$retract_this."</span></label><section class=\"reviewed\">";if($meta_show == 1){if($reviews_results->TYPE != ''){echo " [ <em>".$reviews_results->TYPE."</em> ] ";}if($reviews_results->LINK != ''){echo " [ <a href=\"".esc_url($reviews_results->LINK)."\">#</a> ] ";}}if($reviews_results->REVIEW != ''){echo "<hr />".$reviews_results->REVIEW."";}if($reviews_results->RATING != ''){echo " <p>".$reviews_results->RATING."</p> ";}echo "</section></article></div>";
-    }        
+    foreach($reviews as $reviews_results){$this_ID = $reviews_results->ID;echo '<div ';if($result_type != ''){echo 'id="'.esc_attr($result_type).'"';}echo ' class="momreview"><article class="block"><input type="checkbox" name="review" id="'.$this_ID.''.$mom_review_global.'" ';if($is_open == 1){echo ' checked';}echo '/><label for="'.$this_ID.''.$mom_review_global.'">';if($reviews_results->TITLE != ''){echo $reviews_results->TITLE;}echo '<span>'.$expand_this.'</span><span>'.$retract_this.'</span></label><section class="reviewed">';if($meta_show == 1){if($reviews_results->TYPE != ''){echo ' [ <em>'.$reviews_results->TYPE.'</em> ] ';}if($reviews_results->LINK != ''){echo ' [ <a href="'.esc_url($reviews_results->LINK).'">#</a> ] ';}}if($reviews_results->REVIEW != ''){echo '<hr />'.$reviews_results->REVIEW;}if($reviews_results->RATING != ''){echo ' <p>'.$reviews_results->RATING.'</p> ';}echo '</section></article></div>';}
     return ob_get_clean();
 }
-function mom_reviews_style(){
-    echo "<style>".get_option('momreviews_css')."</style>
-    ";
-}
-
-
-
-
-
-/* SECTION F **********************************************************************
-***********************************************************************************
-(F0) Settings
-**********************************************************************************/
-if(is_admin()){
-
+function mom_reviews_style(){echo '<style>'.get_option('momreviews_css').'</style>';}
+/*****************************/
+/* Divider                   */
+/*****************************/
+/* SECTION F                 */
+/* (F0) Settings             */
+/* Shortcodes                */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
+if(current_user_can('manage_options')){
     function my_optional_modules_shortcodes_module(){
-
-        function mom_shortcodes_page_content(){
-            echo "
-                <div class=\"settings\">
-                
-                <table class=\"form-table\" border=\"1\">
-                    <tbody>
-                        
-                        <tr valign=\"top\">
-                            <p>[<a href=\"#google_maps\">map</a>] 
-                            &mdash; [<a href=\"#reddit_button\">reddit</a>] 
-                            &mdash; [<a href=\"#restrict\">restrict content to logged in users</a>] 
-                            &mdash; [<a href=\"#progress_bars\">progress bars</a>]
-                            &mdash; [<a href=\"#verifier\">verifier</a>]</p>
-                        </tr>
-                        <tr valign=\"top\" id=\"google_maps\">
-                            <td valign=\"top\">
-                                <strong>Google Maps</strong>
-                                <br />Embed a Google map.<br />Based on <a href=\"http://wordpress.org/plugins/very-simple-google-maps/\">Very Simple Google Maps</a> by <a href=\"http://profiles.wordpress.org/masterk/\">Michael Aronoff</a><hr />
-                                <u>Parameters</u><br />width<br />height<br />frameborder<br />align<br />address<br />info_window<br />zoom<br />    companycode<hr />
-                                <u>Defaults</u><br />Width: 100% <br />Height: 350px <br />Frameborder: 0 <br />Align: center<hr />
-                                div class .mom_map
-                            </td>
-                            <td valign=\"top\">
-                                <table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
+        echo "
+            <div class=\"settings\">
+            <table class=\"form-table\" border=\"1\">
+                <tbody>
+                    <tr valign=\"top\">
+                        <p>[<a href=\"#google_maps\">map</a>] 
+                        &mdash; [<a href=\"#reddit_button\">reddit</a>] 
+                        &mdash; [<a href=\"#restrict\">restrict content to logged in users</a>] 
+                        &mdash; [<a href=\"#progress_bars\">progress bars</a>]
+                        &mdash; [<a href=\"#verifier\">verifier</a>]</p>
+                    </tr>
+                    <tr valign=\"top\" id=\"google_maps\">
+                        <td valign=\"top\">
+                            <strong>Google Maps</strong>
+                            <br />Embed a Google map.<br />Based on <a href=\"http://wordpress.org/plugins/very-simple-google-maps/\">Very Simple Google Maps</a> by <a href=\"http://profiles.wordpress.org/masterk/\">Michael Aronoff</a><hr />
+                            <u>Parameters</u><br />width<br />height<br />frameborder<br />align<br />address<br />info_window<br />zoom<br />    companycode<hr />
+                            <u>Defaults</u><br />Width: 100% <br />Height: 350px <br />Frameborder: 0 <br />Align: center<hr />
+                            div class .mom_map
+                        </td>
+                        <td valign=\"top\">
+                            <table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
+                            <tbody>
+                            <tr><td><code>[mom_map address=\"38.573333,-109.549167\"]</code></td><td><em>GPS</em></td></tr>
+                            <tr><td><iframe align=\"center\" width=\"100%\" height=\"350px\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"https://maps.google.com/maps?&q=38.573333%2C-109.549167&amp;cid=&output=embed&z=14&iwloc=A&visual_refresh=true\"></iframe></td></tr>
+                            <tr><td><code>[mom_map address=\"1600 Pennsylvania Ave NW, Washington, D.C., DC\"]</code></td><td><em>Street Address</em></td></tr>
+                            <tr><td><iframe align=\"center\" width=\"100%\" height=\"350px\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"https://maps.google.com/maps?&q=1600+Pennsylvania+Ave+NW%2C+Washington%2C+D.C.%2C+DC+&amp;cid=&output=embed&z=14&iwloc=A&visual_refresh=true\"></iframe></td></tr>
+                            </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr valign=\"top\" id=\"reddit_button\" style=\"background-color:#f4faff;\">
+                        <td valign=\"top\">
+                            <strong>Reddit button</strong>
+                            <br />Create a customizable submit button for the current post.<hr />
+                            <u>Parameters</u><br />target<br />title<br />bgcolor<br />border<hr />
+                            <u>Defaults</u> <br />title: post title<br />bgcolor: transparent<br />border (color): transparent<hr />
+                            div class .mom_reddit
+                        </td>
+                        <td valign=\"top\">
+                            <table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\">
                                 <tbody>
-                                <tr><td><code>[mom_map address=\"38.573333,-109.549167\"]</code></td><td><em>GPS</em></td></tr>
-                                <tr><td><iframe align=\"center\" width=\"100%\" height=\"350px\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"https://maps.google.com/maps?&q=38.573333%2C-109.549167&amp;cid=&output=embed&z=14&iwloc=A&visual_refresh=true\"></iframe></td></tr>
-                                <tr><td><code>[mom_map address=\"1600 Pennsylvania Ave NW, Washington, D.C., DC\"]</code></td><td><em>Street Address</em></td></tr>
-                                <tr><td><iframe align=\"center\" width=\"100%\" height=\"350px\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"https://maps.google.com/maps?&q=1600+Pennsylvania+Ave+NW%2C+Washington%2C+D.C.%2C+DC+&amp;cid=&output=embed&z=14&iwloc=A&visual_refresh=true\"></iframe></td></tr>
-                                </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        
-                        <tr valign=\"top\" id=\"reddit_button\" style=\"background-color:#f4faff;\">
-                            <td valign=\"top\">
-                                <strong>Reddit button</strong>
-                                <br />Create a customizable submit button for the current post.<hr />
-                                <u>Parameters</u><br />target<br />title<br />bgcolor<br />border<hr />
-                                <u>Defaults</u> <br />title: post title<br />bgcolor: transparent<br />border (color): transparent<hr />
-                                div class .mom_reddit
-                            </td>
-                            <td valign=\"top\">
-                                <table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\">
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <code>[mom_reddit]</code></td><td><em>Default</em>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <script type=\"text/javascript\">
-                                                reddit_url = \"http://reddit.com/\";
+                                    <tr>
+                                        <td>
+                                            <code>[mom_reddit]</code></td><td><em>Default</em>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <script type=\"text/javascript\">
+                                            reddit_url = \"http://reddit.com/\";
+                                            reddit_target = \"\";
+                                            reddit_title = \"Test\";
+                                            reddit_bgcolor = \"\";
+                                            reddit_bordercolor = \"\";
+                                            </script>
+                                            <script type=\"text/javascript\" src=\"http://www.reddit.com/static/button/button3.js\"></script>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <code>[mom_reddit target=\"news\"]</code></td><td><em>Targeting <a href=\"http://reddit.com/r/news/\">/r/news</a></em>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <script type=\"text/javascript\">
+                                            reddit_url = \"http://reddit.com/\";
+                                            reddit_target = \"news\";
+                                            reddit_title = \"Reddit\";
+                                            reddit_bgcolor = \"\";
+                                            reddit_bordercolor = \"\";
+                                            </script>
+                                            <script type=\"text/javascript\" src=\"http://www.reddit.com/static/button/button3.js\"></script>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <code>[mom_reddit bgcolor=\"000\" border=\"000\"]</code></td><td><em>Black background/border</em>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <script type=\"text/javascript\">
+                                                reddit_url = \"http://test.com/\";
                                                 reddit_target = \"\";
-                                                reddit_title = \"Test\";
-                                                reddit_bgcolor = \"\";
-                                                reddit_bordercolor = \"\";
-                                                </script>
-                                                <script type=\"text/javascript\" src=\"http://www.reddit.com/static/button/button3.js\"></script>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <code>[mom_reddit target=\"news\"]</code></td><td><em>Targeting <a href=\"http://reddit.com/r/news/\">/r/news</a></em>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <script type=\"text/javascript\">
-                                                reddit_url = \"http://reddit.com/\";
-                                                reddit_target = \"news\";
                                                 reddit_title = \"Reddit\";
-                                                reddit_bgcolor = \"\";
-                                                reddit_bordercolor = \"\";
-                                                </script>
-                                                <script type=\"text/javascript\" src=\"http://www.reddit.com/static/button/button3.js\"></script>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <code>[mom_reddit bgcolor=\"000\" border=\"000\"]</code></td><td><em>Black background/border</em>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <script type=\"text/javascript\">
-                                                    reddit_url = \"http://test.com/\";
-                                                    reddit_target = \"\";
-                                                    reddit_title = \"Reddit\";
-                                                    reddit_bgcolor = \"000\";
-                                                    reddit_bordercolor = \"000\";
-                                                </script>
-                                                <script type=\"text/javascript\" src=\"http://www.reddit.com/static/button/button3.js\"></script>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-
-                        <tr valign=\"top\" id=\"restrict\">
-                            <td valign=\"top\">
-                                <strong>Restrict content to logged in users</strong><br />Restrict content to users who are not logged in, including commenting or viewing comments.<hr />
-                                <u>Parameters</u><br />message<br />comments<hr />
-                                <u>Defaults</u> <br /> message: You must be logged in to view this content.<hr />
-                                div class .mom_restrict
-                            </td>
-                            <td valign=\"top\">
-                                <table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <code>[mom_restrict]some content[/mom_restrict]</code></td><td><em>Default</em>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                Logged in users see:<br />some content
-                                                <p>Users who are not logged in see:<br />You must be logged in to view this content.</p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <code>[mom_restrict comments=\"1\" message=\"Log in to view this content!\"]some content[/mom_restrict]</code></td><td><em>Comments and form are hidden</em>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                Logged in users see:<br />some content
-                                                <p>Users who are not logged in see:<br />Log in to view this content!<br />(<em>Comment form and comments are hidden.)</em>)</p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <code>[mom_restrict comments=\"2\" message=\"Log in to view this content!\"]some content[/mom_restrict]</code></td><td><em>Comment form is hidden</em>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                Logged in users see:<br />some content
-                                                <p>Users who are not logged in see:<br />Log in to view this content!<br />(<em>Comment form is hidden</em>)</p>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        
-                        <tr valign=\"top\" id=\"progress_bars\">
-                            <td valign=\"top\">
-                                <strong>Progress bars</strong>
-                                <br />Create bars that fill up, based on your parameters, to show progression towards a goal.<hr />
-                                <u>Parameters</u><br />align, fillcolor, maincolor, 
-                                height, level, margin, 
-                                width<hr />
-                                <u>Defaults</u><br />align: none<br />fillcolor: #ccc<br />maincolor: #000<br />height: 15<br />level:<br />margin: 0 auto<br />width: 95%<br /><hr />
-                                div class .mom_progress<hr />
-                                The <code>level</code> refers to the % of the main bar to be filled.  So a level of 51 would fill it 51%, 29 would fill it 29%, 75 would fill it 75%, and so on.
-                            </td>
-                            <td valign=\"top\">
-                                <table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
-                                <tbody>
-                                <tr><td><code>[mom_progress level=\"10\"]</code></td><td><em>Default, level 10</em></td></tr>
-                                <tr><td>
-                                    <div id=\"1\" class=\"mom_progress\" style=\"clear: both; height:15px; display: block; width:95%%; margin: 0 auto; background-color:#000\"><div style=\"display: block; height:15px; width:10%; background-color: #ccc;\"></div></div>
-                                </td></tr>
-                                <tr><td><code>[mom_progress level=\"70\" maincolor=\"#ff0000\" fillcolor=\"#009cff\"]</code></td><td><em>Level 70, custom colors</em></td></tr>
-                                <tr><td>
-                                    <div id=\"2\" class=\"mom_progress\" style=\"clear: both; height:15px; display: block; width:95%; margin: 0 auto; background-color:#ff0000\"><div style=\"display: block; height:15px; width:70%; background-color: #009cff;\"></div></div>
-                                </td></tr>
-                                <tr><td><code>[mom_progress height=\"50\" level=\"70\" maincolor=\"#ff0000\" fillcolor=\"#009cff\"]</code></td><td><em>Level 70, custom colors, height of 50 (translates to 50px)</em></td></tr>
-                                <tr><td>
-                                    <div id=\"3\" class=\"mom_progress\" style=\"clear: both; height:50px; display: block; width:95%; margin: 0 auto; background-color:#ff0000\"><div style=\"display: block; height:50px; width:70%; background-color: #009cff;\"></div></div>
-                                </td></tr>                                    
+                                                reddit_bgcolor = \"000\";
+                                                reddit_bordercolor = \"000\";
+                                            </script>
+                                            <script type=\"text/javascript\" src=\"http://www.reddit.com/static/button/button3.js\"></script>
+                                        </td>
+                                    </tr>
                                 </tbody>
-                                </table>
-                            </td>
-                        </tr>        
-
-                        <tr valign=\"top\" id=\"verifier\">
-                            <td valign=\"top\">
-                                <strong>Verifier</strong>
-                                <br />Gate content with a customizable input prompt with optional tracking of unique right and wrong answers.<hr />
-                                <u>Parameters</u><br />age,answer,logged,message,fail,logging,background<hr />
-                                <u>Defaults</u><br />cmessage: Correct<br />imessage: Incorrect<br />age:<br />answer:<br />logged:1<br />message: Please verify your age by typing it here<br />fail: You are not able to view this content at this time.<br />logging: 0<br />background: transparent<br />single: 0<br />deactivate: 0<br />
-                                
-                                <p><u>age</u>: (numeric only) set the age you want to be entered into the form to be considered valid.  (Both age and answer <strong>cannot</strong> be used together.</p>
-                                <p><u>answer</u>: (alphanumeric) enter the right answer that needs to be input into the form to show the content.</p>
-                                <p><u>logged</u>: (0 or 1) 1 is to show the form to everyone - even people logged in.  0 will hide the verification for people who are logged in.</p>
-                                <p><u>message</u>: Message to display in the form to let users know what needs to be input.</p>
-                                <p><u>fail</u>: Message that is shown when the wrong answer is given, or the age entered is too young.</p>
-                                <p><u>logging</u>: (0 or 1 or 3) If set to 1, each unique answer given to each form will be tracked in the database, allowing access to statistical data.  Only one record per IP address per form will be saved.  3 will show (below the form) a box containing the % of right and wrong answers, and will enable logging.</p>
-                                <p><u>background</u>: Hex color code for the background of the form.</p>
-                                <p><u>single</u>: (0 or 1) Set to 1 to allow only one attempt.  Right or wrong, once the attempt has been made, the form will no longer show.</p>
-                                <p><u>cmessage</u>: (if stats are being displayed) the message for the % of correct votes</p>
-                                <p><u>imessage</u>: (if stats are being displayed) the message for the % of incorrect votes</p>
-                                <p><u>deactivate</u>: (0 or 1) 1 to deactivate a form.</p>
-                                
-                                <p>Case does not matter with question and answer - they are both converted to lowercase upon comparing for correct answers.</p>
-                                <p>Background <strong>can</strong> be <code>transparent</code>.</p>
-                                
-                                <p>You could also inner-content blank ([mom_verify]no content here[/mom_verify], and define logging as <code>3</code> to create a poll-type question.</p>
-                                
-                                <hr />
-                                blockquote.momAgeVerification<br />
-                                form.momAgeVerification<br />
-                                <hr />
-
-                            </td>
-                            <td valign=\"top\">
-                                <table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
+                            </table>
+                        </td>
+                    </tr>
+                    <tr valign=\"top\" id=\"restrict\">
+                        <td valign=\"top\">
+                            <strong>Restrict content to logged in users</strong><br />Restrict content to users who are not logged in, including commenting or viewing comments.<hr />
+                            <u>Parameters</u><br />message<br />comments<hr />
+                            <u>Defaults</u> <br /> message: You must be logged in to view this content.<hr />
+                            div class .mom_restrict
+                        </td>
+                        <td valign=\"top\">
+                            <table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
                                 <tbody>
-                                <tr><td>How to set up a two answer poll:<br />
-                                <ul>
-                                <li>Let's say you want to set up a poll for \"Was this article helpful?\".  Set your answer to 'yes' - we only need it for stats.</li>
-                                <li>Set your correct message to \"Found this useful\" (or whatever wording you want for the people who thought it was useful), and incorrect to \"Didn't find this useful\".</li>
-                                <li>All answers that are \"yes\" will be counted as \"Found this useful\".  Any other answers will be counted as not.</li><li>Your message could be something like: \"Did you find this article useful?  Yes or no.\"</li></ul>
-                                <hr />Example: <code>[mom_verify message=\"Did you find this article useful?  Yes or no.\" answer=\"yes\" cmessage=\"Found this useful\" imessage=\"Didn't find this useful\" logging=\"3\" single=\"1\"][/mom_verify]</code>
-                                </td></tr>
-                                <tr><td><code>[mom_verify age=\"18\"]some content[/mom_verify]</code></td><td><em>Default, correct age input 18 or over</em></td></tr>
-                                <tr><td><code>[mom_verify answer=\"hank HIlL\" message=\"Who sells propane and propane accessories?\"]some content[/mom_verify]</code></td><td><em>Default, question and answer set.</em></td></tr>
-                                <tr><td><code>[mom_verify age=\"18\" background=\"fff\"]some content[/mom_verify]</code></td><td><em>Black background, 18+ age gate</em></td></tr>
+                                    <tr>
+                                        <td>
+                                            <code>[mom_restrict]some content[/mom_restrict]</code></td><td><em>Default</em>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Logged in users see:<br />some content
+                                            <p>Users who are not logged in see:<br />You must be logged in to view this content.</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <code>[mom_restrict comments=\"1\" message=\"Log in to view this content!\"]some content[/mom_restrict]</code></td><td><em>Comments and form are hidden</em>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Logged in users see:<br />some content
+                                            <p>Users who are not logged in see:<br />Log in to view this content!<br />(<em>Comment form and comments are hidden.)</em>)</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <code>[mom_restrict comments=\"2\" message=\"Log in to view this content!\"]some content[/mom_restrict]</code></td><td><em>Comment form is hidden</em>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Logged in users see:<br />some content
+                                            <p>Users who are not logged in see:<br />Log in to view this content!<br />(<em>Comment form is hidden</em>)</p>
+                                        </td>
+                                    </tr>
                                 </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                        
-                        
-                    </tbody>
-                </table>
-            </div>";
-        }
-        mom_shortcodes_page_content();
+                            </table>
+                        </td>
+                    </tr>
+                    <tr valign=\"top\" id=\"progress_bars\">
+                        <td valign=\"top\">
+                            <strong>Progress bars</strong>
+                            <br />Create bars that fill up, based on your parameters, to show progression towards a goal.<hr />
+                            <u>Parameters</u><br />align, fillcolor, maincolor, 
+                            height, level, margin, 
+                            width<hr />
+                            <u>Defaults</u><br />align: none<br />fillcolor: #ccc<br />maincolor: #000<br />height: 15<br />level:<br />margin: 0 auto<br />width: 95%<br /><hr />
+                            div class .mom_progress<hr />
+                            The <code>level</code> refers to the % of the main bar to be filled.  So a level of 51 would fill it 51%, 29 would fill it 29%, 75 would fill it 75%, and so on.
+                        </td>
+                        <td valign=\"top\">
+                            <table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
+                            <tbody>
+                            <tr><td><code>[mom_progress level=\"10\"]</code></td><td><em>Default, level 10</em></td></tr>
+                            <tr><td>
+                                <div id=\"1\" class=\"mom_progress\" style=\"clear: both; height:15px; display: block; width:95%; margin: 0 auto; background-color:#000\"><div style=\"display: block; height:15px; width:10%; background-color: #ccc;\"></div></div>
+                            </td></tr>
+                            <tr><td><code>[mom_progress level=\"70\" maincolor=\"#ff0000\" fillcolor=\"#009cff\"]</code></td><td><em>Level 70, custom colors</em></td></tr>
+                            <tr><td>
+                                <div id=\"2\" class=\"mom_progress\" style=\"clear: both; height:15px; display: block; width:95%; margin: 0 auto; background-color:#ff0000\"><div style=\"display: block; height:15px; width:70%; background-color: #009cff;\"></div></div>
+                            </td></tr>
+                            <tr><td><code>[mom_progress height=\"50\" level=\"70\" maincolor=\"#ff0000\" fillcolor=\"#009cff\"]</code></td><td><em>Level 70, custom colors, height of 50 (translates to 50px)</em></td></tr>
+                            <tr><td>
+                                <div id=\"3\" class=\"mom_progress\" style=\"clear: both; height:50px; display: block; width:95%; margin: 0 auto; background-color:#ff0000\"><div style=\"display: block; height:50px; width:70%; background-color: #009cff;\"></div></div>
+                            </td></tr>                                    
+                            </tbody>
+                            </table>
+                        </td>
+                    </tr>        
+                    <tr valign=\"top\" id=\"verifier\">
+                        <td valign=\"top\">
+                            <strong>Verifier</strong>
+                            <br />Gate content with a customizable input prompt with optional tracking of unique right and wrong answers.<hr />
+                            <u>Parameters</u><br />age,answer,logged,message,fail,logging,background<hr />
+                            <u>Defaults</u><br />cmessage: Correct<br />imessage: Incorrect<br />age:<br />answer:<br />logged:1<br />message: Please verify your age by typing it here<br />fail: You are not able to view this content at this time.<br />logging: 0<br />background: transparent<br />single: 0<br />deactivate: 0<br />
+                            <p><u>age</u>: (numeric only) set the age you want to be entered into the form to be considered valid.  (Both age and answer <strong>cannot</strong> be used together.</p>
+                            <p><u>answer</u>: (alphanumeric) enter the right answer that needs to be input into the form to show the content.</p>
+                            <p><u>logged</u>: (0 or 1) 1 is to show the form to everyone - even people logged in.  0 will hide the verification for people who are logged in.</p>
+                            <p><u>message</u>: Message to display in the form to let users know what needs to be input.</p>
+                            <p><u>fail</u>: Message that is shown when the wrong answer is given, or the age entered is too young.</p>
+                            <p><u>logging</u>: (0 or 1 or 3) If set to 1, each unique answer given to each form will be tracked in the database, allowing access to statistical data.  Only one record per IP address per form will be saved.  3 will show (below the form) a box containing the % of right and wrong answers, and will enable logging.</p>
+                            <p><u>background</u>: Hex color code for the background of the form.</p>
+                            <p><u>single</u>: (0 or 1) Set to 1 to allow only one attempt.  Right or wrong, once the attempt has been made, the form will no longer show.</p>
+                            <p><u>cmessage</u>: (if stats are being displayed) the message for the % of correct votes</p>
+                            <p><u>imessage</u>: (if stats are being displayed) the message for the % of incorrect votes</p>
+                            <p><u>deactivate</u>: (0 or 1) 1 to deactivate a form.</p>
+                            <p>Case does not matter with question and answer - they are both converted to lowercase upon comparing for correct answers.</p>
+                            <p>Background <strong>can</strong> be <code>transparent</code>.</p>
+                            <p>You could also inner-content blank ([mom_verify]no content here[/mom_verify], and define logging as <code>3</code> to create a poll-type question.</p>
+                            <hr />
+                            blockquote.momAgeVerification<br />
+                            form.momAgeVerification<br />
+                            <hr />
+                        </td>
+                        <td valign=\"top\">
+                            <table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
+                            <tbody>
+                            <tr><td>How to set up a two answer poll:<br />
+                            <ul>
+                            <li>Let's say you want to set up a poll for \"Was this article helpful?\".  Set your answer to 'yes' - we only need it for stats.</li>
+                            <li>Set your correct message to \"Found this useful\" (or whatever wording you want for the people who thought it was useful), and incorrect to \"Didn't find this useful\".</li>
+                            <li>All answers that are \"yes\" will be counted as \"Found this useful\".  Any other answers will be counted as not.</li><li>Your message could be something like: \"Did you find this article useful?  Yes or no.\"</li></ul>
+                            <hr />Example: <code>[mom_verify message=\"Did you find this article useful?  Yes or no.\" answer=\"yes\" cmessage=\"Found this useful\" imessage=\"Didn't find this useful\" logging=\"3\" single=\"1\"][/mom_verify]</code>
+                            </td></tr>
+                            <tr><td><code>[mom_verify age=\"18\"]some content[/mom_verify]</code></td><td><em>Default, correct age input 18 or over</em></td></tr>
+                            <tr><td><code>[mom_verify answer=\"hank HIlL\" message=\"Who sells propane and propane accessories?\"]some content[/mom_verify]</code></td><td><em>Default, question and answer set.</em></td></tr>
+                            <tr><td><code>[mom_verify age=\"18\" background=\"fff\"]some content[/mom_verify]</code></td><td><em>Black background, 18+ age gate</em></td></tr>
+                            </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>";
     }
 }
-/**********************************************************************************
-(F1) Shortcodes
-**********************************************************************************/
-function mom_archives($atts, $content = null){
+/*****************************/
+/* SECTION F                 */
+/* (F1) Functions            */
+/* Shortcodes                */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
+function mom_archives($atts,$content = null){
     if(!is_user_logged_in()){
-        $nofollowCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');    
+        $nofollowCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');
     }
     if(is_user_logged_in()){
         if($user_level == 0){$loggedOutCats = get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
@@ -1907,28 +1983,27 @@ function mom_archives($atts, $content = null){
     echo '<div class="momlistcategories">';foreach($category_ids as $cat_id){if(in_array($cat_id, $nofollowcats)) continue;$cat = get_category($cat_id);$link = get_category_link($cat_id);echo '<div><a href="'.esc_url($link).'" title="link to '.esc_attr($cat->name).'">'.esc_attr($cat->name).'</a><span>'.esc_attr($cat->count).'</span><section>'.esc_attr($cat->description);$args = array('numberposts'=>'1','category'=>$cat_id);$latestpost = wp_get_recent_posts($args);foreach($latestpost as $latest){echo '<article><em><a href="'.esc_url(get_permalink($latest["ID"])).'" title="'.esc_attr($latest["post_title"]).'" >'.esc_attr($latest["post_title"]).'</a></em></article>';}echo '</section></div>';}echo '</div>';
     return ob_get_clean();
 }
-
 $momverifier_verification_step = 0;
 function mom_google_map_shortcode($atts, $content = null){
     ob_start();
     extract(
         shortcode_atts(array(
-            "width" => '100%',
-            "height" => '350px',
-            "frameborder" => '0',
-            "align" => 'center',
-            "address" => '',
-            "info_window" => 'A',
-            "zoom" => '14',
-            "companycode" => ''
+            'width'       => '100%',
+            'height'      => '350px',
+            'frameborder' => '0',
+            'align'       => 'center',
+            'address'     => '',
+            'info_window' => 'A',
+            'zoom'        => '14',
+            'companycode' => ''
         ), $atts)
     );
-    $mgms_output = 'q=' . urlencode($address) . '&cid=' . urlencode($companycode);
-    echo "
-    <div class=\"mom_map\">
-        <iframe align=\"" . $align . "\" width=\"" . $width . "\" height=\"" . $height . "\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"https://maps.google.com/maps?&amp;" . htmlentities($mgms_output) . "&amp;output=embed&amp;z=" . $zoom . "&amp;iwloc=" . $info_window . "&amp;visual_refresh=true\"></iframe>
+    $mgms_output = 'q='.urlencode($address).'&amp;cid='.urlencode($companycode);
+    echo '
+    <div class="mom_map">
+        <iframe align="'.esc_attr($align).'" width="'.esc_attr($width).'" height="'.esc_attr($height).'" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?&amp;'.htmlentities($mgms_output).'&amp;output=embed&amp;z='.esc_attr($zoom).'&amp;iwloc='.esc_attr($info_window).'&amp;visual_refresh=true"></iframe>
     </div>
-    ";
+    ';
     return ob_get_clean();
 }
 function mom_reddit_shortcode($atts, $content = null){
@@ -1941,50 +2016,48 @@ function mom_reddit_shortcode($atts, $content = null){
         }
     extract(
         shortcode_atts(array(
-            "url" => '' . $get_permalink . '',
-            "target" => '',
-            "title" => '' . $post_title . '',
-            "bgcolor" => '',
-            "border" => ''
+            'url'     => '' . $get_permalink . '',
+            'target'  => '',
+            'title'   => '' . $post_title . '',
+            'bgcolor' => '',
+            'border'  => ''
         ), $atts)
     );
     ob_start();
-    echo "
-    <div class=\"mom_reddit\">
-    <script type=\"text/javascript\">
-        reddit_url = \"" . $url . "\";
-        reddit_target = \"" . $target . "\";
-        reddit_title = \"" . $title . "\";
-        reddit_bgcolor = \"" . $bgcolor . "\";
-        reddit_bordercolor = \"" . $border . "\";
+    echo '
+    <div class="mom_reddit">
+    <script type="text/javascript">
+        reddit_url = "'.esc_url($url).'";
+        reddit_target = "'.esc_attr($target).'";
+        reddit_title = "'.esc_attr($title).'";
+        reddit_bgcolor = "'.esc_attr($bgcolor).'";
+        reddit_bordercolor = "'.esc_attr($border).'";
     </script>
-    <script type=\"text/javascript\" src=\"http://www.reddit.com/static/button/button3.js\"></script>
-    </div>";
+    <script type="text/javascript" src="http://www.reddit.com/static/button/button3.js"></script>
+    </div>';
     return ob_get_clean();
     }
 }
 function mom_restrict_shortcode($atts, $content = null){
     extract(
         shortcode_atts(array(
-            "message" => 'You must be logged in to view this content.',
-            "comments" => '',
-            "form" => ''
+            'message'  => 'You must be logged in to view this content.',
+            'comments' => '',
+            'form'     => ''
         ), $atts)
     );
     ob_start();
-    if(is_user_logged_in()){
-        return $content;
-    }else{
-        echo "<div class=\"mom_restrict\">" . htmlentities($message) . "</div>";
-        if($comments == "1"){
+    if(is_user_logged_in()){return $content;}else{
+        echo '<div class="mom_restrict">'.htmlentities($message).'</div>';
+        if($comments == '1'){
             add_filter('comments_template','restricted_comments_view');
             function restricted_comments_view($comment_template){
-                return dirname(__FILE__) . '/includes/templates/comments.php';
+                return dirname(__FILE__).'/includes/templates/comments.php';
             }
         }
-        if($comments == "2"){
-            add_filter('comments_open','restricted_comments_form', 10, 2);
-            function restricted_comments_form($open, $post_id){
+        if($comments == '2'){
+            add_filter('comments_open','restricted_comments_form',10,2);
+            function restricted_comments_form($open,$post_id){
                 $post = get_post($post_id);
                 $open = false;
                 return $open;
@@ -1993,35 +2066,35 @@ function mom_restrict_shortcode($atts, $content = null){
     }        
     return ob_get_clean();
 }
-function mom_progress_shortcode($atts, $content = null){
+function mom_progress_shortcode($atts,$content = null){
     extract(
         shortcode_atts(array(
-            "align" => 'none',
-            "fillcolor" => '#ccc',
-            "maincolor" => '#000',
-            "height" => '15',
-            "fontsize" => '15',
-            "level" => '',
-            "margin" => '0 auto',
-            "talign" => 'center',
-            "width" => '95%',
+            'align'     => 'none',
+            'fillcolor' => '#ccc',
+            'maincolor' => '#000',
+            'height'    => '15',
+            'fontsize'  => '15',
+            'level'     => '',
+            'margin'    => '0 auto',
+            'talign'    => 'center',
+            'width'     => '95',
         ), $atts)
     );
-    $align_fetch = sanitize_text_field ($align);
-    $fillcolor_fetch = sanitize_text_field ($fillcolor);
-    $height_fetch = sanitize_text_field ($height);
-    $level_fetch = sanitize_text_field ($level);
-    $maincolor_fetch = sanitize_text_field ($maincolor);
-    $margin_fetch = sanitize_text_field ($margin);
-    $width_fetch = sanitize_text_field ($width);
+    $align_fetch     = sanitize_text_field($align);
+    $fillcolor_fetch = sanitize_text_field($fillcolor);
+    $height_fetch    = sanitize_text_field($height);
+    $level_fetch     = sanitize_text_field($level);
+    $maincolor_fetch = sanitize_text_field($maincolor);
+    $margin_fetch    = sanitize_text_field($margin);
+    $width_fetch     = sanitize_text_field($width);
     ob_start();
-    if($align_fetch == "left"){$align_fetch_final = "float: left;";}
-    elseif($align_fetch == "right"){$align_fetch_final = "float: right;";}
-    else {$align_fetch_final = "clear: both; ";}
-    echo "<div class=\"mom_progress\" style=\"" . $align_fetch_final . "; height:" . $height_fetch . "px; display: block; width:" . $width_fetch . "%;  margin: $margin_fetch; background-color:" . $maincolor_fetch . "\"><div style=\"display: block; height:" . $height_fetch . "px; width:" . $level_fetch . "%; background-color: $fillcolor_fetch;\"></div></div>";
+    if($align_fetch          == 'left'){$align_fetch_final = 'float: left';}
+    elseif($align_fetch      == 'right'){$align_fetch_final = 'float: right';}
+    else {$align_fetch_final = 'clear: both';}
+    echo '<div class="mom_progress" style="'.$align_fetch_final.';height:'.$height_fetch.'px;display:block;width:'.$width_fetch.'%;margin:'.$margin_fetch.';background-color:'.$maincolor_fetch.'"><div style="display:block;height:'.$height_fetch.'px;width:'.$level_fetch.'%;background-color:'.$fillcolor_fetch.';"></div></div>';
     return ob_get_clean();
 }
-function mom_verify_shortcode($atts, $content = null){
+function mom_verify_shortcode($atts,$content = null){
     global $post;
     if(isset($_SERVER["REMOTE_ADDR"])){
         $ipAddress = $_SERVER["REMOTE_ADDR"]; 
@@ -2082,33 +2155,32 @@ function mom_verify_shortcode($atts, $content = null){
     if(is_numeric($isLogged) && $isLogged == 0 && is_user_logged_in()){
         $isCorrect = 1;
     } elseif(is_numeric($isLogged) && $isLogged == 1){        
-        
         if($alreadyAttempted != 1){
-            if(!$_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . ''] != '' && $isDeactivated != 1){
-            return "
-            <blockquote style=\"display:block;clear:both;margin:5px auto 5px auto;padding:5px;font-size:25px;\">
-            <p>" . $theMessage . "</p>
-            <form style=\"clear:both;display:block;padding:5px;margin:0 auto 5px auto;width:98%;overflow:hidden;border-radius:3px;background-color:#" . $theBackground . ";\" class=\"momAgeVerification\" method=\"post\" action=\"" . esc_url(get_permalink()) . "\">
-                <input style=\"clear:both;font-size:25px;width:99%;margin:0 auto;\" type=\"text\" name=\"ageVerification" . $momverifier_verification_step . $thePostId . "\">
-                <input style=\"clear:both;font-size:20px;width:100%;margin:0 auto;\" type=\"submit\" name=\"submit\" class=\"submit\" value=\"Submit\" >
+            if(!$_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.''] != '' && $isDeactivated != 1){
+            return '
+            <blockquote style="display:block;clear:both;margin:5px auto 5px auto;padding:5px;font-size:25px;">
+            <p>'.$theMessage.'</p>
+            <form style="clear:both;display:block;padding:5px;margin:0 auto 5px auto;width:98%;overflow:hidden;border-radius:3px;background-color:#'.$theBackground.';" class="momAgeVerification" method="post" action="'.esc_url(get_permalink()).'">
+                <input style="clear:both;font-size:25px;width:99%;margin:0 auto;" type="text" name="ageVerification'.esc_attr($momverifier_verification_step).esc_attr($thePostId).'">
+                <input style="clear:both;font-size:20px;width:100%;margin:0 auto;" type="submit" name="submit" class="submit" value="Submit">
             </form>
             </blockquote>
-            ";
+            ';
             }
         }
-        if($_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . ''] != ''){
-            if($theAge != '' && is_numeric($_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']) && $_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']){
-                $ageEntered    = ($_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']);
+        if($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.''] != ''){
+            if($theAge         != '' && is_numeric($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']) && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
+                $ageEntered     = ($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']);
                 if($ageEntered >= $theAge){
-                    $isCorrect = 1;
+                    $isCorrect  = 1;
                 }else{
                     $isCorrect = 0;
                 }
-            } elseif($theAnswer != '' && $_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']){
-                $answerGiven   = ($_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']);
-                $correctAnswer = strtolower($theAnswer  );
+            } elseif($theAnswer != '' && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
+                $answerGiven   = ($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']);
+                $correctAnswer = strtolower($theAnswer);
                 $answered      = strtolower($answerGiven);                    
-                if($answered === $correctAnswer){
+                if($answered   === $correctAnswer){
                     $isCorrect = 1;
                 }else{
                     $isCorrect = 0;
@@ -2119,9 +2191,9 @@ function mom_verify_shortcode($atts, $content = null){
     if(is_numeric($isLogging) && $isLogging == 1 || is_numeric($isLogging) && $isLogging == 3 || is_numeric($attempts) && $attempts == 1){
         global $wpdb;
         $verification_table_name    = $wpdb->prefix.'momverification';
-        $getIPforCurrentTransaction = $wpdb->get_results ("SELECT IP,POST FROM $verification_table_name WHERE IP = '".$theIP."' AND POST = '" . $verificationID . "'");
-        if(count ($getIPforCurrentTransaction) <= 0 && $_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']){
-            if($theAge != '' && is_numeric($_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']) && $_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']){
+        $getIPforCurrentTransaction = $wpdb->get_results ("SELECT IP,POST FROM $verification_table_name WHERE IP = '".$theIP."' AND POST = '".$verificationID."'");
+        if(count ($getIPforCurrentTransaction) <= 0 && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
+            if($theAge != '' && is_numeric($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']) && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
                 $ageEntered    = ($_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']);
                 if($ageEntered >= $theAge){        
                 $wpdb->query("INSERT INTO $verification_table_name (ID, POST, CORRECT, IP) VALUES ('','$verificationID','1','$theIP')");
@@ -2130,8 +2202,8 @@ function mom_verify_shortcode($atts, $content = null){
                 }
             }
             elseif($theAnswer != '' && $_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']){
-                $answerGiven   = ($_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']);
-                $correctAnswer = strtolower($theAnswer  );
+                $answerGiven   = ($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']);
+                $correctAnswer = strtolower($theAnswer);
                 $answered      = strtolower($answerGiven);                
                 if($answered === $correctAnswer){                
                 $wpdb->query("INSERT INTO $verification_table_name (ID, POST, CORRECT, IP) VALUES ('','$verificationID','1','$theIP')");
@@ -2141,36 +2213,32 @@ function mom_verify_shortcode($atts, $content = null){
             }
         }
         if($isLogging != 1){
-            $incorrect            = $wpdb->get_results ("SELECT CORRECT FROM $verification_table_name WHERE POST = '" . $verificationID . "' AND CORRECT = '0' ");
-            $correct              = $wpdb->get_results ("SELECT CORRECT FROM $verification_table_name WHERE POST = '" . $verificationID . "' AND CORRECT = '1' ");
-            $incorrectCount   = count ($incorrect);
-            $correctCount     = count ($correct);
+            $incorrect            = $wpdb->get_results ("SELECT CORRECT FROM $verification_table_name WHERE POST = '".$verificationID."' AND CORRECT = '0'");
+            $correct              = $wpdb->get_results ("SELECT CORRECT FROM $verification_table_name WHERE POST = '".$verificationID."' AND CORRECT = '1'");
+            $incorrectCount       = count ($incorrect);
+            $correctCount         = count ($correct);
             if(count ($correct) > 0 && count ($incorrect) > 0){$totalCount = ($incorrectCount + $correctCount);}else{$totalCount = 1;}                    
-            $percentCorrect   = ($correctCount/$totalCount * 100);
-            $percentIncorrect = ($incorrectCount/$totalCount * 100);
-            if($statsMessage == ''){$statsMessage = $theMessage;}
-            return "<div style=\"clear:both;display:block;width:99%;margin:10px auto 10px auto;overflow:auto;background-color:#f6fbff;border:1px solid #4a5863;border-radius:3px;padding:5px;\"><p>" . $statsMessage . "</p><div class=\"mom_progress\" style=\"clear:both; height:20px; display: block; width:95%;  margin:5px auto 5px auto; background-color:#ff0000\"><div title=\"" . $correctCount . "\" style=\"display: block; height:20px; width:" . $percentCorrect . "%; background-color:#1eff00;\"></div></div><div style=\"font-size:15px;margin:-5px auto;width:95%;\"><span style=\"float:left;text-align:left;\">" . $correctResultMessage . " (" . $percentCorrect . "%)</span><span style=\"float:right;text-align:right;\">" . $incorrectResultMessage . " (" . $percentIncorrect . "%)</span></div></div>";
+            $percentCorrect       = ($correctCount/$totalCount * 100);
+            $percentIncorrect     = ($incorrectCount/$totalCount * 100);
+            if($statsMessage      == ''){$statsMessage = $theMessage;}
+            return '<div style="clear:both;display:block;width:99%;margin:10px auto 10px auto;overflow:auto;background-color:#f6fbff;border:1px solid #4a5863;border-radius:3px;padding:5px;"><p>'.$statsMessage.'</p><div class="mom_progress" style="clear:both;height:20px;display:block;width:95%; margin:5px auto 5px auto;background-color:#ff0000"><div title="'.$correctCount.'" style="display:block;height:20px;width:'.$percentCorrect.'%;background-color:#1eff00;"></div></div><div style="font-size:15px;margin:-5px auto;width:95%;"><span style="float:left;text-align:left;">'.$correctResultMessage.' ('.$percentCorrect.'%)</span><span style="float:right;text-align:right;">'.$incorrectResultMessage.' ('.$percentIncorrect.'%)</span></div></div>';
         }
     }
-    if($isCorrect == 1){
-        return $content;
-    } elseif($isCorrect == 0 && $deactivate != 1){
-        return "<blockquote class=\"momAgeVerification\">" . $failMessage . "</blockquote>";
-    }
+    if($isCorrect == 1){return $content;}elseif($isCorrect == 0 && $deactivate != 1){return '<blockquote class="momAgeVerification">'.$failMessage.'</blockquote>';}
     return ob_get_clean();
 }    
-
-
-
-
-
-/* SECTION G **********************************************************************
-***********************************************************************************
-(G0) Functions
-**********************************************************************************/
+/*****************************/
+/* Divider                   */
+/*****************************/
+/* SECTION G                 */
+/* (G0) Functions            */
+/* Meta                      */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
 function mom_SEO_header(){
     global $post;
-    if(is_admin()){
+    if(current_user_can('manage_options')){
     function mom_grab_author_count()
     {
         if(is_author())
@@ -2269,115 +2337,77 @@ function mom_SEO_header(){
             <meta property="og:type" content="website"/>
             ';
         }
-        if(is_search() || is_404() || is_archive()){
-            echo '
-            <meta name="robots" content="noarchive"/>
-            <meta name="robots" content="nofollow"/>
-            ';
-        }
+        if(is_search() || is_404() || is_archive())echo '<meta name="robots" content="noarchive"/><meta name="robots" content="nofollow"/>';
     }
     add_action('wp_head','mom_meta_module');
     function momSEOfeed($content){
         return $content.'<p><a href="'.esc_url(get_permalink($post->ID)).'">'.htmlentities(get_post_field('post_title',$postid)).'</a> via <a href="'.esc_url(home_url('/')).'">'.get_bloginfo('site_name').'</a></p>';
     }
-    add_filter('the_content_feed','momSEOfeed');
-    add_filter('the_excerpt_rss','momSEOfeed');
+    add_filter('the_content_feed','momSEOfeed');                  add_filter('the_excerpt_rss','momSEOfeed');
     function momSEOheadscripts(){
-        remove_action('wp_head','wp_print_scripts');
-        remove_action('wp_head','wp_print_head_scripts',9);
+        remove_action('wp_head','wp_print_scripts');              remove_action('wp_head','wp_print_head_scripts',9);
         remove_action('wp_head','wp_enqueue_scripts',1);
     }
-    add_action('wp_enqueue_scripts','momSEOheadscripts');
-    add_action('wp_footer','wp_print_scripts',5);
-    add_action('wp_footer','wp_enqueue_scripts',5);
-    add_action('wp_footer','wp_print_head_scripts',5);
+    add_action('wp_enqueue_scripts','momSEOheadscripts');         add_action('wp_footer','wp_print_scripts',5);
+    add_action('wp_footer','wp_enqueue_scripts',5);               add_action('wp_footer','wp_print_head_scripts',5);
     add_filter('jetpack_enable_opengraph','__return_false',99);
 }
-
-
-
-
-
-/* SECTION H **********************************************************************
-***********************************************************************************
-(H0) Settings
-**********************************************************************************/
-if(is_admin()){
+/*****************************/
+/* Divider                   */
+/*****************************/
+/* SECTION H                 */
+/* (H0) Settings             */
+/* Theme Takeover            */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
+if(current_user_can('manage_options')){
     function my_optional_modules_theme_takeover_module(){
-        function update_momthemetakeover_options(){
-            if(isset($_POST['momthemetakeoversave'])){
-                update_option('MOM_themetakeover_youtubefrontpage',$_REQUEST['MOM_themetakeover_youtubefrontpage']);
-                update_option('MOM_themetakeover_topbar',$_REQUEST['MOM_themetakeover_topbar']);
-                update_option('MOM_themetakeover_archivepage',$_REQUEST['MOM_themetakeover_archivepage']);
-                update_option('MOM_themetakeover_fitvids',$_REQUEST['MOM_themetakeover_fitvids']);
-                update_option('MOM_themetakeover_postdiv',$_REQUEST['MOM_themetakeover_postdiv']);
-                update_option('MOM_themetakeover_postelement',$_REQUEST['MOM_themetakeover_postelement']);
-                update_option('MOM_themetakeover_posttoggle',$_REQUEST['MOM_themetakeover_posttoggle']);
-            }
-        }
-        function mom_themetakeover_form(){
-            echo '<div class="clear"></div>
-            <div class="exclude">
-                <section><label for="MOM_themetakeover_youtubefrontpage">Youtube URL for 404s</label><input type="text" id="MOM_themetakeover_youtubefrontpage" name="MOM_themetakeover_youtubefrontpage" value="'.get_option('MOM_themetakeover_youtubefrontpage').'"></section>
-                <section><label for="MOM_themetakeover_fitvids"><a href="http://fitvidsjs.com/">Fitvid</a> .class</label><input type="text" id="MOM_themetakeover_fitvids" name="MOM_themetakeover_fitvids" value="'.get_option('MOM_themetakeover_fitvids').'"></section>
-                <section><label for="MOM_themetakeover_postdiv">Post content .div</label><input type="text" placeholder=".entry" id="MOM_themetakeover_postdiv" name="MOM_themetakeover_postdiv" value="'.get_option('MOM_themetakeover_postdiv').'"></section>
-                <section><label for="MOM_themetakeover_postelement">Post title .element</label><input type="text" placeholder="h1" id="MOM_themetakeover_postelement" name="MOM_themetakeover_postelement" value="'.get_option('MOM_themetakeover_postelement').'"></section>
-                <section><label for="MOM_themetakeover_posttoggle">Toggle text</label><input type="text" placeholder="Toggle contents" id="MOM_themetakeover_posttoggle" name="MOM_themetakeover_posttoggle" value="'.get_option('MOM_themetakeover_posttoggle').'"></section>
-            </div>';
-            echo '
-            <div class="exclude">
-                <section><label for="MOM_themetakeover_topbar">Enable navbar</label>
-                    <select id="MOM_themetakeover_topbar" name="MOM_themetakeover_topbar">
-                        <option value="1"';if(get_option('MOM_themetakeover_topbar') == 1){echo ' selected="selected"';}echo '">Yes</section>
-                        <option value="0"';if(get_option('MOM_themetakeover_topbar') == 0){echo ' selected="selected"';}echo '">No</section>
-                    </select>
-                </section>';
+        echo '<span class="moduletitle">__theme takeover<em>easy theme manipulation</em></span><div class="clear"></div><div class="settings"><form method="post">';
+        echo '<div class="clear"></div>
+        <div class="exclude">
+            <section><label for="MOM_themetakeover_youtubefrontpage">Youtube URL for 404s</label><input type="text" id="MOM_themetakeover_youtubefrontpage" name="MOM_themetakeover_youtubefrontpage" value="'.esc_url(get_option('MOM_themetakeover_youtubefrontpage')).'"></section>
+            <section><label for="MOM_themetakeover_fitvids"><a href="http://fitvidsjs.com/">Fitvid</a> .class</label><input type="text" id="MOM_themetakeover_fitvids" name="MOM_themetakeover_fitvids" value="'.esc_attr(get_option('MOM_themetakeover_fitvids')).'"></section>
+            <section><label for="MOM_themetakeover_postdiv">Post content .div</label><input type="text" placeholder=".entry" id="MOM_themetakeover_postdiv" name="MOM_themetakeover_postdiv" value="'.esc_attr(get_option('MOM_themetakeover_postdiv')).'"></section>
+            <section><label for="MOM_themetakeover_postelement">Post title .element</label><input type="text" placeholder="h1" id="MOM_themetakeover_postelement" name="MOM_themetakeover_postelement" value="'.esc_attr(get_option('MOM_themetakeover_postelement')).'"></section>
+            <section><label for="MOM_themetakeover_posttoggle">Toggle text</label><input type="text" placeholder="Toggle contents" id="MOM_themetakeover_posttoggle" name="MOM_themetakeover_posttoggle" value="'.esc_attr(get_option('MOM_themetakeover_posttoggle')).'"></section>
+        </div>';
+        echo '
+        <div class="exclude">
+            <section><label for="MOM_themetakeover_topbar">Enable navbar</label>
+                <select id="MOM_themetakeover_topbar" name="MOM_themetakeover_topbar">
+                    <option value="1"';if(get_option('MOM_themetakeover_topbar') == 1){echo ' selected="selected"';}echo '">Yes</section>
+                    <option value="0"';if(get_option('MOM_themetakeover_topbar') == 0){echo ' selected="selected"';}echo '">No</section>
+                </select>
+            </section>';
             if(get_option('mommaincontrol_shorts') == 1){
             $showmepages = get_pages(); 
             echo '<section>
             <label for="MOM_themetakeover_archivepage">Archives page</label>
             <select name="MOM_themetakeover_archivepage" class="allpages" id="MOM_themetakeover_archivepage">
-                <option value="">Home page</option>';
-                foreach ($showmepages as $pagesshown){
-                    echo '<option name="MOM_themetakeover_archivepage" id="mompaf_'.$pagesshown->ID.'" value="'.$pagesshown->ID.'"'; 
-                    if(get_option('MOM_themetakeover_archivepage') == $pagesshown->ID){echo ' selected="selected"';}echo '>
-                    '.$pagesshown->post_title.'</option>';
-                }
-                echo '
-            </select>
-            </section>';
-            }else{
+            <option value="">Home page</option>';
+            foreach ($showmepages as $pagesshown){
+                echo '<option name="MOM_themetakeover_archivepage" id="mompaf_'.esc_attr($pagesshown->ID).'" value="'.esc_attr($pagesshown->ID).'"'; 
+                if(get_option('MOM_themetakeover_archivepage') == $pagesshown->ID){echo ' selected="selected"';}echo '>
+                '.$pagesshown->post_title.'</option>';
+            }
+            echo '</select></section>';
+        }else{
             echo '<section>
             <label>__Dependency: Shortcodes (not enabled)</label>
             </section>';
-            }
-            echo '</div>
-            <div class="exclude">
-
-            </section>';
         }
-        function mom_themetakeover_page_content(){
-            echo '
-            <span class="moduletitle">__theme takeover<em>easy theme manipulation</em></span>
-            <div class="clear"></div>                
-            <div class="settings">
-            <form method="post">';
-                    mom_themetakeover_form();
-                    echo '
-                    <input id="momthemetakeoversave" type="submit" value="Save Changes" name="momthemetakeoversave">
-                </form>
-            </div>
-            </div>
-            </div>
-            <div class="new"></div>';
-        }
-        if(isset($_POST['momthemetakeoversave'])){update_momthemetakeover_options();}
-        mom_themetakeover_page_content();
+        echo '</div><div class="exclude"></section>';
+        echo '<input id="momthemetakeoversave" type="submit" value="Save Changes" name="momthemetakeoversave"></form></div></div></div><div class="new"></div>';
     }
 }
-/**********************************************************************************
-(H1) Functions
-**********************************************************************************/
+/*****************************/
+/* SECTION H                 */
+/* (H1) Functions            */
+/* Theme Takeover            */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
 if(get_option('MOM_themetakeover_youtubefrontpage') != ''){
     function mom_youtube404(){
         global $wp_query;
@@ -2399,11 +2429,9 @@ if(get_option('MOM_themetakeover_youtubefrontpage') != ''){
 }
 if(get_option('MOM_themetakeover_topbar') == 1){
     function mom_topbar(){
-        echo '
-        <div class="momnavbar">
-        <div>';
-                if(get_option('mommaincontrol_fontawesome') == 1){echo '<i class="fa fa-home"></i> ';}
-                echo '<a href="'.esc_url(home_url('/')).'">Front</a> - ';
+        echo '<div class="momnavbar"><div>';
+        if(get_option('mommaincontrol_fontawesome') == 1){echo '<i class="fa fa-home"></i> ';}
+        echo '<a href="'.esc_url(home_url('/')).'">Front</a> - ';
         if(get_option('mommaincontrol_fontawesome') == 1){echo '<i class="fa fa-clock-o"></i> ';}
         echo 'Latest Post/';
         $args = array('numberposts'=>'1');
@@ -2411,7 +2439,6 @@ if(get_option('MOM_themetakeover_topbar') == 1){
         foreach($latestpost as $latest){
             echo ' <a href="'.esc_url(get_permalink($latest["ID"])).'" title="Look '.esc_attr($latest["post_title"]).'" >'.$latest["post_title"].'</a>';
         }
-        
         if(is_user_logged_in()){
             if(is_single() && current_user_can('edit_post',$id)){
                 echo '  |  '; edit_post_link('Edit this post');
@@ -2422,23 +2449,18 @@ if(get_option('MOM_themetakeover_topbar') == 1){
             if(!is_single()){obwcountplus_total();}else{obwcountplus_single();}
             echo ' published words';
         }
-        echo '</span></div>
-        <div>
-        <ul>';
-        
+        echo '</span></div><div><ul>';
         if(get_option('mommaincontrol_shorts') == 1){echo '<li><a href="'.esc_url(get_permalink(get_option('MOM_themetakeover_archivepage'))).'">All</a></li>';}
-        
         $counter = 0;
         $max = 1; 
         $taxonomy = 'category';
         $terms = get_terms($taxonomy);
         shuffle ($terms);
-        //echo 'shuffled';
         if($terms){
             foreach($terms as $term){
                 $counter++;
                 if($counter <= $max){
-                echo '<li><a href="' . get_category_link($term->term_id) . '" title="' . sprintf(__("View all posts in %s"), $term->name) . '" ' . '>Random</a></li>';
+                echo '<li><a href="'.get_category_link($term->term_id).'" title="'.sprintf(__("View all posts in %s"), $term->name).'" '.'>Random</a></li>';
                 }
             }
         }
@@ -2447,74 +2469,45 @@ if(get_option('MOM_themetakeover_topbar') == 1){
     }
     add_action('wp_footer','mom_topbar');
     // http://plugins.svn.wordpress.org/wp-toolbar-removal/trunk/wp-toolbar-removal.php
-    remove_action('init','wp_admin_bar_init');
-    remove_filter('init','wp_admin_bar_init');
-    remove_action('wp_head','wp_admin_bar');
-    remove_filter('wp_head','wp_admin_bar');
-    remove_action('wp_footer','wp_admin_bar');
-    remove_filter('wp_footer','wp_admin_bar');
-    remove_action('admin_head','wp_admin_bar');
-    remove_filter('admin_head','wp_admin_bar');
-    remove_action('admin_footer','wp_admin_bar');
-    remove_filter('admin_footer','wp_admin_bar');
-    remove_action('wp_head','wp_admin_bar_class');
-    remove_filter('wp_head','wp_admin_bar_class');
-    remove_action('wp_footer','wp_admin_bar_class');
-    remove_filter('wp_footer','wp_admin_bar_class');
-    remove_action('admin_head','wp_admin_bar_class');
-    remove_filter('admin_head','wp_admin_bar_class');
-    remove_action('admin_footer','wp_admin_bar_class');
-    remove_filter('admin_footer','wp_admin_bar_class');
-    remove_action('wp_head','wp_admin_bar_css');
-    remove_filter('wp_head','wp_admin_bar_css');
-    remove_action('wp_head','wp_admin_bar_dev_css');
-    remove_filter('wp_head','wp_admin_bar_dev_css');
-    remove_action('wp_head','wp_admin_bar_rtl_css');
-    remove_filter('wp_head','wp_admin_bar_rtl_css');
-    remove_action('wp_head','wp_admin_bar_rtl_dev_css');
-    remove_filter('wp_head','wp_admin_bar_rtl_dev_css');
-    remove_action('admin_head','wp_admin_bar_css');
-    remove_filter('admin_head','wp_admin_bar_css');
-    remove_action('admin_head','wp_admin_bar_dev_css');
-    remove_filter('admin_head','wp_admin_bar_dev_css');
-    remove_action('admin_head','wp_admin_bar_rtl_css');
-    remove_filter('admin_head','wp_admin_bar_rtl_css');
-    remove_action('admin_head','wp_admin_bar_rtl_dev_css');
-    remove_filter('admin_head','wp_admin_bar_rtl_dev_css');
-    remove_action('wp_footer','wp_admin_bar_js');
-    remove_filter('wp_footer','wp_admin_bar_js');
-    remove_action('wp_footer','wp_admin_bar_dev_js');
-    remove_filter('wp_footer','wp_admin_bar_dev_js');
-    remove_action('admin_footer','wp_admin_bar_js');
-    remove_filter('admin_footer','wp_admin_bar_js');
-    remove_action('admin_footer','wp_admin_bar_dev_js');
-    remove_filter('admin_footer','wp_admin_bar_dev_js');
-    remove_action('locale','wp_admin_bar_lang');
-    remove_filter('locale','wp_admin_bar_lang');
-    remove_action('wp_head','wp_admin_bar_render', 1000);
-    remove_filter('wp_head','wp_admin_bar_render', 1000);
-    remove_action('wp_footer','wp_admin_bar_render', 1000);
-    remove_filter('wp_footer','wp_admin_bar_render', 1000);
-    remove_action('admin_head','wp_admin_bar_render', 1000);
-    remove_filter('admin_head','wp_admin_bar_render', 1000);
-    remove_action('admin_footer','wp_admin_bar_render', 1000);
-    remove_filter('admin_footer','wp_admin_bar_render', 1000);
-    remove_action('admin_footer','wp_admin_bar_render');
-    remove_filter('admin_footer','wp_admin_bar_render');
-    remove_action('wp_ajax_adminbar_render','wp_admin_bar_ajax_render', 1000);
-    remove_filter('wp_ajax_adminbar_render','wp_admin_bar_ajax_render', 1000);
-    remove_action('wp_ajax_adminbar_render','wp_admin_bar_ajax_render');
-    remove_filter('wp_ajax_adminbar_render','wp_admin_bar_ajax_render');                
+    remove_action('init','wp_admin_bar_init');                                    remove_filter('init','wp_admin_bar_init');
+    remove_action('wp_head','wp_admin_bar');                                      remove_filter('wp_head','wp_admin_bar');
+    remove_action('wp_footer','wp_admin_bar');                                    remove_filter('wp_footer','wp_admin_bar');
+    remove_action('admin_head','wp_admin_bar');                                   remove_filter('admin_head','wp_admin_bar');
+    remove_action('admin_footer','wp_admin_bar');                                 remove_filter('admin_footer','wp_admin_bar');
+    remove_action('wp_head','wp_admin_bar_class');                                remove_filter('wp_head','wp_admin_bar_class');
+    remove_action('wp_footer','wp_admin_bar_class');                              remove_filter('wp_footer','wp_admin_bar_class');
+    remove_action('admin_head','wp_admin_bar_class');                             remove_filter('admin_head','wp_admin_bar_class');
+    remove_action('admin_footer','wp_admin_bar_class');                           remove_filter('admin_footer','wp_admin_bar_class');
+    remove_action('wp_head','wp_admin_bar_css');                                  remove_filter('wp_head','wp_admin_bar_css');
+    remove_action('wp_head','wp_admin_bar_dev_css');                              remove_filter('wp_head','wp_admin_bar_dev_css');
+    remove_action('wp_head','wp_admin_bar_rtl_css');                              remove_filter('wp_head','wp_admin_bar_rtl_css');
+    remove_action('wp_head','wp_admin_bar_rtl_dev_css');                          remove_filter('wp_head','wp_admin_bar_rtl_dev_css');
+    remove_action('admin_head','wp_admin_bar_css');                               remove_filter('admin_head','wp_admin_bar_css');
+    remove_action('admin_head','wp_admin_bar_dev_css');                           remove_filter('admin_head','wp_admin_bar_dev_css');
+    remove_action('admin_head','wp_admin_bar_rtl_css');                           remove_filter('admin_head','wp_admin_bar_rtl_css');
+    remove_action('admin_head','wp_admin_bar_rtl_dev_css');                       remove_filter('admin_head','wp_admin_bar_rtl_dev_css');
+    remove_action('wp_footer','wp_admin_bar_js');                                 remove_filter('wp_footer','wp_admin_bar_js');
+    remove_action('wp_footer','wp_admin_bar_dev_js');                             remove_filter('wp_footer','wp_admin_bar_dev_js');
+    remove_action('admin_footer','wp_admin_bar_js');                              remove_filter('admin_footer','wp_admin_bar_js');
+    remove_action('admin_footer','wp_admin_bar_dev_js');                          remove_filter('admin_footer','wp_admin_bar_dev_js');
+    remove_action('locale','wp_admin_bar_lang');                                  remove_filter('locale','wp_admin_bar_lang');
+    remove_action('wp_head','wp_admin_bar_render', 1000);                         remove_filter('wp_head','wp_admin_bar_render', 1000);
+    remove_action('wp_footer','wp_admin_bar_render', 1000);                       remove_filter('wp_footer','wp_admin_bar_render', 1000);
+    remove_action('admin_head','wp_admin_bar_render', 1000);                      remove_filter('admin_head','wp_admin_bar_render', 1000);
+    remove_action('admin_footer','wp_admin_bar_render', 1000);                    remove_filter('admin_footer','wp_admin_bar_render', 1000);
+    remove_action('admin_footer','wp_admin_bar_render');                          remove_filter('admin_footer','wp_admin_bar_render');
+    remove_action('wp_ajax_adminbar_render','wp_admin_bar_ajax_render', 1000);    remove_filter('wp_ajax_adminbar_render','wp_admin_bar_ajax_render', 1000);
+    remove_action('wp_ajax_adminbar_render','wp_admin_bar_ajax_render');          remove_filter('wp_ajax_adminbar_render','wp_admin_bar_ajax_render');                
 }
-
-
-
-
-
-/* SECTION I **********************************************************************
-***********************************************************************************
-(I0) Shortcode
-**********************************************************************************/
+/*****************************/
+/* Divider                   */
+/*****************************/
+/* SECTION I                 */
+/* (I0) Functions            */
+/* Font Awesome              */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
 function font_fa_shortcode($atts, $content = null){
     extract(
         shortcode_atts(array(
@@ -2527,81 +2520,29 @@ function font_fa_shortcode($atts, $content = null){
     echo '<i class="fa fa-'.$iconfinal.'"></i>';
     return ob_get_clean();
 }
-
-
-
-
-
-/* SECTION J **********************************************************************
-***********************************************************************************
-(J0) Settings
-**********************************************************************************/
-if(is_admin()){
+/*****************************/
+/* Divider                   */
+/*****************************/
+/* SECTION J                 */
+/* (J0) Settings             */
+/* Count++                   */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
+if(current_user_can('manage_options')){
     function my_optional_modules_count_module(){
-        function update_obwcountplus_options(){
-            if($_REQUEST['obwcountplus_countdownfrom'])    update_option('obwcountplus_1_countdownfrom',$_REQUEST['obwcountplus_countdownfrom']);
-            if($_REQUEST['obwcountplus_remaining'])        update_option('obwcountplus_2_remaining',$_REQUEST['obwcountplus_remaining']);
-            if($_REQUEST['obwcountplus_total'])            update_option('obwcountplus_3_total',$_REQUEST['obwcountplus_total']);
-            if($_REQUEST['obwcountplus_custom'])        update_option('obwcountplus_4_custom',$_REQUEST['obwcountplus_custom']);
-            if($_REQUEST['obwcountplus_countdownfrom'])    update_option('obwcountplus_1_countdownfrom','0');
-            if($_REQUEST['obwcountplus_remaining'])        update_option('obwcountplus_2_remaining','remaining');
-            if($_REQUEST['obwcountplus_total'])            update_option('obwcountplus_3_total','total');
-            if($_REQUEST['obwcountplus_custom'])        update_option('obwcountplus_4_custom','');
+            echo '<form method="post"><span class="moduletitle">__count++<em>Count words published</em></span><div class="clear"></div><div class="settings">';
+            echo '<div class="countplus"><section><label for="obwcountplus_countdownfrom">Goal (<em>0</em> for none)</label><input id="obwcountplus_countdownfrom" type="text" value="'.esc_attr(get_option('obwcountplus_1_countdownfrom')).'" name="obwcountplus_countdownfrom"></section><section><label for="obwcountplus_remaining">Text for remaining</label><input id="obwcountplus_remaining" type="text" value="'.esc_attr(get_option('obwcountplus_2_remaining')).'" name="obwcountplus_remaining"></section><section><label for="obwcountplus_total">Text for published</label><input id="obwcountplus_total" type="text" value="'.esc_attr(get_option('obwcountplus_3_total')).'" name="obwcountplus_total"></section><section><label for="obwcountplus_custom">Custom output</label><input id="obwcountplus_custom" type="text" value="'.esc_attr(get_option('obwcountplus_4_custom')).'" name="obwcountplus_custom"></section></div>';
+            echo '<input id="obwcountsave" type="submit" value="Save Changes" name="obwcountsave"></form><div class="templatetags"><section>Custom output example: (with goal)<span class="right">%total% words of %remain% published</span></section><section>Custom output example: (without goal) <span class="right">%total% words published</span></section><section>Custom output example: (numbers only)(total on blog) <span class="right">%total%</span></section><section>Custom output example: (numbers only)(total remain of goal) <span class="right">%remain%</span></section><section>Template tag: (single post word count)<span class="right"><code>obwcountplus_total();</code></span></section><section>Custom output:<span class="right"><code>countsplusplus();</code></span></section><section>Total words + remaining:<span class="right"><code>obwcountplus_count();</code></span></section><section>Total words:<span class="right"><code>obwcountplus_total();</code></span></section><section>Remainig:(displays total published if goal reached)<span class="right"><code>obwcountplus_remaining();</code></span></section></div><p class="creditlink">Count++ is adapted from <a href="http://wordpress.org/plugins/post-word-count/">Post Word Count</a> by <a href="http://profiles.wordpress.org/nickmomrik/">Nick Momrik</a>.</p>';
         }
-        function obwcountplus_form(){
-            echo "
-            <div class=\"countplus\">
-                <section>
-                    <label for=\"obwcountplus_countdownfrom\">Goal (<em>0</em> for none)</label>
-                    <input id=\"obwcountplus_countdownfrom\" type=\"text\" value=\"". get_option('obwcountplus_1_countdownfrom') . "\" name=\"obwcountplus_countdownfrom\">
-                </section>
-                <section>
-                    <label for=\"obwcountplus_remaining\">Text for remaining</label>
-                    <input id=\"obwcountplus_remaining\" type=\"text\" value=\"". get_option('obwcountplus_2_remaining') . "\" name=\"obwcountplus_remaining\">
-                </section>
-                <section>
-                    <label for=\"obwcountplus_total\">Text for published</label>
-                    <input id=\"obwcountplus_total\" type=\"text\" value=\"". get_option('obwcountplus_3_total') . "\" name=\"obwcountplus_total\">
-                </section>
-                <section>                
-                    <label for=\"obwcountplus_custom\">Custom output</label>
-                    <input id=\"obwcountplus_custom\" type=\"text\" value=\"". get_option('obwcountplus_4_custom') . "\" name=\"obwcountplus_custom\">
-                </section>
-            </div>";
-        }
-        function obwcountplus_page_content(){
-                echo "
-                <form method=\"post\">
-                    <span class=\"moduletitle\">__count++<em>let's play the counting game</em></span>
-                    <div class=\"clear\"></div>                
-                    <div class=\"settings\">";
-                    obwcountplus_form();
-                    echo "<input id=\"obwcountsave\" type=\"submit\" value=\"Save Changes\" name=\"obwcountsave\">
-                </form>
-                <div class=\"templatetags\">
-                <section>Custom output example: (with goal)<span class=\"right\">%total% words of %remain% published</span></section>
-                <section>Custom output example: (without goal) <span class=\"right\">%total% words published</span></section>
-                <section>Custom output example: (numbers only)(total on blog) <span class=\"right\">%total%</span></section>
-                <section>Custom output example: (numbers only)(total remain of goal) <span class=\"right\">%remain%</span></section>
-                <section>Template tag: (single post word count)<span class=\"right\"><code>obwcountplus_total();</code></span></section>
-                <section>Custom output:<span class=\"right\"><code>countsplusplus();</code></span></section>
-                <section>Total words + remaining:<span class=\"right\"><code>obwcountplus_count();</code></span></section>
-                <section>Total words:<span class=\"right\"><code>obwcountplus_total();</code></span></section>
-                <section>Remainig:(displays total published if goal reached)<span class=\"right\"><code>obwcountplus_remaining();</code></span></section>
-                </div>
-                <p class=\"creditlink\">Count++ is adapted from <a href=\"http://wordpress.org/plugins/post-word-count/\">Post Word Count</a> by <a href=\"http://profiles.wordpress.org/nickmomrik/\">Nick Momrik</a>.</p>
-                ";
-        }
-        if(isset($_POST['obwcountsave'])){
-            update_obwcountplus_options(); 
-            echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
-        }
-        obwcountplus_page_content();
     }
-}
-/**********************************************************************************
-(J1) Functions
-**********************************************************************************/
+/*****************************/
+/* SECTION J                 */
+/* (J1) Functions            */
+/* Count++                   */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
 function countsplusplus(){
     $oldcount = 0;
     global $wpdb;
@@ -2713,64 +2654,18 @@ function obwcountplus_count(){
         echo esc_attr(number_format(get_option('obwcountplus_1_countdownfrom') - $totalcount).' '.get_option('obwcountplus_2_remaining').' ('.number_format($totalcount).' '.get_option('obwcountplus_3_total').')');
     }
 }
-
-
-
-
-
-/* SECTION K **********************************************************************
-***********************************************************************************
-(K0) Settings
-**********************************************************************************/
-if(is_admin()){ 
+/*****************************/
+/* Divider                   */
+/*****************************/
+/* SECTION K                 */
+/* (K0) Settings             */
+/* Exclude                   */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
+if(current_user_can('manage_options')){ 
     function my_optional_modules_exclude_module(){
-        function update_momse_options(){
-            if(isset($_POST['momsesave'])){
-                update_option('MOM_Exclude_VisitorCategories',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_VisitorCategories']))))))));
-                update_option('MOM_Exclude_VisitorTags',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_VisitorTags'])))))))));
-                update_option('MOM_Exclude_Categories_RSS',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Categories_RSS'])))))))));
-                update_option('MOM_Exclude_Categories_Front',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Categories_Front'])))))))));
-                update_option('MOM_Exclude_Categories_TagArchives',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Categories_TagArchives'])))))))));
-                update_option('MOM_Exclude_Categories_SearchResults',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Categories_SearchResults'])))))))));
-                update_option('MOM_Exclude_Tags_RSS',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Tags_RSS'])))))))));
-                update_option('MOM_Exclude_Tags_Front',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Tags_Front'])))))))));
-                update_option('MOM_Exclude_Tags_CategoryArchives',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Tags_CategoryArchives'])))))))));
-                update_option('MOM_Exclude_Tags_SearchResults',sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_Tags_SearchResults'])))))))));
-                update_option('MOM_Exclude_PostFormats_Visitor',sanitize_text_field($_REQUEST['MOM_Exclude_PostFormats_Visitor']));
-                update_option('MOM_Exclude_PostFormats_RSS',sanitize_text_field($_REQUEST['MOM_Exclude_PostFormats_RSS']));
-                update_option('MOM_Exclude_PostFormats_Front',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_Front'])));
-                update_option('MOM_Exclude_PostFormats_CategoryArchives',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_CategoryArchives'])));
-                update_option('MOM_Exclude_PostFormats_TagArchives',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_TagArchives'])));
-                update_option('MOM_Exclude_PostFormats_SearchResults',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_SearchResults'])));
-                update_option('MOM_Exclude_TagsSun',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_TagsSun'])))))));
-                update_option('MOM_Exclude_TagsMon',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_TagsMon'])))))));
-                update_option('MOM_Exclude_TagsTue',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_TagsTue'])))))));
-                update_option('MOM_Exclude_TagsWed',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_TagsWed'])))))));
-                update_option('MOM_Exclude_TagsThu',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_TagsThu'])))))));
-                update_option('MOM_Exclude_TagsFri',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_TagsFri'])))))));
-                update_option('MOM_Exclude_TagsSat',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',($_REQUEST['MOM_Exclude_TagsSat'])))))));
-                update_option('MOM_Exclude_CategoriesSun',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_CategoriesSun']))))))));
-                update_option('MOM_Exclude_CategoriesMon',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_CategoriesMon']))))))));
-                update_option('MOM_Exclude_CategoriesTue',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_CategoriesTue']))))))));
-                update_option('MOM_Exclude_CategoriesWed',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_CategoriesWed']))))))));
-                update_option('MOM_Exclude_CategoriesThu',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_CategoriesThu']))))))));
-                update_option('MOM_Exclude_CategoriesFri',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_CategoriesFri']))))))));
-                update_option('MOM_Exclude_CategoriesSat',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_CategoriesSat']))))))));
-                update_option('MOM_Exclude_level0Categories',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level0Categories']))))))));
-                update_option('MOM_Exclude_level1Categories',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level1Categories']))))))));
-                update_option('MOM_Exclude_level2Categories',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level2Categories']))))))));
-                update_option('MOM_Exclude_level7Categories',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level7Categories']))))))));
-                update_option('MOM_Exclude_level0Tags',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level0Tags']))))))));
-                update_option('MOM_Exclude_level1Tags',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level1Tags']))))))));
-                update_option('MOM_Exclude_level2Tags',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level2Tags']))))))));
-                update_option('MOM_Exclude_level7Tags',sanitize_text_field(implode(',',array_unique(explode(',',preg_replace('/[^0-9,.]/','',(($_REQUEST['MOM_Exclude_level7Tags']))))))));
-                update_option('MOM_Exclude_URL',$_REQUEST['MOM_Exclude_URL']);
-                update_option('MOM_Exclude_URL_User',$_REQUEST['MOM_Exclude_URL_User']);
-                update_option('MOM_Exclude_NoFollow',$_REQUEST['MOM_Exclude_NoFollow']);
-                update_option('MOM_Exclude_Hide_Dashboard',$_REQUEST['MOM_Exclude_Hide_Dashboard']);
-            }
-        }
-        function momse_form(){
+            echo '<span class="moduletitle">__exclude<em>separate multiple ids with commas (1,2,3,...)</em></span><div class="clear"></div><div class="settings"><form method="post">';
             echo '
                 <div class="listing">
                 <div class="list"><span>Category (<strong>ID</strong>)</span>';
@@ -2989,36 +2884,22 @@ if(is_admin()){
                 }
                 echo '
             </select>
-            </section>
-            ';
+            </section>';
+            echo '<input id="momsesave" type="submit" value="Save Changes" name="momsesave"></form></div></div></div><div class="new"></div>';
         }
-        function momse_page_content(){
-            echo '
-            <span class="moduletitle">__exclude<em>separate multiple ids with commas (1,2,3,...)</em></span>
-            <div class="clear"></div>                
-            <div class="settings">
-            <form method="post">';
-                    momse_form();
-                    echo '
-                    <input id="momsesave" type="submit" value="Save Changes" name="momsesave">
-                </form>
-            </div>
-            </div>
-            </div>
-            <div class="new"></div>';
-        }
-        if(isset($_POST['momsesave'])){update_momse_options();}
-        momse_page_content();
-    }
 }
-/**********************************************************************************
-(K1) Functions
-**********************************************************************************/
+/*****************************/
+/* SECTION K                 */
+/* (K1) Settings             */
+/* Exclude                   */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
 get_currentuserinfo();
 global $user_level;    
 if ($user_level <=7 && get_option('MOM_Exclude_Hide_Dashboard') == 1) {
     // http://wordpress.org/support/topic/hide-dashboard-for-all-except-admin-without-plugin?replies=5
-    function remove_the_dashboard () {
+    function remove_the_dashboard(){
         global $menu, $submenu, $user_ID;
         $the_user = new WP_User($user_ID);
         reset($menu); $page = key($menu);
@@ -3042,10 +2923,10 @@ if (!is_user_logged_in() || is_user_logged_in() && $user_level == 0 || is_user_l
         get_currentuserinfo();
         global $user_level;
         $loggedOutCats = array('0,0');
-        if($user_level == 0) {$loggedOutCats = get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
-        if($user_level <= 1) {$loggedOutCats = get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
-        if($user_level <= 2) {$loggedOutCats = get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
-        if($user_level <= 7) {$loggedOutCats = get_option('MOM_Exclude_level7Categories');}
+        if($user_level == 0){$loggedOutCats = get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
+        if($user_level <= 1){$loggedOutCats = get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
+        if($user_level <= 2){$loggedOutCats = get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
+        if($user_level <= 7){$loggedOutCats = get_option('MOM_Exclude_level7Categories');}
     }
         $c1 = explode(',',$loggedOutCats);
         foreach($c1 as &$C1) { $C1 = ''.$C1.',';}
@@ -3155,7 +3036,6 @@ if(get_option('MOM_Exclude_NoFollow') != 0){
             get_the_author()
         );
     }    
-
     function nofollow_cat_posts($text) {
     $loggedOutCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');    
     $c1 = explode(',',$loggedOutCats);
@@ -3175,10 +3055,10 @@ if(get_option('MOM_Exclude_NoFollow') != 0){
 add_action('pre_get_posts','momse_filter_home');
 function momse_filter_home($query){
     $c1        = array('0,0');
-    $lt_1    = array('0,0');
+    $lt_1      = array('0,0');
     $t1        = array('0,0');
-    $t_1    = array('0,0');
-    $c_1    = array('0,0');
+    $t_1       = array('0,0');
+    $c_1       = array('0,0');
     if(get_option('MOM_Exclude_Categories_Front') == ''){$MOM_Exclude_Categories_Front = array('0,0');}else{$MOM_Exclude_Categories_Front = get_option('MOM_Exclude_Categories_Front');}
     if(get_option('MOM_Exclude_Categories_TagArchives') == ''){$MOM_Exclude_Categories_TagArchives = array('0,0');}else{$MOM_Exclude_Categories_TagArchives = get_option('MOM_Exclude_Categories_TagArchives');}
     if(get_option('MOM_Exclude_Categories_SearchResults') == ''){$MOM_Exclude_Categories_SearchResults = array('0,0');}else{$MOM_Exclude_Categories_SearchResults = get_option('MOM_Exclude_Categories_SearchResults');}
@@ -3540,378 +3420,287 @@ function momse_filter_home($query){
         }
     }
 }
-
-
-
-
-
-/* SECTION L **********************************************************************
-***********************************************************************************
-(K0) Settings
-**********************************************************************************/
-if(is_admin()){
-
+/*****************************/
+/* Divider                   */
+/*****************************/
+/* SECTION L                 */
+/* (L0) Settings             */
+/* Jump Around               */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
+if(current_user_can('manage_options')){
     function my_optional_modules_jump_around_module(){
-    
-        
-        function update_JA(){
-            update_option('jump_around_0',$_REQUEST['jump_around_0']);
-            update_option('jump_around_1',$_REQUEST['jump_around_1']);
-            update_option('jump_around_2',$_REQUEST['jump_around_2']);
-            update_option('jump_around_3',$_REQUEST['jump_around_3']);
-            update_option('jump_around_4',$_REQUEST['jump_around_4']);
-            update_option('jump_around_5',$_REQUEST['jump_around_5']);
-            update_option('jump_around_6',$_REQUEST['jump_around_6']);
-            update_option('jump_around_7',$_REQUEST['jump_around_7']);
-            update_option('jump_around_8',$_REQUEST['jump_around_8']);
-            echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
-        }
-
-        if($_REQUEST["update_JA"]){update_JA();}
-        
-        function print_jump_around_form(){
-            echo "
-            <div class=\"countplus\">
-                <section><label for=\"jump_around_0\">Post container:</label>
-                <input type=\"text\" name=\"jump_around_0\" value=\"" . get_option('jump_around_0') . "\" /></section>
-                <section><label for=\"jump_around_1\">Permalink:</label>
-                <input type=\"text\" name=\"jump_around_1\" value=\"" . get_option('jump_around_1') . "\" /></section>
-                <section><label for=\"jump_around_2\">Previous posts</label>
-                <input type=\"text\" name=\"jump_around_2\" value=\"" . get_option('jump_around_2') . "\" /></section>
-                <section><label for=\"jump_around_3\">Next posts</label>
-                <input type=\"text\" name=\"jump_around_3\" value=\"" . get_option('jump_around_3') . "\" /></section>
-                <section><label for=\"jump_around_4\">Previous key</label>
-                <select name=\"jump_around_4\">
-                    <option value=\"65\"";if(get_option('jump_around_4') == '65'){echo " selected=\"selected\"";}echo ">a</option>
-                    <option value=\"66\"";if(get_option('jump_around_4') == '66'){echo " selected=\"selected\"";}echo ">b</option>
-                    <option value=\"67\"";if(get_option('jump_around_4') == '67'){echo " selected=\"selected\"";}echo ">c</option>
-                    <option value=\"68\"";if(get_option('jump_around_4') == '68'){echo " selected=\"selected\"";}echo ">d</option>
-                    <option value=\"69\"";if(get_option('jump_around_4') == '69'){echo " selected=\"selected\"";}echo ">e</option>
-                    <option value=\"70\"";if(get_option('jump_around_4') == '70'){echo " selected=\"selected\"";}echo ">f</option>
-                    <option value=\"71\"";if(get_option('jump_around_4') == '71'){echo " selected=\"selected\"";}echo ">g</option>
-                    <option value=\"72\"";if(get_option('jump_around_4') == '72'){echo " selected=\"selected\"";}echo ">h</option>
-                    <option value=\"73\"";if(get_option('jump_around_4') == '73'){echo " selected=\"selected\"";}echo ">i</option>
-                    <option value=\"74\"";if(get_option('jump_around_4') == '74'){echo " selected=\"selected\"";}echo ">j</option>
-                    <option value=\"75\"";if(get_option('jump_around_4') == '75'){echo " selected=\"selected\"";}echo ">k</option>
-                    <option value=\"76\"";if(get_option('jump_around_4') == '76'){echo " selected=\"selected\"";}echo ">l</option>
-                    <option value=\"77\"";if(get_option('jump_around_4') == '77'){echo " selected=\"selected\"";}echo ">m</option>
-                    <option value=\"78\"";if(get_option('jump_around_4') == '78'){echo " selected=\"selected\"";}echo ">n</option>
-                    <option value=\"79\"";if(get_option('jump_around_4') == '79'){echo " selected=\"selected\"";}echo ">o</option>
-                    <option value=\"80\"";if(get_option('jump_around_4') == '80'){echo " selected=\"selected\"";}echo ">p</option>
-                    <option value=\"81\"";if(get_option('jump_around_4') == '81'){echo " selected=\"selected\"";}echo ">q</option>
-                    <option value=\"82\"";if(get_option('jump_around_4') == '82'){echo " selected=\"selected\"";}echo ">r</option>
-                    <option value=\"83\"";if(get_option('jump_around_4') == '83'){echo " selected=\"selected\"";}echo ">s</option>
-                    <option value=\"84\"";if(get_option('jump_around_4') == '84'){echo " selected=\"selected\"";}echo ">t</option>
-                    <option value=\"85\"";if(get_option('jump_around_4') == '85'){echo " selected=\"selected\"";}echo ">u</option>
-                    <option value=\"86\"";if(get_option('jump_around_4') == '86'){echo " selected=\"selected\"";}echo ">v</option>
-                    <option value=\"87\"";if(get_option('jump_around_4') == '87'){echo " selected=\"selected\"";}echo ">w</option>
-                    <option value=\"88\"";if(get_option('jump_around_4') == '88'){echo " selected=\"selected\"";}echo ">x</option>
-                    <option value=\"89\"";if(get_option('jump_around_4') == '89'){echo " selected=\"selected\"";}echo ">y</option>
-                    <option value=\"90\"";if(get_option('jump_around_4') == '90'){echo " selected=\"selected\"";}echo ">z</option>
-                    <option value=\"48\"";if(get_option('jump_around_4') == '48'){echo " selected=\"selected\"";}echo ">0</option>
-                    <option value=\"49\"";if(get_option('jump_around_4') == '49'){echo " selected=\"selected\"";}echo ">1</option>
-                    <option value=\"50\"";if(get_option('jump_around_4') == '50'){echo " selected=\"selected\"";}echo ">2</option>
-                    <option value=\"51\"";if(get_option('jump_around_4') == '51'){echo " selected=\"selected\"";}echo ">3</option>
-                    <option value=\"52\"";if(get_option('jump_around_4') == '52'){echo " selected=\"selected\"";}echo ">4</option>
-                    <option value=\"53\"";if(get_option('jump_around_4') == '53'){echo " selected=\"selected\"";}echo ">5</option>
-                    <option value=\"54\"";if(get_option('jump_around_4') == '54'){echo " selected=\"selected\"";}echo ">6</option>
-                    <option value=\"55\"";if(get_option('jump_around_4') == '55'){echo " selected=\"selected\"";}echo ">7</option>
-                    <option value=\"56\"";if(get_option('jump_around_4') == '56'){echo " selected=\"selected\"";}echo ">8</option>
-                    <option value=\"57\"";if(get_option('jump_around_4') == '57'){echo " selected=\"selected\"";}echo ">9</option>
-                    <option value=\"37\"";if(get_option('jump_around_4') == '37'){echo " selected=\"selected\"";}echo ">left arrow</option>
-                    <option value=\"38\"";if(get_option('jump_around_4') == '38'){echo " selected=\"selected\"";}echo ">up arrow</option>
-                    <option value=\"39\"";if(get_option('jump_around_4') == '39'){echo " selected=\"selected\"";}echo ">right arrow</option>
-                    <option value=\"40\"";if(get_option('jump_around_4') == '40'){echo " selected=\"selected\"";}echo ">down arrow</option>
+            echo '<span class="moduletitle">__jump_around<em>keyboard navigation</em></span><div class="clear"></div><div class="settings"><form method="post">';
+            echo '
+            <div class="countplus">
+                <section><label for="jump_around_0">Post container:</label>
+                <input type="text" name="jump_around_0" value="'.get_option('jump_around_0').'" /></section>
+                <section><label for="jump_around_1">Permalink:</label>
+                <input type="text" name="jump_around_1" value="'.get_option('jump_around_1').'" /></section>
+                <section><label for="jump_around_2">Previous posts</label>
+                <input type="text" name="jump_around_2" value="'.get_option('jump_around_2').'" /></section>
+                <section><label for="jump_around_3">Next posts</label>
+                <input type="text" name="jump_around_3" value="'.get_option('jump_around_3').'" /></section>
+                <section><label for="jump_around_4">Previous key</label>
+                <select name="jump_around_4">
+                    <option value="65"';if(get_option('jump_around_4') == '65'){echo ' selected="selected"';}echo '>a</option>
+                    <option value="66"';if(get_option('jump_around_4') == '66'){echo ' selected="selected"';}echo '>b</option>
+                    <option value="67"';if(get_option('jump_around_4') == '67'){echo ' selected="selected"';}echo '>c</option>
+                    <option value="68"';if(get_option('jump_around_4') == '68'){echo ' selected="selected"';}echo '>d</option>
+                    <option value="69"';if(get_option('jump_around_4') == '69'){echo ' selected="selected"';}echo '>e</option>
+                    <option value="70"';if(get_option('jump_around_4') == '70'){echo ' selected="selected"';}echo '>f</option>
+                    <option value="71"';if(get_option('jump_around_4') == '71'){echo ' selected="selected"';}echo '>g</option>
+                    <option value="72"';if(get_option('jump_around_4') == '72'){echo ' selected="selected"';}echo '>h</option>
+                    <option value="73"';if(get_option('jump_around_4') == '73'){echo ' selected="selected"';}echo '>i</option>
+                    <option value="74"';if(get_option('jump_around_4') == '74'){echo ' selected="selected"';}echo '>j</option>
+                    <option value="75"';if(get_option('jump_around_4') == '75'){echo ' selected="selected"';}echo '>k</option>
+                    <option value="76"';if(get_option('jump_around_4') == '76'){echo ' selected="selected"';}echo '>l</option>
+                    <option value="77"';if(get_option('jump_around_4') == '77'){echo ' selected="selected"';}echo '>m</option>
+                    <option value="78"';if(get_option('jump_around_4') == '78'){echo ' selected="selected"';}echo '>n</option>
+                    <option value="79"';if(get_option('jump_around_4') == '79'){echo ' selected="selected"';}echo '>o</option>
+                    <option value="80"';if(get_option('jump_around_4') == '80'){echo ' selected="selected"';}echo '>p</option>
+                    <option value="81"';if(get_option('jump_around_4') == '81'){echo ' selected="selected"';}echo '>q</option>
+                    <option value="82"';if(get_option('jump_around_4') == '82'){echo ' selected="selected"';}echo '>r</option>
+                    <option value="83"';if(get_option('jump_around_4') == '83'){echo ' selected="selected"';}echo '>s</option>
+                    <option value="84"';if(get_option('jump_around_4') == '84'){echo ' selected="selected"';}echo '>t</option>
+                    <option value="85"';if(get_option('jump_around_4') == '85'){echo ' selected="selected"';}echo '>u</option>
+                    <option value="86"';if(get_option('jump_around_4') == '86'){echo ' selected="selected"';}echo '>v</option>
+                    <option value="87"';if(get_option('jump_around_4') == '87'){echo ' selected="selected"';}echo '>w</option>
+                    <option value="88"';if(get_option('jump_around_4') == '88'){echo ' selected="selected"';}echo '>x</option>
+                    <option value="89"';if(get_option('jump_around_4') == '89'){echo ' selected="selected"';}echo '>y</option>
+                    <option value="90"';if(get_option('jump_around_4') == '90'){echo ' selected="selected"';}echo '>z</option>
+                    <option value="48"';if(get_option('jump_around_4') == '48'){echo ' selected="selected"';}echo '>0</option>
+                    <option value="49"';if(get_option('jump_around_4') == '49'){echo ' selected="selected"';}echo '>1</option>
+                    <option value="50"';if(get_option('jump_around_4') == '50'){echo ' selected="selected"';}echo '>2</option>
+                    <option value="51"';if(get_option('jump_around_4') == '51'){echo ' selected="selected"';}echo '>3</option>
+                    <option value="52"';if(get_option('jump_around_4') == '52'){echo ' selected="selected"';}echo '>4</option>
+                    <option value="53"';if(get_option('jump_around_4') == '53'){echo ' selected="selected"';}echo '>5</option>
+                    <option value="54"';if(get_option('jump_around_4') == '54'){echo ' selected="selected"';}echo '>6</option>
+                    <option value="55"';if(get_option('jump_around_4') == '55'){echo ' selected="selected"';}echo '>7</option>
+                    <option value="56"';if(get_option('jump_around_4') == '56'){echo ' selected="selected"';}echo '>8</option>
+                    <option value="57"';if(get_option('jump_around_4') == '57'){echo ' selected="selected"';}echo '>9</option>
+                    <option value="37"';if(get_option('jump_around_4') == '37'){echo ' selected="selected"';}echo '>left arrow</option>
+                    <option value="38"';if(get_option('jump_around_4') == '38'){echo ' selected="selected"';}echo '>up arrow</option>
+                    <option value="39"';if(get_option('jump_around_4') == '39'){echo ' selected="selected"';}echo '>right arrow</option>
+                    <option value="40"';if(get_option('jump_around_4') == '40'){echo ' selected="selected"';}echo '>down arrow</option>
                 </select></section>
-                <section><label for=\"jump_around_5\">Open currently selected key</label>
-                <select name=\"jump_around_5\">
-                    <option value=\"65\"";if(get_option('jump_around_5') == '65'){echo " selected=\"selected\"";}echo ">a</option>
-                    <option value=\"66\"";if(get_option('jump_around_5') == '66'){echo " selected=\"selected\"";}echo ">b</option>
-                    <option value=\"67\"";if(get_option('jump_around_5') == '67'){echo " selected=\"selected\"";}echo ">c</option>
-                    <option value=\"68\"";if(get_option('jump_around_5') == '68'){echo " selected=\"selected\"";}echo ">d</option>
-                    <option value=\"69\"";if(get_option('jump_around_5') == '69'){echo " selected=\"selected\"";}echo ">e</option>
-                    <option value=\"70\"";if(get_option('jump_around_5') == '70'){echo " selected=\"selected\"";}echo ">f</option>
-                    <option value=\"71\"";if(get_option('jump_around_5') == '71'){echo " selected=\"selected\"";}echo ">g</option>
-                    <option value=\"72\"";if(get_option('jump_around_5') == '72'){echo " selected=\"selected\"";}echo ">h</option>
-                    <option value=\"73\"";if(get_option('jump_around_5') == '73'){echo " selected=\"selected\"";}echo ">i</option>
-                    <option value=\"74\"";if(get_option('jump_around_5') == '74'){echo " selected=\"selected\"";}echo ">j</option>
-                    <option value=\"75\"";if(get_option('jump_around_5') == '75'){echo " selected=\"selected\"";}echo ">k</option>
-                    <option value=\"76\"";if(get_option('jump_around_5') == '76'){echo " selected=\"selected\"";}echo ">l</option>
-                    <option value=\"77\"";if(get_option('jump_around_5') == '77'){echo " selected=\"selected\"";}echo ">m</option>
-                    <option value=\"78\"";if(get_option('jump_around_5') == '78'){echo " selected=\"selected\"";}echo ">n</option>
-                    <option value=\"79\"";if(get_option('jump_around_5') == '79'){echo " selected=\"selected\"";}echo ">o</option>
-                    <option value=\"80\"";if(get_option('jump_around_5') == '80'){echo " selected=\"selected\"";}echo ">p</option>
-                    <option value=\"81\"";if(get_option('jump_around_5') == '81'){echo " selected=\"selected\"";}echo ">q</option>
-                    <option value=\"82\"";if(get_option('jump_around_5') == '82'){echo " selected=\"selected\"";}echo ">r</option>
-                    <option value=\"83\"";if(get_option('jump_around_5') == '83'){echo " selected=\"selected\"";}echo ">s</option>
-                    <option value=\"84\"";if(get_option('jump_around_5') == '84'){echo " selected=\"selected\"";}echo ">t</option>
-                    <option value=\"85\"";if(get_option('jump_around_5') == '85'){echo " selected=\"selected\"";}echo ">u</option>
-                    <option value=\"86\"";if(get_option('jump_around_5') == '86'){echo " selected=\"selected\"";}echo ">v</option>
-                    <option value=\"87\"";if(get_option('jump_around_5') == '87'){echo " selected=\"selected\"";}echo ">w</option>
-                    <option value=\"88\"";if(get_option('jump_around_5') == '88'){echo " selected=\"selected\"";}echo ">x</option>
-                    <option value=\"89\"";if(get_option('jump_around_5') == '89'){echo " selected=\"selected\"";}echo ">y</option>
-                    <option value=\"90\"";if(get_option('jump_around_5') == '90'){echo " selected=\"selected\"";}echo ">z</option>
-                    <option value=\"48\"";if(get_option('jump_around_5') == '48'){echo " selected=\"selected\"";}echo ">0</option>
-                    <option value=\"49\"";if(get_option('jump_around_5') == '49'){echo " selected=\"selected\"";}echo ">1</option>
-                    <option value=\"50\"";if(get_option('jump_around_5') == '50'){echo " selected=\"selected\"";}echo ">2</option>
-                    <option value=\"51\"";if(get_option('jump_around_5') == '51'){echo " selected=\"selected\"";}echo ">3</option>
-                    <option value=\"52\"";if(get_option('jump_around_5') == '52'){echo " selected=\"selected\"";}echo ">4</option>
-                    <option value=\"53\"";if(get_option('jump_around_5') == '53'){echo " selected=\"selected\"";}echo ">5</option>
-                    <option value=\"54\"";if(get_option('jump_around_5') == '54'){echo " selected=\"selected\"";}echo ">6</option>
-                    <option value=\"55\"";if(get_option('jump_around_5') == '55'){echo " selected=\"selected\"";}echo ">7</option>
-                    <option value=\"56\"";if(get_option('jump_around_5') == '56'){echo " selected=\"selected\"";}echo ">8</option>
-                    <option value=\"57\"";if(get_option('jump_around_5') == '57'){echo " selected=\"selected\"";}echo ">9</option>
-                    <option value=\"37\"";if(get_option('jump_around_5') == '37'){echo " selected=\"selected\"";}echo ">left arrow</option>
-                    <option value=\"38\"";if(get_option('jump_around_5') == '38'){echo " selected=\"selected\"";}echo ">up arrow</option>
-                    <option value=\"39\"";if(get_option('jump_around_5') == '39'){echo " selected=\"selected\"";}echo ">right arrow</option>
-                    <option value=\"40\"";if(get_option('jump_around_5') == '40'){echo " selected=\"selected\"";}echo ">down arrow</option>
+                <section><label for="jump_around_5">Open currently selected key</label>
+                <select name="jump_around_5">
+                    <option value="65"';if(get_option('jump_around_5') == '65'){echo ' selected="selected"';}echo '>a</option>
+                    <option value="66"';if(get_option('jump_around_5') == '66'){echo ' selected="selected"';}echo '>b</option>
+                    <option value="67"';if(get_option('jump_around_5') == '67'){echo ' selected="selected"';}echo '>c</option>
+                    <option value="68"';if(get_option('jump_around_5') == '68'){echo ' selected="selected"';}echo '>d</option>
+                    <option value="69"';if(get_option('jump_around_5') == '69'){echo ' selected="selected"';}echo '>e</option>
+                    <option value="70"';if(get_option('jump_around_5') == '70'){echo ' selected="selected"';}echo '>f</option>
+                    <option value="71"';if(get_option('jump_around_5') == '71'){echo ' selected="selected"';}echo '>g</option>
+                    <option value="72"';if(get_option('jump_around_5') == '72'){echo ' selected="selected"';}echo '>h</option>
+                    <option value="73"';if(get_option('jump_around_5') == '73'){echo ' selected="selected"';}echo '>i</option>
+                    <option value="74"';if(get_option('jump_around_5') == '74'){echo ' selected="selected"';}echo '>j</option>
+                    <option value="75"';if(get_option('jump_around_5') == '75'){echo ' selected="selected"';}echo '>k</option>
+                    <option value="76"';if(get_option('jump_around_5') == '76'){echo ' selected="selected"';}echo '>l</option>
+                    <option value="77"';if(get_option('jump_around_5') == '77'){echo ' selected="selected"';}echo '>m</option>
+                    <option value="78"';if(get_option('jump_around_5') == '78'){echo ' selected="selected"';}echo '>n</option>
+                    <option value="79"';if(get_option('jump_around_5') == '79'){echo ' selected="selected"';}echo '>o</option>
+                    <option value="80"';if(get_option('jump_around_5') == '80'){echo ' selected="selected"';}echo '>p</option>
+                    <option value="81"';if(get_option('jump_around_5') == '81'){echo ' selected="selected"';}echo '>q</option>
+                    <option value="82"';if(get_option('jump_around_5') == '82'){echo ' selected="selected"';}echo '>r</option>
+                    <option value="83"';if(get_option('jump_around_5') == '83'){echo ' selected="selected"';}echo '>s</option>
+                    <option value="84"';if(get_option('jump_around_5') == '84'){echo ' selected="selected"';}echo '>t</option>
+                    <option value="85"';if(get_option('jump_around_5') == '85'){echo ' selected="selected"';}echo '>u</option>
+                    <option value="86"';if(get_option('jump_around_5') == '86'){echo ' selected="selected"';}echo '>v</option>
+                    <option value="87"';if(get_option('jump_around_5') == '87'){echo ' selected="selected"';}echo '>w</option>
+                    <option value="88"';if(get_option('jump_around_5') == '88'){echo ' selected="selected"';}echo '>x</option>
+                    <option value="89"';if(get_option('jump_around_5') == '89'){echo ' selected="selected"';}echo '>y</option>
+                    <option value="90"';if(get_option('jump_around_5') == '90'){echo ' selected="selected"';}echo '>z</option>
+                    <option value="48"';if(get_option('jump_around_5') == '48'){echo ' selected="selected"';}echo '>0</option>
+                    <option value="49"';if(get_option('jump_around_5') == '49'){echo ' selected="selected"';}echo '>1</option>
+                    <option value="50"';if(get_option('jump_around_5') == '50'){echo ' selected="selected"';}echo '>2</option>
+                    <option value="51"';if(get_option('jump_around_5') == '51'){echo ' selected="selected"';}echo '>3</option>
+                    <option value="52"';if(get_option('jump_around_5') == '52'){echo ' selected="selected"';}echo '>4</option>
+                    <option value="53"';if(get_option('jump_around_5') == '53'){echo ' selected="selected"';}echo '>5</option>
+                    <option value="54"';if(get_option('jump_around_5') == '54'){echo ' selected="selected"';}echo '>6</option>
+                    <option value="55"';if(get_option('jump_around_5') == '55'){echo ' selected="selected"';}echo '>7</option>
+                    <option value="56"';if(get_option('jump_around_5') == '56'){echo ' selected="selected"';}echo '>8</option>
+                    <option value="57"';if(get_option('jump_around_5') == '57'){echo ' selected="selected"';}echo '>9</option>
+                    <option value="37"';if(get_option('jump_around_5') == '37'){echo ' selected="selected"';}echo '>left arrow</option>
+                    <option value="38"';if(get_option('jump_around_5') == '38'){echo ' selected="selected"';}echo '>up arrow</option>
+                    <option value="39"';if(get_option('jump_around_5') == '39'){echo ' selected="selected"';}echo '>right arrow</option>
+                    <option value="40"';if(get_option('jump_around_5') == '40'){echo ' selected="selected"';}echo '>down arrow</option>
                 </select></section>
-                <section><label for=\"jump_around_6\">Next key</label>
-                <select name=\"jump_around_6\">
-                    <option value=\"65\"";if(get_option('jump_around_6') == '65'){echo " selected=\"selected\"";}echo ">a</option>
-                    <option value=\"66\"";if(get_option('jump_around_6') == '66'){echo " selected=\"selected\"";}echo ">b</option>
-                    <option value=\"67\"";if(get_option('jump_around_6') == '67'){echo " selected=\"selected\"";}echo ">c</option>
-                    <option value=\"68\"";if(get_option('jump_around_6') == '68'){echo " selected=\"selected\"";}echo ">d</option>
-                    <option value=\"69\"";if(get_option('jump_around_6') == '69'){echo " selected=\"selected\"";}echo ">e</option>
-                    <option value=\"70\"";if(get_option('jump_around_6') == '70'){echo " selected=\"selected\"";}echo ">f</option>
-                    <option value=\"71\"";if(get_option('jump_around_6') == '71'){echo " selected=\"selected\"";}echo ">g</option>
-                    <option value=\"72\"";if(get_option('jump_around_6') == '72'){echo " selected=\"selected\"";}echo ">h</option>
-                    <option value=\"73\"";if(get_option('jump_around_6') == '73'){echo " selected=\"selected\"";}echo ">i</option>
-                    <option value=\"74\"";if(get_option('jump_around_6') == '74'){echo " selected=\"selected\"";}echo ">j</option>
-                    <option value=\"75\"";if(get_option('jump_around_6') == '75'){echo " selected=\"selected\"";}echo ">k</option>
-                    <option value=\"76\"";if(get_option('jump_around_6') == '76'){echo " selected=\"selected\"";}echo ">l</option>
-                    <option value=\"77\"";if(get_option('jump_around_6') == '77'){echo " selected=\"selected\"";}echo ">m</option>
-                    <option value=\"78\"";if(get_option('jump_around_6') == '78'){echo " selected=\"selected\"";}echo ">n</option>
-                    <option value=\"79\"";if(get_option('jump_around_6') == '79'){echo " selected=\"selected\"";}echo ">o</option>
-                    <option value=\"80\"";if(get_option('jump_around_6') == '80'){echo " selected=\"selected\"";}echo ">p</option>
-                    <option value=\"81\"";if(get_option('jump_around_6') == '81'){echo " selected=\"selected\"";}echo ">q</option>
-                    <option value=\"82\"";if(get_option('jump_around_6') == '82'){echo " selected=\"selected\"";}echo ">r</option>
-                    <option value=\"83\"";if(get_option('jump_around_6') == '83'){echo " selected=\"selected\"";}echo ">s</option>
-                    <option value=\"84\"";if(get_option('jump_around_6') == '84'){echo " selected=\"selected\"";}echo ">t</option>
-                    <option value=\"85\"";if(get_option('jump_around_6') == '85'){echo " selected=\"selected\"";}echo ">u</option>
-                    <option value=\"86\"";if(get_option('jump_around_6') == '86'){echo " selected=\"selected\"";}echo ">v</option>
-                    <option value=\"87\"";if(get_option('jump_around_6') == '87'){echo " selected=\"selected\"";}echo ">w</option>
-                    <option value=\"88\"";if(get_option('jump_around_6') == '88'){echo " selected=\"selected\"";}echo ">x</option>
-                    <option value=\"89\"";if(get_option('jump_around_6') == '89'){echo " selected=\"selected\"";}echo ">y</option>
-                    <option value=\"90\"";if(get_option('jump_around_6') == '90'){echo " selected=\"selected\"";}echo ">z</option>
-                    <option value=\"48\"";if(get_option('jump_around_6') == '48'){echo " selected=\"selected\"";}echo ">0</option>
-                    <option value=\"49\"";if(get_option('jump_around_6') == '49'){echo " selected=\"selected\"";}echo ">1</option>
-                    <option value=\"50\"";if(get_option('jump_around_6') == '50'){echo " selected=\"selected\"";}echo ">2</option>
-                    <option value=\"51\"";if(get_option('jump_around_6') == '51'){echo " selected=\"selected\"";}echo ">3</option>
-                    <option value=\"52\"";if(get_option('jump_around_6') == '52'){echo " selected=\"selected\"";}echo ">4</option>
-                    <option value=\"53\"";if(get_option('jump_around_6') == '53'){echo " selected=\"selected\"";}echo ">5</option>
-                    <option value=\"54\"";if(get_option('jump_around_6') == '54'){echo " selected=\"selected\"";}echo ">6</option>
-                    <option value=\"55\"";if(get_option('jump_around_6') == '55'){echo " selected=\"selected\"";}echo ">7</option>
-                    <option value=\"56\"";if(get_option('jump_around_6') == '56'){echo " selected=\"selected\"";}echo ">8</option>
-                    <option value=\"57\"";if(get_option('jump_around_6') == '57'){echo " selected=\"selected\"";}echo ">9</option>
-                    <option value=\"37\"";if(get_option('jump_around_6') == '37'){echo " selected=\"selected\"";}echo ">left arrow</option>
-                    <option value=\"38\"";if(get_option('jump_around_6') == '38'){echo " selected=\"selected\"";}echo ">up arrow</option>
-                    <option value=\"39\"";if(get_option('jump_around_6') == '39'){echo " selected=\"selected\"";}echo ">right arrow</option>
-                    <option value=\"40\"";if(get_option('jump_around_6') == '40'){echo " selected=\"selected\"";}echo ">down arrow</option>
+                <section><label for="jump_around_6">Next key</label>
+                <select name="jump_around_6">
+                    <option value="65"';if(get_option('jump_around_6') == '65'){echo ' selected="selected"';}echo '>a</option>
+                    <option value="66"';if(get_option('jump_around_6') == '66'){echo ' selected="selected"';}echo '>b</option>
+                    <option value="67"';if(get_option('jump_around_6') == '67'){echo ' selected="selected"';}echo '>c</option>
+                    <option value="68"';if(get_option('jump_around_6') == '68'){echo ' selected="selected"';}echo '>d</option>
+                    <option value="69"';if(get_option('jump_around_6') == '69'){echo ' selected="selected"';}echo '>e</option>
+                    <option value="70"';if(get_option('jump_around_6') == '70'){echo ' selected="selected"';}echo '>f</option>
+                    <option value="71"';if(get_option('jump_around_6') == '71'){echo ' selected="selected"';}echo '>g</option>
+                    <option value="72"';if(get_option('jump_around_6') == '72'){echo ' selected="selected"';}echo '>h</option>
+                    <option value="73"';if(get_option('jump_around_6') == '73'){echo ' selected="selected"';}echo '>i</option>
+                    <option value="74"';if(get_option('jump_around_6') == '74'){echo ' selected="selected"';}echo '>j</option>
+                    <option value="75"';if(get_option('jump_around_6') == '75'){echo ' selected="selected"';}echo '>k</option>
+                    <option value="76"';if(get_option('jump_around_6') == '76'){echo ' selected="selected"';}echo '>l</option>
+                    <option value="77"';if(get_option('jump_around_6') == '77'){echo ' selected="selected"';}echo '>m</option>
+                    <option value="78"';if(get_option('jump_around_6') == '78'){echo ' selected="selected"';}echo '>n</option>
+                    <option value="79"';if(get_option('jump_around_6') == '79'){echo ' selected="selected"';}echo '>o</option>
+                    <option value="80"';if(get_option('jump_around_6') == '80'){echo ' selected="selected"';}echo '>p</option>
+                    <option value="81"';if(get_option('jump_around_6') == '81'){echo ' selected="selected"';}echo '>q</option>
+                    <option value="82"';if(get_option('jump_around_6') == '82'){echo ' selected="selected"';}echo '>r</option>
+                    <option value="83"';if(get_option('jump_around_6') == '83'){echo ' selected="selected"';}echo '>s</option>
+                    <option value="84"';if(get_option('jump_around_6') == '84'){echo ' selected="selected"';}echo '>t</option>
+                    <option value="85"';if(get_option('jump_around_6') == '85'){echo ' selected="selected"';}echo '>u</option>
+                    <option value="86"';if(get_option('jump_around_6') == '86'){echo ' selected="selected"';}echo '>v</option>
+                    <option value="87"';if(get_option('jump_around_6') == '87'){echo ' selected="selected"';}echo '>w</option>
+                    <option value="88"';if(get_option('jump_around_6') == '88'){echo ' selected="selected"';}echo '>x</option>
+                    <option value="89"';if(get_option('jump_around_6') == '89'){echo ' selected="selected"';}echo '>y</option>
+                    <option value="90"';if(get_option('jump_around_6') == '90'){echo ' selected="selected"';}echo '>z</option>
+                    <option value="48"';if(get_option('jump_around_6') == '48'){echo ' selected="selected"';}echo '>0</option>
+                    <option value="49"';if(get_option('jump_around_6') == '49'){echo ' selected="selected"';}echo '>1</option>
+                    <option value="50"';if(get_option('jump_around_6') == '50'){echo ' selected="selected"';}echo '>2</option>
+                    <option value="51"';if(get_option('jump_around_6') == '51'){echo ' selected="selected"';}echo '>3</option>
+                    <option value="52"';if(get_option('jump_around_6') == '52'){echo ' selected="selected"';}echo '>4</option>
+                    <option value="53"';if(get_option('jump_around_6') == '53'){echo ' selected="selected"';}echo '>5</option>
+                    <option value="54"';if(get_option('jump_around_6') == '54'){echo ' selected="selected"';}echo '>6</option>
+                    <option value="55"';if(get_option('jump_around_6') == '55'){echo ' selected="selected"';}echo '>7</option>
+                    <option value="56"';if(get_option('jump_around_6') == '56'){echo ' selected="selected"';}echo '>8</option>
+                    <option value="57"';if(get_option('jump_around_6') == '57'){echo ' selected="selected"';}echo '>9</option>
+                    <option value="37"';if(get_option('jump_around_6') == '37'){echo ' selected="selected"';}echo '>left arrow</option>
+                    <option value="38"';if(get_option('jump_around_6') == '38'){echo ' selected="selected"';}echo '>up arrow</option>
+                    <option value="39"';if(get_option('jump_around_6') == '39'){echo ' selected="selected"';}echo '>right arrow</option>
+                    <option value="40"';if(get_option('jump_around_6') == '40'){echo ' selected="selected"';}echo '>down arrow</option>
                 </select></section>
-                <section><label for=\"jump_around_7\">Older posts key</label>
-                <select name=\"jump_around_7\">
-                    <option value=\"65\"";if(get_option('jump_around_7') == '65'){echo " selected=\"selected\"";}echo ">a</option>
-                    <option value=\"66\"";if(get_option('jump_around_7') == '66'){echo " selected=\"selected\"";}echo ">b</option>
-                    <option value=\"67\"";if(get_option('jump_around_7') == '67'){echo " selected=\"selected\"";}echo ">c</option>
-                    <option value=\"68\"";if(get_option('jump_around_7') == '68'){echo " selected=\"selected\"";}echo ">d</option>
-                    <option value=\"69\"";if(get_option('jump_around_7') == '69'){echo " selected=\"selected\"";}echo ">e</option>
-                    <option value=\"70\"";if(get_option('jump_around_7') == '70'){echo " selected=\"selected\"";}echo ">f</option>
-                    <option value=\"71\"";if(get_option('jump_around_7') == '71'){echo " selected=\"selected\"";}echo ">g</option>
-                    <option value=\"72\"";if(get_option('jump_around_7') == '72'){echo " selected=\"selected\"";}echo ">h</option>
-                    <option value=\"73\"";if(get_option('jump_around_7') == '73'){echo " selected=\"selected\"";}echo ">i</option>
-                    <option value=\"74\"";if(get_option('jump_around_7') == '74'){echo " selected=\"selected\"";}echo ">j</option>
-                    <option value=\"75\"";if(get_option('jump_around_7') == '75'){echo " selected=\"selected\"";}echo ">k</option>
-                    <option value=\"76\"";if(get_option('jump_around_7') == '76'){echo " selected=\"selected\"";}echo ">l</option>
-                    <option value=\"77\"";if(get_option('jump_around_7') == '77'){echo " selected=\"selected\"";}echo ">m</option>
-                    <option value=\"78\"";if(get_option('jump_around_7') == '78'){echo " selected=\"selected\"";}echo ">n</option>
-                    <option value=\"79\"";if(get_option('jump_around_7') == '79'){echo " selected=\"selected\"";}echo ">o</option>
-                    <option value=\"80\"";if(get_option('jump_around_7') == '80'){echo " selected=\"selected\"";}echo ">p</option>
-                    <option value=\"81\"";if(get_option('jump_around_7') == '81'){echo " selected=\"selected\"";}echo ">q</option>
-                    <option value=\"82\"";if(get_option('jump_around_7') == '82'){echo " selected=\"selected\"";}echo ">r</option>
-                    <option value=\"83\"";if(get_option('jump_around_7') == '83'){echo " selected=\"selected\"";}echo ">s</option>
-                    <option value=\"84\"";if(get_option('jump_around_7') == '84'){echo " selected=\"selected\"";}echo ">t</option>
-                    <option value=\"85\"";if(get_option('jump_around_7') == '85'){echo " selected=\"selected\"";}echo ">u</option>
-                    <option value=\"86\"";if(get_option('jump_around_7') == '86'){echo " selected=\"selected\"";}echo ">v</option>
-                    <option value=\"87\"";if(get_option('jump_around_7') == '87'){echo " selected=\"selected\"";}echo ">w</option>
-                    <option value=\"88\"";if(get_option('jump_around_7') == '88'){echo " selected=\"selected\"";}echo ">x</option>
-                    <option value=\"89\"";if(get_option('jump_around_7') == '89'){echo " selected=\"selected\"";}echo ">y</option>
-                    <option value=\"90\"";if(get_option('jump_around_7') == '90'){echo " selected=\"selected\"";}echo ">z</option>
-                    <option value=\"48\"";if(get_option('jump_around_7') == '48'){echo " selected=\"selected\"";}echo ">0</option>
-                    <option value=\"49\"";if(get_option('jump_around_7') == '49'){echo " selected=\"selected\"";}echo ">1</option>
-                    <option value=\"50\"";if(get_option('jump_around_7') == '50'){echo " selected=\"selected\"";}echo ">2</option>
-                    <option value=\"51\"";if(get_option('jump_around_7') == '51'){echo " selected=\"selected\"";}echo ">3</option>
-                    <option value=\"52\"";if(get_option('jump_around_7') == '52'){echo " selected=\"selected\"";}echo ">4</option>
-                    <option value=\"53\"";if(get_option('jump_around_7') == '53'){echo " selected=\"selected\"";}echo ">5</option>
-                    <option value=\"54\"";if(get_option('jump_around_7') == '54'){echo " selected=\"selected\"";}echo ">6</option>
-                    <option value=\"55\"";if(get_option('jump_around_7') == '55'){echo " selected=\"selected\"";}echo ">7</option>
-                    <option value=\"56\"";if(get_option('jump_around_7') == '56'){echo " selected=\"selected\"";}echo ">8</option>
-                    <option value=\"57\"";if(get_option('jump_around_7') == '57'){echo " selected=\"selected\"";}echo ">9</option>
-                    <option value=\"37\"";if(get_option('jump_around_7') == '37'){echo " selected=\"selected\"";}echo ">left arrow</option>
-                    <option value=\"38\"";if(get_option('jump_around_7') == '38'){echo " selected=\"selected\"";}echo ">up arrow</option>
-                    <option value=\"39\"";if(get_option('jump_around_7') == '39'){echo " selected=\"selected\"";}echo ">right arrow</option>
-                    <option value=\"40\"";if(get_option('jump_around_7') == '40'){echo " selected=\"selected\"";}echo ">down arrow</option>
+                <section><label for="jump_around_7">Older posts key</label>
+                <select name="jump_around_7">
+                    <option value="65"';if(get_option('jump_around_7') == '65'){echo ' selected="selected"';}echo '>a</option>
+                    <option value="66"';if(get_option('jump_around_7') == '66'){echo ' selected="selected"';}echo '>b</option>
+                    <option value="67"';if(get_option('jump_around_7') == '67'){echo ' selected="selected"';}echo '>c</option>
+                    <option value="68"';if(get_option('jump_around_7') == '68'){echo ' selected="selected"';}echo '>d</option>
+                    <option value="69"';if(get_option('jump_around_7') == '69'){echo ' selected="selected"';}echo '>e</option>
+                    <option value="70"';if(get_option('jump_around_7') == '70'){echo ' selected="selected"';}echo '>f</option>
+                    <option value="71"';if(get_option('jump_around_7') == '71'){echo ' selected="selected"';}echo '>g</option>
+                    <option value="72"';if(get_option('jump_around_7') == '72'){echo ' selected="selected"';}echo '>h</option>
+                    <option value="73"';if(get_option('jump_around_7') == '73'){echo ' selected="selected"';}echo '>i</option>
+                    <option value="74"';if(get_option('jump_around_7') == '74'){echo ' selected="selected"';}echo '>j</option>
+                    <option value="75"';if(get_option('jump_around_7') == '75'){echo ' selected="selected"';}echo '>k</option>
+                    <option value="76"';if(get_option('jump_around_7') == '76'){echo ' selected="selected"';}echo '>l</option>
+                    <option value="77"';if(get_option('jump_around_7') == '77'){echo ' selected="selected"';}echo '>m</option>
+                    <option value="78"';if(get_option('jump_around_7') == '78'){echo ' selected="selected"';}echo '>n</option>
+                    <option value="79"';if(get_option('jump_around_7') == '79'){echo ' selected="selected"';}echo '>o</option>
+                    <option value="80"';if(get_option('jump_around_7') == '80'){echo ' selected="selected"';}echo '>p</option>
+                    <option value="81"';if(get_option('jump_around_7') == '81'){echo ' selected="selected"';}echo '>q</option>
+                    <option value="82"';if(get_option('jump_around_7') == '82'){echo ' selected="selected"';}echo '>r</option>
+                    <option value="83"';if(get_option('jump_around_7') == '83'){echo ' selected="selected"';}echo '>s</option>
+                    <option value="84"';if(get_option('jump_around_7') == '84'){echo ' selected="selected"';}echo '>t</option>
+                    <option value="85"';if(get_option('jump_around_7') == '85'){echo ' selected="selected"';}echo '>u</option>
+                    <option value="86"';if(get_option('jump_around_7') == '86'){echo ' selected="selected"';}echo '>v</option>
+                    <option value="87"';if(get_option('jump_around_7') == '87'){echo ' selected="selected"';}echo '>w</option>
+                    <option value="88"';if(get_option('jump_around_7') == '88'){echo ' selected="selected"';}echo '>x</option>
+                    <option value="89"';if(get_option('jump_around_7') == '89'){echo ' selected="selected"';}echo '>y</option>
+                    <option value="90"';if(get_option('jump_around_7') == '90'){echo ' selected="selected"';}echo '>z</option>
+                    <option value="48"';if(get_option('jump_around_7') == '48'){echo ' selected="selected"';}echo '>0</option>
+                    <option value="49"';if(get_option('jump_around_7') == '49'){echo ' selected="selected"';}echo '>1</option>
+                    <option value="50"';if(get_option('jump_around_7') == '50'){echo ' selected="selected"';}echo '>2</option>
+                    <option value="51"';if(get_option('jump_around_7') == '51'){echo ' selected="selected"';}echo '>3</option>
+                    <option value="52"';if(get_option('jump_around_7') == '52'){echo ' selected="selected"';}echo '>4</option>
+                    <option value="53"';if(get_option('jump_around_7') == '53'){echo ' selected="selected"';}echo '>5</option>
+                    <option value="54"';if(get_option('jump_around_7') == '54'){echo ' selected="selected"';}echo '>6</option>
+                    <option value="55"';if(get_option('jump_around_7') == '55'){echo ' selected="selected"';}echo '>7</option>
+                    <option value="56"';if(get_option('jump_around_7') == '56'){echo ' selected="selected"';}echo '>8</option>
+                    <option value="57"';if(get_option('jump_around_7') == '57'){echo ' selected="selected"';}echo '>9</option>
+                    <option value="37"';if(get_option('jump_around_7') == '37'){echo ' selected="selected"';}echo '>left arrow</option>
+                    <option value="38"';if(get_option('jump_around_7') == '38'){echo ' selected="selected"';}echo '>up arrow</option>
+                    <option value="39"';if(get_option('jump_around_7') == '39'){echo ' selected="selected"';}echo '>right arrow</option>
+                    <option value="40"';if(get_option('jump_around_7') == '40'){echo ' selected="selected"';}echo '>down arrow</option>
                 </select></section>
-                <section><label for=\"jump_around_8\">Newer posts key</label>
-                <select name=\"jump_around_8\">
-                    <option value=\"65\"";if(get_option('jump_around_8') == '65'){echo " selected=\"selected\"";}echo ">a</option>
-                    <option value=\"66\"";if(get_option('jump_around_8') == '66'){echo " selected=\"selected\"";}echo ">b</option>
-                    <option value=\"67\"";if(get_option('jump_around_8') == '67'){echo " selected=\"selected\"";}echo ">c</option>
-                    <option value=\"68\"";if(get_option('jump_around_8') == '68'){echo " selected=\"selected\"";}echo ">d</option>
-                    <option value=\"69\"";if(get_option('jump_around_8') == '69'){echo " selected=\"selected\"";}echo ">e</option>
-                    <option value=\"70\"";if(get_option('jump_around_8') == '70'){echo " selected=\"selected\"";}echo ">f</option>
-                    <option value=\"71\"";if(get_option('jump_around_8') == '71'){echo " selected=\"selected\"";}echo ">g</option>
-                    <option value=\"72\"";if(get_option('jump_around_8') == '72'){echo " selected=\"selected\"";}echo ">h</option>
-                    <option value=\"73\"";if(get_option('jump_around_8') == '73'){echo " selected=\"selected\"";}echo ">i</option>
-                    <option value=\"74\"";if(get_option('jump_around_8') == '74'){echo " selected=\"selected\"";}echo ">j</option>
-                    <option value=\"75\"";if(get_option('jump_around_8') == '75'){echo " selected=\"selected\"";}echo ">k</option>
-                    <option value=\"76\"";if(get_option('jump_around_8') == '76'){echo " selected=\"selected\"";}echo ">l</option>
-                    <option value=\"77\"";if(get_option('jump_around_8') == '77'){echo " selected=\"selected\"";}echo ">m</option>
-                    <option value=\"78\"";if(get_option('jump_around_8') == '78'){echo " selected=\"selected\"";}echo ">n</option>
-                    <option value=\"79\"";if(get_option('jump_around_8') == '79'){echo " selected=\"selected\"";}echo ">o</option>
-                    <option value=\"80\"";if(get_option('jump_around_8') == '80'){echo " selected=\"selected\"";}echo ">p</option>
-                    <option value=\"81\"";if(get_option('jump_around_8') == '81'){echo " selected=\"selected\"";}echo ">q</option>
-                    <option value=\"82\"";if(get_option('jump_around_8') == '82'){echo " selected=\"selected\"";}echo ">r</option>
-                    <option value=\"83\"";if(get_option('jump_around_8') == '83'){echo " selected=\"selected\"";}echo ">s</option>
-                    <option value=\"84\"";if(get_option('jump_around_8') == '84'){echo " selected=\"selected\"";}echo ">t</option>
-                    <option value=\"85\"";if(get_option('jump_around_8') == '85'){echo " selected=\"selected\"";}echo ">u</option>
-                    <option value=\"86\"";if(get_option('jump_around_8') == '86'){echo " selected=\"selected\"";}echo ">v</option>
-                    <option value=\"87\"";if(get_option('jump_around_8') == '87'){echo " selected=\"selected\"";}echo ">w</option>
-                    <option value=\"88\"";if(get_option('jump_around_8') == '88'){echo " selected=\"selected\"";}echo ">x</option>
-                    <option value=\"89\"";if(get_option('jump_around_8') == '89'){echo " selected=\"selected\"";}echo ">y</option>
-                    <option value=\"90\"";if(get_option('jump_around_8') == '90'){echo " selected=\"selected\"";}echo ">z</option>
-                    <option value=\"48\"";if(get_option('jump_around_8') == '48'){echo " selected=\"selected\"";}echo ">0</option>
-                    <option value=\"49\"";if(get_option('jump_around_8') == '49'){echo " selected=\"selected\"";}echo ">1</option>
-                    <option value=\"50\"";if(get_option('jump_around_8') == '50'){echo " selected=\"selected\"";}echo ">2</option>
-                    <option value=\"51\"";if(get_option('jump_around_8') == '51'){echo " selected=\"selected\"";}echo ">3</option>
-                    <option value=\"52\"";if(get_option('jump_around_8') == '52'){echo " selected=\"selected\"";}echo ">4</option>
-                    <option value=\"53\"";if(get_option('jump_around_8') == '53'){echo " selected=\"selected\"";}echo ">5</option>
-                    <option value=\"54\"";if(get_option('jump_around_8') == '54'){echo " selected=\"selected\"";}echo ">6</option>
-                    <option value=\"55\"";if(get_option('jump_around_8') == '55'){echo " selected=\"selected\"";}echo ">7</option>
-                    <option value=\"56\"";if(get_option('jump_around_8') == '56'){echo " selected=\"selected\"";}echo ">8</option>
-                    <option value=\"57\"";if(get_option('jump_around_8') == '57'){echo " selected=\"selected\"";}echo ">9</option>
-                    <option value=\"37\"";if(get_option('jump_around_8') == '37'){echo " selected=\"selected\"";}echo ">left arrow</option>
-                    <option value=\"38\"";if(get_option('jump_around_8') == '38'){echo " selected=\"selected\"";}echo ">up arrow</option>
-                    <option value=\"39\"";if(get_option('jump_around_8') == '39'){echo " selected=\"selected\"";}echo ">right arrow</option>
-                    <option value=\"40\"";if(get_option('jump_around_8') == '40'){echo " selected=\"selected\"";}echo ">down arrow</option>
+                <section><label for="jump_around_8">Newer posts key</label>
+                <select name="jump_around_8">
+                    <option value="65"';if(get_option('jump_around_8') == '65'){echo ' selected="selected"';}echo '>a</option>
+                    <option value="66"';if(get_option('jump_around_8') == '66'){echo ' selected="selected"';}echo '>b</option>
+                    <option value="67"';if(get_option('jump_around_8') == '67'){echo ' selected="selected"';}echo '>c</option>
+                    <option value="68"';if(get_option('jump_around_8') == '68'){echo ' selected="selected"';}echo '>d</option>
+                    <option value="69"';if(get_option('jump_around_8') == '69'){echo ' selected="selected"';}echo '>e</option>
+                    <option value="70"';if(get_option('jump_around_8') == '70'){echo ' selected="selected"';}echo '>f</option>
+                    <option value="71"';if(get_option('jump_around_8') == '71'){echo ' selected="selected"';}echo '>g</option>
+                    <option value="72"';if(get_option('jump_around_8') == '72'){echo ' selected="selected"';}echo '>h</option>
+                    <option value="73"';if(get_option('jump_around_8') == '73'){echo ' selected="selected"';}echo '>i</option>
+                    <option value="74"';if(get_option('jump_around_8') == '74'){echo ' selected="selected"';}echo '>j</option>
+                    <option value="75"';if(get_option('jump_around_8') == '75'){echo ' selected="selected"';}echo '>k</option>
+                    <option value="76"';if(get_option('jump_around_8') == '76'){echo ' selected="selected"';}echo '>l</option>
+                    <option value="77"';if(get_option('jump_around_8') == '77'){echo ' selected="selected"';}echo '>m</option>
+                    <option value="78"';if(get_option('jump_around_8') == '78'){echo ' selected="selected"';}echo '>n</option>
+                    <option value="79"';if(get_option('jump_around_8') == '79'){echo ' selected="selected"';}echo '>o</option>
+                    <option value="80"';if(get_option('jump_around_8') == '80'){echo ' selected="selected"';}echo '>p</option>
+                    <option value="81"';if(get_option('jump_around_8') == '81'){echo ' selected="selected"';}echo '>q</option>
+                    <option value="82"';if(get_option('jump_around_8') == '82'){echo ' selected="selected"';}echo '>r</option>
+                    <option value="83"';if(get_option('jump_around_8') == '83'){echo ' selected="selected"';}echo '>s</option>
+                    <option value="84"';if(get_option('jump_around_8') == '84'){echo ' selected="selected"';}echo '>t</option>
+                    <option value="85"';if(get_option('jump_around_8') == '85'){echo ' selected="selected"';}echo '>u</option>
+                    <option value="86"';if(get_option('jump_around_8') == '86'){echo ' selected="selected"';}echo '>v</option>
+                    <option value="87"';if(get_option('jump_around_8') == '87'){echo ' selected="selected"';}echo '>w</option>
+                    <option value="88"';if(get_option('jump_around_8') == '88'){echo ' selected="selected"';}echo '>x</option>
+                    <option value="89"';if(get_option('jump_around_8') == '89'){echo ' selected="selected"';}echo '>y</option>
+                    <option value="90"';if(get_option('jump_around_8') == '90'){echo ' selected="selected"';}echo '>z</option>
+                    <option value="48"';if(get_option('jump_around_8') == '48'){echo ' selected="selected"';}echo '>0</option>
+                    <option value="49"';if(get_option('jump_around_8') == '49'){echo ' selected="selected"';}echo '>1</option>
+                    <option value="50"';if(get_option('jump_around_8') == '50'){echo ' selected="selected"';}echo '>2</option>
+                    <option value="51"';if(get_option('jump_around_8') == '51'){echo ' selected="selected"';}echo '>3</option>
+                    <option value="52"';if(get_option('jump_around_8') == '52'){echo ' selected="selected"';}echo '>4</option>
+                    <option value="53"';if(get_option('jump_around_8') == '53'){echo ' selected="selected"';}echo '>5</option>
+                    <option value="54"';if(get_option('jump_around_8') == '54'){echo ' selected="selected"';}echo '>6</option>
+                    <option value="55"';if(get_option('jump_around_8') == '55'){echo ' selected="selected"';}echo '>7</option>
+                    <option value="56"';if(get_option('jump_around_8') == '56'){echo ' selected="selected"';}echo '>8</option>
+                    <option value="57"';if(get_option('jump_around_8') == '57'){echo ' selected="selected"';}echo '>9</option>
+                    <option value="37"';if(get_option('jump_around_8') == '37'){echo ' selected="selected"';}echo '>left arrow</option>
+                    <option value="38"';if(get_option('jump_around_8') == '38'){echo ' selected="selected"';}echo '>up arrow</option>
+                    <option value="39"';if(get_option('jump_around_8') == '39'){echo ' selected="selected"';}echo '>right arrow</option>
+                    <option value="40"';if(get_option('jump_around_8') == '40'){echo ' selected="selected"';}echo '>down arrow</option>
                 </select></section>
             </div>
-            <input id=\"update_JA\" type=\"submit\" value=\"Save Changes\" name=\"update_JA\">";
+            <input id="update_JA" type="submit" value="Save Changes" name="update_JA">';
+            echo '</form></div><div class="templatetags"><section>Filter for classes<span class="right">.div</span></section><section>Filter for links in classes<span class="right">.div a</span></section><section>Filter for elements in classes<span class="right">.div h1</span></section><section>Filter for linked elements in classes<span class="right">.div h1 a</span></section></div></div><div class="new"></div><p class="creditlink"><em>Thanks to <a href="http://stackoverflow.com/questions/1939041/change-hash-without-reload-in-jquery">jitter</a> &amp; <a href="http://stackoverflow.com/questions/13694277/scroll-to-next-div-using-arrow-keys">mVChr</a> for the help.</em></p>';
         }
-
-        function momja_page_content(){
-            echo "
-            <span class=\"moduletitle\">__jump_around<em>keyboard navigation</em></span>
-            <div class=\"clear\"></div>                
-            <div class=\"settings\">
-                    <form method=\"post\">";
-                        print_jump_around_form();
-                        echo "
-                        </form>
-                        </div>
-                        <div class=\"templatetags\">
-                        <section>Filter for classes<span class=\"right\">.div</span></section>
-                        <section>Filter for links in classes<span class=\"right\">.div a</span></section>
-                        <section>Filter for elements in classes<span class=\"right\">.div h1</span></section>
-                        <section>Filter for linked elements in classes<span class=\"right\">.div h1 a</span></section>
-                        </div>                            
-            </div><div class=\"new\"></div><p class=\"creditlink\"><em>Thanks to <a href=\"http://stackoverflow.com/questions/1939041/change-hash-without-reload-in-jquery\">jitter</a> &amp; <a href=\"http://stackoverflow.com/questions/13694277/scroll-to-next-div-using-arrow-keys\">mVChr</a> for the help.</em></p>";
-        }
-        momja_page_content();
-    }
 }
-
-
-
-
-
-/* SECTION W *********************************************************************/
-
-
-
-
-
-/* SECTION X *********************************************************************/
-if(is_admin()){
+/* Divider                   */
+/*****************************/
+/* SECTION X                 */
+/* (X0) Functions            */
+/* Database Cleaner          */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/
+if(current_user_can('manage_options')){
     function my_optional_modules_cleaner_module(){
         global $table_prefix,$wpdb;
-        $revisions_count = 0;
-        $comments_count = 0;
-        $terms_count = 0;
-        $postsTable = $table_prefix.'posts';
-        $commentsTable = $table_prefix.'comments';
-        $termsTable2 = $table_prefix.'terms';
-        $termsTable = $table_prefix.'term_taxonomy';
-        $revisions_total = $wpdb->get_results("SELECT ID FROM `" . $postsTable . "` WHERE `post_type` = 'revision' OR `post_type` = 'auto_draft' OR `post_status` = 'trash'");
-        $comments_total = $wpdb->get_results("SELECT comment_ID FROM `".$commentsTable."` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'");
-        $terms_total = $wpdb->get_results("SELECT term_taxonomy_id FROM `".$termsTable."` WHERE `count` = '0'");
-        foreach($revisions_total as $retot){
-            $revisions_count++;
-        }
-        foreach($comments_total as $comtot){
-            $comments_count++;
-        }
-        foreach ($terms_total as $termstot){
-            $this_term = $termstot->term_id;
-            $terms_count++;
-        }
+        $revisions_count = 0;                                           $comments_count  = 0;
+        $terms_count     = 0;                                           $postsTable      = $table_prefix.'posts';
+        $commentsTable   = $table_prefix.'comments';                    $termsTable2     = $table_prefix.'terms';
+        $termsTable      = $table_prefix.'term_taxonomy';
+        $revisions_total = $wpdb->get_results("SELECT ID FROM `".$postsTable."` WHERE `post_type` = 'revision' OR `post_type` = 'auto_draft' OR `post_status` = 'trash'");
+        $comments_total  = $wpdb->get_results("SELECT comment_ID FROM `".$commentsTable."` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'");
+        $terms_total     = $wpdb->get_results("SELECT term_taxonomy_id FROM `".$termsTable."` WHERE `count` = '0'");
+        foreach($revisions_total as $retot){$revisions_count++;}        foreach($comments_total as $comtot){$comments_count++;}
+        foreach ($terms_total as $termstot){$this_term   = $termstot->term_id;$terms_count++;}
         $totalClutter = ($terms_count + $comments_count + $revisions_count);
-        echo '
-        <section class="trash">
-        <label for="deleteAllClutter"><i class="fa fa-trash-o"></i><span>All clutter</span><em>'.$totalClutter.'</em></label>
-        <form method="post"><input class="hidden" id="deleteAllClutter" type="submit" value="Go" name="deleteAllClutter"></form>
-        </section>
-        <section class="trash">
-        <label for="delete_post_revisions"><i class="fa fa-trash-o"></i><span>Autodrafts/revisions and trash posts</span><em>'.$revisions_count.'</em></label>
-        <form method="post"><input class="hidden" id="delete_post_revisions" type="submit" value="Go" name="delete_post_revisions"></form>
-        </section>
-        <section class="trash">
-        <label for="delete_unapproved_comments"><i class="fa fa-trash-o"></i><span>Spam,trashed,unapproved comments</span><em>'.$comments_count.'</em></label>
-        <form method="post"><input class="hidden" id="delete_unapproved_comments" type="submit" value="Go" name="delete_unapproved_comments"></form>
-        </section>
-        <section class="trash">
-        <label for="delete_unused_terms"><i class="fa fa-trash-o"></i><span>Orphan tags and categories</span><em>'.$terms_count.'</em></label>
-        <form method="post"><input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms"></form>
-        </section>
-        ';
-        if(
-            isset($_POST['delete_unused_terms']) || 
-            isset($_POST['delete_post_revisions']) || 
-            isset($_POST['delete_unapproved_comments']) || 
-            isset($_POST['deleteAllClutter'])) 
-        {
-            if(isset($_POST['delete_post_revisions'])){
-                $wpdb->query("DELETE FROM `".$postsTable."` WHERE `post_type` = 'revision' OR `post_type` = 'auto-draft' OR `post_status` = 'trash'");
-            }
-            if(isset($_POST['delete_unapproved_comments'])){
-                $wpdb->query("DELETE FROM `".$commentsTable."` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'");
-            }
-            if(isset($_POST['delete_unused_terms'])){
-                $wpdb->query("DELETE FROM `".$termsTable2."` WHERE `term_id` IN (select `term_id` from `".$termsTable."` WHERE `count` = 0)");
-                $wpdb->query("DELETE FROM `".$termsTable."` WHERE `count` = 0");
-            }
-            if(isset($_POST['deleteAllClutter'])){
-                $wpdb->query("DELETE FROM `".$postsTable."` WHERE `post_type` = 'revision' OR `post_type` = 'auto-draft' OR `post_status` = 'trash'");
-                $wpdb->query("DELETE FROM `".$commentsTable."` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'");
-                $wpdb->query("DELETE FROM `".$termsTable2."` WHERE `term_id` IN (select `term_id` from `".$termsTable."` WHERE `count` = 0)");
-                $wpdb->query("DELETE FROM `".$termsTable."` WHERE `count` = 0");
-            }
-            echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
-        }
+        echo '<section class="trash"><label for="deleteAllClutter"><i class="fa fa-trash-o"></i><span>All clutter</span><em>'.esc_attr($totalClutter).'</em></label><form method="post"><input class="hidden" id="deleteAllClutter" type="submit" value="Go" name="deleteAllClutter"></form></section>';
+        echo '<section class="trash"><label for="delete_post_revisions"><i class="fa fa-trash-o"></i><span>Autodrafts/revisions and trash posts</span><em>'.esc_attr($revisions_count).'</em></label><form method="post"><input class="hidden" id="delete_post_revisions" type="submit" value="Go" name="delete_post_revisions"></form></section>';
+        echo '<section class="trash"><label for="delete_unapproved_comments"><i class="fa fa-trash-o"></i><span>Spam,trashed,unapproved comments</span><em>'.esc_attr($comments_count).'</em></label><form method="post"><input class="hidden" id="delete_unapproved_comments" type="submit" value="Go" name="delete_unapproved_comments"></form></section>';
+        echo '<section class="trash"><label for="delete_unused_terms"><i class="fa fa-trash-o"></i><span>Orphan tags and categories</span><em>'.esc_attr($terms_count).'</em></label><form method="post"><input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms"></form></section>';
     }
 }
-
-    
-    
-    
-    
-/* SECTION Y **********************************************************************
-**********************************************************************************/
-if(is_admin()){
-        function momAdminOptions(){
-            $css = plugins_url()."/".plugin_basename(dirname(__FILE__)).'/includes/';
+/*****************************/
+/* Divider                   */
+/*****************************/
+/* SECTION Y                 */
+/* (Y0) Functions            */
+/* Javascript for modules    */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/   
+if(current_user_can('manage_options')){
+            $css = plugins_url().'/'.plugin_basename(dirname(__FILE__)).'/includes/';
             add_action('wp_enqueue_admin_scripts','mom_plugin_scripts');        
-        
             // Add info panel to post edit screen
             function momEditorScreen($post_type){
                 $screen = get_current_screen();
@@ -3923,10 +3712,10 @@ if(is_admin()){
                      get_option('mommaincontrol_rups') == 1 ||
                      get_option('mommaincontrol_fontawesome') == 1
                 ){
-                    echo "                
-                    <div class=\"momEditorScreen postbox\">
+                    echo '
+                    <div class="momEditorScreen postbox">
                         <h3>Shortcodes provided by My Optional Modules</h3>
-                        <div class=\"inside\">
+                        <div class="inside">
                             <style>
                                 ol#momEditorMenu {width:95%; margin:0 auto; overflow:auto; overflow:hidden;}
                                 ol#momEditorMenu li {width:auto; margin:2px; float:left; list-style:none; display:block; padding:5px; line-height:20px; font-size:13px;}
@@ -3937,7 +3726,7 @@ if(is_admin()){
                                 ol#momEditorMenu li.icon:hover {cursor:pointer; color:#441515; background-color:#ececec; border-radius:3px;}
                             </style>                    
                                                 
-                            <ol id=\"momEditorMenu\">";
+                            <ol id="momEditorMenu">';
                                 if(get_option('mommaincontrol_shorts') == 1){
                                     echo '<li>Google map<span class="fa fa-plus-square" onclick="addText(event)">[mom_map address=""]</span></li>';
                                     echo '<li>Reddit button<span class="fa fa-plus-square" onclick="addText(event)">[mom_reddit]</span></li>';
@@ -3953,7 +3742,6 @@ if(is_admin()){
                                 }
                                 if(get_option('mommaincontrol_fontawesome') == 1){
                                     echo '<li class="clear"></li>';
-                                    // Medical Icons
                                     echo '<li onclick="addText(event)" class="icon fa fa-ambulance"><span>&#60;i class="fa fa-ambulance"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-medkit"><span>&#60;i class="fa fa-medkit"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-user-md"><span>&#60;i class="fa fa-user-md"&#62;&#60;/i&#62;</span></li>';
@@ -3962,7 +3750,6 @@ if(is_admin()){
                                     echo '<li onclick="addText(event)" class="icon fa fa-wheelchair"><span>&#60;i class="fa fa-wheelchair"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-hospital"><span>&#60;i class="fa fa-hospital"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-stethoscope"><span>&#60;i class="fa fa-stethoscope"&#62;&#60;/i&#62;</span></li>';    
-                                    // Brand Icons
                                     echo '<li onclick="addText(event)" class="icon fa fa-adn"><span>&#60;i class="fa fa-adn"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-bitbucket"><span>&#60;i class="fa fa-bitbucket"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-btc"><span>&#60;i class="fa fa-btc"&#62;&#60;/i&#62;</span></li>';
@@ -4010,7 +3797,6 @@ if(is_admin()){
                                     echo '<li onclick="addText(event)" class="icon fa fa-vimeo-square"><span>&#60;i class="fa fa-vimeo-square"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-windows"><span>&#60;i class="fa fa-windows"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-youtube"><span>&#60;i class="fa fa-youtube"&#62;&#60;/i&#62;</span></li>';    
-                                    // Video player icons
                                     echo '<li onclick="addText(event)" class="icon fa fa-backward"><span>&#60;i class="fa fa-backward"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-fast-forward"><span>&#60;i class="fa fa-fast-forward"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-pause"><span>&#60;i class="fa fa-pause"&#62;&#60;/i&#62;</span></li>';
@@ -4027,7 +3813,6 @@ if(is_admin()){
                                     echo '<li onclick="addText(event)" class="icon fa fa-play-circle"><span>&#60;i class="fa fa-play-circle"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-resize-small"><span>&#60;i class="fa fa-resize-small"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-stop"><span>&#60;i class="fa fa-stop"&#62;&#60;/i&#62;</span></li>';    
-                                    // Directional icons
                                     echo '<li onclick="addText(event)" class="icon fa fa-angle-double-down"><span>&#60;i class="fa fa-angle-double-down"&#62;&#60;/i&#62;</span></li>';    
                                     echo '<li onclick="addText(event)" class="icon fa fa-angle-double-up"><span>&#60;i class="fa fa-angle-double-up"&#62;&#60;/i&#62;</span></li>';    
                                     echo '<li onclick="addText(event)" class="icon fa fa-angle-right"><span>&#60;i class="fa fa-angle-right"&#62;&#60;/i&#62;</span></li>';    
@@ -4076,7 +3861,6 @@ if(is_admin()){
                                     echo '<li onclick="addText(event)" class="icon fa fa-long-arrow-left"><span>&#60;i class="fa fa-long-arrow-left"&#62;&#60;/i&#62;</span></li>';    
                                     echo '<li onclick="addText(event)" class="icon fa fa-toggle-down"><span>&#60;i class="fa fa-toggle-down"&#62;&#60;/i&#62;</span></li>';    
                                     echo '<li onclick="addText(event)" class="icon fa fa-toggle-up"><span>&#60;i class="fa fa-toggle-up"&#62;&#60;/i&#62;</span></li>';    
-                                    // Text editor icons
                                     echo '<li onclick="addText(event)" class="icon fa fa-align-center"><span>&#60;i class="fa fa-align-center"&#62;&#60;/i&#62;</span></li>';    
                                     echo '<li onclick="addText(event)" class="icon fa fa-align-right"><span>&#60;i class="fa fa-align-right"&#62;&#60;/i&#62;</span></li>';    
                                     echo '<li onclick="addText(event)" class="icon fa fa-chain-broken"><span>&#60;i class="fa fa-chain-broken"&#62;&#60;/i&#62;</span></li>';    
@@ -4122,7 +3906,6 @@ if(is_admin()){
                                     echo '<li onclick="addText(event)" class="icon fa fa-text-width"><span>&#60;i class="fa fa-text-width"&#62;&#60;/i&#62;</span></li>';    
                                     echo '<li onclick="addText(event)" class="icon fa fa-th-list"><span>&#60;i class="fa fa-th-list"&#62;&#60;/i&#62;</span></li>';    
                                     echo '<li onclick="addText(event)" class="icon fa fa-unlink"><span>&#60;i class="fa fa-unlink"&#62;&#60;/i&#62;</span></li>';    
-                                    // Currency icons
                                     echo '<li onclick="addText(event)" class="icon fa fa-bitcoin"><span>&#60;i class="fa fa-bitcoin"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-dollar"><span>&#60;i class="fa fa-dollar"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-gbp"><span>&#60;i class="fa fa-gbp"&#62;&#60;/i&#62;</span></li>';
@@ -4144,7 +3927,6 @@ if(is_admin()){
                                     echo '<li onclick="addText(event)" class="icon fa fa-ruble"><span>&#60;i class="fa fa-ruble"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-turkish-lira"><span>&#60;i class="fa fa-turkish-lira"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-yen"><span>&#60;i class="fa fa-yen"&#62;&#60;/i&#62;</span></li>';
-                                    // Form control icons
                                     echo '<li onclick="addText(event)" class="icon fa fa-check-square"><span>&#60;i class="fa fa-check-square"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-circle-o"><span>&#60;i class="fa fa-circle-o"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-minus-square-o"><span>&#60;i class="fa fa-minus-square-o"&#62;&#60;/i&#62;</span></li>';
@@ -4154,7 +3936,6 @@ if(is_admin()){
                                     echo '<li onclick="addText(event)" class="icon fa fa-circle"><span>&#60;i class="fa fa-circle"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-minus-square"><span>&#60;i class="fa fa-minus-square"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-square-o"><span>&#60;i class="fa fa-square-o"&#62;&#60;/i&#62;</span></li>';
-                                    // Web application icons
                                     echo '<li onclick="addText(event)" class="icon fa fa-adjust"><span>&#60;i class="fa fa-adjust"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-anchor"><span>&#60;i class="fa fa-anchor"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-archive"><span>&#60;i class="fa fa-archive"&#62;&#60;/i&#62;</span></li>';
@@ -4252,7 +4033,6 @@ if(is_admin()){
                                     echo '<li onclick="addText(event)" class="icon fa fa-glass"><span>&#60;i class="fa fa-glass"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-globe"><span>&#60;i class="fa fa-globe"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-group"><span>&#60;i class="fa fa-group"&#62;&#60;/i&#62;</span></li>';
-                                    // hdd-o seems to be broken ## echo '<li onclick="addText(event)" class="icon fa fa-hdd-o"><span>&#60;i class="fa fa-hdd-o"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-headphones"><span>&#60;i class="fa fa-headphones"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-heart"><span>&#60;i class="fa fa-heart"&#62;&#60;/i&#62;</span></li>';
                                     echo '<li onclick="addText(event)" class="icon fa fa-heart-o"><span>&#60;i class="fa fa-heart-o"&#62;&#60;/i&#62;</span></li>';
@@ -4407,18 +4187,18 @@ if(is_admin()){
                 }
             }
             add_action('edit_form_after_editor','momEditorScreen');
-        }
-    momAdminOptions();
 }
-
-
-
-
-
-/* SECTION Z **********************************************************************
-***********************************************************************************
-Report all bugs to admin@onebillionwords.com
-Additional support can be provided to those who ask for it at the following URL:
-~>    http://www.onebillionwords.com/my-optional-modules/
-**********************************************************************************/
+/*****************************/
+/* Divider                   */
+/*****************************/
+/* SECTION Z                 */
+/* Additional information    */
+/*****************************/
+/* 11/15/2013 (last update)  */
+/*****************************/   
+// Report all bugs to admin@onebillionwords.com
+// Additional support can be provided to those who ask for it at the following URL:
+// http://www.onebillionwords.com/my-optional-modules/
+/* End                       */
+/*****************************/   
 ?>
