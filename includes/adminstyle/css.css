@@ -117,7 +117,7 @@
 	.moduletitle em{float:right;font-size:20px;text-decoration:none;font-style:normal;color:#c9c9c9;}
 	.moduletitlemain{clear:both;width:800px;display:block;margin:0 -1px 0;height:40px;font-size:40px;line-height:35px;text-indent:5px;}
 	.moduletitlemain em{float:right;font-size:20px;text-decoration:none;font-style:normal;color:#c9c9c9;}
-	.momresults{display:block;height:450px;clear:both;}
+	.momresults{display:block;height:400px;clear:both;}
 	.reviewitem{display:block;clear:both;width:100%;height:65px;overflow:hidden;margin:0 0 -10px -5px;border-top:1px solid #000;border-bottom:3px dashed #3d3838;}
 	.reviewitem:hover{background-color:#584d4d;color:#000;}
 	.reviewitem section.id{clear:both;width:100%;border-bottom:1px solid #efefef;font-size:10px;text-indent:5px;background-color:#5a5353;color:#fff;text-shadow:none;}

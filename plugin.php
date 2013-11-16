@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.3
+Version: 5.3.4
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -1960,7 +1960,7 @@ if(current_user_can('manage_options')){
 /* (F1) Functions            */
 /* Shortcodes                */
 /*****************************/
-/* 11/15/2013 (last update)  */
+/* 11/16/2013 (last update)  */
 /*****************************/
 function mom_archives($atts,$content = null){
     if(!is_user_logged_in()){
@@ -2133,7 +2133,7 @@ function mom_verify_shortcode($atts,$content = null){
     $isLogged               = sanitize_text_field(strip_tags(htmlentities($logged    )));
     $theMessage             = sanitize_text_field(strip_tags(htmlentities($message    )));
     $theAnswer              = sanitize_text_field(strip_tags(htmlentities($answer    )));
-    $failMessage            = sanitize_text_field(strip_tags(htmlentities($fail      )));
+    $failMessage            = $fail;
     $isLogged               = sanitize_text_field(strip_tags(htmlentities($logged    )));
     $isLogging              = sanitize_text_field(strip_tags(htmlentities($logging    )));
     $attempts               = sanitize_text_field(strip_tags(htmlentities($single    )));
@@ -2224,7 +2224,7 @@ function mom_verify_shortcode($atts,$content = null){
             return '<div style="clear:both;display:block;width:99%;margin:10px auto 10px auto;overflow:auto;background-color:#f6fbff;border:1px solid #4a5863;border-radius:3px;padding:5px;"><p>'.$statsMessage.'</p><div class="mom_progress" style="clear:both;height:20px;display:block;width:95%; margin:5px auto 5px auto;background-color:#ff0000"><div title="'.$correctCount.'" style="display:block;height:20px;width:'.$percentCorrect.'%;background-color:#1eff00;"></div></div><div style="font-size:15px;margin:-5px auto;width:95%;"><span style="float:left;text-align:left;">'.$correctResultMessage.' ('.$percentCorrect.'%)</span><span style="float:right;text-align:right;">'.$incorrectResultMessage.' ('.$percentIncorrect.'%)</span></div></div>';
         }
     }
-    if($isCorrect == 1){return $content;}elseif($isCorrect == 0 && $deactivate != 1){return '<blockquote class="momAgeVerification">'.$failMessage.'</blockquote>';}
+    if($isCorrect == 1){return $content;}elseif($isCorrect == 0 && $deactivate != 1){return $failMessage;}
     return ob_get_clean();
 }    
 /*****************************/
