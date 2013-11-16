@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.2
+Version: 5.3.3
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -2406,7 +2406,7 @@ if(current_user_can('manage_options')){
 /* (H1) Functions            */
 /* Theme Takeover            */
 /*****************************/
-/* 11/15/2013 (last update)  */
+/* 11/16/2013 (last update)  */
 /*****************************/
 if(get_option('MOM_themetakeover_youtubefrontpage') != ''){
     function mom_youtube404(){
@@ -2464,7 +2464,7 @@ if(get_option('MOM_themetakeover_topbar') == 1){
                 }
             }
         }
-        mom_exclude_list_categories();
+        if(function_exists('mom_exclude_list_categories'))mom_exclude_list_categories();
         echo '</ul></div></div>';            
     }
     add_action('wp_footer','mom_topbar');
@@ -3662,6 +3662,7 @@ if(current_user_can('manage_options')){
             echo '</form></div><div class="templatetags"><section>Filter for classes<span class="right">.div</span></section><section>Filter for links in classes<span class="right">.div a</span></section><section>Filter for elements in classes<span class="right">.div h1</span></section><section>Filter for linked elements in classes<span class="right">.div h1 a</span></section></div></div><div class="new"></div><p class="creditlink"><em>Thanks to <a href="http://stackoverflow.com/questions/1939041/change-hash-without-reload-in-jquery">jitter</a> &amp; <a href="http://stackoverflow.com/questions/13694277/scroll-to-next-div-using-arrow-keys">mVChr</a> for the help.</em></p>';
         }
 }
+/*****************************/
 /* Divider                   */
 /*****************************/
 /* SECTION X                 */
