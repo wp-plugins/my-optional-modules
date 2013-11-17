@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.4
+Version: 5.3.5
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -206,22 +206,22 @@ if($mommodule_exclude == 1){
     function mom_exclude_list_categories(){
     get_currentuserinfo();
     global $user_level;
-	$nofollowCats = array('0,0');
+    $nofollowCats = '0';
         if(!is_user_logged_in()){
             $nofollowCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');    
         }
         if(is_user_logged_in()){
-            if($user_level == 0) {$loggedOutCats = get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
-            if($user_level <= 1) {$loggedOutCats = get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
-            if($user_level <= 2) {$loggedOutCats = get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
-            if($user_level <= 7) {$loggedOutCats = get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
+            if($user_level == 0) {$nofollowCats = get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
+            if($user_level <= 1) {$nofollowCats = get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
+            if($user_level <= 2) {$nofollowCats = get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
+            if($user_level <= 7) {$nofollowCats = get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
         }
         $c1 = explode(',',$nofollowCats);
         foreach($c1 as &$C1) { $C1 = ''.$C1.',';}
         $c_1 = rtrim(implode($c1),',');
         $c11 = explode(',',str_replace(' ','',$c_1));
         $c11array = array($c11);
-        $nofollowcats = $c11;
+        $nofollowcats = array_filter($c11);
         $category_ids = get_all_category_ids();
         foreach($category_ids as $cat_id) {
           if( in_array($cat_id, $nofollowcats) ) continue;
@@ -1720,7 +1720,10 @@ function mom_reviews_shortcode($atts, $content = null){
             $reviews = $wpdb->get_results("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name ORDER BY $order_by $order_dir");
         }
     }
-    foreach($reviews as $reviews_results){$this_ID = $reviews_results->ID;echo '<div ';if($result_type != ''){echo 'id="'.esc_attr($result_type).'"';}echo ' class="momreview"><article class="block"><input type="checkbox" name="review" id="'.$this_ID.''.$mom_review_global.'" ';if($is_open == 1){echo ' checked';}echo '/><label for="'.$this_ID.''.$mom_review_global.'">';if($reviews_results->TITLE != ''){echo $reviews_results->TITLE;}echo '<span>'.$expand_this.'</span><span>'.$retract_this.'</span></label><section class="reviewed">';if($meta_show == 1){if($reviews_results->TYPE != ''){echo ' [ <em>'.$reviews_results->TYPE.'</em> ] ';}if($reviews_results->LINK != ''){echo ' [ <a href="'.esc_url($reviews_results->LINK).'">#</a> ] ';}}if($reviews_results->REVIEW != ''){echo '<hr />'.$reviews_results->REVIEW;}if($reviews_results->RATING != ''){echo ' <p>'.$reviews_results->RATING.'</p> ';}echo '</section></article></div>';}
+    foreach($reviews as $reviews_results){
+    if($reviews_results->REVIEW != ''){$this_ID = $reviews_results->ID;echo '<div ';if($result_type != ''){echo 'id="'.esc_attr($result_type).'"';}echo ' class="momreview"><article class="block"><input type="checkbox" name="review" id="'.$this_ID.''.$mom_review_global.'" ';if($is_open == 1){echo ' checked';}echo '/><label for="'.$this_ID.''.$mom_review_global.'">';if($reviews_results->TITLE != ''){echo $reviews_results->TITLE;}echo '<span>'.$expand_this.'</span><span>'.$retract_this.'</span></label><section class="reviewed">';if($meta_show == 1){if($reviews_results->TYPE != ''){echo ' [ <em>'.$reviews_results->TYPE.'</em> ] ';}if($reviews_results->LINK != ''){echo ' [ <a href="'.esc_url($reviews_results->LINK).'">#</a> ] ';}}echo '<hr />'.$reviews_results->REVIEW;if($reviews_results->RATING != ''){echo ' <p>'.$reviews_results->RATING.'</p> ';}echo '</section></article></div>';}
+    elseif($reviews_results->REVIEW == ''){$this_ID = $reviews_results->ID;echo '<div ';if($result_type != ''){echo 'id="'.esc_attr($result_type).'"';}echo ' class="momreview"><article class="block"><input type="checkbox" name="review" id="'.$this_ID.''.$mom_review_global.'" ';if($is_open == 1){echo ' checked';}echo '/><label>';if($reviews_results->TITLE != ''){if($reviews_results->LINK != ''){echo '<a href="'.esc_url($reviews_results->LINK).'">';}echo $reviews_results->TITLE;if($reviews_results->LINK != ''){echo '</a>';}}echo '<span>'.$reviews_results->RATING.'</span><span></span></label></article></div>';}
+    }
     return ob_get_clean();
 }
 function mom_reviews_style(){echo '<style>'.get_option('momreviews_css').'</style>';}
@@ -2893,7 +2896,7 @@ if(current_user_can('manage_options')){
 /* (K1) Settings             */
 /* Exclude                   */
 /*****************************/
-/* 11/15/2013 (last update)  */
+/* 11/16/2013 (last update)  */
 /*****************************/
 get_currentuserinfo();
 global $user_level;    
@@ -2916,13 +2919,13 @@ if ($user_level <=7 && get_option('MOM_Exclude_Hide_Dashboard') == 1) {
 }
 if (!is_user_logged_in() || is_user_logged_in() && $user_level == 0 || is_user_logged_in() && $user_level == 1 || is_user_logged_in() && $user_level == 2 || is_user_logged_in() && $user_level == 7){
     function exclude_post_by_category($query){
-    $loggedOutCats = array('0,0');
+    $loggedOutCats = '0';
     if(!is_user_logged_in()){
         $loggedOutCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');
     }else{
         get_currentuserinfo();
         global $user_level;
-        $loggedOutCats = array('0,0');
+        $loggedOutCats = '0';
         if($user_level == 0){$loggedOutCats = get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
         if($user_level <= 1){$loggedOutCats = get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
         if($user_level <= 2){$loggedOutCats = get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
@@ -2933,7 +2936,7 @@ if (!is_user_logged_in() || is_user_logged_in() && $user_level == 0 || is_user_l
         $c_1 = rtrim(implode($c1),',');
         $c11 = explode(',',str_replace(' ','',$c_1));
         $c11array = array($c11);
-        $excluded_category_ids = $c11;
+        $excluded_category_ids = array_filter($c11);
         if($query->is_main_query()){
             if($query->is_single()){
                 if(($query->query_vars['p'])){
@@ -2957,7 +2960,7 @@ if (!is_user_logged_in() || is_user_logged_in() && $user_level == 0 || is_user_l
         }
     }
     function exclude_post_by_tag($query){
-    $loggedOutTags = array('0,0');
+    $loggedOutTags = '0';
     if(!is_user_logged_in()){
         $loggedOutTags = get_option('MOM_Exclude_VisitorTags').','.get_option('MOM_Exclude_level0Tags').','.get_option('MOM_Exclude_level1Tags').','.get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');
     }else{
@@ -2971,7 +2974,7 @@ if (!is_user_logged_in() || is_user_logged_in() && $user_level == 0 || is_user_l
             foreach ($t1 as &$T1){$T1 = ''.$T1.',';}
             $t_1 = implode($t1);
             $t11 = explode(',',str_replace(' ','',$t_1));
-        $excluded_tag_ids = $t11;
+        $excluded_tag_ids = array_filter($t11);
         if($query->is_main_query()){
             if($query->is_single()){
                 if(($query->query_vars['p'])){
@@ -3053,42 +3056,43 @@ if(get_option('MOM_Exclude_NoFollow') != 0){
     add_filter('the_content', 'nofollow_cat_posts');
 }
 add_action('pre_get_posts','momse_filter_home');
+
 function momse_filter_home($query){
-    $c1        = array('0,0');
-    $lt_1      = array('0,0');
-    $t1        = array('0,0');
-    $t_1       = array('0,0');
-    $c_1       = array('0,0');
-    if(get_option('MOM_Exclude_Categories_Front') == ''){$MOM_Exclude_Categories_Front = array('0,0');}else{$MOM_Exclude_Categories_Front = get_option('MOM_Exclude_Categories_Front');}
-    if(get_option('MOM_Exclude_Categories_TagArchives') == ''){$MOM_Exclude_Categories_TagArchives = array('0,0');}else{$MOM_Exclude_Categories_TagArchives = get_option('MOM_Exclude_Categories_TagArchives');}
-    if(get_option('MOM_Exclude_Categories_SearchResults') == ''){$MOM_Exclude_Categories_SearchResults = array('0,0');}else{$MOM_Exclude_Categories_SearchResults = get_option('MOM_Exclude_Categories_SearchResults');}
-    if(get_option('MOM_Exclude_Categories_RSS') == ''){$MOM_Exclude_Categories_RSS = array('0,0');}else{$MOM_Exclude_Categories_RSS = get_option('MOM_Exclude_Categories_RSS');}
-    if(get_option('MOM_Exclude_Tags_RSS') == ''){$MOM_Exclude_Tags_RSS = array('0,0');}else{$MOM_Exclude_Tags_RSS = get_option('MOM_Exclude_Tags_RSS');}
-    if(get_option('MOM_Exclude_Tags_Front') == ''){$MOM_Exclude_Tags_Front = array('0,0');}else{$MOM_Exclude_Tags_Front = get_option('MOM_Exclude_Tags_Front');}
-    if(get_option('MOM_Exclude_Tags_CategoryArchives') == ''){$MOM_Exclude_Tags_CategoryArchives = array('0,0');}else{$MOM_Exclude_Tags_CategoryArchives = get_option('MOM_Exclude_Tags_CategoryArchives');}
-    if(get_option('MOM_Exclude_Tags_SearchResults') == ''){$MOM_Exclude_Tags_SearchResults = array('0,0');}else{$MOM_Exclude_Tags_SearchResults = get_option('MOM_Exclude_Tags_SearchResults');}
+    $c1        = '0';
+    $lt_1      = '0';
+    $t1        = '0';
+    $t_1       = '0';
+    $c_1       = '0';
+    if(get_option('MOM_Exclude_Categories_Front') == ''){$MOM_Exclude_Categories_Front = '0';}else{$MOM_Exclude_Categories_Front = get_option('MOM_Exclude_Categories_Front');}
+    if(get_option('MOM_Exclude_Categories_TagArchives') == ''){$MOM_Exclude_Categories_TagArchives = '0';}else{$MOM_Exclude_Categories_TagArchives = get_option('MOM_Exclude_Categories_TagArchives');}
+    if(get_option('MOM_Exclude_Categories_SearchResults') == ''){$MOM_Exclude_Categories_SearchResults = '0';}else{$MOM_Exclude_Categories_SearchResults = get_option('MOM_Exclude_Categories_SearchResults');}
+    if(get_option('MOM_Exclude_Categories_RSS') == ''){$MOM_Exclude_Categories_RSS = '0';}else{$MOM_Exclude_Categories_RSS = get_option('MOM_Exclude_Categories_RSS');}
+    if(get_option('MOM_Exclude_Tags_RSS') == ''){$MOM_Exclude_Tags_RSS = '0';}else{$MOM_Exclude_Tags_RSS = get_option('MOM_Exclude_Tags_RSS');}
+    if(get_option('MOM_Exclude_Tags_Front') == ''){$MOM_Exclude_Tags_Front = '0';}else{$MOM_Exclude_Tags_Front = get_option('MOM_Exclude_Tags_Front');}
+    if(get_option('MOM_Exclude_Tags_CategoryArchives') == ''){$MOM_Exclude_Tags_CategoryArchives = '0';}else{$MOM_Exclude_Tags_CategoryArchives = get_option('MOM_Exclude_Tags_CategoryArchives');}
+    if(get_option('MOM_Exclude_Tags_SearchResults') == ''){$MOM_Exclude_Tags_SearchResults = '0';}else{$MOM_Exclude_Tags_SearchResults = get_option('MOM_Exclude_Tags_SearchResults');}
     if(get_option('MOM_Exclude_PostFormats_Front') == ''){$MOM_Exclude_PostFormats_Front = '';}else{$MOM_Exclude_PostFormats_Front = get_option('MOM_Exclude_PostFormats_Front');}
     if(get_option('MOM_Exclude_PostFormats_CategoryArchives') == ''){$MOM_Exclude_PostFormats_CategoryArchives = '';}else{$MOM_Exclude_PostFormats_CategoryArchives = get_option('MOM_Exclude_PostFormats_CategoryArchives');}
     if(get_option('MOM_Exclude_PostFormats_TagArchives') == ''){$MOM_Exclude_PostFormats_TagArchives = '';}else{$MOM_Exclude_PostFormats_TagArchives = get_option('MOM_Exclude_PostFormats_TagArchives');}
     if(get_option('MOM_Exclude_PostFormats_SearchResults') == ''){$MOM_Exclude_PostFormats_SearchResults = '';}else{$MOM_Exclude_PostFormats_SearchResults = get_option('MOM_Exclude_PostFormats_SearchResults');}
     if(get_option('MOM_Exclude_PostFormats_Visitor') == ''){$MOM_Exclude_PostFormats_Visitor = '';}else{$MOM_Exclude_PostFormats_Visitor = get_option('MOM_Exclude_PostFormats_Visitor');}
     if(get_option('MOM_Exclude_PostFormats_RSS') == ''){$MOM_Exclude_PostFormats_RSS = '';}else{$MOM_Exclude_PostFormats_RSS = get_option('MOM_Exclude_PostFormats_RSS');}
-    if(get_option('MOM_Exclude_Cats_Day') == ''){$MOM_Exclude_Cats_Day = array('0,0');}
-    if(get_option('MOM_Exclude_Tags_Day') == ''){$MOM_Exclude_Tags_Day = array('0,0');}
-    if(date('D') === 'Sun'){$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsSun');}
-    if(date('D') === 'Mon'){$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsMon');}
-    if(date('D') === 'Tue'){$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsTue');} 
-    if(date('D') === 'Wed'){$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsWed');}
-    if(date('D') === 'Thu'){$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsThu');}
-    if(date('D') === 'Fri'){$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsFri');}
-    if(date('D') === 'Sat'){$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsSun');}
-    if(date('D') === 'Sun'){$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesSun');}
-    if(date('D') === 'Mon'){$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesMon');}
-    if(date('D') === 'Tue'){$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesTue');} 
-    if(date('D') === 'Wed'){$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesWed');}
-    if(date('D') === 'Thu'){$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesThu');}
-    if(date('D') === 'Fri'){$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesFri');}
-    if(date('D') === 'Sat'){$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesSat');}        
+    if(get_option('MOM_Exclude_Cats_Day') == ''){$MOM_Exclude_Cats_Day = '0';}
+    if(get_option('MOM_Exclude_Tags_Day') == ''){$MOM_Exclude_Tags_Day = '0';}
+    if(date('D') === 'Sun'){if(get_option('') == 'MOM_Exclude_Tags_Day') $MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsSun');}
+    if(date('D') === 'Mon'){if(get_option('') == 'MOM_Exclude_Tags_Day') $MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsMon');}
+    if(date('D') === 'Tue'){if(get_option('') == 'MOM_Exclude_Tags_Day') $MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsTue');}
+    if(date('D') === 'Wed'){if(get_option('') == 'MOM_Exclude_Tags_Day') $MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsWed');}
+    if(date('D') === 'Thu'){if(get_option('') == 'MOM_Exclude_Tags_Day') $MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsThu');}
+    if(date('D') === 'Fri'){if(get_option('') == 'MOM_Exclude_Tags_Day') $MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsFri');}
+    if(date('D') === 'Sat'){if(get_option('') == 'MOM_Exclude_Tags_Day') $MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsSun');}
+    if(date('D') === 'Sun'){if(get_option('') == 'MOM_Exclude_Cats_Day') $MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesSun');}
+    if(date('D') === 'Mon'){if(get_option('') == 'MOM_Exclude_Cats_Day') $MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesMon');}
+    if(date('D') === 'Tue'){if(get_option('') == 'MOM_Exclude_Cats_Day') $MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesTue');}
+    if(date('D') === 'Wed'){if(get_option('') == 'MOM_Exclude_Cats_Day') $MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesWed');}
+    if(date('D') === 'Thu'){if(get_option('') == 'MOM_Exclude_Cats_Day') $MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesThu');}
+    if(date('D') === 'Fri'){if(get_option('') == 'MOM_Exclude_Cats_Day') $MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesFri');}
+    if(date('D') === 'Sat'){if(get_option('') == 'MOM_Exclude_Cats_Day') $MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesSat');}
     $rss_day = explode(',',$MOM_Exclude_Tags_Day);
     foreach ($rss_day as &$rss_day_1){$rss_day_1 = ''.$rss_day_1.',';}
     $rss_day_1 = implode($rss_day);
@@ -3098,26 +3102,24 @@ function momse_filter_home($query){
     $rss_day_1_cat = implode($rss_day_cat);
     $rssday_cat = explode(',', str_replace(' ','',$rss_day_1_cat));        
     if(!is_user_logged_in()){
-        $loggedOutCats = array('0,0');
-        $loggedOutTags = array('0,0');
-        if ( $query->is_feed){$c1 = explode(',',$MOM_Exclude_Categories_RSS);$hidePostFormats = $MOM_Exclude_PostFormats_RSS;$t1 = explode(',',$MOM_Exclude_Tags_RSS);}
-        if ( $query->is_home){$c1 = explode(',',$MOM_Exclude_Categories_Front);$hidePostFormats = $MOM_Exclude_PostFormats_Front;$t1 = explode(',',$MOM_Exclude_Tags_Front);}
-        if ( $query->is_category){$t1 = explode(',',$MOM_Exclude_Tags_CategoryArchives);$hidePostFormats = $MOM_Exclude_PostFormats_CategoryArchives;}
-        if ( $query->is_tag){$c1 = explode(',',$MOM_Exclude_Categories_TagArchives);$hidePostFormats = $MOM_Exclude_PostFormats_TagArchives;}
-        if ( $query->is_search){$c1 = explode(',',$MOM_Exclude_Categories_SearchResults);$hidePostFormats = $MOM_Exclude_PostFormats_SearchResults;$t1 = explode(',',$MOM_Exclude_Tags_SearchResults);}
-        foreach($c1 as &$C1){$C1 = ''.$C1.',';}
-        $c_1 = rtrim(implode($c1),',');
-        $hideUserCats = explode(',',str_replace(' ','',$c_1));
-        foreach($t1 as &$T1) {$T1 = ''.$T1.',';}
-        $t11 = rtrim(implode($t1),',');
-        $hideUserTags = explode(',',str_replace(' ','',$t_1));
-        $loggedOutCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');
-        $loggedOutTags = get_option('MOM_Exclude_VisitorTags').','.get_option('MOM_Exclude_level0Tags').','.get_option('MOM_Exclude_level1Tags').','.get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');
-        $lc1 = explode(',',$loggedOutCats);
+        $loggedOutCats = '0';
+        $loggedOutTags = '0';
+		if(get_option('MOM_Exclude_VisitorCategories') != ''){$MOM_Exclude_VisitorCategories = get_option('MOM_Exclude_VisitorCategories');}else{$MOM_Exclude_VisitorCategories = '0';}
+		if(get_option('MOM_Exclude_level0Categories')  != ''){$MOM_Exclude_level0Categories  = get_option('MOM_Exclude_level0Categories');}else{$MOM_Exclude_level0Categories   = '0';}
+		if(get_option('MOM_Exclude_level1Categories')  != ''){$MOM_Exclude_level1Categories  = get_option('MOM_Exclude_level1Categories');}else{$MOM_Exclude_level1Categories   = '0';}
+		if(get_option('MOM_Exclude_level2Categories')  != ''){$MOM_Exclude_level2Categories  = get_option('MOM_Exclude_level2Categories');}else{$MOM_Exclude_level2Categories   = '0';}
+		if(get_option('MOM_Exclude_level7Categories')  != ''){$MOM_Exclude_level7Categories  = get_option('MOM_Exclude_level7Categories');}else{$MOM_Exclude_level7Categories   = '0';}
+		if(get_option('MOM_Exclude_VisitorTags')       != ''){$MOM_Exclude_VisitorTags       = get_option('MOM_Exclude_VisitorTags');}else{$MOM_Exclude_VisitorTags             = '0';}
+		if(get_option('MOM_Exclude_level0Tags')        != ''){$MOM_Exclude_level0Tags        = get_option('MOM_Exclude_level0Tags');}else{$MOM_Exclude_level0Tags               = '0';}
+		if(get_option('MOM_Exclude_level1Tags')        != ''){$MOM_Exclude_level1Tags        = get_option('MOM_Exclude_level1Tags');}else{$MOM_Exclude_level1Tags               = '0';}
+		if(get_option('MOM_Exclude_level2Tags')        != ''){$MOM_Exclude_level2Tags        = get_option('MOM_Exclude_level2Tags');}else{$MOM_Exclude_level2Tags               = '0';}		
+        $loggedOutCats = $MOM_Exclude_VisitorCategories.','.$MOM_Exclude_level0Categories.','.$MOM_Exclude_level1Categories.','.$MOM_Exclude_level2Categories.','.$MOM_Exclude_level7Categories;
+        $loggedOutTags = $MOM_Exclude_VisitorTags.','.$MOM_Exclude_level0Tags.','.$MOM_Exclude_level1Tags.','.$MOM_Exclude_level2Tags.','.$MOM_Exclude_level7Tags;
+        $lc1 = array_unique(explode(',',$loggedOutCats));
         foreach($lc1 as &$LC1){ $LC1 = ''.$LC1.',';}
         $lc_1 = rtrim(implode($lc1),',');
         $hideLoggedOutCats = explode(',',str_replace(' ','',$loggedOutCats));
-        $lt1 = explode(',',$loggedOutTags);
+        $lt1 = array_unique(explode(',',$loggedOutTags));
         foreach($lt1 as &$LT1){$LT1 = ''.$LT1.',';}
         $lt11 = rtrim(implode($lt1),',');
         $hideLoggedOutTags = explode(',',str_replace(' ','',$lt11));
@@ -3125,299 +3127,76 @@ function momse_filter_home($query){
     }else{
         get_currentuserinfo();
         global $user_level;
-        $loggedOutCats = array('0,0');
-        $loggedOutTags = array('0,0');
-        if    ($user_level == 0) {$loggedOutCats = get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
-        elseif($user_level == 1) {$loggedOutCats = get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
-        elseif($user_level == 2) {$loggedOutCats = get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
-        elseif($user_level == 7) {$loggedOutCats = get_option('MOM_Exclude_level7Categories');}
-        else{$loggedOutCats = array('0,0');}
-        if    ($user_level == 0) {$loggedOutTags = get_option('MOM_Exclude_level0Tags').','.get_option('MOM_Exclude_level1Tags').','.get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');}
-        elseif($user_level == 1) {$loggedOutTags = get_option('MOM_Exclude_level1Tags').','.get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');}
-        elseif($user_level == 2) {$loggedOutTags = get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');}
-        elseif($user_level == 7) {$loggedOutTags = get_option('MOM_Exclude_level7Tags');}
-        else{$loggedOutTags = array('0,0');}
-        $lc1 = explode(',',$loggedOutCats);
-        $lt1 = explode(',',$loggedOutTags);
-        foreach($lc1 as &$LC1){$LC1 = ''.$LC1.',';}
-        $lc_1 = rtrim(implode($lc1),',');
-        $hideUserCats = explode(',',str_replace(' ','',$lc_1));
-        foreach($lt1 as &$LT1) {$LT1 = ''.$LT1.',';}
-        $lt11 = rtrim(implode($lt1),',');
-        $hideUserTags = explode(',',str_replace(' ','',$lt_1));
-        if ( $query->is_feed){$c1 = explode(',',$MOM_Exclude_Categories_RSS);$hidePostFormats = $MOM_Exclude_PostFormats_RSS;$t1 = explode(',',$MOM_Exclude_Tags_RSS);}
-        if ( $query->is_home){$c1 = explode(',',$MOM_Exclude_Categories_Front);$hidePostFormats = $MOM_Exclude_PostFormats_Front;$t1 = explode(',',$MOM_Exclude_Tags_Front);}
-        if ( $query->is_category){$t1 = explode(',',$MOM_Exclude_Tags_CategoryArchives);$hidePostFormats = $MOM_Exclude_PostFormats_CategoryArchives;}
-        if ( $query->is_tag){$c1 = explode(',',$MOM_Exclude_Categories_TagArchives);$hidePostFormats = $MOM_Exclude_PostFormats_TagArchives;}
-        if ( $query->is_search){$c1 = explode(',',$MOM_Exclude_Categories_SearchResults);$hidePostFormats = $MOM_Exclude_PostFormats_SearchResults;$t1 = explode(',',$MOM_Exclude_Tags_SearchResults);}
-        foreach($c1 as &$C1){$C1 = ''.$C1.',';}
-        $c_1 = rtrim(implode($c1),',');
+        $loggedOutCats = '0';
+        $loggedOutTags = '0';
+		if(get_option('MOM_Exclude_VisitorCategories') != ''){$MOM_Exclude_VisitorCategories = get_option('MOM_Exclude_VisitorCategories');}else{$MOM_Exclude_VisitorCategories = '0';}
+		if(get_option('MOM_Exclude_level0Categories')  != ''){$MOM_Exclude_level0Categories  = get_option('MOM_Exclude_level0Categories');}else{$MOM_Exclude_level0Categories   = '0';}
+		if(get_option('MOM_Exclude_level1Categories')  != ''){$MOM_Exclude_level1Categories  = get_option('MOM_Exclude_level1Categories');}else{$MOM_Exclude_level1Categories   = '0';}
+		if(get_option('MOM_Exclude_level2Categories')  != ''){$MOM_Exclude_level2Categories  = get_option('MOM_Exclude_level2Categories');}else{$MOM_Exclude_level2Categories   = '0';}
+		if(get_option('MOM_Exclude_level7Categories')  != ''){$MOM_Exclude_level7Categories  = get_option('MOM_Exclude_level7Categories');}else{$MOM_Exclude_level7Categories   = '0';}		
+		if(get_option('MOM_Exclude_VisitorTags')       != ''){$MOM_Exclude_VisitorTags       = get_option('MOM_Exclude_VisitorTags');}else{$MOM_Exclude_VisitorTags             = '0';}
+		if(get_option('MOM_Exclude_level0Tags')        != ''){$MOM_Exclude_level0Tags        = get_option('MOM_Exclude_level0Tags');}else{$MOM_Exclude_level0Tags               = '0';}
+		if(get_option('MOM_Exclude_level1Tags')        != ''){$MOM_Exclude_level1Tags        = get_option('MOM_Exclude_level1Tags');}else{$MOM_Exclude_level1Tags               = '0';}
+		if(get_option('MOM_Exclude_level2Tags')        != ''){$MOM_Exclude_level2Tags        = get_option('MOM_Exclude_level2Tags');}else{$MOM_Exclude_level2Tags               = '0';}
+		if(get_option('MOM_Exclude_level7Categories')  != ''){$MOM_Exclude_level7Categories  = get_option('MOM_Exclude_level7Categories');}else{$MOM_Exclude_level7Categories   = '0';}				
+        if    ($user_level == 0) {$loggedOutCats = $MOM_Exclude_level0Categories.','.$MOM_Exclude_level1Categories.','.$MOM_Exclude_level2Categories.','.$MOM_Exclude_level7Categories;}
+        elseif($user_level == 1) {$loggedOutCats = $MOM_Exclude_level1Categories.','.$MOM_Exclude_level2Categories.','.$MOM_Exclude_level7Categories;}
+        elseif($user_level == 2) {$loggedOutCats = $MOM_Exclude_level2Categories.','.$MOM_Exclude_level7Categories;}
+        elseif($user_level == 7) {$loggedOutCats = $MOM_Exclude_level7Categories;}
+        if    ($user_level == 0) {$loggedOutTags = $MOM_Exclude_level0Tags.','.$MOM_Exclude_level1Tags.','.$MOM_Exclude_level2Tags.','.$MOM_Exclude_level7Tags;}
+        elseif($user_level == 1) {$loggedOutTags = $MOM_Exclude_level1Tags.','.$MOM_Exclude_level2Tags.','.$MOM_Exclude_level7Tags;}
+        elseif($user_level == 2) {$loggedOutTags = $MOM_Exclude_level2Tags.','.$MOM_Exclude_level7Tags;}
+        elseif($user_level == 7) {$loggedOutTags = $MOM_Exclude_level7Tags;}
         $hideLoggedOutCats = explode(',',str_replace(' ','',$c_1));
-        foreach($t1 as &$T1) {$T1 = ''.$T1.',';}
-        $t11 = rtrim(implode($t1),',');
-        $hideLoggedOutTags = explode(',',str_replace(' ','',$t_1));
+        $hideLoggedOutTags = explode(',',str_replace(' ','',$t11));
+        $lc1 = array_unique(explode(',',$loggedOutCats));
+        foreach($lc1 as &$LC1){ $LC1 = ''.$LC1.',';}
+        $lc_1 = rtrim(implode($lc1),',');
+        $hideLoggedOutCats = explode(',',str_replace(' ','',$loggedOutCats));
+        $lt1 = array_unique(explode(',',$loggedOutTags));
+        foreach($lt1 as &$LT1){$LT1 = ''.$LT1.',';}
+        $lt11 = rtrim(implode($lt1),',');
+        $hideLoggedOutTags = explode(',',str_replace(' ','',$lt11));
     }
-    if ($query->is_feed){
-        $rss1 = explode(',',$MOM_Exclude_Categories_RSS);
-        foreach($rss1 as &$RSS1){$RSS1 = ''.$RSS1.',';}
-        $rss_1 = implode($rss1);
-        $rss11 = explode(',',str_replace(' ','',$rss_1));
-        $rss2 = explode(',', $MOM_Exclude_Tags_RSS);
-        foreach ($rss2 as &$RSS2) { $RSS2 = "".$RSS2.","; }
-        $rss_2 = implode($rss2);
-        $rss22 = explode(',',str_replace(' ','',$rss_2));
-        $tax_query = array(
-            'relation' => 'AND OR',
+    if($query->is_feed){$c1 = explode(',',$MOM_Exclude_Categories_RSS);$hidePostFormats = $MOM_Exclude_PostFormats_RSS;$t1 = explode(',',$MOM_Exclude_Tags_RSS);}
+    if($query->is_home){$c1 = explode(',',$MOM_Exclude_Categories_Front);$hidePostFormats = $MOM_Exclude_PostFormats_Front;$t1 = explode(',',$MOM_Exclude_Tags_Front);}
+    if($query->is_category){$t1 = explode(',',$MOM_Exclude_Tags_CategoryArchives);$hidePostFormats = $MOM_Exclude_PostFormats_CategoryArchives;}
+    if($query->is_tag){$c1 = explode(',',$MOM_Exclude_Categories_TagArchives);$hidePostFormats = $MOM_Exclude_PostFormats_TagArchives;}
+    if($query->is_search){$c1 = explode(',',$MOM_Exclude_Categories_SearchResults);$hidePostFormats = $MOM_Exclude_PostFormats_SearchResults;$t1 = explode(',',$MOM_Exclude_Tags_SearchResults);}
+    foreach($c1 as &$C1){$C1 = ''.$C1.',';}
+    $c_1 = rtrim(implode($c1),',');
+    $hideUserCats = explode(',',str_replace(' ','',$c_1));
+    foreach($t1 as &$T1) {$T1 = ''.$T1.',';}
+    $t11 = rtrim(implode($t1),',');
+    $hideUserTags = explode(',',str_replace(' ','',$t11));
+    $hideAllCategories = array_merge((array)$hideUserCats,(array)$hideLoggedOutCats,(array)$rssday_cat);
+    $hideAllTags = array_merge((array)$hideUserTags,(array)$hideLoggedOutTags,(array)$rssday);
+	$hideAllCategories = array_filter(array_unique($hideAllCategories));
+	$hideAllTags = array_filter(array_unique($hideAllTags));	
+    if ($query->is_feed || $query->is_home || $query->is_search || $query->tag || $query->is_category){
+		$tax_query = array(
+			'ignore_sticky_posts' => true,
+            'relation'            => 'AND OR',
             array(
-                'taxonomy' => 'category',
-                'terms' => $rss11,
-                'field' => 'id',
-                'operator' => 'NOT IN'
+                'taxonomy'        => 'category',
+                'terms'           => $hideAllCategories,
+                'field'           => 'id',
+                'operator'        => 'NOT IN'
             ),
             array(
-                'taxonomy' => 'post_tag',
-                'terms' => $rss22,
-                'field' => 'id',
-                'operator' => 'NOT IN'
+                'taxonomy'        => 'post_tag',
+                'terms'           => $hideAllTags,
+                'field'           => 'id',
+                'operator'        => 'NOT IN'
             ),
             array(
-                'taxonomy' => 'category',
-                'terms' => $hideUserCats,
-                'field' => 'id',
-                'operator' => 'NOT IN'
-            ),
-            array(
-                'taxonomy' => 'post_tag',
-                'terms' => $hideUserTags,
-                'field' => 'id',
-                'operator' => 'NOT IN'
-            ),                
-            array(
-                'taxonomy' => 'post_format',
-                'field' => 'slug',
-                'terms' => array($hidePostFormats),
-                'operator' => 'NOT IN'
-            ),
-            array(
-                'taxonomy' => 'post_tag',
-                'terms' => $rssday,
-                'field' => 'id',
-                'operator' => 'NOT IN'
-            ),
-            array(
-                'taxonomy' => 'category',
-                'terms' => $rssday_cat,
-                'field' => 'id',
-                'operator' => 'NOT IN'
-            ),
-            array(
-                'taxonomy' => 'category',
-                'terms' => $hideLoggedOutTags,
-                'field' => 'id',
-                'operator' => 'NOT IN'
-            ),
-            array(
-                'taxonomy' => 'category',
-                'terms' => $hideLoggedOutCats,
-                'field' => 'id',
-                'operator' => 'NOT IN'
-            ),
-        );
+                'taxonomy'        => 'post_format',
+                'field'           => 'slug',
+                'terms'           => array($hidePostFormats),
+                'operator'        => 'NOT IN'
+            )
+		);
         $query->set('tax_query',$tax_query);
-    }
-    if($query->is_main_query() && !is_admin()){
-        if($query->is_home()){
-            $tax_query = array(
-                'relation' => 'AND OR',
-                array(
-                    'taxonomy' => 'category',
-                    'terms' => $hideUserCats,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),
-                array(
-                    'taxonomy' => 'post_tag',
-                    'terms' => $hideUserTags,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),
-                array(
-                    'taxonomy' => 'category',
-                    'terms' => $hideLoggedOutCats,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),
-                array(
-                    'taxonomy' => 'post_tag',
-                    'terms' => $hideLoggedOutTags,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),                        
-                array(
-                    'taxonomy' => 'post_format',
-                    'field' => 'slug',
-                    'terms' => array($hidePostFormats),
-                    'operator' => 'NOT IN'
-                ),
-                array(
-                    'taxonomy' => 'post_tag',
-                    'terms' => $rssday,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),
-                array(
-                    'taxonomy' => 'category',
-                    'terms' => $rssday_cat,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),
-            );
-            $query->set( 'tax_query', $tax_query );
-        }
-        elseif ($query->is_category()){
-            $tax_query = array(
-                'relation' => 'AND OR',
-                array(
-                    'taxonomy' => 'post_tag',
-                    'terms' => $hideLoggedOutTags,
-                    'field' => 'id',
-                    'operator' => 'NOT IN',
-                ),
-                array(
-                    'taxonomy' => 'post_format',
-                    'field' => 'slug',
-                    'terms' => array($hidePostFormats),
-                    'operator' => 'NOT IN',
-                ),
-                array(
-                    'taxonomy' => 'category',
-                    'terms' => $hideUserCats,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),
-                array(
-                    'taxonomy' => 'post_tag',
-                    'terms' => $hideUserTags,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),                        
-                array(
-                    'taxonomy' => 'post_tag',
-                    'terms' => $rssday,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),
-                array(
-                    'taxonomy' => 'category',
-                    'terms' => $rssday_cat,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),
-                array(
-                    'taxonomy' => 'category',
-                    'terms' => $hideLoggedOutCats,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),
-            );
-            $query->set('tax_query',$tax_query);
-        }
-        elseif ($query->is_tag()){
-            $tax_query = array(
-                'relation' => 'AND OR',
-                array(
-                    'taxonomy' => 'category',
-                    'terms' => $hideLoggedOutCats,
-                    'field' => 'id',
-                    'operator' => 'NOT IN',
-                ),
-                array(
-                    'taxonomy' => 'post_format',
-                    'field' => 'slug',
-                    'terms' => array($hidePostFormats),
-                    'operator' => 'NOT IN',
-                ),
-                array(
-                    'taxonomy' => 'category',
-                    'terms' => $hideUserCats,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),
-                array(
-                    'taxonomy' => 'post_tag',
-                    'terms' => $hideUserTags,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),                        
-                array(
-                    'taxonomy' => 'post_tag',
-                    'terms' => $rssday,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),
-                array(
-                    'taxonomy' => 'category',
-                    'terms' => $rssday_cat,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),
-                array(
-                    'taxonomy' => 'category',
-                    'terms' => $hideLoggedOutTags,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),
-            );
-            $query->set('tax_query',$tax_query);
-        }
-        elseif ($query->is_search()){
-            $tax_query = array(
-                'relation' => 'AND OR',
-                array(
-                    'taxonomy' => 'category',
-                    'terms' => $hideUserCats,
-                    'field' => 'id',
-                    'operator' => 'NOT IN',
-                ),
-                array(
-                    'taxonomy' => 'post_tag',
-                    'terms' => $hideUserTags,
-                    'field' => 'id',
-                    'operator' => 'NOT IN',
-                ),
-                array(
-                    'taxonomy' => 'category',
-                    'terms' => $hideLoggedOutCats,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),
-                array(
-                    'taxonomy' => 'post_tag',
-                    'terms' => $hideLoggedOutTags,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),                        
-                array(
-                    'taxonomy' => 'post_format',
-                    'field' => 'slug',
-                    'terms' => array($hidePostFormats),
-                    'operator' => 'NOT IN',
-                ),
-                array(
-                    'taxonomy' => 'post_tag',
-                    'terms' => $rssday,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),
-                array(
-                    'taxonomy' => 'category',
-                    'terms' => $rssday_cat,
-                    'field' => 'id',
-                    'operator' => 'NOT IN'
-                ),
-            );
-            $query->set('tax_query',$tax_query);
-        }
     }
 }
 /*****************************/
