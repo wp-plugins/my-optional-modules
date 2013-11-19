@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.6
+Version: 5.3.7
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -121,7 +121,7 @@ function MOMMainCSS() {
 /* SECTION B                 */
 /* (B1) Variables            */
 /*****************************/
-/* 11/15/2013 (last update)  */
+/* 11/18/2013 (last update)  */
 /*****************************/
 $mommodule_analytics             = false;
 $mommodule_count                 = false;
@@ -179,11 +179,13 @@ $mommodule_reviews               = esc_attr(get_option('mommaincontrol_reviews')
 $mommodule_shortcodes            = esc_attr(get_option('mommaincontrol_shorts'));
     if($mommodule_shortcodes     == 1)$mommodule_shortcodes = true;
     if($mommodule_shortcodes     === true)add_shortcode('mom_archives','mom_archives');
+	if($mommodule_shortcodes     === true)add_shortcode('mom_onthisday','mom_onthisday');
     if($mommodule_shortcodes     === true)add_shortcode('mom_map','mom_google_map_shortcode');
     if($mommodule_shortcodes     === true)add_shortcode('mom_reddit','mom_reddit_shortcode');
     if($mommodule_shortcodes     === true)add_shortcode('mom_restrict','mom_restrict_shortcode');
     if($mommodule_shortcodes     === true)add_shortcode('mom_progress','mom_progress_shortcode');
     if($mommodule_shortcodes     === true)add_shortcode('mom_verify','mom_verify_shortcode');
+	if($mommodule_shortcodes     === true)add_filter('the_content','do_shortcode','mom_onthisday');
     if($mommodule_shortcodes     === true)add_filter('the_content','do_shortcode','mom_archives');
     if($mommodule_shortcodes     === true)add_filter('the_content','do_shortcode','mom_map');
     if($mommodule_shortcodes     === true)add_filter('the_content','do_shortcode','mom_reddit');
@@ -1390,7 +1392,8 @@ if(current_user_can('manage_options')){
                         &mdash; [<a href=\"#reddit_button\">reddit</a>] 
                         &mdash; [<a href=\"#restrict\">restrict content to logged in users</a>] 
                         &mdash; [<a href=\"#progress_bars\">progress bars</a>]
-                        &mdash; [<a href=\"#verifier\">verifier</a>]</p>
+                        &mdash; [<a href=\"#verifier\">verifier</a>]
+						&mdash; [<a href=\"#onthisday\">on this day</a>]</p>
                     </tr>
                     <tr valign=\"top\" id=\"google_maps\">
                         <td valign=\"top\">
@@ -1596,6 +1599,24 @@ if(current_user_can('manage_options')){
                             </table>
                         </td>
                     </tr>
+                    <tr valign=\"top\" id=\"onthisday\">
+                        <td valign=\"top\">
+                            <strong>On this day</strong>
+                            <br />Embed a small widget that grabs posts for the current day (minus the post that is currently being viewed) for previous years, or if no posts are found, will display 5 posts at random.  Template tag available to display 5 posts from previous years on this day for categories, tags, and front pages (will also display 5 random if none found).<hr />
+							<br />Shortcode: [mom_onthisday]<br />Template tag: mom_onthisday_template();<br />
+                            <u>Parameters</u><br />cat<br />amount<br />title<br />
+                            <u>Defaults</u><br />amount: -1 <br />cat: <br />title: on this day<br /><hr />
+                        </td>
+                        <td valign=\"top\">
+                            <table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
+                            <tbody>
+                            <tr><td><code>[mom_onthisday cat=\"current\"]</code></td><td><em>Display past posts from this category only</em></td></tr>
+                            <tr><td><code>[mom_onthisday title=\"previous years\" amount=\"2\"]</code></td><td><em>Display 2 past posts in a div with the title <em>previous years</em>.</em></td></tr>
+                            <tr><td><iframe align=\"center\" width=\"100%\" height=\"350px\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"https://maps.google.com/maps?&q=1600+Pennsylvania+Ave+NW%2C+Washington%2C+D.C.%2C+DC+&amp;cid=&output=embed&z=14&iwloc=A&visual_refresh=true\"></iframe></td></tr>
+                            </tbody>
+                            </table>
+                        </td>
+                    </tr>					
                 </tbody>
             </table>
         </div>";
@@ -1606,8 +1627,90 @@ if(current_user_can('manage_options')){
 /* (F1) Functions            */
 /* Shortcodes                */
 /*****************************/
-/* 11/16/2013 (last update)  */
+/* 11/18/2013 (last update)  */
 /*****************************/
+function mom_onthisday_template(){
+	$current_day   = date('d');
+	$current_month = date('m');
+	if(is_category()){
+		$category_current = get_the_category();
+		$category = $category_current[0]->cat_ID;	
+	}
+	if(is_tag()){
+		$tagged = get_query_var('tag');
+		$tag = esc_attr($tagged);
+	}	
+	wp_reset_query();
+	if(is_category()){query_posts( "cat=$category&monthnum=$current_month&day=$current_day&posts_per_page=-1" );}
+	elseif(is_tag()){query_posts( "tag=$tag&monthnum=$current_month&day=$current_day&posts_per_page=-1" );}
+	else{query_posts( "monthnum=$current_month&day=$current_day&posts_per_page=-1" );}
+	$posts = 0;
+	while( have_posts() ) : the_post();
+	$posts++;
+	if( $posts == 1 ) {	echo '<div id="mom_onthisday"><span class="onthisday">on this day</span>'; }
+	if($posts > 0){
+		$postid = get_the_id();
+		echo '<section class="mom_onthisday"><a href="';the_permalink();echo'">';echo get_the_post_thumbnail($postid, 'thumbnail', array('class' => 'mom_thumb'));echo '<div class="mom_onthisday">';echo '<h3 class="title">';the_title();echo '</h3><span class="theyear">';the_date('Y'); echo'</span>';echo '</div></a></section>';
+	}
+		endwhile;
+	if($posts == 0){
+		$posts++;
+		if( $posts == 1 ) {	echo '<div id="mom_onthisday"><span class="onthisday">5 random posts</span>'; }
+		query_posts( "orderby=rand&posts_per_page=5&ignore_sticky_posts=1" );
+		while( have_posts() ) : the_post();
+		$postid = get_the_id();
+		echo '<section class="mom_onthisday"><a href="';the_permalink();echo'">';echo get_the_post_thumbnail($postid, 'thumbnail', array('class' => 'mom_thumb'));echo '<div class="mom_onthisday">';echo '<h3 class="title">';the_title();echo '</h3><span class="theyear">';the_date('Y'); echo'</span>';echo '</div></a></section>';
+		endwhile;
+	}
+	echo '</div>';
+	wp_reset_query();
+}
+function mom_onthisday($atts,$content = null){
+    extract(
+        shortcode_atts(array(
+			'amount' => '-1',
+			'title'  => 'On this day',
+			'cat'    => '',
+		), $atts)
+    );
+	global $post;
+	$postid   = $post->ID;
+	if ($cat  == 'current'){
+		$category_current = get_the_category($postid);
+		$category = $category_current[0]->cat_ID;
+	}else{
+		$category = esc_attr($cat);
+	}
+	$onthisday     = esc_attr($title);
+	$postid        = get_the_ID();
+	$current_day   = date('d');
+	$current_month = date('m');
+	$postsperpage = esc_attr($amount);
+	query_posts( "cat=$category&monthnum=$current_month&day=$current_day&post_per_page=$postsperpage" );
+	ob_start();
+	wp_reset_query();
+	$posts = 0;
+	while( have_posts() ) : the_post();
+	$posts++;
+	if( $posts == 1 ) {	echo '<div id="mom_onthisday"><span class="onthisday">on this day</span>'; }
+	if($posts > 0){
+		$postid = get_the_id();
+		echo '<section class="mom_onthisday"><a href="';the_permalink();echo'">';echo get_the_post_thumbnail($postid, 'thumbnail', array('class' => 'mom_thumb'));echo '<div class="mom_onthisday">';echo '<h3 class="title">';the_title();echo '</h3><span class="theyear">';the_date('Y'); echo'</span>';echo '</div></a></section>';
+	}
+		endwhile;
+	if($posts == 0){
+		$posts++;
+		if( $posts == 1 ) {	echo '<div id="mom_onthisday"><span class="onthisday">5 random posts</span>'; }
+		query_posts( "orderby=rand&post_per_page=5&ignore_sticky_posts=1" );
+		while( have_posts() ) : the_post();
+		$postid = get_the_id();
+		echo '<section class="mom_onthisday"><a href="';the_permalink();echo'">';echo get_the_post_thumbnail($postid, 'thumbnail', array('class' => 'mom_thumb'));echo '<div class="mom_onthisday">';echo '<h3 class="title">';the_title();echo '</h3><span class="theyear">';the_date('Y'); echo'</span>';echo '</div></a></section>';
+		endwhile;
+	}
+	echo '</div>';
+	wp_reset_query();
+	return ob_get_clean();
+}
 function mom_archives($atts,$content = null){
     if(!is_user_logged_in()){
         $nofollowCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');
@@ -2013,8 +2116,10 @@ if(current_user_can('manage_options')){
         echo '<div class="clear"></div>
         <div class="exclude">
             <section><label for="MOM_themetakeover_youtubefrontpage">Youtube URL for 404s</label><input type="text" id="MOM_themetakeover_youtubefrontpage" name="MOM_themetakeover_youtubefrontpage" value="'.esc_url(get_option('MOM_themetakeover_youtubefrontpage')).'"></section>
-            <section><label for="MOM_themetakeover_fitvids"><a href="http://fitvidsjs.com/">Fitvid</a> .class</label><input type="text" id="MOM_themetakeover_fitvids" name="MOM_themetakeover_fitvids" value="'.esc_attr(get_option('MOM_themetakeover_fitvids')).'"></section>
-            <section><label for="MOM_themetakeover_postdiv">Post content .div</label><input type="text" placeholder=".entry" id="MOM_themetakeover_postdiv" name="MOM_themetakeover_postdiv" value="'.esc_attr(get_option('MOM_themetakeover_postdiv')).'"></section>
+            <section><hr /></section>
+			<section><label for="MOM_themetakeover_fitvids"><a href="http://fitvidsjs.com/">Fitvid</a> .class</label><input type="text" id="MOM_themetakeover_fitvids" name="MOM_themetakeover_fitvids" value="'.esc_attr(get_option('MOM_themetakeover_fitvids')).'"></section>
+            <section><hr /></section>
+			<section><label for="MOM_themetakeover_postdiv">Post content .div</label><input type="text" placeholder=".entry" id="MOM_themetakeover_postdiv" name="MOM_themetakeover_postdiv" value="'.esc_attr(get_option('MOM_themetakeover_postdiv')).'"></section>
             <section><label for="MOM_themetakeover_postelement">Post title .element</label><input type="text" placeholder="h1" id="MOM_themetakeover_postelement" name="MOM_themetakeover_postelement" value="'.esc_attr(get_option('MOM_themetakeover_postelement')).'"></section>
             <section><label for="MOM_themetakeover_posttoggle">Toggle text</label><input type="text" placeholder="Toggle contents" id="MOM_themetakeover_posttoggle" name="MOM_themetakeover_posttoggle" value="'.esc_attr(get_option('MOM_themetakeover_posttoggle')).'"></section>
         </div>';
@@ -2043,6 +2148,7 @@ if(current_user_can('manage_options')){
             <label>__Dependency: Shortcodes (not enabled)</label>
             </section>';
         }
+		echo '<section><hr /></section>';
         echo '</div><div class="exclude">';
         echo '<input id="momthemetakeoversave" type="submit" value="Save Changes" name="momthemetakeoversave"></form></div></div></div><div class="new"></div>';
     }
@@ -2817,7 +2923,7 @@ function mom_exclude_filter_posts($query){
     if ($query->is_feed || $query->is_home || $query->is_search || $query->tag || $query->is_category){
 		$tax_query = array(
 			'ignore_sticky_posts' => true,
-            'relation'            => 'AND OR',
+			'post_type'           => 'any',
             array(
                 'taxonomy'        => 'category',
                 'terms'           => $hideAllCategories,
