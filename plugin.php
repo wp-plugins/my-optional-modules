@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.7
+Version: 5.3.7.1
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -1650,7 +1650,7 @@ function mom_onthisday_template(){
 	if( $posts == 1 ) {	echo '<div id="mom_onthisday"><span class="onthisday">on this day</span>'; }
 	if($posts > 0){
 		$postid = get_the_id();
-		echo '<section class="mom_onthisday"><a href="';the_permalink();echo'">';echo get_the_post_thumbnail($postid, 'thumbnail', array('class' => 'mom_thumb'));echo '<div class="mom_onthisday">';echo '<h3 class="title">';the_title();echo '</h3><span class="theyear">';the_date('Y'); echo'</span>';echo '</div></a></section>';
+		echo '<section class="mom_onthisday"><a href="';the_permalink();echo'">';echo '<div class="mom_onthisday">';echo '<span class="title">';the_title();echo '</span><span class="theyear">';the_date('Y'); echo'</span>';echo '</div></a></section>';
 	}
 		endwhile;
 	if($posts == 0){
@@ -1659,7 +1659,7 @@ function mom_onthisday_template(){
 		query_posts( "orderby=rand&posts_per_page=5&ignore_sticky_posts=1" );
 		while( have_posts() ) : the_post();
 		$postid = get_the_id();
-		echo '<section class="mom_onthisday"><a href="';the_permalink();echo'">';echo get_the_post_thumbnail($postid, 'thumbnail', array('class' => 'mom_thumb'));echo '<div class="mom_onthisday">';echo '<h3 class="title">';the_title();echo '</h3><span class="theyear">';the_date('Y'); echo'</span>';echo '</div></a></section>';
+		echo '<section class="mom_onthisday"><a href="';the_permalink();echo'">';echo '<div class="mom_onthisday">';echo '<span class="title">';the_title();echo '</span><span class="theyear">';the_date('Y'); echo'</span>';echo '</div></a></section>';
 		endwhile;
 	}
 	echo '</div>';
@@ -1688,14 +1688,13 @@ function mom_onthisday($atts,$content = null){
 	$postsperpage = esc_attr($amount);
 	query_posts( "cat=$category&monthnum=$current_month&day=$current_day&post_per_page=$postsperpage" );
 	ob_start();
-	wp_reset_query();
 	$posts = 0;
 	while( have_posts() ) : the_post();
 	$posts++;
 	if( $posts == 1 ) {	echo '<div id="mom_onthisday"><span class="onthisday">on this day</span>'; }
 	if($posts > 0){
 		$postid = get_the_id();
-		echo '<section class="mom_onthisday"><a href="';the_permalink();echo'">';echo get_the_post_thumbnail($postid, 'thumbnail', array('class' => 'mom_thumb'));echo '<div class="mom_onthisday">';echo '<h3 class="title">';the_title();echo '</h3><span class="theyear">';the_date('Y'); echo'</span>';echo '</div></a></section>';
+		echo '<section class="mom_onthisday"><a href="';the_permalink();echo'">';echo get_the_post_thumbnail($postid, 'thumbnail', array('class' => 'mom_thumb'));echo '<div class="mom_onthisday">';echo '<span class="title">';the_title();echo '</span><span class="theyear">';the_date('Y'); echo'</span>';echo '</div></a></section>';
 	}
 		endwhile;
 	if($posts == 0){
@@ -1704,7 +1703,7 @@ function mom_onthisday($atts,$content = null){
 		query_posts( "orderby=rand&post_per_page=5&ignore_sticky_posts=1" );
 		while( have_posts() ) : the_post();
 		$postid = get_the_id();
-		echo '<section class="mom_onthisday"><a href="';the_permalink();echo'">';echo get_the_post_thumbnail($postid, 'thumbnail', array('class' => 'mom_thumb'));echo '<div class="mom_onthisday">';echo '<h3 class="title">';the_title();echo '</h3><span class="theyear">';the_date('Y'); echo'</span>';echo '</div></a></section>';
+		echo '<section class="mom_onthisday"><a href="';the_permalink();echo'">';echo get_the_post_thumbnail($postid, 'thumbnail', array('class' => 'mom_thumb'));echo '<div class="mom_onthisday">';echo '<span class="title">';the_title();echo '</span><span class="theyear">';the_date('Y'); echo'</span>';echo '</div></a></section>';
 		endwhile;
 	}
 	echo '</div>';

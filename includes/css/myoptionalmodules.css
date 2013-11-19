@@ -20,13 +20,12 @@
 	span#createalisttog,span#createalisttogd{margin:0 auto;cursor:pointer;}
 	div.createalist_listitems{margin:15px auto 10px 15px;text-indent:15px;}
 	/* On this day*/
-	#mom_onthisday{padding:5px;border:1px solid #eee;display:block;width:250px;background-color:#fcfcfc;margin:30px auto;}
-	#mom_onthisday i{float:right;color:#e4e4e4;}
+	#mom_onthisday{font-size:12px;padding:5px;border:1px solid #eee;display:block;width:250px;background-color:#fcfcfc;margin:30px auto;}
 	#mom_onthisday span.onthisday{padding:10px;display:block;clear:both;border:1px solid #eee;background-color:#fff;margin:-20px auto 0 auto;width:auto;text-transform:lowercase;font-size:20px;text-align:center;}
-	section.mom_onthisday{clear:both; width:100%;margin:0 auto 0 -5px;padding:5px;overflow:hidden;cursor:pointer;height:30px;}
-	section.mom_onthisday:hover{background-color:#fff;}
-	section.mom_onthisday .mom_thumb{position:relative;float:left;height:30px;width:auto;}
-	div.mom_onthisday {width:82%;margin:0 auto;padding:5px;float:right;}
-	h3.title{text-align:left;font-size:15px;line-height:15px;letter-spacing:.5px;width:160px;overflow:hidden;display:block;margin:-5px 0;float:left;height:10px;}
-	span.theyear {float:right;margin:-9px 5px 0;font-size:12px;}
-	section.nothing{text-align:center;color:#bcbcbc;}
+	#mom_onthisday section.mom_onthisday{clear:both; width:100%;margin:0 auto 0 -5px;padding:5px;overflow:hidden;cursor:pointer;height:auto;overflow:hidden;}
+	#mom_onthisday section.mom_onthisday:hover{background-color:#fff;}
+	#mom_onthisday section.mom_onthisday a {display:block;width:100%;height:100%;}
+	#mom_onthisday section.mom_onthisday div.mom_onthisday {width:95%;margin:0 auto 0 -5px;padding:5px;clear:both;display:block;overflow:hidden;}
+	#mom_onthisday section.mom_onthisday div.mom_onthisday span.title{float:left;text-align:left;display:block;width:80%;}
+	#mom_onthisday section.mom_onthisday div.mom_onthisday span.theyear {float:right;text-align:right;display:block;width:10%;margin:5px 0;}
+	#mom_onthisday section.mom_onthisday div.mom_onthisday section.nothing{text-align:center;color:#bcbcbc;}
