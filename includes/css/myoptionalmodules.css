@@ -1,4 +1,3 @@
-	div,i,section,label,a,input { -webkit-transition: all .6s ease-in-out; -moz-transition: all .6s ease-in-out; -o-transition: all .6s ease-in-out; transition: all .6s ease-in-out; }	
 	/* Navbar */
 	div.momnavbar{cursor:pointer;text-transform:uppercase;position:absolute;top:0;left:0;width:100%;height:30px;display:block;background-color:#fff;text-indent:5px;font-size:10px;padding:3px 0 2px 0;overflow:hidden;line-height:13px;z-index:999;}
 	div.momnavbar div{width:100%;display:block;overflow:hidden;height:15px;border-bottom:1px solid #000;position:relative;}
@@ -22,7 +21,7 @@
 	/* On this day*/
 	#mom_onthisday{font-size:12px;padding:5px;border:1px solid #eee;display:block;width:250px;background-color:#fcfcfc;margin:30px auto;}
 	#mom_onthisday span.onthisday{padding:10px;display:block;clear:both;border:1px solid #eee;background-color:#fff;margin:-20px auto 0 auto;width:auto;text-transform:lowercase;font-size:20px;text-align:center;}
-	#mom_onthisday section.mom_onthisday{clear:both; width:100%;margin:0 auto 0 -5px;padding:5px;overflow:hidden;cursor:pointer;height:auto;overflow:hidden;}
+	#mom_onthisday section.mom_onthisday{clear:both; width:100%;margin:0 auto 0 -5px;padding:5px;overflow:hidden;cursor:pointer;height:40px;overflow:hidden;}
 	#mom_onthisday section.mom_onthisday:hover{background-color:#fff;}
 	#mom_onthisday section.mom_onthisday a {display:block;width:100%;height:100%;}
 	#mom_onthisday section.mom_onthisday div.mom_onthisday {width:95%;margin:0 auto 0 -5px;padding:5px;clear:both;display:block;overflow:hidden;}

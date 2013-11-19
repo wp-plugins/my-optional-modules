@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.7.2
+Version: 5.3.7.3
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -20,61 +20,47 @@ You should have received a copy of the GNU General Public License
 along with this program;if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 /******************************
-(00) Contents
-SECTION A > Minor dependencies
-SECTION B > Overall
-(B0) Install > When plugin is activated, do stuff
-(B1) Variables > Set variables for main modules
-(B2) Main functions > Define functions that we need immediately
-(B3) Options > Saving and deleting
-SECTION C > Settings page
-SECTION D > Passwords
-(D0) Settings > Settings page
-(D1) Functions > Functions([shortcode])
-SECTION E > Reviews
-(E0) Settings > Settings page
-(E1) Functions > Reviews functions,[shortcode]
-SECTION F > Shortcodes
-(F0) Settings > Settings display (informational purposes screen)
-(F1) Shortcodes > [shortcodes]
-SECTION G > Meta
-(G0) Functions > Meta functions
-SECTION H > Theme Takeover
-(H0) Settings > Settings page
-(H1) Functions > Theme Takeover functions
-SECTION I > Font Awesome
-(I0) Shortcode > [font-fa] shortcode for Font Awesome <i></i>
-SECTION J > Count++
-(J0) Settings > Settings page
-(J1) Functions > Count++ Theme functions
-SECTION K > Exclude
-(K0) Settings > Settings page
-(K1) Functions > Exclude functions
-Section L > Jump Around
-(L0) Settings > Settings page
-SECTION X > Database cleaner
-SECTION Y > Post edit buttons
-SECTION Z > Additional information
-/*****************************/
-/* Divider
-/*****************************/
-/* SECTION A
-/* Dependencies
-/*****************************/
-/* 11/15/2013 (last update)
-/*****************************/
+	(00) Contents
+		SECTION A > Minor dependencies
+		SECTION B > Overall
+			(B0) Install > When plugin is activated, do stuff
+			(B1) Variables > Set variables for main modules
+			(B2) Main functions > Define functions that we need immediately
+			(B3) Options > Saving and deleting
+		SECTION C > Settings page
+		SECTION D > Passwords
+			(D0) Settings > Settings page
+			(D1) Functions > Functions([shortcode])
+		SECTION E > Reviews
+			(E0) Settings > Settings page
+			(E1) Functions > Reviews functions,[shortcode]
+		SECTION F > Shortcodes
+			(F0) Settings > Settings display (informational purposes screen)
+			(F1) Shortcodes > [shortcodes]
+		SECTION G > Meta
+			(G0) Functions > Meta functions
+		SECTION H > Theme Takeover
+			(H0) Settings > Settings page
+			(H1) Functions > Theme Takeover functions
+		SECTION I > Font Awesome
+			(I0) Shortcode > [font-fa] shortcode for Font Awesome <i></i>
+		SECTION J > Count++
+			(J0) Settings > Settings page
+			(J1) Functions > Count++ Theme functions
+		SECTION K > Exclude
+			(K0) Settings > Settings page
+			(K1) Functions > Exclude functions
+		Section L > Jump Around
+			(L0) Settings > Settings page
+		SECTION X > Database cleaner
+		SECTION Y > Post edit buttons
+		SECTION Z > Additional information
+/****************************** SECTION A -/- Dependencies  ******************************/
 define('MyOptionalModules',true);
 require_once(ABSPATH.'wp-includes/pluggable.php');
 $my_optional_modules_passwords_salt = wp_salt();
 $passwordField = 0;
-/*****************************/
-/* Divider
-/*****************************/
-/* SECTION B
-/* (B0) Install
-/*****************************/
-/* 11/15/2013 (last update)
-/*****************************/
+/****************************** SECTION B -/- (B0) Install ******************************/
 register_activation_hook(__FILE__,'my_optional_modules_main_control_install');
 add_action('wp','enqueueMOMscriptsFooter');
 add_action('admin_enqueue_scripts','mom_styles');
@@ -94,19 +80,12 @@ function MOMFontAwesomeIncluded(){
 	wp_register_style('font_awesome',plugins_url().'/'.plugin_basename(dirname(__FILE__)).'/includes/fontawesome/css/font-awesome.css');
 	wp_enqueue_style('font_awesome');
 }
-function MOMMainCSS() {
-		$myStyleFile = WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules.css';
-		wp_register_style('my_optional_modules',$myStyleFile);
-		wp_enqueue_style('my_optional_modules');
+function MOMMainCSS(){
+	$myStyleFile = WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules.css';
+	wp_register_style('my_optional_modules',$myStyleFile);
+	wp_enqueue_style('my_optional_modules');
 }
-/*****************************/
-/* Divider
-/*****************************/
-/* SECTION B
-/* (B1) Variables
-/*****************************/
-/* 11/18/2013 (last update)
-/*****************************/
+/****************************** SECTION B -/- (B1) Variables ******************************/
 $mommodule_analytics = esc_attr(get_option('mommaincontrol_analytics'));
 $mommodule_focus = esc_attr(get_option('mommaincontrol_focus'));
 
@@ -155,9 +134,19 @@ if($mommodule_maintenance === true)add_action('wp','momMaintenance');
 
 $mommodule_meta = esc_attr(get_option('mommaincontrol_meta'));
 if($mommodule_meta == 1)$mommodule_meta = true;
+if($mommodule_meta === true)mom_SEO_header();
 if($mommodule_meta === true)add_filter('admin_init','momSEO_add_fields_to_general');
 if($mommodule_meta === true)add_filter('user_contactmethods','momSEO_add_fields_to_profile');
-if($mommodule_meta === true)mom_SEO_header();
+if($mommodule_meta === true)add_filter('the_content_feed','momSEOfeed');
+if($mommodule_meta === true)add_filter('the_excerpt_rss','momSEOfeed');
+if($mommodule_meta === true)add_filter('jetpack_enable_opengraph','__return_false',99);
+if($mommodule_meta === true)add_action('template_redirect','mom_grab_author_count');
+if($mommodule_meta === true)add_action('wp','momSEO_disable_date_based_archives');
+if($mommodule_meta === true)add_action('wp_head','mom_meta_module');
+if($mommodule_meta === true)add_action('wp_enqueue_scripts','momSEOheadscripts');
+if($mommodule_meta === true)add_action('wp_footer','wp_print_scripts',5);
+if($mommodule_meta === true)add_action('wp_footer','wp_enqueue_scripts',5);
+if($mommodule_meta === true)add_action('wp_footer','wp_print_head_scripts',5);
 
 $mommodule_passwords = esc_attr(get_option('mommaincontrol_momrups'));
 if($mommodule_passwords == 1)$mommodule_passwords = true;
@@ -199,12 +188,10 @@ if($mommodule_versionnumbers === true)add_filter('style_loader_src','mom_remove_
 if($mommodule_versionnumbers === true)add_filter('script_loader_src','mom_remove_version_numbers',0);
 
 $momthemetakeover_youtube = esc_url(get_option('MOM_themetakeover_youtubefrontpage'));
-/*****************************/
-/* SECTION B
-/* (B2) Main Functions
-/*****************************/
-/* 11/19/2013 (last update)
-/*****************************/
+/****************************** SECTION B -/- (B2) Main Functions ******************************/
+function sanistripents($string){
+	return sanitize_text_field(strip_tags(htmlentities($string)));
+}
 function unique_numbersonly_nospaces($string){
 	return sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',($string)))))));
 }
@@ -223,31 +210,31 @@ if($mommodule_exclude == 1){
 			if($user_level <= 7){$nofollowCats = get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
 		}
 		$c1 = explode(',',$nofollowCats);
-		foreach($c1 as &$C1) {$C1 = ''.$C1.',';}
+		foreach($c1 as &$C1){$C1 = ''.$C1.',';}
 		$c_1 = rtrim(implode($c1),',');
 		$c11 = explode(',',str_replace(' ','',$c_1));
 		$c11array = array($c11);
 		$nofollowcats = array_filter($c11);
 		$category_ids = get_all_category_ids();
-		foreach($category_ids as $cat_id) {
+		foreach($category_ids as $cat_id){
 			if(in_array($cat_id, $nofollowcats))continue;
 			$cat = get_category($cat_id);
-			$link = get_category_link( $cat_id );
+			$link = get_category_link($cat_id);
 			echo '<li><a href="'.$link.'" title="link to '.$cat->name.'">'.$cat->name.'</a></li>';
 		}	
 	}
 }
 function momSEO_add_fields_to_profile($profile_fields){
-			$profile_fields['twitter_personal'] = 'Twitter Username';
-			return $profile_fields;
+	$profile_fields['twitter_personal'] = 'Twitter Username';
+	return $profile_fields;
 }
 function momSEO_add_fields_to_general(){
-			register_setting('general','site_twitter','esc_attr');
-			add_settings_field('site_twitter','<label for="site_twitter">'.__('Twitter Site username','site_twitter').'</label>' ,'mom_SEO_add_twitter_to_general_html','general');
+	register_setting('general','site_twitter','esc_attr');
+	add_settings_field('site_twitter','<label for="site_twitter">'.__('Twitter Site username','site_twitter').'</label>' ,'mom_SEO_add_twitter_to_general_html','general');
 }
 function mom_SEO_add_twitter_to_general_html(){
-		$twitter = get_option('site_twitter','');
-		echo '<input id="site_twitter" name="site_twitter" value="'.$twitter.'"/>';
+	$twitter = get_option('site_twitter','');
+	echo '<input id="site_twitter" name="site_twitter" value="'.$twitter.'"/>';
 }
 function enqueueMOMscriptsFooter(){
 	function mom_jquery(){
@@ -266,11 +253,20 @@ function enqueueMOMscriptsFooter(){
 			wp_register_script('lazyload',$lazyLoad,'','',null,false);
 			wp_enqueue_script('lazyload');
 		}
+		if(get_option('MOM_themetakeover_wowhead') == 1){
+			$wowhead = '//static.wowhead.com/widgets/power.js';
+			wp_deregister_script('wowhead');
+			wp_register_script('wowhead',$wowhead,'','',null,false);
+			wp_enqueue_script('wowhead');
+		}		
 	}
 	add_action('wp_enqueue_scripts','mom_jquery');
 	function MOMScriptsFooter(){
 		echo '
 		<script type=\'text/javascript\'>';
+		if(get_option('MOM_themetakeover_wowhead') == 1){
+			echo 'var wowhead_tooltips = { "colorlinks": true, "iconizelinks": true, "renamelinks": true }';
+		}
 		if(get_option('mommaincontrol_analytics') == 1 && get_option('momanalytics_code') != ''){
 			echo '
 			(function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){
@@ -281,7 +277,7 @@ function enqueueMOMscriptsFooter(){
 			ga(\'send\',\'pageview\');
 			';
 		}			
-		echo 'jQuery(document).ready(function ($){';
+		echo 'jQuery(document).ready(function($){';
 		if(get_option('mommaincontrol_momja') == 1){
 			if(is_archive() || is_home() || is_search()){
 				echo '
@@ -467,14 +463,14 @@ function my_optional_modules_main_control_install(){
 	add_option('mommaincontrol_shorts_activated',1);
 }
 if(get_option('mommaincontrol_momse') == 1 && get_option('MOM_themetakeover_youtubefrontpage') == ''){
-		function MOMExclude404Redirection() {
+		function MOMExclude404Redirection(){
 				if(!is_user_logged_in()){
 						if(get_option('MOM_Exclude_URL') != ''){$RedirectURL = esc_url(get_permalink(get_option('MOM_Exclude_URL')));}else{$RedirectURL = get_bloginfo('wpurl');}
 				}else{
 						if(get_option('MOM_Exclude_URL_User') != ''){$RedirectURL = esc_url(get_permalink(get_option('MOM_Exclude_URL_User')));}else{$RedirectURL = get_bloginfo('wpurl');}
 				}
 				global $wp_query;
-				if ($wp_query->is_404) {
+				if($wp_query->is_404){
 						wp_redirect($RedirectURL,301);exit;
 				}
 		}
@@ -515,12 +511,7 @@ function mom_plugin_scripts(){
 function mom_exclude_postformat_theme_support(){
 	add_theme_support('post-formats', array('aside','gallery','link','image','quote','status','video','audio','chat'));
 }
-/*****************************/
-/* SECTION B
-/* (B3) Options
-/*****************************/
-/* 11/15/2013 (last update)
-/*****************************/
+/****************************** SECTION B -/- (B3) Options ******************************/
 if(current_user_can('manage_options')){
 global $wpdb;
 $RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
@@ -533,6 +524,7 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 	if(get_option('mommaincontrol_passwords_activated') == 0){$wpdb->query("DROP TABLE ".$RUPs_table_name."");}
 	if(get_option('mommaincontrol_reviews_activated') == 0){$wpdb->query("DROP TABLE ".$review_table_name."");}
 	if(get_option('mommaincontrol_shorts_activated') == 0){$wpdb->query("DROP TABLE ".$verification_table_name."");}
+	delete_option('MOM_themetakeover_wowhead');
 	delete_option('mommaincontrol_obwcountplus');
 	delete_option('mommaincontrol_momrups');
 	delete_option('mommaincontrol_momse');
@@ -682,7 +674,7 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 	if(isset($_POST['mom_passwords_mode_submit'])){
 		add_option('mommaincontrol_passwords_activated',1);					
 		if(get_option('mommaincontrol_passwords_activated') == 1){
-		$RUPs_sql = "CREATE TABLE $RUPs_table_name (
+		$RUPs_sql = "CREATE TABLE $RUPs_table_name(
 		ID INT(11) NOT NULL AUTO_INCREMENT , 
 		DATE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 		URL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
@@ -740,101 +732,9 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 			add_option('momMaintenance_url','');
 		}
 }
-	if(isset($_POST['passwordsSave'])){
-		global $my_optional_modules_passwords_salt;
-		$pass1 = $_REQUEST['rotating_universal_passwords_1'];
-		$pass2 = $_REQUEST['rotating_universal_passwords_2'];
-		$pass3 = $_REQUEST['rotating_universal_passwords_3'];
-		$pass4 = $_REQUEST['rotating_universal_passwords_4'];
-		$pass5 = $_REQUEST['rotating_universal_passwords_5'];
-		$pass6 = $_REQUEST['rotating_universal_passwords_6'];
-		$pass7 = $_REQUEST['rotating_universal_passwords_7'];
-		$pass_final_1 = hash('sha512',$my_optional_modules_passwords_salt.$pass1);
-		$pass_final_2 = hash('sha512',$my_optional_modules_passwords_salt.$pass2);
-		$pass_final_3 = hash('sha512',$my_optional_modules_passwords_salt.$pass3);
-		$pass_final_4 = hash('sha512',$my_optional_modules_passwords_salt.$pass4);
-		$pass_final_5 = hash('sha512',$my_optional_modules_passwords_salt.$pass5);
-		$pass_final_6 = hash('sha512',$my_optional_modules_passwords_salt.$pass6);
-		$pass_final_7 = hash('sha512',$my_optional_modules_passwords_salt.$pass7);
-		if($pass1 !== '')update_option('rotating_universal_passwords_1',$pass_final_1);
-		if($pass2 !== '')update_option('rotating_universal_passwords_2',$pass_final_2);
-		if($pass3 !== '')update_option('rotating_universal_passwords_3',$pass_final_3);
-		if($pass4 !== '')update_option('rotating_universal_passwords_4',$pass_final_4);
-		if($pass5 !== '')update_option('rotating_universal_passwords_5',$pass_final_5);
-		if($pass6 !== '')update_option('rotating_universal_passwords_6',$pass_final_6);
-		if($pass7 !== '')update_option('rotating_universal_passwords_7',$pass_final_7);
-		update_option('rotating_universal_passwords_8',$_REQUEST['rotating_universal_passwords_8']);
-	}
 	if(isset($_POST['reset_rups'])){
-		delete_option('rotating_universal_passwords_1');
-		delete_option('rotating_universal_passwords_2');
-		delete_option('rotating_universal_passwords_3');
-		delete_option('rotating_universal_passwords_4');
-		delete_option('rotating_universal_passwords_5');
-		delete_option('rotating_universal_passwords_6');
-		delete_option('rotating_universal_passwords_7');	
-		add_option('rotating_universal_passwords_1','');
-		add_option('rotating_universal_passwords_2','');
-		add_option('rotating_universal_passwords_3','');
-		add_option('rotating_universal_passwords_4','');
-		add_option('rotating_universal_passwords_5','');
-		add_option('rotating_universal_passwords_6','');
-		add_option('rotating_universal_passwords_7','');	
-	}
-	if(isset($_POST['update_JA'])){
-		update_option('jump_around_0',$_REQUEST['jump_around_0']);
-		update_option('jump_around_1',$_REQUEST['jump_around_1']);
-		update_option('jump_around_2',$_REQUEST['jump_around_2']);
-		update_option('jump_around_3',$_REQUEST['jump_around_3']);
-		update_option('jump_around_4',$_REQUEST['jump_around_4']);
-		update_option('jump_around_5',$_REQUEST['jump_around_5']);
-		update_option('jump_around_6',$_REQUEST['jump_around_6']);
-		update_option('jump_around_7',$_REQUEST['jump_around_7']);
-		update_option('jump_around_8',$_REQUEST['jump_around_8']);
-	}	
-	if(isset($_POST['momsesave'])){
-		update_option('MOM_Exclude_VisitorCategories',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_VisitorCategories']));
-		update_option('MOM_Exclude_VisitorTags',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_VisitorTags']));
-		update_option('MOM_Exclude_Categories_RSS',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_Categories_RSS']));
-		update_option('MOM_Exclude_Categories_Front',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_Categories_Front']));
-		update_option('MOM_Exclude_Categories_TagArchives',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_Categories_TagArchives']));
-		update_option('MOM_Exclude_Categories_SearchResults',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_Categories_SearchResults']));
-		update_option('MOM_Exclude_Tags_RSS',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_Tags_RSS']));
-		update_option('MOM_Exclude_Tags_Front',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_Tags_Front']));
-		update_option('MOM_Exclude_Tags_CategoryArchives',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_Tags_CategoryArchives']));
-		update_option('MOM_Exclude_Tags_SearchResults',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_Tags_SearchResults']));
-		update_option('MOM_Exclude_PostFormats_Visitor',sanitize_text_field($_REQUEST['MOM_Exclude_PostFormats_Visitor']));
-		update_option('MOM_Exclude_PostFormats_RSS',sanitize_text_field($_REQUEST['MOM_Exclude_PostFormats_RSS']));
-		update_option('MOM_Exclude_PostFormats_Front',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_Front'])));
-		update_option('MOM_Exclude_PostFormats_CategoryArchives',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_CategoryArchives'])));
-		update_option('MOM_Exclude_PostFormats_TagArchives',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_TagArchives'])));
-		update_option('MOM_Exclude_PostFormats_SearchResults',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_SearchResults'])));
-		update_option('MOM_Exclude_TagsSun',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_TagsSun']));
-		update_option('MOM_Exclude_TagsMon',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_TagsMon']));
-		update_option('MOM_Exclude_TagsTue',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_TagsTue']));
-		update_option('MOM_Exclude_TagsWed',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_TagsWed']));
-		update_option('MOM_Exclude_TagsThu',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_TagsThu']));
-		update_option('MOM_Exclude_TagsFri',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_TagsFri']));
-		update_option('MOM_Exclude_TagsSat',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_TagsSat']));
-		update_option('MOM_Exclude_CategoriesSun',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_CategoriesSun']));
-		update_option('MOM_Exclude_CategoriesMon',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_CategoriesMon']));
-		update_option('MOM_Exclude_CategoriesTue',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_CategoriesTue']));
-		update_option('MOM_Exclude_CategoriesWed',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_CategoriesWed']));
-		update_option('MOM_Exclude_CategoriesThu',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_CategoriesThu']));
-		update_option('MOM_Exclude_CategoriesFri',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_CategoriesFri']));
-		update_option('MOM_Exclude_CategoriesSat',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_CategoriesSat']));
-		update_option('MOM_Exclude_level0Categories',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_level0Categories']));
-		update_option('MOM_Exclude_level1Categories',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_level1Categories']));
-		update_option('MOM_Exclude_level2Categories',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_level2Categories']));
-		update_option('MOM_Exclude_level7Categories',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_level7Categories']));
-		update_option('MOM_Exclude_level0Tags',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_level0Tags']));
-		update_option('MOM_Exclude_level1Tags',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_level1Tags']));
-		update_option('MOM_Exclude_level2Tags',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_level2Tags']));
-		update_option('MOM_Exclude_level7Tags',unique_numbersonly_nospaces($_REQUEST['MOM_Exclude_level7Tags']));
-		update_option('MOM_Exclude_URL',$_REQUEST['MOM_Exclude_URL']);
-		update_option('MOM_Exclude_URL_User',$_REQUEST['MOM_Exclude_URL_User']);
-		update_option('MOM_Exclude_NoFollow',$_REQUEST['MOM_Exclude_NoFollow']);
-		update_option('MOM_Exclude_Hide_Dashboard',$_REQUEST['MOM_Exclude_Hide_Dashboard']);
+		delete_option('rotating_universal_passwords_1');delete_option('rotating_universal_passwords_2');delete_option('rotating_universal_passwords_3');delete_option('rotating_universal_passwords_4');delete_option('rotating_universal_passwords_5');delete_option('rotating_universal_passwords_6');delete_option('rotating_universal_passwords_7');	
+		add_option('rotating_universal_passwords_1','');add_option('rotating_universal_passwords_2','');add_option('rotating_universal_passwords_3','');add_option('rotating_universal_passwords_4','');add_option('rotating_universal_passwords_5','');add_option('rotating_universal_passwords_6','');add_option('rotating_universal_passwords_7','');	
 	}
 	if(
 		isset($_POST['delete_unused_terms']) || 
@@ -863,35 +763,36 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 			$wpdb->query("DELETE FROM `".$termsTable."` WHERE `count` = 0");
 		}
 	}
-	if(isset($_POST['obwcountsave'])){
-		if($_REQUEST['obwcountplus_countdownfrom'])update_option('obwcountplus_1_countdownfrom',$_REQUEST['obwcountplus_countdownfrom']);
-		if($_REQUEST['obwcountplus_remaining'])update_option('obwcountplus_2_remaining',$_REQUEST['obwcountplus_remaining']);
-		if($_REQUEST['obwcountplus_total'])update_option('obwcountplus_3_total',$_REQUEST['obwcountplus_total']);
-		if($_REQUEST['obwcountplus_custom'])update_option('obwcountplus_4_custom',$_REQUEST['obwcountplus_custom']);
-		if($_REQUEST['obwcountplus_countdownfrom'] == '')update_option('obwcountplus_1_countdownfrom','0');
-		if($_REQUEST['obwcountplus_remaining'] == '')update_option('obwcountplus_2_remaining','remaining');
-		if($_REQUEST['obwcountplus_total'] == '')update_option('obwcountplus_3_total','total');
-		if($_REQUEST['obwcountplus_custom'] == '')update_option('obwcountplus_4_custom','');
-	}
-	if(isset($_POST['momthemetakeoversave'])){
-		update_option('MOM_themetakeover_youtubefrontpage',$_REQUEST['MOM_themetakeover_youtubefrontpage']);
-		update_option('MOM_themetakeover_topbar',$_REQUEST['MOM_themetakeover_topbar']);
-		update_option('MOM_themetakeover_archivepage',$_REQUEST['MOM_themetakeover_archivepage']);
-		update_option('MOM_themetakeover_fitvids',$_REQUEST['MOM_themetakeover_fitvids']);
-		update_option('MOM_themetakeover_postdiv',$_REQUEST['MOM_themetakeover_postdiv']);
-		update_option('MOM_themetakeover_postelement',$_REQUEST['MOM_themetakeover_postelement']);
-		update_option('MOM_themetakeover_posttoggle',$_REQUEST['MOM_themetakeover_posttoggle']);
+	// Module form saving 
+	if(isset($_POST['passwordsSave'])){
+		global $my_optional_modules_passwords_salt;
+		foreach($_REQUEST as $k => $v){
+			if($v != '')update_option($k,hash('sha512',$my_optional_modules_passwords_salt.$v));
+		}
+		update_option('rotating_universal_passwords_8',$_REQUEST['rotating_universal_passwords_8']);
+	}	
+	if(isset($_POST['momsesave'])){
+		foreach($_REQUEST as $k => $v){
+			update_option($k,unique_numbersonly_nospaces($v));
+		}	
+		update_option('MOM_Exclude_PostFormats_Visitor',sanitize_text_field($_REQUEST['MOM_Exclude_PostFormats_Visitor']));
+		update_option('MOM_Exclude_PostFormats_RSS',sanitize_text_field($_REQUEST['MOM_Exclude_PostFormats_RSS']));
+		update_option('MOM_Exclude_PostFormats_Front',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_Front'])));
+		update_option('MOM_Exclude_PostFormats_CategoryArchives',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_CategoryArchives'])));
+		update_option('MOM_Exclude_PostFormats_TagArchives',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_TagArchives'])));
+		update_option('MOM_Exclude_PostFormats_SearchResults',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_SearchResults'])));
+		update_option('MOM_Exclude_URL',$_REQUEST['MOM_Exclude_URL']);
+		update_option('MOM_Exclude_URL_User',$_REQUEST['MOM_Exclude_URL_User']);
+		update_option('MOM_Exclude_NoFollow',$_REQUEST['MOM_Exclude_NoFollow']);
+		update_option('MOM_Exclude_Hide_Dashboard',$_REQUEST['MOM_Exclude_Hide_Dashboard']);
+	}	
+	if(isset($_POST['obwcountsave']) || isset($_POST['momthemetakeoversave']) || isset($_POST['update_JA'])){
+		foreach($_REQUEST as $k => $v){
+			update_option($k,$v);
+		}	
 	}
 }
-/*****************************/
-/* Divider
-/*****************************/
-/* SECTION C
-/* (C0) Settings
-/* Main Plugin Page
-/*****************************/
-/* 11/17/2013 (last update)
-/*****************************/
+/****************************** SECTION C -/- (C0) Settings -/- Main Plugin Page ******************************/
 if(current_user_can('manage_options')){
 	// Add options page for plugin to Wordpress backend
 	add_action('admin_menu','my_optional_modules_add_options_page');
@@ -965,7 +866,7 @@ if(current_user_can('manage_options')){
 			<div class="small left">
 			<form method="post" action=""><input onClick="this.select();" type="text" value="'.get_option('momanalytics_code').'" name="momanalytics_code" placeholder="UA-XXXXXXXX-X" />
 			<input placeholder="http://url.tld" onClick="this.select();" type="text" value="'.get_option('momMaintenance_url').'" name="momMaintenance_url" />
-			<select name="mompaf_post" id="mompaf_0"><option value="0" ';if(get_option('mompaf_post') == 0){echo 'selected="selected"';}echo '/>Latest post</option>';$showmeposts = get_posts(array('posts_per_page' => -1)); foreach ($showmeposts as $postsshown){echo '<option name="mompaf_post" id="mompaf_'.$postsshown->ID.'" value="'.$postsshown->ID.'"'; if(get_option('mompaf_post') == $postsshown->ID){echo ' selected="selected"';}echo '>'.$postsshown->post_title.'</option>';}echo '</select>
+			<select name="mompaf_post" id="mompaf_0"><option value="0" ';if(get_option('mompaf_post') == 0){echo 'selected="selected"';}echo '/>Latest post</option>';$showmeposts = get_posts(array('posts_per_page' => -1)); foreach($showmeposts as $postsshown){echo '<option name="mompaf_post" id="mompaf_'.$postsshown->ID.'" value="'.$postsshown->ID.'"'; if(get_option('mompaf_post') == $postsshown->ID){echo ' selected="selected"';}echo '>'.$postsshown->post_title.'</option>';}echo '</select>
 			</div>
 			<div class="small left">
 			<label for="mom_postasfront_post_submit" class="onoff1_solo">Save<span></span></label><input type="submit" id="mom_postasfront_post_submit" name="mom_postasfront_post_submit" value="Submit" class="hidden"></form>
@@ -1011,15 +912,7 @@ if(current_user_can('manage_options')){
 		echo '</div>';
 	}
 }
-/*****************************/
-/* Divider
-/*****************************/
-/* SECTION D
-/* (D0) Settings
-/* Passwords
-/*****************************/
-/* 11/15/2013 (last update)
-/*****************************/
+/****************************** SECTION D -/- (D0) Settings -/- Passwords ******************************/
 if(current_user_can('manage_options')){
 	function my_optional_modules_passwords_module(){
 		echo '<span class="moduletitle">__passwords<em>[rups]hide this content[/rups]</em></span><div class="clear"></div><div class="settings">';
@@ -1096,8 +989,8 @@ if(current_user_can('manage_options')){
 				global $wpdb;
 				$RUPs_attempts_amount = get_option('rotating_universal_passwords_8');
 				$RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
-				$RUPs_locks = $wpdb->get_results ("SELECT ID,DATE,IP,URL FROM $RUPs_table_name WHERE ATTEMPTS >= $RUPs_attempts_amount ORDER BY ID DESC");
-				foreach ($RUPs_locks as $RUPs_locks_admin){
+				$RUPs_locks = $wpdb->get_results("SELECT ID,DATE,IP,URL FROM $RUPs_table_name WHERE ATTEMPTS >= $RUPs_attempts_amount ORDER BY ID DESC");
+				foreach($RUPs_locks as $RUPs_locks_admin){
 					$this_ID = $RUPs_locks_admin->ID;
 					echo '
 					<div class="clear locked">
@@ -1114,13 +1007,7 @@ if(current_user_can('manage_options')){
 		echo '</div></div></div>';
 	}
 }
-/*****************************/
-/* SECTION D
-/* (D1) Functions
-/* Passwords
-/*****************************/
-/* 11/15/2013 (last update)
-/*****************************/
+/****************************** SECTION D -/- (D1) Functions -/- Passwords ******************************/
 function rotating_universal_passwords_shortcode($atts, $content = null){
 	ob_start();
 	global $passwordField;
@@ -1133,9 +1020,9 @@ function rotating_universal_passwords_shortcode($atts, $content = null){
 	} else if(isset($_SERVER["HTTP_CLIENT_IP"])){
 		$RUPs_origin = $_SERVER["HTTP_CLIENT_IP"]; 
 	}
-	$RUPs_ip_addr = $RUPs_origin; 
-	$RUPs_s32int = ip2long($RUPs_ip_addr); 
-	$RUPs_us32str = sprintf("%u",$RUPs_s32int);			
+	$RUPs_ip_addr = $RUPs_origin;
+	$RUPs_s32int = ip2long($RUPs_ip_addr);
+	$RUPs_us32str = sprintf("%u",$RUPs_s32int);
 	if(date('N') === '7'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_1');$rotating_universal_passwords_today_is = 'Sunday';}
 	if(date('N') === '1'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_2');$rotating_universal_passwords_today_is = 'Monday';}
 	if(date('N') === '2'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_3');$rotating_universal_passwords_today_is = 'Tuesday';}
@@ -1204,38 +1091,30 @@ function rotating_universal_passwords_shortcode($atts, $content = null){
 	}
 	return ob_get_clean();
 }
-/*****************************/
-/* Divider
-/*****************************/
-/* SECTION E
-/* (E0) Settings
-/* Reviews
-/*****************************/
-/* 11/15/2013 (last update)
-/*****************************/
+/****************************** SECTION E -/- (E0) Settings -/- Reviews ******************************/
 if(current_user_can('manage_options')){
 	function my_optional_modules_reviews_module(){
 		function mom_closetags($html){
 			// http://stackoverflow.com/questions/3059398/how-to-close-unclosed-html-tags
-			preg_match_all ("#<([a-z]+)(.*)?(?!/)>#iU", $html, $result);
+			preg_match_all("#<([a-z]+)(.*)?(?!/)>#iU", $html, $result);
 			$openedtags = $result[1];
-			preg_match_all ("#</([a-z]+)>#iU", $html, $result);
+			preg_match_all("#</([a-z]+)>#iU", $html, $result);
 			$closedtags = $result[1];
-			$len_opened = count ($openedtags);
-			if(count ($closedtags) == $len_opened)
+			$len_opened = count($openedtags);
+			if(count($closedtags) == $len_opened)
 			{
 			return $html;
 			}
-			$openedtags = array_reverse ($openedtags);
+			$openedtags = array_reverse($openedtags);
 			for($i = 0; $i < $len_opened; $i++)
 			{
-				if(!in_array ($openedtags[$i], $closedtags))
+				if(!in_array($openedtags[$i], $closedtags))
 				{
 				$html .= "</" . $openedtags[$i] . ">";
 				}
 				else
 				{
-				unset ($closedtags[array_search ($openedtags[$i], $closedtags)]);
+				unset($closedtags[array_search($openedtags[$i], $closedtags)]);
 				}
 			}
 			return $html;
@@ -1254,7 +1133,7 @@ if(current_user_can('manage_options')){
 		}
 		if(isset($_POST['filterResults'])){
 			$filter_type = $_REQUEST['filterResults_type'];		
-			$filter_type_fetch = sanitize_text_field ($filter_type);
+			$filter_type_fetch = sanitize_text_field($filter_type);
 			update_option('momreviews_search',$filter_type_fetch);
 		}
 			
@@ -1304,12 +1183,12 @@ if(current_user_can('manage_options')){
 					$filtered_search = get_option('momreviews_search');
 					
 					if(get_option('momreviews_search') != ""){
-						$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE TYPE = '$filtered_search' ORDER BY ID DESC");
+						$reviews = $wpdb->get_results("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE TYPE = '$filtered_search' ORDER BY ID DESC");
 					}else{
-						$reviews = $wpdb->get_results ("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name ORDER BY ID DESC");
+						$reviews = $wpdb->get_results("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name ORDER BY ID DESC");
 					}
 					echo '<div class="momresults">';
-					foreach ($reviews as $reviews_results){
+					foreach($reviews as $reviews_results){
 						$this_ID = $reviews_results->ID;
 							echo "<div class=\"momdata\">";
 							
@@ -1370,13 +1249,7 @@ if(current_user_can('manage_options')){
 		reviews_page_content();
 	}
 }	
-/*****************************/
-/* SECTION E
-/* (E1) Functions
-/* Reviews
-/*****************************/
-/* 11/15/2013 (last update)
-/*****************************/
+/****************************** SECTION E -/- (E1) Functions -/- Reviews ******************************/
 $mom_review_global = 0;
 function mom_reviews_shortcode($atts, $content = null){
 	global $mom_review_global;
@@ -1422,15 +1295,7 @@ function mom_reviews_shortcode($atts, $content = null){
 	return ob_get_clean();
 }
 function mom_reviews_style(){echo '<style>'.get_option('momreviews_css').'</style>';}
-/*****************************/
-/* Divider
-/*****************************/
-/* SECTION F
-/* (F0) Settings
-/* Shortcodes
-/*****************************/
-/* 11/15/2013 (last update)
-/*****************************/
+/****************************** SECTION F -/- (F0) Settings -/- Shortcodes ******************************/
 if(current_user_can('manage_options')){
 	function my_optional_modules_shortcodes_module(){
 		echo "
@@ -1672,13 +1537,7 @@ if(current_user_can('manage_options')){
 		</div>";
 	}
 }
-/*****************************/
-/* SECTION F
-/* (F1) Functions
-/* Shortcodes
-/*****************************/
-/* 11/18/2013 (last update)
-/*****************************/
+/****************************** SECTION F -/- (F1) Functions -/- Shortcodes ******************************/
 function mom_onthisday_template(){
 	$current_day = date('d');
 	$current_month = date('m');
@@ -1697,7 +1556,7 @@ function mom_onthisday_template(){
 	$posts = 0;
 	while(have_posts()):the_post();
 	$posts++;
-	if( $posts == 1 ) {	echo '<div id="mom_onthisday"><span class="onthisday">on this day</span>';}
+	if($posts == 1){echo '<div id="mom_onthisday"><span class="onthisday">on this day</span>';}
 	if($posts > 0){
 		$postid = get_the_id();
 		echo '<section class="mom_onthisday"><a href="';the_permalink();echo'">';echo '<div class="mom_onthisday">';echo '<span class="title">';the_title();echo '</span><span class="theyear">';the_date('Y'); echo'</span>';echo '</div></a></section>';
@@ -1705,7 +1564,7 @@ function mom_onthisday_template(){
 		endwhile;
 	if($posts == 0){
 		$posts++;
-		if( $posts == 1 ) {	echo '<div id="mom_onthisday"><span class="onthisday">5 random posts</span>';}
+		if($posts == 1){echo '<div id="mom_onthisday"><span class="onthisday">5 random posts</span>';}
 		query_posts( "orderby=rand&posts_per_page=5&ignore_sticky_posts=1" );
 		while(have_posts()):the_post();
 		$postid = get_the_id();
@@ -1725,7 +1584,7 @@ function mom_onthisday($atts,$content = null){
 	);
 	global $post;
 	$postid = $post->ID;
-	if ($cat == 'current'){
+	if($cat == 'current'){
 		$category_current = get_the_category($postid);
 		$category = $category_current[0]->cat_ID;
 	}else{
@@ -1749,7 +1608,7 @@ function mom_onthisday($atts,$content = null){
 		endwhile;
 	if($posts == 0){
 		$posts++;
-		if( $posts == 1 ) {	echo '<div id="mom_onthisday"><span class="onthisday">5 random posts</span>';}
+		if($posts == 1){echo '<div id="mom_onthisday"><span class="onthisday">5 random posts</span>';}
 		query_posts( "orderby=rand&post_per_page=5&ignore_sticky_posts=1" );
 		while(have_posts()):the_post();
 		$postid = get_the_id();
@@ -1809,7 +1668,7 @@ function mom_reddit_shortcode($atts, $content = null){
 	$query = "SELECT post_title FROM $wpdb->posts WHERE post_status = 'publish' AND ID = '$id'";
 	$reddit = $wpdb->get_results($query);
 	if($reddit){
-		foreach ($reddit as $reddit_info){
+		foreach($reddit as $reddit_info){
 			$post_title = strip_tags($reddit_info->post_title);
 		}
 	extract(
@@ -1926,27 +1785,27 @@ function mom_verify_shortcode($atts,$content = null){
 	global $momverifier_verification_step;
 	$momverifier_verification_step++;
 	$thePostId = $post->ID;
-	$theBackground = sanitize_text_field(strip_tags(htmlentities($background)));
-	$theAge = sanitize_text_field(strip_tags(htmlentities($age)));
-	$isLogged = sanitize_text_field(strip_tags(htmlentities($logged)));
-	$theMessage = sanitize_text_field(strip_tags(htmlentities($message)));
-	$theAnswer = sanitize_text_field(strip_tags(htmlentities($answer)));
+	$theBackground = sanistripents($background);
+	$theAge = sanistripents($age);
+	$isLogged = sanistripents($logged);
+	$theMessage = sanistripents($message);
+	$theAnswer = sanistripents($answer);
 	$failMessage = $fail;
-	$isLogged = sanitize_text_field(strip_tags(htmlentities($logged	)));
-	$isLogging = sanitize_text_field(strip_tags(htmlentities($logging)));
-	$attempts = sanitize_text_field(strip_tags(htmlentities($single	)));
-	$correctResultMessage = sanitize_text_field(strip_tags(htmlentities($cmessage)));
-	$incorrectResultMessage = sanitize_text_field(strip_tags(htmlentities($imessage)));
-	$isDeactivated = sanitize_text_field(strip_tags(htmlentities($deactivate)));
+	$isLogged = sanistripents($logged);
+	$isLogging = sanistripents($logging);
+	$attempts = sanistripents($single);
+	$correctResultMessage = sanistripents($cmessage);
+	$incorrectResultMessage = sanistripents($imessage);
+	$isDeactivated = sanistripents($deactivate);
 	$verificationID = $momverifier_verification_step.''.$thePostId;
-	$statsMessage = sanitize_text_field(strip_tags(htmlentities($stats)));
+	$statsMessage = sanistripents($stats);
 	$alreadyAttempted = 0;
 	if(is_numeric($attempts) && $attempts == 1){
 		global $wpdb;
 		$verification_table_name = $wpdb->prefix.'momverification';
-		$getNumberofAttempts = $wpdb->get_results ("SELECT IP,POST,CORRECT FROM $verification_table_name WHERE IP = '".$theIP."' AND POST = '" . $verificationID . "'");	
+		$getNumberofAttempts = $wpdb->get_results("SELECT IP,POST,CORRECT FROM $verification_table_name WHERE IP = '".$theIP."' AND POST = '" . $verificationID . "'");	
 		$alreadyAttempted = count($getNumberofAttempts);
-		foreach ($getNumberofAttempts as $numberofattempts){
+		foreach($getNumberofAttempts as $numberofattempts){
 			$isCorrect = $numberofattempts->CORRECT;
 		}
 	}
@@ -1989,8 +1848,8 @@ function mom_verify_shortcode($atts,$content = null){
 	if(is_numeric($isLogging) && $isLogging == 1 || is_numeric($isLogging) && $isLogging == 3 || is_numeric($attempts) && $attempts == 1){
 		global $wpdb;
 		$verification_table_name = $wpdb->prefix.'momverification';
-		$getIPforCurrentTransaction = $wpdb->get_results ("SELECT IP,POST FROM $verification_table_name WHERE IP = '".$theIP."' AND POST = '".$verificationID."'");
-		if(count ($getIPforCurrentTransaction) <= 0 && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
+		$getIPforCurrentTransaction = $wpdb->get_results("SELECT IP,POST FROM $verification_table_name WHERE IP = '".$theIP."' AND POST = '".$verificationID."'");
+		if(count($getIPforCurrentTransaction) <= 0 && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
 			if($theAge != '' && is_numeric($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']) && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
 				$ageEntered	= ($_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']);
 				if($ageEntered >= $theAge){		
@@ -2011,11 +1870,11 @@ function mom_verify_shortcode($atts,$content = null){
 			}
 		}
 		if($isLogging != 1){
-			$incorrect = $wpdb->get_results ("SELECT CORRECT FROM $verification_table_name WHERE POST = '".$verificationID."' AND CORRECT = '0'");
-			$correct = $wpdb->get_results ("SELECT CORRECT FROM $verification_table_name WHERE POST = '".$verificationID."' AND CORRECT = '1'");
-			$incorrectCount = count ($incorrect);
-			$correctCount = count ($correct);
-			if(count ($correct) > 0 && count ($incorrect) > 0){$totalCount = ($incorrectCount + $correctCount);}else{$totalCount = 1;}					
+			$incorrect = $wpdb->get_results("SELECT CORRECT FROM $verification_table_name WHERE POST = '".$verificationID."' AND CORRECT = '0'");
+			$correct = $wpdb->get_results("SELECT CORRECT FROM $verification_table_name WHERE POST = '".$verificationID."' AND CORRECT = '1'");
+			$incorrectCount = count($incorrect);
+			$correctCount = count($correct);
+			if(count($correct) > 0 && count($incorrect) > 0){$totalCount = ($incorrectCount + $correctCount);}else{$totalCount = 1;}					
 			$percentCorrect = ($correctCount/$totalCount * 100);
 			$percentIncorrect = ($incorrectCount/$totalCount * 100);
 			if($statsMessage == ''){$statsMessage = $theMessage;}
@@ -2025,27 +1884,16 @@ function mom_verify_shortcode($atts,$content = null){
 	if($isCorrect == 1){return $content;}elseif($isCorrect == 0 && $deactivate != 1){return $failMessage;}
 	return ob_get_clean();
 }	
-/*****************************/
-/* Divider
-/*****************************/
-/* SECTION G
-/* (G0) Functions
-/* Meta
-/*****************************/
-/* 11/15/2013 (last update)
-/*****************************/
+/****************************** SECTION G -/- (G0) Functions -/- Meta ******************************/
 function mom_SEO_header(){
 	global $post;
-	if(current_user_can('manage_options')){
 	function mom_grab_author_count()
 	{
 		if(is_author())
 		{
-			if(sizeof(get_users())===1)
+			if(sizeof(get_users('who=authors'))===1)
 				wp_redirect(get_bloginfo('url'));
 		}
-	}
-	add_action('template_redirect','mom_grab_author_count');
 	}
 	function momSEO_disable_date_based_archives(){
 		if(is_date() || is_year() || is_month() || is_day() || is_time() || is_new_day()){
@@ -2056,7 +1904,6 @@ function mom_SEO_header(){
 			endif;
 		}
 	}
-	add_action('wp','momSEO_disable_date_based_archives');
 	function mom_meta_module(){
 		global $wp,$post;
 		$postid = $post->ID;
@@ -2137,32 +1984,16 @@ function mom_SEO_header(){
 		}
 		if(is_search() || is_404() || is_archive())echo '<meta name="robots" content="noindex,nofollow"/>';
 	}
-	add_action('wp_head','mom_meta_module');
 	function momSEOfeed($content){
 		return $content.'<p><a href="'.esc_url(get_permalink($post->ID)).'">'.htmlentities(get_post_field('post_title',$postid)).'</a> via <a href="'.esc_url(home_url('/')).'">'.get_bloginfo('site_name').'</a></p>';
 	}
-	add_filter('the_content_feed','momSEOfeed');
-	add_filter('the_excerpt_rss','momSEOfeed');
 	function momSEOheadscripts(){
 		remove_action('wp_head','wp_print_scripts');
 		remove_action('wp_head','wp_print_head_scripts',9);
 		remove_action('wp_head','wp_enqueue_scripts',1);
 	}
-	add_action('wp_enqueue_scripts','momSEOheadscripts');
-	add_action('wp_footer','wp_print_scripts',5);
-	add_action('wp_footer','wp_enqueue_scripts',5);
-	add_action('wp_footer','wp_print_head_scripts',5);
-	add_filter('jetpack_enable_opengraph','__return_false',99);
 }
-/*****************************/
-/* Divider
-/*****************************/
-/* SECTION H
-/* (H0) Settings
-/* Theme Takeover
-/*****************************/
-/* 11/15/2013 (last update)
-/*****************************/
+/****************************** SECTION H -/- (H0) Settings -/- Theme Takeover ******************************/
 if(current_user_can('manage_options')){
 	function my_optional_modules_theme_takeover_module(){
 		echo '<span class="moduletitle">__theme takeover<em>easy theme manipulation</em></span><div class="clear"></div><div class="settings"><form method="post">';
@@ -2190,7 +2021,7 @@ if(current_user_can('manage_options')){
 			<label for="MOM_themetakeover_archivepage">Archives page</label>
 			<select name="MOM_themetakeover_archivepage" class="allpages" id="MOM_themetakeover_archivepage">
 			<option value="">Home page</option>';
-			foreach ($showmepages as $pagesshown){
+			foreach($showmepages as $pagesshown){
 				echo '<option name="MOM_themetakeover_archivepage" id="mompaf_'.esc_attr($pagesshown->ID).'" value="'.esc_attr($pagesshown->ID).'"'; 
 				if(get_option('MOM_themetakeover_archivepage') == $pagesshown->ID){echo ' selected="selected"';}echo '>
 				'.$pagesshown->post_title.'</option>';
@@ -2202,17 +2033,17 @@ if(current_user_can('manage_options')){
 			</section>';
 		}
 		echo '<section><hr /></section>';
+		echo '<section><label for="MOM_themetakeover_wowhead">Enable Wowhead Tooltips (<a href="http://www.wowhead.com/tooltips">?</a>)</label>
+				<select id="MOM_themetakeover_wowhead" name="MOM_themetakeover_wowhead">
+					<option value="1"';if(get_option('MOM_themetakeover_wowhead') == 1){echo ' selected="selected"';}echo '>Yes</option>
+					<option value="0"';if(get_option('MOM_themetakeover_wowhead') == 0){echo ' selected="selected"';}echo '>No</option>
+				</select>
+			</section>';		
 		echo '</div><div class="exclude">';
 		echo '<input id="momthemetakeoversave" type="submit" value="Save Changes" name="momthemetakeoversave"></form></div></div></div><div class="new"></div>';
 	}
 }
-/*****************************/
-/* SECTION H
-/* (H1) Functions
-/* Theme Takeover
-/*****************************/
-/* 11/16/2013 (last update)
-/*****************************/
+/****************************** SECTION H -/- (H1) Functions -/- Theme Takeover ******************************/
 if(get_option('MOM_themetakeover_youtubefrontpage') != ''){
 	function mom_youtube404(){
 		global $wp_query;
@@ -2260,7 +2091,7 @@ if(get_option('MOM_themetakeover_topbar') == 1){
 		$max = 1; 
 		$taxonomy = 'category';
 		$terms = get_terms($taxonomy);
-		shuffle ($terms);
+		shuffle($terms);
 		if($terms){
 			foreach($terms as $term){
 				$counter++;
@@ -2333,15 +2164,7 @@ if(get_option('MOM_themetakeover_topbar') == 1){
 	remove_action('wp_ajax_adminbar_render','wp_admin_bar_ajax_render');
 	remove_filter('wp_ajax_adminbar_render','wp_admin_bar_ajax_render');				
 }
-/*****************************/
-/* Divider
-/*****************************/
-/* SECTION I
-/* (I0) Functions
-/* Font Awesome
-/*****************************/
-/* 11/15/2013 (last update)
-/*****************************/
+/****************************** SECTION I -/- (I0) Functions -/- Font Awesome ******************************/
 function font_fa_shortcode($atts, $content = null){
 	extract(
 		shortcode_atts(array(
@@ -2354,29 +2177,15 @@ function font_fa_shortcode($atts, $content = null){
 	echo '<i class="fa fa-'.$iconfinal.'"></i>';
 	return ob_get_clean();
 }
-/*****************************/
-/* Divider
-/*****************************/
-/* SECTION J
-/* (J0) Settings
-/* Count++
-/*****************************/
-/* 11/15/2013 (last update)
-/*****************************/
+/****************************** SECTION J -/- (J0) Settings -/- Count++ ******************************/
 if(current_user_can('manage_options')){
 	function my_optional_modules_count_module(){
 			echo '<form method="post"><span class="moduletitle">__count++<em>Count words published</em></span><div class="clear"></div><div class="settings">';
-			echo '<div class="countplus"><section><label for="obwcountplus_countdownfrom">Goal (<em>0</em> for none)</label><input id="obwcountplus_countdownfrom" type="text" value="'.esc_attr(get_option('obwcountplus_1_countdownfrom')).'" name="obwcountplus_countdownfrom"></section><section><label for="obwcountplus_remaining">Text for remaining</label><input id="obwcountplus_remaining" type="text" value="'.esc_attr(get_option('obwcountplus_2_remaining')).'" name="obwcountplus_remaining"></section><section><label for="obwcountplus_total">Text for published</label><input id="obwcountplus_total" type="text" value="'.esc_attr(get_option('obwcountplus_3_total')).'" name="obwcountplus_total"></section><section><label for="obwcountplus_custom">Custom output</label><input id="obwcountplus_custom" type="text" value="'.esc_attr(get_option('obwcountplus_4_custom')).'" name="obwcountplus_custom"></section></div>';
+			echo '<div class="countplus"><section><label for="obwcountplus_1_countdownfrom">Goal (<em>0</em> for none)</label><input id="obwcountplus_1_countdownfrom" type="text" value="'.esc_attr(get_option('obwcountplus_1_countdownfrom')).'" name="obwcountplus_1_countdownfrom"></section><section><label for="obwcountplus_2_remaining">Text for remaining</label><input id="obwcountplus_2_remaining" type="text" value="'.esc_attr(get_option('obwcountplus_2_remaining')).'" name="obwcountplus_2_remaining"></section><section><label for="obwcountplus_3_total">Text for published</label><input id="obwcountplus_3_total" type="text" value="'.esc_attr(get_option('obwcountplus_3_total')).'" name="obwcountplus_3_total"></section><section><label for="obwcountplus_4_custom">Custom output</label><input id="obwcountplus_4_custom" type="text" value="'.esc_attr(get_option('obwcountplus_4_custom')).'" name="obwcountplus_4_custom"></section></div>';
 			echo '<input id="obwcountsave" type="submit" value="Save Changes" name="obwcountsave"></form><div class="templatetags"><section>Custom output example: (with goal)<span class="right">%total% words of %remain% published</span></section><section>Custom output example: (without goal) <span class="right">%total% words published</span></section><section>Custom output example: (numbers only)(total on blog) <span class="right">%total%</span></section><section>Custom output example: (numbers only)(total remain of goal) <span class="right">%remain%</span></section><section>Template tag: (single post word count)<span class="right"><code>obwcountplus_total();</code></span></section><section>Custom output:<span class="right"><code>countsplusplus();</code></span></section><section>Total words + remaining:<span class="right"><code>obwcountplus_count();</code></span></section><section>Total words:<span class="right"><code>obwcountplus_total();</code></span></section><section>Remainig:(displays total published if goal reached)<span class="right"><code>obwcountplus_remaining();</code></span></section></div><p class="creditlink">Count++ is adapted from <a href="http://wordpress.org/plugins/post-word-count/">Post Word Count</a> by <a href="http://profiles.wordpress.org/nickmomrik/">Nick Momrik</a>.</p>';
 		}
 	}
-/*****************************/
-/* SECTION J
-/* (J1) Functions
-/* Count++
-/*****************************/
-/* 11/15/2013 (last update)
-/*****************************/
+/****************************** SECTION J -/- (J1) Functions -/- Count++ ******************************/
 function countsplusplus(){
 	$oldcount = 0;
 	global $wpdb;
@@ -2488,15 +2297,7 @@ function obwcountplus_count(){
 		echo esc_attr(number_format(get_option('obwcountplus_1_countdownfrom') - $totalcount).' '.get_option('obwcountplus_2_remaining').' ('.number_format($totalcount).' '.get_option('obwcountplus_3_total').')');
 	}
 }
-/*****************************/
-/* Divider
-/*****************************/
-/* SECTION K
-/* (K0) Settings
-/* Exclude
-/*****************************/
-/* 11/15/2013 (last update)
-/*****************************/
+/****************************** SECTION K -/- (K0) Settings -/- Exclude ******************************/
 if(current_user_can('manage_options')){
 	function my_optional_modules_exclude_module(){
 			echo '<span class="moduletitle">__exclude<em>separate multiple ids with commas (1,2,3,...)</em></span><div class="clear"></div><div class="settings"><form method="post">';
@@ -2512,7 +2313,7 @@ if(current_user_can('manage_options')){
 			</div>
 			<div class="list"><span>Tag (<strong>ID</strong>)</span>';
 				$showmetags = get_categories('taxonomy=post_tag&hide_empty=0');
-					foreach ($showmetags as $tagsshown){
+					foreach($showmetags as $tagsshown){
 					echo '<span>'.$tagsshown->cat_name.'(<strong>'.$tagsshown->cat_ID.'</strong>)</span>';
 				}
 			echo '
@@ -2524,7 +2325,7 @@ if(current_user_can('manage_options')){
 			}
 			echo '"/>
 			<input class="allitems" type="text" onclick="this.select();" value="';
-			foreach ($showmetags as $tagsall){
+			foreach($showmetags as $tagsall){
 				echo $tagsall->cat_ID.',';
 			}				
 			echo '"/>
@@ -2699,9 +2500,9 @@ if(current_user_can('manage_options')){
 			<label for="MOM_Exclude_URL">Redirect 404s (logged in)</label>
 			<select name="MOM_Exclude_URL" class="allpages" id="MOM_Exclude_URL">
 				<option value="">Home page</option>';
-				foreach ($showmepages as $pagesshown){
+				foreach($showmepages as $pagesshown){
 					echo '<option name="MOM_Exclude_URL" id="mompaf_'.$pagesshown->ID.'" value="'.$pagesshown->ID.'"'; 
-					if (get_option('MOM_Exclude_URL') == $pagesshown->ID){echo ' selected="selected"';} echo '>
+					if(get_option('MOM_Exclude_URL') == $pagesshown->ID){echo ' selected="selected"';} echo '>
 					'.$pagesshown->post_title.'</option>';
 				}
 				echo '
@@ -2711,9 +2512,9 @@ if(current_user_can('manage_options')){
 			<label for="MOM_Exclude_URL_User">Redirect 404s (logged out)</label>
 			<select name="MOM_Exclude_URL_User" class="allpages" id="MOM_Exclude_URL_User">
 				<option value=""/>Home page</option>';
-				foreach ($showmepages as $pagesshownuser){
+				foreach($showmepages as $pagesshownuser){
 					echo '<option name="MOM_Exclude_URL_User" id="mompaf_'.$pagesshownuser->ID.'" value="'.$pagesshown->ID.'"'; 
-					if (get_option('MOM_Exclude_URL_User') == $pagesshownuser->ID){echo ' selected="selected"';} echo '>
+					if(get_option('MOM_Exclude_URL_User') == $pagesshownuser->ID){echo ' selected="selected"';} echo '>
 					'.$pagesshownuser->post_title.'</option>';
 				}
 				echo '
@@ -2722,13 +2523,7 @@ if(current_user_can('manage_options')){
 			echo '<input id="momsesave" type="submit" value="Save Changes" name="momsesave"></form></div></div>';
 		}
 }
-/*****************************/
-/* SECTION K
-/* (K1) Settings
-/* Exclude
-/*****************************/
-/* 11/16/2013 (last update)
-/*****************************/
+/****************************** SECTION K -/- (K1) Settings -/- Exclude ******************************/
 get_currentuserinfo();
 global $user_level;	
 if($user_level <=7 && get_option('MOM_Exclude_Hide_Dashboard') == 1){
@@ -2737,18 +2532,18 @@ if($user_level <=7 && get_option('MOM_Exclude_Hide_Dashboard') == 1){
 		global $menu, $submenu, $user_ID;
 		$the_user = new WP_User($user_ID);
 		reset($menu); $page = key($menu);
-		while ((__('Dashboard') != $menu[$page][0]) && next($menu))
+		while((__('Dashboard') != $menu[$page][0]) && next($menu))
 		$page = key($menu);
 		if(__('Dashboard') == $menu[$page][0]) unset($menu[$page]);
 		reset($menu); $page = key($menu);
-		while (!$the_user->has_cap($menu[$page][1]) && next($menu))
+		while(!$the_user->has_cap($menu[$page][1]) && next($menu))
 		$page = key($menu);
 		if(preg_match('#wp-admin/?(index.php)?$#',$_SERVER['REQUEST_URI']) && ('index.php' != $menu[$page][2]))
 		wp_redirect(get_option('siteurl') . '/wp-admin/profile.php');
 	}
-	add_action('admin_menu', 'remove_the_dashboard');
+	add_action('admin_menu','remove_the_dashboard');
 }
-if (!is_user_logged_in() || is_user_logged_in() && $user_level == 0 || is_user_logged_in() && $user_level == 1 || is_user_logged_in() && $user_level == 2 || is_user_logged_in() && $user_level == 7){
+if(!is_user_logged_in() || is_user_logged_in() && $user_level == 0 || is_user_logged_in() && $user_level == 1 || is_user_logged_in() && $user_level == 2 || is_user_logged_in() && $user_level == 7){
 	function exclude_post_by_category($query){
 	$loggedOutCats = '0';
 	if(!is_user_logged_in()){
@@ -2763,7 +2558,7 @@ if (!is_user_logged_in() || is_user_logged_in() && $user_level == 0 || is_user_l
 		if($user_level <= 7){$loggedOutCats = get_option('MOM_Exclude_level7Categories');}
 	}
 		$c1 = explode(',',$loggedOutCats);
-		foreach($c1 as &$C1) {$C1 = ''.$C1.',';}
+		foreach($c1 as &$C1){$C1 = ''.$C1.',';}
 		$c_1 = rtrim(implode($c1),',');
 		$c11 = explode(',',str_replace(' ','',$c_1));
 		$c11array = array($c11);
@@ -2778,9 +2573,9 @@ if (!is_user_logged_in() || is_user_logged_in() && $user_level == 0 || is_user_l
 					global $wpdb;
 					$page = $wpdb->get_var($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_name = %s AND post_type= %s AND post_status = 'publish'",$page_slug,$post_type));
 				}
-				if ($page) {
+				if($page){
 					$post_categories = wp_get_post_categories($page);
-					foreach ($excluded_category_ids as $category_id){
+					foreach($excluded_category_ids as $category_id){
 						if(in_array($category_id,$post_categories)){
 							$query->set('p',-$category_id);
 							break;
@@ -2802,7 +2597,7 @@ if (!is_user_logged_in() || is_user_logged_in() && $user_level == 0 || is_user_l
 		if($user_level <= 7){$loggedOutTags = get_option('MOM_Exclude_level7Tags');}
 	}
 			$t1 = explode(',',$loggedOutTags);
-			foreach ($t1 as &$T1){$T1 = ''.$T1.',';}
+			foreach($t1 as &$T1){$T1 = ''.$T1.',';}
 			$t_1 = implode($t1);
 			$t11 = explode(',',str_replace(' ','',$t_1));
 		$excluded_tag_ids = array_filter($t11);
@@ -2834,12 +2629,12 @@ if (!is_user_logged_in() || is_user_logged_in() && $user_level == 0 || is_user_l
 if(get_option('MOM_Exclude_NoFollow') != 0){
 	add_filter('wp_list_categories','exclude_nofollow');
 	add_filter('the_category','exclude_nofollow_categories');
-	function exclude_nofollow( $text ) {
+	function exclude_nofollow($text){
 		$text = stripslashes($text);
-		$text = preg_replace_callback('|<a (.+?)>|i', 'wp_rel_nofollow_callback', $text);
+		$text = preg_replace_callback('|<a (.+?)>|i','wp_rel_nofollow_callback', $text);
 		return $text;
 	}
-	function exclude_nofollow_categories( $text ) {
+	function exclude_nofollow_categories($text){
 		$text = str_replace('rel="category tag"', "", $text);
 		$text = exclude_nofollow($text);
 		return $text;
@@ -2848,30 +2643,30 @@ if(get_option('MOM_Exclude_NoFollow') != 0){
 	{
 		$nofollowCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');	
 		$c1 = explode(',',$nofollowCats);
-		foreach($c1 as &$C1) {$C1 = ''.$C1.',';}
+		foreach($c1 as &$C1){$C1 = ''.$C1.',';}
 		$c_1 = rtrim(implode($c1),',');
 		$c11 = explode(',',str_replace(' ','',$c_1));
 		$c11array = array($c11);
 		$nofollowcats = $c11;
-		if (is_category($nofollowcats) && !is_feed())
+		if(is_category($nofollowcats) && !is_feed())
 		{
 				echo '<meta name="robots" content="noindex, nofollow" />';
 		}
 	}
-	add_action('wp_head', 'exclude_no_index_cat');
+	add_action('wp_head','exclude_no_index_cat');
 	function nofollow_the_author_posts_link($deprecated = ''){
 		global $authordata;
 		printf(
 			'<a rel="nofollow" href="%1$s" title="%2$s">%3$s</a>',
-			get_author_posts_url( $authordata->ID, $authordata->user_nicename ),
+			get_author_posts_url($authordata->ID,$authordata->user_nicename),
 			sprintf( __('Posts by %s'), attribute_escape(get_the_author())),
 			get_the_author()
 		);
 	}	
-	function nofollow_cat_posts($text) {
+	function nofollow_cat_posts($text){
 	$loggedOutCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');	
 	$c1 = explode(',',$loggedOutCats);
-	foreach($c1 as &$C1) {$C1 = ''.$C1.',';}
+	foreach($c1 as &$C1){$C1 = ''.$C1.',';}
 	$c_1 = rtrim(implode($c1),',');
 	$c11 = explode(',',str_replace(' ','',$c_1));
 	$c11array = array($c11);
@@ -2882,7 +2677,7 @@ if(get_option('MOM_Exclude_NoFollow') != 0){
 			}
 			return $text;
 	}
-	add_filter('the_content', 'nofollow_cat_posts');
+	add_filter('the_content','nofollow_cat_posts');
 }
 function mom_exclude_filter_posts($query){
 	$c1	= '0';
@@ -2906,26 +2701,26 @@ function mom_exclude_filter_posts($query){
 	if(get_option('MOM_Exclude_PostFormats_RSS') == ''){$MOM_Exclude_PostFormats_RSS = '';}else{$MOM_Exclude_PostFormats_RSS = get_option('MOM_Exclude_PostFormats_RSS');}
 	if(get_option('MOM_Exclude_Cats_Day') == ''){$MOM_Exclude_Cats_Day = '0';}
 	if(get_option('MOM_Exclude_Tags_Day') == ''){$MOM_Exclude_Tags_Day = '0';}
-	if(date('D') === 'Sun'){if(get_option('') == 'MOM_Exclude_Tags_Day') $MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsSun');}
-	if(date('D') === 'Mon'){if(get_option('') == 'MOM_Exclude_Tags_Day') $MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsMon');}
-	if(date('D') === 'Tue'){if(get_option('') == 'MOM_Exclude_Tags_Day') $MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsTue');}
-	if(date('D') === 'Wed'){if(get_option('') == 'MOM_Exclude_Tags_Day') $MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsWed');}
-	if(date('D') === 'Thu'){if(get_option('') == 'MOM_Exclude_Tags_Day') $MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsThu');}
-	if(date('D') === 'Fri'){if(get_option('') == 'MOM_Exclude_Tags_Day') $MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsFri');}
-	if(date('D') === 'Sat'){if(get_option('') == 'MOM_Exclude_Tags_Day') $MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsSun');}
-	if(date('D') === 'Sun'){if(get_option('') == 'MOM_Exclude_Cats_Day') $MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesSun');}
-	if(date('D') === 'Mon'){if(get_option('') == 'MOM_Exclude_Cats_Day') $MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesMon');}
-	if(date('D') === 'Tue'){if(get_option('') == 'MOM_Exclude_Cats_Day') $MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesTue');}
-	if(date('D') === 'Wed'){if(get_option('') == 'MOM_Exclude_Cats_Day') $MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesWed');}
-	if(date('D') === 'Thu'){if(get_option('') == 'MOM_Exclude_Cats_Day') $MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesThu');}
-	if(date('D') === 'Fri'){if(get_option('') == 'MOM_Exclude_Cats_Day') $MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesFri');}
-	if(date('D') === 'Sat'){if(get_option('') == 'MOM_Exclude_Cats_Day') $MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesSat');}
+	if(date('D') === 'Sun'){if(get_option('') == 'MOM_Exclude_Tags_Day')$MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsSun');}
+	if(date('D') === 'Mon'){if(get_option('') == 'MOM_Exclude_Tags_Day')$MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsMon');}
+	if(date('D') === 'Tue'){if(get_option('') == 'MOM_Exclude_Tags_Day')$MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsTue');}
+	if(date('D') === 'Wed'){if(get_option('') == 'MOM_Exclude_Tags_Day')$MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsWed');}
+	if(date('D') === 'Thu'){if(get_option('') == 'MOM_Exclude_Tags_Day')$MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsThu');}
+	if(date('D') === 'Fri'){if(get_option('') == 'MOM_Exclude_Tags_Day')$MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsFri');}
+	if(date('D') === 'Sat'){if(get_option('') == 'MOM_Exclude_Tags_Day')$MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsSun');}
+	if(date('D') === 'Sun'){if(get_option('') == 'MOM_Exclude_Cats_Day')$MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesSun');}
+	if(date('D') === 'Mon'){if(get_option('') == 'MOM_Exclude_Cats_Day')$MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesMon');}
+	if(date('D') === 'Tue'){if(get_option('') == 'MOM_Exclude_Cats_Day')$MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesTue');}
+	if(date('D') === 'Wed'){if(get_option('') == 'MOM_Exclude_Cats_Day')$MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesWed');}
+	if(date('D') === 'Thu'){if(get_option('') == 'MOM_Exclude_Cats_Day')$MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesThu');}
+	if(date('D') === 'Fri'){if(get_option('') == 'MOM_Exclude_Cats_Day')$MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesFri');}
+	if(date('D') === 'Sat'){if(get_option('') == 'MOM_Exclude_Cats_Day')$MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesSat');}
 	$rss_day = explode(',',$MOM_Exclude_Tags_Day);
-	foreach ($rss_day as &$rss_day_1){$rss_day_1 = ''.$rss_day_1.',';}
+	foreach($rss_day as &$rss_day_1){$rss_day_1 = ''.$rss_day_1.',';}
 	$rss_day_1 = implode($rss_day);
 	$rssday = explode(',',str_replace(' ','',$rss_day_1));
 	$rss_day_cat = explode(',',$MOM_Exclude_Cats_Day);
-	if(is_array($rss_day_cat)){foreach ($rss_day_cat as &$rss_day_1_cat){$rss_day_1_cat = ''.$rss_day_1_cat.',';}}
+	if(is_array($rss_day_cat)){foreach($rss_day_cat as &$rss_day_1_cat){$rss_day_1_cat = ''.$rss_day_1_cat.',';}}
 	$rss_day_1_cat = implode($rss_day_cat);
 	$rssday_cat = explode(',', str_replace(' ','',$rss_day_1_cat));		
 	if(!is_user_logged_in()){
@@ -2966,14 +2761,14 @@ function mom_exclude_filter_posts($query){
 		if(get_option('MOM_Exclude_level1Tags') != ''){$MOM_Exclude_level1Tags = get_option('MOM_Exclude_level1Tags');}else{$MOM_Exclude_level1Tags = '0';}
 		if(get_option('MOM_Exclude_level2Tags') != ''){$MOM_Exclude_level2Tags = get_option('MOM_Exclude_level2Tags');}else{$MOM_Exclude_level2Tags = '0';}
 		if(get_option('MOM_Exclude_level7Categories') != ''){$MOM_Exclude_level7Categories = get_option('MOM_Exclude_level7Categories');}else{$MOM_Exclude_level7Categories = '0';}				
-		if	($user_level == 0) {$loggedOutCats = $MOM_Exclude_level0Categories.','.$MOM_Exclude_level1Categories.','.$MOM_Exclude_level2Categories.','.$MOM_Exclude_level7Categories;}
-		elseif($user_level == 1) {$loggedOutCats = $MOM_Exclude_level1Categories.','.$MOM_Exclude_level2Categories.','.$MOM_Exclude_level7Categories;}
-		elseif($user_level == 2) {$loggedOutCats = $MOM_Exclude_level2Categories.','.$MOM_Exclude_level7Categories;}
-		elseif($user_level == 7) {$loggedOutCats = $MOM_Exclude_level7Categories;}
-		if	($user_level == 0) {$loggedOutTags = $MOM_Exclude_level0Tags.','.$MOM_Exclude_level1Tags.','.$MOM_Exclude_level2Tags.','.$MOM_Exclude_level7Tags;}
-		elseif($user_level == 1) {$loggedOutTags = $MOM_Exclude_level1Tags.','.$MOM_Exclude_level2Tags.','.$MOM_Exclude_level7Tags;}
-		elseif($user_level == 2) {$loggedOutTags = $MOM_Exclude_level2Tags.','.$MOM_Exclude_level7Tags;}
-		elseif($user_level == 7) {$loggedOutTags = $MOM_Exclude_level7Tags;}
+		if($user_level == 0){$loggedOutCats = $MOM_Exclude_level0Categories.','.$MOM_Exclude_level1Categories.','.$MOM_Exclude_level2Categories.','.$MOM_Exclude_level7Categories;}
+		elseif($user_level == 1){$loggedOutCats = $MOM_Exclude_level1Categories.','.$MOM_Exclude_level2Categories.','.$MOM_Exclude_level7Categories;}
+		elseif($user_level == 2){$loggedOutCats = $MOM_Exclude_level2Categories.','.$MOM_Exclude_level7Categories;}
+		elseif($user_level == 7){$loggedOutCats = $MOM_Exclude_level7Categories;}
+		if($user_level == 0){$loggedOutTags = $MOM_Exclude_level0Tags.','.$MOM_Exclude_level1Tags.','.$MOM_Exclude_level2Tags.','.$MOM_Exclude_level7Tags;}
+		elseif($user_level == 1){$loggedOutTags = $MOM_Exclude_level1Tags.','.$MOM_Exclude_level2Tags.','.$MOM_Exclude_level7Tags;}
+		elseif($user_level == 2){$loggedOutTags = $MOM_Exclude_level2Tags.','.$MOM_Exclude_level7Tags;}
+		elseif($user_level == 7){$loggedOutTags = $MOM_Exclude_level7Tags;}
 		$hideLoggedOutCats = explode(',',str_replace(' ','',$c_1));
 		$hideLoggedOutTags = explode(',',str_replace(' ','',$t11));
 		$lc1 = array_unique(explode(',',$loggedOutCats));
@@ -2993,14 +2788,14 @@ function mom_exclude_filter_posts($query){
 	foreach($c1 as &$C1){$C1 = ''.$C1.',';}
 	$c_1 = rtrim(implode($c1),',');
 	$hideUserCats = explode(',',str_replace(' ','',$c_1));
-	foreach($t1 as &$T1) {$T1 = ''.$T1.',';}
+	foreach($t1 as &$T1){$T1 = ''.$T1.',';}
 	$t11 = rtrim(implode($t1),',');
 	$hideUserTags = explode(',',str_replace(' ','',$t11));
 	$hideAllCategories = array_merge((array)$hideUserCats,(array)$hideLoggedOutCats,(array)$rssday_cat);
 	$hideAllTags = array_merge((array)$hideUserTags,(array)$hideLoggedOutTags,(array)$rssday);
 	$hideAllCategories = array_filter(array_unique($hideAllCategories));
 	$hideAllTags = array_filter(array_unique($hideAllTags));	
-	if ($query->is_feed || $query->is_home || $query->is_search || $query->tag || $query->is_category){
+	if($query->is_feed || $query->is_home || $query->is_search || $query->tag || $query->is_category){
 		$tax_query = array(
 			'ignore_sticky_posts' => true,
 			'post_type' => 'any',
@@ -3026,15 +2821,7 @@ function mom_exclude_filter_posts($query){
 		$query->set('tax_query',$tax_query);
 	}
 }
-/*****************************/
-/* Divider
-/*****************************/
-/* SECTION L
-/* (L0) Settings
-/* Jump Around
-/*****************************/
-/* 11/15/2013 (last update)
-/*****************************/
+/****************************** SECTION L -/- (L0) Settings -/- Jump Around ******************************/
 if(current_user_can('manage_options')){
 	function my_optional_modules_jump_around_module(){
 			echo '<span class="moduletitle">__jump_around<em>keyboard navigation</em></span><div class="clear"></div><div class="settings"><form method="post">';
@@ -3268,15 +3055,7 @@ if(current_user_can('manage_options')){
 			echo '</form></div><div class="templatetags"><section>Filter for classes<span class="right">.div</span></section><section>Filter for links in classes<span class="right">.div a</span></section><section>Filter for elements in classes<span class="right">.div h1</span></section><section>Filter for linked elements in classes<span class="right">.div h1 a</span></section><div class="new"><p class="creditlink"><em>Thanks to <a href="http://stackoverflow.com/questions/1939041/change-hash-without-reload-in-jquery">jitter</a> &amp; <a href="http://stackoverflow.com/questions/13694277/scroll-to-next-div-using-arrow-keys">mVChr</a> for the help.</em></p></div></div>';
 		}
 }
-/*****************************/
-/* Divider
-/*****************************/
-/* SECTION X
-/* (X0) Functions
-/* Database Cleaner
-/*****************************/
-/* 11/15/2013 (last update)
-/*****************************/
+/****************************** SECTION X -/- (X0) Functions -/- Database Cleaner ******************************/
 if(current_user_can('manage_options')){
 	function my_optional_modules_cleaner_module(){
 		global $table_prefix,$wpdb;
@@ -3292,7 +3071,7 @@ if(current_user_can('manage_options')){
 		$terms_total = $wpdb->get_results("SELECT term_taxonomy_id FROM `".$termsTable."` WHERE `count` = '0'");
 		foreach($revisions_total as $retot){$revisions_count++;}
 		foreach($comments_total as $comtot){$comments_count++;}
-		foreach ($terms_total as $termstot){$this_term = $termstot->term_id;$terms_count++;}
+		foreach($terms_total as $termstot){$this_term = $termstot->term_id;$terms_count++;}
 		$totalClutter = ($terms_count + $comments_count + $revisions_count);
 		echo '<section class="trash"><label for="deleteAllClutter"><i class="fa fa-trash-o"></i><span>All clutter</span><em>'.esc_attr($totalClutter).'</em></label><form method="post"><input class="hidden" id="deleteAllClutter" type="submit" value="Go" name="deleteAllClutter"></form></section>';
 		echo '<section class="trash"><label for="delete_post_revisions"><i class="fa fa-trash-o"></i><span>Post clutter</span><em>'.esc_attr($revisions_count).'</em></label><form method="post"><input class="hidden" id="delete_post_revisions" type="submit" value="Go" name="delete_post_revisions"></form></section>';
@@ -3300,15 +3079,7 @@ if(current_user_can('manage_options')){
 		echo '<section class="trash"><label for="delete_unused_terms"><i class="fa fa-trash-o"></i><span>Taxonomy clutter</span><em>'.esc_attr($terms_count).'</em></label><form method="post"><input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms"></form></section>';
 	}
 }
-/*****************************/
-/* Divider
-/*****************************/
-/* SECTION Y
-/* (Y0) Functions
-/* Javascript for modules
-/*****************************/
-/* 11/15/2013 (last update)
-/*****************************/
+/****************************** SECTION Y -/- (Y0) Functions -/- Javascript for modules ******************************/
 if(current_user_can('manage_options')){
 			$css = plugins_url().'/'.plugin_basename(dirname(__FILE__)).'/includes/';
 			add_action('wp_enqueue_admin_scripts','mom_plugin_scripts');		
@@ -3799,17 +3570,9 @@ if(current_user_can('manage_options')){
 			}	
 			add_action('edit_form_after_editor','momEditorScreen');
 }
-/*****************************/
-/* Divider
-/*****************************/
-/* SECTION Z
-/* Additional information
-/*****************************/
-/* 11/15/2013 (last update)
-/*****************************/
-// Report all bugs to admin@onebillionwords.com
-// Additional support can be provided to those who ask for it at the following URL:
-// http://www.onebillionwords.com/my-optional-modules/
-/* End
-/*****************************/
-?>
+/****************************** SECTION Z -/- Additional information ******************************
+	Report all bugs to admin@onebillionwords.com
+	Additional support can be provided to those who ask for it at the following URL:
+	http://www.onebillionwords.com/my-optional-modules/
+	End
+*/?>
