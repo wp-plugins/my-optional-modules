@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.7.3
+Version: .5.3.7.4
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -265,7 +265,9 @@ function enqueueMOMscriptsFooter(){
 		echo '
 		<script type=\'text/javascript\'>';
 		if(get_option('MOM_themetakeover_wowhead') == 1){
-			echo 'var wowhead_tooltips = { "colorlinks": true, "iconizelinks": true, "renamelinks": true }';
+			echo '
+			var wowhead_tooltips = { "colorlinks": true, "iconizelinks": true, "renamelinks": true }
+			';
 		}
 		if(get_option('mommaincontrol_analytics') == 1 && get_option('momanalytics_code') != ''){
 			echo '
@@ -2065,6 +2067,16 @@ if(get_option('MOM_themetakeover_youtubefrontpage') != ''){
 }
 if(get_option('MOM_themetakeover_topbar') == 1){
 	function mom_topbar(){
+		global $wp,$post;
+		if(is_single()){
+			$postid = $post->ID;
+			$post_title = get_post_field('post_title',$postid);
+			$post_link = get_permalink($post->ID);
+		}else{
+			$post_title = get_bloginfo('site_name');
+			$post_link = esc_url(home_url('/'));
+		}
+
 		echo '<div class="momnavbar"><div>';
 		if(get_option('mommaincontrol_fontawesome') == 1){echo '<i class="fa fa-home"></i> ';}
 		echo '<a href="'.esc_url(home_url('/')).'">Front</a> - ';
@@ -2101,7 +2113,19 @@ if(get_option('MOM_themetakeover_topbar') == 1){
 			}
 		}
 		if(function_exists('mom_exclude_list_categories'))mom_exclude_list_categories();
-		echo '</ul></div></div>';			
+		echo '</ul></div>';
+		//http://www.webdesignerforum.co.uk/topic/70328-easy-social-sharing-buttons-for-wordpress-without-a-plugin/
+		echo '
+		<div class="navbar_social">
+				<!--Twitter-->
+				<a class="fa fa-twitter" href="http://twitter.com/home?status=Reading:'.esc_url($post_link).'" title="Share this post on Twitter!" target="_blank"></a>
+				<!--Facebook-->
+				<a class="fa fa-facebook" href="http://www.facebook.com/sharer.php?u='.esc_url($post_link).'&amp;t='.esc_attr($post_title).'" title="Share this post on Facebook!" onclick="window.open(this.href); return false;"></a>
+				<!--Google Plus-->
+				<a class="fa fa-google-plus" target="_blank" href="https://plus.google.com/share?url='.esc_url($post_link).'"></a>
+		</div>';
+		
+		echo '</div>';
 	}
 	add_action('wp_footer','mom_topbar');
 	// http://plugins.svn.wordpress.org/wp-toolbar-removal/trunk/wp-toolbar-removal.php
