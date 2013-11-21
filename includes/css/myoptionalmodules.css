@@ -1,22 +1,35 @@
+	.hidden{display:none;visibility:hidden;}
 	/* Passwords */
 	input[type='text'].password { width:95%; margin:10px auto;}
 	/* Navbar */
-	div.momnavbar{cursor:pointer;text-transform:uppercase;width:100%;height:40px;display:block;background-color:#fff;text-indent:5px;font-size:10px;padding:0 0 2px 0;overflow:hidden;line-height:13px;z-index:999;border-bottom:1px solid #000;}
-	div.momnavbar div{width:100%;display:block;overflow:hidden;height:15px;border-top:1px solid #000;position:relative;}
-	div.momnavbar ul{width:85%;margin:3px 0 !important;position:absolute !important;top:0 !important;left:0 !important;padding:0px !important; border:none !important;}
-	div.momnavbar ul li{float:left !important;display:block !important;width:auto !important;margin:0 5px auto !important;list-style:none !important;padding:0px !important;}
-	div.momnavbar .navbar_social{width:95px !important;position:absolute !important; right: 0px !important; top: 17px !important;text-align:right !important;border-top:none;font-size:15px !important;border-left:1px solid #000 !important;padding:4px 5px 0 !important;height:22px !important;background-color:#f0f8ff;}
-	div.momnavbar .navbar_social a{float:right;margin:0 5px 0 5px;}
-	div.momnavbar span{float:right !important;margin:0 5px 0 !important;padding:0px !important;}
+	div.momnavbar{z-index:999;text-transform:uppercase;width:100%;display:block;text-align:left;font-size:20px;}
+	 .navbardark,.navbardark a{background-color:#f5f5f5;color:#9f9f9f;}
+	 .navbarlight,.navbarlight a{background-color:#9f9f9f;color:#f5f5f5;}
+	 .navbardefault,.navbardefault a{background-color:#fff;color:#000;}
+	 .momnavbar a:hover{text-decoration:underline;}
+	.navbartop {height:25px;line-height:35px;}
+	.navbarbottom{height:auto;}
+	div.momnavbar .item{height:20px;padding:5px;margin:0;cursor:pointer;}
+	div.momnavbarcategories{display:block;width:95%;height:20px;overflow:hidden;margin:0;display:block;font-size:12px;float:left;}
+	div.momnavbarcategories ul{margin:-5px 0;width:100%;}
+	div.momnavbarcategories ul li {float:left;margin:0 5px; line-height:15px;}
+	.navbartop form#navsearchform{position:absolute;right:-12px;top:5px;cursor:pointer;background-color:#fff;color:#000;border:1px solid #000;padding:5px;}
+	.navbarbottom form#navsearchform{position:absolute;right:-12px;top:-25px;cursor:pointer;background-color:#fff;color:#000;border:1px solid #000;padding:5px;}
+	div.momnavbar form#navsearchform i{cursor:pointer;}
+	form#navsearchform input[type='text']{height:25px;font-size:20px;width:0;}
+	form#navsearchform input[type='text']:focus{width:150px;}
+	.navbartop{border-bottom:1px solid #000;}
+	.navbarbottom{border-top:1px solid #000;}
+	.navbartop,.stucktothetop{position:fixed !important;top:0 !important;left:0 !important;z-index:99999 !important;}
+	.navbarbottom,.stucktothebottom{position:fixed !important;bottom:0 !important;left:0 !important;z-index:99999 !important;}
+	/* Archives */
 	div.momlistcategories{clear:both;margin:25px auto;width:95%;}
 	div.momlistcategories h4{margin:55px 0 25px 0;}
 	div.momlistcategories div{padding:5px;clear:both;overflow:hidden;width:100%;margin:5px auto;}
 	div.momlistcategories div:hover{height:auto;overflow-y:auto;overflow-x:hidden;border:1px solid #454343;background-color:#f7f7f7;}
 	div.momlistcategories span{float:right;}
 	div.momlistcategories section{clear:both;margin:5px auto;width:100%;font-size:14px;}
-	div.momlistcategories section article{clear:both;margin:0 auto;width:100%;font-size:15px;line-height:18px;}
-	.navbartop,.stucktothetop{position:fixed !important;top:0 !important;left:0 !important;z-index:99999 !important;}
-	.navbarbottom,.stucktothetop{position:fixed !important;bottom:0 !important;left:0 !important;z-index:99999 !important;}	
+	div.momlistcategories section article{clear:both;margin:0 auto;width:100%;font-size:15px;line-height:18px;}	
 	/* Heading List */
 	.scrolltotop{position:fixed;right:10px;bottom:10px;z-index:99999;display:none;visibility:hidden;}
 	.show{visibility:visible;display:block;}
