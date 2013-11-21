@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.7.1
 Tested up to: 3.7.1
-Stable tag: 5.3.7.6
+Stable tag: 5.3.7.7
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -35,14 +35,14 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Analaytics automatic embedding.
 * Automatically enable all images in posts and pages to use Lazy Load.
 * Hide WP Version from enqueued scripts and stylesheets.
+* Disable author archives (if only 1 author)
+* Disable all date/time based archives
+* Move JS to footer
+* Attach linkbacks to all RSS feed items
 
 = Meta: =
 * Auto-generate meta tags (open-graph and otherwise).
-* Appends linkbacks on RSS items (against scrapers).
 * noarchive/nofollow on 404/search pages/archives.
-* Disables Author archives if only one author exists.
-* Disables date based archives to avoid duplicate content.
-* Moves Javascript to the footer to decrease page load times.
 * Disables Jetpack open graph.
 
 = Tools: =
@@ -65,13 +65,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= .5.3.7.6 =
-* Passwords now uses Bcrypt for its passwords, and its salt has changed.
-* If your server does not have Blowfish enabled, Passwords will be disabled (if enabled) and will not be available to you.
-* Upon activation of the plugin, a salt will be generated for you; however, you may change it if you wish.
-* If (and when) you change the salt, you will need to resave your passwords.
-* You will also need to resave your passwords upon reactivation of the plugin.
-* File hash function moved to a button so as not to continously grab the contents of the plugin file every time the Home section is loaded.
+= .5.3.7.7 =
+* The following have been moved from meta to their own modules (capable of being toggled independently): RSS feed protection (appens linkback and site name to RSS feed items), Move JS to Footer (removes JS calls from header, moves them to the footer), Disable Authors (disables author archives if only one author on site), and Disable dates (disables all date/time based archives).
 
 = .5 =
 * All scripts (.js,script) moved to a single file, enqueued)

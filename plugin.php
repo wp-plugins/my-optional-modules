@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.7.6
+Version: 5.3.7.7
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -125,6 +125,27 @@ if($mommodule_fontawesome === true)add_filter('the_content','do_shortcode','font
 $mommodule_jumparound = esc_attr(get_option('mommaincontrol_momja'));
 if($mommodule_jumparound == 1)$mommodule_jumparound = true;
 
+$mommodule_authorarchives = esc_attr(get_option('mommaincontrol_authorarchives'));
+if($mommodule_authorarchives == 1)$mommodule_authorarchives = true;
+if($mommodule_authorarchives === true)add_action('template_redirect','mom_grab_author_count');
+
+$mommodule_datearchives = esc_attr(get_option('mommaincontrol_datearchives'));
+if($mommodule_datearchives == 1)$mommodule_datearchives = true;
+if($mommodule_datearchives === true)add_action('wp','mom_disable_date_based_archives');
+if($mommodule_datearchives === true)add_action('template_redirect','mom_disable_date_based_archives');
+
+$mommodule_footerscripts = esc_attr(get_option('mommaincontrol_footerscripts'));
+if($mommodule_footerscripts == 1)$mommodule_footerscripts = true;
+if($mommodule_footerscripts === true)add_action('wp_enqueue_scripts','momfooterscripts');
+if($mommodule_footerscripts === true)add_action('wp_footer','wp_print_scripts',5);
+if($mommodule_footerscripts === true)add_action('wp_footer','wp_enqueue_scripts',5);
+if($mommodule_footerscripts === true)add_action('wp_footer','wp_print_head_scripts',5);
+
+$mommodule_protectrss = esc_attr(get_option('mommaincontrol_protectrss'));
+if($mommodule_protectrss == 1)$mommodule_protectrss = true;
+if($mommodule_protectrss === true)add_filter('the_content_feed','momprotectrss');
+if($mommodule_protectrss === true)add_filter('the_excerpt_rss','momprotectrss');
+
 $mommodule_lazyload = esc_attr(get_option('mommaincontrol_lazyload'));
 if($mommodule_lazyload == 1)$mommodule_lazyload = true;
 
@@ -137,16 +158,8 @@ if($mommodule_meta == 1)$mommodule_meta = true;
 if($mommodule_meta === true)mom_SEO_header();
 if($mommodule_meta === true)add_filter('admin_init','momSEO_add_fields_to_general');
 if($mommodule_meta === true)add_filter('user_contactmethods','momSEO_add_fields_to_profile');
-if($mommodule_meta === true)add_filter('the_content_feed','momSEOfeed');
-if($mommodule_meta === true)add_filter('the_excerpt_rss','momSEOfeed');
 if($mommodule_meta === true)add_filter('jetpack_enable_opengraph','__return_false',99);
-if($mommodule_meta === true)add_action('template_redirect','mom_grab_author_count');
-if($mommodule_meta === true)add_action('wp','momSEO_disable_date_based_archives');
 if($mommodule_meta === true)add_action('wp_head','mom_meta_module');
-if($mommodule_meta === true)add_action('wp_enqueue_scripts','momSEOheadscripts');
-if($mommodule_meta === true)add_action('wp_footer','wp_print_scripts',5);
-if($mommodule_meta === true)add_action('wp_footer','wp_enqueue_scripts',5);
-if($mommodule_meta === true)add_action('wp_footer','wp_print_head_scripts',5);
 
 $mommodule_passwords = esc_attr(get_option('mommaincontrol_momrups'));
 if($mommodule_passwords == 1)$mommodule_passwords = true;
@@ -189,6 +202,32 @@ if($mommodule_versionnumbers === true)add_filter('script_loader_src','mom_remove
 
 $momthemetakeover_youtube = esc_url(get_option('MOM_themetakeover_youtubefrontpage'));
 /****************************** SECTION B -/- (B2) Main Functions ******************************/
+function momprotectrss($content){
+		return $content.'<p><a href="'.esc_url(get_permalink($post->ID)).'">'.htmlentities(get_post_field('post_title',$postid)).'</a> via <a href="'.esc_url(home_url('/')).'">'.get_bloginfo('site_name').'</a></p>';
+}
+function momfooterscripts(){
+	remove_action('wp_head','wp_print_scripts');
+	remove_action('wp_head','wp_print_head_scripts',9);
+	remove_action('wp_head','wp_enqueue_scripts',1);
+}
+function mom_grab_author_count(){
+	global $wp_query;
+	if(is_author())
+	{
+		if(sizeof(get_users('who=authors'))===1)
+			wp_redirect(get_bloginfo('url'));
+	}
+}
+function mom_disable_date_based_archives(){
+	global $wp_query;
+	if(is_date() || is_year() || is_month() || is_day() || is_time() || is_new_day()){
+		$homeURL = esc_url(home_url('/'));
+		if(have_posts()):the_post();
+		header('location:'.$homeURL);
+		exit;
+		endif;
+	}
+}
 function sanistripents($string){
 	return sanitize_text_field(strip_tags(htmlentities($string)));
 }
@@ -414,6 +453,17 @@ function enqueueMOMscriptsFooter(){
 				}
 			});';	
 		}
+		if(get_option('MOM_themetakeover_topbar') == 2){
+			echo '
+			$(window).scroll(function(){
+				var scroll = $(window).scrollTop();
+					if(scroll >= 0){
+						$(".momnavbar").addClass("stucktothebottom");
+				}else{
+						$(".momnavbar").removeClass("stucktothebottom");
+				}
+			});';	
+		}		
 		// Post/page list(s) / scroll-to-top arrow
 		if(get_option('MOM_themetakeover_postdiv') != '' && get_option('MOM_themetakeover_postelement') != ''){
 			if(is_single() || is_page()){
@@ -534,6 +584,10 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 	if(get_option('mommaincontrol_passwords_activated') == 0){$wpdb->query("DROP TABLE ".$RUPs_table_name."");}
 	if(get_option('mommaincontrol_reviews_activated') == 0){$wpdb->query("DROP TABLE ".$review_table_name."");}
 	if(get_option('mommaincontrol_shorts_activated') == 0){$wpdb->query("DROP TABLE ".$verification_table_name."");}
+	delete_option('mommaincontrol_protectrss');
+	delete_option('mommaincontrol_footerscripts');
+	delete_option('mommaincontrol_authorarchives');
+	delete_option('mommaincontrol_datearchives');
 	delete_option('MOM_themetakeover_wowhead');
 	delete_option('mom_passwords_salt');
 	delete_option('mommaincontrol_obwcountplus');
@@ -636,6 +690,10 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 	// Form handling for options a
 	if(isset($_POST['MOMsave'])){}
 	if(isset($_POST['mom_themetakeover_mode_submit'])){update_option('mommaincontrol_themetakeover',$_REQUEST['themetakeover']);}
+	if(isset($_POST['mom_protectrss_mode_submit'])){update_option('mommaincontrol_protectrss',$_REQUEST['protectrss']);}
+	if(isset($_POST['mom_footerscripts_mode_submit'])){update_option('mommaincontrol_footerscripts',$_REQUEST['footerscripts']);}
+	if(isset($_POST['mom_author_archives_mode_submit'])){update_option('mommaincontrol_authorarchives',$_REQUEST['authorarchives']);}
+	if(isset($_POST['mom_date_archives_mode_submit'])){update_option('mommaincontrol_datearchives',$_REQUEST['datearchives']);}
 	if(isset($_POST['mom_count_mode_submit'])){update_option('mommaincontrol_obwcountplus',$_REQUEST['countplus']);}
 	if(isset($_POST['mom_exclude_mode_submit'])){update_option('mommaincontrol_momse',$_REQUEST['exclude']);}
 	if(isset($_POST['mom_jumparound_mode_submit'])){update_option('mommaincontrol_momja',$_REQUEST['jumparound']);}
@@ -837,15 +895,19 @@ if(current_user_can('manage_options')){
 		<form method="post" action="" name="momJumpAround"><label for="mom_jumparound_mode_submit" class="onoff';if(get_option('mommaincontrol_momja') == 1){echo '1';}else{echo '0';}echo'">Jump Around<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momja') == 1){echo '0';}if(get_option('mommaincontrol_momja') == 0){echo '1';}echo '" name="jumparound" /><input type="submit" id="mom_jumparound_mode_submit" name="mom_jumparound_mode_submit" value="Submit" class="hidden" /></form>';
 		if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){ echo '<form method="post" action="" name="momPasswords"><label for="mom_passwords_mode_submit" class="onoff';if(get_option('mommaincontrol_momrups') == 1){echo '1';}else{echo '0';}echo'">Passwords<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momrups') == 1){echo '0';}if(get_option('mommaincontrol_momrups') == 0){echo '1';}echo '" name="passwords" /><input type="submit" id="mom_passwords_mode_submit" name="mom_passwords_mode_submit" value="Submit" class="hidden" /></form>';}
 		echo '<form method="post" action="" name="momShortcodes"><label for="mom_shortcodes_mode_submit" class="onoff';if(get_option('mommaincontrol_shorts') == 1){echo '1';}else{echo '0';}echo'">Shortcodes<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_shorts') == 1){echo '0';}if(get_option('mommaincontrol_shorts') == 0){echo '1';}echo '" name="shortcodes" /><input type="submit" id="mom_shortcodes_mode_submit" name="mom_shortcodes_mode_submit" value="Submit" class="hidden" /></form>
+		<form method="post" action="" name="protectrss"><label for="mom_protectrss_mode_submit" class="onoff';if(get_option('mommaincontrol_protectrss') == 1){echo '1';}else{echo '0';}echo'">&copy; RSS feed<span></span></label><input class="hidden" type="text" value="';if(get_option('mommaincontrol_protectrss') == 1){echo '0';}if(get_option('mommaincontrol_protectrss') == 0){echo '1';}echo '" name="protectrss" /><input type="submit" id="mom_protectrss_mode_submit" name="mom_protectrss_mode_submit" value="Submit" class="hidden" /></form>
 		</div>
 		<div class="small left">
 		<form method="post" action="" name="momThemTakeover"><label for="mom_themetakeover_mode_submit" class="onoff';if(get_option('mommaincontrol_themetakeover') == 1){echo '1';}else{echo '0';}echo'">Theme Takeover<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_themetakeover') == 1){echo '0';}if(get_option('mommaincontrol_themetakeover') == 0){echo '1';}echo '" name="themetakeover" /><input type="submit" id="mom_themetakeover_mode_submit" name="mom_themetakeover_mode_submit" value="Submit" class="hidden" /></form>
 		<form method="post" action="" name="fontawesome"><label for="mom_fontawesome_mode_submit" class="onoff';if(get_option('mommaincontrol_fontawesome') == 1){echo '1';}else{echo '0';}echo'">Font Awesome<span></span></label><input class="hidden" type="text" value="';if(get_option('mommaincontrol_fontawesome') == 1){echo '0';}if(get_option('mommaincontrol_fontawesome') == 0){echo '1';}echo '" name="mommaincontrol_fontawesome" /><input type="submit" id="mom_fontawesome_mode_submit" name="mom_fontawesome_mode_submit" value="Submit" class="hidden" /></form>
 		<form method="post" action="" name="hidewpversions"><label for="mom_versions_submit" class="onoff';if(get_option('mommaincontrol_versionnumbers') == 1){echo '1';}else{echo '0';}echo'">Hide WP Version<span></span></label><input class="hidden" type="text" value="';if(get_option('mommaincontrol_versionnumbers') == 1){echo '0';}if(get_option('mommaincontrol_versionnumbers') == 0){echo '1';}echo '" name="mommaincontrol_versionnumbers" /><input type="submit" id="mom_versions_submit" name="mom_versions_submit" value="Submit" class="hidden" /></form>
+		<form method="post" action="" name="footerscripts"><label for="mom_footerscripts_mode_submit" class="onoff';if(get_option('mommaincontrol_footerscripts') == 1){echo '1';}else{echo '0';}echo'">Move JS to Footer<span></span></label><input class="hidden" type="text" value="';if(get_option('mommaincontrol_footerscripts') == 1){echo '0';}if(get_option('mommaincontrol_footerscripts') == 0){echo '1';}echo '" name="footerscripts" /><input type="submit" id="mom_footerscripts_mode_submit" name="mom_footerscripts_mode_submit" value="Submit" class="hidden" /></form>
 		</div>
 		<div class="small left">
 		<form method="post" action="" name="lazyload"><label for="mom_lazy_mode_submit" class="onoff';if(get_option('mommaincontrol_lazyload') == 1){echo '1';}else{echo '0';}echo'">Lazy Load<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_lazyload') == 1){echo '0';}if(get_option('mommaincontrol_lazyload') == 0){echo '1';}echo '" name="mommaincontrol_lazyload" /><input type="submit" id="mom_lazy_mode_submit" name="mom_lazy_mode_submit" value="Submit" class="hidden" /></form>
 		<form method="post" action="" name="meta"><label for="mom_meta_mode_submit" class="onoff';if(get_option('mommaincontrol_meta') == 1){echo '1';}else{echo '0';}echo'">Meta<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_meta') == 1){echo '0';}if(get_option('mommaincontrol_meta') == 0){echo '1';}echo '" name="mommaincontrol_meta" /><input type="submit" id="mom_meta_mode_submit" name="mom_meta_mode_submit" value="Submit" class="hidden" /></form>
+		<form method="post" action="" name="authorarchives"><label for="mom_author_archives_mode_submit" class="onoff';if(get_option('mommaincontrol_authorarchives') == 1){echo '1';}else{echo '0';}echo'">Disable Authors<span></span></label><input class="hidden" type="text" value="';if(get_option('mommaincontrol_authorarchives') == 1){echo '0';}if(get_option('mommaincontrol_authorarchives') == 0){echo '1';}echo '" name="authorarchives" /><input type="submit" id="mom_author_archives_mode_submit" name="mom_author_archives_mode_submit" value="Submit" class="hidden" /></form>
+		<form method="post" action="" name="datearchives"><label for="mom_date_archives_mode_submit" class="onoff';if(get_option('mommaincontrol_datearchives') == 1){echo '1';}else{echo '0';}echo'">Disable Dates<span></span></label><input class="hidden" type="text" value="';if(get_option('mommaincontrol_datearchives') == 1){echo '0';}if(get_option('mommaincontrol_datearchives') == 0){echo '1';}echo '" name="datearchives" /><input type="submit" id="mom_date_archives_mode_submit" name="mom_date_archives_mode_submit" value="Submit" class="hidden" /></form>
 		</div>';
 
 		echo '<div class="small left">';
@@ -1935,23 +1997,6 @@ function mom_verify_shortcode($atts,$content = null){
 /****************************** SECTION G -/- (G0) Functions -/- Meta ******************************/
 function mom_SEO_header(){
 	global $post;
-	function mom_grab_author_count()
-	{
-		if(is_author())
-		{
-			if(sizeof(get_users('who=authors'))===1)
-				wp_redirect(get_bloginfo('url'));
-		}
-	}
-	function momSEO_disable_date_based_archives(){
-		if(is_date() || is_year() || is_month() || is_day() || is_time() || is_new_day()){
-			$homeURL = esc_url(home_url('/'));
-			if(have_posts()):the_post();
-			header('location:'.$homeURL);
-			exit;
-			endif;
-		}
-	}
 	function mom_meta_module(){
 		global $wp,$post;
 		$postid = $post->ID;
@@ -2032,14 +2077,6 @@ function mom_SEO_header(){
 		}
 		if(is_search() || is_404() || is_archive())echo '<meta name="robots" content="noindex,nofollow"/>';
 	}
-	function momSEOfeed($content){
-		return $content.'<p><a href="'.esc_url(get_permalink($post->ID)).'">'.htmlentities(get_post_field('post_title',$postid)).'</a> via <a href="'.esc_url(home_url('/')).'">'.get_bloginfo('site_name').'</a></p>';
-	}
-	function momSEOheadscripts(){
-		remove_action('wp_head','wp_print_scripts');
-		remove_action('wp_head','wp_print_head_scripts',9);
-		remove_action('wp_head','wp_enqueue_scripts',1);
-	}
 }
 /****************************** SECTION H -/- (H0) Settings -/- Theme Takeover ******************************/
 if(current_user_can('manage_options')){
@@ -2059,7 +2096,8 @@ if(current_user_can('manage_options')){
 		<div class="exclude">
 			<section><label for="MOM_themetakeover_topbar">Enable navbar</label>
 				<select id="MOM_themetakeover_topbar" name="MOM_themetakeover_topbar">
-					<option value="1"';if(get_option('MOM_themetakeover_topbar') == 1){echo ' selected="selected"';}echo '>Yes</option>
+					<option value="1"';if(get_option('MOM_themetakeover_topbar') == 1){echo ' selected="selected"';}echo '>Yes (top)</option>
+					<option value="2"';if(get_option('MOM_themetakeover_topbar') == 2){echo ' selected="selected"';}echo '>Yes (bottom)</option>
 					<option value="0"';if(get_option('MOM_themetakeover_topbar') == 0){echo ' selected="selected"';}echo '>No</option>
 				</select>
 			</section>';
@@ -2111,7 +2149,7 @@ if(get_option('MOM_themetakeover_youtubefrontpage') != ''){
 	}
 	add_action('template_redirect','templateRedirect');
 }
-if(get_option('MOM_themetakeover_topbar') == 1){
+if(get_option('MOM_themetakeover_topbar') == 1 || get_option('MOM_themetakeover_topbar') == 2){
 	function mom_topbar(){
 		global $wp,$post;
 		if(is_single()){
@@ -2123,7 +2161,7 @@ if(get_option('MOM_themetakeover_topbar') == 1){
 			$post_link = esc_url(home_url('/'));
 		}
 
-		echo '<div class="momnavbar"><div>';
+		echo '<div class="momnavbar ';if(get_option('MOM_themetakeover_topbar') == 1){ echo 'navbartop';}elseif(get_option('MOM_themetakeover_topbar') == 2){ echo 'navbarbottom';} echo'"><div>';
 		if(get_option('mommaincontrol_fontawesome') == 1){echo '<i class="fa fa-home"></i> ';}
 		echo '<a href="'.esc_url(home_url('/')).'">Front</a> - ';
 		if(get_option('mommaincontrol_fontawesome') == 1){echo '<i class="fa fa-clock-o"></i> ';}
