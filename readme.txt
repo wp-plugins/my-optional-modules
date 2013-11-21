@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.7.1
 Tested up to: 3.7.1
-Stable tag: 5.3.7.5
+Stable tag: 5.3.7.6
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -65,8 +65,13 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= .5.3.7.5 =
-* Hash added to home to compare against hash on onebillionwords.com to ensure file has not been tampered with.
+= .5.3.7.6 =
+* Passwords now uses Bcrypt for its passwords, and its salt has changed.
+* If your server does not have Blowfish enabled, Passwords will be disabled (if enabled) and will not be available to you.
+* Upon activation of the plugin, a salt will be generated for you; however, you may change it if you wish.
+* If (and when) you change the salt, you will need to resave your passwords.
+* You will also need to resave your passwords upon reactivation of the plugin.
+* File hash function moved to a button so as not to continously grab the contents of the plugin file every time the Home section is loaded.
 
 = .5 =
 * All scripts (.js,script) moved to a single file, enqueued)

@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.7.5
+Version: 5.3.7.6
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -58,7 +58,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 /****************************** SECTION A -/- Dependencies  ******************************/
 define('MyOptionalModules',true);
 require_once(ABSPATH.'wp-includes/pluggable.php');
-$my_optional_modules_passwords_salt = wp_salt();
+$my_optional_modules_passwords_salt = get_option('mom_passwords_salt');
 $passwordField = 0;
 /****************************** SECTION B -/- (B0) Install ******************************/
 register_activation_hook(__FILE__,'my_optional_modules_main_control_install');
@@ -459,6 +459,14 @@ function enqueueMOMscriptsFooter(){
 	add_action('wp_footer','MOMScriptsFooter');
 }
 function my_optional_modules_main_control_install(){
+	if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){
+	$availableCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890./';
+	$generateSalt = '';
+	for($i = 0; $i < 22; $i++){
+		$generateSalt .= $availableCharacters[rand(0, strlen($availableCharacters) - 1)];
+	}
+	add_option('mom_passwords_salt',$generateSalt);}
+	else{update_option('mommaincontrol_momrups',0);}
 	update_option('mommaincontrol_focus','');
 	add_option('mommaincontrol_passwords_activated',1);					
 	add_option('mommaincontrol_reviews_activated',1);
@@ -527,6 +535,7 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 	if(get_option('mommaincontrol_reviews_activated') == 0){$wpdb->query("DROP TABLE ".$review_table_name."");}
 	if(get_option('mommaincontrol_shorts_activated') == 0){$wpdb->query("DROP TABLE ".$verification_table_name."");}
 	delete_option('MOM_themetakeover_wowhead');
+	delete_option('mom_passwords_salt');
 	delete_option('mommaincontrol_obwcountplus');
 	delete_option('mommaincontrol_momrups');
 	delete_option('mommaincontrol_momse');
@@ -665,6 +674,14 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 	if(isset($_POST['mom_jumparound_mode_submit'])){add_option('jump_around_6',68);}
 	if(isset($_POST['mom_jumparound_mode_submit'])){add_option('jump_around_7',90);}
 	if(isset($_POST['mom_jumparound_mode_submit'])){add_option('jump_around_8',88);}
+	if(isset($_POST['mom_passwords_mode_submit'])){
+		$availableCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890./';
+		$generateSalt = '';
+		for($i = 0; $i < 22; $i++){
+			$generateSalt .= $availableCharacters[rand(0, strlen($availableCharacters) - 1)];
+		}
+		add_option('mom_passwords_salt',$generateSalt);
+	}
 	if(isset($_POST['mom_passwords_mode_submit'])){add_option('rotating_universal_passwords_1','');}	
 	if(isset($_POST['mom_passwords_mode_submit'])){add_option('rotating_universal_passwords_2','');}	
 	if(isset($_POST['mom_passwords_mode_submit'])){add_option('rotating_universal_passwords_3','');}	
@@ -769,9 +786,10 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 	if(isset($_POST['passwordsSave'])){
 		global $my_optional_modules_passwords_salt;
 		foreach($_REQUEST as $k => $v){
-			if($v != '')update_option($k,hash('sha512',$my_optional_modules_passwords_salt.$v));
+			if($v != '')update_option($k,crypt($v,'$2a$'.$my_optional_modules_passwords_salt));
 		}
 		update_option('rotating_universal_passwords_8',$_REQUEST['rotating_universal_passwords_8']);
+		update_option('mom_passwords_salt',$_REQUEST['mom_passwords_salt']);
 	}	
 	if(isset($_POST['momsesave'])){
 		foreach($_REQUEST as $k => $v){
@@ -816,9 +834,9 @@ if(current_user_can('manage_options')){
 		<form method="post" action="" name="momExclude"><label for="mom_exclude_mode_submit" class="onoff';if(get_option('mommaincontrol_momse') == 1){echo '1';}else{echo '0';}echo'">Exclude<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momse') == 1){echo '0';}if(get_option('mommaincontrol_momse') == 0){echo '1';}echo '" name="exclude" /><input type="submit" id="mom_exclude_mode_submit" name="mom_exclude_mode_submit" value="Submit" class="hidden" /></form>
 		</div>
 		<div class="small left">
-		<form method="post" action="" name="momJumpAround"><label for="mom_jumparound_mode_submit" class="onoff';if(get_option('mommaincontrol_momja') == 1){echo '1';}else{echo '0';}echo'">Jump Around<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momja') == 1){echo '0';}if(get_option('mommaincontrol_momja') == 0){echo '1';}echo '" name="jumparound" /><input type="submit" id="mom_jumparound_mode_submit" name="mom_jumparound_mode_submit" value="Submit" class="hidden" /></form>
-		<form method="post" action="" name="momPasswords"><label for="mom_passwords_mode_submit" class="onoff';if(get_option('mommaincontrol_momrups') == 1){echo '1';}else{echo '0';}echo'">Passwords<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momrups') == 1){echo '0';}if(get_option('mommaincontrol_momrups') == 0){echo '1';}echo '" name="passwords" /><input type="submit" id="mom_passwords_mode_submit" name="mom_passwords_mode_submit" value="Submit" class="hidden" /></form>
-		<form method="post" action="" name="momShortcodes"><label for="mom_shortcodes_mode_submit" class="onoff';if(get_option('mommaincontrol_shorts') == 1){echo '1';}else{echo '0';}echo'">Shortcodes<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_shorts') == 1){echo '0';}if(get_option('mommaincontrol_shorts') == 0){echo '1';}echo '" name="shortcodes" /><input type="submit" id="mom_shortcodes_mode_submit" name="mom_shortcodes_mode_submit" value="Submit" class="hidden" /></form>
+		<form method="post" action="" name="momJumpAround"><label for="mom_jumparound_mode_submit" class="onoff';if(get_option('mommaincontrol_momja') == 1){echo '1';}else{echo '0';}echo'">Jump Around<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momja') == 1){echo '0';}if(get_option('mommaincontrol_momja') == 0){echo '1';}echo '" name="jumparound" /><input type="submit" id="mom_jumparound_mode_submit" name="mom_jumparound_mode_submit" value="Submit" class="hidden" /></form>';
+		if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){ echo '<form method="post" action="" name="momPasswords"><label for="mom_passwords_mode_submit" class="onoff';if(get_option('mommaincontrol_momrups') == 1){echo '1';}else{echo '0';}echo'">Passwords<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momrups') == 1){echo '0';}if(get_option('mommaincontrol_momrups') == 0){echo '1';}echo '" name="passwords" /><input type="submit" id="mom_passwords_mode_submit" name="mom_passwords_mode_submit" value="Submit" class="hidden" /></form>';}
+		echo '<form method="post" action="" name="momShortcodes"><label for="mom_shortcodes_mode_submit" class="onoff';if(get_option('mommaincontrol_shorts') == 1){echo '1';}else{echo '0';}echo'">Shortcodes<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_shorts') == 1){echo '0';}if(get_option('mommaincontrol_shorts') == 0){echo '1';}echo '" name="shortcodes" /><input type="submit" id="mom_shortcodes_mode_submit" name="mom_shortcodes_mode_submit" value="Submit" class="hidden" /></form>
 		</div>
 		<div class="small left">
 		<form method="post" action="" name="momThemTakeover"><label for="mom_themetakeover_mode_submit" class="onoff';if(get_option('mommaincontrol_themetakeover') == 1){echo '1';}else{echo '0';}echo'">Theme Takeover<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_themetakeover') == 1){echo '0';}if(get_option('mommaincontrol_themetakeover') == 0){echo '1';}echo '" name="themetakeover" /><input type="submit" id="mom_themetakeover_mode_submit" name="mom_themetakeover_mode_submit" value="Submit" class="hidden" /></form>
@@ -890,7 +908,7 @@ if(current_user_can('manage_options')){
 		if(get_option('mommaincontrol_obwcountplus') == 1 || get_option('mommaincontrol_momse') == 1 || get_option('mommaincontrol_momrups') == 1 || get_option('mommaincontrol_momja') == 1 || get_option('mommaincontrol_shorts') == 1 || get_option('mommaincontrol_reviews') == 1 || get_option('mommaincontrol_themetakeover') == 1){
 		if(get_option('mommaincontrol_obwcountplus') == 1){echo '<section><label class="configurationlabel" for="MOMcount"></i>Count++</label><input id="MOMcount" name="MOMcount" class="hidden" type="submit"></section>';}
 		if(get_option('mommaincontrol_momse') == 1){echo '<section><label class="configurationlabel" for="MOMexclude">Exclude</label><input id="MOMexclude" name="MOMexclude" class="hidden" type="submit"></section>';}
-		if(get_option('mommaincontrol_momrups') == 1){echo '<section><label class="configurationlabel" for="MOMpasswords">Passwords</label><input id="MOMpasswords" name="MOMpasswords" class="hidden" type="submit"></section>';}
+		if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){if(get_option('mommaincontrol_momrups') == 1){echo '<section><label class="configurationlabel" for="MOMpasswords">Passwords</label><input id="MOMpasswords" name="MOMpasswords" class="hidden" type="submit"></section>';}}
 		if(get_option('mommaincontrol_momja') == 1){echo '<section><label class="configurationlabel" for="MOMjumparound">Jump Around</label><input id="MOMjumparound" name="MOMjumparound" class="hidden" type="submit"></section>';}
 		if(get_option('mommaincontrol_reviews') == 1){echo '<section><label class="configurationlabel" for="MOMreviews">Reviews</label><input id="MOMreviews" name="MOMreviews" class="hidden" type="submit"></section>';}
 		if(get_option('mommaincontrol_shorts') == 1){echo '<section><label class="configurationlabel" for="MOMshortcodes"></i>Shortcodes</label><input id="MOMshortcodes" name="MOMshortcodes" class="hidden" type="submit"></section>';}if(get_option('mommaincontrol_themetakeover') == 1){echo '<section><label class="configurationlabel" for="MOMthemetakeover"></i>Takeover</label><input id="MOMthemetakeover" name="MOMthemetakeover" class="hidden" type="submit"></section>';}
@@ -910,15 +928,19 @@ if(current_user_can('manage_options')){
 			elseif(get_option('mommaincontrol_themetakeover') == 1 && get_option('mommaincontrol_focus') == 'themetakeover'){my_optional_modules_theme_takeover_module();}
 			echo '</div>';
 		}else{
-			echo '<code>The has generated for this file is: <strong class="on">';
-			$file = plugin_dir_path( __FILE__ ).'plugin.php';
-			$file_handler = fopen($file,'r'); 
-			$contents = fread($file_handler, filesize($file)); 
-			fclose($file_handler); 
-			$contents = esc_attr($contents);
-			$contents = str_replace(array("\n","\t","\r"),"",$contents);
-			echo hash('sha1',$contents);
-			echo '</strong></code>';
+			if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){}else{ '<code>CRYPT_BLOWFISH is not available.  Passwords module disabled.</code><br />';}
+			if(!isset($_POST['generateHash']))echo '<form action="" method="post" name="generateHash"><input type="submit" name="generateHash" id="generateHash" value="Generate the file hash to check."/></form>';
+			if(isset($_POST['generateHash'])){
+				echo '<code>The has generated for this file is: <strong class="on">';
+				$file = plugin_dir_path( __FILE__ ).'plugin.php';
+				$file_handler = fopen($file,'r'); 
+				$contents = fread($file_handler, filesize($file)); 
+				fclose($file_handler); 
+				$contents = esc_attr($contents);
+				$contents = str_replace(array("\n","\t","\r"),"",$contents);
+				echo hash('sha1',$contents);
+				echo '</strong></code>';
+			}
 		}
 	echo '</div>';
 	}
@@ -984,6 +1006,11 @@ if(current_user_can('manage_options')){
 					if(get_option('rotating_universal_passwords_8') !== ''){
 						echo get_option('rotating_universal_passwords_8');
 					}echo '" /></section>
+					<section><label for="mom_passwords_salt">Salt (22 characters/(a-Z,0-9,./ <strong>only</strong>)</label>
+					<input type="text" maxlength="22" name="mom_passwords_salt" value="'; 
+					if(get_option('mom_passwords_salt') !== ''){
+						echo get_option('mom_passwords_salt');
+					}echo '" /></section>					
 					</div>
 					<input type="submit" name="passwordsSave" id="passwordsSave" value="Save changes" />
 					<input type="submit" name="reset_rups" id="reset_rups" value="Reset passwords" />
@@ -1020,87 +1047,97 @@ if(current_user_can('manage_options')){
 }
 /****************************** SECTION D -/- (D1) Functions -/- Passwords ******************************/
 function rotating_universal_passwords_shortcode($atts, $content = null){
-	ob_start();
-	global $passwordField;
-	$passwordField++;	
-	global $my_optional_modules_passwords_salt;
-	if(isset($_SERVER["REMOTE_ADDR"])){
-		$RUPs_origin = $_SERVER["REMOTE_ADDR"]; 
-	} else if(isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
-		$RUPs_origin = $_SERVER["HTTP_X_FORWARDED_FOR"]; 
-	} else if(isset($_SERVER["HTTP_CLIENT_IP"])){
-		$RUPs_origin = $_SERVER["HTTP_CLIENT_IP"]; 
-	}
-	$RUPs_ip_addr = $RUPs_origin;
-	$RUPs_s32int = ip2long($RUPs_ip_addr);
-	$RUPs_us32str = sprintf("%u",$RUPs_s32int);
-	if(date('N') === '7'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_1');$rotating_universal_passwords_today_is = 'Sunday';}
-	if(date('N') === '1'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_2');$rotating_universal_passwords_today_is = 'Monday';}
-	if(date('N') === '2'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_3');$rotating_universal_passwords_today_is = 'Tuesday';}
-	if(date('N') === '3'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_4');$rotating_universal_passwords_today_is = 'Wednesday';}
-	if(date('N') === '4'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_5');$rotating_universal_passwords_today_is = 'Thursday';}
-	if(date('N') === '5'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_6');$rotating_universal_passwords_today_is = 'Friday';}
-	if(date('N') === '6'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_7');$rotating_universal_passwords_today_is = 'Saturday';}
-	$rups_md5passa = hash('sha512',$my_optional_modules_passwords_salt.$_REQUEST['rups_pass']);
-	global $wpdb;
-	$RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
-	$RUPs_result = $wpdb->get_results("SELECT ID FROM $RUPs_table_name WHERE IP = '".$RUPs_s32int."'");
-	if(isset($_POST['rups_pass'])){
-		if($rups_md5passa === $rotating_universal_passwords_todays_password){
-			if(count($RUPs_result) > 0){
-				$RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
-				$wpdb->query("DELETE FROM $RUPs_table_name WHERE IP = '$RUPs_s32int'");
+	if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){
+		ob_start();
+		global $passwordField;
+		global $my_optional_modules_passwords_salt;
+		$passwordField++;	
+		if(isset($_SERVER["REMOTE_ADDR"])){
+			$RUPs_origin = $_SERVER["REMOTE_ADDR"]; 
+		} else if(isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
+			$RUPs_origin = $_SERVER["HTTP_X_FORWARDED_FOR"]; 
+		} else if(isset($_SERVER["HTTP_CLIENT_IP"])){
+			$RUPs_origin = $_SERVER["HTTP_CLIENT_IP"]; 
 		}
-			return $content;
-		}else{
-			$RUPs_date = date('Y-m-d H:i:s');
+		$RUPs_ip_addr = $RUPs_origin;
+		$RUPs_s32int = ip2long($RUPs_ip_addr);
+		$RUPs_us32str = sprintf("%u",$RUPs_s32int);
+		if(date('N') === '7'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_1');$rotating_universal_passwords_today_is = 'Sunday';}
+		if(date('N') === '1'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_2');$rotating_universal_passwords_today_is = 'Monday';}
+		if(date('N') === '2'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_3');$rotating_universal_passwords_today_is = 'Tuesday';}
+		if(date('N') === '3'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_4');$rotating_universal_passwords_today_is = 'Wednesday';}
+		if(date('N') === '4'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_5');$rotating_universal_passwords_today_is = 'Thursday';}
+		if(date('N') === '5'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_6');$rotating_universal_passwords_today_is = 'Friday';}
+		if(date('N') === '6'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_7');$rotating_universal_passwords_today_is = 'Saturday';}
+			if($rotating_universal_passwords_todays_password != ''){
+			$rups_md5passa = crypt($_REQUEST['rups_pass'],'$2a$'.$my_optional_modules_passwords_salt);
+			global $wpdb;
 			$RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
-			$RUPs_URL = esc_url(get_permalink());
-			if(count($RUPs_result) > 0){
-				$wpdb->query("UPDATE $RUPs_table_name SET ATTEMPTS = ATTEMPTS + 1 WHERE IP = $RUPs_s32int");
-				$wpdb->query("UPDATE $RUPs_table_name SET DATE = '$RUPs_date' WHERE IP = $RUPs_s32int");
-				$wpdb->query("UPDATE $RUPs_table_name SET URL = '".esc_url(get_permalink())."' WHERE IP = $RUPs_s32int");
+			$RUPs_result = $wpdb->get_results("SELECT ID FROM $RUPs_table_name WHERE IP = '".$RUPs_s32int."'");
+			if(isset($_POST['rups_pass'])){
+				if($rups_md5passa === $rotating_universal_passwords_todays_password){
+					if(count($RUPs_result) > 0){
+						$RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
+						$wpdb->query("DELETE FROM $RUPs_table_name WHERE IP = '$RUPs_s32int'");
+				}
+					return $content;
+				}else{
+					$RUPs_date = date('Y-m-d H:i:s');
+					$RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
+					$RUPs_URL = esc_url(get_permalink());
+					if(count($RUPs_result) > 0){
+						$wpdb->query("UPDATE $RUPs_table_name SET ATTEMPTS = ATTEMPTS + 1 WHERE IP = $RUPs_s32int");
+						$wpdb->query("UPDATE $RUPs_table_name SET DATE = '$RUPs_date' WHERE IP = $RUPs_s32int");
+						$wpdb->query("UPDATE $RUPs_table_name SET URL = '".esc_url(get_permalink())."' WHERE IP = $RUPs_s32int");
+					}else{
+						$wpdb->query("INSERT INTO $RUPs_table_name (ID, DATE, IP, ATTEMPTS, URL) VALUES ('','$RUPs_date','$RUPs_s32int','1','$RUPs_URL')") ;
+					}
+				}
+			}
+			$RUPs_attempts = $wpdb->get_results("SELECT DATE,ATTEMPTS FROM $RUPs_table_name WHERE IP = '".$RUPs_s32int."'");
+			if(count($RUPs_attempts) > 0){
+				foreach($RUPs_attempts as $RUPs_attempt_count){
+					$RUPs_attempted = $RUPs_attempt_count->ATTEMPTS;
+					$RUPs_dated = $RUPs_attempt_count->DATE;
+					if($RUPs_attempted < get_option('rotating_universal_passwords_8')){
+						$attempts = get_option('rotating_universal_passwords_8');
+						$attemptsLeft = $attempts - $RUPs_attempted . ' attempts left.';
+						if(isset($_POST)){
+							echo '<form method="post" id="RUPS'.$passwordField.'" action="'.esc_url(get_permalink()).'">';
+							wp_nonce_field('password_'.$passwordField);
+							echo '<input type="text" class="password" name="rups_pass" placeholder="'.$attemptsLeft.'Enter the password for '.esc_attr($rotating_universal_passwords_today_is).'." >
+							<input type="submit" name="submit" class="hidden" value="Submit">
+							</form>';
+						}
+					}
+					elseif($RUPs_attempted >= get_option('rotating_universal_passwords_8')){
+						echo "<blockquote>You have been locked out.  If you feel this is an error, please contact the admin with the following <strong>id:".$RUPs_s32int."</strong> to inquire further.</blockquote>";
+					}else{			
+						if(isset($_POST)){
+							echo '<form method="post" id="RUPS'.$passwordField.'" action="'.esc_url(get_permalink()).'">';
+							wp_nonce_field('password_'.$passwordField);
+							echo '<input type="text" class="password" name="rups_pass" placeholder="'.$attemptsLeft.'Enter the password for '.esc_attr($rotating_universal_passwords_today_is).'." >
+							<input type="submit" name="submit" class="hidden" value="Submit">
+							</form>';
+						}
+					}
+				}
 			}else{
-				$wpdb->query("INSERT INTO $RUPs_table_name (ID, DATE, IP, ATTEMPTS, URL) VALUES ('','$RUPs_date','$RUPs_s32int','1','$RUPs_URL')") ;
-			}
-		}
-	}
-	$RUPs_attempts = $wpdb->get_results("SELECT DATE,ATTEMPTS FROM $RUPs_table_name WHERE IP = '".$RUPs_s32int."'");
-	if(count($RUPs_attempts) > 0){
-		foreach($RUPs_attempts as $RUPs_attempt_count){
-			$RUPs_attempted = $RUPs_attempt_count->ATTEMPTS;
-			$RUPs_dated = $RUPs_attempt_count->DATE;
-			if($RUPs_attempted < get_option('rotating_universal_passwords_8')){
 				if(isset($_POST)){
 					echo '<form method="post" id="RUPS'.$passwordField.'" action="'.esc_url(get_permalink()).'">';
 					wp_nonce_field('password_'.$passwordField);
-					echo '<input type="text" name="rups_pass" placeholder="Today is '.esc_attr($rotating_universal_passwords_today_is).'." >
-					<input type="submit" name="submit" class="submit" value="Submit" >
+					echo '<input type="text" class="password" name="rups_pass" placeholder="'.$attemptsLeft.'Enter the password for '.esc_attr($rotating_universal_passwords_today_is).'." >
+					<input type="submit" name="submit" class="hidden" value="Submit">
 					</form>';
 				}
 			}
-			elseif($RUPs_attempted >= get_option('rotating_universal_passwords_8')){
-				echo "<blockquote>You have been locked out.  If you feel this is an error, please contact the admin with the following <strong>id:".$RUPs_s32int."</strong> to inquire further.</blockquote>";
-			}else{			
-				if(isset($_POST)){
-					echo '<form method="post" id="RUPS'.$passwordField.'" action="'.esc_url(get_permalink()).'">';
-					wp_nonce_field('password_'.$passwordField);
-					echo '<input type="text" name="rups_pass" placeholder="Today is '.esc_attr($rotating_universal_passwords_today_is).'." >
-					<input type="submit" name="submit" class="submit" value="Submit" >
-					</form>';
-				}
-			}
-		}
-	}else{
-		if(isset($_POST)){
-			echo '<form method="post" id="RUPS'.$passwordField.'" action="'.esc_url(get_permalink()).'">';
-			wp_nonce_field('password_'.$passwordField);
-			echo '<input type="text" name="rups_pass" placeholder="Today is '.esc_attr($rotating_universal_passwords_today_is).'." >
-			<input type="submit" name="submit" class="submit" value="Submit" >
-			</form>';
+			return ob_get_clean();
+		}else{
+		ob_start();
+		echo '<blockquote>'.esc_attr($rotating_universal_passwords_today_is).'\'s password is blank or missing.</blockquote>';
+		return ob_get_clean();
 		}
 	}
-	return ob_get_clean();
 }
 /****************************** SECTION E -/- (E0) Settings -/- Reviews ******************************/
 if(current_user_can('manage_options')){
