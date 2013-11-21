@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.7.7
+Version: 5.3.7.8
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -2788,10 +2788,10 @@ if(get_option('MOM_Exclude_NoFollow') != 0){
 	add_filter('the_content','nofollow_cat_posts');
 }
 function mom_exclude_filter_posts($query){
-	$c1	= '0';
-	$lt_1 = '0';
-	$t1	= '0';
-	$t_1 = '0';
+	$c1	= array('0');
+	$lt_1 = array('0');
+	$t1	= array('0');
+	$t_1 = array('0');
 	$c_1 = '0';
 	if(get_option('MOM_Exclude_Categories_Front') == ''){$MOM_Exclude_Categories_Front = '0';}else{$MOM_Exclude_Categories_Front = get_option('MOM_Exclude_Categories_Front');}
 	if(get_option('MOM_Exclude_Categories_TagArchives') == ''){$MOM_Exclude_Categories_TagArchives = '0';}else{$MOM_Exclude_Categories_TagArchives = get_option('MOM_Exclude_Categories_TagArchives');}
