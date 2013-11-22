@@ -2,22 +2,25 @@
 	/* Passwords */
 	input[type='text'].password { width:95%; margin:10px auto;}
 	/* Navbar */
-	div.momnavbar{z-index:999;text-transform:uppercase;width:100%;display:block;text-align:left;font-size:20px;}
+	 .momnavbar{z-index:999;text-transform:uppercase;width:100%;display:block;text-align:left;line-height:35px;}
 	 .navbardark,.navbardark a{background-color:#f5f5f5;color:#9f9f9f;}
 	 .navbarlight,.navbarlight a{background-color:#9f9f9f;color:#f5f5f5;}
 	 .navbardefault,.navbardefault a{background-color:#fff;color:#000;}
+	 .navbarred,.navbarred a{background-color:#f25e5e;color:#fff6f6;}
+	 .navbarblue,.navbarblue a{background-color:#5ea0f2;color:#f0f7ff;}
+	 .navbargreen,.navbargreen a{background-color:#5ef26c;color:#072406;}
+	 .navbaryellow,.navbaryellow a{background-color:#e2f25e;color:#1d1e02;}
 	 .momnavbar a:hover{text-decoration:underline;}
-	.navbartop {height:25px;line-height:35px;}
+	.navbartop {height:46px;}
 	.navbarbottom{height:auto;}
 	div.momnavbar .item{height:20px;padding:5px;margin:0;cursor:pointer;}
-	div.momnavbarcategories{display:block;width:95%;height:20px;overflow:hidden;margin:0;display:block;font-size:12px;float:left;}
-	div.momnavbarcategories ul{margin:-5px 0;width:100%;}
-	div.momnavbarcategories ul li {float:left;margin:0 5px; line-height:15px;}
-	.navbartop form#navsearchform{position:absolute;right:-12px;top:5px;cursor:pointer;background-color:#fff;color:#000;border:1px solid #000;padding:5px;}
-	.navbarbottom form#navsearchform{position:absolute;right:-12px;top:-25px;cursor:pointer;background-color:#fff;color:#000;border:1px solid #000;padding:5px;}
-	div.momnavbar form#navsearchform i{cursor:pointer;}
-	form#navsearchform input[type='text']{height:25px;font-size:20px;width:0;}
-	form#navsearchform input[type='text']:focus{width:150px;}
+	.momnavbarcategories{display:block;width:100%;height:100%;overflow:hidden;margin:0;display:block;clear:both;padding:0;margin:-5px 0;width:100%;line-height:53px;font-size:15px;}
+	.momnavbarcategories li {float:left;margin:0 5px; list-style:none;}
+	.navbartop #navsearchform{position:absolute;right:0;top:0;cursor:pointer;background-color:#fff;color:#000;border:1px solid #000;padding:5px;margin:0;}
+	.navbarbottom #navsearchform{position:absolute;right:0;top:0;cursor:pointer;background-color:#fff;color:#000;border:1px solid #000;padding:5px;margin:0;}
+	div.momnavbar #navsearchform i{cursor:pointer;}
+	#navsearchform .navsearchformtext{height:25px;font-size:20px;width:0;border:0;padding:0;}
+	#navsearchform .navsearchformtext:focus{width:150px;}
 	.navbartop{border-bottom:1px solid #000;}
 	.navbarbottom{border-top:1px solid #000;}
 	.navbartop,.stucktothetop{position:fixed !important;top:0 !important;left:0 !important;z-index:99999 !important;}

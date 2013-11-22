@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.7.9
+Version: 5.3.8.0
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -2108,6 +2108,10 @@ if(current_user_can('manage_options')){
 				<select id="MOM_themetakeover_topbar_color" name="MOM_themetakeover_topbar_color">
 					<option value="1"';if(get_option('MOM_themetakeover_topbar_color') == 1){echo ' selected="selected"';}echo '>Dark</option>
 					<option value="2"';if(get_option('MOM_themetakeover_topbar_color') == 2){echo ' selected="selected"';}echo '>Light</option>
+					<option value="4"';if(get_option('MOM_themetakeover_topbar_color') == 4){echo ' selected="selected"';}echo '>Red</option>
+					<option value="5"';if(get_option('MOM_themetakeover_topbar_color') == 5){echo ' selected="selected"';}echo '>Green</option>
+					<option value="6"';if(get_option('MOM_themetakeover_topbar_color') == 6){echo ' selected="selected"';}echo '>Blue</option>
+					<option value="7"';if(get_option('MOM_themetakeover_topbar_color') == 7){echo ' selected="selected"';}echo '>Yellow</option>
 					<option value="3"';if(get_option('MOM_themetakeover_topbar_color') == 3){echo ' selected="selected"';}echo '>Default</option>
 				</select>
 			</section>			
@@ -2178,21 +2182,26 @@ if(get_option('MOM_themetakeover_topbar') == 1 || get_option('MOM_themetakeover_
 			$post_link = esc_url(home_url('/'));
 		}
 		echo '<div class="momnavbar ';
-		if(get_option('MOM_themetakeover_topbar_color') == 1){ echo 'navbarlight ';}elseif(get_option('MOM_themetakeover_topbar_color') == 2){echo 'navbardark ';}else{echo 'navbardefault ';}
+		if(get_option('MOM_themetakeover_topbar_color') == 1){ echo 'navbarlight ';}
+		elseif(get_option('MOM_themetakeover_topbar_color') == 2){echo 'navbardark ';}
+		elseif(get_option('MOM_themetakeover_topbar_color') == 4){echo 'navbarred ';}
+		elseif(get_option('MOM_themetakeover_topbar_color') == 5){echo 'navbargreen ';}
+		elseif(get_option('MOM_themetakeover_topbar_color') == 6){echo 'navbarblue ';}
+		elseif(get_option('MOM_themetakeover_topbar_color') == 7){echo 'navbaryellow ';}
+		else{echo 'navbardefault ';}
 		if(get_option('MOM_themetakeover_topbar') == 1){ echo 'navbartop';}elseif(get_option('MOM_themetakeover_topbar') == 2){ echo 'navbarbottom';} echo'">';
 		if(get_option('MOM_themetakeover_topbar_search') == 1){
 			echo '
 				<form role="search" method="get" id="navsearchform" action="'.esc_url( home_url( '/' ) ).'">
 						<div>
 							<label for="navsearchforminput"><i class="fa fa-search"></i></label>
-							<input type="text" value="" name="navsearchforminput" id="navsearchforminput" placeholder="Search" />
+							<input type="text" value="" class="navsearchformtext" id="navsearchforminput" placeholder="Search" />
 							<input type="submit" class="hidden" value="Search" />
 						</div>
 				</form>
 			';
 		}
-		echo '<div class="items">
-		<div class="momnavbarcategories"><ul>
+		echo '<ul class="momnavbarcategories">
 		<li><a href="'.esc_url(home_url('/')).'">Front</a></li>';
 		$args = array('numberposts'=>'1');
 		$latestpost = wp_get_recent_posts($args);
@@ -2221,7 +2230,7 @@ if(get_option('MOM_themetakeover_topbar') == 1 || get_option('MOM_themetakeover_
 			}
 		}
 		if(function_exists('mom_exclude_list_categories'))mom_exclude_list_categories();
-		echo '</ul></div></div></div>';
+		echo '</ul></div>';
 	}
 	add_action('wp_footer','mom_topbar');
 	// http://plugins.svn.wordpress.org/wp-toolbar-removal/trunk/wp-toolbar-removal.php
