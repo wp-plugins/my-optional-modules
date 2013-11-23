@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.0
+Version: 5.3.8.1
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -202,6 +202,19 @@ if($mommodule_versionnumbers === true)add_filter('script_loader_src','mom_remove
 
 $momthemetakeover_youtube = esc_url(get_option('MOM_themetakeover_youtubefrontpage'));
 /****************************** SECTION B -/- (B2) Main Functions ******************************/
+if(get_option('MOM_themetakeover_backgroundimage') == 1){
+	//http://scottnix.com/thematic-snippets/
+	$backgroundargs = array( 
+		'default-image'          => '',
+		'default-color'          => '',
+		'wp-head-callback'       => '_custom_background_cb',
+		'admin-head-callback'    => '',
+		'admin-preview-callback' => ''
+	);
+	add_theme_support( 'custom-background', array(
+		'default-color' => 'fff',
+	) );
+}
 function momprotectrss($content){
 		return $content.'<p><a href="'.esc_url(get_permalink($post->ID)).'">'.htmlentities(get_post_field('post_title',$postid)).'</a> via <a href="'.esc_url(home_url('/')).'">'.get_bloginfo('site_name').'</a></p>';
 }
@@ -506,7 +519,7 @@ function enqueueMOMscriptsFooter(){
 		});
 		</script>';
 	}
-	add_action('wp_footer','MOMScriptsFooter');
+	add_action('wp_footer','MOMScriptsFooter',99999);
 }
 function my_optional_modules_main_control_install(){
 	if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){
@@ -585,6 +598,8 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 	if(get_option('mommaincontrol_reviews_activated') == 0){$wpdb->query("DROP TABLE ".$review_table_name."");}
 	if(get_option('mommaincontrol_shorts_activated') == 0){$wpdb->query("DROP TABLE ".$verification_table_name."");}
 	delete_option('mommaincontrol_protectrss');
+	delete_option('MOM_themetakeover_extend');
+	delete_option('MOM_themetakeover_backgroundimage');
 	delete_option('MOM_themetakeover_topbar_search');
 	delete_option('MOM_themetakeover_topbar_share');
 	delete_option('MOM_themetakeover_topbar_color');
@@ -2104,6 +2119,12 @@ if(current_user_can('manage_options')){
 					<option value="0"';if(get_option('MOM_themetakeover_topbar') == 0){echo ' selected="selected"';}echo '>No</option>
 				</select>
 			</section>
+			<section><label for="MOM_themetakeover_extend">Extend navbar</label>
+				<select id="MOM_themetakeover_extend" name="MOM_themetakeover_extend">
+					<option value="1"';if(get_option('MOM_themetakeover_extend') == 1){echo ' selected="selected"';}echo '>Yes</option>
+					<option value="0"';if(get_option('MOM_themetakeover_extend') == 0){echo ' selected="selected"';}echo '>No</option>
+				</select>
+			</section>			
 			<section><label for="MOM_themetakeover_topbar_color">Navbar scheme</label>
 				<select id="MOM_themetakeover_topbar_color" name="MOM_themetakeover_topbar_color">
 					<option value="1"';if(get_option('MOM_themetakeover_topbar_color') == 1){echo ' selected="selected"';}echo '>Dark</option>
@@ -2140,6 +2161,13 @@ if(current_user_can('manage_options')){
 			}
 			echo '</select></section>';
 		echo '<section><hr /></section>';
+		echo '<section><label for="MOM_themetakeover_backgroundimage">Enable Custom BG Image</label>
+				<select id="MOM_themetakeover_backgroundimage" name="MOM_themetakeover_backgroundimage">
+					<option value="0"';if(get_option('MOM_themetakeover_backgroundimage') == 0){echo ' selected="selected"';}echo '>No</option>
+					<option value="1"';if(get_option('MOM_themetakeover_backgroundimage') == 1){echo ' selected="selected"';}echo '>Yes</option>
+				</select>
+			</section>';
+		echo '<section><hr /></section>';
 		echo '<section><label for="MOM_themetakeover_wowhead">Enable Wowhead Tooltips (<a href="http://www.wowhead.com/tooltips">?</a>)</label>
 				<select id="MOM_themetakeover_wowhead" name="MOM_themetakeover_wowhead">
 					<option value="1"';if(get_option('MOM_themetakeover_wowhead') == 1){echo ' selected="selected"';}echo '>Yes</option>
@@ -2173,45 +2201,40 @@ if(get_option('MOM_themetakeover_youtubefrontpage') != ''){
 if(get_option('MOM_themetakeover_topbar') == 1 || get_option('MOM_themetakeover_topbar') == 2){
 	function mom_topbar(){
 		global $wp,$post;
+		ob_start();
+		the_title_attribute();
+		$title = ob_get_clean();		
 		if(is_single() || is_page()){
 			$postid = $post->ID;
-			$post_title = get_post_field('post_title',$postid);
+			$the_title = get_post_field('post_title',$postid);
 			$post_link = get_permalink($post->ID);
 		}else{
-			$post_title = get_bloginfo('site_name');
+			$the_title = get_bloginfo('site_name');
 			$post_link = esc_url(home_url('/'));
 		}
 		echo '<div class="momnavbar ';
-		if(get_option('MOM_themetakeover_topbar_color') == 1){ echo 'navbarlight ';}
-		elseif(get_option('MOM_themetakeover_topbar_color') == 2){echo 'navbardark ';}
-		elseif(get_option('MOM_themetakeover_topbar_color') == 4){echo 'navbarred ';}
-		elseif(get_option('MOM_themetakeover_topbar_color') == 5){echo 'navbargreen ';}
-		elseif(get_option('MOM_themetakeover_topbar_color') == 6){echo 'navbarblue ';}
-		elseif(get_option('MOM_themetakeover_topbar_color') == 7){echo 'navbaryellow ';}
-		else{echo 'navbardefault ';}
-		if(get_option('MOM_themetakeover_topbar') == 1){ echo 'navbartop';}elseif(get_option('MOM_themetakeover_topbar') == 2){ echo 'navbarbottom';} echo'">';
+		if(get_option('MOM_themetakeover_topbar_color') == 1){$scheme = 'momschemelight'; echo 'navbarlight ';}
+		elseif(get_option('MOM_themetakeover_topbar_color') == 2){$scheme = 'momschemedark'; echo 'navbardark ';}
+		elseif(get_option('MOM_themetakeover_topbar_color') == 4){$scheme = 'momschemered'; echo 'navbarred ';}
+		elseif(get_option('MOM_themetakeover_topbar_color') == 5){$scheme = 'momschemegreen'; echo 'navbargreen ';}
+		elseif(get_option('MOM_themetakeover_topbar_color') == 6){$scheme = 'momschemeblue'; echo 'navbarblue ';}
+		elseif(get_option('MOM_themetakeover_topbar_color') == 7){$scheme = 'momschemeyellow'; echo 'navbaryellow ';}
+		else{$scheme = 'momschemedefault'; echo 'navbardefault ';}
+		if(get_option('MOM_themetakeover_topbar') == 1){ $isTop = 'down'; echo 'navbartop';}elseif(get_option('MOM_themetakeover_topbar') == 2){ $isTop = 'up'; echo 'navbarbottom';} echo'">';
 		if(get_option('MOM_themetakeover_topbar_search') == 1){
-			echo '
-				<form role="search" method="get" id="navsearchform" action="'.esc_url( home_url( '/' ) ).'">
-						<div>
-							<label for="navsearchforminput"><i class="fa fa-search"></i></label>
-							<input type="text" value="" class="navsearchformtext" id="navsearchforminput" placeholder="Search" />
-							<input type="submit" class="hidden" value="Search" />
-						</div>
-				</form>
-			';
+			echo '<label for="s" class="momsearchthis fa fa-search"></label>';get_search_form();
 		}
 		echo '<ul class="momnavbarcategories">
 		<li><a href="'.esc_url(home_url('/')).'">Front</a></li>';
 		$args = array('numberposts'=>'1');
 		$latestpost = wp_get_recent_posts($args);
 		foreach($latestpost as $latest){
-			echo '<li><a href="'.esc_url(get_permalink($latest["ID"])).'" title="Look '.esc_attr($latest["post_title"]).'" >Latest</a></li>';
+			echo '<li><a href="'.esc_url(get_permalink($latest["ID"])).'" title="'.esc_attr($latest["post_title"]).'" >Latest</a></li>';
 		}		
 		if(get_option('MOM_themetakeover_topbar_share') == 1){
 			//http://www.webdesignerforum.co.uk/topic/70328-easy-social-sharing-buttons-for-wordpress-without-a-plugin/
 			echo '<li><a href="http://twitter.com/home?status=Reading:'.esc_url($post_link).'" title="Share this post on Twitter!" target="_blank"><i class="fa fa-twitter"></i></a></li>
-			<li><a href="http://www.facebook.com/sharer.php?u='.esc_url($post_link).'&amp;t='.esc_attr($post_title).'" title="Share this post on Facebook!" onclick="window.open(this.href); return false;"><i class="fa fa-facebook"></i></a></li>
+			<li><a href="http://www.facebook.com/sharer.php?u='.esc_url($post_link).'&amp;t='.esc_attr(urlencode($the_title)).'" title="Share this post on Facebook!" onclick="window.open(this.href); return false;"><i class="fa fa-facebook"></i></a></li>
 			<li><a target="_blank" href="https://plus.google.com/share?url='.esc_url($post_link).'"><i class="fa fa-google-plus"></i></a></li>
 			';
 		}
@@ -2231,6 +2254,52 @@ if(get_option('MOM_themetakeover_topbar') == 1 || get_option('MOM_themetakeover_
 		}
 		if(function_exists('mom_exclude_list_categories'))mom_exclude_list_categories();
 		echo '</ul></div>';
+		if(get_option('MOM_themetakeover_extend') == 1){
+			echo '<div class="momnavbar_extended'.esc_attr($isTop).'">';
+			if($isTop == 'up'){echo '<label for="momnavbarextended"><span class="momnavbar_tab '.esc_attr($scheme).'"><i class="fa fa-chevron-'.esc_attr($isTop).'"></i></span></label>';}
+			echo '<input id="momnavbarextended" type="checkbox" class="hidden"></input>
+			<div class="momnavbar_extended_inner  '.esc_attr($scheme).'">
+			<h3 class="clear">'.esc_attr(get_bloginfo('name')).'</h3>
+			<p class="siteinfo">'.esc_attr(get_bloginfo('description')).'</p>';
+			if(is_single()){if(function_exists('obwcountplus_single')){echo '<span>'; obwcountplus_single();echo' words</span>';}}
+			if(function_exists('obwcountplus_total')){echo '<span>';obwcountplus_total();echo ' total</span>';}
+			$tags = get_tags('number=10');
+			$html = '<div class="listalltags">';
+			foreach ( $tags as $tag ) {
+				$tag_link = get_tag_link( $tag->term_id );
+				$html .= "<a href='{$tag_link}' title='{$tag->name} Tag' class='{$tag->slug}'>";
+				$html .= "{$tag->name}</a>";
+			}
+			$html .= '</div>';
+			echo $html;		
+			echo '<div class="recentPostListingThumbnails '.esc_attr($scheme).'">';
+				$args=array(
+					'numberposts'=>25,
+					'post_type'=>'post',
+					'meta_key'=>'_thumbnail_id',
+				);		
+				$recent_posts = wp_get_recent_posts($args);
+				foreach( $recent_posts as $recentthumbs ){
+					$url = wp_get_attachment_url( get_post_thumbnail_id($recentthumbs["ID"]) );
+					echo '<a class="thumbnail" href="' . get_permalink($recentthumbs["ID"]) . '" title="'.esc_attr($recentthumbs["post_title"]).'" ><img src="'.$url.'" /></a>';
+				}
+			echo '</div>';
+			echo '<div class="recentPostListing">
+			<ul>';
+				$argsb=array(
+					'numberposts'=>9,
+					'post_type'=>'post',
+				);					
+				$recent_posts = wp_get_recent_posts($argsb);
+				foreach( $recent_posts as $recent ){
+					echo '<li><a href="' . get_permalink($recent["ID"]) . '" title="'.esc_attr($recent["post_title"]).'" >' .   $recent["post_title"].'</a> </li> ';
+				}
+			echo '</ul>
+			</div>
+			</div>';
+			if($isTop == 'down'){echo '<label for="momnavbarextended"><span class="momnavbar_tab '.esc_attr($scheme).'"><i class="fa fa-chevron-'.esc_attr($isTop).'"></i></span></label>';}
+			echo '</div>';
+		}
 	}
 	add_action('wp_footer','mom_topbar');
 	// http://plugins.svn.wordpress.org/wp-toolbar-removal/trunk/wp-toolbar-removal.php
