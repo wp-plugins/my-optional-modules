@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.1
+Version: 5.3.8.1.1
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -2263,7 +2263,7 @@ if(get_option('MOM_themetakeover_topbar') == 1 || get_option('MOM_themetakeover_
 			<p class="siteinfo">'.esc_attr(get_bloginfo('description')).'</p>';
 			if(is_single()){if(function_exists('obwcountplus_single')){echo '<span>'; obwcountplus_single();echo' words</span>';}}
 			if(function_exists('obwcountplus_total')){echo '<span>';obwcountplus_total();echo ' total</span>';}
-			$tags = get_tags('number=10');
+			$tags = get_tags('number=10&orderby=count');
 			$html = '<div class="listalltags">';
 			foreach ( $tags as $tag ) {
 				$tag_link = get_tag_link( $tag->term_id );
