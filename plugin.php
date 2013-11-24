@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.1.1
+Version: 5.3.8.2
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -52,6 +52,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			(K1) Functions > Exclude functions
 		Section L > Jump Around
 			(L0) Settings > Settings page
+		SECTION M > POST VODING
+			(M0) Functions > Post Voting
 		SECTION X > Database cleaner
 		SECTION Y > Post edit buttons
 		SECTION Z > Additional information
@@ -587,6 +589,8 @@ function mom_exclude_postformat_theme_support(){
 /****************************** SECTION B -/- (B3) Options ******************************/
 if(current_user_can('manage_options')){
 global $wpdb;
+$votesPosts = $wpdb->prefix.'momvotes_posts';
+$votesVotes = $wpdb->prefix.'momvotes_votes';
 $RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
 $review_table_name = $wpdb->prefix.'momreviews';
 $verification_table_name = $wpdb->prefix.'momverification';
@@ -594,9 +598,12 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 	add_option('mommaincontrol_passwords_activated',1);					
 	add_option('mommaincontrol_reviews_activated',1);
 	add_option('mommaincontrol_shorts_activated',1);
+	add_option('mommaincontrol_votes_activated',1);
+	if(get_option('mommaincontrol_votes_activated') == 0){$wpdb->query("DROP TABLE ".$votesPosts."");$wpdb->query("DROP TABLE ".$votesVotes."");}
 	if(get_option('mommaincontrol_passwords_activated') == 0){$wpdb->query("DROP TABLE ".$RUPs_table_name."");}
 	if(get_option('mommaincontrol_reviews_activated') == 0){$wpdb->query("DROP TABLE ".$review_table_name."");}
 	if(get_option('mommaincontrol_shorts_activated') == 0){$wpdb->query("DROP TABLE ".$verification_table_name."");}
+	delete_option('mommaincontrol_votes_activated');
 	delete_option('mommaincontrol_protectrss');
 	delete_option('MOM_themetakeover_extend');
 	delete_option('MOM_themetakeover_backgroundimage');
@@ -704,6 +711,7 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 	delete_option('momreviews_css');
 	delete_option('momreviews_search');
 	delete_option('momMaintenance_url');
+	delete_option('mommaincontrol_votes');
 }else{	
 	// Form handling for options a
 	if(isset($_POST['MOMsave'])){}
@@ -713,6 +721,7 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 	if(isset($_POST['mom_author_archives_mode_submit'])){update_option('mommaincontrol_authorarchives',$_REQUEST['authorarchives']);}
 	if(isset($_POST['mom_date_archives_mode_submit'])){update_option('mommaincontrol_datearchives',$_REQUEST['datearchives']);}
 	if(isset($_POST['mom_count_mode_submit'])){update_option('mommaincontrol_obwcountplus',$_REQUEST['countplus']);}
+	if(isset($_POST['mom_votes_mode_submit'])){update_option('mommaincontrol_votes',$_REQUEST['votes']);}
 	if(isset($_POST['mom_exclude_mode_submit'])){update_option('mommaincontrol_momse',$_REQUEST['exclude']);}
 	if(isset($_POST['mom_jumparound_mode_submit'])){update_option('mommaincontrol_momja',$_REQUEST['jumparound']);}
 	if(isset($_POST['mom_passwords_mode_submit'])){update_option('mommaincontrol_momrups',$_REQUEST['passwords']);}
@@ -758,6 +767,29 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 		}
 		add_option('mom_passwords_salt',$generateSalt);
 	}
+	
+	if(isset($_POST['mom_votes_mode_submit'])){
+		add_option('mommaincontrol_votes_activated',1);					
+		if(get_option('mommaincontrol_votes_activated') == 1){
+		$votesSQLa = "CREATE TABLE $votesVotes(
+		ID INT(11) NOT NULL AUTO_INCREMENT , 
+		IP INT(11) NOT NULL,
+		VOTE INT(11) NOT NULL,
+		PRIMARY KEY  (ID)
+		);";
+		$votesSQLb = "CREATE TABLE $votesPosts(
+		ID INT(11) NOT NULL AUTO_INCREMENT , 
+		UP INT(11) NOT NULL,
+		DOWN INT(11) NOT NULL,
+		PRIMARY KEY  (ID)
+		);";
+		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+		dbDelta($votesSQLa);	
+		dbDelta($votesSQLb);	
+		update_option('mommaincontrol_votes_activated',0);
+		}
+	}
+	
 	if(isset($_POST['mom_passwords_mode_submit'])){add_option('rotating_universal_passwords_1','');}	
 	if(isset($_POST['mom_passwords_mode_submit'])){add_option('rotating_universal_passwords_2','');}	
 	if(isset($_POST['mom_passwords_mode_submit'])){add_option('rotating_universal_passwords_3','');}	
@@ -908,6 +940,7 @@ if(current_user_can('manage_options')){
 		<form method="post" name="momReviews"><label for="mom_reviews_mode_submit" class="onoff';if(get_option('mommaincontrol_reviews') == 1){echo '1';}else{echo '0';}echo'">Reviews<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_reviews') == 1){echo '0';}if(get_option('mommaincontrol_reviews') == 0){echo '1';}echo '" name="reviews" /><input type="submit" id="mom_reviews_mode_submit" name="mom_reviews_mode_submit" value="Submit" class="hidden" /></form>
 		<form method="post" action="" name="momCount"><label for="mom_count_mode_submit" class="onoff';if(get_option('mommaincontrol_obwcountplus') == 1){echo '1';}else{echo '0';}echo'">Count++<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_obwcountplus') == 1){echo '0';}if(get_option('mommaincontrol_obwcountplus') == 0){echo '1';}echo '" name="countplus" /><input type="submit" id="mom_count_mode_submit" name="mom_count_mode_submit" value="Submit" class="hidden" /></form>
 		<form method="post" action="" name="momExclude"><label for="mom_exclude_mode_submit" class="onoff';if(get_option('mommaincontrol_momse') == 1){echo '1';}else{echo '0';}echo'">Exclude<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momse') == 1){echo '0';}if(get_option('mommaincontrol_momse') == 0){echo '1';}echo '" name="exclude" /><input type="submit" id="mom_exclude_mode_submit" name="mom_exclude_mode_submit" value="Submit" class="hidden" /></form>
+		<form method="post" action="" name="momVotes"><label for="mom_votes_mode_submit" class="onoff';if(get_option('mommaincontrol_votes') == 1){echo '1';}else{echo '0';}echo'">Post votes<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_votes') == 1){echo '0';}if(get_option('mommaincontrol_votes') == 0){echo '1';}echo '" name="votes" /><input type="submit" id="mom_votes_mode_submit" name="mom_votes_mode_submit" value="Submit" class="hidden" /></form>
 		</div>
 		<div class="small left">
 		<form method="post" action="" name="momJumpAround"><label for="mom_jumparound_mode_submit" class="onoff';if(get_option('mommaincontrol_momja') == 1){echo '1';}else{echo '0';}echo'">Jump Around<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momja') == 1){echo '0';}if(get_option('mommaincontrol_momja') == 0){echo '1';}echo '" name="jumparound" /><input type="submit" id="mom_jumparound_mode_submit" name="mom_jumparound_mode_submit" value="Submit" class="hidden" /></form>';
@@ -1133,11 +1166,11 @@ function rotating_universal_passwords_shortcode($atts, $content = null){
 		global $my_optional_modules_passwords_salt;
 		$passwordField++;	
 		if(isset($_SERVER["REMOTE_ADDR"])){
-			$RUPs_origin = $_SERVER["REMOTE_ADDR"]; 
+			$RUPs_origin = esc_attr($_SERVER["REMOTE_ADDR"]);
 		} else if(isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
-			$RUPs_origin = $_SERVER["HTTP_X_FORWARDED_FOR"]; 
+			$RUPs_origin = esc_attr($_SERVER["HTTP_X_FORWARDED_FOR"]); 
 		} else if(isset($_SERVER["HTTP_CLIENT_IP"])){
-			$RUPs_origin = $_SERVER["HTTP_CLIENT_IP"]; 
+			$RUPs_origin = esc_attr($_SERVER["HTTP_CLIENT_IP"]); 
 		}
 		$RUPs_ip_addr = $RUPs_origin;
 		$RUPs_s32int = ip2long($RUPs_ip_addr);
@@ -2256,7 +2289,9 @@ if(get_option('MOM_themetakeover_topbar') == 1 || get_option('MOM_themetakeover_
 		echo '</ul></div>';
 		if(get_option('MOM_themetakeover_extend') == 1){
 			echo '<div class="momnavbar_extended'.esc_attr($isTop).'">';
-			if($isTop == 'up'){echo '<label for="momnavbarextended"><span class="momnavbar_tab '.esc_attr($scheme).'"><i class="fa fa-chevron-'.esc_attr($isTop).'"></i></span></label>';}
+			if($isTop == 'up'){echo '<label for="momnavbarextended"><span class="momnavbar_tab '.esc_attr($scheme).'"><i class="fa fa-chevron-'.esc_attr($isTop).'"></i></span></label>';
+			echo '<ul class="momnavbar_pagesup">';wp_list_pages('title_li&depth=1');echo'</ul>';
+			}
 			echo '<input id="momnavbarextended" type="checkbox" class="hidden"></input>
 			<div class="momnavbar_extended_inner  '.esc_attr($scheme).'">
 			<h3 class="clear">'.esc_attr(get_bloginfo('name')).'</h3>
@@ -2297,7 +2332,8 @@ if(get_option('MOM_themetakeover_topbar') == 1 || get_option('MOM_themetakeover_
 			echo '</ul>
 			</div>
 			</div>';
-			if($isTop == 'down'){echo '<label for="momnavbarextended"><span class="momnavbar_tab '.esc_attr($scheme).'"><i class="fa fa-chevron-'.esc_attr($isTop).'"></i></span></label>';}
+			if($isTop == 'down'){echo '<label for="momnavbarextended"><span class="momnavbar_tab '.esc_attr($scheme).'"><i class="fa fa-chevron-'.esc_attr($isTop).'"></i></span></label>
+						<ul class="momnavbar_pagesdown">';wp_list_pages('title_li&depth=1');echo'</ul>';}
 			echo '</div>';
 		}
 	}
@@ -3277,6 +3313,102 @@ if(current_user_can('manage_options')){
 		echo '<section class="trash"><label for="delete_unused_terms"><i class="fa fa-trash-o"></i><span>Taxonomy clutter</span><em>'.esc_attr($terms_count).'</em></label><form method="post"><input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms"></form></section>';
 	}
 }
+/****************************** SECTION M -/- (M0) Functions -/- Post Voting *****************************************/
+function vote_the_posts_top($atts,$content = null){
+	extract(
+		shortcode_atts(array(
+			'amount' => 10,
+		), $atts)
+	);	
+	$amount = intval($amount);
+	global $wpdb,$wp,$post;
+	ob_start();
+	wp_reset_query();
+	$votesPosts = $wpdb->prefix.'momvotes_posts';
+	$query_sql = "SELECT ID,UP,DOWN from $votesPosts ORDER BY UP DESC LIMIT $amount";
+	$query_result = $wpdb->get_col( $wpdb->prepare ($query_sql, OBJECT));
+	if ($query_result) {
+	echo '<div class="topVotes">';
+	foreach ($query_result as $post_id) {
+		$post = &get_post( $post_id );
+		setup_postdata($post);
+		echo '<div class="votedPost">';
+		echo '<a href="';the_permalink();echo'" rel="bookmark" title="Permanent Link to ';the_title_attribute();echo'">';the_title();echo'</a>';
+		vote_the_post();
+		echo '</div>';
+	}}else{}	
+	echo '</div>';
+	wp_reset_query();
+	return ob_get_clean();
+}
+if(get_option('mommaincontrol_votes') == 1)add_shortcode('topvoted','vote_the_posts_top');
+if(get_option('mommaincontrol_votes') == 1)add_filter('the_content','do_shortcode','vote_the_posts_top');
+if(get_option('mommaincontrol_votes') == 1){	
+	function vote_the_post(){
+		global $wpdb,$wp,$post;
+		$votesPosts = $wpdb->prefix.'momvotes_posts';
+		$votesVotes = $wpdb->prefix.'momvotes_votes';
+		if(isset($_SERVER["REMOTE_ADDR"])){
+			$ip_address = esc_attr($_SERVER["REMOTE_ADDR"]);
+		} else if(isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
+			$ip_address = esc_attr($_SERVER["HTTP_X_FORWARDED_FOR"]);
+		} else if(isset($_SERVER["HTTP_CLIENT_IP"])){
+			$ip_address = esc_attr($_SERVER["HTTP_CLIENT_IP"]);
+		}
+		$theIP = esc_attr($ip_address);
+		$theIP_s32int = esc_attr(ip2long($ip_address));
+		$theIP_us32str = esc_attr(sprintf("%u",$theIP_s32int));
+		$theID = intval($post->ID);
+		$getID = $wpdb->get_results("SELECT ID,UP,DOWN FROM $votesPosts WHERE ID = '".$theID."' LIMIT 1");
+		if(count($getID) == 0){
+			$wpdb->query("INSERT INTO $votesPosts (ID, UP, DOWN) VALUES ($theID,1,0)");
+		}
+		foreach($getID as $gotID){
+			$votesUP = intval($gotID->UP);
+			$votesDOWN = intval($gotID->DOWN);
+			$votesTOTAL = intval($votesUP + $votesDOWN);
+			if($votesUP > $votesDOWN){$votesTOTAL = $votesUP - $votesDOWN;}
+			elseif($votesUP < $votesDOWN){$votesTOTAL = $votesDOWN - $votesUP;}
+			elseif($votesUP == $votesDOWN){$votesTOTAL = $votesUP - $votesDOWN;}
+			elseif($votesDOWN > $votesUP){$votesTOTAL = $votesDOWN - $votesUP;}
+			if($votesTOTAL <= 0){$votesTOTAL = 0;}
+			$getIP = $wpdb->get_results("SELECT ID,IP,VOTE FROM $votesVotes WHERE ID = '".$theID."' AND IP = '".$theIP_us32str."' LIMIT 1");
+			if(count($getIP) == 0) {
+				if(isset($_POST[$theID.'-up-submit'])){
+					$wpdb->query("UPDATE $votesPosts SET UP = UP + 1 WHERE ID = $theID");
+					$wpdb->query("INSERT INTO $votesVotes (ID, IP, VOTE) VALUES ($theID,$theIP_us32str,1)");
+				}
+				if(isset($_POST[$theID.'-down-submit'])){
+					$wpdb->query("UPDATE $votesPosts SET DOWN = DOWN + 1 WHERE ID = $theID");
+					$wpdb->query("INSERT INTO $votesVotes (ID, IP, VOTE) VALUES ($theID,$theIP_us32str,0)");
+				}			
+				echo '<div class="vote_the_post" id="'.esc_attr($theID).'">';
+				echo '<form action="" id="'.esc_attr($theID).'-up" method="post"><label for="'.esc_attr($theID).'-up-submit" class="upvote"><i class="fa fa-arrow-up"></i></label><input type="submit" name="'.esc_attr($theID).'-up-submit" id="'.esc_attr($theID).'-up-submit" /></form>';
+				echo '<form action="" id="'.esc_attr($theID).'-down" method="post"><label for="'.esc_attr($theID).'-down-submit" class="downvote"><i class="fa fa-arrow-down"></i></label><input type="submit" name="'.esc_attr($theID).'-down-submit" id="'.esc_attr($theID).'-down-submit" /></form>';
+				echo '<span>'.esc_attr($votesTOTAL).'</span>';
+				echo '</div>';
+			}else{
+				foreach($getIP as $gotIP){
+					$vote = esc_attr($gotIP->VOTE);
+					if($vote == 1 && isset($_POST[$theID.'-up-submit'])){
+						$wpdb->query("UPDATE $votesPosts SET UP = UP - 1 WHERE ID = $theID");
+						$wpdb->query("DELETE FROM $votesVotes WHERE IP = '$theIP_us32str' AND ID = '$theID'");
+					}
+					if($vote == 0 && isset($_POST[$theID.'-down-submit'])){
+						$wpdb->query("UPDATE $votesPosts SET DOWN = DOWN - 1 WHERE ID = $theID");
+						$wpdb->query("DELETE FROM $votesVotes WHERE IP = '$theIP_us32str' AND ID = '$theID'");
+					}
+					echo '<div class="vote_the_post" id="'.esc_attr($theID).'">';
+					echo '<form id="'.esc_attr($theID).'-up" method="post"><label for="'.esc_attr($theID).'-up-submit" class="upvote"><i class="fa fa-arrow-up ';if($vote == 1){ echo 'active';} echo '"></i></label><input type="submit" name="'.esc_attr($theID).'-up-submit" id="'.esc_attr($theID).'-up-submit" /></form>';
+					echo '<form id="'.esc_attr($theID).'-down" method="post"><label for="'.esc_attr($theID).'-down-submit" class="downvote"><i class="fa fa-arrow-down '; if($vote == 0){ echo 'active';} echo '"></i></label><input type="submit" name="'.esc_attr($theID).'-down-submit" id="'.esc_attr($theID).'-down-submit" /></form>';
+					echo '<span>'.esc_attr($votesTOTAL).'</span>';
+					echo '</div>';
+				}
+			}			
+		}		
+	}
+}
+
 /****************************** SECTION Y -/- (Y0) Functions -/- Javascript for modules ******************************/
 if(current_user_can('manage_options')){
 			$css = plugins_url().'/'.plugin_basename(dirname(__FILE__)).'/includes/';
