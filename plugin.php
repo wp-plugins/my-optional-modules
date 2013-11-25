@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.3.1
+Version: 5.3.8.3.2
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -3858,12 +3858,10 @@ function regularboard_shortcode($atts,$content = null){
 			}else{
 				echo '<h3 class="options">'.$SHORTNAME.' EXISTS</h3>';
 			}
-			}
-			
+			}	
 		}else{
 			echo '<div class="banned"><h3 class="banned">NOT LOGGED IN.</h3></div>';
 		}
-	
 	}elseif($BOARD != ''){
 		$getBoards = $wpdb->get_results("SELECT SHORTNAME FROM $regularboard_boards ");
 		echo '<span class="boardlisting textright">';
@@ -3939,7 +3937,10 @@ function regularboard_shortcode($atts,$content = null){
 								echo '</form>';
 								if($boardrules != '')echo '<section class="rules">'.$boardrules.'</section>';
 								if(isset($_POST['FORMSUBMIT'])){
-									if($_REQUEST['URL'] != '' || $_REQUEST['PAGE'] != '' || $_REQUEST['LOGIN'] != '' || $_REQUEST['USERNAME'] != '' || $_REQUREST['PASSWORD'] != ''){
+									if($_REQUEST['COMMENT'] == '') {
+										echo '<h3 class="info">CAN\'T SUBMIT AN EMPTY COMMENT</h3>';
+									}
+									elseif($_REQUEST['URL'] != '' || $_REQUEST['PAGE'] != '' || $_REQUEST['LOGIN'] != '' || $_REQUEST['USERNAME'] != '' || $_REQUREST['PASSWORD'] != ''){
 										$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$IP','$ID','1','filling out hidden form areas (likely bot).')");
 									}else{
 										$comment = array(
@@ -3956,7 +3957,7 @@ function regularboard_shortcode($atts,$content = null){
 											echo"Couldn't connected to Akismet server!";
 										} else {
 											if($akismet->isSpam()) {
-												
+												$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$IP','$ID','1','AKISMET detected you as a spammer.')");
 											} else {
 												if($THREAD == ''){
 													$enteredCOMMENT = wpautop(sanistripents($_REQUEST['COMMENT']));
@@ -4114,7 +4115,7 @@ function regularboard_shortcode($atts,$content = null){
 			echo '<h3 class="banned">'.esc_attr($noboard).'</h3>';
 		}
 	}else{
-		$getBoards = $wpdb->get_results("SELECT SHORTNAME,NAME FROM $regularboard_boards ");
+		$getBoards = $wpdb->get_results("SELECT SHORTNAME,NAME,DESCRIPTION FROM $regularboard_boards ");
 		echo '<div class="boardlist">';
 		if(count($getBoards) > 0){
 			foreach($getBoards as $gotBoards){
