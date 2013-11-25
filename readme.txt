@@ -1,9 +1,9 @@
 === My Optional Modules ===
 Contributors: boyevul
-Tags: voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
+Tags: board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.7.1
 Tested up to: 3.7.1
-Stable tag: 5.3.8.2
+Stable tag: 5.3.8.3
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -30,6 +30,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Shortcodes!, a module that adds useful shortcodes for posts and pages.
 * Theme Takeover: Youtube 404; navbar that disables the Wordpress Admin Bar and gives you a bar similar to RES (with limited functionality)
 * Post Voting: Add a vote box to each post via template function. (display top posts with a shortcode).  
+* Regular Board: (requires Akismet) An extremely simple anonymous forum.  Set up boards to post to.  All deployed via shortcode. (Consult official documentation for information)
 
 = Tweaks: =
 * Analaytics automatic embedding.
@@ -65,11 +66,9 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= .5.3.8.2 =
-* Navbar CSS tweaked, page list added.
-* Post voting added (use shortcode [topvoted] to display 10 top voted posts order by vote (use amount="SOMENUMBER" to determine how many posts to show beyond default).
-* Add <?php if(function_exists('vote_the_post')){if(!is_page()){ vote_the_post(); }}?> (IN THE LOOP) where you want the vote box to appear.
-* Posts aren't added automatically, meaning that to add all posts to the vote table, you'll need to manually run through each page on your blog.  Once you've done this, your vote box will show up (just cycle through next page, next page, next page, until you've viewed all of your posts.)
+= .5.3.8.3 =
+* nonces fixed for a few things.
+* Regular Board added.
 
 = .5 =
 * All scripts (.js,script) moved to a single file, enqueued)

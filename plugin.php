@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.2
+Version: 5.3.8.3
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -54,6 +54,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 			(L0) Settings > Settings page
 		SECTION M > POST VODING
 			(M0) Functions > Post Voting
+		SECTION N > REGULARD BOARD
+			(N0) Functions > Regular Board
 		SECTION X > Database cleaner
 		SECTION Y > Post edit buttons
 		SECTION Z > Additional information
@@ -204,6 +206,322 @@ if($mommodule_versionnumbers === true)add_filter('script_loader_src','mom_remove
 
 $momthemetakeover_youtube = esc_url(get_option('MOM_themetakeover_youtubefrontpage'));
 /****************************** SECTION B -/- (B2) Main Functions ******************************/
+/**
+ * 08.11.2010 22:25:17est
+ * 
+ * Akismet PHP4 class
+ * 
+ * <b>Usage</b>
+ * <code>
+ *    $comment = array(
+ *           'author'    => 'viagra-test-123',
+ *           'email'     => 'test@example.com',
+ *           'website'   => 'http://www.example.com/',
+ *           'body'      => 'This is a test comment',
+ *           'permalink' => 'http://yourdomain.com/yourblogpost.url',
+ *        );
+ *
+ *    $akismet = new Akismet('http://www.yourdomain.com/', 'YOUR_WORDPRESS_API_KEY', $comment);
+ *
+ *    if($akismet->errorsExist()) {
+ *        echo"Couldn't connected to Akismet server!";
+ *    } else {
+ *        if($akismet->isSpam()) {
+ *            echo"Spam detected";
+ *        } else {
+ *            echo"yay, no spam!";
+ *        }
+ *    }
+ * </code>
+ * 
+ * @author Bret Kuhns {@link www.bretkuhns.com}
+ * @link http://code.google.com/p/akismet-php4
+ * @version 0.3.5
+ * @license http://www.opensource.org/licenses/mit-license.php MIT License
+ */
+// Error constants
+define("AKISMET_SERVER_NOT_FOUND",	0);
+define("AKISMET_RESPONSE_FAILED",	1);
+define("AKISMET_INVALID_KEY",		2);
+// Base class to assist in error handling between Akismet classes
+class AkismetObject {
+	var $errors = array();
+	/**
+	 * Add a new error to the errors array in the object
+	 *
+	 * @param	String	$name	A name (array key) for the error
+	 * @param	String	$string	The error message
+	 * @return void
+	 */ 
+	// Set an error in the object
+	function setError($name, $message) {
+		$this->errors[$name] = $message;
+	}
+	/**
+	 * Return a specific error message from the errors array
+	 *
+	 * @param	String	$name	The name of the error you want
+	 * @return mixed	Returns a String if the error exists, a false boolean if it does not exist
+	 */
+	function getError($name) {
+		if($this->isError($name)) {
+			return $this->errors[$name];
+		} else {
+			return false;
+		}
+	}
+	/**
+	 * Return all errors in the object
+	 *
+	 * @return String[]
+	 */ 
+	function getErrors() {
+		return (array)$this->errors;
+	}
+	/**
+	 * Check if a certain error exists
+	 *
+	 * @param	String	$name	The name of the error you want
+	 * @return boolean
+	 */ 
+	function isError($name) {
+		return isset($this->errors[$name]);
+	}
+	/**
+	 * Check if any errors exist
+	 *
+	 * @return boolean
+	 */
+	function errorsExist() {
+		return (count($this->errors) > 0);
+	}
+}
+// Used by the Akismet class to communicate with the Akismet service
+class AkismetHttpClient extends AkismetObject {
+	var $akismetVersion = '1.1';
+	var $con;
+	var $host;
+	var $port;
+	var $apiKey;
+	var $blogUrl;
+	var $errors = array();
+	// Constructor
+	function AkismetHttpClient($host, $blogUrl, $apiKey, $port = 80) {
+		$this->host = $host;
+		$this->port = $port;
+		$this->blogUrl = $blogUrl;
+		$this->apiKey = $apiKey;
+	}
+	// Use the connection active in $con to get a response from the server and return that response
+	function getResponse($request, $path, $type = "post", $responseLength = 1160) {
+		$this->_connect();
+		if($this->con && !$this->isError(AKISMET_SERVER_NOT_FOUND)) {
+			$request  = 
+					strToUpper($type)." /{$this->akismetVersion}/$path HTTP/1.0\r\n" .
+					"Host: ".((!empty($this->apiKey)) ? $this->apiKey."." : null)."{$this->host}\r\n" .
+					"Content-Type: application/x-www-form-urlencoded; charset=utf-8\r\n" .
+					"Content-Length: ".strlen($request)."\r\n" .
+					"User-Agent: Akismet PHP4 Class\r\n" .
+					"\r\n" .
+					$request
+				;
+			$response = "";
+			@fwrite($this->con, $request);
+			while(!feof($this->con)) {
+				$response .= @fgets($this->con, $responseLength);
+			}
+			$response = explode("\r\n\r\n", $response, 2);
+			return $response[1];
+		} else {
+			$this->setError(AKISMET_RESPONSE_FAILED, "The response could not be retrieved.");
+		}
+		$this->_disconnect();
+	}	
+	// Connect to the Akismet server and store that connection in the instance variable $con
+	function _connect() {
+		if(!($this->con = @fsockopen($this->host, $this->port))) {
+			$this->setError(AKISMET_SERVER_NOT_FOUND, "Could not connect to akismet server.");
+		}
+	}
+	// Close the connection to the Akismet server
+	function _disconnect() {
+		@fclose($this->con);
+	}
+}
+// The controlling class. This is the ONLY class the user should instantiate in
+// order to use the Akismet service!
+class Akismet extends AkismetObject {
+	var $apiPort = 80;
+	var $akismetServer = 'rest.akismet.com';
+	var $akismetVersion = '1.1';
+	var $http;
+	var $ignore = array(
+			'HTTP_COOKIE',
+			'HTTP_X_FORWARDED_FOR',
+			'HTTP_X_FORWARDED_HOST',
+			'HTTP_MAX_FORWARDS',
+			'HTTP_X_FORWARDED_SERVER',
+			'REDIRECT_STATUS',
+			'SERVER_PORT',
+			'PATH',
+			'DOCUMENT_ROOT',
+			'SERVER_ADMIN',
+			'QUERY_STRING',
+			'PHP_SELF',
+			'argv'
+		);
+	var $blogUrl = "";
+	var $apiKey  = "";
+	var $comment = array();
+	/**
+	 * Constructor
+	 * 
+	 * Set instance variables, connect to Akismet, and check API key
+	 * 
+	 * @param	String	$blogUrl	The URL to your own blog
+	 * @param 	String	$apiKey		Your wordpress API key
+	 * @param 	String[]	$comment	A formatted comment array to be examined by the Akismet service
+	 * @return	Akismet
+	 */
+	function Akismet($blogUrl, $apiKey, $comment = array()) {
+		$this->blogUrl = $blogUrl;
+		$this->apiKey  = $apiKey;
+		$this->setComment($comment);
+		
+		// Connect to the Akismet server and populate errors if they exist
+		$this->http = new AkismetHttpClient($this->akismetServer, $blogUrl, $apiKey);
+		if($this->http->errorsExist()) {
+			$this->errors = array_merge($this->errors, $this->http->getErrors());
+		}
+		
+		// Check if the API key is valid
+		if(!$this->_isValidApiKey($apiKey)) {
+			$this->setError(AKISMET_INVALID_KEY, "Your Akismet API key is not valid.");
+		}
+	}
+	/**
+	 * Query the Akismet and determine if the comment is spam or not
+	 * 
+	 * @return	boolean
+	 */
+	function isSpam() {
+		$response = $this->http->getResponse($this->_getQueryString(), 'comment-check');
+		
+		return ($response == "true");
+	}
+	/**
+	 * Submit this comment as an unchecked spam to the Akismet server
+	 * 
+	 * @return	void
+	 */
+	function submitSpam() {
+		$this->http->getResponse($this->_getQueryString(), 'submit-spam');
+	}
+	/**
+	 * Submit a false-positive comment as "ham" to the Akismet server
+	 *
+	 * @return	void
+	 */
+	function submitHam() {
+		$this->http->getResponse($this->_getQueryString(), 'submit-ham');
+	}
+	/**
+	 * Manually set the comment value of the instantiated object.
+	 *
+	 * @param	Array	$comment
+	 * @return	void
+	 */
+	function setComment($comment) {
+		$this->comment = $comment;
+		if(!empty($comment)) {
+			$this->_formatCommentArray();
+			$this->_fillCommentValues();
+		}
+	}
+	/**
+	 * Returns the current value of the object's comment array.
+	 *
+	 * @return	Array
+	 */
+	function getComment() {
+		return $this->comment;
+	}
+	/**
+	 * Check with the Akismet server to determine if the API key is valid
+	 *
+	 * @access	Protected
+	 * @param	String	$key	The Wordpress API key passed from the constructor argument
+	 * @return	boolean
+	 */
+	function _isValidApiKey($key) {
+		$keyCheck = $this->http->getResponse("key=".$this->apiKey."&blog=".$this->blogUrl, 'verify-key');
+		return ($keyCheck == "valid");
+	}
+	/**
+	 * Format the comment array in accordance to the Akismet API
+	 *
+	 * @access	Protected
+	 * @return	void
+	 */
+	function _formatCommentArray() {
+		$format = array(
+				'type' => 'comment_type',
+				'author' => 'comment_author',
+				'email' => 'comment_author_email',
+				'website' => 'comment_author_url',
+				'body' => 'comment_content'
+			);
+		foreach($format as $short => $long) {
+			if(isset($this->comment[$short])) {
+				$this->comment[$long] = $this->comment[$short];
+				unset($this->comment[$short]);
+			}
+		}
+	}
+	/**
+	 * Fill any values not provided by the developer with available values.
+	 *
+	 * @return	void
+	 */
+	function _fillCommentValues() {
+		if(!isset($this->comment['user_ip'])) {
+			$this->comment['user_ip'] = ($_SERVER['REMOTE_ADDR'] != getenv('SERVER_ADDR')) ? $_SERVER['REMOTE_ADDR'] : getenv('HTTP_X_FORWARDED_FOR');
+		}
+		if(!isset($this->comment['user_agent'])) {
+			$this->comment['user_agent'] = $_SERVER['HTTP_USER_AGENT'];
+		}
+		if(!isset($this->comment['referrer'])) {
+			$this->comment['referrer'] = $_SERVER['HTTP_REFERER'];
+		}
+		if(!isset($this->comment['blog'])) {
+			$this->comment['blog'] = $this->blogUrl;
+		}
+	}
+	/**
+	 * Build a query string for use with HTTP requests
+	 *
+	 * @access	Protected
+	 * @return	String
+	 */
+	function _getQueryString() {
+		foreach($_SERVER as $key => $value) {
+			if(!in_array($key, $this->ignore)) {
+				if($key == 'REMOTE_ADDR') {
+					$this->comment[$key] = $this->comment['user_ip'];
+				} else {
+					$this->comment[$key] = $value;
+				}
+			}
+		}
+		$query_string = '';
+		foreach($this->comment as $key => $data) {
+			$query_string .= $key . '=' . urlencode(stripslashes($data)) . '&';
+		}
+		return $query_string;
+	}
+}
+
+
 if(get_option('MOM_themetakeover_backgroundimage') == 1){
 	//http://scottnix.com/thematic-snippets/
 	$backgroundargs = array( 
@@ -589,20 +907,27 @@ function mom_exclude_postformat_theme_support(){
 /****************************** SECTION B -/- (B3) Options ******************************/
 if(current_user_can('manage_options')){
 global $wpdb;
+$regularboard_boards = $wpdb->prefix.'regularboard_boards';
+$regularboard_posts = $wpdb->prefix.'regularboard_posts';
+$regularboard_users = $wpdb->prefix.'regularboard_users';
 $votesPosts = $wpdb->prefix.'momvotes_posts';
 $votesVotes = $wpdb->prefix.'momvotes_votes';
 $RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
 $review_table_name = $wpdb->prefix.'momreviews';
 $verification_table_name = $wpdb->prefix.'momverification';
 if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
+	add_option('mommaincontrol_regularboard_activated',1);
 	add_option('mommaincontrol_passwords_activated',1);					
 	add_option('mommaincontrol_reviews_activated',1);
 	add_option('mommaincontrol_shorts_activated',1);
 	add_option('mommaincontrol_votes_activated',1);
+	if(get_option('mommaincontrol_regularboard_activated') == 0){$wpdb->query("DROP TABLE ".$regularboard_boards."");$wpdb->query("DROP TABLE ".$regularboard_posts."");$wpdb->query("DROP TABLE ".$regularboard_users."");}
 	if(get_option('mommaincontrol_votes_activated') == 0){$wpdb->query("DROP TABLE ".$votesPosts."");$wpdb->query("DROP TABLE ".$votesVotes."");}
 	if(get_option('mommaincontrol_passwords_activated') == 0){$wpdb->query("DROP TABLE ".$RUPs_table_name."");}
 	if(get_option('mommaincontrol_reviews_activated') == 0){$wpdb->query("DROP TABLE ".$review_table_name."");}
 	if(get_option('mommaincontrol_shorts_activated') == 0){$wpdb->query("DROP TABLE ".$verification_table_name."");}
+	delete_option('mommaincontrol_regularboard_activated');
+	delete_option('mommaincontrol_regularboard');
 	delete_option('mommaincontrol_votes_activated');
 	delete_option('mommaincontrol_protectrss');
 	delete_option('MOM_themetakeover_extend');
@@ -715,6 +1040,7 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 }else{	
 	// Form handling for options a
 	if(isset($_POST['MOMsave'])){}
+	if(isset($_POST['mom_regularboard_mode_submit'])){update_option('mommaincontrol_regularboard',$_REQUEST['regularboard']);}
 	if(isset($_POST['mom_themetakeover_mode_submit'])){update_option('mommaincontrol_themetakeover',$_REQUEST['themetakeover']);}
 	if(isset($_POST['mom_protectrss_mode_submit'])){update_option('mommaincontrol_protectrss',$_REQUEST['protectrss']);}
 	if(isset($_POST['mom_footerscripts_mode_submit'])){update_option('mommaincontrol_footerscripts',$_REQUEST['footerscripts']);}
@@ -766,6 +1092,46 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 			$generateSalt .= $availableCharacters[rand(0, strlen($availableCharacters) - 1)];
 		}
 		add_option('mom_passwords_salt',$generateSalt);
+	}
+	
+	if(isset($_POST['mom_regularboard_mode_submit'])){
+		add_option('mommaincontrol_regularboard_activated',1);
+		if(get_option('mommaincontrol_regularboard_activated') == 1){
+		$regularboardSQLa = "CREATE TABLE $regularboard_boards(
+		ID INT(11) NOT NULL AUTO_INCREMENT , 
+		NAME TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+		SHORTNAME TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+		DESCRIPTION TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+		RULES TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+		PRIMARY KEY  (ID)
+		);";
+		$regularboardSQLb = "CREATE TABLE $regularboard_posts(
+		ID INT(11) NOT NULL AUTO_INCREMENT , 
+		PARENT INT(11) NOT NULL ,
+		IP INT(11) NOT NULL ,
+		DATE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+		EMAIL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+		SUBJECT TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+		COMMENT TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+		BOARD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+		MODERATOR TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+		LAST TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+		PRIMARY KEY  (ID)
+		);";
+		$regularboardSQLc = "CREATE TABLE $regularboard_users(
+		ID INT(11) NOT NULL AUTO_INCREMENT , 
+		IP INT(11) NOT NULL,
+		PARENT INT(11) NOT NULL,
+		BANNED INT(11) NOT NULL,
+		MESSAGE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+		PRIMARY KEY  (ID)
+		);";
+		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+		dbDelta($regularboardSQLa);
+		dbDelta($regularboardSQLb);
+		dbDelta($regularboardSQLc);
+		update_option('mommaincontrol_regularboard_activated',0);
+		}
 	}
 	
 	if(isset($_POST['mom_votes_mode_submit'])){
@@ -961,7 +1327,9 @@ if(current_user_can('manage_options')){
 		<form method="post" action="" name="datearchives"><label for="mom_date_archives_mode_submit" class="onoff';if(get_option('mommaincontrol_datearchives') == 1){echo '1';}else{echo '0';}echo'">Disable Dates<span></span></label><input class="hidden" type="text" value="';if(get_option('mommaincontrol_datearchives') == 1){echo '0';}if(get_option('mommaincontrol_datearchives') == 0){echo '1';}echo '" name="datearchives" /><input type="submit" id="mom_date_archives_mode_submit" name="mom_date_archives_mode_submit" value="Submit" class="hidden" /></form>
 		</div>';
 
-		echo '<div class="small left">';
+		echo '<div class="small left">
+		<form method="post" action="" name="regularboard"><label for="mom_regularboard_mode_submit" class="onoff';if(get_option('mommaincontrol_regularboard') == 1){echo '1';}else{echo '0';}echo'">Regular Board<span></span></label><input class="hidden" type="text" value="';if(get_option('mommaincontrol_regularboard') == 1){echo '0';}if(get_option('mommaincontrol_regularboard') == 0){echo '1';}echo '" name="regularboard" /><input type="submit" id="mom_regularboard_mode_submit" name="mom_regularboard_mode_submit" value="Submit" class="hidden" /></form>
+		';
 		if(!isset($_POST['mom_delete_step_one'])){
 		echo '
 		<section>
@@ -1216,7 +1584,7 @@ function rotating_universal_passwords_shortcode($atts, $content = null){
 						$attempts = get_option('rotating_universal_passwords_8');
 						$attemptsLeft = $attempts - $RUPs_attempted . ' attempts left.';
 						if(isset($_POST)){
-							echo '<form method="post" id="RUPS'.$passwordField.'" action="'.esc_url(get_permalink()).'">';
+							echo '<form method="post" name="password_'.$passwordField.'" id="RUPS'.$passwordField.'" action="'.esc_url(get_permalink()).'">';
 							wp_nonce_field('password_'.$passwordField);
 							echo '<input type="text" class="password" name="rups_pass" placeholder="'.$attemptsLeft.'Enter the password for '.esc_attr($rotating_universal_passwords_today_is).'." >
 							<input type="submit" name="submit" class="hidden" value="Submit">
@@ -1227,7 +1595,7 @@ function rotating_universal_passwords_shortcode($atts, $content = null){
 						echo "<blockquote>You have been locked out.  If you feel this is an error, please contact the admin with the following <strong>id:".$RUPs_s32int."</strong> to inquire further.</blockquote>";
 					}else{			
 						if(isset($_POST)){
-							echo '<form method="post" id="RUPS'.$passwordField.'" action="'.esc_url(get_permalink()).'">';
+							echo '<form method="post" name="password_'.$passwordField.'" id="RUPS'.$passwordField.'" action="'.esc_url(get_permalink()).'">';
 							wp_nonce_field('password_'.$passwordField);
 							echo '<input type="text" class="password" name="rups_pass" placeholder="'.$attemptsLeft.'Enter the password for '.esc_attr($rotating_universal_passwords_today_is).'." >
 							<input type="submit" name="submit" class="hidden" value="Submit">
@@ -1237,7 +1605,7 @@ function rotating_universal_passwords_shortcode($atts, $content = null){
 				}
 			}else{
 				if(isset($_POST)){
-					echo '<form method="post" id="RUPS'.$passwordField.'" action="'.esc_url(get_permalink()).'">';
+					echo '<form method="post" name="password_'.$passwordField.'" id="RUPS'.$passwordField.'" action="'.esc_url(get_permalink()).'">';
 					wp_nonce_field('password_'.$passwordField);
 					echo '<input type="text" class="password" name="rups_pass" placeholder="'.$attemptsLeft.'Enter the password for '.esc_attr($rotating_universal_passwords_today_is).'." >
 					<input type="submit" name="submit" class="hidden" value="Submit">
@@ -1323,7 +1691,7 @@ if(current_user_can('manage_options')){
 				</div>
 				<form method=\"post\" class=\"csssubmit\">
 					<section><textarea name=\"css\">".get_option('momreviews_css')."</textarea></section>
-					<section><input id=\"csssubmit\" type=\"submit\" value=\"Save CSS\" name=\"csssubmit\"></input></section>
+					<section><input id=\"csssubmit\" type=\"submit\" value=\"Save CSS\" name=\"csssubmit\" /></section>
 				</form>
 				</div>
 			";
@@ -2292,7 +2660,7 @@ if(get_option('MOM_themetakeover_topbar') == 1 || get_option('MOM_themetakeover_
 			if($isTop == 'up'){echo '<label for="momnavbarextended"><span class="momnavbar_tab '.esc_attr($scheme).'"><i class="fa fa-chevron-'.esc_attr($isTop).'"></i></span></label>';
 			echo '<ul class="momnavbar_pagesup">';wp_list_pages('title_li&depth=1');echo'</ul>';
 			}
-			echo '<input id="momnavbarextended" type="checkbox" class="hidden"></input>
+			echo '<input id="momnavbarextended" type="checkbox" class="hidden" />
 			<div class="momnavbar_extended_inner  '.esc_attr($scheme).'">
 			<h3 class="clear">'.esc_attr(get_bloginfo('name')).'</h3>
 			<p class="siteinfo">'.esc_attr(get_bloginfo('description')).'</p>';
@@ -3382,11 +3750,11 @@ if(get_option('mommaincontrol_votes') == 1){
 					$wpdb->query("UPDATE $votesPosts SET DOWN = DOWN + 1 WHERE ID = $theID");
 					$wpdb->query("INSERT INTO $votesVotes (ID, IP, VOTE) VALUES ($theID,$theIP_us32str,0)");
 				}			
-				echo '<div class="vote_the_post" id="'.esc_attr($theID).'">';
+				echo '<span class="vote_the_post" id="'.esc_attr($theID).'">';
 				echo '<form action="" id="'.esc_attr($theID).'-up" method="post"><label for="'.esc_attr($theID).'-up-submit" class="upvote"><i class="fa fa-arrow-up"></i></label><input type="submit" name="'.esc_attr($theID).'-up-submit" id="'.esc_attr($theID).'-up-submit" /></form>';
 				echo '<form action="" id="'.esc_attr($theID).'-down" method="post"><label for="'.esc_attr($theID).'-down-submit" class="downvote"><i class="fa fa-arrow-down"></i></label><input type="submit" name="'.esc_attr($theID).'-down-submit" id="'.esc_attr($theID).'-down-submit" /></form>';
 				echo '<span>'.esc_attr($votesTOTAL).'</span>';
-				echo '</div>';
+				echo '</span>';
 			}else{
 				foreach($getIP as $gotIP){
 					$vote = esc_attr($gotIP->VOTE);
@@ -3398,16 +3766,342 @@ if(get_option('mommaincontrol_votes') == 1){
 						$wpdb->query("UPDATE $votesPosts SET DOWN = DOWN - 1 WHERE ID = $theID");
 						$wpdb->query("DELETE FROM $votesVotes WHERE IP = '$theIP_us32str' AND ID = '$theID'");
 					}
-					echo '<div class="vote_the_post" id="'.esc_attr($theID).'">';
+					echo '<span class="vote_the_post" id="'.esc_attr($theID).'">';
 					echo '<form id="'.esc_attr($theID).'-up" method="post"><label for="'.esc_attr($theID).'-up-submit" class="upvote"><i class="fa fa-arrow-up ';if($vote == 1){ echo 'active';} echo '"></i></label><input type="submit" name="'.esc_attr($theID).'-up-submit" id="'.esc_attr($theID).'-up-submit" /></form>';
 					echo '<form id="'.esc_attr($theID).'-down" method="post"><label for="'.esc_attr($theID).'-down-submit" class="downvote"><i class="fa fa-arrow-down '; if($vote == 0){ echo 'active';} echo '"></i></label><input type="submit" name="'.esc_attr($theID).'-down-submit" id="'.esc_attr($theID).'-down-submit" /></form>';
 					echo '<span>'.esc_attr($votesTOTAL).'</span>';
-					echo '</div>';
+					echo '</span>';
 				}
 			}			
 		}		
 	}
 }
+/****************************** SECTION N -/- (N0) Functions -/- Regular Board****************************************/
+function regularboard_shortcode($atts,$content = null){
+	extract(
+		shortcode_atts(array(
+			'flood'	=> '0',
+			'nothreads' => 'No threads to display',
+			'noboard' => 'Board does not exist',
+			'bannedmessage' => 'YOU ARE BANNED',
+			'postedmessage' => 'POSTED!!!',
+			'modcode' => '##MOD',
+			'posting' => '1',
+		), $atts)
+	);	
+	$flood = intval($flood);
+	echo '<div class="boardDisplay">';
+	global $wpdb,$wp,$post;
+	$current_timestamp = date('Y-m-d G:i:s');
+	$regularboard_boards = $wpdb->prefix.'regularboard_boards';
+	$regularboard_posts = $wpdb->prefix.'regularboard_posts';
+	$regularboard_users = $wpdb->prefix.'regularboard_users';
+	if(isset($_SERVER["REMOTE_ADDR"])){
+		$ip_address = sanistripents($_SERVER["REMOTE_ADDR"]);
+	} else if(isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
+		$ip_address = sanistripents($_SERVER["HTTP_X_FORWARDED_FOR"]);
+	} else if(isset($_SERVER["HTTP_CLIENT_IP"])){
+		$ip_address = sanistripents($_SERVER["HTTP_CLIENT_IP"]);
+	}
+	$theIP = sanistripents($ip_address);
+	$theIP_s32int = sanistripents(ip2long($ip_address));
+	$theIP_us32str = sanistripents(sprintf("%u",$theIP_s32int));
+	$QUERY = sanistripents($_SERVER['QUERY_STRING']);
+	$BOARD = sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['board']));
+	$AREA = sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['area']));
+	$THREAD = intval($_GET['thread']);
+	$BOARD = strtolower($BOARD);
+	$AREA = strtolower($AREA);
+	if($AREA == 'create'){
+		if(current_user_can('manage_options')){
+			$getUsers = $wpdb->get_results("SELECT ID,IP,PARENT,BANNED,MESSAGE FROM $regularboard_users WHERE BANNED = 1");
+			echo '<div class="banned"><h3 class="options">CREATE/DELETE/UNBAN</h3>';
+			echo '<form method="post" name="OPTIONSFORM">';
+			wp_nonce_field('OPTIONSFORM');
+			echo '<input type="text" name="SHORTNAME" id="SHORTNAME" placeholder="Shortname" />
+			<input type="text" name="NAME" id="NAME" placeholder="Expanded board name" />
+			<input type="text" name="DESCRIPTION" id="DESCRIPTION" placeholder="Short description" />
+			<textarea name="RULES" id="RULES" placeholder="Rules for this board (HTML allowed)"></textarea>
+			<input type="submit" name="CREATEBOARD" id="CREATEBOARD" value="Create this board" />
+			<input type="text" name="DELETETHIS" id="DELETETHIS" placeholder="Shortname of board to delete" />
+			<input type="submit" name="DELETEBOARD" id="DELETEBOARD" value="Delete this board" />';
+			foreach($getUsers as $gotUsers){
+			$userIP = $gotUsers->IP;
+			$userMESSAGE = $gotUsers->MESSAGE;
+			echo '<span>'.$userIP.' / '.$userMESSAGE.'</span>';
+			echo '<input type="submit" name="UNBAN'.$userIP.'" id="UNBAN'.$userIP.'" value="Unban '.$userIP.'" />';
+			if(isset($_POST['UNBAN'.$userIP.''])){
+				$wpdb->query("DELETE FROM $regularboard_users WHERE IP = '".$userIP."'");
+			}
+			}
+			echo '</form></div>';
+			if(isset($_POST['DELETEBOARD']) && $_REQUEST['DELETETHIS'] != '' ){
+			$DELETETHIS = sanistripents($_REQUEST['DELETETHIS']);
+				$getBoards = $wpdb->get_results("SELECT SHORTNAME FROM $regularboard_boards WHERE SHORTNAME = '$DELETETHIS'");
+				if(count($getBoards) == 0){
+					echo '<h3 class="options">'.$DELETETHIS.' DOESN\'T EXIST</h3>';
+				}else{
+				$wpdb->query("DELETE FROM $regularboard_posts WHERE BOARD = '".$DELETETHIS."'");
+				$wpdb->query("DELETE FROM $regularboard_boards WHERE SHORTNAME = '".$DELETETHIS."'");
+				echo '<h3 class="options">'.$DELETETHIS.' DELETED</h3>';
+			}
+			}
+			if(isset($_POST['CREATEBOARD']) && $_REQUEST['NAME'] != '' && $_REQUEST['SHORTNAME'] != ''){
+			$NAME = sanistripents($_REQUEST['NAME']);
+			$SHORTNAME = sanistripents($_REQUEST['SHORTNAME']);
+			$DESCRIPTION = sanistripents($_REQUEST['DESCRIPTION']);
+			$RULES = wpautop($_REQUEST['RULES']);
+			$getBoards = $wpdb->get_results("SELECT SHORTNAME FROM $regularboard_boards WHERE SHORTNAME = '$SHORTNAME'");
+			if(count($getBoards) == 0){
+				$wpdb->query("INSERT INTO $regularboard_boards (NAME, SHORTNAME, DESCRIPTION, RULES) VALUES ('$NAME','$SHORTNAME','$DESCRIPTION','$RULES')") ;
+				echo '<h3 class="options">'.$SHORTNAME.' CREATED</h3>';
+			}else{
+				echo '<h3 class="options">'.$SHORTNAME.' EXISTS</h3>';
+			}
+			}
+			
+		}else{
+			echo '<div class="banned"><h3 class="banned">NOT LOGGED IN.</h3></div>';
+		}
+	
+	}elseif($BOARD != ''){
+		$getBoards = $wpdb->get_results("SELECT SHORTNAME FROM $regularboard_boards ");
+		echo '<span class="boardlisting textright">';
+		if(count($getBoards) > 0){echo '[';foreach($getBoards as $gotBoards){$BOARDNAME = sanistripents($gotBoards->SHORTNAME);echo '<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDNAME.'</a>';}echo ']';}
+		if(current_user_can('manage_options')){echo '[<a href="?area=create">Add/Delete/Unban</a>]';}
+		echo '</span>';
+		$getCurrentBoard = $wpdb->get_results("SELECT ID,NAME,SHORTNAME,DESCRIPTION,RULES FROM $regularboard_boards WHERE SHORTNAME = '".$BOARD."' LIMIT 1");
+		$getUser = $wpdb->get_results("SELECT ID,IP,PARENT,BANNED,MESSAGE FROM $regularboard_users WHERE IP = '".$theIP_us32str."' AND BANNED = 1 LIMIT 1");
+		if($THREAD == ''){
+		$getParentPosts = $wpdb->get_results("SELECT ID,PARENT,IP,DATE,EMAIL,SUBJECT,COMMENT,BOARD,MODERATOR,LAST FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0 ORDER BY LAST DESC");
+		}elseif($THREAD != ''){
+		$getParentPosts = $wpdb->get_results("SELECT ID,PARENT,IP,DATE,EMAIL,SUBJECT,COMMENT,BOARD,MODERATOR,LAST FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND ID = '".$THREAD."' AND PARENT = 0 LIMIT 1");
+		$getParentReplies = $wpdb->get_results("SELECT ID,PARENT,IP,DATE,EMAIL,SUBJECT,COMMENT,BOARD,MODERATOR,LAST FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = '".$THREAD."'");
+		}
+		$getLastPost = $wpdb->get_results("SELECT IP,DATE FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' ORDER BY DATE DESC LIMIT 1");
+		if(count($getLastPost) > 0){
+			foreach($getLastPost as $lastPost){
+				$time = $lastPost->DATE;
+				$postedOn = strtotime($time);
+				$currently = strtotime($current_timestamp);
+				$timegate = $currently - $postedOn;
+				if($timegate < $flood){
+					$timegateactive = true;
+				}
+			}
+		}
+		if(count($getCurrentBoard) > 0){
+			foreach($getCurrentBoard as $gotCurrentBoard){
+				$boardName = sanistripents($gotCurrentBoard->NAME);
+				$boardShort = sanistripents($gotCurrentBoard->SHORTNAME);
+				$boardDescription = sanistripents($gotCurrentBoard->DESCRIPTION);
+				$boardrules = $gotCurrentBoard->RULES;
+				if(count($getUser) > 0){
+					echo '<div class="banned"><h3 class="banned">'.esc_attr($bannedmessage).'</h3>';
+					foreach($getUser as $gotUser){
+						$IP = intval($gotUser->IP);
+						$BANNED = intval($gotUser->BANNED);
+						$MESSAGE = sanistripents($gotUser->MESSAGE);
+						if($MESSAGE != '')echo 'Your IP Address, '.$ip_address.' has been banned for '.$MESSAGE.'.';
+					}
+					echo '</div>';
+				}else{
+					echo '<h3 class="boardName">'.$boardName.'</h3><p class="boardDescription">'.$boardDescription.'</p>';
+					if($THREAD != ''){echo '<p class="reply">Posting Mode: Reply <a rel="nofollow" href="?board='.$BOARD.'">(RETURN)</a></p>';}
+					
+					echo '<div class="mainboard"><div class="boardform">';
+					
+					if($THREAD != '' && count($getParentPosts) > 0 || $THREAD == ''){
+						if($timegateactive === true){
+							echo '<div class="timegate"><h3>'. (120 - $timegate) . ' seconds until you can post again.</h3></div>';
+						}else{
+							if($posting != 1){
+								echo '<h3 class="readonly">Read-Only Mode</h3>';
+							}
+							elseif($posting == 1){
+								echo '<form class="topic" name="regularboard_'.$theIP_us32str.'" method="post" action="">';
+								wp_nonce_field('regularboard_'.$theIP_us32str);
+								echo '<input type="hidden" value="" name="URL" />';
+								echo '<input type="hidden" value="" name="PAGE" />';
+								echo '<input type="hidden" value="" name="LOGIN" />';
+								echo '<input type="hidden" value="" name="USERNAME" />';
+								echo '<input type="hidden" value="" name="PASSWORD" />';
+								echo '<section><label for="EMAIL">E-mail</label><input type="text" id="EMAIL" name="EMAIL" placeholder="E-mail" /></section>';
+								echo '<section><label for="SUBJECT">Subject</label><input type="text" id="SUBJECT" name="SUBJECT" placeholder="Subject" /></section>';
+								echo '<section><textarea name="COMMENT" placeholder="Comment"></textarea></section>';
+								echo '<section><label for="FORMSUBMIT" class="submit">Post a new ';if($THREAD == ''){echo 'topic';}elseif($THREAD != ''){echo 'reply';}echo '</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section>';
+								echo '</form>';
+								if($boardrules != '')echo '<section class="rules">'.$boardrules.'</section>';
+								if(isset($_POST['FORMSUBMIT'])){
+									if($_REQUEST['URL'] != '' || $_REQUEST['PAGE'] != '' || $_REQUEST['LOGIN'] != '' || $_REQUEST['USERNAME'] != '' || $_REQUREST['PASSWORD'] != ''){
+										$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$IP','$ID','1','filling out hidden form areas (likely bot).')");
+									}else{
+										$comment = array(
+											'author'    => 'anonymous',
+											'email'     => sanistripents($_REQUEST['EMAIL']),
+											'website'   => '',
+											'body'      => sanistripents($_REQUEST['COMMENT']),
+											'permalink' => '',
+										);
+										$homeLink = esc_url(home_url('/'));
+										$akismetKey = get_option('wordpress_api_key');
+										$akismet = new Akismet($homeLink, $akismetKey, $comment);
+										if($akismet->errorsExist()) {
+											echo"Couldn't connected to Akismet server!";
+										} else {
+											if($akismet->isSpam()) {
+												
+											} else {
+												if($THREAD == ''){
+													$enteredCOMMENT = wpautop(sanistripents($_REQUEST['COMMENT']));
+													$enteredSUBJECT = sanistripents($_REQUEST['SUBJECT']);
+													$checkCOMMENT = strtolower($enteredCOMMENT);
+													$getDuplicate = $wpdb->get_results("SELECT COMMENT FROM $regularboard_posts WHERE COMMENT = '".$checkCOMMENT."' LIMIT 1");
+													if(count($getDuplicate) == 0){
+														echo '<h3 class="info">'.esc_attr($postedmessage).'</h3>';
+														$enteredEMAIL = sanistripents($_REQUEST['EMAIL']);
+														if(current_user_can('manage_options')){ 
+															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('',0,'$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','1','$current_timestamp')") ;
+														}else{
+															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('',0,'$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','0','$current_timestamp')") ;
+														}
+													}else{
+														echo '<h3 class="info">DUPLICATE CONTENT DETECTED - POST DISCARED</h3>';
+													}
+												}elseif($THREAD != ''){
+													$enteredSUBJECT = sanistripents($_REQUEST['SUBJECT']);
+													$enteredCOMMENT = wpautop(sanistripents($_REQUEST['COMMENT']));
+													$checkCOMMENT = strtolower($enteredCOMMENT);
+													$getDuplicate = $wpdb->get_results("SELECT COMMENT FROM $regularboard_posts WHERE COMMENT = '".$checkCOMMENT."' LIMIT 1");
+													if(count($getDuplicate) == 0){
+														echo '<h3 class="info">'.esc_attr($postedmessage).'</h3>';
+														$enteredEMAIL = sanistripents($_REQUEST['EMAIL']);
+														if(current_user_can('manage_options')){ 
+															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('','$THREAD','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','1','$current_timestamp')") ;
+															$checkSAGE = strtolower($enteredEMAIL);
+															if($checkSAGE != 'sage'){
+																$wpdb->query("UPDATE $regularboard_posts SET LAST = '$current_timestamp' WHERE ID = '$THREAD'");
+															}
+														}else{
+															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('','$THREAD','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','0','$current_timestamp')") ;
+															$checkSAGE = strtolower($enteredEMAIL);
+															if($checkSAGE != 'sage'){
+																$wpdb->query("UPDATE $regularboard_posts SET LAST = '$current_timestamp' WHERE ID = '$THREAD'");
+															}											
+														}
+													}else{
+														echo '<h3 class="info">DUPLICATE CONTENT DETECTED - POST DISCARED</h3>';
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}					
+					echo '</div><div class="boardposts">';
+					if(count($getParentPosts) > 0){
+						foreach($getParentPosts as $parentPosts){
+							$MODERATOR = intval($parentPosts->MODERATOR);
+							$ID = intval($parentPosts->ID);
+							$PARENT = intval($parentPosts->PARENT);
+							$IP = intval($parentPosts->IP);
+							$DATE = sanistripents($parentPosts->DATE);
+							$EMAIL = sanistripents($parentPosts->EMAIL);
+							$SUBJECT = sanistripents($parentPosts->SUBJECT);
+							$COMMENT = $parentPosts->COMMENT;
+							$BOARD = sanistripents($parentPosts->BOARD);
+							echo '<article>';
+							if($SUBJECT != '')echo '<em>'.$SUBJECT.'</em><br />';
+							echo '<span class="OP">Anonymous</span>';if($MODERATOR == 1){echo '<span class="mod">'.$modcode.'</span>';}echo '<span class="date">'.$DATE.'</span><span class="postid">No.'.$ID.' '; if($THREAD == ''){ echo '[<a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">Reply</a>]'; }
+							if($IP == $theIP_us32str){
+									echo '<div class="controlpaneluser">';
+									echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'">[Delete]</label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
+										if(isset($_POST['DELETE'.$ID.''])){
+											$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
+											$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
+										}
+									echo '</div>';
+							}
+							if(current_user_can('manage_options')){
+								if($MODERATOR != 1){
+									echo '<div class="controlpanel">';
+									echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'">[Delete]</label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
+									echo '<form method="post" class="inline" name="DELETE"><label for="BAN'.$ID.'">[Ban / </label><input type="text" name="MESSAGE" placeholder="Reason" />]<input type="submit" class="hidden" id="BAN'.$ID.'" name="BAN'.$ID.'" /></form>';
+										if(isset($_POST['BAN'.$ID.''])){
+											$MESSAGE = $_REQUEST['MESSAGE'];
+											$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$IP','$ID','1','$MESSAGE')");
+											$wpdb->query("DELETE FROM $regularboard_posts WHERE IP = '".$IP."'");
+										}
+										if(isset($_POST['DELETE'.$ID.''])){
+											$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
+											$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
+										}
+									echo '</div>';
+								}
+							}
+							echo '</span><section>'.$COMMENT.'</section>
+							</article>';
+						}					
+						if($THREAD != ''){
+							foreach($getParentReplies as $parentReplies){
+								$MODERATOR = intval($parentPosts->MODERATOR);
+								$ID = intval($parentReplies->ID);
+								$PARENT = intval($parentReplies->PARENT);
+								$IP = intval($parentReplies->IP);
+								$DATE = sanistripents($parentReplies->DATE);
+								$EMAIL = sanistripents($parentReplies->EMAIL);
+								$SUBJECT = sanistripents($parentReplies->SUBJECT);
+								$COMMENT = $parentReplies->COMMENT;
+								$BOARD = sanistripents($parentReplies->BOARD);
+								echo '<article class="reply" id="'.$ID.'"><span class="OP">Anonymous</span>';
+								if($MODERATOR == 1){echo '<span class="mod">'.$modcode.'</span>';}
+								echo '<span class="date">'.$DATE.'</span><span class="postid">No.'.$ID.'</span>';
+							if($IP == $theIP_us32str){
+									echo '<div class="controlpaneluser">';
+									echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'">[Delete]</label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
+										if(isset($_POST['DELETE'.$ID.''])){
+											$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
+											$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
+										}
+									echo '</div>';
+							}								
+							if(current_user_can('manage_options')){ 
+							if($MODERATOR != 1){
+								echo '<div class="controlpanel">';
+								echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'">[Delete]</label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
+								echo '<form method="post" class="inline" name="DELETE"><label for="BAN'.$ID.'">[Ban / </label><input type="text" name="MESSAGE" placeholder="Reason" />]<input type="submit" class="hidden" id="BAN'.$ID.'" name="BAN'.$ID.'" /></form>';
+									if(isset($_POST['BAN'.$ID.''])){
+										$MESSAGE = $_REQUEST['MESSAGE'];
+										$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$IP','$ID','1','$MESSAGE')");
+									}
+									if(isset($_POST['DELETE'.$ID.''])){
+										$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
+										$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
+									}
+								echo '</div>';
+								}
+							}
+								echo '<section>'.$COMMENT.'</section></article>';
+							}
+						}
+					}else{
+						echo '<h3 class="info">'.esc_attr($nothreads).'</h3>';
+					}
+				}
+			}
+		}else{
+			echo '<h3 class="banned">'.esc_attr($noboard).'</h3>';
+		}
+	}else{
+		$getBoards = $wpdb->get_results("SELECT SHORTNAME FROM $regularboard_boards ");
+		if(count($getBoards) > 0){echo '<span class="boardlisting textleft"> Select a board to participate in: [';foreach($getBoards as $gotBoards){$BOARDNAME = sanistripents($gotBoards->SHORTNAME);echo '<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDNAME.'</a>';}echo ']</span>';}
+	}
+	echo '</div></div></div>';
+}
+if(get_option('mommaincontrol_regularboard') == 1)add_shortcode('regularboard','regularboard_shortcode');
+if(get_option('mommaincontrol_regularboard') == 1)add_filter('the_content','do_shortcode','regularboard_shortcode');
 
 /****************************** SECTION Y -/- (Y0) Functions -/- Javascript for modules ******************************/
 if(current_user_can('manage_options')){
