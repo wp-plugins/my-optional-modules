@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.3.4
+Version: 5.3.8.3.5
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -206,6 +206,20 @@ if($mommodule_versionnumbers === true)add_filter('script_loader_src','mom_remove
 
 $momthemetakeover_youtube = esc_url(get_option('MOM_themetakeover_youtubefrontpage'));
 /****************************** SECTION B -/- (B2) Main Functions ******************************/
+function tripcode($name)
+//http://stackoverflow.com/questions/2422482/how-do-i-create-a-tripcode-system
+{
+    if(ereg("(#|!)(.*)", $name, $matches))
+    {
+        $cap  = $matches[2];
+        $cap  = strtr($cap,"&amp;", "&");
+        $cap  = strtr($cap,",", ",");
+        $salt = substr($cap."H.",1,2);
+        $salt = ereg_replace("[^\.-z]",".",$salt);
+        $salt = strtr($salt,":;<=>?@[\\]^_`","ABCDEFGabcdef"); 
+        return substr(crypt($cap,$salt),-10)."";
+    }
+}
 /**
  * 08.11.2010 22:25:17est
  * 
@@ -2448,6 +2462,7 @@ function mom_SEO_header(){
 		$excerpt = preg_replace('/\s\s+/i','',$excerpt);
 		$excerpt = substr($excerpt,0,155);
 		$excerpt_short = substr($excerpt,0,strrpos($excerpt,' ')).'...';
+		$excerpt_short = preg_replace('@\[.*?\]@','', $excerpt);		
 		if($excerpt_short != ''){$theExcerpt = '<meta property="og:description" content="'.$excerpt_short.'"/>';}
 		if($featuredImage != ''){$theFeaturedImage = '<meta property="og:image" content="'.$featuredImage.'"/>';}
 		if($twitter_personal_content != '' || $twitter_site_content != ''){$Twitter_start = '<meta name="twitter:card" value="summary">';}
@@ -3787,6 +3802,7 @@ function regularboard_shortcode($atts,$content = null){
 			'postedmessage' => 'POSTED!!!',
 			'modcode' => '##MOD',
 			'posting' => '1',
+			'threadsper' => '15',
 		), $atts)
 	);	
 	$flood = intval($flood);
@@ -3871,7 +3887,7 @@ function regularboard_shortcode($atts,$content = null){
 		$getCurrentBoard = $wpdb->get_results("SELECT ID,NAME,SHORTNAME,DESCRIPTION,RULES FROM $regularboard_boards WHERE SHORTNAME = '".$BOARD."' LIMIT 1");
 		$getUser = $wpdb->get_results("SELECT ID,IP,PARENT,BANNED,MESSAGE FROM $regularboard_users WHERE IP = '".$theIP_us32str."' AND BANNED = 1 LIMIT 1");
 		if($THREAD == ''){
-		$postsperpage = get_option('posts_per_page');
+		$postsperpage = intval($threadsper);
 		$targetpage = '?board='.$BOARD;
 		$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0");
 		$totalpages = count($countpages);
@@ -3911,7 +3927,7 @@ function regularboard_shortcode($atts,$content = null){
 					echo '</div>';
 				}else{
 					echo '<h3 class="boardName">'.$boardName.'</h3><p class="boardDescription">'.$boardDescription.'</p>';
-					if($THREAD != ''){echo '<p class="reply">Posting Mode: Reply <a rel="nofollow" href="?board='.$BOARD.'">(RETURN)</a></p>';}
+					if($THREAD != ''){echo '<p class="reply">Posting Mode: Reply <a rel="nofollow" href="?board='.$BOARD.'">[Return]</a></p>';}
 					
 					echo '<div class="mainboard"><div class="boardform">';
 					
@@ -3937,11 +3953,10 @@ function regularboard_shortcode($atts,$content = null){
 									echo '<input type="hidden" value="" name="PASSWORD" />';
 									echo '<section><label for="EMAIL">E-mail</label><input type="text" id="EMAIL" name="EMAIL" placeholder="E-mail" /></section>';
 									echo '<section><label for="SUBJECT">Subject</label><input type="text" id="SUBJECT" name="SUBJECT" placeholder="Subject" /></section>';
-									echo '<section><textarea name="COMMENT" placeholder="Comment"></textarea></section>';
+									echo '<section><label for="COMMENT">Comment</label><textarea id="COMMENT" name="COMMENT" placeholder="Comment"></textarea></section>';
 									echo '<section><label for="FORMSUBMIT" class="submit">Post a new ';if($THREAD == ''){echo 'topic';}elseif($THREAD != ''){echo 'reply';}echo '</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section>';
 									echo '</form>';
 								}
-								if($boardrules != '')echo '<section class="rules">'.$boardrules.'</section>';
 								if(isset($_POST['FORMSUBMIT'])){
 									if($_REQUEST['COMMENT'] == '') {
 										echo '<h3 class="info">CAN\'T SUBMIT AN EMPTY COMMENT</h3>';
@@ -4015,6 +4030,7 @@ function regularboard_shortcode($atts,$content = null){
 						}
 					}					
 					echo '</div><div class="boardposts">';
+					if($boardrules != '')echo '<div class="rules">'.$boardrules.'</div>';
 					if(count($getParentPosts) > 0){
 						foreach($getParentPosts as $parentPosts){
 							$MODERATOR = intval($parentPosts->MODERATOR);
@@ -4022,16 +4038,23 @@ function regularboard_shortcode($atts,$content = null){
 							$PARENT = intval($parentPosts->PARENT);
 							$IP = intval($parentPosts->IP);
 							$DATE = sanistripents($parentPosts->DATE);
-							$EMAIL = sanistripents($parentPosts->EMAIL);
+							$EMAIL = sanistripents(strtolower($parentPosts->EMAIL));
 							$SUBJECT = sanistripents($parentPosts->SUBJECT);
 							$COMMENT = $parentPosts->COMMENT;
 							$BOARD = sanistripents($parentPosts->BOARD);
 							$LAST = sanistripents($parentPosts->LAST);
 							$getReplies = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT = '".$ID."'");
-							echo '<article>';
+							echo '<div class="op">';
 							if($LAST == '9999-12-25 23:59:59')echo '<i class="fa fa-thumb-tack"></i> ';
-							if($SUBJECT != '')echo '<em>'.$SUBJECT.'</em><br />';
-							echo '<span class="OP">Anonymous</span>';if($MODERATOR == 1){echo '<span class="mod">'.$modcode.'</span>';}
+							if($LAST == '0')echo '<i class="fa fa-lock"></i> ';
+							if($SUBJECT != '')echo '<span class="subject">'.$SUBJECT.'</span>';
+							echo '<span class="OP"><span class="name">';
+							if($EMAIL == 'heaven'){echo '';}
+							else{echo 'anonymous';}
+							echo '</span>';
+							$tripcode = tripcode($EMAIL);
+							if($tripcode != '') echo ' <span class="trip">'.$tripcode.'</span>';
+							echo '</span>';if($MODERATOR == 1){echo '<span class="mod">'.$modcode.'</span>';}
 							if($LAST != '9999-12-25 23:59:59')echo '<span class="date">'.$DATE.'</span>';
 							echo '<span class="postid">No.'.$ID.' '; if($THREAD == ''){ echo '[<a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">Reply</a>] ('.count($getReplies).')'; }
 							if($IP == $theIP_us32str){
@@ -4071,7 +4094,7 @@ function regularboard_shortcode($atts,$content = null){
 								
 							}
 							echo '</span><section>'.$COMMENT.'</section>
-							</article>';
+							</div>';
 						}					
 						if($THREAD != ''){
 							foreach($getParentReplies as $parentReplies){
@@ -4080,11 +4103,17 @@ function regularboard_shortcode($atts,$content = null){
 								$PARENT = intval($parentReplies->PARENT);
 								$IP = intval($parentReplies->IP);
 								$DATE = sanistripents($parentReplies->DATE);
-								$EMAIL = sanistripents($parentReplies->EMAIL);
+								$EMAIL = sanistripents(strtolower($parentReplies->EMAIL));
 								$SUBJECT = sanistripents($parentReplies->SUBJECT);
 								$COMMENT = $parentReplies->COMMENT;
 								$BOARD = sanistripents($parentReplies->BOARD);
-								echo '<article class="reply" id="'.$ID.'"><span class="OP">Anonymous</span>';
+								echo '<div class="postcontainer reply" id="'.$ID.'"><span class="OP"><span class="name">';
+								if($EMAIL == 'heaven'){echo '';}
+								else{echo 'anonymous';}
+								echo '</span>';
+								$tripcode = tripcode($EMAIL);
+								if($tripcode != '') echo ' <span class="trip">'.$tripcode.'</span>';
+								echo '</span>';
 								if($MODERATOR == 1){echo '<span class="mod">'.$modcode.'</span>';}
 								echo '<span class="date">'.$DATE.'</span><span class="postid">No.'.$ID.'</span>';
 							if($IP == $theIP_us32str){
@@ -4112,7 +4141,7 @@ function regularboard_shortcode($atts,$content = null){
 								}
 								echo '</div>';
 							}
-								echo '<section>'.$COMMENT.'</section></article>';
+								echo '<section>'.$COMMENT.'</section></div>';
 							}
 						}
 
