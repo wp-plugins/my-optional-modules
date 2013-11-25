@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.3
+Version: 5.3.8.3.1
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -3873,7 +3873,13 @@ function regularboard_shortcode($atts,$content = null){
 		$getCurrentBoard = $wpdb->get_results("SELECT ID,NAME,SHORTNAME,DESCRIPTION,RULES FROM $regularboard_boards WHERE SHORTNAME = '".$BOARD."' LIMIT 1");
 		$getUser = $wpdb->get_results("SELECT ID,IP,PARENT,BANNED,MESSAGE FROM $regularboard_users WHERE IP = '".$theIP_us32str."' AND BANNED = 1 LIMIT 1");
 		if($THREAD == ''){
-		$getParentPosts = $wpdb->get_results("SELECT ID,PARENT,IP,DATE,EMAIL,SUBJECT,COMMENT,BOARD,MODERATOR,LAST FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0 ORDER BY LAST DESC");
+		$postsperpage = get_option('posts_per_page');
+		$targetpage = '?board='.$BOARD;
+		$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0");
+		$totalpages = count($countpages);
+		$results = mysql_escape_string($_GET['results']);
+		if($results){$start = ($results - 1) * $postsperpage;}else{$start = 0;}
+		$getParentPosts = $wpdb->get_results("SELECT ID,PARENT,IP,DATE,EMAIL,SUBJECT,COMMENT,BOARD,MODERATOR,LAST FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0 ORDER BY LAST DESC LIMIT $start,$postsperpage");
 		}elseif($THREAD != ''){
 		$getParentPosts = $wpdb->get_results("SELECT ID,PARENT,IP,DATE,EMAIL,SUBJECT,COMMENT,BOARD,MODERATOR,LAST FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND ID = '".$THREAD."' AND PARENT = 0 LIMIT 1");
 		$getParentReplies = $wpdb->get_results("SELECT ID,PARENT,IP,DATE,EMAIL,SUBJECT,COMMENT,BOARD,MODERATOR,LAST FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = '".$THREAD."'");
@@ -4012,9 +4018,10 @@ function regularboard_shortcode($atts,$content = null){
 							$SUBJECT = sanistripents($parentPosts->SUBJECT);
 							$COMMENT = $parentPosts->COMMENT;
 							$BOARD = sanistripents($parentPosts->BOARD);
+							$getReplies = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT = '".$ID."'");
 							echo '<article>';
 							if($SUBJECT != '')echo '<em>'.$SUBJECT.'</em><br />';
-							echo '<span class="OP">Anonymous</span>';if($MODERATOR == 1){echo '<span class="mod">'.$modcode.'</span>';}echo '<span class="date">'.$DATE.'</span><span class="postid">No.'.$ID.' '; if($THREAD == ''){ echo '[<a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">Reply</a>]'; }
+							echo '<span class="OP">Anonymous</span>';if($MODERATOR == 1){echo '<span class="mod">'.$modcode.'</span>';}echo '<span class="date">'.$DATE.'</span><span class="postid">No.'.$ID.' '; if($THREAD == ''){ echo '[<a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">Reply</a>] ('.count($getReplies).')'; }
 							if($IP == $theIP_us32str){
 									echo '<div class="controlpaneluser">';
 									echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'">[Delete]</label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
@@ -4086,6 +4093,18 @@ function regularboard_shortcode($atts,$content = null){
 								echo '<section>'.$COMMENT.'</section></article>';
 							}
 						}
+
+						$i = 0;
+						$paging = round($totalpages / $postsperpage);
+						if($paging > 0){
+						echo '<div class="pages">Go to page ';
+							while ($i < $paging) {
+								$i++;
+								echo '<a ';if($i == $results){ echo 'class="focus" '; } echo 'href="?board='.$BOARD.'&amp;results='.$i.'">'.$i.'</a>';
+							}
+						echo '</div>';
+						}
+						
 					}else{
 						echo '<h3 class="info">'.esc_attr($nothreads).'</h3>';
 					}
@@ -4095,8 +4114,25 @@ function regularboard_shortcode($atts,$content = null){
 			echo '<h3 class="banned">'.esc_attr($noboard).'</h3>';
 		}
 	}else{
-		$getBoards = $wpdb->get_results("SELECT SHORTNAME FROM $regularboard_boards ");
-		if(count($getBoards) > 0){echo '<span class="boardlisting textleft"> Select a board to participate in: [';foreach($getBoards as $gotBoards){$BOARDNAME = sanistripents($gotBoards->SHORTNAME);echo '<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDNAME.'</a>';}echo ']</span>';}
+		$getBoards = $wpdb->get_results("SELECT SHORTNAME,NAME FROM $regularboard_boards ");
+		echo '<div class="boardlist">';
+		if(count($getBoards) > 0){
+			foreach($getBoards as $gotBoards){
+				$BOARDNAME = sanistripents($gotBoards->SHORTNAME);
+				$BOARDLONG = sanistripents($gotBoards->NAME);
+				$BOARDDESC = sanistripents($gotBoards->DESCRIPTION);
+				$getBoardPostsPosts = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' ");
+				$getBoardPostsTopics = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT = '0'");
+				echo '
+					<section>
+						<h3><a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDLONG.'</a></h3><p>
+						';
+						if($BOARDDESC != ''){ echo '&mdash; '.$BOARDDESC; }
+					echo '<br /><em>'.count($getBoardPostsPosts).' posts / '.count($getBoardPostsTopics).' topics</p>';
+					echo '</section>';
+				}
+		}
+		echo '</div>';
 	}
 	echo '</div></div></div>';
 }
