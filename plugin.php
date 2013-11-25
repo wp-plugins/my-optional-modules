@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.3.2
+Version: 5.3.8.3.3
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -3941,7 +3941,7 @@ function regularboard_shortcode($atts,$content = null){
 										echo '<h3 class="info">CAN\'T SUBMIT AN EMPTY COMMENT</h3>';
 									}
 									elseif($_REQUEST['URL'] != '' || $_REQUEST['PAGE'] != '' || $_REQUEST['LOGIN'] != '' || $_REQUEST['USERNAME'] != '' || $_REQUREST['PASSWORD'] != ''){
-										$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$IP','$ID','1','filling out hidden form areas (likely bot).')");
+										$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1','filling out hidden form areas (likely bot).')");
 									}else{
 										$comment = array(
 											'author'    => 'anonymous',
@@ -3957,7 +3957,7 @@ function regularboard_shortcode($atts,$content = null){
 											echo"Couldn't connected to Akismet server!";
 										} else {
 											if($akismet->isSpam()) {
-												$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$IP','$ID','1','AKISMET detected you as a spammer.')");
+												$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1','AKISMET detected you as a spammer.')");
 											} else {
 												if($THREAD == ''){
 													$enteredCOMMENT = wpautop(sanistripents($_REQUEST['COMMENT']));
