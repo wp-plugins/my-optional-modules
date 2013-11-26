@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.3.6
+Version: 5.3.8.3.7
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -62,6 +62,9 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 /****************************** SECTION A -/- Dependencies  ******************************/
 define('MyOptionalModules',true);
 require_once(ABSPATH.'wp-includes/pluggable.php');
+require_once('HTMLPurifier.standalone.php');
+$config = HTMLPurifier_Config::createDefault();
+$purifier = new HTMLPurifier($config);
 $my_optional_modules_passwords_salt = get_option('mom_passwords_salt');
 $passwordField = 0;
 /****************************** SECTION B -/- (B0) Install ******************************/
@@ -3793,9 +3796,13 @@ if(get_option('mommaincontrol_votes') == 1){
 }
 /****************************** SECTION N -/- (N0) Functions -/- Regular Board****************************************/
 function regularboard_shortcode($atts,$content = null){
+	global $purifier;
 	extract(
 		shortcode_atts(array(
 			'flood'	=> '0',
+			'cutoff' => '500',
+			'maxbody' => '1800',
+			'maxtext' => '75',
 			'nothreads' => 'No threads to display',
 			'noboard' => 'Board does not exist',
 			'bannedmessage' => 'YOU ARE BANNED',
@@ -3951,9 +3958,9 @@ function regularboard_shortcode($atts,$content = null){
 									echo '<input type="hidden" value="" name="LOGIN" />';
 									echo '<input type="hidden" value="" name="USERNAME" />';
 									echo '<input type="hidden" value="" name="PASSWORD" />';
-									echo '<section><label for="EMAIL">E-mail</label><input type="text" id="EMAIL" name="EMAIL" placeholder="E-mail" /></section>';
-									echo '<section><label for="SUBJECT">Subject</label><input type="text" id="SUBJECT" name="SUBJECT" placeholder="Subject" /></section>';
-									echo '<section><label for="COMMENT">Comment</label><textarea id="COMMENT" name="COMMENT" placeholder="Comment"></textarea></section>';
+									echo '<section><label for="EMAIL">E-mail</label><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="E-mail" /></section>';
+									echo '<section><label for="SUBJECT">Subject</label><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section>';
+									echo '<section><label for="COMMENT">Comment</label><textarea id="COMMENT" maxlength="'.$maxbody.'" name="COMMENT" placeholder="Comment"></textarea></section>';
 									echo '<section><label for="FORMSUBMIT" class="submit">Post a new ';if($THREAD == ''){echo 'topic';}elseif($THREAD != ''){echo 'reply';}echo '</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section>';
 									echo '</form>';
 								}
@@ -3981,13 +3988,17 @@ function regularboard_shortcode($atts,$content = null){
 												$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1','AKISMET detected you as a spammer.')");
 											} else {
 												if($THREAD == ''){
-													$enteredCOMMENT = wpautop(sanistripents($_REQUEST['COMMENT']));
+													$cleanCOMMENT = $purifier->purify($_REQUEST['COMMENT']);
+													$cleanCOMMENT = substr($cleanCOMMENT,0,$maxbody);
+													$enteredCOMMENT = wpautop($cleanCOMMENT);
 													$enteredSUBJECT = sanistripents($_REQUEST['SUBJECT']);
+													$enteredSUBJECT = substr($enteredSUBJECT,0,$maxtext);
 													$checkCOMMENT = strtolower($enteredCOMMENT);
 													$getDuplicate = $wpdb->get_results("SELECT COMMENT FROM $regularboard_posts WHERE COMMENT = '".$checkCOMMENT."' LIMIT 1");
 													if(count($getDuplicate) == 0){
 														echo '<h3 class="info">'.esc_attr($postedmessage).'</h3>';
 														$enteredEMAIL = sanistripents(tripcode(($_REQUEST['EMAIL'])));
+														$enteredEMAIL = substr($enteredEMAIL,0,$maxtext);
 														if(current_user_can('manage_options')){ 
 															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('',0,'$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','1','$current_timestamp')") ;
 														}else{
@@ -3998,12 +4009,16 @@ function regularboard_shortcode($atts,$content = null){
 													}
 												}elseif($THREAD != '' && $LOCKED == 0){
 													$enteredSUBJECT = sanistripents($_REQUEST['SUBJECT']);
-													$enteredCOMMENT = wpautop(sanistripents($_REQUEST['COMMENT']));
+													$enteredSUBJECT = substr($enteredSUBJECT,0,$maxtext);
+													$cleanCOMMENT = $purifier->purify($_REQUEST['COMMENT']);
+													$cleanCOMMENT = substr($cleanCOMMENT,0,$maxbody);
+													$enteredCOMMENT = wpautop($cleanCOMMENT);
 													$checkCOMMENT = strtolower($enteredCOMMENT);
 													$getDuplicate = $wpdb->get_results("SELECT COMMENT FROM $regularboard_posts WHERE COMMENT = '".$checkCOMMENT."' LIMIT 1");
 													if(count($getDuplicate) == 0){
 														echo '<h3 class="info">'.esc_attr($postedmessage).'</h3>';
 														$enteredEMAIL = sanistripents(tripcode(($_REQUEST['EMAIL'])));
+														$enteredEMAIL = substr($enteredEMAIL,0,$maxtext);
 														if(current_user_can('manage_options')){ 
 															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('','$THREAD','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','1','$current_timestamp')") ;
 															$checkSAGE = strtolower($enteredEMAIL);
@@ -4032,18 +4047,20 @@ function regularboard_shortcode($atts,$content = null){
 					echo '</div><div class="boardposts">';
 					if($boardrules != '')echo '<div class="rules">'.$boardrules.'</div>';
 					if(count($getParentPosts) > 0){
+					
+
 						foreach($getParentPosts as $parentPosts){
-							$MODERATOR = intval($parentPosts->MODERATOR);
-							$ID = intval($parentPosts->ID);
-							$PARENT = intval($parentPosts->PARENT);
-							$IP = intval($parentPosts->IP);
-							$DATE = sanistripents($parentPosts->DATE);
-							$EMAIL = sanistripents($parentPosts->EMAIL);
-							$SUBJECT = sanistripents($parentPosts->SUBJECT);
-							$COMMENT = $parentPosts->COMMENT;
-							$BOARD = sanistripents($parentPosts->BOARD);
-							$LAST = sanistripents($parentPosts->LAST);
 							$getReplies = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT = '".$ID."'");
+							$ID = $parentPosts->ID;
+							$MODERATOR = $parentPosts->MODERATOR;
+							$PARENT = $parentPosts->PARENT;
+							$IP = $parentPosts->IP;
+							$DATE = $parentPosts->DATE;
+							$EMAIL = $parentPosts->EMAIL;
+							$SUBJECT = $parentPosts->SUBJECT;
+							$COMMENT = $parentPosts->COMMENT;
+							$BOARD = $parentPosts->BOARD;
+							$LAST = $parentPosts->LAST;
 							echo '<div class="op">';
 							if($LAST == '9999-12-25 23:59:59')echo '<i class="fa fa-thumb-tack"></i> ';
 							if($LAST == '0')echo '<i class="fa fa-lock"></i> ';
@@ -4052,49 +4069,54 @@ function regularboard_shortcode($atts,$content = null){
 							if(strtolower($EMAIL) == 'heaven'){echo '';}
 							else{echo 'anonymous';}
 							echo '</span>';
-							if($EMAIL != '') echo ' <span class="trip">'.$EMAIL.'</span>';
-							echo '</span>';if($MODERATOR == 1){echo '<span class="mod">'.$modcode.'</span>';}
+							if($EMAIL != '')echo ' <span class="trip">'.$EMAIL.'</span>';
+							echo '</span>';
+							if($MODERATOR == 1)echo '<span class="mod">'.$modcode.'</span>';
 							if($LAST != '9999-12-25 23:59:59')echo '<span class="date">'.$DATE.'</span>';
-							echo '<span class="postid">No.'.$ID.' '; if($THREAD == ''){ echo '[<a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">Reply</a>] ('.count($getReplies).')'; }
+							echo '<span class="postid">No.'.$ID.' '; 
+							if($THREAD == '')echo '[<a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">Reply</a>] ('.count($getReplies).')';
 							if($IP == $theIP_us32str){
-									echo '<div class="controlpaneluser">';
-									echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'">[Delete]</label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
-										if(isset($_POST['DELETE'.$ID.''])){
-											$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
-											$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
-										}
-									echo '</div>';
+								echo '<div class="controlpaneluser">';
+								echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'">[Delete]</label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
+									if(isset($_POST['DELETE'.$ID.''])){
+										$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
+										$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
+									}
+								echo '</div>';
 							}
 							if(current_user_can('manage_options')){
-									echo '<div class="controlpanel">';
-									if($LAST != '9999-12-25 23:59:59')echo '<form method="post" class="inline" name="STICKY"><label for="STICKY'.$ID.'">[+ STICKY]</label><input type="submit" class="hidden" id="STICKY'.$ID.'" name="STICKY'.$ID.'" /></form>';
-									if(isset($_POST['STICKY'.$ID.'']))$wpdb->query("UPDATE $regularboard_posts SET LAST = '9999-12-25 23:59:59' WHERE ID = '$ID'");
-									if($LAST == '9999-12-25 23:59:59')echo '<form method="post" class="inline" name="UNSTICKY"><label for="UNSTICKY'.$ID.'">[- STICKY]</label><input type="submit" class="hidden" id="UNSTICKY'.$ID.'" name="UNSTICKY'.$ID.'" /></form>';
-									if(isset($_POST['UNSTICKY'.$ID.'']))$wpdb->query("UPDATE $regularboard_posts SET LAST = '$DATE' WHERE ID = '$ID'");
-									if($LAST != '0')echo '<form method="post" class="inline" name="LOCK"><label for="LOCK'.$ID.'">[+ LOCK]</label><input type="submit" class="hidden" id="LOCK'.$ID.'" name="LOCK'.$ID.'" /></form>';
-									if(isset($_POST['LOCK'.$ID.'']))$wpdb->query("UPDATE $regularboard_posts SET LAST = '0' WHERE ID = '$ID'");
-									if($LAST == '0')echo '<form method="post" class="inline" name="UNLOCK"><label for="UNLOCK'.$ID.'">[- LOCK]</label><input type="submit" class="hidden" id="UNLOCK'.$ID.'" name="UNLOCK'.$ID.'" /></form>';
-									if(isset($_POST['UNLOCK'.$ID.'']))$wpdb->query("UPDATE $regularboard_posts SET LAST = '$DATE' WHERE ID = '$ID'");
-										
+								echo '<div class="controlpanel">';
+								if($LAST != '9999-12-25 23:59:59')echo '<form method="post" class="inline" name="STICKY"><label for="STICKY'.$ID.'">[+ STICKY]</label><input type="submit" class="hidden" id="STICKY'.$ID.'" name="STICKY'.$ID.'" /></form>';
+								if(isset($_POST['STICKY'.$ID.'']))$wpdb->query("UPDATE $regularboard_posts SET LAST = '9999-12-25 23:59:59' WHERE ID = '$ID'");
+								if($LAST == '9999-12-25 23:59:59')echo '<form method="post" class="inline" name="UNSTICKY"><label for="UNSTICKY'.$ID.'">[- STICKY]</label><input type="submit" class="hidden" id="UNSTICKY'.$ID.'" name="UNSTICKY'.$ID.'" /></form>';
+								if(isset($_POST['UNSTICKY'.$ID.'']))$wpdb->query("UPDATE $regularboard_posts SET LAST = '$DATE' WHERE ID = '$ID'");
+								if($LAST != '0')echo '<form method="post" class="inline" name="LOCK"><label for="LOCK'.$ID.'">[+ LOCK]</label><input type="submit" class="hidden" id="LOCK'.$ID.'" name="LOCK'.$ID.'" /></form>';
+								if(isset($_POST['LOCK'.$ID.'']))$wpdb->query("UPDATE $regularboard_posts SET LAST = '0' WHERE ID = '$ID'");
+								if($LAST == '0')echo '<form method="post" class="inline" name="UNLOCK"><label for="UNLOCK'.$ID.'">[- LOCK]</label><input type="submit" class="hidden" id="UNLOCK'.$ID.'" name="UNLOCK'.$ID.'" /></form>';
+								if(isset($_POST['UNLOCK'.$ID.'']))$wpdb->query("UPDATE $regularboard_posts SET LAST = '$DATE' WHERE ID = '$ID'");
 								if($MODERATOR != 1){
 									echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'">[Delete]</label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
 									echo '<form method="post" class="inline" name="DELETE"><label for="BAN'.$ID.'">[Ban / </label><input type="text" name="MESSAGE" placeholder="Reason" />]<input type="submit" class="hidden" id="BAN'.$ID.'" name="BAN'.$ID.'" /></form>';
-										if(isset($_POST['BAN'.$ID.''])){
-											$MESSAGE = $_REQUEST['MESSAGE'];
-											$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$IP','$ID','1','$MESSAGE')");
-											$wpdb->query("DELETE FROM $regularboard_posts WHERE IP = '".$IP."'");
-										}
-										if(isset($_POST['DELETE'.$ID.''])){
-											$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
-											$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
-										}
+									if(isset($_POST['BAN'.$ID.''])){
+										$MESSAGE = $_REQUEST['MESSAGE'];
+										$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$IP','$ID','1','$MESSAGE')");
+										$wpdb->query("DELETE FROM $regularboard_posts WHERE IP = '".$IP."'");
+									}
+									if(isset($_POST['DELETE'.$ID.''])){
+										$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
+										$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
+									}
 								}
-									echo '</div>';
-								
+								echo '</div>';
 							}
-							echo '</span><section>'.$COMMENT.'</section>
-							</div>';
-						}					
+							echo '</span><section>';
+							
+							if($THREAD == '')echo substr($COMMENT,0,$cutoff);
+							if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
+							if($THREAD != '')echo $COMMENT;
+							echo '</section></div>';
+						}
+						
 						if($THREAD != ''){
 							foreach($getParentReplies as $parentReplies){
 								$MODERATOR = intval($parentPosts->MODERATOR);
@@ -4139,7 +4161,11 @@ function regularboard_shortcode($atts,$content = null){
 								}
 								echo '</div>';
 							}
-								echo '<section>'.$COMMENT.'</section></div>';
+								echo '<section>';
+								
+								echo $COMMENT;
+
+								echo '</section></div>';
 							}
 						}
 
