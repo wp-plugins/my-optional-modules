@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.3.9
+Version: 5.3.8.4
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -781,14 +781,19 @@ function enqueueMOMscriptsFooter(){
 			$placeholder = plugins_url().'/'.plugin_basename(dirname(__FILE__)).'/includes/javascript/placeholder.png';
 			echo '
 			$("img").wrap(function(){
+				if($(this).hasClass("skipLazy")){
+				}else{
 					$(this).wrap(function(){
 						var newimg = \'<img src="'.$placeholder.'" data-original="\' + $(this).attr(\'src\') + \'" width="\' + $(this).attr(\'width\') + \'" height="\' + $(this).attr(\'height\') + \'" class="lazy \' + $(this).attr(\'class\') + \'">\';
 						return newimg;
 					});
 					return \'<noscript>\';
+				}
 				});
 			$("img.lazy").lazyload(
-				{data_attribute: "original" 
+				{
+				data_attribute: "original",
+				skip_invisible: false
 			});';
 		}
 		// Navbar
@@ -2702,7 +2707,7 @@ if(get_option('MOM_themetakeover_topbar') == 1 || get_option('MOM_themetakeover_
 				$recent_posts = wp_get_recent_posts($args);
 				foreach( $recent_posts as $recentthumbs ){
 					$url = wp_get_attachment_url( get_post_thumbnail_id($recentthumbs["ID"]) );
-					echo '<a class="thumbnail" href="' . get_permalink($recentthumbs["ID"]) . '" title="'.esc_attr($recentthumbs["post_title"]).'" ><img src="'.$url.'" /></a>';
+					echo '<a class="thumbnail" href="' . get_permalink($recentthumbs["ID"]) . '" title="'.esc_attr($recentthumbs["post_title"]).'" ><img class="skipLazy greyscale" src="'.$url.'" /></a>';
 				}
 			echo '</div>';
 			echo '<div class="recentPostListing">
