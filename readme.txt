@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.7.1
 Tested up to: 3.7.1
-Stable tag: 5.3.8.3.7
+Stable tag: 5.3.8.3.8
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -66,10 +66,14 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= .5.3.8.3.7 =
-* Use HTML Purifier for comment formatting.
-* Maxbody added (determine how long a comment can be) (default is 1800 characters) and maxtext (determine how long email and subject can be) (default is 75 characters)
-
+= .5.3.8.3.8 =
+* Regular Board | 24-hour format of hour (with leading zero) replaces 24-hour format (without leading zero)
+* Regular Board | Last 3 replies (if exist) for threads shown below OP
+* Regular Board | Reply count fixed
+* Regular Board | Word-wrap for paragraphs in op/reply (added)
+* Regular Board | standard copyright/trademark message (changeable) added to bottom of boards
+* Regular Board | Last (timestamp) changed for newly created threads to excessive-future date to ensure immediate placement at top of list
+* Regular Board | Some elements (instead of being completely stripped of tags) have been filtered with HTMLPurifier to.  These include all text strings from shortcode and board descriptions and rules
 
 = .5 =
 * All scripts (.js,script) moved to a single file, enqueued)

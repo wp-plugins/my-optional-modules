@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.3.7
+Version: 5.3.8.3.8
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -3810,12 +3810,19 @@ function regularboard_shortcode($atts,$content = null){
 			'modcode' => '##MOD',
 			'posting' => '1',
 			'threadsper' => '15',
+			'credits' => 'All trademarks and copyrights on this page are owned by their respective parties.  Comments are owned by (and the responsibility of) the Poster.',
 		), $atts)
 	);	
 	$flood = intval($flood);
+	$credits = $purifier->purify($credits);
+	$nothreads = $purifier->purify($nothreads);
+	$noboard = $purifier->purify($noboard);
+	$bannedmessage = $purifier->purify($bannedmessage);
+	$postedmessage = $purifier->purify($postedmessage);
+	$modcode = $purifier->purify($modcode);
 	echo '<div class="boardDisplay">';
 	global $wpdb,$wp,$post;
-	$current_timestamp = date('Y-m-d G:i:s');
+	$current_timestamp = date('Y-m-d H:i:s');
 	$regularboard_boards = $wpdb->prefix.'regularboard_boards';
 	$regularboard_posts = $wpdb->prefix.'regularboard_posts';
 	$regularboard_users = $wpdb->prefix.'regularboard_users';
@@ -3872,8 +3879,8 @@ function regularboard_shortcode($atts,$content = null){
 			if(isset($_POST['CREATEBOARD']) && $_REQUEST['NAME'] != '' && $_REQUEST['SHORTNAME'] != ''){
 			$NAME = sanistripents($_REQUEST['NAME']);
 			$SHORTNAME = sanistripents($_REQUEST['SHORTNAME']);
-			$DESCRIPTION = sanistripents($_REQUEST['DESCRIPTION']);
-			$RULES = wpautop($_REQUEST['RULES']);
+			$DESCRIPTION = $purifier->purify($_REQUEST['DESCRIPTION']);
+			$RULES = $purifier->purify(wpautop($_REQUEST['RULES']));
 			$getBoards = $wpdb->get_results("SELECT SHORTNAME FROM $regularboard_boards WHERE SHORTNAME = '$SHORTNAME'");
 			if(count($getBoards) == 0){
 				$wpdb->query("INSERT INTO $regularboard_boards (NAME, SHORTNAME, DESCRIPTION, RULES) VALUES ('$NAME','$SHORTNAME','$DESCRIPTION','$RULES')") ;
@@ -3921,10 +3928,10 @@ function regularboard_shortcode($atts,$content = null){
 			foreach($getCurrentBoard as $gotCurrentBoard){
 				$boardName = sanistripents($gotCurrentBoard->NAME);
 				$boardShort = sanistripents($gotCurrentBoard->SHORTNAME);
-				$boardDescription = sanistripents($gotCurrentBoard->DESCRIPTION);
-				$boardrules = $gotCurrentBoard->RULES;
+				$boardDescription = $purifier->purify($gotCurrentBoard->DESCRIPTION);
+				$boardrules = $purifier->purify($gotCurrentBoard->RULES);
 				if(count($getUser) > 0){
-					echo '<div class="banned"><h3 class="banned">'.esc_attr($bannedmessage).'</h3>';
+					echo '<div class="banned"><h3 class="banned">'.$purifier->purify($bannedmessage).'</h3>';
 					foreach($getUser as $gotUser){
 						$IP = intval($gotUser->IP);
 						$BANNED = intval($gotUser->BANNED);
@@ -4000,9 +4007,9 @@ function regularboard_shortcode($atts,$content = null){
 														$enteredEMAIL = sanistripents(tripcode(($_REQUEST['EMAIL'])));
 														$enteredEMAIL = substr($enteredEMAIL,0,$maxtext);
 														if(current_user_can('manage_options')){ 
-															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('',0,'$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','1','$current_timestamp')") ;
+															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('',0,'$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','1','2999-11-26 24:59:59')") ;
 														}else{
-															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('',0,'$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','0','$current_timestamp')") ;
+															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('',0,'$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','0','2999-11-26 24:59:59')") ;
 														}
 													}else{
 														echo '<h3 class="info">DUPLICATE CONTENT DETECTED - POST DISCARED</h3>';
@@ -4047,11 +4054,10 @@ function regularboard_shortcode($atts,$content = null){
 					echo '</div><div class="boardposts">';
 					if($boardrules != '')echo '<div class="rules">'.$boardrules.'</div>';
 					if(count($getParentPosts) > 0){
-					
-
 						foreach($getParentPosts as $parentPosts){
-							$getReplies = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT = '".$ID."'");
 							$ID = $parentPosts->ID;
+							$getReplies = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE PARENT = '".$ID."'");
+							$gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."' ORDER BY DATE ASC LIMIT 0,3");
 							$MODERATOR = $parentPosts->MODERATOR;
 							$PARENT = $parentPosts->PARENT;
 							$IP = $parentPosts->IP;
@@ -4115,11 +4121,59 @@ function regularboard_shortcode($atts,$content = null){
 							if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
 							if($THREAD != '')echo $COMMENT;
 							echo '</section></div>';
+							if(count($gotReplies) > 0){
+								foreach($gotReplies as $REPLIES){
+									$MODERATOR = intval($REPLIES->MODERATOR);
+									$ID = intval($REPLIES->ID);
+									$PARENT = intval($REPLIES->PARENT);
+									$IP = intval($REPLIES->IP);
+									$DATE = sanistripents($REPLIES->DATE);
+									$EMAIL = sanistripents($REPLIES->EMAIL);
+									$SUBJECT = sanistripents($REPLIES->SUBJECT);
+									$COMMENT = $REPLIES->COMMENT;
+									$BOARD = sanistripents($REPLIES->BOARD);							
+									echo '<div class="postcontainer reply" id="'.$ID.'"><span class="OP"><span class="name">';
+									if(strtolower($EMAIL) == 'heaven'){echo '';}
+									else{echo 'anonymous';}
+									echo '</span>';
+									if($EMAIL != '') echo ' <span class="trip">'.$EMAIL.'</span>';
+									echo '</span>';
+									if($MODERATOR == 1){echo '<span class="mod">'.$modcode.'</span>';}
+									echo '<span class="date">'.$DATE.'</span><span class="postid">No.'.$ID.'</span>';
+								if($IP == $theIP_us32str){
+										echo '<div class="controlpaneluser">';
+										echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'">[Delete]</label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
+											if(isset($_POST['DELETE'.$ID.''])){
+												$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
+												$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
+											}
+										echo '</div>';
+								}								
+								if(current_user_can('manage_options')){ 
+									echo '<div class="controlpanel">';
+									if($MODERATOR != 1){
+										echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'">[Delete]</label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
+										echo '<form method="post" class="inline" name="DELETE"><label for="BAN'.$ID.'">[Ban / </label><input type="text" name="MESSAGE" placeholder="Reason" />]<input type="submit" class="hidden" id="BAN'.$ID.'" name="BAN'.$ID.'" /></form>';
+										if(isset($_POST['BAN'.$ID.''])){
+											$MESSAGE = $_REQUEST['MESSAGE'];
+											$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$IP','$ID','1','$MESSAGE')");
+										}
+										if(isset($_POST['DELETE'.$ID.''])){
+											$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
+											$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
+										}
+									}
+									echo '</div>';
+								}
+									echo '<section>';
+									echo $purifier->purify($COMMENT);
+									echo '</section></div>';								
+								}
+							}
 						}
-						
 						if($THREAD != ''){
 							foreach($getParentReplies as $parentReplies){
-								$MODERATOR = intval($parentPosts->MODERATOR);
+								$MODERATOR = intval($parentReplies->MODERATOR);
 								$ID = intval($parentReplies->ID);
 								$PARENT = intval($parentReplies->PARENT);
 								$IP = intval($parentReplies->IP);
@@ -4163,30 +4217,31 @@ function regularboard_shortcode($atts,$content = null){
 							}
 								echo '<section>';
 								
-								echo $COMMENT;
+								echo $purifier->purify($COMMENT);
 
 								echo '</section></div>';
 							}
 						}
-
-						$i = 0;
-						$paging = round($totalpages / $postsperpage);
-						if($paging > 0){
-						echo '<div class="pages">Go to page ';
-							while ($i < $paging) {
-								$i++;
-								echo '<a ';if($i == $results){ echo 'class="focus" '; } echo 'href="?board='.$BOARD.'&amp;results='.$i.'">'.$i.'</a>';
+						if($BOARD != '' && $THREAD == ''){
+							$i = 0;
+							$paging = round($totalpages / $postsperpage);
+							if($paging > 0){
+							echo '<div class="pages">Go to page ';
+								while ($i < $paging) {
+									$i++;
+									echo '<a ';if($i == $results){ echo 'class="focus" '; } echo 'href="?board='.$BOARD.'&amp;results='.$i.'">'.$i.'</a>';
+								}
+							echo '</div>';
 							}
-						echo '</div>';
 						}
 						
 					}else{
-						echo '<h3 class="info">'.esc_attr($nothreads).'</h3>';
+						echo '<h3 class="info">'.$nothreads.'</h3>';
 					}
 				}
 			}
 		}else{
-			echo '<h3 class="banned">'.esc_attr($noboard).'</h3>';
+			echo '<h3 class="banned">'.$noboard.'</h3>';
 		}
 	}else{
 		$getBoards = $wpdb->get_results("SELECT SHORTNAME,NAME,DESCRIPTION FROM $regularboard_boards ");
@@ -4209,7 +4264,7 @@ function regularboard_shortcode($atts,$content = null){
 		}
 		echo '</div>';
 	}
-	echo '</div></div></div>';
+	echo '</div></div><p class="credits">'.$credits.'</p></div>';
 }
 if(get_option('mommaincontrol_regularboard') == 1)add_shortcode('regularboard','regularboard_shortcode');
 if(get_option('mommaincontrol_regularboard') == 1)add_filter('the_content','do_shortcode','regularboard_shortcode');
