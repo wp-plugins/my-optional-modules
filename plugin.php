@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.3.5
+Version: 5.3.8.3.6
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -3987,7 +3987,7 @@ function regularboard_shortcode($atts,$content = null){
 													$getDuplicate = $wpdb->get_results("SELECT COMMENT FROM $regularboard_posts WHERE COMMENT = '".$checkCOMMENT."' LIMIT 1");
 													if(count($getDuplicate) == 0){
 														echo '<h3 class="info">'.esc_attr($postedmessage).'</h3>';
-														$enteredEMAIL = sanistripents($_REQUEST['EMAIL']);
+														$enteredEMAIL = sanistripents(tripcode(($_REQUEST['EMAIL'])));
 														if(current_user_can('manage_options')){ 
 															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('',0,'$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','1','$current_timestamp')") ;
 														}else{
@@ -4003,7 +4003,7 @@ function regularboard_shortcode($atts,$content = null){
 													$getDuplicate = $wpdb->get_results("SELECT COMMENT FROM $regularboard_posts WHERE COMMENT = '".$checkCOMMENT."' LIMIT 1");
 													if(count($getDuplicate) == 0){
 														echo '<h3 class="info">'.esc_attr($postedmessage).'</h3>';
-														$enteredEMAIL = sanistripents($_REQUEST['EMAIL']);
+														$enteredEMAIL = sanistripents(tripcode(($_REQUEST['EMAIL'])));
 														if(current_user_can('manage_options')){ 
 															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('','$THREAD','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','1','$current_timestamp')") ;
 															$checkSAGE = strtolower($enteredEMAIL);
@@ -4038,7 +4038,7 @@ function regularboard_shortcode($atts,$content = null){
 							$PARENT = intval($parentPosts->PARENT);
 							$IP = intval($parentPosts->IP);
 							$DATE = sanistripents($parentPosts->DATE);
-							$EMAIL = sanistripents(strtolower($parentPosts->EMAIL));
+							$EMAIL = sanistripents($parentPosts->EMAIL);
 							$SUBJECT = sanistripents($parentPosts->SUBJECT);
 							$COMMENT = $parentPosts->COMMENT;
 							$BOARD = sanistripents($parentPosts->BOARD);
@@ -4049,11 +4049,10 @@ function regularboard_shortcode($atts,$content = null){
 							if($LAST == '0')echo '<i class="fa fa-lock"></i> ';
 							if($SUBJECT != '')echo '<span class="subject">'.$SUBJECT.'</span>';
 							echo '<span class="OP"><span class="name">';
-							if($EMAIL == 'heaven'){echo '';}
+							if(strtolower($EMAIL) == 'heaven'){echo '';}
 							else{echo 'anonymous';}
 							echo '</span>';
-							$tripcode = tripcode($EMAIL);
-							if($tripcode != '') echo ' <span class="trip">'.$tripcode.'</span>';
+							if($EMAIL != '') echo ' <span class="trip">'.$EMAIL.'</span>';
 							echo '</span>';if($MODERATOR == 1){echo '<span class="mod">'.$modcode.'</span>';}
 							if($LAST != '9999-12-25 23:59:59')echo '<span class="date">'.$DATE.'</span>';
 							echo '<span class="postid">No.'.$ID.' '; if($THREAD == ''){ echo '[<a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">Reply</a>] ('.count($getReplies).')'; }
@@ -4103,16 +4102,15 @@ function regularboard_shortcode($atts,$content = null){
 								$PARENT = intval($parentReplies->PARENT);
 								$IP = intval($parentReplies->IP);
 								$DATE = sanistripents($parentReplies->DATE);
-								$EMAIL = sanistripents(strtolower($parentReplies->EMAIL));
+								$EMAIL = sanistripents($parentReplies->EMAIL);
 								$SUBJECT = sanistripents($parentReplies->SUBJECT);
 								$COMMENT = $parentReplies->COMMENT;
 								$BOARD = sanistripents($parentReplies->BOARD);
 								echo '<div class="postcontainer reply" id="'.$ID.'"><span class="OP"><span class="name">';
-								if($EMAIL == 'heaven'){echo '';}
+								if(strtolower($EMAIL) == 'heaven'){echo '';}
 								else{echo 'anonymous';}
 								echo '</span>';
-								$tripcode = tripcode($EMAIL);
-								if($tripcode != '') echo ' <span class="trip">'.$tripcode.'</span>';
+								if($EMAIL != '') echo ' <span class="trip">'.$EMAIL.'</span>';
 								echo '</span>';
 								if($MODERATOR == 1){echo '<span class="mod">'.$modcode.'</span>';}
 								echo '<span class="date">'.$DATE.'</span><span class="postid">No.'.$ID.'</span>';
