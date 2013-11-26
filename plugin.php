@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.5
+Version: 5.3.8.6
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -1159,6 +1159,7 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 		EMAIL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 		SUBJECT TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 		COMMENT TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+		URL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 		BOARD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 		MODERATOR TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 		LAST TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
@@ -2726,6 +2727,7 @@ if(get_option('MOM_themetakeover_topbar') == 1 || get_option('MOM_themetakeover_
 				$args=array(
 					'numberposts'=>25,
 					'post_type'=>'post',
+					'post_status'=>'publish',
 					'meta_key'=>'_thumbnail_id',
 				);		
 				$recent_posts = wp_get_recent_posts($args);
@@ -2737,8 +2739,9 @@ if(get_option('MOM_themetakeover_topbar') == 1 || get_option('MOM_themetakeover_
 			echo '<div class="recentPostListing">
 			<ul>';
 				$argsb=array(
-					'numberposts'=>9,
+					'numberposts'=>12,
 					'post_type'=>'post',
+					'post_status'=>'publish',
 				);					
 				$recent_posts = wp_get_recent_posts($argsb);
 				foreach( $recent_posts as $recent ){
@@ -3839,9 +3842,11 @@ function regularboard_shortcode($atts,$content = null){
 			'modcode' => '##MOD',
 			'posting' => '1',
 			'threadsper' => '15',
+			'allowURL' => '1',
 			'credits' => 'All trademarks and copyrights on this page are owned by their respective parties.  Comments are owned by (and the responsibility of) the Poster.',
 		), $atts)
 	);	
+	$allowURL = intval($allowURL);
 	$flood = intval($flood);
 	$credits = $purifier->purify($credits);
 	$nothreads = $purifier->purify($nothreads);
@@ -3867,9 +3872,7 @@ function regularboard_shortcode($atts,$content = null){
 	$theIP_us32str = sanistripents(sprintf("%u",$theIP_s32int));
 	$checkThisIP = long2ip($theIP);
 	checkdnsbl($checkThisIP);
-	if ($DNSBL === true){ 
-		$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1',' being blacklisted by the DNSBL.')");
-	}
+
 	$QUERY = sanistripents($_SERVER['QUERY_STRING']);
 	$BOARD = sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['board']));
 	$AREA = sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['area']));
@@ -3880,6 +3883,25 @@ function regularboard_shortcode($atts,$content = null){
 		if(current_user_can('manage_options')){
 			$getUsers = $wpdb->get_results("SELECT ID,IP,PARENT,BANNED,MESSAGE FROM $regularboard_users WHERE BANNED = 1");
 			echo '<div class="banned"><h3 class="options">CREATE/DELETE/UNBAN</h3>';
+
+			$checkTable = $wpdb->get_results("SHOW COLUMNS FROM `$regularboard_posts` LIKE 'URL'");
+			$checkTable = $wpdb->get_results("SHOW COLUMNS FROM `$regularboard_posts` LIKE 'TYPE'");
+			
+			if(count($checkTable) > 0){}else{
+				echo '
+				<hr />
+				<form method="post">
+				<input type="submit" name="UPGRADE" id="UPGRADE" value="An upgrade is necessary." />
+				</form>
+				<hr />
+				';
+				if(isset($_POST['UPGRADE'])){
+					$wpdb->query("ALTER TABLE $regularboard_posts ADD URL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER COMMENT");
+					$wpdb->query("ALTER TABLE $regularboard_posts ADD TYPE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER URL");
+				}
+			}
+			
+			
 			echo '<form method="post" name="OPTIONSFORM">';
 			wp_nonce_field('OPTIONSFORM');
 			echo '<input type="text" name="SHORTNAME" id="SHORTNAME" placeholder="Shortname" />
@@ -3942,10 +3964,10 @@ function regularboard_shortcode($atts,$content = null){
 		$totalpages = count($countpages);
 		$results = mysql_escape_string($_GET['results']);
 		if($results){$start = ($results - 1) * $postsperpage;}else{$start = 0;}
-		$getParentPosts = $wpdb->get_results("SELECT ID,PARENT,IP,DATE,EMAIL,SUBJECT,COMMENT,BOARD,MODERATOR,LAST FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0 ORDER BY LAST DESC LIMIT $start,$postsperpage");
+		$getParentPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0 ORDER BY LAST DESC LIMIT $start,$postsperpage");
 		}elseif($THREAD != ''){
-		$getParentPosts = $wpdb->get_results("SELECT ID,PARENT,IP,DATE,EMAIL,SUBJECT,COMMENT,BOARD,MODERATOR,LAST FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND ID = '".$THREAD."' AND PARENT = 0 LIMIT 1");
-		$getParentReplies = $wpdb->get_results("SELECT ID,PARENT,IP,DATE,EMAIL,SUBJECT,COMMENT,BOARD,MODERATOR,LAST FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = '".$THREAD."'");
+		$getParentPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND ID = '".$THREAD."' AND PARENT = 0 LIMIT 1");
+		$getParentReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = '".$THREAD."'");
 		}
 		$getLastPost = $wpdb->get_results("SELECT IP,DATE FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' ORDER BY DATE DESC LIMIT 1");
 		if(count($getLastPost) > 0){
@@ -3975,6 +3997,9 @@ function regularboard_shortcode($atts,$content = null){
 					}
 					echo '</div>';
 				}else{
+					if ($DNSBL === true){ 
+						$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1',' being blacklisted by the DNSBL.')");
+					}
 					echo '<h3 class="boardName">'.$boardName.'</h3><p class="boardDescription">'.$boardDescription.'</p>';
 					if($THREAD != ''){echo '<p class="reply">Posting Mode: Reply <a rel="nofollow" href="?board='.$BOARD.'">[Return]</a></p>';}
 					
@@ -3995,12 +4020,13 @@ function regularboard_shortcode($atts,$content = null){
 								if($LOCKED == 0){
 									echo '<form class="topic" name="regularboard_'.$theIP_us32str.'" method="post" action="">';
 									wp_nonce_field('regularboard_'.$theIP_us32str);
-									echo '<input type="hidden" value="" name="URL" />';
+									echo '<input type="hidden" value="" name="LINK" />';
 									echo '<input type="hidden" value="" name="PAGE" />';
 									echo '<input type="hidden" value="" name="LOGIN" />';
 									echo '<input type="hidden" value="" name="USERNAME" />';
 									echo '<input type="hidden" value="" name="PASSWORD" />';
 									echo '<section><label for="EMAIL">E-mail</label><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="E-mail" /></section>';
+									if($allowURL == 1)echo '<section><label for="URL">URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL" /></section>';
 									echo '<section><label for="SUBJECT">Subject</label><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section>';
 									echo '<section><label for="COMMENT">Comment</label><textarea id="COMMENT" maxlength="'.$maxbody.'" name="COMMENT" placeholder="Comment"></textarea></section>';
 									echo '<section><label for="FORMSUBMIT" class="submit">Post a new ';if($THREAD == ''){echo 'topic';}elseif($THREAD != ''){echo 'reply';}echo '</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section>';
@@ -4010,7 +4036,7 @@ function regularboard_shortcode($atts,$content = null){
 									if($_REQUEST['COMMENT'] == '') {
 										echo '<h3 class="info">CAN\'T SUBMIT AN EMPTY COMMENT</h3>';
 									}
-									elseif($_REQUEST['URL'] != '' || $_REQUEST['PAGE'] != '' || $_REQUEST['LOGIN'] != '' || $_REQUEST['USERNAME'] != '' || $_REQUREST['PASSWORD'] != ''){
+									elseif($_REQUEST['LINK'] != '' || $_REQUEST['PAGE'] != '' || $_REQUEST['LOGIN'] != '' || $_REQUEST['USERNAME'] != '' || $_REQUREST['PASSWORD'] != ''){
 										$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1','filling out hidden form areas (likely bot).')");
 									}else{
 										$comment = array(
@@ -4030,6 +4056,17 @@ function regularboard_shortcode($atts,$content = null){
 												$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1','AKISMET detected you as a spammer.')");
 											} else {
 												if($THREAD == ''){
+													$cleanURL = sanistripents($_REQUEST['URL']);
+													if($cleanURL != ''){
+														$checkimage = getimagesize($cleanURL);
+														if(isset($checkimage['mime'])){
+															$TYPE = 'image';
+															$URL = $cleanURL;
+														}else{
+															$TYPE = '';
+															$URL = '';
+														}
+													}
 													$cleanCOMMENT = $purifier->purify($_REQUEST['COMMENT']);
 													$cleanCOMMENT = substr($cleanCOMMENT,0,$maxbody);
 													$enteredCOMMENT = wpautop($cleanCOMMENT);
@@ -4042,14 +4079,25 @@ function regularboard_shortcode($atts,$content = null){
 														$enteredEMAIL = sanistripents(tripcode(($_REQUEST['EMAIL'])));
 														$enteredEMAIL = substr($enteredEMAIL,0,$maxtext);
 														if(current_user_can('manage_options')){
-															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('',0,'$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','1','2999-11-26 24:59:59')") ;
+															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, URL, TYPE, BOARD, MODERATOR, LAST) VALUES ('',0,'$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$URL','$TYPE','$BOARD','1','2999-11-26 24:59:59')") ;
 														}else{
-															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('',0,'$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','0','2999-11-26 24:59:59')") ;
+															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, URL, TYPE, BOARD, MODERATOR, LAST) VALUES ('',0,'$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$URL','$TYPE','$BOARD','0','2999-11-26 24:59:59')") ;
 														}
 													}else{
 														echo '<h3 class="info">DUPLICATE CONTENT DETECTED - POST DISCARED</h3>';
 													}
 												}elseif($THREAD != '' && $LOCKED == 0){
+													$cleanURL = sanistripents($_REQUEST['URL']);
+													if($cleanURL != ''){
+														$checkimage = getimagesize($cleanURL);
+														if(isset($checkimage['mime'])){
+															$TYPE = 'image';
+															$URL = $cleanURL;
+														}else{
+															$TYPE = 'url';
+															$URL = preg_replace("#((http|https|ftp)://(\S*?\.\S*?))(\s|\;|\)|\]|\[|\{|\}|,|\"|'|:|\<|$|\.\s)#ie","$1",$URL);
+														}
+													}												
 													$enteredSUBJECT = sanistripents($_REQUEST['SUBJECT']);
 													$enteredSUBJECT = substr($enteredSUBJECT,0,$maxtext);
 													$cleanCOMMENT = $purifier->purify($_REQUEST['COMMENT']);
@@ -4062,14 +4110,14 @@ function regularboard_shortcode($atts,$content = null){
 														$enteredEMAIL = sanistripents(tripcode(($_REQUEST['EMAIL'])));
 														$enteredEMAIL = substr($enteredEMAIL,0,$maxtext);
 														if(current_user_can('manage_options')){
-															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('','$THREAD','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','1','$current_timestamp')");
+															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, URL, TYPE, BOARD, MODERATOR, LAST) VALUES ('','$THREAD','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$URL','$TYPE','$BOARD','1','$current_timestamp')");
 															$checkSAGE = strtolower($enteredEMAIL);
 															$checkSTICKY = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE LAST = '9999-12-25 23:59:59' AND ID = '".$THREAD."' LIMIT 1");
 															if($checkSAGE != 'sage' || count($checkSTICKY) != 1){
 																$wpdb->query("UPDATE $regularboard_posts SET LAST = '$current_timestamp' WHERE ID = '$THREAD'");
 															}
 														}else{
-															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('','$THREAD','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','0','$current_timestamp')");
+															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, URL, TYPE, BOARD, MODERATOR, LAST) VALUES ('','$THREAD','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$URL','$TYPE','$BOARD','0','$current_timestamp')");
 															$checkSAGE = strtolower($enteredEMAIL);
 															if($checkSAGE != 'sage'){
 																$wpdb->query("UPDATE $regularboard_posts SET LAST = '$current_timestamp' WHERE ID = '$THREAD'");
@@ -4093,6 +4141,8 @@ function regularboard_shortcode($atts,$content = null){
 							$ID = $parentPosts->ID;
 							$getReplies = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE PARENT = '".$ID."'");
 							$gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."' ORDER BY DATE ASC LIMIT 0,3");
+							$TYPE = $parentPosts->TYPE;
+							$URL = $parentPosts->URL;
 							$MODERATOR = $parentPosts->MODERATOR;
 							$PARENT = $parentPosts->PARENT;
 							$IP = $parentPosts->IP;
@@ -4103,6 +4153,7 @@ function regularboard_shortcode($atts,$content = null){
 							$BOARD = $parentPosts->BOARD;
 							$LAST = $parentPosts->LAST;
 							echo '<div class="op">';
+							if($URL != '' && $TYPE == 'image')echo '<span class="fileinfo">File:<a href="'.$URL.'">'.$URL.'</a></span>';
 							if($LAST == '9999-12-25 23:59:59')echo '<i class="fa fa-thumb-tack"></i> ';
 							if($LAST == '0')echo '<i class="fa fa-lock"></i> ';
 							if($SUBJECT != '')echo '<span class="subject">'.$SUBJECT.'</span>';
@@ -4151,13 +4202,17 @@ function regularboard_shortcode($atts,$content = null){
 								echo '</div>';
 							}
 							echo '</span><section>';
-							
+							if($URL != '' && $TYPE == 'image'){
+								echo '<img class="imageOP" src="'.$URL.'" align="left" height="250" />';
+							}							
 							if($THREAD == '')echo substr($COMMENT,0,$cutoff);
 							if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
 							if($THREAD != '')echo $COMMENT;
 							echo '</section></div>';
 							if(count($gotReplies) > 0 && $THREAD == ''){
 								foreach($gotReplies as $REPLIES){
+									$TYPE = $REPLIES->TYPE;
+									$URL = $REPLIES->URL;
 									$MODERATOR = intval($REPLIES->MODERATOR);
 									$ID = intval($REPLIES->ID);
 									$PARENT = intval($REPLIES->PARENT);
@@ -4167,7 +4222,9 @@ function regularboard_shortcode($atts,$content = null){
 									$SUBJECT = sanistripents($REPLIES->SUBJECT);
 									$COMMENT = $REPLIES->COMMENT;
 									$BOARD = sanistripents($REPLIES->BOARD);							
-									echo '<div class="postcontainer reply" id="'.$ID.'"><span class="OP"><span class="name">';
+									echo '<div class="postcontainer reply" id="'.$ID.'">';
+									if($URL != '' && $TYPE == 'image')echo '<span class="fileinfo">File:<a href="'.$URL.'">'.$URL.'</a></span>';
+									echo '<span class="OP"><span class="name">';
 									if(strtolower($EMAIL) == 'heaven'){echo '';}
 									else{echo 'anonymous';}
 									echo '</span>';
@@ -4201,6 +4258,9 @@ function regularboard_shortcode($atts,$content = null){
 									echo '</div>';
 								}
 									echo '<section>';
+							if($URL != '' && $TYPE == 'image'){
+								echo '<img class="imageREPLY" src="'.$URL.'" align="left" height="125" />';
+							}
 									echo $purifier->purify($COMMENT);
 									echo '</section></div>';								
 								}
@@ -4208,6 +4268,9 @@ function regularboard_shortcode($atts,$content = null){
 						}
 						if($THREAD != ''){
 							foreach($getParentReplies as $parentReplies){
+								$TYPE = $parentReplies->TYPE;
+								$URL = $parentReplies->URL;
+								$IMAGE = '';
 								$MODERATOR = intval($parentReplies->MODERATOR);
 								$ID = intval($parentReplies->ID);
 								$PARENT = intval($parentReplies->PARENT);
@@ -4217,7 +4280,9 @@ function regularboard_shortcode($atts,$content = null){
 								$SUBJECT = sanistripents($parentReplies->SUBJECT);
 								$COMMENT = $parentReplies->COMMENT;
 								$BOARD = sanistripents($parentReplies->BOARD);
-								echo '<div class="postcontainer reply" id="'.$ID.'"><span class="OP"><span class="name">';
+								echo '<div class="postcontainer reply" id="'.$ID.'">';
+								if($URL != '' && $TYPE == 'image')echo '<span class="fileinfo">File:<a href="'.$URL.'">'.$URL.'</a></span>';
+								echo '<span class="OP"><span class="name">';
 								if(strtolower($EMAIL) == 'heaven'){echo '';}
 								else{echo 'anonymous';}
 								echo '</span>';
@@ -4251,7 +4316,9 @@ function regularboard_shortcode($atts,$content = null){
 								echo '</div>';
 							}
 								echo '<section>';
-								
+								if($URL != '' && $TYPE == 'image'){
+									echo '<img class="imageREPLY" src="'.$URL.'" align="left" height="125" />';
+								}
 								echo $purifier->purify($COMMENT);
 
 								echo '</section></div>';
