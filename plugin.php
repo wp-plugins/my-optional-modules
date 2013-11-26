@@ -4264,7 +4264,7 @@ function regularboard_shortcode($atts,$content = null){
 	}
 	if($THREAD != '' || $BOARD != '')echo '</div></div>';
 	if($THREAD != '' || $BOARD != '')echo '<p class="credits">'.$credits.'</p></div>';
-	if($THREAD == '' && $BOARD == '')echo '</div>';
+	if($THREAD == '' && $BOARD == '')echo '</div></div>';
 }
 if(get_option('mommaincontrol_regularboard') == 1)add_shortcode('regularboard','regularboard_shortcode');
 if(get_option('mommaincontrol_regularboard') == 1)add_filter('the_content','do_shortcode','regularboard_shortcode');
