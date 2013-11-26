@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.3.8
+Version: 5.3.8.3.9
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -3896,6 +3896,7 @@ function regularboard_shortcode($atts,$content = null){
 		$getBoards = $wpdb->get_results("SELECT SHORTNAME FROM $regularboard_boards ");
 		echo '<span class="boardlisting textright">';
 		if(count($getBoards) > 0){echo '[';foreach($getBoards as $gotBoards){$BOARDNAME = sanistripents($gotBoards->SHORTNAME);echo '<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDNAME.'</a>';}echo ']';}
+		echo '[<a href="'.get_permalink().'">Home</a>]';
 		if(current_user_can('manage_options')){echo '[<a href="?area=create">Add/Delete/Unban</a>]';}
 		echo '</span>';
 		$getCurrentBoard = $wpdb->get_results("SELECT ID,NAME,SHORTNAME,DESCRIPTION,RULES FROM $regularboard_boards WHERE SHORTNAME = '".$BOARD."' LIMIT 1");
@@ -4006,7 +4007,7 @@ function regularboard_shortcode($atts,$content = null){
 														echo '<h3 class="info">'.esc_attr($postedmessage).'</h3>';
 														$enteredEMAIL = sanistripents(tripcode(($_REQUEST['EMAIL'])));
 														$enteredEMAIL = substr($enteredEMAIL,0,$maxtext);
-														if(current_user_can('manage_options')){ 
+														if(current_user_can('manage_options')){
 															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('',0,'$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','1','2999-11-26 24:59:59')") ;
 														}else{
 															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('',0,'$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','0','2999-11-26 24:59:59')") ;
@@ -4026,15 +4027,15 @@ function regularboard_shortcode($atts,$content = null){
 														echo '<h3 class="info">'.esc_attr($postedmessage).'</h3>';
 														$enteredEMAIL = sanistripents(tripcode(($_REQUEST['EMAIL'])));
 														$enteredEMAIL = substr($enteredEMAIL,0,$maxtext);
-														if(current_user_can('manage_options')){ 
-															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('','$THREAD','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','1','$current_timestamp')") ;
+														if(current_user_can('manage_options')){
+															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('','$THREAD','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','1','$current_timestamp')");
 															$checkSAGE = strtolower($enteredEMAIL);
 															$checkSTICKY = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE LAST = '9999-12-25 23:59:59' AND ID = '".$THREAD."' LIMIT 1");
 															if($checkSAGE != 'sage' || count($checkSTICKY) != 1){
 																$wpdb->query("UPDATE $regularboard_posts SET LAST = '$current_timestamp' WHERE ID = '$THREAD'");
 															}
 														}else{
-															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('','$THREAD','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','0','$current_timestamp')") ;
+															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, BOARD, MODERATOR, LAST) VALUES ('','$THREAD','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$BOARD','0','$current_timestamp')");
 															$checkSAGE = strtolower($enteredEMAIL);
 															if($checkSAGE != 'sage'){
 																$wpdb->query("UPDATE $regularboard_posts SET LAST = '$current_timestamp' WHERE ID = '$THREAD'");
@@ -4121,7 +4122,7 @@ function regularboard_shortcode($atts,$content = null){
 							if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
 							if($THREAD != '')echo $COMMENT;
 							echo '</section></div>';
-							if(count($gotReplies) > 0){
+							if(count($gotReplies) > 0 && $THREAD == ''){
 								foreach($gotReplies as $REPLIES){
 									$MODERATOR = intval($REPLIES->MODERATOR);
 									$ID = intval($REPLIES->ID);
@@ -4247,6 +4248,8 @@ function regularboard_shortcode($atts,$content = null){
 		$getBoards = $wpdb->get_results("SELECT SHORTNAME,NAME,DESCRIPTION FROM $regularboard_boards ");
 		echo '<div class="boardlist">';
 		if(count($getBoards) > 0){
+			echo '<div>';
+			echo '<h3>Boards</h3>';
 			foreach($getBoards as $gotBoards){
 				$BOARDNAME = sanistripents($gotBoards->SHORTNAME);
 				$BOARDLONG = sanistripents($gotBoards->NAME);
@@ -4254,17 +4257,14 @@ function regularboard_shortcode($atts,$content = null){
 				$getBoardPostsPosts = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' ");
 				$getBoardPostsTopics = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT = '0'");
 				echo '
-					<section>
-						<h3><a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDLONG.'</a></h3><p>
-						';
-						if($BOARDDESC != ''){ echo '&mdash; '.$BOARDDESC; }
-					echo '<br /><em>'.count($getBoardPostsPosts).' posts / '.count($getBoardPostsTopics).' topics</p>';
-					echo '</section>';
+					<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDLONG.'</a>';
 				}
+			echo '</div>';
 		}
-		echo '</div>';
 	}
-	echo '</div></div><p class="credits">'.$credits.'</p></div>';
+	if($THREAD != '' || $BOARD != '')echo '</div></div>';
+	if($THREAD != '' || $BOARD != '')echo '<p class="credits">'.$credits.'</p></div>';
+	if($THREAD == '' && $BOARD == '')echo '</div>';
 }
 if(get_option('mommaincontrol_regularboard') == 1)add_shortcode('regularboard','regularboard_shortcode');
 if(get_option('mommaincontrol_regularboard') == 1)add_filter('the_content','do_shortcode','regularboard_shortcode');
