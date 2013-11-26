@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.4
+Version: 5.3.8.5
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -209,6 +209,30 @@ if($mommodule_versionnumbers === true)add_filter('script_loader_src','mom_remove
 
 $momthemetakeover_youtube = esc_url(get_option('MOM_themetakeover_youtubefrontpage'));
 /****************************** SECTION B -/- (B2) Main Functions ******************************/
+function checkdnsbl($ip){
+	//http://snipplr.com/view/64564/
+	$dnsbl_lookup=array(
+		'dnsbl-1.uceprotect.net',
+		'dnsbl-2.uceprotect.net',
+		'dnsbl-3.uceprotect.net',
+		'dnsbl.sorbs.net',
+		'zen.spamhaus.org'
+		);
+	if($ip){
+		$reverse_ip=implode(".",array_reverse(explode(".",$ip)));
+		foreach($dnsbl_lookup as $host){
+			if(checkdnsrr($reverse_ip.".".$host.".","A")){
+				$listed.=$reverse_ip.'.'.$host;
+			}
+		}
+	}
+	if($listed){
+		$DNSBL === true;
+	}else{
+		$DNSBL === false;
+	}
+}
+
 function tripcode($name)
 //http://stackoverflow.com/questions/2422482/how-do-i-create-a-tripcode-system
 {
@@ -3841,6 +3865,11 @@ function regularboard_shortcode($atts,$content = null){
 	$theIP = sanistripents($ip_address);
 	$theIP_s32int = sanistripents(ip2long($ip_address));
 	$theIP_us32str = sanistripents(sprintf("%u",$theIP_s32int));
+	$checkThisIP = long2ip($theIP);
+	checkdnsbl($checkThisIP);
+	if ($DNSBL === true){ 
+		$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1',' being blacklisted by the DNSBL.')");
+	}
 	$QUERY = sanistripents($_SERVER['QUERY_STRING']);
 	$BOARD = sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['board']));
 	$AREA = sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['area']));
@@ -3861,7 +3890,7 @@ function regularboard_shortcode($atts,$content = null){
 			<input type="text" name="DELETETHIS" id="DELETETHIS" placeholder="Shortname of board to delete" />
 			<input type="submit" name="DELETEBOARD" id="DELETEBOARD" value="Delete this board" />';
 			foreach($getUsers as $gotUsers){
-			$userIP = $gotUsers->IP;
+			$userIP = long2ip($gotUsers->IP);
 			$userMESSAGE = $gotUsers->MESSAGE;
 			echo '<span>'.$userIP.' / '.$userMESSAGE.'</span>';
 			echo '<input type="submit" name="UNBAN'.$userIP.'" id="UNBAN'.$userIP.'" value="Unban '.$userIP.'" />';
