@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.6
+Version: 5.3.8.6.1
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -3843,11 +3843,11 @@ function regularboard_shortcode($atts,$content = null){
 			'modcode' => '##MOD',
 			'posting' => '1',
 			'threadsper' => '15',
-			'allowURL' => '1',
+			'allowurl' => '1',
 			'credits' => 'All trademarks and copyrights on this page are owned by their respective parties.  Comments are owned by (and the responsibility of) the Poster.',
 		), $atts)
 	);	
-	$allowURL = intval($allowURL);
+	$allowurl = intval($allowurl);
 	$flood = intval($flood);
 	$credits = $purifier->purify($credits);
 	$nothreads = $purifier->purify($nothreads);
@@ -4027,7 +4027,7 @@ function regularboard_shortcode($atts,$content = null){
 									echo '<input type="hidden" value="" name="USERNAME" />';
 									echo '<input type="hidden" value="" name="PASSWORD" />';
 									echo '<section><label for="EMAIL">E-mail</label><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="E-mail" /></section>';
-									if($allowURL == 1)echo '<section><label for="URL">URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL" /></section>';
+									if($allowURL != 0){echo '<section><label for="URL">URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL" /></section>';}
 									echo '<section><label for="SUBJECT">Subject</label><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section>';
 									echo '<section><label for="COMMENT">Comment</label><textarea id="COMMENT" maxlength="'.$maxbody.'" name="COMMENT" placeholder="Comment"></textarea></section>';
 									echo '<section><label for="FORMSUBMIT" class="submit">Post a new ';if($THREAD == ''){echo 'topic';}elseif($THREAD != ''){echo 'reply';}echo '</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section>';
@@ -4057,16 +4057,21 @@ function regularboard_shortcode($atts,$content = null){
 												$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1','AKISMET detected you as a spammer.')");
 											} else {
 												if($THREAD == ''){
-													$cleanURL = sanistripents($_REQUEST['URL']);
-													if($cleanURL != ''){
-														$checkimage = getimagesize($cleanURL);
-														if(isset($checkimage['mime'])){
-															$TYPE = 'image';
-															$URL = $cleanURL;
-														}else{
-															$TYPE = '';
-															$URL = '';
+													if($allowurl == 1){
+														$cleanURL = sanistripents($_REQUEST['URL']);
+														if($cleanURL != ''){
+															$checkimage = getimagesize($cleanURL);
+															if(isset($checkimage['mime'])){
+																$TYPE = 'image';
+																$URL = $cleanURL;
+															}else{
+																$TYPE = '';
+																$URL = '';
+															}
 														}
+													}else{
+														$TYPE = '';
+														$URL = '';
 													}
 													$cleanCOMMENT = $purifier->purify($_REQUEST['COMMENT']);
 													$cleanCOMMENT = substr($cleanCOMMENT,0,$maxbody);
@@ -4089,16 +4094,21 @@ function regularboard_shortcode($atts,$content = null){
 													}
 												}elseif($THREAD != '' && $LOCKED == 0){
 													$cleanURL = sanistripents($_REQUEST['URL']);
-													if($cleanURL != ''){
-														$checkimage = getimagesize($cleanURL);
-														if(isset($checkimage['mime'])){
-															$TYPE = 'image';
-															$URL = $cleanURL;
-														}else{
-															$TYPE = 'url';
-															$URL = preg_replace("#((http|https|ftp)://(\S*?\.\S*?))(\s|\;|\)|\]|\[|\{|\}|,|\"|'|:|\<|$|\.\s)#ie","$1",$URL);
-														}
-													}												
+													if($allowurl == 1){
+														if($cleanURL != ''){
+															$checkimage = getimagesize($cleanURL);
+															if(isset($checkimage['mime'])){
+																$TYPE = 'image';
+																$URL = $cleanURL;
+															}else{
+																$TYPE = '';
+																$URL = '';
+															}
+														}												
+													}else{
+														$TYPE = '';
+														$URL = '';
+													}
 													$enteredSUBJECT = sanistripents($_REQUEST['SUBJECT']);
 													$enteredSUBJECT = substr($enteredSUBJECT,0,$maxtext);
 													$cleanCOMMENT = $purifier->purify($_REQUEST['COMMENT']);
