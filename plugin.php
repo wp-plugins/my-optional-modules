@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.7
+Version: 5.3.8.7.1
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -4030,8 +4030,11 @@ function regularboard_shortcode($atts,$content = null){
 								if(count($checkLOCK) == 1)$LOCKED = 1;
 								if($LOCKED == 1)echo '<h3 class="readonly"><i class="fa fa-lock"></i> THREAD LOCKED</h3>';
 								if($LOCKED == 0){
-									echo '<form class="topic" name="regularboard_'.$theIP_us32str.'" method="post" action="">';
-									wp_nonce_field('regularboard_'.$theIP_us32str);
+									echo '<form class="topic" name="regularboard" method="post" action="';
+									if($BOARD != '' && $THREAD == '')echo '?board='.$BOARD;
+									if($BOARD != '' && $THREAD != '')echo '?board='.$BOARD.'&amp;thread='.$THREAD;
+									echo '">';
+									wp_nonce_field('regularboard');
 									echo '<input type="hidden" value="" name="LINK" />';
 									echo '<input type="hidden" value="" name="PAGE" />';
 									echo '<input type="hidden" value="" name="LOGIN" />';
