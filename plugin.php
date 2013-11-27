@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.6.1
+Version: 5.3.8.6.2
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -3843,11 +3843,11 @@ function regularboard_shortcode($atts,$content = null){
 			'modcode' => '##MOD',
 			'posting' => '1',
 			'threadsper' => '15',
-			'allowurl' => '1',
+			'enableurl' => '1',
 			'credits' => 'All trademarks and copyrights on this page are owned by their respective parties.  Comments are owned by (and the responsibility of) the Poster.',
 		), $atts)
 	);	
-	$allowurl = intval($allowurl);
+	$enableurl = intval($enableurl);
 	$flood = intval($flood);
 	$credits = $purifier->purify($credits);
 	$nothreads = $purifier->purify($nothreads);
@@ -4027,7 +4027,7 @@ function regularboard_shortcode($atts,$content = null){
 									echo '<input type="hidden" value="" name="USERNAME" />';
 									echo '<input type="hidden" value="" name="PASSWORD" />';
 									echo '<section><label for="EMAIL">E-mail</label><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="E-mail" /></section>';
-									if($allowURL != 0){echo '<section><label for="URL">URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL" /></section>';}
+									if($enableurl != 0){echo '<section><label for="URL">URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL" /></section>';}
 									echo '<section><label for="SUBJECT">Subject</label><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section>';
 									echo '<section><label for="COMMENT">Comment</label><textarea id="COMMENT" maxlength="'.$maxbody.'" name="COMMENT" placeholder="Comment"></textarea></section>';
 									echo '<section><label for="FORMSUBMIT" class="submit">Post a new ';if($THREAD == ''){echo 'topic';}elseif($THREAD != ''){echo 'reply';}echo '</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section>';
@@ -4057,11 +4057,15 @@ function regularboard_shortcode($atts,$content = null){
 												$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1','AKISMET detected you as a spammer.')");
 											} else {
 												if($THREAD == ''){
-													if($allowurl == 1){
+													if($enableurl == 1){
 														$cleanURL = sanistripents($_REQUEST['URL']);
 														if($cleanURL != ''){
-															$checkimage = getimagesize($cleanURL);
-															if(isset($checkimage['mime'])){
+														$path_info = pathinfo($cleanURL);
+														if(getimagesize($cleanURL) !== false){
+															if($path_info['extension'] == 'jpg' ||
+																$path_info['extension'] == 'gif' ||
+																$path_info['extension'] == 'jpeg' ||
+																$path_info['extension'] == 'png'){
 																$TYPE = 'image';
 																$URL = $cleanURL;
 															}else{
@@ -4069,6 +4073,7 @@ function regularboard_shortcode($atts,$content = null){
 																$URL = '';
 															}
 														}
+													}
 													}else{
 														$TYPE = '';
 														$URL = '';
@@ -4094,17 +4099,22 @@ function regularboard_shortcode($atts,$content = null){
 													}
 												}elseif($THREAD != '' && $LOCKED == 0){
 													$cleanURL = sanistripents($_REQUEST['URL']);
-													if($allowurl == 1){
+													if($enableurl == 1){
 														if($cleanURL != ''){
-															$checkimage = getimagesize($cleanURL);
-															if(isset($checkimage['mime'])){
+														$path_info = pathinfo($cleanURL);
+														if(getimagesize($cleanURL) !== false){
+															if($path_info['extension'] == 'jpg' ||
+																$path_info['extension'] == 'gif' ||
+																$path_info['extension'] == 'jpeg' ||
+																$path_info['extension'] == 'png'){
 																$TYPE = 'image';
 																$URL = $cleanURL;
 															}else{
 																$TYPE = '';
 																$URL = '';
 															}
-														}												
+														}	
+													}
 													}else{
 														$TYPE = '';
 														$URL = '';
@@ -4214,7 +4224,7 @@ function regularboard_shortcode($atts,$content = null){
 							}
 							echo '</span><section>';
 							if($URL != '' && $TYPE == 'image'){
-								echo '<img class="imageOP" src="'.$URL.'" align="left" height="250" />';
+								echo $purifier->purify('<img class="imageOP" src="'.$URL.'" align="left" height="250" />');
 							}							
 							if($THREAD == '')echo substr($COMMENT,0,$cutoff);
 							if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
@@ -4270,7 +4280,7 @@ function regularboard_shortcode($atts,$content = null){
 								}
 									echo '<section>';
 							if($URL != '' && $TYPE == 'image'){
-								echo '<img class="imageREPLY" src="'.$URL.'" align="left" height="125" />';
+								echo $purifier->purify('<img class="imageREPLY" src="'.$URL.'" align="left" height="125" />');
 							}
 									echo $purifier->purify($COMMENT);
 									echo '</section></div>';								
@@ -4328,7 +4338,7 @@ function regularboard_shortcode($atts,$content = null){
 							}
 								echo '<section>';
 								if($URL != '' && $TYPE == 'image'){
-									echo '<img class="imageREPLY" src="'.$URL.'" align="left" height="125" />';
+									echo $purifier->purify('<img class="imageREPLY" src="'.$URL.'" align="left" height="125" />');
 								}
 								echo $purifier->purify($COMMENT);
 

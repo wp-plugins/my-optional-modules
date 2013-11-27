@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.7.1
 Tested up to: 3.8-beta-1
-Stable tag: 5.3.8.6.1
+Stable tag: 5.3.8.6.2
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -66,8 +66,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= .5.3.8.6.1 =
-* Regular Board | Bugfix: allowURL changed to allowurl (correctly disables URL/TYPE management on submission if turned off).
+= .5.3.8.6.2 =
+* Regular Board | Further checking on URL if it is an image (and not an image appended with another extension, like .png.php).  
 
 
 = .5 =
