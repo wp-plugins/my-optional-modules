@@ -35,7 +35,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * 4-chan clone
 * Support Gravatar
 * Support Youtube/Youtu.be/image embedding (via URL)
-* Supports DNSBL/Akismet/IPv4 and IPv6 validation (autobans DNSBL/Akismet results, disables posting for IP addresses that aren't IPv4/IPv6 valid)
+* Supports DNSBL/Akismet (required to function)/IPv4 and IPv6 validation (autobans DNSBL/Akismet results, disables posting for IP addresses that aren't IPv4/IPv6 valid)
 * Uses HTMLPurifier/wpautop to cleanse and display comments (meaning users can format their comments)
 * Supports Tripcodes and saging
 * Deleting threads and comments is IP based - no passwords.
