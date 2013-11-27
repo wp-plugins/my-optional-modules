@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.6.2
+Version: 5.3.8.7
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -612,7 +612,7 @@ function mom_exclude_list_categories(){
 	if($mommodule_exclude == 1){
 		get_currentuserinfo();
 		global $user_level;
-		$nofollowCats = '0';
+		$nofollowCats = array('0');
 		if(!is_user_logged_in()){
 			$nofollowCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');	
 		}
@@ -627,11 +627,14 @@ function mom_exclude_list_categories(){
 		$c_1 = rtrim(implode($c1),',');
 		$c11 = explode(',',str_replace(' ','',$c_1));
 		$c11array = array($c11);
+		$array = array('0');
 		$nofollowcats = array_filter($c11);
 	}
 		$category_ids = get_all_category_ids();
 		foreach($category_ids as $cat_id){
-			if(in_array($cat_id, $nofollowcats))continue;
+			if($nofollowcats != ''){
+				if(in_array($cat_id, $nofollowcats))continue;
+			}
 			$cat = get_category($cat_id);
 			$link = get_category_link($cat_id);
 			echo '<li><a href="'.$link.'" title="link to '.$cat->name.'">'.$cat->name.'</a></li>';
@@ -3844,10 +3847,12 @@ function regularboard_shortcode($atts,$content = null){
 			'posting' => '1',
 			'threadsper' => '15',
 			'enableurl' => '1',
+			'enablerep' => '0',
 			'credits' => 'All trademarks and copyrights on this page are owned by their respective parties.  Comments are owned by (and the responsibility of) the Poster.',
 		), $atts)
 	);	
 	$enableurl = intval($enableurl);
+	$enablerep = intval($enablerep);
 	$flood = intval($flood);
 	$credits = $purifier->purify($credits);
 	$nothreads = $purifier->purify($nothreads);
@@ -4005,6 +4010,9 @@ function regularboard_shortcode($atts,$content = null){
 					if($THREAD != ''){echo '<p class="reply">Posting Mode: Reply <a rel="nofollow" href="?board='.$BOARD.'">[Return]</a></p>';}
 					
 					echo '<div class="mainboard"><div class="boardform">';
+					if(filter_var($checkThisIP,FILTER_VALIDATE_IP)){ $IPPASS = true; }
+					elseif(filter_var($checkThisIP,FILTER_VALIDATE_IP,FILTER_FLAG_IPV6)){ $IPPASS = true; }
+					else{ $IPPASS = false;}
 					
 					if($THREAD != '' && count($getParentPosts) > 0 || $THREAD == ''){
 						if($timegateactive === true){
@@ -4013,7 +4021,10 @@ function regularboard_shortcode($atts,$content = null){
 							if($posting != 1){
 								echo '<h3 class="readonly">Read-Only Mode</h3>';
 							}
-							elseif($posting == 1){
+							elseif($posting == 1 && $IPPASS === false){
+								echo '<h3 class="readonly">You are not permitted to post.</h3>';
+							}
+							elseif($posting == 1 && $IPPASS === true){
 								$LOCKED = 0;
 								if($THREAD != '')$checkLOCK = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE LAST = '0' AND ID = '".$THREAD."' LIMIT 1");
 								if(count($checkLOCK) == 1)$LOCKED = 1;
@@ -4027,7 +4038,8 @@ function regularboard_shortcode($atts,$content = null){
 									echo '<input type="hidden" value="" name="USERNAME" />';
 									echo '<input type="hidden" value="" name="PASSWORD" />';
 									echo '<section><label for="EMAIL">E-mail</label><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="E-mail" /></section>';
-									if($enableurl != 0){echo '<section><label for="URL">URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL" /></section>';}
+									if($enableurl == 1 && $THREAD == ''){echo '<section><label for="URL"><i class="fa fa-camera-retro"></i> URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)" /></section>';}
+									if($enablerep == 1 && $THREAD != ''){echo '<section><label for="URL"><i class="fa fa-camera-retro"></i> URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)" /></section>';}
 									echo '<section><label for="SUBJECT">Subject</label><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section>';
 									echo '<section><label for="COMMENT">Comment</label><textarea id="COMMENT" maxlength="'.$maxbody.'" name="COMMENT" placeholder="Comment"></textarea></section>';
 									echo '<section><label for="FORMSUBMIT" class="submit">Post a new ';if($THREAD == ''){echo 'topic';}elseif($THREAD != ''){echo 'reply';}echo '</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section>';
@@ -4061,22 +4073,30 @@ function regularboard_shortcode($atts,$content = null){
 														$cleanURL = sanistripents($_REQUEST['URL']);
 														if($cleanURL != ''){
 														$path_info = pathinfo($cleanURL);
-														if(getimagesize($cleanURL) !== false){
+														if(strpos(strtolower($cleanURL),'youtu.be/')){
+															$VIDEOID = substr($cleanURL,16);
+															$TYPE = 'video';
+															$URL = '<iframe src="http://www.youtube.com/embed/'.sanistripents($VIDEOID).'?loop=1&amp;playlist='.sanistripents($VIDEOID).'&amp;controls=0&amp;showinfo=0&amp;autohide=1" frameborder="0" allowfullscreen></iframe>';
+														}
+														elseif(strpos(strtolower($cleanURL),'youtube.com/watch?v=')){
+															parse_str(parse_url($cleanURL, PHP_URL_QUERY), $VIDEO_VAR);
+															$VIDEOID = $VIDEO_VAR['v'];
+															$TYPE = 'video';
+															$URL = '<iframe src="http://www.youtube.com/embed/'.sanistripents($VIDEOID).'?loop=1&amp;playlist='.sanistripents($VIDEOID).'&amp;controls=0&amp;showinfo=0&amp;autohide=1" frameborder="0" allowfullscreen></iframe>';
+														}														
+														elseif(getimagesize($cleanURL) !== false){
 															if($path_info['extension'] == 'jpg' ||
 																$path_info['extension'] == 'gif' ||
 																$path_info['extension'] == 'jpeg' ||
 																$path_info['extension'] == 'png'){
 																$TYPE = 'image';
 																$URL = $cleanURL;
-															}else{
-																$TYPE = '';
-																$URL = '';
 															}
+														}else{
+															$TYPE = '';
+															$URL = '';
 														}
 													}
-													}else{
-														$TYPE = '';
-														$URL = '';
 													}
 													$cleanCOMMENT = $purifier->purify($_REQUEST['COMMENT']);
 													$cleanCOMMENT = substr($cleanCOMMENT,0,$maxbody);
@@ -4087,7 +4107,11 @@ function regularboard_shortcode($atts,$content = null){
 													$getDuplicate = $wpdb->get_results("SELECT COMMENT FROM $regularboard_posts WHERE COMMENT = '".$checkCOMMENT."' LIMIT 1");
 													if(count($getDuplicate) == 0){
 														echo '<h3 class="info">'.esc_attr($postedmessage).'</h3>';
+														if(filter_var($_REQUEST['EMAIL'],FILTER_VALIDATE_EMAIL)){
+														$enteredEMAIL = sanistripents(($_REQUEST['EMAIL']));
+														}else{
 														$enteredEMAIL = sanistripents(tripcode(($_REQUEST['EMAIL'])));
+														}
 														$enteredEMAIL = substr($enteredEMAIL,0,$maxtext);
 														if(current_user_can('manage_options')){
 															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, URL, TYPE, BOARD, MODERATOR, LAST) VALUES ('',0,'$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$URL','$TYPE','$BOARD','1','2999-11-26 24:59:59')") ;
@@ -4099,26 +4123,34 @@ function regularboard_shortcode($atts,$content = null){
 													}
 												}elseif($THREAD != '' && $LOCKED == 0){
 													$cleanURL = sanistripents($_REQUEST['URL']);
-													if($enableurl == 1){
+													if($enablerep == 1){
 														if($cleanURL != ''){
 														$path_info = pathinfo($cleanURL);
-														if(getimagesize($cleanURL) !== false){
+														if(strpos(strtolower($cleanURL),'youtu.be/')){
+															$VIDEOID = substr($cleanURL,16);
+															$TYPE = 'video';
+															$URL = '<iframe src="http://www.youtube.com/embed/'.sanistripents($VIDEOID).'?loop=1&amp;playlist='.sanistripents($VIDEOID).'&amp;controls=0&amp;showinfo=0&amp;autohide=1" frameborder="0" allowfullscreen></iframe>';
+														}
+														elseif(strpos(strtolower($cleanURL),'youtube.com/watch?v=')){
+															parse_str(parse_url($cleanURL, PHP_URL_QUERY), $VIDEO_VAR);
+															$VIDEOID = $VIDEO_VAR['v'];
+															$TYPE = 'video';
+															$URL = '<iframe src="http://www.youtube.com/embed/'.sanistripents($VIDEOID).'?loop=1&amp;playlist='.sanistripents($VIDEOID).'&amp;controls=0&amp;showinfo=0&amp;autohide=1" frameborder="0" allowfullscreen></iframe>';
+														}														
+														elseif(getimagesize($cleanURL) !== false){
 															if($path_info['extension'] == 'jpg' ||
 																$path_info['extension'] == 'gif' ||
 																$path_info['extension'] == 'jpeg' ||
 																$path_info['extension'] == 'png'){
 																$TYPE = 'image';
 																$URL = $cleanURL;
-															}else{
-																$TYPE = '';
-																$URL = '';
 															}
-														}	
-													}
-													}else{
-														$TYPE = '';
-														$URL = '';
-													}
+														}else{
+															$TYPE = '';
+															$URL = '';
+														}
+														}
+														}
 													$enteredSUBJECT = sanistripents($_REQUEST['SUBJECT']);
 													$enteredSUBJECT = substr($enteredSUBJECT,0,$maxtext);
 													$cleanCOMMENT = $purifier->purify($_REQUEST['COMMENT']);
@@ -4128,7 +4160,11 @@ function regularboard_shortcode($atts,$content = null){
 													$getDuplicate = $wpdb->get_results("SELECT COMMENT FROM $regularboard_posts WHERE COMMENT = '".$checkCOMMENT."' LIMIT 1");
 													if(count($getDuplicate) == 0){
 														echo '<h3 class="info">'.esc_attr($postedmessage).'</h3>';
+														if(filter_var($_REQUEST['EMAIL'],FILTER_VALIDATE_EMAIL)){
+														$enteredEMAIL = sanistripents(($_REQUEST['EMAIL']));
+														}else{
 														$enteredEMAIL = sanistripents(tripcode(($_REQUEST['EMAIL'])));
+														}
 														$enteredEMAIL = substr($enteredEMAIL,0,$maxtext);
 														if(current_user_can('manage_options')){
 															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, URL, TYPE, BOARD, MODERATOR, LAST) VALUES ('','$THREAD','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$URL','$TYPE','$BOARD','1','$current_timestamp')");
@@ -4179,10 +4215,11 @@ function regularboard_shortcode($atts,$content = null){
 							if($LAST == '0')echo '<i class="fa fa-lock"></i> ';
 							if($SUBJECT != '')echo '<span class="subject">'.$SUBJECT.'</span>';
 							echo '<span class="OP"><span class="name">';
-							if(strtolower($EMAIL) == 'heaven'){echo '';}
+							if($EMAIL != ''){echo get_avatar($EMAIL,32);}
+							elseif(strtolower($EMAIL) == 'heaven'){echo '';}
 							else{echo 'anonymous';}
 							echo '</span>';
-							if($EMAIL != '')echo ' <span class="trip">'.$EMAIL.'</span>';
+							if($EMAIL != '')echo ' <span class="trip">';if(filter_var($EMAIL,FILTER_VALIDATE_EMAIL)){}else{echo $EMAIL;} echo'</span>';
 							echo '</span>';
 							if($MODERATOR == 1)echo '<span class="mod">'.$modcode.'</span>';
 							if($LAST != '9999-12-25 23:59:59')echo '<span class="date">'.$DATE.'</span>';
@@ -4225,7 +4262,7 @@ function regularboard_shortcode($atts,$content = null){
 							echo '</span><section>';
 							if($URL != '' && $TYPE == 'image'){
 								echo $purifier->purify('<img class="imageOP" src="'.$URL.'" align="left" height="250" />');
-							}							
+							}elseif($TYPE == 'video' && $URL != ''){echo $URL;}
 							if($THREAD == '')echo substr($COMMENT,0,$cutoff);
 							if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
 							if($THREAD != '')echo $COMMENT;
@@ -4246,10 +4283,11 @@ function regularboard_shortcode($atts,$content = null){
 									echo '<div class="postcontainer reply" id="'.$ID.'">';
 									if($URL != '' && $TYPE == 'image')echo '<span class="fileinfo">File:<a href="'.$URL.'">'.$URL.'</a></span>';
 									echo '<span class="OP"><span class="name">';
-									if(strtolower($EMAIL) == 'heaven'){echo '';}
+									if($EMAIL != ''){echo get_avatar($EMAIL,32);}
+									elseif(strtolower($EMAIL) == 'heaven'){echo '';}
 									else{echo 'anonymous';}
 									echo '</span>';
-									if($EMAIL != '') echo ' <span class="trip">'.$EMAIL.'</span>';
+									if($EMAIL != '') echo ' <span class="trip">';if(filter_var($EMAIL,FILTER_VALIDATE_EMAIL)){}else{echo $EMAIL;} echo'</span>';
 									echo '</span>';
 									if($MODERATOR == 1){echo '<span class="mod">'.$modcode.'</span>';}
 									echo '<span class="date">'.$DATE.'</span><span class="postid">No.'.$ID.'</span>';
@@ -4281,12 +4319,15 @@ function regularboard_shortcode($atts,$content = null){
 									echo '<section>';
 							if($URL != '' && $TYPE == 'image'){
 								echo $purifier->purify('<img class="imageREPLY" src="'.$URL.'" align="left" height="125" />');
-							}
+							}elseif($TYPE == 'video' && $URL != ''){echo $URL;}
 									echo $purifier->purify($COMMENT);
 									echo '</section></div>';								
 								}
 							}
 						}
+						
+						
+						
 						if($THREAD != ''){
 							foreach($getParentReplies as $parentReplies){
 								$TYPE = $parentReplies->TYPE;
@@ -4304,10 +4345,11 @@ function regularboard_shortcode($atts,$content = null){
 								echo '<div class="postcontainer reply" id="'.$ID.'">';
 								if($URL != '' && $TYPE == 'image')echo '<span class="fileinfo">File:<a href="'.$URL.'">'.$URL.'</a></span>';
 								echo '<span class="OP"><span class="name">';
-								if(strtolower($EMAIL) == 'heaven'){echo '';}
+								if($EMAIL != ''){echo get_avatar($EMAIL,32);}
+								elseif(strtolower($EMAIL) == 'heaven'){echo '';}
 								else{echo 'anonymous';}
 								echo '</span>';
-								if($EMAIL != '') echo ' <span class="trip">'.$EMAIL.'</span>';
+								if($EMAIL != '') echo ' <span class="trip">';if(filter_var($EMAIL,FILTER_VALIDATE_EMAIL)){}else{echo $EMAIL;} echo'</span>';
 								echo '</span>';
 								if($MODERATOR == 1){echo '<span class="mod">'.$modcode.'</span>';}
 								echo '<span class="date">'.$DATE.'</span><span class="postid">No.'.$ID.'</span>';
@@ -4339,7 +4381,7 @@ function regularboard_shortcode($atts,$content = null){
 								echo '<section>';
 								if($URL != '' && $TYPE == 'image'){
 									echo $purifier->purify('<img class="imageREPLY" src="'.$URL.'" align="left" height="125" />');
-								}
+								}elseif($TYPE == 'video' && $URL != ''){echo $URL;}
 								echo $purifier->purify($COMMENT);
 
 								echo '</section></div>';
