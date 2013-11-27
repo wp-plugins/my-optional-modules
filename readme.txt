@@ -33,8 +33,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 = Regular Board = 
 * 4-chan clone
-* Support Gravatar
-* Support Youtube/Youtu.be/image embedding (via URL)
+* Supports Gravatar
+* Supports Youtube/Youtu.be/image embedding (via URL)
 * Supports DNSBL/Akismet (required to function)/IPv4 and IPv6 validation (autobans DNSBL/Akismet results, disables posting for IP addresses that aren't IPv4/IPv6 valid)
 * Uses HTMLPurifier/wpautop to cleanse and display comments (meaning users can format their comments)
 * Supports Tripcodes and saging
