@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.7.4
+Version: 5.3.8.7.5
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -657,6 +657,12 @@ function enqueueMOMscriptsFooter(){
 		wp_deregister_script('jquery');
 		wp_register_script('jquery', "http".($_SERVER['SERVER_PORT'] == 443 ? "s" : "")."://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js",'','', null, false);
 		wp_enqueue_script('jquery');
+		
+		$sisyphus = plugins_url().'/my-optional-modules/includes/javascript/sisyphus.js';
+		wp_deregister_script('sisyphus');
+		wp_register_script('sisyphus',$sisyphus,'','',null,false);
+		wp_enqueue_script('sisyphus');
+		
 		if(get_option('MOM_themetakeover_fitvids') != ''){
 			$fitvids = plugins_url().'/my-optional-modules/includes/javascript/fitvids.js';
 			wp_deregister_script('fitvids');
@@ -696,6 +702,11 @@ function enqueueMOMscriptsFooter(){
 			';
 		}			
 		echo 'jQuery(document).ready(function($){';
+		
+		echo '$( function() {
+			$("form").sisyphus();
+		});';
+		
 		if(get_option('mommaincontrol_momja') == 1){
 			if(is_archive() || is_home() || is_search()){
 				echo '
@@ -3947,32 +3958,47 @@ function regularboard_shortcode($atts,$content = null){
 			}else{
 				echo '<h3 class="options">'.$SHORTNAME.' EXISTS</h3>';
 			}
-			}	
+			}
+			echo '</div>';
 		}else{
 			echo '<div class="banned"><h3 class="banned">NOT LOGGED IN.</h3></div></div>';
 		}
-	}elseif($BOARD != ''){
-		$getBoards = $wpdb->get_results("SELECT SHORTNAME FROM $regularboard_boards ");
-		echo '<span class="boardlisting textright">';
-		if(count($getBoards) > 0){echo '[';foreach($getBoards as $gotBoards){$BOARDNAME = sanistripents($gotBoards->SHORTNAME);echo '<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDNAME.'</a>';}echo ']';}
-		echo '[<a href="'.get_permalink().'">Home</a>]';
-		if($ISMODERATOR === true){echo '[<a href="?area=create">Add/Delete/Unban</a>]';}
-		echo '</span>';
+	}
+	elseif($BOARD != ''){
+		
+		// Get Results
+		$getBoards = $wpdb->get_results("SELECT SHORTNAME FROM $regularboard_boards");
 		$getCurrentBoard = $wpdb->get_results("SELECT ID,NAME,SHORTNAME,DESCRIPTION,RULES FROM $regularboard_boards WHERE SHORTNAME = '".$BOARD."' LIMIT 1");
 		$getUser = $wpdb->get_results("SELECT ID,IP,PARENT,BANNED,MESSAGE FROM $regularboard_users WHERE IP = '".$theIP_us32str."' AND BANNED = 1 LIMIT 1");
-		if($THREAD == ''){
-		$postsperpage = intval($threadsper);
-		$targetpage = '?board='.$BOARD;
-		$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0");
-		$totalpages = count($countpages);
-		$results = mysql_escape_string($_GET['results']);
-		if($results){$start = ($results - 1) * $postsperpage;}else{$start = 0;}
-		$getParentPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0 ORDER BY LAST DESC LIMIT $start,$postsperpage");
-		}elseif($THREAD != ''){
-		$getParentPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND ID = '".$THREAD."' AND PARENT = 0 LIMIT 1");
-		$getParentReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = '".$THREAD."'");
-		}
+		if($THREAD == '')$postsperpage = intval($threadsper);
+		if($THREAD == '')$targetpage = '?board='.$BOARD;
+		if($THREAD == '')$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0");
+		if($THREAD == '')$totalpages = count($countpages);
+		if($THREAD == '')$results = mysql_escape_string($_GET['results']);
+		if($THREAD == '')if($results){$start = ($results - 1) * $postsperpage;}else{$start = 0;}
+		if($THREAD == '')$getParentPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0 ORDER BY LAST DESC LIMIT $start,$postsperpage");
+		if($THREAD != '')$getParentPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND ID = '".$THREAD."' AND PARENT = 0 LIMIT 1");
+		if($THREAD != '')$getParentReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = '".$THREAD."'");
 		$getLastPost = $wpdb->get_results("SELECT IP,DATE FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' AND MODERATOR != '1' ORDER BY ID DESC LIMIT 1");
+				
+		// Board listing
+		echo '<span class="boardlisting textright">';
+		if(count($getBoards) > 0){
+			echo '[';
+			foreach($getBoards as $gotBoards){
+				$BOARDNAME = sanistripents($gotBoards->SHORTNAME);
+				echo '
+				<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDNAME.'</a>';
+			}
+			echo ']';
+		}
+		echo '[<a href="'.get_permalink().'">Home</a>]';
+		if($ISMODERATOR === true){
+			echo '[<a href="?area=create">Add/Delete/Unban</a>]';
+		}
+		echo '</span>';
+
+		// Determine time between between the last post and the flood protection time amount
 		if(count($getLastPost) > 0){
 			foreach($getLastPost as $lastPost){
 				$time = $lastPost->DATE;
@@ -3984,147 +4010,92 @@ function regularboard_shortcode($atts,$content = null){
 				}
 			}
 		}
+		
+		// Show board content if the requested board exists
 		if(count($getCurrentBoard) > 0){
-		if(!is_user_logged_in() && $requirelogged == 1){ echo '<h3 class="banned">YOU ARE NOT LOGGED IN.</h3>';}
-		elseif(!is_user_logged_in() && $requirelogged == 0 || is_user_logged_in()){
-			foreach($getCurrentBoard as $gotCurrentBoard){
-				$boardName = sanistripents($gotCurrentBoard->NAME);
-				$boardShort = sanistripents($gotCurrentBoard->SHORTNAME);
-				$boardDescription = $purifier->purify($gotCurrentBoard->DESCRIPTION);
-				$boardrules = $purifier->purify($gotCurrentBoard->RULES);
-				if(count($getUser) > 0){
-					echo '<div class="banned"><h3 class="banned">'.$purifier->purify($bannedmessage).'</h3>';
-					foreach($getUser as $gotUser){
-						$IP = intval($gotUser->IP);
-						$BANNED = intval($gotUser->BANNED);
-						$MESSAGE = sanistripents($gotUser->MESSAGE);
-						if($MESSAGE != '')echo 'Your IP Address, '.$ip_address.' has been banned for '.$MESSAGE.'.';
-					}
-					echo '</div>';
-				}else{
-					if ($DNSBL === true){ 
+		
+			// If set to members only, display this message in place of board content to users who are not logged in.
+			if(!is_user_logged_in() && $requirelogged == 1){
+				echo '<h3 class="banned">YOU ARE NOT LOGGED IN.</h3>';
+			}
+			
+			// Continue if user is logged in or logged in not required
+			elseif(!is_user_logged_in() && $requirelogged == 0 || is_user_logged_in()){
+				
+				// Board content
+				foreach($getCurrentBoard as $gotCurrentBoard){
+					$boardName = sanistripents($gotCurrentBoard->NAME);
+					$boardShort = sanistripents($gotCurrentBoard->SHORTNAME);
+					$boardDescription = $purifier->purify($gotCurrentBoard->DESCRIPTION);
+					$boardrules = $purifier->purify($gotCurrentBoard->RULES);
+					
+					// If user is not banned, check if their IP is blacklisted on the DNSBL.  If it is, autoban them.
+					if ($DNSBL === true)
+					{
 						$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1',' being blacklisted by the DNSBL.')");
 					}
-					echo '<h3 class="boardName">'.$boardName.'</h3>';
-					echo '<p class="boardDescription">'.$boardDescription.'</p>';
-					if($THREAD != ''){echo '<p class="reply">Posting Mode: Reply <a rel="nofollow" href="?board='.$BOARD.'">[Return]</a></p>';}
-					echo '<div class="mainboard"><div class="boardform">';
-					if(filter_var($checkThisIP,FILTER_VALIDATE_IP)){ $IPPASS = true; }
-					elseif(filter_var($checkThisIP,FILTER_VALIDATE_IP,FILTER_FLAG_IPV6)){ $IPPASS = true; }
-					else{ $IPPASS = false;}
-					if($THREAD != '' && count($getParentPosts) > 0 || $THREAD == ''){
-						if($timegateactive === true){
-							echo '<div class="timegate"><h3>'. ($timebetween - $timegate) . ' seconds until you can post again.</h3></div>';
-						}else{
-							if($posting != 1){
-								echo '<h3 class="readonly">Read-Only Mode</h3>';
-							}
-							elseif($posting == 1 && $IPPASS === false){
-								echo '<h3 class="readonly">You are not permitted to post.</h3>';
-							}
-							elseif($posting == 1 && $IPPASS === true){
-								$LOCKED = 0;
-								if($THREAD != '')$checkLOCK = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE LAST = '0' AND ID = '".$THREAD."' LIMIT 1");
-								if(count($checkLOCK) == 1)$LOCKED = 1;
-								if($LOCKED == 1)echo '<h3 class="readonly"><i class="fa fa-lock"></i> THREAD LOCKED</h3>';
-								if($LOCKED == 0){
-									echo '<form class="topic" name="regularboard" method="post" action="';
-									if($BOARD != '' && $THREAD == '')echo '?board='.$BOARD;
-									if($BOARD != '' && $THREAD != '')echo '?board='.$BOARD.'&amp;thread='.$THREAD;
-									echo '">';
-									wp_nonce_field('regularboard');
-									echo '<input type="hidden" value="" name="LINK" />';
-									echo '<input type="hidden" value="" name="PAGE" />';
-									echo '<input type="hidden" value="" name="LOGIN" />';
-									echo '<input type="hidden" value="" name="USERNAME" />';
-									echo '<input type="hidden" value="" name="PASSWORD" />';
-									echo '<section><label for="EMAIL">E-mail</label><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="E-mail" /></section>';
-									if($enableurl == 1 && $THREAD == ''){echo '<section><label for="URL"><i class="fa fa-camera-retro"></i> URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)" /></section>';}
-									if($enablerep == 1 && $THREAD != ''){echo '<section><label for="URL"><i class="fa fa-camera-retro"></i> URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)" /></section>';}
-									echo '<section><label for="SUBJECT">Subject</label><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section>';
-									echo '<section><label for="COMMENT">Comment</label><textarea id="COMMENT" maxlength="'.$maxbody.'" name="COMMENT" placeholder="Comment"></textarea></section>';
-									echo '<section><label for="FORMSUBMIT" class="submit">Post a new ';if($THREAD == ''){echo 'topic';}elseif($THREAD != ''){echo 'reply';}echo '</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section>';
-									echo '</form>';
-								}
-								if(isset($_POST['FORMSUBMIT'])){
-									if($_REQUEST['COMMENT'] == '') {
-										echo '<h3 class="info">CAN\'T SUBMIT AN EMPTY COMMENT</h3>';
-									}
-									elseif($_REQUEST['LINK'] != '' || $_REQUEST['PAGE'] != '' || $_REQUEST['LOGIN'] != '' || $_REQUEST['USERNAME'] != '' || $_REQUREST['PASSWORD'] != ''){
-										$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1','filling out hidden form areas (likely bot).')");
-									}else{
-										$comment = array(
-											'author'    => 'anonymous',
-											'email'     => sanistripents($_REQUEST['EMAIL']),
-											'website'   => '',
-											'body'      => sanistripents($_REQUEST['COMMENT']),
-											'permalink' => '',
-										);
-										$homeLink = esc_url(home_url('/'));
-										$akismetKey = get_option('wordpress_api_key');
-										$akismet = new Akismet($homeLink, $akismetKey, $comment);
-										if($akismet->errorsExist()) {
-											echo"Couldn't connected to Akismet server!";
-										} else {
-											if($akismet->isSpam() && $theIP != '2147483647') {
-												$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1','AKISMET detected you as a spammer.')");
+					
+					// If user is banned, don't go any further.
+					elseif(count($getUser) > 0)
+					{
+						echo '<div class="banned"><h3 class="banned">'.$purifier->purify($bannedmessage).'</h3>';
+						foreach($getUser as $gotUser){
+							$IP = intval($gotUser->IP);
+							$BANNED = intval($gotUser->BANNED);
+							$MESSAGE = sanistripents($gotUser->MESSAGE);
+							if($MESSAGE != '')echo 'Your IP Address, '.$ip_address.' has been banned for '.$MESSAGE.'.';
+						}
+						echo '</div>';
+					}
+					
+					// If user is not banned, and they haven't been listed on the DNSBL, let them view the board content.
+					else
+					{
+					
+					
+									// Form handling
+									if(isset($_POST['FORMSUBMIT']))
+									{
+										if($_REQUEST['COMMENT'] == '') 
+										{
+											echo '<h3 class="info">CAN\'T SUBMIT AN EMPTY COMMENT</h3>';
+										}
+										elseif($_REQUEST['LINK'] != '' || $_REQUEST['PAGE'] != '' || $_REQUEST['LOGIN'] != '' || $_REQUEST['USERNAME'] != '' || $_REQUREST['PASSWORD'] != '')
+										{
+											$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1','filling out hidden form areas (likely bot).')");
+										}
+										else
+										{
+											$comment = array(
+												'author'    => 'anonymous',
+												'email'     => sanistripents($_REQUEST['EMAIL']),
+												'website'   => '',
+												'body'      => sanistripents($_REQUEST['COMMENT']),
+												'permalink' => '',
+											);
+											$homeLink = esc_url(home_url('/'));
+											$akismetKey = get_option('wordpress_api_key');
+											$akismet = new Akismet($homeLink, $akismetKey, $comment);
+											if($akismet->errorsExist()) {
+												echo"Couldn't connected to Akismet server!";
 											} else {
-												if($THREAD == ''){
-													if($enableurl == 1){
+												if($akismet->isSpam() && $theIP != '2147483647'){
+													$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1','AKISMET detected you as a spammer.')");
+												}else{
+													if($THREAD == '' && $enableurl == 1 || $THREAD != ''  && $enablerep == 1)
+													{
 														$cleanURL = sanistripents($_REQUEST['URL']);
-														if($cleanURL != ''){
-														$path_info = pathinfo($cleanURL);
-														if(strpos(strtolower($cleanURL),'youtu.be/')){
-															$VIDEOID = substr($cleanURL,16);
-															$TYPE = 'video';
-															$URL = '<iframe src="http://www.youtube.com/embed/'.sanistripents($VIDEOID).'?loop=1&amp;playlist='.sanistripents($VIDEOID).'&amp;controls=0&amp;showinfo=0&amp;autohide=1" frameborder="0" allowfullscreen></iframe>';
-														}
-														elseif(strpos(strtolower($cleanURL),'youtube.com/watch?v=')){
-															parse_str(parse_url($cleanURL, PHP_URL_QUERY), $VIDEO_VAR);
-															$VIDEOID = $VIDEO_VAR['v'];
-															$TYPE = 'video';
-															$URL = '<iframe src="http://www.youtube.com/embed/'.sanistripents($VIDEOID).'?loop=1&amp;playlist='.sanistripents($VIDEOID).'&amp;controls=0&amp;showinfo=0&amp;autohide=1" frameborder="0" allowfullscreen></iframe>';
-														}														
-														elseif(getimagesize($cleanURL) !== false){
-															if($path_info['extension'] == 'jpg' ||
-																$path_info['extension'] == 'gif' ||
-																$path_info['extension'] == 'jpeg' ||
-																$path_info['extension'] == 'png'){
-																$TYPE = 'image';
-																$URL = $cleanURL;
-															}
-														}else{
-															$TYPE = '';
-															$URL = '';
-														}
-													}
-													}
-													$cleanCOMMENT = $purifier->purify($_REQUEST['COMMENT']);
-													$cleanCOMMENT = substr($cleanCOMMENT,0,$maxbody);
-													$enteredCOMMENT = wpautop($cleanCOMMENT);
-													$enteredSUBJECT = sanistripents($_REQUEST['SUBJECT']);
-													$enteredSUBJECT = substr($enteredSUBJECT,0,$maxtext);
-													$checkCOMMENT = strtolower($enteredCOMMENT);
-													$getDuplicate = $wpdb->get_results("SELECT COMMENT FROM $regularboard_posts WHERE COMMENT = '".$checkCOMMENT."' LIMIT 1");
-													if(count($getDuplicate) == 0){
-														echo '<h3 class="info">'.esc_attr($postedmessage).'</h3>';
-														if(filter_var($_REQUEST['EMAIL'],FILTER_VALIDATE_EMAIL)){
-														$enteredEMAIL = sanistripents(($_REQUEST['EMAIL']));
-														}else{
-														$enteredEMAIL = sanistripents(tripcode(($_REQUEST['EMAIL'])));
-														}
-														$enteredEMAIL = substr($enteredEMAIL,0,$maxtext);
-														if($ISMODERATOR === true){
-															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, URL, TYPE, BOARD, MODERATOR, LAST) VALUES ('',0,'$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$URL','$TYPE','$BOARD','1','$current_timestamp')") ;
-														}else{
-															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, URL, TYPE, BOARD, MODERATOR, LAST) VALUES ('',0,'$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$URL','$TYPE','$BOARD','0','$current_timestamp')") ;
-														}
-													}else{
-														echo '<h3 class="info">DUPLICATE CONTENT DETECTED - POST DISCARED</h3>';
-													}
-												}elseif($THREAD != '' && $LOCKED == 0){
-													$cleanURL = sanistripents($_REQUEST['URL']);
-													if($enablerep == 1){
+														
+														// http://frankkoehl.com/2009/09/http-status-code-curl-php/
+														$ch = curl_init();
+														$opts = array(CURLOPT_RETURNTRANSFER => true,
+														CURLOPT_URL => $cleanURL,
+														CURLOPT_NOBODY => true,
+														CURLOPT_TIMEOUT => 10);
+														curl_setopt_array($ch, $opts);
+														curl_exec($ch);
+														$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+														curl_close($ch);
 														if($cleanURL != ''){
 															$path_info = pathinfo($cleanURL);
 															if(strpos(strtolower($cleanURL),'youtu.be/')){
@@ -4138,7 +4109,7 @@ function regularboard_shortcode($atts,$content = null){
 																$TYPE = 'video';
 																$URL = '<iframe src="http://www.youtube.com/embed/'.sanistripents($VIDEOID).'?loop=1&amp;playlist='.sanistripents($VIDEOID).'&amp;controls=0&amp;showinfo=0&amp;autohide=1" frameborder="0" allowfullscreen></iframe>';
 															}														
-															elseif(getimagesize($cleanURL) !== false){
+															elseif($status == '200' && getimagesize($cleanURL) !== false){
 																if($path_info['extension'] == 'jpg' ||
 																	$path_info['extension'] == 'gif' ||
 																	$path_info['extension'] == 'jpeg' ||
@@ -4152,15 +4123,20 @@ function regularboard_shortcode($atts,$content = null){
 															}
 														}
 													}
-													$enteredSUBJECT = sanistripents($_REQUEST['SUBJECT']);
-													$enteredSUBJECT = substr($enteredSUBJECT,0,$maxtext);
+													if($THREAD != '')$enteredPARENT = intval($THREAD);
+													if($THREAD == '')$enteredPARENT = 0;
 													$cleanCOMMENT = $purifier->purify($_REQUEST['COMMENT']);
 													$cleanCOMMENT = substr($cleanCOMMENT,0,$maxbody);
 													$enteredCOMMENT = wpautop($cleanCOMMENT);
+													$enteredSUBJECT = sanistripents($_REQUEST['SUBJECT']);
+													$enteredSUBJECT = substr($enteredSUBJECT,0,$maxtext);
 													$checkCOMMENT = strtolower($enteredCOMMENT);
-													$getDuplicate = $wpdb->get_results("SELECT COMMENT FROM $regularboard_posts WHERE COMMENT = '".$checkCOMMENT."' LIMIT 1");
+													$getDuplicate = $wpdb->get_results("SELECT COMMENT FROM $regularboard_posts WHERE COMMENT = '".$checkCOMMENT."' AND BOARD = '".$BOARD."' LIMIT 1");
+													$THISPAGE = get_permalink();
+													if($BOARD != '' && $THREAD == '')$REDIRECTO = $THISPAGE.'?board='.$BOARD;
+													if($BOARD != '' && $THREAD != '')$REDIRECTO = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$THREAD;
 													if(count($getDuplicate) == 0){
-														echo '<h3 class="info">'.esc_attr($postedmessage).'</h3>';
+														echo '<h3 class="info">'.esc_attr($postedmessage).'<br />click <a href="'.esc_url($REDIRECTO).'">here</a> if you are not redirected.</h3>';
 														if(filter_var($_REQUEST['EMAIL'],FILTER_VALIDATE_EMAIL)){
 															$enteredEMAIL = sanistripents(($_REQUEST['EMAIL']));
 														}else{
@@ -4168,145 +4144,299 @@ function regularboard_shortcode($atts,$content = null){
 														}
 														$enteredEMAIL = substr($enteredEMAIL,0,$maxtext);
 														if($ISMODERATOR === true){
-															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, URL, TYPE, BOARD, MODERATOR, LAST) VALUES ('','$THREAD','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$URL','$TYPE','$BOARD','1','$current_timestamp')");
-															$checkSAGE = strtolower($enteredEMAIL);
-															$checkSTICKY = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE LAST = '9999-12-25 23:59:59' AND ID = '".$THREAD."' LIMIT 1");
-															if($checkSAGE != 'sage' || count($checkSTICKY) != 1){
-																$wpdb->query("UPDATE $regularboard_posts SET LAST = '$current_timestamp' WHERE ID = '$THREAD'");
-															}
+															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, URL, TYPE, BOARD, MODERATOR, LAST) VALUES ('','$enteredPARENT','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$URL','$TYPE','$BOARD','1','$current_timestamp')") ;
 														}else{
-															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, URL, TYPE, BOARD, MODERATOR, LAST) VALUES ('','$THREAD','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$URL','$TYPE','$BOARD','0','$current_timestamp')");
-															$checkSAGE = strtolower($enteredEMAIL);
-															if($checkSAGE != 'sage'){
-																$wpdb->query("UPDATE $regularboard_posts SET LAST = '$current_timestamp' WHERE ID = '$THREAD'");
-															}											
+															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, URL, TYPE, BOARD, MODERATOR, LAST) VALUES ('','$enteredPARENT','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$URL','$TYPE','$BOARD','0','$current_timestamp')") ;
 														}
 													}else{
-														echo '<h3 class="info">DUPLICATE CONTENT DETECTED - POST DISCARED</h3>';
+														echo '<h3 class="info">DUPLICATE CONTENT DETECTED - POST DISCARED<br />GO BACK AND FIX YOUR COMMENT.</h3>';
 													}
 												}
 											}
 										}
+										echo '<meta http-equiv="refresh" content="5;URL= '.$REDIRECTO.'">';
+									}
+									if(!isset($_POST['FORMSUBMIT']))
+									{
+					
+						echo '<h3 class="boardName">'.$boardName.'</h3>';
+						echo '<p class="boardDescription">'.$boardDescription.'</p>';
+						if($THREAD != ''){echo '<p class="reply">Posting Mode: Reply <a rel="nofollow" href="?board='.$BOARD.'">[Return]</a></p>';}
+						echo '<div class="mainboard"><div class="boardform">';
+						if(filter_var($checkThisIP,FILTER_VALIDATE_IP)){ $IPPASS = true; }
+						elseif(filter_var($checkThisIP,FILTER_VALIDATE_IP,FILTER_FLAG_IPV6)){ $IPPASS = true; }
+						else{ $IPPASS = false;}
+						if($THREAD != '' && count($getParentPosts) > 0 || $THREAD == ''){
+							if($timegateactive === true){
+								echo '<div class="timegate"><h3>'. ($timebetween - $timegate) . ' seconds until you can post again.</h3></div>';
+							}else{
+								if($posting != 1){
+									echo '<h3 class="readonly">Read-Only Mode</h3>';
+								}
+								elseif($posting == 1 && $IPPASS === false){
+									echo '<h3 class="readonly">You are not permitted to post.</h3>';
+								}
+								elseif($posting == 1 && $IPPASS === true){
+								
+									$LOCKED = 0;
+									if($THREAD != '')$checkLOCK = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE LAST = '0' AND ID = '".$THREAD."' LIMIT 1");
+									if(count($checkLOCK) == 1)$LOCKED = 1;
+									if($LOCKED == 1)echo '<h3 class="readonly"><i class="fa fa-lock"></i> THREAD LOCKED</h3>';
+									if($LOCKED == 0){
+										echo '<form class="topic" name="regularboard" method="post" action="';
+										if($BOARD != '' && $THREAD == '')echo '?board='.$BOARD;
+										if($BOARD != '' && $THREAD != '')echo '?board='.$BOARD.'&amp;thread='.$THREAD;
+										echo '">';
+										wp_nonce_field('regularboard');
+										echo '<input type="hidden" value="" name="LINK" />';
+										echo '<input type="hidden" value="" name="PAGE" />';
+										echo '<input type="hidden" value="" name="LOGIN" />';
+										echo '<input type="hidden" value="" name="USERNAME" />';
+										echo '<input type="hidden" value="" name="PASSWORD" />';
+										echo '<section><label for="EMAIL">E-mail</label><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="E-mail" /></section>';
+										if($enableurl == 1 && $THREAD == ''){echo '<section><label for="URL"><i class="fa fa-camera-retro"></i> URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)" /></section>';}
+										if($enablerep == 1 && $THREAD != ''){echo '<section><label for="URL"><i class="fa fa-camera-retro"></i> URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)" /></section>';}
+										echo '<section><label for="SUBJECT">Subject</label><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section>';
+										echo '<section><label for="COMMENT">Comment</label><textarea id="COMMENT" maxlength="'.$maxbody.'" name="COMMENT" placeholder="Comment"></textarea></section>';
+										echo '<section><label for="FORMSUBMIT" class="submit">Post a new ';if($THREAD == ''){echo 'topic';}elseif($THREAD != ''){echo 'reply';}echo '</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section>';
+										echo '</form>';
 									}
 								}
 							}
 						}
-					}
-					echo '</div><div class="boardposts">';
-					if($boardrules != '')echo '<div class="rules">'.$boardrules.'</div>';
-					$totalREPLIES = 0;
-					if(count($getParentPosts) > 0){
-						foreach($getParentPosts as $parentPosts){
-							$ID = $parentPosts->ID;
-							$IAMOP = $parentPosts->IP;
-							$getReplies = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE PARENT = '".$ID."'");
-							$totalREPLIES = count($getReplies);
-							if($totalREPLIES >= 4)$totalREPLYS = $totalREPLIES - 3;
-							if($totalREPLIES >= 3)$totalREPLYS = $totalREPLIES - 3;
-							if($totalREPLIES == 2)$totalREPLYS = $totalREPLIES - 2;
-							if($totalREPLIES == 1)$totalREPLYS = $totalREPLIES - 1;
-							if($totalREPLIES == 0)$totalREPLYS = $totalREPLIES - 0;
-							$gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."' ORDER BY DATE ASC LIMIT $totalREPLYS,3");
-							$TYPE = $parentPosts->TYPE;
-							$URL = $parentPosts->URL;
-							$MODERATOR = $parentPosts->MODERATOR;
-							$PARENT = $parentPosts->PARENT;
-							$IP = $parentPosts->IP;
-							$DATE = $parentPosts->DATE;
-							$EMAIL = $parentPosts->EMAIL;
-							$SUBJECT = $parentPosts->SUBJECT;
-							$COMMENT = $parentPosts->COMMENT;
-							$BOARD = $parentPosts->BOARD;
-							$LAST = $parentPosts->LAST;
-							echo '<div class="op">';
-							if($URL != '' && $TYPE == 'image')echo '<span class="fileinfo">File:<a href="'.$URL.'">'.$URL.'</a></span>';
-							if($LAST == '9999-12-25 23:59:59')echo '<i class="fa fa-thumb-tack"></i> ';
-							if($LAST == '0')echo '<i class="fa fa-lock"></i> ';
-							if($SUBJECT != '')echo '<span class="subject">'.$SUBJECT.'</span>';
-							echo '<span class="OP"><span class="name">';
-							if($EMAIL != ''){echo get_avatar($EMAIL,32);}
-							elseif(strtolower($EMAIL) == 'heaven'){echo '';}
-							else{echo $defaultname;}
-							echo '</span>';
-							if($EMAIL != '')echo ' <span class="trip">';if(filter_var($EMAIL,FILTER_VALIDATE_EMAIL)){}else{echo $EMAIL;} echo'</span>';
-							echo '</span>';
-							if($MODERATOR == 1)echo '<span class="mod">'.$modcode.'</span>';
-							if($LAST != '9999-12-25 23:59:59')echo '<span class="date">'.$DATE.'</span>';
-							echo '<span class="postid">No.'.$ID.' '; 
-							if($THREAD == '')echo '[<a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">Reply</a>] ('.count($getReplies).')';
-							if($IP == $theIP_us32str){
-								echo '<div class="controlpaneluser">';
-								echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'">[Delete]</label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
-									if(isset($_POST['DELETE'.$ID.''])){
-										$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
-										$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
+						echo '</div><div class="boardposts">';
+						if($boardrules != '')echo '<div class="rules">'.$boardrules.'</div>';
+						$totalREPLIES = 0;
+						if(count($getParentPosts) > 0){
+							foreach($getParentPosts as $parentPosts){
+								$ID = $parentPosts->ID;
+								$IAMOP = $parentPosts->IP;
+								$getReplies = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE PARENT = '".$ID."'");
+								$totalREPLIES = count($getReplies);
+								if($totalREPLIES >= 4)$totalREPLYS = $totalREPLIES - 3;
+								if($totalREPLIES >= 3)$totalREPLYS = $totalREPLIES - 3;
+								if($totalREPLIES == 2)$totalREPLYS = $totalREPLIES - 2;
+								if($totalREPLIES == 1)$totalREPLYS = $totalREPLIES - 1;
+								if($totalREPLIES == 0)$totalREPLYS = $totalREPLIES - 0;
+								$gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."' ORDER BY DATE ASC LIMIT $totalREPLYS,3");
+								$TYPE = $parentPosts->TYPE;
+								$URL = $parentPosts->URL;
+								$MODERATOR = $parentPosts->MODERATOR;
+								$PARENT = $parentPosts->PARENT;
+								$IP = $parentPosts->IP;
+								$DATE = $parentPosts->DATE;
+								$EMAIL = $parentPosts->EMAIL;
+								$SUBJECT = $parentPosts->SUBJECT;
+								$COMMENT = $parentPosts->COMMENT;
+								$BOARD = $parentPosts->BOARD;
+								$LAST = $parentPosts->LAST;
+								echo '<div class="op">';
+								if($URL != '' && $TYPE == 'image')echo '<span class="fileinfo">File:<a href="'.$URL.'">'.$URL.'</a></span>';
+								if($LAST == '9999-12-25 23:59:59')echo '<i class="fa fa-thumb-tack"></i> ';
+								if($LAST == '0')echo '<i class="fa fa-lock"></i> ';
+								echo '
+								<span class="OP">';
+								if($SUBJECT != '')echo '<span class="subject">'.$SUBJECT.'</span>';
+								if($EMAIL != ''){
+									echo get_avatar($EMAIL,32);
+								}								
+								echo '<span class="name">';
+								if(strtolower($EMAIL) == 'heaven'){echo '';}
+								else{echo $defaultname;}
+								echo '
+								</span>';
+								if($EMAIL != ''){
+									echo '
+									<span class="trip">';
+									if(filter_var($EMAIL,FILTER_VALIDATE_EMAIL)){
+									}else{
+										echo $EMAIL;
+									} 
+										echo'
+										</span>';
+								}
+								echo '
+								</span>';
+								if($MODERATOR == 1)echo '<span class="mod">'.$modcode.'</span>';
+								if($LAST != '9999-12-25 23:59:59')echo '
+								<span class="date">'.$DATE.'</span>
+								<span class="postid">No.'.$ID.' </span>'; 
+								if($THREAD == '')echo ' [<a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">Reply</a>] ('.count($getReplies).')';
+								if($IP == $theIP_us32str){
+									echo '<div class="controlpaneluser">';
+									echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
+										if(isset($_POST['DELETE'.$ID.''])){
+											$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
+											$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
+										}
+									echo '</div>';
+								}
+								if($ISMODERATOR === true){
+									echo '<div class="controlpanel">';
+									if($LAST != '9999-12-25 23:59:59')echo '<form method="post" class="inline" name="STICKY"><label for="STICKY'.$ID.'"><i class="off fa fa-thumb-tack"></i></label><input type="submit" class="hidden" id="STICKY'.$ID.'" name="STICKY'.$ID.'" /></form>';
+									if(isset($_POST['STICKY'.$ID.'']))$wpdb->query("UPDATE $regularboard_posts SET LAST = '9999-12-25 23:59:59' WHERE ID = '$ID'");
+									if($LAST == '9999-12-25 23:59:59')echo '<form method="post" class="inline" name="UNSTICKY"><label for="UNSTICKY'.$ID.'"><i class="on fa fa-thumb-tack"></i></label><input type="submit" class="hidden" id="UNSTICKY'.$ID.'" name="UNSTICKY'.$ID.'" /></form>';
+									if(isset($_POST['UNSTICKY'.$ID.'']))$wpdb->query("UPDATE $regularboard_posts SET LAST = '$DATE' WHERE ID = '$ID'");
+									if($LAST != '0')echo '<form method="post" class="inline" name="LOCK"><label for="LOCK'.$ID.'"><i class="off fa fa-lock"></i></label><input type="submit" class="hidden" id="LOCK'.$ID.'" name="LOCK'.$ID.'" /></form>';
+									if(isset($_POST['LOCK'.$ID.'']))$wpdb->query("UPDATE $regularboard_posts SET LAST = '0' WHERE ID = '$ID'");
+									if($LAST == '0')echo '<form method="post" class="inline" name="UNLOCK"><label for="UNLOCK'.$ID.'"><i class="on fa fa-lock"></i></label><input type="submit" class="hidden" id="UNLOCK'.$ID.'" name="UNLOCK'.$ID.'" /></form>';
+									if(isset($_POST['UNLOCK'.$ID.'']))$wpdb->query("UPDATE $regularboard_posts SET LAST = '$DATE' WHERE ID = '$ID'");
+									if($MODERATOR != 1){
+										echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
+										echo '<form method="post" class="inline" name="DELETE"><label for="BAN'.$ID.'">[Ban / </label><input type="text" name="MESSAGE" placeholder="Reason" />]<input type="submit" class="hidden" id="BAN'.$ID.'" name="BAN'.$ID.'" /></form>';
+										if(isset($_POST['BAN'.$ID.''])){
+											$MESSAGE = $_REQUEST['MESSAGE'];
+											$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$IP','$ID','1','$MESSAGE')");
+											$wpdb->query("DELETE FROM $regularboard_posts WHERE IP = '".$IP."'");
+										}
+										if(isset($_POST['DELETE'.$ID.''])){
+											$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
+											$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
+										}
 									}
-								echo '</div>';
-							}
-							if($ISMODERATOR === true){
-								echo '<div class="controlpanel">';
-								if($LAST != '9999-12-25 23:59:59')echo '<form method="post" class="inline" name="STICKY"><label for="STICKY'.$ID.'">[+ STICKY]</label><input type="submit" class="hidden" id="STICKY'.$ID.'" name="STICKY'.$ID.'" /></form>';
-								if(isset($_POST['STICKY'.$ID.'']))$wpdb->query("UPDATE $regularboard_posts SET LAST = '9999-12-25 23:59:59' WHERE ID = '$ID'");
-								if($LAST == '9999-12-25 23:59:59')echo '<form method="post" class="inline" name="UNSTICKY"><label for="UNSTICKY'.$ID.'">[- STICKY]</label><input type="submit" class="hidden" id="UNSTICKY'.$ID.'" name="UNSTICKY'.$ID.'" /></form>';
-								if(isset($_POST['UNSTICKY'.$ID.'']))$wpdb->query("UPDATE $regularboard_posts SET LAST = '$DATE' WHERE ID = '$ID'");
-								if($LAST != '0')echo '<form method="post" class="inline" name="LOCK"><label for="LOCK'.$ID.'">[+ LOCK]</label><input type="submit" class="hidden" id="LOCK'.$ID.'" name="LOCK'.$ID.'" /></form>';
-								if(isset($_POST['LOCK'.$ID.'']))$wpdb->query("UPDATE $regularboard_posts SET LAST = '0' WHERE ID = '$ID'");
-								if($LAST == '0')echo '<form method="post" class="inline" name="UNLOCK"><label for="UNLOCK'.$ID.'">[- LOCK]</label><input type="submit" class="hidden" id="UNLOCK'.$ID.'" name="UNLOCK'.$ID.'" /></form>';
-								if(isset($_POST['UNLOCK'.$ID.'']))$wpdb->query("UPDATE $regularboard_posts SET LAST = '$DATE' WHERE ID = '$ID'");
-								if($MODERATOR != 1){
-									echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'">[Delete]</label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
-									echo '<form method="post" class="inline" name="DELETE"><label for="BAN'.$ID.'">[Ban / </label><input type="text" name="MESSAGE" placeholder="Reason" />]<input type="submit" class="hidden" id="BAN'.$ID.'" name="BAN'.$ID.'" /></form>';
-									if(isset($_POST['BAN'.$ID.''])){
-										$MESSAGE = $_REQUEST['MESSAGE'];
-										$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$IP','$ID','1','$MESSAGE')");
-										$wpdb->query("DELETE FROM $regularboard_posts WHERE IP = '".$IP."'");
+									echo '</div>';
+								}
+								
+								if($URL != '' && $TYPE == 'image'){
+									echo $purifier->purify('<img class="imageOP" src="'.$URL.'" height="250" />');
+								}elseif($TYPE == 'video' && $URL != ''){echo $URL;}
+								if($THREAD == '')echo substr($COMMENT,0,$cutoff);
+								if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
+								if($THREAD != '')echo $COMMENT;
+								
+								if($THREAD == ''){
+									if($totalREPLIES >= 4) echo ' <span class="omitted">'.$totalREPLYS.' posts omitted.  Click <a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">here</a> to view.</span>';
+									if($totalREPLIES >= 4) echo '<div id="omitted'.$ID.'"></div>';
+								}
+								
+								
+								if(count($gotReplies) > 0 && $THREAD == ''){
+									foreach($gotReplies as $REPLIES){
+										$TYPE = $REPLIES->TYPE;
+										$URL = $REPLIES->URL;
+										$MODERATOR = intval($REPLIES->MODERATOR);
+										$ID = intval($REPLIES->ID);
+										$PARENT = intval($REPLIES->PARENT);
+										$IP = intval($REPLIES->IP);
+										$DATE = sanistripents($REPLIES->DATE);
+										$EMAIL = sanistripents($REPLIES->EMAIL);
+										$SUBJECT = sanistripents($REPLIES->SUBJECT);
+										$COMMENT = $REPLIES->COMMENT;
+										$BOARD = sanistripents($REPLIES->BOARD);							
+										echo '<div class="reply" id="'.$ID.'">';
+										if($URL != '' && $TYPE == 'image')echo '<span class="fileinfo">File:<a href="'.$URL.'">'.$URL.'</a></span>';
+										echo '
+										<span class="OP">';
+										if($EMAIL != ''){
+											echo get_avatar($EMAIL,32);
+										}										
+										echo '<span class="name">';
+										if(strtolower($EMAIL) == 'heaven'){echo '';}
+										else{echo $defaultname;}
+										if($IP == $IAMOP)echo ' <span class="thisisOP">(OP)</span>';
+										echo '
+										</span>';
+										if($EMAIL != ''){
+											echo ' 
+											<span class="trip">';
+											if(filter_var($EMAIL,FILTER_VALIDATE_EMAIL)){
+											}else{
+												echo $EMAIL;
+											}
+											echo'
+											</span>';
+										}
+										echo '
+										</span>';
+										if($MODERATOR == 1){echo '<span class="mod">'.$modcode.'</span>';}
+										echo '
+										<span class="date">'.$DATE.'</span>
+										<span class="postid">No.'.$ID.'</span>';
+									if($IP == $theIP_us32str){
+											echo '<div class="controlpaneluser">';
+											echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
+												if(isset($_POST['DELETE'.$ID.''])){
+													$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
+													$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
+												}
+											echo '</div>';
+									}								
+									if($ISMODERATOR === true){ 
+										echo '<div class="controlpanel">';
+										if($MODERATOR != 1){
+											echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
+											echo '<form method="post" class="inline" name="DELETE"><label for="BAN'.$ID.'">[Ban / </label><input type="text" name="MESSAGE" placeholder="Reason" />]<input type="submit" class="hidden" id="BAN'.$ID.'" name="BAN'.$ID.'" /></form>';
+											if(isset($_POST['BAN'.$ID.''])){
+												$MESSAGE = $_REQUEST['MESSAGE'];
+												$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$IP','$ID','1','$MESSAGE')");
+											}
+											if(isset($_POST['DELETE'.$ID.''])){
+												$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
+												$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
+											}
+										}
+										echo '</div>';
 									}
-									if(isset($_POST['DELETE'.$ID.''])){
-										$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
-										$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
+										echo '<section>';
+								if($URL != '' && $TYPE == 'image'){
+									echo $purifier->purify('<img class="imageREPLY" src="'.$URL.'" height="125" />');
+								}elseif($TYPE == 'video' && $URL != ''){echo $URL;}
+										if($THREAD != '')echo $purifier->purify($COMMENT);
+										if($THREAD == '')echo substr($COMMENT,0,$cutoff);
+										if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
+										echo '</section></div>';								
 									}
 								}
-								echo '</div>';
 							}
-							echo '</span><section>';
-							if($URL != '' && $TYPE == 'image'){
-								echo $purifier->purify('<img class="imageOP" src="'.$URL.'" align="left" height="250" />');
-							}elseif($TYPE == 'video' && $URL != ''){echo $URL;}
-							if($THREAD == '')echo substr($COMMENT,0,$cutoff);
-							if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
-							if($THREAD != '')echo $COMMENT;
-							if($totalREPLIES >= 4) echo ' <span class="omitted">'.$totalREPLYS.' posts omitted.  Click <a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">here</a> to view.</span>';
-							if($totalREPLIES >= 4) echo '<div id="omitted'.$ID.'"></div>';
 							
-							echo '</section></div>';
-							if(count($gotReplies) > 0 && $THREAD == ''){
-								foreach($gotReplies as $REPLIES){
-									$TYPE = $REPLIES->TYPE;
-									$URL = $REPLIES->URL;
-									$MODERATOR = intval($REPLIES->MODERATOR);
-									$ID = intval($REPLIES->ID);
-									$PARENT = intval($REPLIES->PARENT);
-									$IP = intval($REPLIES->IP);
-									$DATE = sanistripents($REPLIES->DATE);
-									$EMAIL = sanistripents($REPLIES->EMAIL);
-									$SUBJECT = sanistripents($REPLIES->SUBJECT);
-									$COMMENT = $REPLIES->COMMENT;
-									$BOARD = sanistripents($REPLIES->BOARD);							
-									echo '<div class="postcontainer reply" id="'.$ID.'">';
+							
+							
+							if($THREAD != ''){
+								foreach($getParentReplies as $parentReplies){
+									$TYPE = $parentReplies->TYPE;
+									$URL = $parentReplies->URL;
+									$IMAGE = '';
+									$MODERATOR = intval($parentReplies->MODERATOR);
+									$ID = intval($parentReplies->ID);
+									$PARENT = intval($parentReplies->PARENT);
+									$IP = intval($parentReplies->IP);
+									$DATE = sanistripents($parentReplies->DATE);
+									$EMAIL = sanistripents($parentReplies->EMAIL);
+									$SUBJECT = sanistripents($parentReplies->SUBJECT);
+									$COMMENT = $parentReplies->COMMENT;
+									$BOARD = sanistripents($parentReplies->BOARD);
+									echo '<div class="reply" id="'.$ID.'">';
 									if($URL != '' && $TYPE == 'image')echo '<span class="fileinfo">File:<a href="'.$URL.'">'.$URL.'</a></span>';
-									echo '<span class="OP"><span class="name">';
-									if($EMAIL != ''){echo get_avatar($EMAIL,32);}
-									elseif(strtolower($EMAIL) == 'heaven'){echo '';}
+									echo '
+									<span class="OP">';
+									if($EMAIL != ''){
+										echo get_avatar($EMAIL,32);
+									}									
+									echo '<span class="name">';
+									if(strtolower($EMAIL) == 'heaven'){echo '';}
 									else{echo $defaultname;}
-									if($IP == $IAMOP)echo ' <small><sup>(OP)</sup></small>';
-									echo '</span>';
-									if($EMAIL != '') echo ' <span class="trip">';if(filter_var($EMAIL,FILTER_VALIDATE_EMAIL)){}else{echo $EMAIL;} echo'</span>';
-									echo '</span>';
+									if($IP == $IAMOP)echo ' <span class="thisisOP">(OP)</span>';
+									echo '
+									</span>';
+									if($EMAIL != ''){
+										echo ' 
+										<span class="trip">';
+										if(filter_var($EMAIL,FILTER_VALIDATE_EMAIL)){
+										}else{
+											echo $EMAIL;
+										}
+										echo'
+										</span>';
+									}
+									echo '
+									</span>';
 									if($MODERATOR == 1){echo '<span class="mod">'.$modcode.'</span>';}
-									echo '<span class="date">'.$DATE.'</span><span class="postid">No.'.$ID.'</span>';
+									echo '
+									<span class="date">'.$DATE.'</span>
+									<span class="postid">No.'.$ID.'</span>';
 								if($IP == $theIP_us32str){
 										echo '<div class="controlpaneluser">';
-										echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'">[Delete]</label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
+										echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
 											if(isset($_POST['DELETE'.$ID.''])){
 												$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
 												$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
@@ -4316,7 +4446,7 @@ function regularboard_shortcode($atts,$content = null){
 								if($ISMODERATOR === true){ 
 									echo '<div class="controlpanel">';
 									if($MODERATOR != 1){
-										echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'">[Delete]</label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
+										echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
 										echo '<form method="post" class="inline" name="DELETE"><label for="BAN'.$ID.'">[Ban / </label><input type="text" name="MESSAGE" placeholder="Reason" />]<input type="submit" class="hidden" id="BAN'.$ID.'" name="BAN'.$ID.'" /></form>';
 										if(isset($_POST['BAN'.$ID.''])){
 											$MESSAGE = $_REQUEST['MESSAGE'];
@@ -4329,104 +4459,47 @@ function regularboard_shortcode($atts,$content = null){
 									}
 									echo '</div>';
 								}
-									echo '<section>';
-							if($URL != '' && $TYPE == 'image'){
-								echo $purifier->purify('<img class="imageREPLY" src="'.$URL.'" align="left" height="125" />');
-							}elseif($TYPE == 'video' && $URL != ''){echo $URL;}
-									if($THREAD != '')echo $purifier->purify($COMMENT);
-									if($THREAD == '')echo substr($COMMENT,0,$cutoff);
-									if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
-									echo '</section></div>';								
-								}
-							}
-						}
-						
-						
-						
-						if($THREAD != ''){
-							foreach($getParentReplies as $parentReplies){
-								$TYPE = $parentReplies->TYPE;
-								$URL = $parentReplies->URL;
-								$IMAGE = '';
-								$MODERATOR = intval($parentReplies->MODERATOR);
-								$ID = intval($parentReplies->ID);
-								$PARENT = intval($parentReplies->PARENT);
-								$IP = intval($parentReplies->IP);
-								$DATE = sanistripents($parentReplies->DATE);
-								$EMAIL = sanistripents($parentReplies->EMAIL);
-								$SUBJECT = sanistripents($parentReplies->SUBJECT);
-								$COMMENT = $parentReplies->COMMENT;
-								$BOARD = sanistripents($parentReplies->BOARD);
-								echo '<div class="postcontainer reply" id="'.$ID.'">';
-								if($URL != '' && $TYPE == 'image')echo '<span class="fileinfo">File:<a href="'.$URL.'">'.$URL.'</a></span>';
-								echo '<span class="OP"><span class="name">';
-								if($EMAIL != ''){echo get_avatar($EMAIL,32);}
-								elseif(strtolower($EMAIL) == 'heaven'){echo '';}
-								else{echo $defaultname;}
-								if($IP == $IAMOP)echo ' <small><sup>(OP)</sup></small>';
-								echo '</span>';
-								if($EMAIL != '') echo ' <span class="trip">';if(filter_var($EMAIL,FILTER_VALIDATE_EMAIL)){}else{echo $EMAIL;} echo'</span>';
-								echo '</span>';
-								if($MODERATOR == 1){echo '<span class="mod">'.$modcode.'</span>';}
-								echo '<span class="date">'.$DATE.'</span><span class="postid">No.'.$ID.'</span>';
-							if($IP == $theIP_us32str){
-									echo '<div class="controlpaneluser">';
-									echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'">[Delete]</label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
-										if(isset($_POST['DELETE'.$ID.''])){
-											$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
-											$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
-										}
+									
+									if($URL != '' && $TYPE == 'image'){
+										echo $purifier->purify('<img class="imageREPLY" src="'.$URL.'" height="125" />');
+									}elseif($TYPE == 'video' && $URL != ''){echo $URL;}
+									echo $purifier->purify($COMMENT);
+
 									echo '</div>';
-							}								
-							if($ISMODERATOR === true){ 
-								echo '<div class="controlpanel">';
-								if($MODERATOR != 1){
-									echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'">[Delete]</label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
-									echo '<form method="post" class="inline" name="DELETE"><label for="BAN'.$ID.'">[Ban / </label><input type="text" name="MESSAGE" placeholder="Reason" />]<input type="submit" class="hidden" id="BAN'.$ID.'" name="BAN'.$ID.'" /></form>';
-									if(isset($_POST['BAN'.$ID.''])){
-										$MESSAGE = $_REQUEST['MESSAGE'];
-										$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$IP','$ID','1','$MESSAGE')");
-									}
-									if(isset($_POST['DELETE'.$ID.''])){
-										$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
-										$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
-									}
 								}
 								echo '</div>';
+								
 							}
-								echo '<section>';
-								if($URL != '' && $TYPE == 'image'){
-									echo $purifier->purify('<img class="imageREPLY" src="'.$URL.'" align="left" height="125" />');
-								}elseif($TYPE == 'video' && $URL != ''){echo $URL;}
-								echo $purifier->purify($COMMENT);
-
-								echo '</section></div>';
-							}
-						}
-						if($BOARD != '' && $THREAD == ''){
-							$i = 0;
-							$paging = round($totalpages / $postsperpage);
-							if($paging > 0){
-							echo '<div class="pages">Go to page ';
-								while ($i < $paging) {
-									$i++;
-									echo '<a ';if($i == $results){ echo 'class="focus" '; } echo 'href="?board='.$BOARD.'&amp;results='.$i.'">'.$i.'</a>';
+							if($BOARD != '' && $THREAD == ''){
+								$i = 0;
+								$paging = round($totalpages / $postsperpage);
+								if($paging > 0){
+								echo '<div class="pages">Go to page ';
+									while ($i < $paging) {
+										$i++;
+										echo '<a ';if($i == $results){ echo 'class="focus" '; } echo 'href="?board='.$BOARD.'&amp;results='.$i.'">'.$i.'</a>';
+									}
+								echo '</div>';
 								}
-							echo '</div>';
+								echo '</div></div>';
 							}
+							
+						}else{
+							echo '<h3 class="info">'.$nothreads.'</h3>';
 						}
-						
-					}else{
-						echo '<h3 class="info">'.$nothreads.'</h3>';
+					
+					
+					
+					echo '</div></div>';
+					}
 					}
 				}
-			}
-		echo '</div></div>';
 		}
 		}else{
 			echo '<h3 class="banned">'.$noboard.'</h3>';
 		}
-	echo '<p class="credits">'.$credits.'</p></div>';
+	if($THREAD == '')echo '</div></div>';
+	if(!isset($_POST['FORMSUBMIT']))echo '<p class="credits">'.$credits.'</p></div>';
 	}else{
 		$getBoards = $wpdb->get_results("SELECT SHORTNAME,NAME,DESCRIPTION FROM $regularboard_boards ");
 		echo '<div class="boardlist">';
@@ -4442,7 +4515,7 @@ function regularboard_shortcode($atts,$content = null){
 				echo '
 					<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDLONG.'</a>';
 				}
-			echo '</div>';
+			echo '</div></div></div>';
 		}
 	}
 }
