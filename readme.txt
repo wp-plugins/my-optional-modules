@@ -1,6 +1,6 @@
 === My Optional Modules ===
 Contributors: boyevul
-Tags: board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
+Tags: 4chan,gravatar,youtube,DNSBL,akismet,ipv4,ipv6,htmlpurifier,html purifier,tripcode,sage,chan,capcodes,board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.7.1
 Tested up to: 3.8-beta-1
 Stable tag: 5.3.8.7
@@ -30,7 +30,18 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Shortcodes!, a module that adds useful shortcodes for posts and pages.
 * Theme Takeover: Youtube 404; navbar that disables the Wordpress Admin Bar and gives you a bar similar to RES (with limited functionality)
 * Post Voting: Add a vote box to each post via template function. (display top posts with a shortcode).  
-* Regular Board: (requires Akismet) An extremely simple anonymous forum.  Set up boards to post to.  All deployed via shortcode. (Consult official documentation for information)
+
+= Regular Board = 
+* 4-chan clone
+* Support Gravatar
+* Support Youtube/Youtu.be/image embedding (via URL)
+* Supports DNSBL/Akismet/IPv4 and IPv6 validation (autobans DNSBL/Akismet results, disables posting for IP addresses that aren't IPv4/IPv6 valid)
+* Uses HTMLPurifier/wpautop to cleanse and display comments (meaning users can format their comments)
+* Supports Tripcodes and saging
+* Deleting threads and comments is IP based - no passwords.
+* Unlike other *chan scripts, the important details that are inserted into the database are handled server-side, not client side with hidden fields.
+* Capcodes for logged in mods
+* Deployed via [shortcode]
 
 = Tweaks: =
 * Analaytics automatic embedding.
