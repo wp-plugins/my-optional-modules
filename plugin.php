@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.7.2
+Version: 5.3.8.7.3
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -3848,6 +3848,7 @@ function regularboard_shortcode($atts,$content = null){
 			'threadsper' => '15',
 			'enableurl' => '1',
 			'enablerep' => '0',
+			'defaultname' => 'anonymous',
 			'credits' => 'All trademarks and copyrights on this page are owned by their respective parties.  Comments are owned by (and the responsibility of) the Poster.',
 		), $atts)
 	);	
@@ -3857,6 +3858,7 @@ function regularboard_shortcode($atts,$content = null){
 	$credits = $purifier->purify($credits);
 	$nothreads = $purifier->purify($nothreads);
 	$noboard = $purifier->purify($noboard);
+	$defaultname = $purifier->purify($defaultname);
 	$bannedmessage = $purifier->purify($bannedmessage);
 	$postedmessage = $purifier->purify($postedmessage);
 	$modcode = $purifier->purify($modcode);
@@ -3908,7 +3910,7 @@ function regularboard_shortcode($atts,$content = null){
 			}
 			
 			
-			echo '<form method="post" name="OPTIONSFORM">';
+			echo '<form method="post" name="OPTIONSFORM" action="?area=create">';
 			wp_nonce_field('OPTIONSFORM');
 			echo '<input type="text" name="SHORTNAME" id="SHORTNAME" placeholder="Shortname" />
 			<input type="text" name="NAME" id="NAME" placeholder="Expanded board name" />
@@ -4006,7 +4008,10 @@ function regularboard_shortcode($atts,$content = null){
 					if ($DNSBL === true){ 
 						$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1',' being blacklisted by the DNSBL.')");
 					}
-					echo '<h3 class="boardName">'.$boardName.'</h3><p class="boardDescription">'.$boardDescription.'</p>';
+					
+					echo '<h3 class="boardName">'.$boardName.'</h3>';
+					echo '<p class="boardDescription">'.$boardDescription.'</p>';
+					
 					if($THREAD != ''){echo '<p class="reply">Posting Mode: Reply <a rel="nofollow" href="?board='.$BOARD.'">[Return]</a></p>';}
 					
 					echo '<div class="mainboard"><div class="boardform">';
@@ -4068,7 +4073,7 @@ function regularboard_shortcode($atts,$content = null){
 										if($akismet->errorsExist()) {
 											echo"Couldn't connected to Akismet server!";
 										} else {
-											if($akismet->isSpam()) {
+											if($akismet->isSpam() && $theIP != '2147483647') {
 												$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1','AKISMET detected you as a spammer.')");
 											} else {
 												if($THREAD == ''){
@@ -4196,11 +4201,19 @@ function regularboard_shortcode($atts,$content = null){
 					}					
 					echo '</div><div class="boardposts">';
 					if($boardrules != '')echo '<div class="rules">'.$boardrules.'</div>';
+					$totalREPLIES = 0;
 					if(count($getParentPosts) > 0){
 						foreach($getParentPosts as $parentPosts){
 							$ID = $parentPosts->ID;
+							$IAMOP = $parentPosts->IP;
 							$getReplies = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE PARENT = '".$ID."'");
-							$gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."' ORDER BY DATE ASC LIMIT 0,3");
+							$totalREPLIES = count($getReplies);
+							if($totalREPLIES >= 4)$totalREPLYS = $totalREPLIES - 3;
+							if($totalREPLIES >= 3)$totalREPLYS = $totalREPLIES - 3;
+							if($totalREPLIES == 2)$totalREPLYS = $totalREPLIES - 2;
+							if($totalREPLIES == 1)$totalREPLYS = $totalREPLIES - 1;
+							if($totalREPLIES == 0)$totalREPLYS = $totalREPLIES - 0;
+							$gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."' ORDER BY DATE ASC LIMIT $totalREPLYS,3");
 							$TYPE = $parentPosts->TYPE;
 							$URL = $parentPosts->URL;
 							$MODERATOR = $parentPosts->MODERATOR;
@@ -4220,7 +4233,7 @@ function regularboard_shortcode($atts,$content = null){
 							echo '<span class="OP"><span class="name">';
 							if($EMAIL != ''){echo get_avatar($EMAIL,32);}
 							elseif(strtolower($EMAIL) == 'heaven'){echo '';}
-							else{echo 'anonymous';}
+							else{echo $defaultname;}
 							echo '</span>';
 							if($EMAIL != '')echo ' <span class="trip">';if(filter_var($EMAIL,FILTER_VALIDATE_EMAIL)){}else{echo $EMAIL;} echo'</span>';
 							echo '</span>';
@@ -4269,6 +4282,9 @@ function regularboard_shortcode($atts,$content = null){
 							if($THREAD == '')echo substr($COMMENT,0,$cutoff);
 							if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
 							if($THREAD != '')echo $COMMENT;
+							if($totalREPLIES >= 4) echo ' <span class="omitted">'.$totalREPLYS.' posts omitted.  Click <a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">here</a> to view.</span>';
+							if($totalREPLIES >= 4) echo '<div id="omitted'.$ID.'"></div>';
+							
 							echo '</section></div>';
 							if(count($gotReplies) > 0 && $THREAD == ''){
 								foreach($gotReplies as $REPLIES){
@@ -4288,7 +4304,8 @@ function regularboard_shortcode($atts,$content = null){
 									echo '<span class="OP"><span class="name">';
 									if($EMAIL != ''){echo get_avatar($EMAIL,32);}
 									elseif(strtolower($EMAIL) == 'heaven'){echo '';}
-									else{echo 'anonymous';}
+									else{echo $defaultname;}
+									if($IP == $IAMOP)echo ' <small><sup>(OP)</sup></small>';
 									echo '</span>';
 									if($EMAIL != '') echo ' <span class="trip">';if(filter_var($EMAIL,FILTER_VALIDATE_EMAIL)){}else{echo $EMAIL;} echo'</span>';
 									echo '</span>';
@@ -4323,7 +4340,9 @@ function regularboard_shortcode($atts,$content = null){
 							if($URL != '' && $TYPE == 'image'){
 								echo $purifier->purify('<img class="imageREPLY" src="'.$URL.'" align="left" height="125" />');
 							}elseif($TYPE == 'video' && $URL != ''){echo $URL;}
-									echo $purifier->purify($COMMENT);
+									if($THREAD != '')echo $purifier->purify($COMMENT);
+									if($THREAD == '')echo substr($COMMENT,0,$cutoff);
+									if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
 									echo '</section></div>';								
 								}
 							}
@@ -4350,7 +4369,8 @@ function regularboard_shortcode($atts,$content = null){
 								echo '<span class="OP"><span class="name">';
 								if($EMAIL != ''){echo get_avatar($EMAIL,32);}
 								elseif(strtolower($EMAIL) == 'heaven'){echo '';}
-								else{echo 'anonymous';}
+								else{echo $defaultname;}
+								if($IP == $IAMOP)echo ' <small><sup>(OP)</sup></small>';
 								echo '</span>';
 								if($EMAIL != '') echo ' <span class="trip">';if(filter_var($EMAIL,FILTER_VALIDATE_EMAIL)){}else{echo $EMAIL;} echo'</span>';
 								echo '</span>';
