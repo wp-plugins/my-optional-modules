@@ -77,7 +77,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= .5.3.8.7.2 =
+= .5.3.8.7.3 =
 * Regular Board | (Fix) latest 3 replies per post show up properly
 * Regular Board | Minor tweaks
 
