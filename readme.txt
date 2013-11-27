@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: 4chan,gravatar,youtube,DNSBL,akismet,ipv4,ipv6,htmlpurifier,tripcode,sage,chan,capcodes,board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.7.1
 Tested up to: 3.8-beta-1
-Stable tag: 5.3.8.7.3
+Stable tag: 5.3.8.7.4
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -33,9 +33,10 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 = Regular Board = 
 * 4-chan clone
+* Can set board to private (logged in users only)
 * Supports Gravatar
 * Supports Youtube/Youtu.be/image embedding (via URL)
-* Supports DNSBL/Akismet (required to function)/IPv4 and IPv6 validation (autobans DNSBL/Akismet results, disables posting for IP addresses that aren't IPv4/IPv6 valid)
+* Supports DNSBL/Akismet/IPv4 and IPv6 validation (autobans DNSBL/Akismet results, disables posting for IP addresses that aren't IPv4/IPv6 valid)
 * Uses HTMLPurifier/wpautop to cleanse and display comments (meaning users can format their comments)
 * Supports Tripcodes and saging
 * Deleting threads and comments is IP based - no passwords.
@@ -77,9 +78,10 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= .5.3.8.7.3 =
-* Regular Board | (Fix) latest 3 replies per post show up properly
-* Regular Board | Minor tweaks
+= .5.3.8.7.4 =
+* Regular Board | Added requirelogged, which allows the moderator to set the board to only be viewable if logged in.
+* Regular Board | Removed flood protection for moderators.
+* Regular Board | flood="" changed to timebetween="" (because for whatever reason, the script was not handling it properly).
 
 
 
