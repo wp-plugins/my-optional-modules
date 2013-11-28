@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.7.5
+Version: 5.3.8.7.5.1
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -3978,7 +3978,6 @@ function regularboard_shortcode($atts,$content = null){
 		if($THREAD == '')if($results){$start = ($results - 1) * $postsperpage;}else{$start = 0;}
 		if($THREAD == '')$getParentPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0 ORDER BY LAST DESC LIMIT $start,$postsperpage");
 		if($THREAD != '')$getParentPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND ID = '".$THREAD."' AND PARENT = 0 LIMIT 1");
-		if($THREAD != '')$getParentReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = '".$THREAD."'");
 		$getLastPost = $wpdb->get_results("SELECT IP,DATE FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' AND MODERATOR != '1' ORDER BY ID DESC LIMIT 1");
 				
 		// Board listing
@@ -4166,7 +4165,7 @@ function regularboard_shortcode($atts,$content = null){
 						if(filter_var($checkThisIP,FILTER_VALIDATE_IP)){ $IPPASS = true; }
 						elseif(filter_var($checkThisIP,FILTER_VALIDATE_IP,FILTER_FLAG_IPV6)){ $IPPASS = true; }
 						else{ $IPPASS = false;}
-						if($THREAD != '' && count($getParentPosts) > 0 || $THREAD == ''){
+						if(count($getParentPosts) > 0){
 							if($timegateactive === true){
 								echo '<div class="timegate"><h3>'. ($timebetween - $timegate) . ' seconds until you can post again.</h3></div>';
 							}else{
@@ -4208,17 +4207,19 @@ function regularboard_shortcode($atts,$content = null){
 						if($boardrules != '')echo '<div class="rules">'.$boardrules.'</div>';
 						$totalREPLIES = 0;
 						if(count($getParentPosts) > 0){
+							// Start board loop
 							foreach($getParentPosts as $parentPosts){
 								$ID = $parentPosts->ID;
 								$IAMOP = $parentPosts->IP;
-								$getReplies = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE PARENT = '".$ID."'");
+								$getReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."'");
 								$totalREPLIES = count($getReplies);
 								if($totalREPLIES >= 4)$totalREPLYS = $totalREPLIES - 3;
 								if($totalREPLIES >= 3)$totalREPLYS = $totalREPLIES - 3;
 								if($totalREPLIES == 2)$totalREPLYS = $totalREPLIES - 2;
 								if($totalREPLIES == 1)$totalREPLYS = $totalREPLIES - 1;
 								if($totalREPLIES == 0)$totalREPLYS = $totalREPLIES - 0;
-								$gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."' ORDER BY DATE ASC LIMIT $totalREPLYS,3");
+								if($THREAD == '')$gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."' ORDER BY DATE ASC LIMIT $totalREPLYS,3");
+								if($THREAD != '')$gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."' ORDER BY LAST DESC");
 								$TYPE = $parentPosts->TYPE;
 								$URL = $parentPosts->URL;
 								$MODERATOR = $parentPosts->MODERATOR;
@@ -4239,7 +4240,7 @@ function regularboard_shortcode($atts,$content = null){
 								if($SUBJECT != '')echo '<span class="subject">'.$SUBJECT.'</span>';
 								if($EMAIL != ''){
 									echo get_avatar($EMAIL,32);
-								}								
+								}				
 								echo '<span class="name">';
 								if(strtolower($EMAIL) == 'heaven'){echo '';}
 								else{echo $defaultname;}
@@ -4296,7 +4297,6 @@ function regularboard_shortcode($atts,$content = null){
 									}
 									echo '</div>';
 								}
-								
 								if($URL != '' && $TYPE == 'image'){
 									echo $purifier->purify('<img class="imageOP" src="'.$URL.'" height="250" />');
 								}elseif($TYPE == 'video' && $URL != ''){echo $URL;}
@@ -4308,9 +4308,7 @@ function regularboard_shortcode($atts,$content = null){
 									if($totalREPLIES >= 4) echo ' <span class="omitted">'.$totalREPLYS.' posts omitted.  Click <a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">here</a> to view.</span>';
 									if($totalREPLIES >= 4) echo '<div id="omitted'.$ID.'"></div>';
 								}
-								
-								
-								if(count($gotReplies) > 0 && $THREAD == ''){
+								if(count($gotReplies) > 0){
 									foreach($gotReplies as $REPLIES){
 										$TYPE = $REPLIES->TYPE;
 										$URL = $REPLIES->URL;
@@ -4378,97 +4376,16 @@ function regularboard_shortcode($atts,$content = null){
 										echo '</div>';
 									}
 										echo '<section>';
-								if($URL != '' && $TYPE == 'image'){
-									echo $purifier->purify('<img class="imageREPLY" src="'.$URL.'" height="125" />');
-								}elseif($TYPE == 'video' && $URL != ''){echo $URL;}
-										if($THREAD != '')echo $purifier->purify($COMMENT);
-										if($THREAD == '')echo substr($COMMENT,0,$cutoff);
-										if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
-										echo '</section></div>';								
-									}
-								}
-							}
-							
-							
-							
-							if($THREAD != ''){
-								foreach($getParentReplies as $parentReplies){
-									$TYPE = $parentReplies->TYPE;
-									$URL = $parentReplies->URL;
-									$IMAGE = '';
-									$MODERATOR = intval($parentReplies->MODERATOR);
-									$ID = intval($parentReplies->ID);
-									$PARENT = intval($parentReplies->PARENT);
-									$IP = intval($parentReplies->IP);
-									$DATE = sanistripents($parentReplies->DATE);
-									$EMAIL = sanistripents($parentReplies->EMAIL);
-									$SUBJECT = sanistripents($parentReplies->SUBJECT);
-									$COMMENT = $parentReplies->COMMENT;
-									$BOARD = sanistripents($parentReplies->BOARD);
-									echo '<div class="reply" id="'.$ID.'">';
-									if($URL != '' && $TYPE == 'image')echo '<span class="fileinfo">File:<a href="'.$URL.'">'.$URL.'</a></span>';
-									echo '
-									<span class="OP">';
-									if($EMAIL != ''){
-										echo get_avatar($EMAIL,32);
-									}									
-									echo '<span class="name">';
-									if(strtolower($EMAIL) == 'heaven'){echo '';}
-									else{echo $defaultname;}
-									if($IP == $IAMOP)echo ' <span class="thisisOP">(OP)</span>';
-									echo '
-									</span>';
-									if($EMAIL != ''){
-										echo ' 
-										<span class="trip">';
-										if(filter_var($EMAIL,FILTER_VALIDATE_EMAIL)){
-										}else{
-											echo $EMAIL;
-										}
-										echo'
-										</span>';
-									}
-									echo '
-									</span>';
-									if($MODERATOR == 1){echo '<span class="mod">'.$modcode.'</span>';}
-									echo '
-									<span class="date">'.$DATE.'</span>
-									<span class="postid">No.'.$ID.'</span>';
-								if($IP == $theIP_us32str){
-										echo '<div class="controlpaneluser">';
-										echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
-											if(isset($_POST['DELETE'.$ID.''])){
-												$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
-												$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
-											}
-										echo '</div>';
-								}								
-								if($ISMODERATOR === true){ 
-									echo '<div class="controlpanel">';
-									if($MODERATOR != 1){
-										echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
-										echo '<form method="post" class="inline" name="DELETE"><label for="BAN'.$ID.'">[Ban / </label><input type="text" name="MESSAGE" placeholder="Reason" />]<input type="submit" class="hidden" id="BAN'.$ID.'" name="BAN'.$ID.'" /></form>';
-										if(isset($_POST['BAN'.$ID.''])){
-											$MESSAGE = $_REQUEST['MESSAGE'];
-											$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$IP','$ID','1','$MESSAGE')");
-										}
-										if(isset($_POST['DELETE'.$ID.''])){
-											$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
-											$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
-										}
-									}
-									echo '</div>';
-								}
-									
 									if($URL != '' && $TYPE == 'image'){
 										echo $purifier->purify('<img class="imageREPLY" src="'.$URL.'" height="125" />');
 									}elseif($TYPE == 'video' && $URL != ''){echo $URL;}
-									echo $purifier->purify($COMMENT);
-
-									echo '</div>';
+											if($THREAD != '')echo $purifier->purify($COMMENT);
+											if($THREAD == '')echo substr($COMMENT,0,$cutoff);
+											if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
+											echo '</section></div>';								
+									}
 								}
 								echo '</div>';
-								
 							}
 							if($BOARD != '' && $THREAD == ''){
 								$i = 0;
@@ -4483,14 +4400,10 @@ function regularboard_shortcode($atts,$content = null){
 								}
 								echo '</div></div>';
 							}
-							
 						}else{
 							echo '<h3 class="info">'.$nothreads.'</h3>';
 						}
-					
-					
-					
-					echo '</div></div>';
+						if($THREAD != '')echo '</div></div>';
 					}
 					}
 				}
@@ -4498,7 +4411,6 @@ function regularboard_shortcode($atts,$content = null){
 		}else{
 			echo '<h3 class="banned">'.$noboard.'</h3>';
 		}
-	if($THREAD == '')echo '</div></div>';
 	if(!isset($_POST['FORMSUBMIT']))echo '<p class="credits">'.$credits.'</p></div>';
 	}else{
 		$getBoards = $wpdb->get_results("SELECT SHORTNAME,NAME,DESCRIPTION FROM $regularboard_boards ");
