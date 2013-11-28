@@ -140,6 +140,14 @@
 	.off{color:#ac1414;font-weight:500;}
 	.on{color:#23ac14;font-weight:500;}
 	.on:hover,.off:hover{font-weight:800;color:#000;}
+	
+	.mycontrols{overflow:hidden;position:absolute;z-index:999;display:block;margin:0;font-size:12px;line-height:24px;width:150px;height:25px;text-indent:5px;background-color:#103251;color:#e5f2ff;display:block;}
+	.mycontrols:hover{overflow:visible;color:#103251;background-color:#e5f2ff;cursor:pointer;height:150px;overflow:none;width:480px;}
+	.mycontrols div{clear:both;width:150px;overflow:hidden;}
+	.mycontrols div a{display:block;width:150px;height:100%;}
+	.mycontrols div .attachedcomment{display:none;visibility:hidden;}
+	.mycontrols div:hover .attachedcomment{position:absolute;top:0;left:155px;display:block;visibility:visible;width:300px;background-color:#fff;margin:5px;padding:5px;font-size:10px;line-height:12px;}
+	
 	.boardDisplay{overflow-y:auto;overflow-x:hidden;display:block;background-color:#f2f8ff;color:#252523;border:1px solid #201f0f;text-shadow:none;width:95%;margin:10px auto;box-shadow: #c1ddfa .01em .01em 0,#c1ddfa .02em .02em 0,#c1ddfa .03em .03em 0,#c1ddfa .04em .04em 0,#c1ddfa .05em .05em 0,#c1ddfa .06em .06em 0,#c1ddfa .07em .07em 0, #c1ddfa .08em .08em 0,#c1ddfa .09em .09em 0,#c1ddfa .1em .1em 0;}
 	.boardDisplay .avatar-32{float:left;border-radius:3px;margin:-5px 5px;}
 	.boardDisplay .boardlist div {clear:both;width:95%;background-color:#fff;border:1px solid #133453;padding:0;overflow-y:auto;overflow-x:hidden;margin:5px auto;}
@@ -147,7 +155,14 @@
 	.boardDisplay .boardlist div h3{width:100%;text-indent:15px;background-color:#eaf5ff;margin:0 auto;padding:5px 0;color:#0e263c;border-bottom:1px solid #3e7cb6;}
 	.boardDisplay .boardlist div a{float:left;margin:15px;min-width:100px;border:0;text-decoration:none;}
 	.boardDisplay .boardlist div a:hover{text-decoration:underline;}
-	.boardDisplay .boardlisting{background-color:#f1f1f1;width:100%;padding:5px 0;font-size:12px;line-height:14px;border-bottom:1px solid #3b3c3d;display:block;}
+	.boardDisplay .boardlisting{background-color:#f1f1f1;padding:5px 0;font-size:12px;line-height:16px;border-bottom:1px solid #3b3c3d;display:block;height:14px;overflow:hidden;
+	margin-left:150px;
+	width: -moz-calc(100% - 150px);
+	width: -webkit-calc(100% - 150px);
+	width: -o-calc(100% - 150px);
+	width: calc(100% - 150px);
+	}
+	.boardDisplay .active{border:1px dotted #000;background-color:#fff0f0 !important;}
 	.boardDisplay .pages{padding:5px;clear:both;width:100%;margin:0 5px;text-align:center;font-size:10px;}
 	.boardDisplay .pages a{margin:5px;}
 	.boardDisplay .pages a.focus{background-color:#000;padding:2px;color:#fff;}
