@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.8
+Version: 5.3.8.8.1
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -67,7 +67,7 @@ $config = HTMLPurifier_Config::createDefault();
 $purifier = new HTMLPurifier($config);
 $my_optional_modules_passwords_salt = get_option('mom_passwords_salt');
 $passwordField = 0;
-if(function_exists('akismet_admin_init')){require_once('Akismet.class.php');}
+if(function_exists('akismet_admin_init')){require_once('akismet.class.php');}
 /****************************** SECTION B -/- (B0) Install ******************************/
 register_activation_hook(__FILE__,'my_optional_modules_main_control_install');
 add_action('wp','enqueueMOMscriptsFooter');
