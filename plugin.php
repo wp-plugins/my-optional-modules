@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.8.1
+Version: 5.3.8.9
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -387,8 +387,8 @@ function enqueueMOMscriptsFooter(){
 			ga(\'send\',\'pageview\');
 			';
 		}			
+
 		echo 'jQuery(document).ready(function($){';
-		
 		echo '$( function() {
 			$("form").sisyphus();
 		});';
@@ -3673,6 +3673,12 @@ function regularboard_shortcode($atts,$content = null){
 		if($THREAD != '')$getParentPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND ID = '".$THREAD."' AND PARENT = 0 LIMIT 1");
 		$getLastPost = $wpdb->get_results("SELECT IP,DATE,ID,MODERATOR FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' ORDER BY ID DESC LIMIT 1");
 		$getLastPosts = $wpdb->get_results("SELECT ID,PARENT,BOARD,COMMENT,SUBJECT,TYPE,URL,DATE FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' ORDER BY ID DESC LIMIT 5");
+		
+		if($THREAD != '')$countimgresults = $wpdb->get_results("SELECT ID from $regularboard_posts WHERE TYPE = 'image' AND PARENT = '".$THREAD."'");
+		if($THREAD != '')$countrepresults = $wpdb->get_results("SELECT ID from $regularboard_posts WHERE PARENT = '".$THREAD."'");
+		if($THREAD != '')$THREADREPLIES = count($countrepresults);
+		if($THREAD != '')$THREADIMGS = count($countimgresults);
+
 		echo '
 		<div class="left mycontrols">
 			<i class="fa fa-plus-square"></i> User Menu';
@@ -3870,7 +3876,6 @@ function regularboard_shortcode($atts,$content = null){
 												$checkCOMMENT = strtolower($enteredCOMMENT);
 												$getDuplicate = $wpdb->get_results("SELECT COMMENT FROM $regularboard_posts WHERE COMMENT = '".$checkCOMMENT."' AND BOARD = '".$BOARD."' LIMIT 1");
 												if(count($getDuplicate) == 0){
-													echo '<h3 class="info">'.esc_attr($postedmessage).'<br />click <a href="'.esc_url($REDIRECTO).'">here</a> if you are not redirected.</h3>';
 													if(filter_var($_REQUEST['EMAIL'],FILTER_VALIDATE_EMAIL)){
 														$enteredEMAIL = sanistripents(($_REQUEST['EMAIL']));
 													}else{
@@ -3883,19 +3888,22 @@ function regularboard_shortcode($atts,$content = null){
 														$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, URL, TYPE, BOARD, MODERATOR, LAST) VALUES ('','$enteredPARENT','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$URL','$TYPE','$BOARD','0','$current_timestamp')") ;
 													}
 														if($THREAD != '' && $LAST != '9999-12-25 23:59:59' && strtolower($enteredEMAIL) != 'sage'){
-															$wpdb->query("UPDATE $regularboard_posts SET LAST = '$current_timestamp' WHERE ID = '$ID'");
+															$wpdb->query("UPDATE $regularboard_posts SET LAST = '$current_timestamp' WHERE ID = '$THREAD'");
 														}
 														
 												}else{
-													echo '<h3 class="info">DUPLICATE CONTENT DETECTED - POST DISCARED<br />GO BACK AND FIX YOUR COMMENT.</h3>';
+													echo '<h3 class="info">DUPLICATE CONTENT DETECTED - POST DISCARED<br />GO BACK AND FIX YOUR COMMENT.</h3></div></div></div>';
 												}
 											}
 										}
+										$LAST = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE COMMENT = '".$enteredCOMMENT."' LIMIT 1");
 										$THISPAGE = get_permalink();
-										if(strtolower($enteredEMAIL) == 'noko' && $THREAD != ''){$REDIRECTO = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$THREAD;}
-										elseif(strtolower($enteredEMAIL) == 'noko' && $THREAD == ''){$REDIRECTO = $THISPAGE.'?board='.$BOARD;}
-										elseif($BOARD != '' && $THREAD == '' && strtolower($enteredEMAIL) != 'noko'){$REDIRECTO = $THISPAGE.'?board='.$BOARD;}
-										elseif($BOARD != '' && $THREAD != '' && strtolower($enteredEMAIL) != 'noko'){$REDIRECTO = $THISPAGE.'?board='.$BOARD;}
+										foreach($LAST as $LATEST){
+										$IDGOTO = $LATEST->ID;
+										if($BOARD != '' && $THREAD == ''){$REDIRECTO = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$IDGOTO;}
+										}
+										if($BOARD != '' && $THREAD != ''){$REDIRECTO = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$THREAD;;}
+										echo '<h3 class="info">'.esc_attr($postedmessage).'<br />click <a href="'.esc_url($REDIRECTO).'">here</a> if you are not redirected.</h3></div></div></div>';
 										if(count($getDuplicate) == 0){echo '<meta http-equiv="refresh" content="5;URL= '.$REDIRECTO.'">';}
 									}
 									if(!isset($_POST['FORMSUBMIT']))
@@ -3930,7 +3938,7 @@ function regularboard_shortcode($atts,$content = null){
 										echo '<form class="topic" name="regularboard" method="post" action="';
 										if($BOARD != '' && $THREAD == '')echo '?board='.$BOARD;
 										if($BOARD != '' && $THREAD != '')echo '?board='.$BOARD.'&amp;thread='.$THREAD;
-										echo '">';
+										echo '" id="COMMENTFORM">';
 										wp_nonce_field('regularboard');
 										echo '<input type="hidden" value="" name="LINK" />';
 										echo '<input type="hidden" value="" name="PAGE" />';
@@ -3941,6 +3949,8 @@ function regularboard_shortcode($atts,$content = null){
 										if($enableurl == 1 && $THREAD == ''){echo '<section><label for="URL"><i class="fa fa-camera-retro"></i> URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)" /></section>';}
 										if($enablerep == 1 && $THREAD != ''){echo '<section><label for="URL"><i class="fa fa-camera-retro"></i> URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)" /></section>';}
 										echo '<section><label for="SUBJECT">Subject</label><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section>';
+										echo '<script src="//tinymce.cachefly.net/4.0/tinymce.min.js"></script>';
+										echo '<script>tinymce.init({selector:\'textarea#COMMENT\'});</script>';
 										echo '<section><label for="COMMENT">Comment</label><textarea id="COMMENT" maxlength="'.$maxbody.'" name="COMMENT" placeholder="Comment"></textarea></section>';
 										echo '<section><label for="FORMSUBMIT" class="submit">Post a new ';if($THREAD == ''){echo 'topic';}elseif($THREAD != ''){echo 'reply';}echo '</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section>';
 										echo '</form>';
@@ -3966,8 +3976,9 @@ function regularboard_shortcode($atts,$content = null){
 								if($totalREPLIES == 1)$totalREPLYS = $totalREPLIES - 1;
 								if($totalREPLIES == 0)$totalREPLYS = $totalREPLIES - 0;
 								if($THREAD == '')$gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."' ORDER BY DATE ASC LIMIT $totalREPLYS,3");
-								if($THREAD != '')$gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."' ORDER BY LAST DESC");
+								if($THREAD != '')$gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."' ORDER BY LAST ASC");
 								$TYPE = $parentPosts->TYPE;
+								if($TYPE == 'image')$THREADIMGS++;
 								$URL = $parentPosts->URL;
 								$MODERATOR = $parentPosts->MODERATOR;
 								$PARENT = $parentPosts->PARENT;
@@ -4048,7 +4059,9 @@ function regularboard_shortcode($atts,$content = null){
 									if($MODERATOR == 1)echo '<span class="mod">'.$modcode.'</span>';
 									if($LAST != '9999-12-25 23:59:59')echo '
 									<span class="date">'.$DATE.'</span>
-									<span class="postid">No.'.$ID.' </span>'; 
+									<span class="postid">';
+									if($THREAD != '')echo ' No. '.$ID.'';
+									echo '</span>'; 
 									if($THREAD == '')echo ' [<a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">Reply</a>] ('.count($getReplies).')';
 									if($IP == $theIP_us32str){
 										echo '<div class="controlpaneluser">';
@@ -4150,8 +4163,8 @@ function regularboard_shortcode($atts,$content = null){
 												</span>';
 												if($MODERATOR == 1){echo '<span class="mod">'.$modcode.'</span>';}
 												echo '
-												<span class="date">'.$DATE.'</span>
-												<span class="postid">No.'.$ID.'</span>';
+												<span class="date">'.$DATE.'</span> 
+												<span class="postid">No. '.$ID.'</span>';
 											if($IP == $theIP_us32str){
 													echo '<div class="controlpaneluser">';
 													echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
@@ -4177,6 +4190,8 @@ function regularboard_shortcode($atts,$content = null){
 										}
 									}
 									echo '</div>';
+		
+
 								}
 							}
 							if($BOARD != '' && $THREAD == ''){
@@ -4193,9 +4208,10 @@ function regularboard_shortcode($atts,$content = null){
 								echo '</div></div>';
 							}
 						}else{
-							echo '<h3 class="info">'.$nothreads.'</h3>';
+							echo '<h3 class="info">'.$nothreads.'</h3></div></div>';
 						}
 						if($THREAD != '')echo '</div></div>';
+						if($THREAD != '')echo '<span class="threadinformation">['.$THREADREPLIES.' replies] ['.$THREADIMGS.' images]</span>';
 					}
 					}
 				}
