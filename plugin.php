@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.8.9.1
+Version: 5.3.9
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -97,7 +97,6 @@ function MOMMainCSS(){
 /****************************** SECTION B -/- (B1) Variables ******************************/
 $mommodule_analytics = esc_attr(get_option('mommaincontrol_analytics'));
 $mommodule_focus = esc_attr(get_option('mommaincontrol_focus'));
-
 $mommodule_analytics = false;
 $mommodule_count = false;			
 $mommodule_exclude = false;
@@ -113,55 +112,43 @@ $mommodule_reviews = false;
 $mommodule_shortcodes = false;
 $mommodule_themetakeover = false;	
 $mommodule_versionnumbers = false;	
-
 if($mommodule_analytics == 1)$mommodule_analytics = true;
 $mommodule_count = esc_attr(get_option('mommaincontrol_obwcountplus'));
-
 if($mommodule_count == 1)$mommodule_count = true;
 $mommodule_exclude = esc_attr(get_option('mommaincontrol_momse'));
-
 if($mommodule_exclude == 1)$mommodule_exclude = true;
 if($mommodule_exclude === true)add_action('after_setup_theme','mom_exclude_postformat_theme_support');
 if($mommodule_exclude === true)add_action('pre_get_posts','mom_exclude_filter_posts');
 if($mommodule_focus == 1)$mommodule_focus = true;
-
 $mommodule_fontawesome = esc_attr(get_option('mommaincontrol_fontawesome'));
 if($mommodule_fontawesome == 1)$mommodule_fontawesome = true;
 if($mommodule_fontawesome === true)add_action('wp_enqueue_scripts','mom_plugin_scripts');
 if($mommodule_fontawesome === true)add_shortcode('font-fa','font_fa_shortcode');
 if($mommodule_fontawesome === true)add_filter('the_content','do_shortcode','font_fa_shortcode');
-
 $mommodule_jumparound = esc_attr(get_option('mommaincontrol_momja'));
 if($mommodule_jumparound == 1)$mommodule_jumparound = true;
-
 $mommodule_authorarchives = esc_attr(get_option('mommaincontrol_authorarchives'));
 if($mommodule_authorarchives == 1)$mommodule_authorarchives = true;
 if($mommodule_authorarchives === true)add_action('template_redirect','mom_grab_author_count');
-
 $mommodule_datearchives = esc_attr(get_option('mommaincontrol_datearchives'));
 if($mommodule_datearchives == 1)$mommodule_datearchives = true;
 if($mommodule_datearchives === true)add_action('wp','mom_disable_date_based_archives');
 if($mommodule_datearchives === true)add_action('template_redirect','mom_disable_date_based_archives');
-
 $mommodule_footerscripts = esc_attr(get_option('mommaincontrol_footerscripts'));
 if($mommodule_footerscripts == 1)$mommodule_footerscripts = true;
 if($mommodule_footerscripts === true)add_action('wp_enqueue_scripts','momfooterscripts');
 if($mommodule_footerscripts === true)add_action('wp_footer','wp_print_scripts',5);
 if($mommodule_footerscripts === true)add_action('wp_footer','wp_enqueue_scripts',5);
 if($mommodule_footerscripts === true)add_action('wp_footer','wp_print_head_scripts',5);
-
 $mommodule_protectrss = esc_attr(get_option('mommaincontrol_protectrss'));
 if($mommodule_protectrss == 1)$mommodule_protectrss = true;
 if($mommodule_protectrss === true)add_filter('the_content_feed','momprotectrss');
 if($mommodule_protectrss === true)add_filter('the_excerpt_rss','momprotectrss');
-
 $mommodule_lazyload = esc_attr(get_option('mommaincontrol_lazyload'));
 if($mommodule_lazyload == 1)$mommodule_lazyload = true;
-
 $mommodule_maintenance = esc_attr(get_option('mommaincontrol_maintenance'));
 if($mommodule_maintenance == 1)$mommodule_maintenance = true;
 if($mommodule_maintenance === true)add_action('wp','momMaintenance');
-
 $mommodule_meta = esc_attr(get_option('mommaincontrol_meta'));
 if($mommodule_meta == 1)$mommodule_meta = true;
 if($mommodule_meta === true)mom_SEO_header();
@@ -169,21 +156,17 @@ if($mommodule_meta === true)add_filter('admin_init','momSEO_add_fields_to_genera
 if($mommodule_meta === true)add_filter('user_contactmethods','momSEO_add_fields_to_profile');
 if($mommodule_meta === true)add_filter('jetpack_enable_opengraph','__return_false',99);
 if($mommodule_meta === true)add_action('wp_head','mom_meta_module');
-
 $mommodule_passwords = esc_attr(get_option('mommaincontrol_momrups'));
 if($mommodule_passwords == 1)$mommodule_passwords = true;
 if($mommodule_passwords === true)add_shortcode('rups','rotating_universal_passwords_shortcode');
 if($mommodule_passwords === true)add_filter('the_content','do_shortcode','rotating_universal_passwords_shortcode');
-
 $mommodule_postasfront = esc_attr(get_option('mommaincontrol_mompaf'));
 if($mommodule_postasfront == 1)$mommodule_postasfront = true;
 if($mommodule_postasfront === true)add_action('wp','mompaf_filter_home');
-
 $mommodule_reviews = esc_attr(get_option('mommaincontrol_reviews'));
 if($mommodule_reviews == 1)$mommodule_reviews = true;
 if($mommodule_reviews === true)add_shortcode('momreviews','mom_reviews_shortcode');	
 if($mommodule_reviews === true)add_filter('the_content','do_shortcode','mom_reviews_shortcode');	
-
 $mommodule_shortcodes = esc_attr(get_option('mommaincontrol_shorts'));
 if($mommodule_shortcodes == 1)$mommodule_shortcodes = true;
 if($mommodule_shortcodes === true)add_shortcode('mom_archives','mom_archives');
@@ -200,15 +183,12 @@ if($mommodule_shortcodes === true)add_filter('the_content','do_shortcode','mom_r
 if($mommodule_shortcodes === true)add_filter('the_content','do_shortcode','mom_restrict');
 if($mommodule_shortcodes === true)add_filter('the_content','do_shortcode','mom_progress');
 if($mommodule_shortcodes === true)add_filter('the_content','do_shortcode','mom_verify');
-
 $mommodule_themetakeover = esc_attr(get_option('mommaincontrol_themetakeover'));
 if($mommodule_themetakeover == 1)$mommodule_themetakeover = true;
-
 $mommodule_versionnumbers = esc_attr(get_option('mommaincontrol_versionnumbers'));
 if($mommodule_versionnumbers == 1)$mommodule_versionnumbers = true;
 if($mommodule_versionnumbers === true)add_filter('style_loader_src','mom_remove_version_numbers',0);
 if($mommodule_versionnumbers === true)add_filter('script_loader_src','mom_remove_version_numbers',0);
-
 $momthemetakeover_youtube = esc_url(get_option('MOM_themetakeover_youtubefrontpage'));
 /****************************** SECTION B -/- (B2) Main Functions ******************************/
 function checkdnsbl($ip){
@@ -234,7 +214,6 @@ function checkdnsbl($ip){
 		$DNSBL === false;
 	}
 }
-
 function tripcode($name)
 //http://stackoverflow.com/questions/2422482/how-do-i-create-a-tripcode-system
 {
@@ -249,7 +228,6 @@ function tripcode($name)
         return substr(crypt($cap,$salt),-10)."";
     }
 }
-
 if(get_option('MOM_themetakeover_backgroundimage') == 1){
 	//http://scottnix.com/thematic-snippets/
 	$backgroundargs = array( 
@@ -866,7 +844,7 @@ if(current_user_can('manage_options')){
 		<div class="small left">
 		<form method="post" action=""><input onClick="this.select();" type="text" value="'.get_option('momanalytics_code').'" name="momanalytics_code" placeholder="UA-XXXXXXXX-X" />
 		<input placeholder="http://url.tld" onClick="this.select();" type="text" value="'.get_option('momMaintenance_url').'" name="momMaintenance_url" />
-		<select name="mompaf_post" id="mompaf_0"><option value="0" ';if(get_option('mompaf_post') == 0){echo 'selected="selected"';}echo '/>Latest post</option>';$showmeposts = get_posts(array('posts_per_page' => -1)); foreach($showmeposts as $postsshown){echo '<option name="mompaf_post" id="mompaf_'.$postsshown->ID.'" value="'.$postsshown->ID.'"'; if(get_option('mompaf_post') == $postsshown->ID){echo ' selected="selected"';}echo '>'.$postsshown->post_title.'</option>';}echo '</select>
+		<select name="mompaf_post" id="mompaf_0"><option value="0" ';$mompaf_post = get_option('mompaf_post');selected( $options['mompaf_post'], 0);echo '/>Latest post</option>';$showmeposts = get_posts(array('posts_per_page' => -1));foreach($showmeposts as $postsshown){echo '<option name="mompaf_post" id="mompaf_'.$postsshown->ID.'" value="'.$postsshown->ID.'"';$postID = $postsshown->ID;$selected = selected( $mompaf_post, $postID);echo '>'.$postsshown->post_title.'</option>';}echo '</select>
 		</div>
 		<div class="small left">
 		<label for="mom_postasfront_post_submit" class="onoff1_solo">Save<span></span></label><input type="submit" id="mom_postasfront_post_submit" name="mom_postasfront_post_submit" value="Submit" class="hidden"></form>
@@ -1123,31 +1101,6 @@ function rotating_universal_passwords_shortcode($atts, $content = null){
 /****************************** SECTION E -/- (E0) Settings -/- Reviews ******************************/
 if(current_user_can('manage_options')){
 	function my_optional_modules_reviews_module(){
-		function mom_closetags($html){
-			// http://stackoverflow.com/questions/3059398/how-to-close-unclosed-html-tags
-			preg_match_all("#<([a-z]+)(.*)?(?!/)>#iU", $html, $result);
-			$openedtags = $result[1];
-			preg_match_all("#</([a-z]+)>#iU", $html, $result);
-			$closedtags = $result[1];
-			$len_opened = count($openedtags);
-			if(count($closedtags) == $len_opened)
-			{
-			return $html;
-			}
-			$openedtags = array_reverse($openedtags);
-			for($i = 0; $i < $len_opened; $i++)
-			{
-				if(!in_array($openedtags[$i], $closedtags))
-				{
-				$html .= "</" . $openedtags[$i] . ">";
-				}
-				else
-				{
-				unset($closedtags[array_search($openedtags[$i], $closedtags)]);
-				}
-			}
-			return $html;
-		}
 		function update_mom_reviews(){
 			global $table_prefix,$wpdb;
 			$reviews_table_name = $table_prefix.'momreviews';			
@@ -1165,7 +1118,6 @@ if(current_user_can('manage_options')){
 			$filter_type_fetch = sanitize_text_field($filter_type);
 			update_option('momreviews_search',$filter_type_fetch);
 		}
-			
 		function update_mom_css(){
 			$newCSS = stripslashes_deep($_REQUEST['css']);
 			update_option('momreviews_css',$newCSS); 
@@ -1210,7 +1162,6 @@ if(current_user_can('manage_options')){
 				global $wpdb;
 					$mom_reviews_table_name = $wpdb->prefix . "momreviews";
 					$filtered_search = get_option('momreviews_search');
-					
 					if(get_option('momreviews_search') != ""){
 						$reviews = $wpdb->get_results("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE TYPE = '$filtered_search' ORDER BY ID DESC");
 					}else{
@@ -1228,7 +1179,7 @@ if(current_user_can('manage_options')){
 								";
 				if(!isset($_POST['edit_'.$this_ID.''])){
 				if(!isset($_POST['delete_'.$this_ID.''])){echo "<form method=\"post\"><input class=\"deleteSubmit\" type=\"submit\" name=\"delete_".$this_ID."\" value=\"Delete\"></form>";}
-				else{echo "<form class=\"confirm\" method=\"post\"><input type=\"submit\" name=\"cancel\" id\"cancel\" value=\"Nevermind, I'd like to keep it.\"/><input class=\"deleteSubmit\" type=\"submit\" name=\"delete_confirm_".$this_ID."\" value=\"Confirm your deletion of item ".$reviews_results->ID."\"/></form>";}
+				else{echo "<form class=\"confirm\" method=\"post\"><input type=\"submit\" name=\"cancel\" id\"cancel\" value=\"No\"/><input class=\"deleteSubmit\" type=\"submit\" name=\"delete_confirm_".$this_ID."\" value=\"Confirm\"/></form>";}
 				echo "<form method=\"post\"><input class=\"editSubmit\" type=\"submit\" name=\"edit_".$this_ID."\" value=\"Edit\"></form>";
 				}	echo "								
 							<section class=\"type\">type: ".$reviews_results->TYPE."</section>
@@ -1270,9 +1221,8 @@ if(current_user_can('manage_options')){
 				if(isset($_POST['cancel'])){
 				}
 				echo "</div>";
-				}	
-				echo '</div>';
-				echo '</div>';
+				}
+				echo '</div></div>';
 				print_mom_reviews_form();
 		}
 		reviews_page_content();
@@ -1999,87 +1949,102 @@ function mom_SEO_header(){
 	}
 }
 /****************************** SECTION H -/- (H0) Settings -/- Theme Takeover ******************************/
-if(current_user_can('manage_options')){
-	function my_optional_modules_theme_takeover_module(){
-		echo '<span class="moduletitle">__theme takeover<em>easy theme manipulation</em></span><div class="clear"></div><div class="settings"><form method="post">';
-		echo '<div class="clear"></div>
-		<div class="exclude">
-			<section><label for="MOM_themetakeover_youtubefrontpage">Youtube URL for 404s</label><input type="text" id="MOM_themetakeover_youtubefrontpage" name="MOM_themetakeover_youtubefrontpage" value="'.esc_url(get_option('MOM_themetakeover_youtubefrontpage')).'"></section>
-			<section><hr /></section>
-			<section><label for="MOM_themetakeover_fitvids"><a href="http://fitvidsjs.com/">Fitvid</a> .class</label><input type="text" id="MOM_themetakeover_fitvids" name="MOM_themetakeover_fitvids" value="'.esc_attr(get_option('MOM_themetakeover_fitvids')).'"></section>
-			<section><hr /></section>
-			<section><label for="MOM_themetakeover_postdiv">Post content .div</label><input type="text" placeholder=".entry" id="MOM_themetakeover_postdiv" name="MOM_themetakeover_postdiv" value="'.esc_attr(get_option('MOM_themetakeover_postdiv')).'"></section>
-			<section><label for="MOM_themetakeover_postelement">Post title .element</label><input type="text" placeholder="h1" id="MOM_themetakeover_postelement" name="MOM_themetakeover_postelement" value="'.esc_attr(get_option('MOM_themetakeover_postelement')).'"></section>
-			<section><label for="MOM_themetakeover_posttoggle">Toggle text</label><input type="text" placeholder="Toggle contents" id="MOM_themetakeover_posttoggle" name="MOM_themetakeover_posttoggle" value="'.esc_attr(get_option('MOM_themetakeover_posttoggle')).'"></section>
-		</div>';
-		echo '
-		<div class="exclude">
-			<section><label for="MOM_themetakeover_topbar">Enable navbar</label>
-				<select id="MOM_themetakeover_topbar" name="MOM_themetakeover_topbar">
-					<option value="1"';if(get_option('MOM_themetakeover_topbar') == 1){echo ' selected="selected"';}echo '>Yes (top)</option>
-					<option value="2"';if(get_option('MOM_themetakeover_topbar') == 2){echo ' selected="selected"';}echo '>Yes (bottom)</option>
-					<option value="0"';if(get_option('MOM_themetakeover_topbar') == 0){echo ' selected="selected"';}echo '>No</option>
-				</select>
-			</section>
-			<section><label for="MOM_themetakeover_extend">Extend navbar</label>
-				<select id="MOM_themetakeover_extend" name="MOM_themetakeover_extend">
-					<option value="1"';if(get_option('MOM_themetakeover_extend') == 1){echo ' selected="selected"';}echo '>Yes</option>
-					<option value="0"';if(get_option('MOM_themetakeover_extend') == 0){echo ' selected="selected"';}echo '>No</option>
-				</select>
-			</section>			
-			<section><label for="MOM_themetakeover_topbar_color">Navbar scheme</label>
-				<select id="MOM_themetakeover_topbar_color" name="MOM_themetakeover_topbar_color">
-					<option value="1"';if(get_option('MOM_themetakeover_topbar_color') == 1){echo ' selected="selected"';}echo '>Dark</option>
-					<option value="2"';if(get_option('MOM_themetakeover_topbar_color') == 2){echo ' selected="selected"';}echo '>Light</option>
-					<option value="4"';if(get_option('MOM_themetakeover_topbar_color') == 4){echo ' selected="selected"';}echo '>Red</option>
-					<option value="5"';if(get_option('MOM_themetakeover_topbar_color') == 5){echo ' selected="selected"';}echo '>Green</option>
-					<option value="6"';if(get_option('MOM_themetakeover_topbar_color') == 6){echo ' selected="selected"';}echo '>Blue</option>
-					<option value="7"';if(get_option('MOM_themetakeover_topbar_color') == 7){echo ' selected="selected"';}echo '>Yellow</option>
-					<option value="3"';if(get_option('MOM_themetakeover_topbar_color') == 3){echo ' selected="selected"';}echo '>Default</option>
-				</select>
-			</section>			
-			<section><label for="MOM_themetakeover_topbar_search">Enable search bar</label>
-				<select id="MOM_themetakeover_topbar_search" name="MOM_themetakeover_topbar_search">
-					<option value="0"';if(get_option('MOM_themetakeover_topbar_search') == 0){echo ' selected="selected"';}echo '>No</option>
-					<option value="1"';if(get_option('MOM_themetakeover_topbar_search') == 1){echo ' selected="selected"';}echo '>Yes</option>
-				</select>
-			</section>						
-			<section><label for="MOM_themetakeover_topbar_share">Share icons</label>
-				<select id="MOM_themetakeover_topbar_share" name="MOM_themetakeover_topbar_share">
-					<option value="0"';if(get_option('MOM_themetakeover_topbar_share') == 0){echo ' selected="selected"';}echo '>No</option>
-					<option value="1"';if(get_option('MOM_themetakeover_topbar_share') == 1){echo ' selected="selected"';}echo '>Yes</option>
-				</select>
-			</section>						
-			';
-			$showmepages = get_pages(); 
-			echo '<section>
-			<label for="MOM_themetakeover_archivepage">Archives page</label>
-			<select name="MOM_themetakeover_archivepage" class="allpages" id="MOM_themetakeover_archivepage">
-			<option value="">Home page</option>';
-			foreach($showmepages as $pagesshown){
-				echo '<option name="MOM_themetakeover_archivepage" id="mompaf_'.esc_attr($pagesshown->ID).'" value="'.esc_attr($pagesshown->ID).'"'; 
-				if(get_option('MOM_themetakeover_archivepage') == $pagesshown->ID){echo ' selected="selected"';}echo '>
-				'.$pagesshown->post_title.'</option>';
-			}
-			echo '</select></section>';
-		echo '<section><hr /></section>';
-		echo '<section><label for="MOM_themetakeover_backgroundimage">Enable Custom BG Image</label>
-				<select id="MOM_themetakeover_backgroundimage" name="MOM_themetakeover_backgroundimage">
-					<option value="0"';if(get_option('MOM_themetakeover_backgroundimage') == 0){echo ' selected="selected"';}echo '>No</option>
-					<option value="1"';if(get_option('MOM_themetakeover_backgroundimage') == 1){echo ' selected="selected"';}echo '>Yes</option>
-				</select>
-			</section>';
-		echo '<section><hr /></section>';
-		echo '<section><label for="MOM_themetakeover_wowhead">Enable Wowhead Tooltips (<a href="http://www.wowhead.com/tooltips">?</a>)</label>
-				<select id="MOM_themetakeover_wowhead" name="MOM_themetakeover_wowhead">
-					<option value="1"';if(get_option('MOM_themetakeover_wowhead') == 1){echo ' selected="selected"';}echo '>Yes</option>
-					<option value="0"';if(get_option('MOM_themetakeover_wowhead') == 0){echo ' selected="selected"';}echo '>No</option>
-				</select>
-			</section>';		
-		echo '</div><div class="exclude">';
-		echo '<input id="momthemetakeoversave" type="submit" value="Save Changes" name="momthemetakeoversave"></form></div></div></div><div class="new"></div>';
+	if(current_user_can('manage_options')){
+		function my_optional_modules_theme_takeover_module(){
+			$MOM_themetakeover_topbar = get_option('MOM_themetakeover_topbar');
+			$MOM_themetakeover_extend = get_option('MOM_themetakeover_extend');
+			$MOM_themetakeover_topbar_color = get_option('MOM_themetakeover_topbar_color');
+			$MOM_themetakeover_topbar_search = get_option('MOM_themetakeover_topbar_search');
+			$MOM_themetakeover_topbar_share = get_option('MOM_themetakeover_topbar_share');
+			$MOM_themetakeover_backgroundimage = get_option('MOM_themetakeover_backgroundimage');
+			$MOM_themetakeover_wowhead = get_option('MOM_themetakeover_wowhead');
+			$showmepages = get_pages(); 		
+			echo '
+			<span class="moduletitle">__theme takeover<em>easy theme manipulation</em></span><div class="clear"></div><div class="settings"><form method="post">
+			<div class="clear"></div>
+			<div class="exclude">
+				<section><label for="MOM_themetakeover_youtubefrontpage">Youtube URL for 404s</label><input type="text" id="MOM_themetakeover_youtubefrontpage" name="MOM_themetakeover_youtubefrontpage" value="'.esc_url(get_option('MOM_themetakeover_youtubefrontpage')).'"></section>
+				<section><hr /></section>
+				<section><label for="MOM_themetakeover_fitvids"><a href="http://fitvidsjs.com/">Fitvid</a> .class</label><input type="text" id="MOM_themetakeover_fitvids" name="MOM_themetakeover_fitvids" value="'.esc_attr(get_option('MOM_themetakeover_fitvids')).'"></section>
+				<section><hr /></section>
+				<section><label for="MOM_themetakeover_postdiv">Post content .div</label><input type="text" placeholder=".entry" id="MOM_themetakeover_postdiv" name="MOM_themetakeover_postdiv" value="'.esc_attr(get_option('MOM_themetakeover_postdiv')).'"></section>
+				<section><label for="MOM_themetakeover_postelement">Post title .element</label><input type="text" placeholder="h1" id="MOM_themetakeover_postelement" name="MOM_themetakeover_postelement" value="'.esc_attr(get_option('MOM_themetakeover_postelement')).'"></section>
+				<section><label for="MOM_themetakeover_posttoggle">Toggle text</label><input type="text" placeholder="Toggle contents" id="MOM_themetakeover_posttoggle" name="MOM_themetakeover_posttoggle" value="'.esc_attr(get_option('MOM_themetakeover_posttoggle')).'"></section>
+			</div>
+			
+			<div class="exclude">
+				<section><label for="MOM_themetakeover_topbar">Enable navbar</label>
+					<select id="MOM_themetakeover_topbar" name="MOM_themetakeover_topbar">
+						<option value="1"'; selected($MOM_themetakeover_topbar, 1); echo '>Yes (top)</option>
+						<option value="2"'; selected($MOM_themetakeover_topbar, 2); echo '>Yes (bottom)</option>
+						<option value="0"'; selected($MOM_themetakeover_topbar, 0); echo '>No</option>
+					</select>
+				</section>
+				<section><label for="MOM_themetakeover_extend">Extend navbar</label>
+					<select id="MOM_themetakeover_extend" name="MOM_themetakeover_extend">
+						<option value="1"'; selected($MOM_themetakeover_extend, 1); echo '>Yes</option>
+						<option value="0"'; selected($MOM_themetakeover_extend, 0); echo '>No</option>
+					</select>
+				</section>			
+				<section><label for="MOM_themetakeover_topbar_color">Navbar scheme</label>
+					<select id="MOM_themetakeover_topbar_color" name="MOM_themetakeover_topbar_color">
+						<option value="1"'; selected($MOM_themetakeover_topbar_color, 1); echo '>Dark</option>
+						<option value="2"'; selected($MOM_themetakeover_topbar_color, 2); echo '>Light</option>
+						<option value="4"'; selected($MOM_themetakeover_topbar_color, 4); echo '>Red</option>
+						<option value="5"'; selected($MOM_themetakeover_topbar_color, 5); echo '>Green</option>
+						<option value="6"'; selected($MOM_themetakeover_topbar_color, 6); echo '>Blue</option>
+						<option value="7"'; selected($MOM_themetakeover_topbar_color, 7); echo '>Yellow</option>
+						<option value="3"'; selected($MOM_themetakeover_topbar_color, 3); echo '>Default</option>
+					</select>
+				</section>			
+				<section><label for="MOM_themetakeover_topbar_search">Enable search bar</label>
+					<select id="MOM_themetakeover_topbar_search" name="MOM_themetakeover_topbar_search">
+						<option value="0"'; selected($MOM_themetakeover_topbar_search, 0); echo '>No</option>
+						<option value="1"'; selected($MOM_themetakeover_topbar_search, 1); echo '>Yes</option>
+					</select>
+				</section>						
+				<section><label for="MOM_themetakeover_topbar_share">Share icons</label>
+					<select id="MOM_themetakeover_topbar_share" name="MOM_themetakeover_topbar_share">
+						<option value="0"'; selected($MOM_themetakeover_topbar_share, 0); echo '>No</option>
+						<option value="1"'; selected($MOM_themetakeover_topbar_share, 1); echo '>Yes</option>
+					</select>
+				</section>						
+				<section>
+				<label for="MOM_themetakeover_archivepage">Archives page</label>
+				<select name="MOM_themetakeover_archivepage" class="allpages" id="MOM_themetakeover_archivepage">
+				<option value="">Home page</option>';
+				
+				foreach($showmepages as $pagesshown){
+					echo '
+					<option name="MOM_themetakeover_archivepage" id="mompaf_'.esc_attr($pagesshown->ID).'" value="'.esc_attr($pagesshown->ID).'"'; 
+					$selectedarchivespage = $pagesshown->ID;
+					$MOM_themetakeover_archivepage = get_option('MOM_themetakeover_archivepage');
+					selected($MOM_themetakeover_archivepage, $selectedarchivespage); echo '>
+					'.$pagesshown->post_title.'</option>';
+				}
+				
+				echo '
+				</select></section>
+				<section><hr /></section>
+				<section><label for="MOM_themetakeover_backgroundimage">Enable Custom BG Image</label>
+					<select id="MOM_themetakeover_backgroundimage" name="MOM_themetakeover_backgroundimage">
+						<option value="0"'; selected($MOM_themetakeover_backgroundimage, 0); echo '>No</option>
+						<option value="1"'; selected($MOM_themetakeover_backgroundimage, 1); echo '>Yes</option>
+					</select>
+				</section>
+				<section><hr /></section>
+				<section><label for="MOM_themetakeover_wowhead">Enable Wowhead Tooltips (<a href="http://www.wowhead.com/tooltips">?</a>)</label>
+					<select id="MOM_themetakeover_wowhead" name="MOM_themetakeover_wowhead">
+						<option value="1"'; selected($MOM_themetakeover_wowhead, 1); echo '>Yes</option>
+						<option value="0"'; selected($MOM_themetakeover_wowhead, 0); echo '>No</option>
+					</select>
+				</section>
+			</div>
+			<div class="exclude">
+			<input id="momthemetakeoversave" type="submit" value="Save Changes" name="momthemetakeoversave" /></form>
+			</div></div><div class="new"></div>';
+		}
 	}
-}
 /****************************** SECTION H -/- (H1) Functions -/- Theme Takeover ******************************/
 if(get_option('MOM_themetakeover_youtubefrontpage') != ''){
 	function mom_youtube404(){
@@ -2403,13 +2368,24 @@ function obwcountplus_count(){
 	}
 }
 /****************************** SECTION K -/- (K0) Settings -/- Exclude ******************************/
-if(current_user_can('manage_options')){
-	function my_optional_modules_exclude_module(){
-			echo '<span class="moduletitle">__exclude<em>separate multiple ids with commas (1,2,3,...)</em></span><div class="clear"></div><div class="settings"><form method="post">';
-			echo '
+	if(current_user_can('manage_options')){
+		function my_optional_modules_exclude_module(){
+			$MOM_Exclude_PostFormats_RSS = get_option('MOM_Exclude_PostFormats_RSS');
+			$MOM_Exclude_PostFormats_Front = get_option('MOM_Exclude_PostFormats_Front');
+			$MOM_Exclude_PostFormats_CategoryArchives = get_option('MOM_Exclude_PostFormats_CategoryArchives');
+			$MOM_Exclude_PostFormats_TagArchives = get_option('MOM_Exclude_PostFormats_TagArchives');
+			$MOM_Exclude_PostFormats_SearchResults = get_option('MOM_Exclude_PostFormats_SearchResults');
+			$MOM_Exclude_PostFormats_Visitor = get_option('MOM_Exclude_PostFormats_Visitor');
+			$MOM_Exclude_Hide_Dashboard = get_option('MOM_Exclude_Hide_Dashboard');
+			$MOM_Exclude_NoFollow = get_option('MOM_Exclude_NoFollow');
+			$MOM_Exclude_URL = get_option('MOM_Exclude_URL');
+			$MOM_Exclude_URL_User = get_option('MOM_Exclude_URL_User');			
+			$showmepages = get_pages(); 			
+			$showmecats = get_categories('taxonomy=category&hide_empty=0'); 
+			$showmetags = get_categories('taxonomy=post_tag&hide_empty=0');
+			echo '<span class="moduletitle">__exclude<em>separate multiple ids with commas (1,2,3,...)</em></span><div class="clear"></div><div class="settings"><form method="post">
 				<div class="listing">
 				<div class="list"><span>Category (<strong>ID</strong>)</span>';
-				$showmecats = get_categories('taxonomy=category&hide_empty=0'); 
 				foreach($showmecats as $catsshown){
 					echo '
 					<span>'.$catsshown->cat_name.'(<strong>'.$catsshown->cat_ID.'</strong>)</span>';
@@ -2417,8 +2393,7 @@ if(current_user_can('manage_options')){
 			echo '
 			</div>
 			<div class="list"><span>Tag (<strong>ID</strong>)</span>';
-				$showmetags = get_categories('taxonomy=post_tag&hide_empty=0');
-					foreach($showmetags as $tagsshown){
+				foreach($showmetags as $tagsshown){
 					echo '<span>'.$tagsshown->cat_name.'(<strong>'.$tagsshown->cat_ID.'</strong>)</span>';
 				}
 			echo '
@@ -2435,7 +2410,6 @@ if(current_user_can('manage_options')){
 			}				
 			echo '"/>
 			<div class="clear"></div>
-			
 			<div class="exclude">
 				<section><span class="left">hide categories</span></section>
 				<section class="break"><span class="right"></span></section>
@@ -2460,9 +2434,7 @@ if(current_user_can('manage_options')){
 				<section><label for="MOM_Exclude_level1Categories">contributor</label><input type="text" id="MOM_Exclude_level1Categories" name="MOM_Exclude_level1Categories" value="'.get_option('MOM_Exclude_level1Categories').'"></section>
 				<section><label for="MOM_Exclude_level2Categories">author</label><input type="text" id="MOM_Exclude_level2Categories" name="MOM_Exclude_level2Categories" value="'.get_option('MOM_Exclude_level2Categories').'"></section>
 				<section><label for="MOM_Exclude_level7Categories">editor</label><input type="text" id="MOM_Exclude_level7Categories" name="MOM_Exclude_level7Categories" value="'.get_option('MOM_Exclude_level7Categories').'"></section>
-				
-			</div>';
-			echo '
+			</div>
 			<div class="exclude">
 				<section><span class="left">hide tags</span></section>
 				<section class="break"><span class="right">from area</span></section>				
@@ -2488,8 +2460,7 @@ if(current_user_can('manage_options')){
 				<section><label for="MOM_Exclude_level2Tags">author</label><input type="text" id="MOM_Exclude_level2Tags" name="MOM_Exclude_level2Tags" value="'.get_option('MOM_Exclude_level2Tags').'"></section>
 				<section><label for="MOM_Exclude_level7Tags">editor</label><input type="text" id="MOM_Exclude_level7Tags" name="MOM_Exclude_level7Tags" value="'.get_option('MOM_Exclude_level7Tags').'"></section>
 			</div>
-			<div class="exclude">';
-			echo '
+			<div class="exclude">
 			<section><span class="left">hide post formats</span></section>
 			<section class="break"><span class="right">from area</span></section>
 			<section><hr/></section>
@@ -2497,119 +2468,113 @@ if(current_user_can('manage_options')){
 				<label for="MOM_Exclude_PostFormats_RSS">RSS</label>
 				<select name="MOM_Exclude_PostFormats_RSS" id="MOM_Exclude_PostFormats_RSS">
 					<option value="">none</option>
-					<option value="post-format-aside"';if(get_option('MOM_Exclude_PostFormats_RSS') === 'post-format-aside'){echo ' selected="selected"';}echo '>Aside</option>
-					<option value="post-format-gallery"';if(get_option('MOM_Exclude_PostFormats_RSS') === 'post-format-gallery'){echo ' selected="selected"';}echo '>Gallery</option>
-					<option value="post-format-link"';if(get_option('MOM_Exclude_PostFormats_RSS') === 'post-format-link'){echo ' selected="selected"';}echo '>Link</option>
-					<option value="post-format-image"';if(get_option('MOM_Exclude_PostFormats_RSS') === 'post-format-image'){echo ' selected="selected"';}echo '>Image</option>
-					<option value="post-format-quote"';if(get_option('MOM_Exclude_PostFormats_RSS') === 'post-format-quote'){echo ' selected="selected"';}echo '>Quote</option>
-					<option value="post-format-status"';if(get_option('MOM_Exclude_PostFormats_RSS') === 'post-format-status'){echo ' selected="selected"';}echo '>Status</option>
-					<option value="post-format-video"';if( get_option('MOM_Exclude_PostFormats_RSS') === 'post-format-video'){echo ' selected="selected"';}echo '>Video</option>
-					<option value="post-format-audio"';if(get_option('MOM_Exclude_PostFormats_RSS') === 'post-format-audio'){echo ' selected="selected"';}echo '>Audio</option>
-					<option value="post-format-chat"';if(get_option('MOM_Exclude_PostFormats_RSS') === 'post-format-chat'){echo ' selected="selected"';}echo '>Chat</option>
+					<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-aside'); echo '>Aside</option>
+					<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-gallery'); echo '>Gallery</option>
+					<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-link'); echo '>Link</option>
+					<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-image'); echo '>Image</option>
+					<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-quote'); echo '>Quote</option>
+					<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-status'); echo '>Status</option>
+					<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-video'); echo '>Video</option>
+					<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-audio'); echo '>Audio</option>
+					<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-chat'); echo '>Chat</option>
 				</select>
 			</section>
 			<section>
 				<label for="MOM_Exclude_PostFormats_Front">front page</label>
 				<select name="MOM_Exclude_PostFormats_Front" id="MOM_Exclude_PostFormats_Front">
 					<option value="">none</option>
-					<option value="post-format-aside"';if(get_option('MOM_Exclude_PostFormats_Front') === 'post-format-aside'){echo ' selected="selected"';}echo '>Aside</option>
-					<option value="post-format-gallery"';if(get_option('MOM_Exclude_PostFormats_Front') === 'post-format-gallery'){echo ' selected="selected"';}echo '>Gallery</option>
-					<option value="post-format-link"';if(get_option('MOM_Exclude_PostFormats_Front') === 'post-format-link'){echo ' selected="selected"';}echo '>Link</option>
-					<option value="post-format-image"';if(get_option('MOM_Exclude_PostFormats_Front') === 'post-format-image'){echo ' selected="selected"';}echo '>Image</option>
-					<option value="post-format-quote"';if(get_option('MOM_Exclude_PostFormats_Front') === 'post-format-quote'){echo ' selected="selected"';}echo '>Quote</option>
-					<option value="post-format-status"';if(get_option('MOM_Exclude_PostFormats_Front') === 'post-format-status'){echo ' selected="selected"';}echo '>Status</option>
-					<option value="post-format-video"';if(get_option('MOM_Exclude_PostFormats_Front') === 'post-format-video'){echo ' selected="selected"';}echo '>Video</option>
-					<option value="post-format-audio"';if(get_option('MOM_Exclude_PostFormats_Front') === 'post-format-audio'){echo ' selected="selected"';}echo '>Audio</option>
-					<option value="post-format-chat"';if(get_option('MOM_Exclude_PostFormats_Front') === 'post-format-chat'){echo ' selected="selected"';}echo '>Chat</option>
+					<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_Front, 'post-format-aside'); echo '>Aside</option>
+					<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_Front,'post-format-gallery'); echo '>Gallery</option>
+					<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_Front,'post-format-link'); echo '>Link</option>
+					<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_Front,'post-format-image'); echo '>Image</option>
+					<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_Front,'post-format-quote'); echo '>Quote</option>
+					<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_Front,'post-format-status'); echo '>Status</option>
+					<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_Front,'post-format-video'); echo '>Video</option>
+					<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_Front,'post-format-audio'); echo '>Audio</option>
+					<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_Front,'post-format-chat'); echo '>Chat</option>
 				</select>
 			</section>
 			<section>
 				<label for="MOM_Exclude_PostFormats_CategoryArchives">archives</label>
 				<select name="MOM_Exclude_PostFormats_CategoryArchives" id="MOM_Exclude_PostFormats_CategoryArchives">
 					<option value="">none</option>
-					<option value="post-format-aside"';if(get_option('MOM_Exclude_PostFormats_CategoryArchives') === 'post-format-aside'){echo ' selected="selected"';}echo '>Aside</option>
-					<option value="post-format-gallery"';if(get_option('MOM_Exclude_PostFormats_CategoryArchives') === 'post-format-gallery'){echo ' selected="selected"';}echo '>Gallery</option>
-					<option value="post-format-link"';if(get_option('MOM_Exclude_PostFormats_CategoryArchives') === 'post-format-link'){echo ' selected="selected"';}echo '>Link</option>
-					<option value="post-format-image"';if(get_option('MOM_Exclude_PostFormats_CategoryArchives') === 'post-format-image'){echo ' selected="selected"';}echo '>Image</option>
-					<option value="post-format-quote"';if(get_option('MOM_Exclude_PostFormats_CategoryArchives') === 'post-format-quote'){echo ' selected="selected"';}echo '>Quote</option>
-					<option value="post-format-status"';if(get_option('MOM_Exclude_PostFormats_CategoryArchives') === 'post-format-status'){echo ' selected="selected"';}echo '>Status</option>
-					<option value="post-format-video"';if(get_option('MOM_Exclude_PostFormats_CategoryArchives') === 'post-format-video'){echo ' selected="selected"';}echo '>Video</option>
-					<option value="post-format-audio"';if(get_option('MOM_Exclude_PostFormats_CategoryArchives') === 'post-format-audio'){echo ' selected="selected"';}echo '>Audio</option>
-					<option value="post-format-chat"';if(get_option('MOM_Exclude_PostFormats_CategoryArchives')	=== 'post-format-chat'){echo ' selected="selected"';}echo '>Chat</option>
+					<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_CategoryArchives, 'post-format-aside'); echo '>Aside</option>
+					<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-gallery'); echo '>Gallery</option>
+					<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-link'); echo '>Link</option>
+					<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-image'); echo '>Image</option>
+					<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-quote'); echo '>Quote</option>
+					<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-status'); echo '>Status</option>
+					<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-video'); echo '>Video</option>
+					<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-audio'); echo '>Audio</option>
+					<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-chat'); echo '>Chat</option>
 				</select>
 			</section>
 			<section>
 				<label for="MOM_Exclude_PostFormats_TagArchives">tags</label>
 				<select name="MOM_Exclude_PostFormats_TagArchives" id="MOM_Exclude_PostFormats_TagArchives">
 					<option value="">none</option>
-					<option value="post-format-aside"';if(get_option('MOM_Exclude_PostFormats_TagArchives') === 'post-format-aside'){echo ' selected="selected"';} echo '>Aside</option>
-					<option value="post-format-gallery"';if(get_option('MOM_Exclude_PostFormats_TagArchives') === 'post-format-gallery'){echo ' selected="selected"';} echo '>Gallery</option>
-					<option value="post-format-link"';if(get_option('MOM_Exclude_PostFormats_TagArchives') === 'post-format-link'){echo ' selected="selected"';} echo '>Link</option>
-					<option value="post-format-image"';if(get_option('MOM_Exclude_PostFormats_TagArchives') === 'post-format-image'){echo ' selected="selected"';} echo '>Image</option>
-					<option value="post-format-quote"';if(get_option('MOM_Exclude_PostFormats_TagArchives') === 'post-format-quote'){echo ' selected="selected"';} echo '>Quote</option>
-					<option value="post-format-status"';if(get_option('MOM_Exclude_PostFormats_TagArchives') === 'post-format-status'){echo ' selected="selected"';} echo '>Status</option>
-					<option value="post-format-video"';if(get_option('MOM_Exclude_PostFormats_TagArchives') === 'post-format-video'){echo ' selected="selected"';} echo '>Video</option>
-					<option value="post-format-audio"';if(get_option('MOM_Exclude_PostFormats_TagArchives') === 'post-format-audio'){echo ' selected="selected"';} echo '>Audio</option>
-					<option value="post-format-chat"';if(get_option('MOM_Exclude_PostFormats_TagArchives') === 'post-format-chat'){echo ' selected="selected"';} echo '>Chat</option>
+					<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-aside'); echo '>Aside</option>
+					<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-gallery'); echo '>Gallery</option>
+					<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-link'); echo '>Link</option>
+					<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-image'); echo '>Image</option>
+					<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-quote'); echo '>Quote</option>
+					<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-status'); echo '>Status</option>
+					<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-video'); echo '>Video</option>
+					<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-audio'); echo '>Audio</option>
+					<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-chat'); echo '>Chat</option>
 				</select>
 			</section>
 			<section>
 				<label for="MOM_Exclude_PostFormats_SearchResults">search results</label>
 				<select name="MOM_Exclude_PostFormats_SearchResults" id="MOM_Exclude_PostFormats_SearchResults">
 					<option value="">none</option>
-					<option value="post-format-aside"';if(get_option('MOM_Exclude_PostFormats_SearchResults') === 'post-format-aside'){echo ' selected="selected"';}echo '>Aside</option>
-					<option value="post-format-gallery"';if(get_option('MOM_Exclude_PostFormats_SearchResults') === 'post-format-gallery'){echo ' selected="selected"';}echo '>Gallery</option>
-					<option value="post-format-link"';if(get_option('MOM_Exclude_PostFormats_SearchResults') === 'post-format-link'){echo ' selected="selected"';}echo '>Link</option>
-					<option value="post-format-image"';if(get_option('MOM_Exclude_PostFormats_SearchResults') === 'post-format-image'){echo ' selected="selected"';}echo '>Image</option>
-					<option value="post-format-quote"';if(get_option('MOM_Exclude_PostFormats_SearchResults') === 'post-format-quote'){echo ' selected="selected"';}echo '>Quote</option>
-					<option value="post-format-status"';if(get_option('MOM_Exclude_PostFormats_SearchResults') === 'post-format-status'){echo ' selected="selected"';}echo '>Status</option>
-					<option value="post-format-video"';if(get_option('MOM_Exclude_PostFormats_SearchResults') === 'post-format-video'){echo ' selected="selected"';}echo '>Video</option>
-					<option value="post-format-audio"';if(get_option('MOM_Exclude_PostFormats_SearchResults') === 'post-format-audio'){echo ' selected="selected"';}echo '>Audio</option>
-					<option value="post-format-chat"';if(get_option('MOM_Exclude_PostFormats_SearchResults') === 'post-format-chat'){echo ' selected="selected"';}echo '>Chat</option>
+					<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-aside'); echo '>Aside</option>
+					<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-gallery'); echo '>Gallery</option>
+					<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-link'); echo '>Link</option>
+					<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-image'); echo '>Image</option>
+					<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-quote'); echo '>Quote</option>
+					<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-status'); echo '>Status</option>
+					<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-video'); echo '>Video</option>
+					<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-audio'); echo '>Audio</option>
+					<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-chat'); echo '>Chat</option>
 				</select>
 			</section>
 			<section>
 				<label for="MOM_Exclude_PostFormats_Visitor">logged out</label>
 				<select name="MOM_Exclude_PostFormats_Visitor" id="MOM_Exclude_PostFormats_Visitor">
 					<option value="">none</option>
-					<option value="post-format-aside"';if(get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-aside'){echo ' selected="selected"';}echo '>Aside</option>
-					<option value="post-format-gallery"';if(get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-gallery'){echo ' selected="selected"';}echo '>Gallery</option>
-					<option value="post-format-link"';if(get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-link'){echo ' selected="selected"';}echo '>Link</option>
-					<option value="post-format-image"';if(get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-image'){echo ' selected="selected"';}echo '>Image</option>
-					<option value="post-format-quote"';if(get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-quote'){echo ' selected="selected"';}echo '>Quote</option>
-					<option value="post-format-status"';if(get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-status'){echo ' selected="selected"';}echo '>Status</option>
-					<option value="post-format-video"';if( get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-video'){echo ' selected="selected"';}echo '>Video</option>
-					<option value="post-format-audio"';if(get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-audio'){echo ' selected="selected"';}echo '>Audio</option>
-					<option value="post-format-chat"';if(get_option('MOM_Exclude_PostFormats_Visitor') === 'post-format-chat'){echo ' selected="selected"';}echo '>Chat</option>
+					<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-aside'); echo '>Aside</option>
+					<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-gallery'); echo '>Gallery</option>
+					<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-link'); echo '>Link</option>
+					<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-image'); echo '>Image</option>
+					<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-quote'); echo '>Quote</option>
+					<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-status'); echo '>Status</option>
+					<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-video'); echo '>Video</option>
+					<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-audio'); echo '>Audio</option>
+					<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-chat'); echo '>Chat</option>
 				</select>
-			</section>';
-			$showmepages = get_pages(); 
-			echo '
+			</section>
 			<section class="break"><span class="right">additional settings</span></section>
 			<section><hr/></section>
 			<section>
 			<label for="MOM_Exclude_Hide_Dashboard">Hide Dash for all but admin</label>
 			<select name="MOM_Exclude_Hide_Dashboard" class="allpages" id="MOM_Exclude_Hide_Dashboard">
-			<option ';if(get_option('MOM_Exclude_Hide_Dashboard') == 1){echo ' selected="selected" ';} echo 'value="1">Yes</option>
-			<option ';if(get_option('MOM_Exclude_Hide_Dashboard') == 0){echo ' selected="selected" ';} echo 'value="0">No</option>
+			<option '; selected($MOM_Exclude_Hide_Dashboard, 1); echo 'value="1">Yes</option>
+			<option '; selected($MOM_Exclude_Hide_Dashboard, 0); echo 'value="0">No</option>
 			</select>
 			</section>
 			<section>
 			<label for="MOM_Exclude_NoFollow">No Follow User Level Hidden</label>
 			<select name="MOM_Exclude_NoFollow" class="allpages" id="MOM_Exclude_NoFollow">
-			<option ';if(get_option('MOM_Exclude_NoFollow') == 1){echo ' selected="selected" ';} echo 'value="1">Yes</option>
-			<option ';if(get_option('MOM_Exclude_NoFollow') == 0){echo ' selected="selected" ';} echo 'value="0">No</option>
+			<option '; selected($MOM_Exclude_NoFollow, 1); echo 'value="1">Yes</option>
+			<option '; selected($MOM_Exclude_NoFollow, 0); echo 'value="0">No</option>
 			</select>
 			</section>
 			<section>
 			<label for="MOM_Exclude_URL">Redirect 404s (logged in)</label>
 			<select name="MOM_Exclude_URL" class="allpages" id="MOM_Exclude_URL">
 				<option value="">Home page</option>';
-				foreach($showmepages as $pagesshown){
-					echo '<option name="MOM_Exclude_URL" id="mompaf_'.$pagesshown->ID.'" value="'.$pagesshown->ID.'"'; 
-					if(get_option('MOM_Exclude_URL') == $pagesshown->ID){echo ' selected="selected"';} echo '>
-					'.$pagesshown->post_title.'</option>';
-				}
+				foreach($showmepages as $pagesshown){ echo '<option name="MOM_Exclude_URL" id="mompaf_'.$pagesshown->ID.'" value="'.$pagesshown->ID.'"'; $pagesshownID = $pagesshown->ID; selected($MOM_Exclude_URL, $pagesshownID); echo '> '.$pagesshown->post_title.'</option>'; }
 				echo '
 			</select>
 			</section>
@@ -2617,17 +2582,13 @@ if(current_user_can('manage_options')){
 			<label for="MOM_Exclude_URL_User">Redirect 404s (logged out)</label>
 			<select name="MOM_Exclude_URL_User" class="allpages" id="MOM_Exclude_URL_User">
 				<option value=""/>Home page</option>';
-				foreach($showmepages as $pagesshownuser){
-					echo '<option name="MOM_Exclude_URL_User" id="mompaf_'.$pagesshownuser->ID.'" value="'.$pagesshown->ID.'"'; 
-					if(get_option('MOM_Exclude_URL_User') == $pagesshownuser->ID){echo ' selected="selected"';} echo '>
-					'.$pagesshownuser->post_title.'</option>';
-				}
+				foreach($showmepages as $pagesshownuser){ echo '<option name="MOM_Exclude_URL_User" id="mompaf_'.$pagesshownuser->ID.'" value="'.$pagesshown->ID.'"'; $pagesshownuserID = $pagesshownuser->ID; selected ($MOM_Exclude_URL_User, $pagesshownuserID); echo '> '.$pagesshownuser->post_title.'</option>';}
 				echo '
 			</select>
-			</section>';
-			echo '<input id="momsesave" type="submit" value="Save Changes" name="momsesave"></form></div></div>';
+			</section>
+			<input id="momsesave" type="submit" value="Save Changes" name="momsesave"></form></div></div>';
 		}
-}
+	}
 /****************************** SECTION K -/- (K1) Settings -/- Exclude ******************************/
 get_currentuserinfo();
 global $user_level;	
@@ -2927,10 +2888,14 @@ function mom_exclude_filter_posts($query){
 	}
 }
 /****************************** SECTION L -/- (L0) Settings -/- Jump Around ******************************/
-if(current_user_can('manage_options')){
-	function my_optional_modules_jump_around_module(){
-			echo '<span class="moduletitle">__jump_around<em>keyboard navigation</em></span><div class="clear"></div><div class="settings"><form method="post">';
-			echo '
+	if(current_user_can('manage_options')){
+		function my_optional_modules_jump_around_module(){
+			$jump_around_4 = get_option('jump_around_4');
+			$jump_around_5 = get_option('jump_around_5');
+			$jump_around_6 = get_option('jump_around_6');
+			$jump_around_7 = get_option('jump_around_7');
+			$jump_around_8 = get_option('jump_around_8');
+			echo '<span class="moduletitle">__jump_around<em>keyboard navigation</em></span><div class="clear"></div><div class="settings"><form method="post">
 			<div class="countplus">
 				<section><label for="jump_around_0">Post container:</label>
 				<input type="text" name="jump_around_0" value="'.get_option('jump_around_0').'" /></section>
@@ -2942,224 +2907,224 @@ if(current_user_can('manage_options')){
 				<input type="text" name="jump_around_3" value="'.get_option('jump_around_3').'" /></section>
 				<section><label for="jump_around_4">Previous key</label>
 				<select name="jump_around_4">
-					<option value="65"';if(get_option('jump_around_4') == '65'){echo ' selected="selected"';}echo '>a</option>
-					<option value="66"';if(get_option('jump_around_4') == '66'){echo ' selected="selected"';}echo '>b</option>
-					<option value="67"';if(get_option('jump_around_4') == '67'){echo ' selected="selected"';}echo '>c</option>
-					<option value="68"';if(get_option('jump_around_4') == '68'){echo ' selected="selected"';}echo '>d</option>
-					<option value="69"';if(get_option('jump_around_4') == '69'){echo ' selected="selected"';}echo '>e</option>
-					<option value="70"';if(get_option('jump_around_4') == '70'){echo ' selected="selected"';}echo '>f</option>
-					<option value="71"';if(get_option('jump_around_4') == '71'){echo ' selected="selected"';}echo '>g</option>
-					<option value="72"';if(get_option('jump_around_4') == '72'){echo ' selected="selected"';}echo '>h</option>
-					<option value="73"';if(get_option('jump_around_4') == '73'){echo ' selected="selected"';}echo '>i</option>
-					<option value="74"';if(get_option('jump_around_4') == '74'){echo ' selected="selected"';}echo '>j</option>
-					<option value="75"';if(get_option('jump_around_4') == '75'){echo ' selected="selected"';}echo '>k</option>
-					<option value="76"';if(get_option('jump_around_4') == '76'){echo ' selected="selected"';}echo '>l</option>
-					<option value="77"';if(get_option('jump_around_4') == '77'){echo ' selected="selected"';}echo '>m</option>
-					<option value="78"';if(get_option('jump_around_4') == '78'){echo ' selected="selected"';}echo '>n</option>
-					<option value="79"';if(get_option('jump_around_4') == '79'){echo ' selected="selected"';}echo '>o</option>
-					<option value="80"';if(get_option('jump_around_4') == '80'){echo ' selected="selected"';}echo '>p</option>
-					<option value="81"';if(get_option('jump_around_4') == '81'){echo ' selected="selected"';}echo '>q</option>
-					<option value="82"';if(get_option('jump_around_4') == '82'){echo ' selected="selected"';}echo '>r</option>
-					<option value="83"';if(get_option('jump_around_4') == '83'){echo ' selected="selected"';}echo '>s</option>
-					<option value="84"';if(get_option('jump_around_4') == '84'){echo ' selected="selected"';}echo '>t</option>
-					<option value="85"';if(get_option('jump_around_4') == '85'){echo ' selected="selected"';}echo '>u</option>
-					<option value="86"';if(get_option('jump_around_4') == '86'){echo ' selected="selected"';}echo '>v</option>
-					<option value="87"';if(get_option('jump_around_4') == '87'){echo ' selected="selected"';}echo '>w</option>
-					<option value="88"';if(get_option('jump_around_4') == '88'){echo ' selected="selected"';}echo '>x</option>
-					<option value="89"';if(get_option('jump_around_4') == '89'){echo ' selected="selected"';}echo '>y</option>
-					<option value="90"';if(get_option('jump_around_4') == '90'){echo ' selected="selected"';}echo '>z</option>
-					<option value="48"';if(get_option('jump_around_4') == '48'){echo ' selected="selected"';}echo '>0</option>
-					<option value="49"';if(get_option('jump_around_4') == '49'){echo ' selected="selected"';}echo '>1</option>
-					<option value="50"';if(get_option('jump_around_4') == '50'){echo ' selected="selected"';}echo '>2</option>
-					<option value="51"';if(get_option('jump_around_4') == '51'){echo ' selected="selected"';}echo '>3</option>
-					<option value="52"';if(get_option('jump_around_4') == '52'){echo ' selected="selected"';}echo '>4</option>
-					<option value="53"';if(get_option('jump_around_4') == '53'){echo ' selected="selected"';}echo '>5</option>
-					<option value="54"';if(get_option('jump_around_4') == '54'){echo ' selected="selected"';}echo '>6</option>
-					<option value="55"';if(get_option('jump_around_4') == '55'){echo ' selected="selected"';}echo '>7</option>
-					<option value="56"';if(get_option('jump_around_4') == '56'){echo ' selected="selected"';}echo '>8</option>
-					<option value="57"';if(get_option('jump_around_4') == '57'){echo ' selected="selected"';}echo '>9</option>
-					<option value="37"';if(get_option('jump_around_4') == '37'){echo ' selected="selected"';}echo '>left arrow</option>
-					<option value="38"';if(get_option('jump_around_4') == '38'){echo ' selected="selected"';}echo '>up arrow</option>
-					<option value="39"';if(get_option('jump_around_4') == '39'){echo ' selected="selected"';}echo '>right arrow</option>
-					<option value="40"';if(get_option('jump_around_4') == '40'){echo ' selected="selected"';}echo '>down arrow</option>
+					<option value="65"'; selected($jump_around_4, '65'); echo '>a</option>
+					<option value="66"'; selected($jump_around_4, '66'); echo '>b</option>
+					<option value="67"'; selected($jump_around_4, '67'); echo '>c</option>
+					<option value="68"'; selected($jump_around_4, '68'); echo '>d</option>
+					<option value="69"'; selected($jump_around_4, '69'); echo '>e</option>
+					<option value="70"'; selected($jump_around_4, '70'); echo '>f</option>
+					<option value="71"'; selected($jump_around_4, '71'); echo '>g</option>
+					<option value="72"'; selected($jump_around_4, '72'); echo '>h</option>
+					<option value="73"'; selected($jump_around_4, '73'); echo '>i</option>
+					<option value="74"'; selected($jump_around_4, '74'); echo '>j</option>
+					<option value="75"'; selected($jump_around_4, '75'); echo '>k</option>
+					<option value="76"'; selected($jump_around_4, '76'); echo '>l</option>
+					<option value="77"'; selected($jump_around_4, '77'); echo '>m</option>
+					<option value="78"'; selected($jump_around_4, '78'); echo '>n</option>
+					<option value="79"'; selected($jump_around_4, '79'); echo '>o</option>
+					<option value="80"'; selected($jump_around_4, '80'); echo '>p</option>
+					<option value="81"'; selected($jump_around_4, '81'); echo '>q</option>
+					<option value="82"'; selected($jump_around_4, '82'); echo '>r</option>
+					<option value="83"'; selected($jump_around_4, '83'); echo '>s</option>
+					<option value="84"'; selected($jump_around_4, '84'); echo '>t</option>
+					<option value="85"'; selected($jump_around_4, '85'); echo '>u</option>
+					<option value="86"'; selected($jump_around_4, '86'); echo '>v</option>
+					<option value="87"'; selected($jump_around_4, '87'); echo '>w</option>
+					<option value="88"'; selected($jump_around_4, '88'); echo '>x</option>
+					<option value="89"'; selected($jump_around_4, '89'); echo '>y</option>
+					<option value="90"'; selected($jump_around_4, '90'); echo '>z</option>
+					<option value="48"'; selected($jump_around_4, '48'); echo '>0</option>
+					<option value="49"'; selected($jump_around_4, '49'); echo '>1</option>
+					<option value="50"'; selected($jump_around_4, '50'); echo '>2</option>
+					<option value="51"'; selected($jump_around_4, '51'); echo '>3</option>
+					<option value="52"'; selected($jump_around_4, '52'); echo '>4</option>
+					<option value="53"'; selected($jump_around_4, '53'); echo '>5</option>
+					<option value="54"'; selected($jump_around_4, '54'); echo '>6</option>
+					<option value="55"'; selected($jump_around_4, '55'); echo '>7</option>
+					<option value="56"'; selected($jump_around_4, '56'); echo '>8</option>
+					<option value="57"'; selected($jump_around_4, '57'); echo '>9</option>
+					<option value="37"'; selected($jump_around_4, '37'); echo '>left arrow</option>
+					<option value="38"'; selected($jump_around_4, '38'); echo '>up arrow</option>
+					<option value="39"'; selected($jump_around_4, '39'); echo '>right arrow</option>
+					<option value="40"'; selected($jump_around_4, '40'); echo '>down arrow</option>
 				</select></section>
 				<section><label for="jump_around_5">Open currently selected key</label>
 				<select name="jump_around_5">
-					<option value="65"';if(get_option('jump_around_5') == '65'){echo ' selected="selected"';}echo '>a</option>
-					<option value="66"';if(get_option('jump_around_5') == '66'){echo ' selected="selected"';}echo '>b</option>
-					<option value="67"';if(get_option('jump_around_5') == '67'){echo ' selected="selected"';}echo '>c</option>
-					<option value="68"';if(get_option('jump_around_5') == '68'){echo ' selected="selected"';}echo '>d</option>
-					<option value="69"';if(get_option('jump_around_5') == '69'){echo ' selected="selected"';}echo '>e</option>
-					<option value="70"';if(get_option('jump_around_5') == '70'){echo ' selected="selected"';}echo '>f</option>
-					<option value="71"';if(get_option('jump_around_5') == '71'){echo ' selected="selected"';}echo '>g</option>
-					<option value="72"';if(get_option('jump_around_5') == '72'){echo ' selected="selected"';}echo '>h</option>
-					<option value="73"';if(get_option('jump_around_5') == '73'){echo ' selected="selected"';}echo '>i</option>
-					<option value="74"';if(get_option('jump_around_5') == '74'){echo ' selected="selected"';}echo '>j</option>
-					<option value="75"';if(get_option('jump_around_5') == '75'){echo ' selected="selected"';}echo '>k</option>
-					<option value="76"';if(get_option('jump_around_5') == '76'){echo ' selected="selected"';}echo '>l</option>
-					<option value="77"';if(get_option('jump_around_5') == '77'){echo ' selected="selected"';}echo '>m</option>
-					<option value="78"';if(get_option('jump_around_5') == '78'){echo ' selected="selected"';}echo '>n</option>
-					<option value="79"';if(get_option('jump_around_5') == '79'){echo ' selected="selected"';}echo '>o</option>
-					<option value="80"';if(get_option('jump_around_5') == '80'){echo ' selected="selected"';}echo '>p</option>
-					<option value="81"';if(get_option('jump_around_5') == '81'){echo ' selected="selected"';}echo '>q</option>
-					<option value="82"';if(get_option('jump_around_5') == '82'){echo ' selected="selected"';}echo '>r</option>
-					<option value="83"';if(get_option('jump_around_5') == '83'){echo ' selected="selected"';}echo '>s</option>
-					<option value="84"';if(get_option('jump_around_5') == '84'){echo ' selected="selected"';}echo '>t</option>
-					<option value="85"';if(get_option('jump_around_5') == '85'){echo ' selected="selected"';}echo '>u</option>
-					<option value="86"';if(get_option('jump_around_5') == '86'){echo ' selected="selected"';}echo '>v</option>
-					<option value="87"';if(get_option('jump_around_5') == '87'){echo ' selected="selected"';}echo '>w</option>
-					<option value="88"';if(get_option('jump_around_5') == '88'){echo ' selected="selected"';}echo '>x</option>
-					<option value="89"';if(get_option('jump_around_5') == '89'){echo ' selected="selected"';}echo '>y</option>
-					<option value="90"';if(get_option('jump_around_5') == '90'){echo ' selected="selected"';}echo '>z</option>
-					<option value="48"';if(get_option('jump_around_5') == '48'){echo ' selected="selected"';}echo '>0</option>
-					<option value="49"';if(get_option('jump_around_5') == '49'){echo ' selected="selected"';}echo '>1</option>
-					<option value="50"';if(get_option('jump_around_5') == '50'){echo ' selected="selected"';}echo '>2</option>
-					<option value="51"';if(get_option('jump_around_5') == '51'){echo ' selected="selected"';}echo '>3</option>
-					<option value="52"';if(get_option('jump_around_5') == '52'){echo ' selected="selected"';}echo '>4</option>
-					<option value="53"';if(get_option('jump_around_5') == '53'){echo ' selected="selected"';}echo '>5</option>
-					<option value="54"';if(get_option('jump_around_5') == '54'){echo ' selected="selected"';}echo '>6</option>
-					<option value="55"';if(get_option('jump_around_5') == '55'){echo ' selected="selected"';}echo '>7</option>
-					<option value="56"';if(get_option('jump_around_5') == '56'){echo ' selected="selected"';}echo '>8</option>
-					<option value="57"';if(get_option('jump_around_5') == '57'){echo ' selected="selected"';}echo '>9</option>
-					<option value="37"';if(get_option('jump_around_5') == '37'){echo ' selected="selected"';}echo '>left arrow</option>
-					<option value="38"';if(get_option('jump_around_5') == '38'){echo ' selected="selected"';}echo '>up arrow</option>
-					<option value="39"';if(get_option('jump_around_5') == '39'){echo ' selected="selected"';}echo '>right arrow</option>
-					<option value="40"';if(get_option('jump_around_5') == '40'){echo ' selected="selected"';}echo '>down arrow</option>
+					<option value="65"'; selected($jump_around_5, '65'); echo '>a</option>
+					<option value="66"'; selected($jump_around_5, '66'); echo '>b</option>
+					<option value="67"'; selected($jump_around_5, '67'); echo '>c</option>
+					<option value="68"'; selected($jump_around_5, '68'); echo '>d</option>
+					<option value="69"'; selected($jump_around_5, '69'); echo '>e</option>
+					<option value="70"'; selected($jump_around_5, '70'); echo '>f</option>
+					<option value="71"'; selected($jump_around_5, '71'); echo '>g</option>
+					<option value="72"'; selected($jump_around_5, '72'); echo '>h</option>
+					<option value="73"'; selected($jump_around_5, '73'); echo '>i</option>
+					<option value="74"'; selected($jump_around_5, '74'); echo '>j</option>
+					<option value="75"'; selected($jump_around_5, '75'); echo '>k</option>
+					<option value="76"'; selected($jump_around_5, '76'); echo '>l</option>
+					<option value="77"'; selected($jump_around_5, '77'); echo '>m</option>
+					<option value="78"'; selected($jump_around_5, '78'); echo '>n</option>
+					<option value="79"'; selected($jump_around_5, '79'); echo '>o</option>
+					<option value="80"'; selected($jump_around_5, '80'); echo '>p</option>
+					<option value="81"'; selected($jump_around_5, '81'); echo '>q</option>
+					<option value="82"'; selected($jump_around_5, '82'); echo '>r</option>
+					<option value="83"'; selected($jump_around_5, '83'); echo '>s</option>
+					<option value="84"'; selected($jump_around_5, '84'); echo '>t</option>
+					<option value="85"'; selected($jump_around_5, '85'); echo '>u</option>
+					<option value="86"'; selected($jump_around_5, '86'); echo '>v</option>
+					<option value="87"'; selected($jump_around_5, '87'); echo '>w</option>
+					<option value="88"'; selected($jump_around_5, '88'); echo '>x</option>
+					<option value="89"'; selected($jump_around_5, '89'); echo '>y</option>
+					<option value="90"'; selected($jump_around_5, '90'); echo '>z</option>
+					<option value="48"'; selected($jump_around_5, '48'); echo '>0</option>
+					<option value="49"'; selected($jump_around_5, '49'); echo '>1</option>
+					<option value="50"'; selected($jump_around_5, '50'); echo '>2</option>
+					<option value="51"'; selected($jump_around_5, '51'); echo '>3</option>
+					<option value="52"'; selected($jump_around_5, '52'); echo '>4</option>
+					<option value="53"'; selected($jump_around_5, '53'); echo '>5</option>
+					<option value="54"'; selected($jump_around_5, '54'); echo '>6</option>
+					<option value="55"'; selected($jump_around_5, '55'); echo '>7</option>
+					<option value="56"'; selected($jump_around_5, '56'); echo '>8</option>
+					<option value="57"'; selected($jump_around_5, '57'); echo '>9</option>
+					<option value="37"'; selected($jump_around_5, '37'); echo '>left arrow</option>
+					<option value="38"'; selected($jump_around_5, '38'); echo '>up arrow</option>
+					<option value="39"'; selected($jump_around_5, '39'); echo '>right arrow</option>
+					<option value="40"'; selected($jump_around_5, '40'); echo '>down arrow</option>
 				</select></section>
 				<section><label for="jump_around_6">Next key</label>
 				<select name="jump_around_6">
-					<option value="65"';if(get_option('jump_around_6') == '65'){echo ' selected="selected"';}echo '>a</option>
-					<option value="66"';if(get_option('jump_around_6') == '66'){echo ' selected="selected"';}echo '>b</option>
-					<option value="67"';if(get_option('jump_around_6') == '67'){echo ' selected="selected"';}echo '>c</option>
-					<option value="68"';if(get_option('jump_around_6') == '68'){echo ' selected="selected"';}echo '>d</option>
-					<option value="69"';if(get_option('jump_around_6') == '69'){echo ' selected="selected"';}echo '>e</option>
-					<option value="70"';if(get_option('jump_around_6') == '70'){echo ' selected="selected"';}echo '>f</option>
-					<option value="71"';if(get_option('jump_around_6') == '71'){echo ' selected="selected"';}echo '>g</option>
-					<option value="72"';if(get_option('jump_around_6') == '72'){echo ' selected="selected"';}echo '>h</option>
-					<option value="73"';if(get_option('jump_around_6') == '73'){echo ' selected="selected"';}echo '>i</option>
-					<option value="74"';if(get_option('jump_around_6') == '74'){echo ' selected="selected"';}echo '>j</option>
-					<option value="75"';if(get_option('jump_around_6') == '75'){echo ' selected="selected"';}echo '>k</option>
-					<option value="76"';if(get_option('jump_around_6') == '76'){echo ' selected="selected"';}echo '>l</option>
-					<option value="77"';if(get_option('jump_around_6') == '77'){echo ' selected="selected"';}echo '>m</option>
-					<option value="78"';if(get_option('jump_around_6') == '78'){echo ' selected="selected"';}echo '>n</option>
-					<option value="79"';if(get_option('jump_around_6') == '79'){echo ' selected="selected"';}echo '>o</option>
-					<option value="80"';if(get_option('jump_around_6') == '80'){echo ' selected="selected"';}echo '>p</option>
-					<option value="81"';if(get_option('jump_around_6') == '81'){echo ' selected="selected"';}echo '>q</option>
-					<option value="82"';if(get_option('jump_around_6') == '82'){echo ' selected="selected"';}echo '>r</option>
-					<option value="83"';if(get_option('jump_around_6') == '83'){echo ' selected="selected"';}echo '>s</option>
-					<option value="84"';if(get_option('jump_around_6') == '84'){echo ' selected="selected"';}echo '>t</option>
-					<option value="85"';if(get_option('jump_around_6') == '85'){echo ' selected="selected"';}echo '>u</option>
-					<option value="86"';if(get_option('jump_around_6') == '86'){echo ' selected="selected"';}echo '>v</option>
-					<option value="87"';if(get_option('jump_around_6') == '87'){echo ' selected="selected"';}echo '>w</option>
-					<option value="88"';if(get_option('jump_around_6') == '88'){echo ' selected="selected"';}echo '>x</option>
-					<option value="89"';if(get_option('jump_around_6') == '89'){echo ' selected="selected"';}echo '>y</option>
-					<option value="90"';if(get_option('jump_around_6') == '90'){echo ' selected="selected"';}echo '>z</option>
-					<option value="48"';if(get_option('jump_around_6') == '48'){echo ' selected="selected"';}echo '>0</option>
-					<option value="49"';if(get_option('jump_around_6') == '49'){echo ' selected="selected"';}echo '>1</option>
-					<option value="50"';if(get_option('jump_around_6') == '50'){echo ' selected="selected"';}echo '>2</option>
-					<option value="51"';if(get_option('jump_around_6') == '51'){echo ' selected="selected"';}echo '>3</option>
-					<option value="52"';if(get_option('jump_around_6') == '52'){echo ' selected="selected"';}echo '>4</option>
-					<option value="53"';if(get_option('jump_around_6') == '53'){echo ' selected="selected"';}echo '>5</option>
-					<option value="54"';if(get_option('jump_around_6') == '54'){echo ' selected="selected"';}echo '>6</option>
-					<option value="55"';if(get_option('jump_around_6') == '55'){echo ' selected="selected"';}echo '>7</option>
-					<option value="56"';if(get_option('jump_around_6') == '56'){echo ' selected="selected"';}echo '>8</option>
-					<option value="57"';if(get_option('jump_around_6') == '57'){echo ' selected="selected"';}echo '>9</option>
-					<option value="37"';if(get_option('jump_around_6') == '37'){echo ' selected="selected"';}echo '>left arrow</option>
-					<option value="38"';if(get_option('jump_around_6') == '38'){echo ' selected="selected"';}echo '>up arrow</option>
-					<option value="39"';if(get_option('jump_around_6') == '39'){echo ' selected="selected"';}echo '>right arrow</option>
-					<option value="40"';if(get_option('jump_around_6') == '40'){echo ' selected="selected"';}echo '>down arrow</option>
+					<option value="65"'; selected($jump_around_6, '65'); echo '>a</option>
+					<option value="66"'; selected($jump_around_6, '66'); echo '>b</option>
+					<option value="67"'; selected($jump_around_6, '67'); echo '>c</option>
+					<option value="68"'; selected($jump_around_6, '68'); echo '>d</option>
+					<option value="69"'; selected($jump_around_6, '69'); echo '>e</option>
+					<option value="70"'; selected($jump_around_6, '70'); echo '>f</option>
+					<option value="71"'; selected($jump_around_6, '71'); echo '>g</option>
+					<option value="72"'; selected($jump_around_6, '72'); echo '>h</option>
+					<option value="73"'; selected($jump_around_6, '73'); echo '>i</option>
+					<option value="74"'; selected($jump_around_6, '74'); echo '>j</option>
+					<option value="75"'; selected($jump_around_6, '75'); echo '>k</option>
+					<option value="76"'; selected($jump_around_6, '76'); echo '>l</option>
+					<option value="77"'; selected($jump_around_6, '77'); echo '>m</option>
+					<option value="78"'; selected($jump_around_6, '78'); echo '>n</option>
+					<option value="79"'; selected($jump_around_6, '79'); echo '>o</option>
+					<option value="80"'; selected($jump_around_6, '80'); echo '>p</option>
+					<option value="81"'; selected($jump_around_6, '81'); echo '>q</option>
+					<option value="82"'; selected($jump_around_6, '82'); echo '>r</option>
+					<option value="83"'; selected($jump_around_6, '83'); echo '>s</option>
+					<option value="84"'; selected($jump_around_6, '84'); echo '>t</option>
+					<option value="85"'; selected($jump_around_6, '85'); echo '>u</option>
+					<option value="86"'; selected($jump_around_6, '86'); echo '>v</option>
+					<option value="87"'; selected($jump_around_6, '87'); echo '>w</option>
+					<option value="88"'; selected($jump_around_6, '88'); echo '>x</option>
+					<option value="89"'; selected($jump_around_6, '89'); echo '>y</option>
+					<option value="90"'; selected($jump_around_6, '90'); echo '>z</option>
+					<option value="48"'; selected($jump_around_6, '48'); echo '>0</option>
+					<option value="49"'; selected($jump_around_6, '49'); echo '>1</option>
+					<option value="50"'; selected($jump_around_6, '50'); echo '>2</option>
+					<option value="51"'; selected($jump_around_6, '51'); echo '>3</option>
+					<option value="52"'; selected($jump_around_6, '52'); echo '>4</option>
+					<option value="53"'; selected($jump_around_6, '53'); echo '>5</option>
+					<option value="54"'; selected($jump_around_6, '54'); echo '>6</option>
+					<option value="55"'; selected($jump_around_6, '55'); echo '>7</option>
+					<option value="56"'; selected($jump_around_6, '56'); echo '>8</option>
+					<option value="57"'; selected($jump_around_6, '57'); echo '>9</option>
+					<option value="37"'; selected($jump_around_6, '37'); echo '>left arrow</option>
+					<option value="38"'; selected($jump_around_6, '38'); echo '>up arrow</option>
+					<option value="39"'; selected($jump_around_6, '39'); echo '>right arrow</option>
+					<option value="40"'; selected($jump_around_6, '40'); echo '>down arrow</option>
 				</select></section>
 				<section><label for="jump_around_7">Older posts key</label>
 				<select name="jump_around_7">
-					<option value="65"';if(get_option('jump_around_7') == '65'){echo ' selected="selected"';}echo '>a</option>
-					<option value="66"';if(get_option('jump_around_7') == '66'){echo ' selected="selected"';}echo '>b</option>
-					<option value="67"';if(get_option('jump_around_7') == '67'){echo ' selected="selected"';}echo '>c</option>
-					<option value="68"';if(get_option('jump_around_7') == '68'){echo ' selected="selected"';}echo '>d</option>
-					<option value="69"';if(get_option('jump_around_7') == '69'){echo ' selected="selected"';}echo '>e</option>
-					<option value="70"';if(get_option('jump_around_7') == '70'){echo ' selected="selected"';}echo '>f</option>
-					<option value="71"';if(get_option('jump_around_7') == '71'){echo ' selected="selected"';}echo '>g</option>
-					<option value="72"';if(get_option('jump_around_7') == '72'){echo ' selected="selected"';}echo '>h</option>
-					<option value="73"';if(get_option('jump_around_7') == '73'){echo ' selected="selected"';}echo '>i</option>
-					<option value="74"';if(get_option('jump_around_7') == '74'){echo ' selected="selected"';}echo '>j</option>
-					<option value="75"';if(get_option('jump_around_7') == '75'){echo ' selected="selected"';}echo '>k</option>
-					<option value="76"';if(get_option('jump_around_7') == '76'){echo ' selected="selected"';}echo '>l</option>
-					<option value="77"';if(get_option('jump_around_7') == '77'){echo ' selected="selected"';}echo '>m</option>
-					<option value="78"';if(get_option('jump_around_7') == '78'){echo ' selected="selected"';}echo '>n</option>
-					<option value="79"';if(get_option('jump_around_7') == '79'){echo ' selected="selected"';}echo '>o</option>
-					<option value="80"';if(get_option('jump_around_7') == '80'){echo ' selected="selected"';}echo '>p</option>
-					<option value="81"';if(get_option('jump_around_7') == '81'){echo ' selected="selected"';}echo '>q</option>
-					<option value="82"';if(get_option('jump_around_7') == '82'){echo ' selected="selected"';}echo '>r</option>
-					<option value="83"';if(get_option('jump_around_7') == '83'){echo ' selected="selected"';}echo '>s</option>
-					<option value="84"';if(get_option('jump_around_7') == '84'){echo ' selected="selected"';}echo '>t</option>
-					<option value="85"';if(get_option('jump_around_7') == '85'){echo ' selected="selected"';}echo '>u</option>
-					<option value="86"';if(get_option('jump_around_7') == '86'){echo ' selected="selected"';}echo '>v</option>
-					<option value="87"';if(get_option('jump_around_7') == '87'){echo ' selected="selected"';}echo '>w</option>
-					<option value="88"';if(get_option('jump_around_7') == '88'){echo ' selected="selected"';}echo '>x</option>
-					<option value="89"';if(get_option('jump_around_7') == '89'){echo ' selected="selected"';}echo '>y</option>
-					<option value="90"';if(get_option('jump_around_7') == '90'){echo ' selected="selected"';}echo '>z</option>
-					<option value="48"';if(get_option('jump_around_7') == '48'){echo ' selected="selected"';}echo '>0</option>
-					<option value="49"';if(get_option('jump_around_7') == '49'){echo ' selected="selected"';}echo '>1</option>
-					<option value="50"';if(get_option('jump_around_7') == '50'){echo ' selected="selected"';}echo '>2</option>
-					<option value="51"';if(get_option('jump_around_7') == '51'){echo ' selected="selected"';}echo '>3</option>
-					<option value="52"';if(get_option('jump_around_7') == '52'){echo ' selected="selected"';}echo '>4</option>
-					<option value="53"';if(get_option('jump_around_7') == '53'){echo ' selected="selected"';}echo '>5</option>
-					<option value="54"';if(get_option('jump_around_7') == '54'){echo ' selected="selected"';}echo '>6</option>
-					<option value="55"';if(get_option('jump_around_7') == '55'){echo ' selected="selected"';}echo '>7</option>
-					<option value="56"';if(get_option('jump_around_7') == '56'){echo ' selected="selected"';}echo '>8</option>
-					<option value="57"';if(get_option('jump_around_7') == '57'){echo ' selected="selected"';}echo '>9</option>
-					<option value="37"';if(get_option('jump_around_7') == '37'){echo ' selected="selected"';}echo '>left arrow</option>
-					<option value="38"';if(get_option('jump_around_7') == '38'){echo ' selected="selected"';}echo '>up arrow</option>
-					<option value="39"';if(get_option('jump_around_7') == '39'){echo ' selected="selected"';}echo '>right arrow</option>
-					<option value="40"';if(get_option('jump_around_7') == '40'){echo ' selected="selected"';}echo '>down arrow</option>
+					<option value="65"'; selected($jump_around_7, '65'); echo '>a</option>
+					<option value="66"'; selected($jump_around_7, '66'); echo '>b</option>
+					<option value="67"'; selected($jump_around_7, '67'); echo '>c</option>
+					<option value="68"'; selected($jump_around_7, '68'); echo '>d</option>
+					<option value="69"'; selected($jump_around_7, '69'); echo '>e</option>
+					<option value="70"'; selected($jump_around_7, '70'); echo '>f</option>
+					<option value="71"'; selected($jump_around_7, '71'); echo '>g</option>
+					<option value="72"'; selected($jump_around_7, '72'); echo '>h</option>
+					<option value="73"'; selected($jump_around_7, '73'); echo '>i</option>
+					<option value="74"'; selected($jump_around_7, '74'); echo '>j</option>
+					<option value="75"'; selected($jump_around_7, '75'); echo '>k</option>
+					<option value="76"'; selected($jump_around_7, '76'); echo '>l</option>
+					<option value="77"'; selected($jump_around_7, '77'); echo '>m</option>
+					<option value="78"'; selected($jump_around_7, '78'); echo '>n</option>
+					<option value="79"'; selected($jump_around_7, '79'); echo '>o</option>
+					<option value="80"'; selected($jump_around_7, '80'); echo '>p</option>
+					<option value="81"'; selected($jump_around_7, '81'); echo '>q</option>
+					<option value="82"'; selected($jump_around_7, '82'); echo '>r</option>
+					<option value="83"'; selected($jump_around_7, '83'); echo '>s</option>
+					<option value="84"'; selected($jump_around_7, '84'); echo '>t</option>
+					<option value="85"'; selected($jump_around_7, '85'); echo '>u</option>
+					<option value="86"'; selected($jump_around_7, '86'); echo '>v</option>
+					<option value="87"'; selected($jump_around_7, '87'); echo '>w</option>
+					<option value="88"'; selected($jump_around_7, '88'); echo '>x</option>
+					<option value="89"'; selected($jump_around_7, '89'); echo '>y</option>
+					<option value="90"'; selected($jump_around_7, '90'); echo '>z</option>
+					<option value="48"'; selected($jump_around_7, '48'); echo '>0</option>
+					<option value="49"'; selected($jump_around_7, '49'); echo '>1</option>
+					<option value="50"'; selected($jump_around_7, '50'); echo '>2</option>
+					<option value="51"'; selected($jump_around_7, '51'); echo '>3</option>
+					<option value="52"'; selected($jump_around_7, '52'); echo '>4</option>
+					<option value="53"'; selected($jump_around_7, '53'); echo '>5</option>
+					<option value="54"'; selected($jump_around_7, '54'); echo '>6</option>
+					<option value="55"'; selected($jump_around_7, '55'); echo '>7</option>
+					<option value="56"'; selected($jump_around_7, '56'); echo '>8</option>
+					<option value="57"'; selected($jump_around_7, '57'); echo '>9</option>
+					<option value="37"'; selected($jump_around_7, '37'); echo '>left arrow</option>
+					<option value="38"'; selected($jump_around_7, '38'); echo '>up arrow</option>
+					<option value="39"'; selected($jump_around_7, '39'); echo '>right arrow</option>
+					<option value="40"'; selected($jump_around_7, '40'); echo '>down arrow</option>
 				</select></section>
 				<section><label for="jump_around_8">Newer posts key</label>
 				<select name="jump_around_8">
-					<option value="65"';if(get_option('jump_around_8') == '65'){echo ' selected="selected"';}echo '>a</option>
-					<option value="66"';if(get_option('jump_around_8') == '66'){echo ' selected="selected"';}echo '>b</option>
-					<option value="67"';if(get_option('jump_around_8') == '67'){echo ' selected="selected"';}echo '>c</option>
-					<option value="68"';if(get_option('jump_around_8') == '68'){echo ' selected="selected"';}echo '>d</option>
-					<option value="69"';if(get_option('jump_around_8') == '69'){echo ' selected="selected"';}echo '>e</option>
-					<option value="70"';if(get_option('jump_around_8') == '70'){echo ' selected="selected"';}echo '>f</option>
-					<option value="71"';if(get_option('jump_around_8') == '71'){echo ' selected="selected"';}echo '>g</option>
-					<option value="72"';if(get_option('jump_around_8') == '72'){echo ' selected="selected"';}echo '>h</option>
-					<option value="73"';if(get_option('jump_around_8') == '73'){echo ' selected="selected"';}echo '>i</option>
-					<option value="74"';if(get_option('jump_around_8') == '74'){echo ' selected="selected"';}echo '>j</option>
-					<option value="75"';if(get_option('jump_around_8') == '75'){echo ' selected="selected"';}echo '>k</option>
-					<option value="76"';if(get_option('jump_around_8') == '76'){echo ' selected="selected"';}echo '>l</option>
-					<option value="77"';if(get_option('jump_around_8') == '77'){echo ' selected="selected"';}echo '>m</option>
-					<option value="78"';if(get_option('jump_around_8') == '78'){echo ' selected="selected"';}echo '>n</option>
-					<option value="79"';if(get_option('jump_around_8') == '79'){echo ' selected="selected"';}echo '>o</option>
-					<option value="80"';if(get_option('jump_around_8') == '80'){echo ' selected="selected"';}echo '>p</option>
-					<option value="81"';if(get_option('jump_around_8') == '81'){echo ' selected="selected"';}echo '>q</option>
-					<option value="82"';if(get_option('jump_around_8') == '82'){echo ' selected="selected"';}echo '>r</option>
-					<option value="83"';if(get_option('jump_around_8') == '83'){echo ' selected="selected"';}echo '>s</option>
-					<option value="84"';if(get_option('jump_around_8') == '84'){echo ' selected="selected"';}echo '>t</option>
-					<option value="85"';if(get_option('jump_around_8') == '85'){echo ' selected="selected"';}echo '>u</option>
-					<option value="86"';if(get_option('jump_around_8') == '86'){echo ' selected="selected"';}echo '>v</option>
-					<option value="87"';if(get_option('jump_around_8') == '87'){echo ' selected="selected"';}echo '>w</option>
-					<option value="88"';if(get_option('jump_around_8') == '88'){echo ' selected="selected"';}echo '>x</option>
-					<option value="89"';if(get_option('jump_around_8') == '89'){echo ' selected="selected"';}echo '>y</option>
-					<option value="90"';if(get_option('jump_around_8') == '90'){echo ' selected="selected"';}echo '>z</option>
-					<option value="48"';if(get_option('jump_around_8') == '48'){echo ' selected="selected"';}echo '>0</option>
-					<option value="49"';if(get_option('jump_around_8') == '49'){echo ' selected="selected"';}echo '>1</option>
-					<option value="50"';if(get_option('jump_around_8') == '50'){echo ' selected="selected"';}echo '>2</option>
-					<option value="51"';if(get_option('jump_around_8') == '51'){echo ' selected="selected"';}echo '>3</option>
-					<option value="52"';if(get_option('jump_around_8') == '52'){echo ' selected="selected"';}echo '>4</option>
-					<option value="53"';if(get_option('jump_around_8') == '53'){echo ' selected="selected"';}echo '>5</option>
-					<option value="54"';if(get_option('jump_around_8') == '54'){echo ' selected="selected"';}echo '>6</option>
-					<option value="55"';if(get_option('jump_around_8') == '55'){echo ' selected="selected"';}echo '>7</option>
-					<option value="56"';if(get_option('jump_around_8') == '56'){echo ' selected="selected"';}echo '>8</option>
-					<option value="57"';if(get_option('jump_around_8') == '57'){echo ' selected="selected"';}echo '>9</option>
-					<option value="37"';if(get_option('jump_around_8') == '37'){echo ' selected="selected"';}echo '>left arrow</option>
-					<option value="38"';if(get_option('jump_around_8') == '38'){echo ' selected="selected"';}echo '>up arrow</option>
-					<option value="39"';if(get_option('jump_around_8') == '39'){echo ' selected="selected"';}echo '>right arrow</option>
-					<option value="40"';if(get_option('jump_around_8') == '40'){echo ' selected="selected"';}echo '>down arrow</option>
+					<option value="65"'; selected($jump_around_8, '65'); echo '>a</option>
+					<option value="66"'; selected($jump_around_8, '66'); echo '>b</option>
+					<option value="67"'; selected($jump_around_8, '67'); echo '>c</option>
+					<option value="68"'; selected($jump_around_8, '68'); echo '>d</option>
+					<option value="69"'; selected($jump_around_8, '69'); echo '>e</option>
+					<option value="70"'; selected($jump_around_8, '70'); echo '>f</option>
+					<option value="71"'; selected($jump_around_8, '71'); echo '>g</option>
+					<option value="72"'; selected($jump_around_8, '72'); echo '>h</option>
+					<option value="73"'; selected($jump_around_8, '73'); echo '>i</option>
+					<option value="74"'; selected($jump_around_8, '74'); echo '>j</option>
+					<option value="75"'; selected($jump_around_8, '75'); echo '>k</option>
+					<option value="76"'; selected($jump_around_8, '76'); echo '>l</option>
+					<option value="77"'; selected($jump_around_8, '77'); echo '>m</option>
+					<option value="78"'; selected($jump_around_8, '78'); echo '>n</option>
+					<option value="79"'; selected($jump_around_8, '79'); echo '>o</option>
+					<option value="80"'; selected($jump_around_8, '80'); echo '>p</option>
+					<option value="81"'; selected($jump_around_8, '81'); echo '>q</option>
+					<option value="82"'; selected($jump_around_8, '82'); echo '>r</option>
+					<option value="83"'; selected($jump_around_8, '83'); echo '>s</option>
+					<option value="84"'; selected($jump_around_8, '84'); echo '>t</option>
+					<option value="85"'; selected($jump_around_8, '85'); echo '>u</option>
+					<option value="86"'; selected($jump_around_8, '86'); echo '>v</option>
+					<option value="87"'; selected($jump_around_8, '87'); echo '>w</option>
+					<option value="88"'; selected($jump_around_8, '88'); echo '>x</option>
+					<option value="89"'; selected($jump_around_8, '89'); echo '>y</option>
+					<option value="90"'; selected($jump_around_8, '90'); echo '>z</option>
+					<option value="48"'; selected($jump_around_8, '48'); echo '>0</option>
+					<option value="49"'; selected($jump_around_8, '49'); echo '>1</option>
+					<option value="50"'; selected($jump_around_8, '50'); echo '>2</option>
+					<option value="51"'; selected($jump_around_8, '51'); echo '>3</option>
+					<option value="52"'; selected($jump_around_8, '52'); echo '>4</option>
+					<option value="53"'; selected($jump_around_8, '53'); echo '>5</option>
+					<option value="54"'; selected($jump_around_8, '54'); echo '>6</option>
+					<option value="55"'; selected($jump_around_8, '55'); echo '>7</option>
+					<option value="56"'; selected($jump_around_8, '56'); echo '>8</option>
+					<option value="57"'; selected($jump_around_8, '57'); echo '>9</option>
+					<option value="37"'; selected($jump_around_8, '37'); echo '>left arrow</option>
+					<option value="38"'; selected($jump_around_8, '38'); echo '>up arrow</option>
+					<option value="39"'; selected($jump_around_8, '39'); echo '>right arrow</option>
+					<option value="40"'; selected($jump_around_8, '40'); echo '>down arrow</option>
 				</select></section>
 			</div>
-			<input id="update_JA" type="submit" value="Save Changes" name="update_JA">';
-			echo '</form></div><div class="templatetags"><section>Filter for classes<span class="right">.div</span></section><section>Filter for links in classes<span class="right">.div a</span></section><section>Filter for elements in classes<span class="right">.div h1</span></section><section>Filter for linked elements in classes<span class="right">.div h1 a</span></section><div class="new"><p class="creditlink"><em>Thanks to <a href="http://stackoverflow.com/questions/1939041/change-hash-without-reload-in-jquery">jitter</a> &amp; <a href="http://stackoverflow.com/questions/13694277/scroll-to-next-div-using-arrow-keys">mVChr</a> for the help.</em></p></div></div>';
+			<input id="update_JA" type="submit" value="Save Changes" name="update_JA">
+			</form></div><div class="templatetags"><section>Filter for classes<span class="right">.div</span></section><section>Filter for links in classes<span class="right">.div a</span></section><section>Filter for elements in classes<span class="right">.div h1</span></section><section>Filter for linked elements in classes<span class="right">.div h1 a</span></section><div class="new"><p class="creditlink"><em>Thanks to <a href="http://stackoverflow.com/questions/1939041/change-hash-without-reload-in-jquery">jitter</a> &amp; <a href="http://stackoverflow.com/questions/13694277/scroll-to-next-div-using-arrow-keys">mVChr</a> for the help.</em></p></div></div>';
 		}
-}
+	}
 /****************************** SECTION M -/- (M0) Functions -/- Post Voting *****************************************/
 function vote_the_posts_top($atts,$content = null){
 	extract(
@@ -3217,10 +3182,10 @@ if(get_option('mommaincontrol_votes') == 1){
 					$wpdb->query("UPDATE $votesPosts SET UP = UP + 1 WHERE ID = $theID");
 					$wpdb->query("INSERT INTO $votesVotes (ID, IP, VOTE) VALUES ($theID,$theIP_us32str,1)");
 				}
-				echo '<span class="vote_the_post" id="'.esc_attr($theID).'">';
+				echo '<div class="vote_the_post" id="'.esc_attr($theID).'">';
 				echo '<form action="" id="'.esc_attr($theID).'-up" method="post"><label for="'.esc_attr($theID).'-up-submit" class="upvote"><i class="fa fa-heart"></i></label><input type="submit" name="'.esc_attr($theID).'-up-submit" id="'.esc_attr($theID).'-up-submit" /></form>';
 				echo '<span>'.esc_attr($votesTOTAL).'</span>';
-				echo '</span>';
+				echo '</div>';
 			}else{
 				foreach($getIP as $gotIP){
 					$vote = esc_attr($gotIP->VOTE);
@@ -3229,10 +3194,10 @@ if(get_option('mommaincontrol_votes') == 1){
 						$wpdb->query("DELETE FROM $votesVotes WHERE IP = '$theIP_us32str' AND ID = '$theID'");
 					}
 					if($vote == 1)$CLASS = ' active';
-					echo '<span class="vote_the_post" id="'.esc_attr($theID).'">';
+					echo '<div class="vote_the_post" id="'.esc_attr($theID).'">';
 					echo '<form action="" id="'.esc_attr($theID).'-up" method="post"><label for="'.esc_attr($theID).'-up-submit" class="upvote"><i class="fa fa-heart'.$CLASS.'"></i></label><input type="submit" name="'.esc_attr($theID).'-up-submit" id="'.esc_attr($theID).'-up-submit" /></form>';
 					echo '<span>'.esc_attr($votesTOTAL).'</span>';
-					echo '</span>';
+					echo '</div>';
 				}
 			}			
 		}		
@@ -3362,7 +3327,6 @@ function regularboard_shortcode($atts,$content = null){
 		}
 	}
 	elseif($BOARD != ''){
-		
 		// Get Results
 		$getBoards = $wpdb->get_results("SELECT SHORTNAME FROM $regularboard_boards ORDER BY SHORTNAME ASC");
 		$getCurrentBoard = $wpdb->get_results("SELECT ID,NAME,SHORTNAME,DESCRIPTION,RULES FROM $regularboard_boards WHERE SHORTNAME = '".$BOARD."' LIMIT 1");
@@ -3377,12 +3341,10 @@ function regularboard_shortcode($atts,$content = null){
 		if($THREAD != '')$getParentPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND ID = '".$THREAD."' AND PARENT = 0 LIMIT 1");
 		$getLastPost = $wpdb->get_results("SELECT IP,DATE,ID,MODERATOR FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' ORDER BY ID DESC LIMIT 1");
 		$getLastPosts = $wpdb->get_results("SELECT ID,PARENT,BOARD,COMMENT,SUBJECT,TYPE,URL,DATE FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' ORDER BY ID DESC LIMIT 5");
-		
 		if($THREAD != '')$countimgresults = $wpdb->get_results("SELECT ID from $regularboard_posts WHERE TYPE = 'image' AND PARENT = '".$THREAD."'");
 		if($THREAD != '')$countrepresults = $wpdb->get_results("SELECT ID from $regularboard_posts WHERE PARENT = '".$THREAD."'");
 		if($THREAD != '')$THREADREPLIES = count($countrepresults);
 		if($THREAD != '')$THREADIMGS = count($countimgresults);
-
 		echo '
 		<div class="left mycontrols">
 			<i class="fa fa-plus-square"></i> User Menu';
@@ -3412,7 +3374,6 @@ function regularboard_shortcode($atts,$content = null){
 			}
 		echo '</div>
 		';
-
 		// Board listing
 		echo '<span class="boardlisting textright">';
 		if(count($getBoards) > 0){
@@ -3428,7 +3389,6 @@ function regularboard_shortcode($atts,$content = null){
 			echo '[<a href="?area=create">Add/Delete/Unban</a>]';
 		}
 		echo '</span>';
-
 		// Determine time between between the last post and the flood protection time amount
 		if(count($getLastPost) > 0){
 			foreach($getLastPost as $lastPost){
@@ -3446,32 +3406,25 @@ function regularboard_shortcode($atts,$content = null){
 				}
 			}
 		}
-		
 		// Show board content if the requested board exists
 		if(count($getCurrentBoard) > 0){
-			
 			// If set to members only, display this message in place of board content to users who are not logged in.
 			if(!is_user_logged_in() && $requirelogged == 1){
 				echo '<h3 class="banned">YOU ARE NOT LOGGED IN.</h3>';
 			}
-			
 			// Continue if user is logged in or logged in not required
 			elseif(!is_user_logged_in() && $requirelogged == 0 || is_user_logged_in()){
-				
 				// Board content
 					foreach($getCurrentBoard as $gotCurrentBoard){
 						$boardName = sanistripents($gotCurrentBoard->NAME);
 						$boardShort = sanistripents($gotCurrentBoard->SHORTNAME);
 						$boardDescription = $purifier->purify($gotCurrentBoard->DESCRIPTION);
 						$boardrules = $purifier->purify($gotCurrentBoard->RULES);
-						
-
 						// If user is not banned, check if their IP is blacklisted on the DNSBL.  If it is, autoban them.
 						if ($DNSBL === true)
 						{
 							$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1',' being blacklisted by the DNSBL.')");
 						}
-						
 						// If user is banned, don't go any further.
 						elseif(count($getUser) > 0)
 						{
@@ -3484,14 +3437,12 @@ function regularboard_shortcode($atts,$content = null){
 							}
 							echo '</div>';
 						}
-						
 						// If user is not banned, and they haven't been listed on the DNSBL, let them view the board content.
 						else
 						{
 										// Form handling
 										if(isset($_POST['FORMSUBMIT']))
 										{
-										
 											$IS_IT_SPAM = 0;
 											if(function_exists('akismet_admin_init')){
 												$APIKey = sanistripents(get_option('wordpress_api_key'));
@@ -3512,7 +3463,6 @@ function regularboard_shortcode($atts,$content = null){
 													}
 												}					
 											}									
-										
 											if($_REQUEST['COMMENT'] == '') 
 											{
 												echo '<h3 class="info">CAN\'T SUBMIT AN EMPTY COMMENT</h3>';
@@ -3532,7 +3482,6 @@ function regularboard_shortcode($atts,$content = null){
 													if($THREAD == '' && $enableurl == 1 || $THREAD != ''  && $enablerep == 1)
 													{
 														$cleanURL = sanistripents($_REQUEST['URL']);
-														
 														// http://frankkoehl.com/2009/09/http-status-code-curl-php/
 														$ch = curl_init();
 														$opts = array(CURLOPT_RETURNTRANSFER => true,
@@ -3612,12 +3561,9 @@ function regularboard_shortcode($atts,$content = null){
 										}
 										if(!isset($_POST['FORMSUBMIT']))
 										{
-										
 						if($AREA == 'catalog'){
-					
 						echo '<h3 class="boardName">'.$boardName.'</h3>';
 						echo '<p class="boardDescription">Catalog</p>';
-
 								foreach($getParentPosts as $parentPosts){
 									$ID = $parentPosts->ID;
 									$IAMOP = $parentPosts->IP;
@@ -3665,12 +3611,7 @@ function regularboard_shortcode($atts,$content = null){
 										echo '</div>';
 									}
 								}
-
-						
 						}else{
-															
-										
-						
 							echo '<h3 class="boardName">'.$boardName.'</h3>';
 							echo '<p class="boardDescription">'.$boardDescription.'</p>';
 							if($THREAD != ''){echo '<p class="reply">Posting Mode: Reply <a rel="nofollow" href="?board='.$BOARD.'">[Return]</a></p>';}
@@ -3678,7 +3619,6 @@ function regularboard_shortcode($atts,$content = null){
 							if(filter_var($checkThisIP,FILTER_VALIDATE_IP)){ $IPPASS = true; }
 							elseif(filter_var($checkThisIP,FILTER_VALIDATE_IP,FILTER_FLAG_IPV6)){ $IPPASS = true; }
 							else{ $IPPASS = false;}
-							
 								if($timegateactive === true){
 									echo '<div class="timegate"><h3>'. ($timebetween - $timegate) . ' seconds until you can post again.</h3></div>';
 								}else{
@@ -3689,14 +3629,11 @@ function regularboard_shortcode($atts,$content = null){
 										echo '<h3 class="readonly">You are not permitted to post.</h3>';
 									}
 									elseif($posting == 1 && $IPPASS === true){
-									
 										$LOCKED = 0;
 										if($THREAD != '')$checkLOCK = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE LAST = '0' AND ID = '".$THREAD."' LIMIT 1");
 										if(count($checkLOCK) == 1)$LOCKED = 1;
 										if($LOCKED == 1 )echo '<h3 class="readonly"><i class="fa fa-lock"></i> THREAD LOCKED</h3>';
 										if($LOCKED == 0){
-										
-											
 											echo '<form class="topic" name="regularboard" method="post" action="';
 											if($BOARD != '' && $THREAD == '')echo '?board='.$BOARD;
 											if($BOARD != '' && $THREAD != '')echo '?board='.$BOARD.'&amp;thread='.$THREAD;
@@ -3714,25 +3651,18 @@ function regularboard_shortcode($atts,$content = null){
 											echo '<section><label for="COMMENT">Comment</label><textarea id="COMMENT" maxlength="'.$maxbody.'" name="COMMENT" placeholder="Comment"></textarea></section>';
 											echo '<section><label for="FORMSUBMIT" class="submit">Post a new ';if($THREAD == ''){echo 'topic';}elseif($THREAD != ''){echo 'reply';}echo '</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section>';
 											echo '</form>';
-										
 										}
 									}
 								}
-							
 							echo '</div><div class="boardposts">';
 							if($boardrules != ''){echo '<div class="rules">'.$boardrules.'</div>';}
 							echo '
 							<hr class="clearboth"></hr>
-							
-								
 								<a class="nav" rel="nofollow" href="?board='.$BOARD.'&amp;area=catalog">[ Catalog ]</a>
-								
-							
 							<hr class="clearboth"></hr>';
 							$totalREPLIES = 0;
 							if(count($getParentPosts) > 0){
 								// Start board loop
-								
 								foreach($getParentPosts as $parentPosts){
 									$ID = $parentPosts->ID;
 									$IAMOP = $parentPosts->IP;
@@ -3798,8 +3728,8 @@ function regularboard_shortcode($atts,$content = null){
 										echo '<meta http-equiv="refresh" content="3;URL= '.$REDIRECTO.'">';
 									}else{								
 										echo '<div class="op" id="'.$ID.'">';
-										echo '<i class="fa fa-minus toggelthis"></i>';	
-										echo '<i class="fa fa-plus toggelthis hidden"></i>';	
+										//echo '<i class="fa fa-minus toggelthis"></i>';	
+										//echo '<i class="fa fa-plus toggelthis hidden"></i>';	
 										if($URL != '' && $TYPE == 'image')echo '<span class="fileinfo">File:<a href="'.$URL.'">'.$URL.'</a></span>';
 										if($LAST == '9999-12-25 23:59:59')echo '<i class="fa fa-thumb-tack"></i> ';
 										if($LAST == '0')echo '<i class="fa fa-lock"></i> ';
@@ -3856,11 +3786,8 @@ function regularboard_shortcode($atts,$content = null){
 										if($THREAD == '')echo substr($COMMENT,0,$cutoff);
 										if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
 										if($THREAD != '')echo $COMMENT;
-										
-										
-											$THISPAGE = get_permalink();
-											if($THREAD == '' && $totalREPLIES >= 4) echo '<span class="omittedinfo">'.$totalREPLYS.' posts omitted.  Click <i class="loadmore fa fa-plus" data="'.$THISPAGE.'?board='.$BOARD.'&amp;thread='.$ID.'"></i> <a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">here</a> to view.</span>';
-											
+										$THISPAGE = get_permalink();
+										if($THREAD == '' && $totalREPLIES >= 4) echo '<span class="omittedinfo">'.$totalREPLYS.' posts omitted.  Click <i class="loadmore fa fa-plus" data="'.$THISPAGE.'?board='.$BOARD.'&amp;thread='.$ID.'"></i> <a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">here</a> to view.</span>';
 										echo '<div class="omitted'.$ID.'" id="omitted">';
 										if(count($gotReplies) > 0){
 											foreach($gotReplies as $REPLIES){
@@ -3962,12 +3889,8 @@ function regularboard_shortcode($atts,$content = null){
 												echo '</div>';
 											}
 										}
-
-										
-										
 										
 										echo '</div></div>';
-
 									}
 								}
 								if($BOARD != '' && $THREAD == ''){
@@ -4073,26 +3996,49 @@ function enqueueMOMscriptsFooter(){
 		}
 		if(get_option('mommaincontrol_lazyload') == 1){
 			$lazyLoad = '//cdn.jsdelivr.net/jquery.lazyload/1.9.0/jquery.lazyload.min.js';
+			$lazyLoadFunctions = plugins_url().'/my-optional-modules/includes/javascript/lazyload.js';
 			wp_deregister_script('lazyload');
 			wp_register_script('lazyload',$lazyLoad,'','',null,false);
 			wp_enqueue_script('lazyload');
+			wp_deregister_script('lazyLoadFunctions');
+			wp_register_script('lazyLoadFunctions',$lazyLoadFunctions,'','',null,false);
+			wp_enqueue_script('lazyLoadFunctions');			
 		}
 		if(get_option('MOM_themetakeover_wowhead') == 1){
 			$wowhead = '//static.wowhead.com/widgets/power.js';
+			$tooltips = plugins_url().'/my-optional-modules/includes/javascript/wowheadtooltips.js';
 			wp_deregister_script('wowhead');
 			wp_register_script('wowhead',$wowhead,'','',null,false);
 			wp_enqueue_script('wowhead');
+			wp_deregister_script('wowheadtooltips');
+			wp_register_script('wowheadtooltips',$wowheadtooltips,'','',null,false);
+			wp_enqueue_script('wowheadtooltips');			
 		}		
+		global $wp,$post;
+		$content = $post->post_content;
+		$regularboard = plugins_url().'/my-optional-modules/includes/javascript/regularboard.js';
+		if( has_shortcode( $content, 'regularboard' )){
+			wp_deregister_script('regularboard');
+			wp_register_script('regularboard',$regularboard,'','',null,false);
+			wp_enqueue_script('regularboard');		
+		}
+		if(get_option('MOM_themetakeover_topbar') == 1){
+			$stucktothetop = plugins_url().'/my-optional-modules/includes/javascript/stucktothetop.js';
+			wp_deregister_script('stucktothetop');
+			wp_register_script('stucktothetop',$stucktothetop,'','',null,false);
+			wp_enqueue_script('stucktothetop');				
+		}
+		if(get_option('MOM_themetakeover_topbar') == 2){
+			$stucktothebottom = plugins_url().'/my-optional-modules/includes/javascript/stucktothebottom.js';
+			wp_deregister_script('stucktothebottom');
+			wp_register_script('stucktothebottom',$stucktothebottom,'','',null,false);
+			wp_enqueue_script('stucktothebottom');		
+		}
 	}
 	add_action('wp_enqueue_scripts','mom_jquery');
 	function MOMScriptsFooter(){
 		echo '
 		<script type=\'text/javascript\'>';
-		if(get_option('MOM_themetakeover_wowhead') == 1){
-			echo '
-			var wowhead_tooltips = { "colorlinks": true, "iconizelinks": true, "renamelinks": true }
-			';
-		}
 		if(get_option('mommaincontrol_analytics') == 1 && get_option('momanalytics_code') != ''){
 			echo '
 			(function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){
@@ -4105,51 +4051,6 @@ function enqueueMOMscriptsFooter(){
 		}			
 
 		echo 'jQuery(document).ready(function($){';
-		
-		global $wp,$post;
-		$content = $post->post_content;
-		if( has_shortcode( $content, 'regularboard' )){
-			
-			//Remember form
-			echo '$( function() {
-				$("form").sisyphus();
-			});';
-			//Highlight reply
-			echo '	
-				var hash = window.location.hash.substr(2);
-				if(hash != false && hash != \'undefined\'){
-					$(\'#\'+hash+\'\').addClass(\'current\');
-					$(location.hash + \'.reply\').addClass(\'active\');
-				};
-			';
-			echo '
-				$(\'.loadmore\').click(function(){
-					var regbo_urlid = $(this).parent().parent().attr(\'id\');
-					var regbo_url = $(this).attr(\'data\');
-					$(\'.omitted\'+regbo_urlid).load(regbo_url + \' div#omitted div.reply\');
-				});
-				$(\'.reload\').click(function(){
-					var regbo_relurl = $(this).attr(\'data\');
-					$(\'#omitted\').load(regbo_relurl + \' div#omitted div.reply\');
-				});
-				
-				$(\'.toggelthis\').click(function(){
-					var regbo_divid = $(this).parent().attr(\'id\');
-					if($(this).parent().hasClass(\'toggled\')){
-					$(\'#\'+regbo_divid+\' .shortinfo\').addClass(\'hidden\');
-					$(\'#\'+regbo_divid+\'\').removeClass(\'toggled\');
-					$(\'#\'+regbo_divid+\' .toggelthis.fa.fa-plus\').addClass(\'hidden\');
-					$(\'#\'+regbo_divid+\' .toggelthis.fa.fa-minus\').removeClass(\'hidden\');
-					}else{
-					$(\'#\'+regbo_divid+\' .toggelthis.fa.fa-minus\').addClass(\'hidden\');
-					$(\'#\'+regbo_divid+\' .toggelthis.fa.fa-plus\').removeClass(\'hidden\');
-					$(\'#\'+regbo_divid+\' .shortinfo\').removeClass(\'hidden\');
-					$(\'#\'+regbo_divid+\'\').addClass(\'toggled\');
-					}
-				});
-			';
-		}
-		
 		if(get_option('mommaincontrol_momja') == 1){
 			if(is_archive() || is_home() || is_search()){
 				echo '
@@ -4245,7 +4146,6 @@ function enqueueMOMscriptsFooter(){
 							return;
 							break;
 					}
-					
 				});
 				}
 				';
@@ -4257,50 +4157,6 @@ function enqueueMOMscriptsFooter(){
 			echo '
 			$(\''.$fitvidContainer.'\').fitVids();';
 		}
-		// Lazyload
-		if(get_option('mommaincontrol_lazyload') == 1){
-			$placeholder = plugins_url().'/'.plugin_basename(dirname(__FILE__)).'/includes/javascript/placeholder.jpg';
-			echo '
-			$("img").wrap(function(){
-				if($(this).hasClass("skipLazy")){
-				}else{
-					$(this).wrap(function(){
-						var newimg = \'<img src="'.$placeholder.'" data-original="\' + $(this).attr(\'src\') + \'" width="\' + $(this).attr(\'width\') + \'" height="\' + $(this).attr(\'height\') + \'" class="lazy \' + $(this).attr(\'class\') + \'">\';
-						return newimg;
-					});
-					return \'<noscript>\';
-				}
-				});
-			$("img.lazy").lazyload(
-				{
-				data_attribute: "original",
-				failure_limit: 999
-				
-			});';
-		}
-		// Navbar
-		if(get_option('MOM_themetakeover_topbar') == 1){
-			echo '
-			$(window).scroll(function(){
-				var scroll = $(window).scrollTop();
-					if(scroll >= 0){
-						$(".momnavbar").addClass("stucktothetop");
-				}else{
-						$(".momnavbar").removeClass("stucktothetop");
-				}
-			});';	
-		}
-		if(get_option('MOM_themetakeover_topbar') == 2){
-			echo '
-			$(window).scroll(function(){
-				var scroll = $(window).scrollTop();
-					if(scroll >= 0){
-						$(".momnavbar").addClass("stucktothebottom");
-				}else{
-						$(".momnavbar").removeClass("stucktothebottom");
-				}
-			});';	
-		}		
 		// Post/page list(s) / scroll-to-top arrow
 		if(get_option('MOM_themetakeover_postdiv') != '' && get_option('MOM_themetakeover_postelement') != ''){
 			if(is_single() || is_page()){

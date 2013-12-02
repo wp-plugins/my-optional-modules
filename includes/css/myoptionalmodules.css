@@ -23,10 +23,10 @@ input[type=text].password{width:95%;margin:10px auto}
 div.momnavbar .item{height:20px;cursor:pointer;margin:0;padding:5px}
 .momnavbarcategories{width:calc(100%-50px);height:100%;overflow:hidden;display:block;clear:both;line-height:53px;font-size:15px;margin:-5px 0;padding:0}
 .momnavbarcategories li{float:left;list-style:none;margin:0 5px}
-.momnavbar label.momsearchthis{position:absolute;right:5px;top:15px;cursor:pointer}
-.momnavbar .search-form,.momnavbar #searchform{position:absolute;right:25px;top:5px}
+.momnavbar label.momsearchthis{position:absolute;right:5px;top:15px;cursor:pointer;background-color:transparent !important;color:#000 !important}
+.momnavbar .search-form,.momnavbar #searchform{position:absolute;right:25px;top:10px}
 .momnavbar #searchform input[type=text]{height:25px!important;font-size:20px!important;width:35px!important;border:0!important;cursor:pointer!important;float:right!important;display:block!important;padding:0!important}
-.momnavbar #searchform input[type=text]:focus{width:150px}
+.momnavbar #searchform input[type=text]:focus{width:150px !important}
 .navbartop,.stucktothetop{position:fixed!important;top:0!important;left:0!important;z-index:99999!important}
 .navbarbottom,.stucktothebottom{position:fixed!important;bottom:0!important;left:0!important;z-index:99999!important}
 .momnavbar_pagesup{width:799px;height:25px;overflow:hidden;clear:both;position:absolute;text-align:right;line-height:15px;background-color:#fff;border-top:1px solid #000;border-right:1px solid #000;margin:0 0 0 10px}
@@ -140,7 +140,7 @@ h3.banned{overflow:hidden;border:0;text-decoration:none;text-align:center;text-i
 h3.options{border:0;text-decoration:none;text-align:center;text-indent:-.12em;color:#f4f1de;font:40px anchor-web-1,anchor-web-2, Impact, sans-serif;font-weight:900;display:inline-block;line-height:1;width:100%;text-shadow:#691616 .01em .01em 0 .02em .02em 0 .03em .03em 0 .04em .04em 0 .05em .05em 0 .06em .06em 0 .07em .07em 0 #691616 .08em .08em 0 .09em .09em 0 .1em .1em 0;margin:0 auto;padding:10px}
 h3.info{font-weight:900;text-align:center;width:100%;margin:10px auto}
 .boardDisplay article{display:block;font-size:13px;line-height:15px;background-color:#fffdf7;margin:10px auto;padding:5px}
-.boardDisplay .op{display:inline-block;font-size:12px;line-height:13px;float:left;width:95%;border-top:1px solid #b7c5d9;margin:0 auto 0 20px;padding:5px 0}
+.boardDisplay .op{display:inline-block;font-size:12px;line-height:13px;float:left;width:100%;border-top:1px solid #b7c5d9;margin:0 auto;padding:5px 0}
 .boardDisplay div.reply{background-color:#d6daf0;color:#21272e;overflow:hidden;max-width:95%;width:auto;font-size:12px;line-height:14px;text-align:left;display:table;margin:10px;padding:5px}
 .boardDisplay .op p,.boardDisplay .reply p{max-width:95%;word-wrap:break-word;display:table;margin:2px 0 2px 15px;padding:5px}
 .boardDisplay .op iframe,.boardDisplay .reply iframe{display:table;width:95%;margin:0 auto}
