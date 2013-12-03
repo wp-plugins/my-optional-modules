@@ -109,7 +109,7 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 .mycontrols div{clear:both;width:150px;overflow:hidden}
 .mycontrols div a{display:block;width:150px;height:100%}
 .mycontrols div:hover .attachedcomment{position:absolute;top:0;left:155px;display:block;visibility:visible;width:300px;background-color:#fff;font-size:10px;line-height:12px;margin:5px;padding:5px}
-.boardDisplay{display:block;background-color:#f2f8ff;color:#252523;border:1px solid #201f0f;text-shadow:none;width:100%;box-shadow:#c1ddfa .01em .01em 0 .02em .02em 0 .03em .03em 0 .04em .04em 0 .05em .05em 0 .06em .06em 0 .07em .07em 0 #c1ddfa .08em .08em 0 .09em .09em 0 .1em .1em 0;margin:10px auto}
+.boardDisplay{display:block;background-color:#f2f8ff;color:#252523;border:1px solid #201f0f;text-shadow:none;width:100%;box-shadow:#c1ddfa .01em .01em 0 .02em .02em 0 .03em .03em 0 .04em .04em 0 .05em .05em 0 .06em .06em 0 .07em .07em 0 #c1ddfa .08em .08em 0 .09em .09em 0 .1em .1em 0;margin:10px auto;overflow:hidden}
 .boardDisplay .avatar-32{float:left;border-radius:3px;height:23px;width:23px;margin:-5px 5px}
 .boardDisplay .boardlist div{clear:both;width:95%;background-color:#fff;border:1px solid #133453;overflow-y:auto;overflow-x:hidden;margin:5px auto;padding:0}
 .boardDisplay .omittedinfo{color:#b2b0b0;font-weight:200;float:left;clear:left;margin:15px}

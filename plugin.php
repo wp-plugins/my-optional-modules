@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.9.1
+Version: 5.3.9.2
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -190,7 +190,7 @@ if($mommodule_versionnumbers == 1)$mommodule_versionnumbers = true;
 if($mommodule_versionnumbers === true)add_filter('style_loader_src','mom_remove_version_numbers',0);
 if($mommodule_versionnumbers === true)add_filter('script_loader_src','mom_remove_version_numbers',0);
 $momthemetakeover_youtube = esc_url(get_option('MOM_themetakeover_youtubefrontpage'));
-/****************************** SECTION B -/- (B2) Main Functions ******************************/
+/****************************** SECTION B -/- (B2) Main Functions */
 function checkdnsbl($ip){
 	//http://snipplr.com/view/64564/
 	$dnsbl_lookup=array(
@@ -380,7 +380,7 @@ function mom_plugin_scripts(){
 function mom_exclude_postformat_theme_support(){
 	add_theme_support('post-formats', array('aside','gallery','link','image','quote','status','video','audio','chat'));
 }
-/****************************** SECTION B -/- (B3) Options ******************************/
+/****************************** SECTION B -/- (B3) Options */
 if(current_user_can('manage_options')){
 global $wpdb;
 $regularboard_boards = $wpdb->prefix.'regularboard_boards';
@@ -402,165 +402,133 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 	if(get_option('mommaincontrol_passwords_activated') == 0){$wpdb->query("DROP TABLE ".$RUPs_table_name."");}
 	if(get_option('mommaincontrol_reviews_activated') == 0){$wpdb->query("DROP TABLE ".$review_table_name."");}
 	if(get_option('mommaincontrol_shorts_activated') == 0){$wpdb->query("DROP TABLE ".$verification_table_name."");}
-	delete_option('mommaincontrol_regularboard_activated');
-	delete_option('mommaincontrol_regularboard');
-	delete_option('mommaincontrol_votes_activated');
-	delete_option('mommaincontrol_protectrss');
-	delete_option('MOM_themetakeover_extend');
-	delete_option('MOM_themetakeover_backgroundimage');
-	delete_option('MOM_themetakeover_topbar_search');
-	delete_option('MOM_themetakeover_topbar_share');
-	delete_option('MOM_themetakeover_topbar_color');
-	delete_option('mommaincontrol_footerscripts');
-	delete_option('mommaincontrol_authorarchives');
-	delete_option('mommaincontrol_datearchives');
-	delete_option('MOM_themetakeover_wowhead');
-	delete_option('mom_passwords_salt');
-	delete_option('mommaincontrol_obwcountplus');
-	delete_option('mommaincontrol_momrups');
-	delete_option('mommaincontrol_momse');
-	delete_option('mommaincontrol_mompaf');
-	delete_option('mommaincontrol_momja');
-	delete_option('mommaincontrol_shorts');
-	delete_option('mommaincontrol_analytics');
-	delete_option('mommaincontrol_reviews');
-	delete_option('mommaincontrol_fontawesome');
-	delete_option('mommaincontrol_versionnumbers');
-	delete_option('mommaincontrol_lazyload');
-	delete_option('mommaincontrol_meta');
-	delete_option('mommaincontrol_focus');
-	delete_option('mommaincontrol_maintenance');
-	delete_option('mommaincontrol_themetakeover');
-	delete_option('mommaincontrol_setfocus');
-	delete_option('mommaincontrol');
-	delete_option('mompaf_post');
-	delete_option('obwcountplus_1_countdownfrom');
-	delete_option('obwcountplus_2_remaining');
-	delete_option('obwcountplus_3_total');
-	delete_option('obwcountplus_4_custom');
-	delete_option('rotating_universal_passwords_1');
-	delete_option('rotating_universal_passwords_2');
-	delete_option('rotating_universal_passwords_3');
-	delete_option('rotating_universal_passwords_4');
-	delete_option('rotating_universal_passwords_5');
-	delete_option('rotating_universal_passwords_6');
-	delete_option('rotating_universal_passwords_7');
-	delete_option('rotating_universal_passwords_8');	
-	delete_option('MOM_Exclude_VisitorCategories');
-	delete_option('MOM_Exclude_VisitorTags');
-	delete_option('MOM_Exclude_Categories_Front');
-	delete_option('MOM_Exclude_Categories_TagArchives');
-	delete_option('MOM_Exclude_Categories_SearchResults');
-	delete_option('MOM_Exclude_Tags_Front');
-	delete_option('MOM_Exclude_Tags_CategoryArchives');
-	delete_option('MOM_Exclude_Tags_SearchResults');
-	delete_option('MOM_Exclude_PostFormats_Front');
-	delete_option('MOM_Exclude_PostFormats_CategoryArchives');
-	delete_option('MOM_Exclude_PostFormats_TagArchives');
-	delete_option('MOM_Exclude_PostFormats_SearchResults');
-	delete_option('MOM_Exclude_Categories_RSS');
-	delete_option('MOM_Exclude_Tags_RSS');
-	delete_option('MOM_Exclude_PostFormats_RSS');
-	delete_option('MOM_Exclude_TagsSun');
-	delete_option('MOM_Exclude_TagsMon');
-	delete_option('MOM_Exclude_TagsTue');
-	delete_option('MOM_Exclude_TagsWed');
-	delete_option('MOM_Exclude_TagsThu');
-	delete_option('MOM_Exclude_TagsFri');
-	delete_option('MOM_Exclude_TagsSat');
-	delete_option('MOM_Exclude_CategoriesSun');
-	delete_option('MOM_Exclude_CategoriesMon');
-	delete_option('MOM_Exclude_CategoriesTue');
-	delete_option('MOM_Exclude_CategoriesWed');
-	delete_option('MOM_Exclude_CategoriesThu');
-	delete_option('MOM_Exclude_CategoriesFri');
-	delete_option('MOM_Exclude_CategoriesSat');
-	delete_option('MOM_Exclude_level0Categories');
-	delete_option('MOM_Exclude_level1Categories');
-	delete_option('MOM_Exclude_level2Categories');
-	delete_option('MOM_Exclude_level7Categories');
-	delete_option('MOM_Exclude_level0Tags');
-	delete_option('MOM_Exclude_level1Tags');
-	delete_option('MOM_Exclude_level2Tags');
-	delete_option('MOM_Exclude_level7Tags');
-	delete_option('MOM_Exclude_URL');
-	delete_option('MOM_Exclude_URL_User');
-	delete_option('MOM_Exclude_PostFormats_Visitor');
-	delete_option('MOM_Exclude_NoFollow');
-	delete_option('simple_announcement_with_exclusion_cat_visitor');
-	delete_option('simple_announcement_with_exclusion_tag_visitor');
-	delete_option('mommaincontrol_passwords_activated');
-	delete_option('MOM_themetakeover_youtubefrontpage');
-	delete_option('MOM_themetakeover_topbar');
-	delete_option('MOM_themetakeover_archivepage');
-	delete_option('MOM_themetakeover_fitvids');
-	delete_option('MOM_themetakeover_postdiv');
-	delete_option('MOM_themetakeover_postelement');
-	delete_option('MOM_themetakeover_posttoggle');
-	delete_option('mommaincontrol_shorts_activated');
-	delete_option('jump_around_0');
-	delete_option('jump_around_1');
-	delete_option('jump_around_2');
-	delete_option('jump_around_3');
-	delete_option('jump_around_4');
-	delete_option('jump_around_5');
-	delete_option('jump_around_6');
-	delete_option('jump_around_7');
-	delete_option('jump_around_8');
-	delete_option('mommaincontrol_reviews_activated');
-	delete_option('momanalytics_code');
-	delete_option('momreviews_css');
-	delete_option('momreviews_search');
-	delete_option('momMaintenance_url');
-	delete_option('mommaincontrol_votes');
+	$option = array('mommaincontrol_regularboard_activated','mommaincontrol_regularboard','mommaincontrol_votes_activated','mommaincontrol_protectrss','MOM_themetakeover_extend','MOM_themetakeover_backgroundimage',
+	'MOM_themetakeover_topbar_search','MOM_themetakeover_topbar_share','MOM_themetakeover_topbar_color','mommaincontrol_footerscripts','mommaincontrol_authorarchives','mommaincontrol_datearchives','MOM_themetakeover_wowhead',
+	'mom_passwords_salt','mommaincontrol_obwcountplus','mommaincontrol_momrups','mommaincontrol_momse','mommaincontrol_mompaf','mommaincontrol_momja','mommaincontrol_shorts','mommaincontrol_analytics','mommaincontrol_reviews',
+	'mommaincontrol_fontawesome','mommaincontrol_versionnumbers','mommaincontrol_lazyload','mommaincontrol_meta','mommaincontrol_focus','mommaincontrol_maintenance','mommaincontrol_themetakeover','mommaincontrol_setfocus',
+	'mommaincontrol','mompaf_post','obwcountplus_1_countdownfrom','obwcountplus_2_remaining','obwcountplus_3_total','obwcountplus_4_custom','rotating_universal_passwords_1','rotating_universal_passwords_2','rotating_universal_passwords_3',
+	'rotating_universal_passwords_4','rotating_universal_passwords_5','rotating_universal_passwords_6','rotating_universal_passwords_7','rotating_universal_passwords_8','MOM_Exclude_VisitorCategories','MOM_Exclude_VisitorTags',
+	'MOM_Exclude_Categories_Front','MOM_Exclude_Categories_TagArchives','MOM_Exclude_Categories_SearchResults','MOM_Exclude_Tags_Front','MOM_Exclude_Tags_CategoryArchives','MOM_Exclude_Tags_SearchResults','MOM_Exclude_PostFormats_Front',
+	'MOM_Exclude_PostFormats_CategoryArchives','MOM_Exclude_PostFormats_TagArchives','MOM_Exclude_PostFormats_SearchResults','MOM_Exclude_Categories_RSS','MOM_Exclude_Tags_RSS','MOM_Exclude_PostFormats_RSS','MOM_Exclude_TagsSun',
+	'MOM_Exclude_TagsMon','MOM_Exclude_TagsTue','MOM_Exclude_TagsWed','MOM_Exclude_TagsThu','MOM_Exclude_TagsFri','MOM_Exclude_TagsSat','MOM_Exclude_CategoriesSun','MOM_Exclude_CategoriesMon','MOM_Exclude_CategoriesTue','MOM_Exclude_CategoriesWed',
+	'MOM_Exclude_CategoriesThu','MOM_Exclude_CategoriesFri','MOM_Exclude_CategoriesSat','MOM_Exclude_level0Categories','MOM_Exclude_level1Categories','MOM_Exclude_level2Categories','MOM_Exclude_level7Categories','MOM_Exclude_level0Tags',
+	'MOM_Exclude_level1Tags','MOM_Exclude_level2Tags','MOM_Exclude_level7Tags','MOM_Exclude_URL','MOM_Exclude_URL_User','MOM_Exclude_PostFormats_Visitor','MOM_Exclude_NoFollow','simple_announcement_with_exclusion_cat_visitor',
+	'simple_announcement_with_exclusion_tag_visitor','mommaincontrol_passwords_activated','MOM_themetakeover_youtubefrontpage','MOM_themetakeover_topbar','MOM_themetakeover_archivepage','MOM_themetakeover_fitvids','MOM_themetakeover_postdiv',
+	'MOM_themetakeover_postelement','MOM_themetakeover_posttoggle','mommaincontrol_shorts_activated','jump_around_0','jump_around_1','jump_around_2','jump_around_3','jump_around_4','jump_around_5','jump_around_6','jump_around_7',
+	'jump_around_8','mommaincontrol_reviews_activated','momanalytics_code','momreviews_css','momreviews_search','momMaintenance_url','mommaincontrol_votes');
+	foreach ($option as &$value){
+		delete_option($value);
+	}
 }else{	
 	// Form handling for options a
 	if(isset($_POST['MOMsave'])){}
-	if(isset($_POST['mom_regularboard_mode_submit'])){update_option('mommaincontrol_regularboard',$_REQUEST['regularboard']);}
-	if(isset($_POST['mom_themetakeover_mode_submit'])){update_option('mommaincontrol_themetakeover',$_REQUEST['themetakeover']);}
-	if(isset($_POST['mom_protectrss_mode_submit'])){update_option('mommaincontrol_protectrss',$_REQUEST['protectrss']);}
-	if(isset($_POST['mom_footerscripts_mode_submit'])){update_option('mommaincontrol_footerscripts',$_REQUEST['footerscripts']);}
-	if(isset($_POST['mom_author_archives_mode_submit'])){update_option('mommaincontrol_authorarchives',$_REQUEST['authorarchives']);}
-	if(isset($_POST['mom_date_archives_mode_submit'])){update_option('mommaincontrol_datearchives',$_REQUEST['datearchives']);}
-	if(isset($_POST['mom_count_mode_submit'])){update_option('mommaincontrol_obwcountplus',$_REQUEST['countplus']);}
-	if(isset($_POST['mom_votes_mode_submit'])){update_option('mommaincontrol_votes',$_REQUEST['votes']);}
-	if(isset($_POST['mom_exclude_mode_submit'])){update_option('mommaincontrol_momse',$_REQUEST['exclude']);}
-	if(isset($_POST['mom_jumparound_mode_submit'])){update_option('mommaincontrol_momja',$_REQUEST['jumparound']);}
-	if(isset($_POST['mom_passwords_mode_submit'])){update_option('mommaincontrol_momrups',$_REQUEST['passwords']);}
-	if(isset($_POST['mom_reviews_mode_submit'])){update_option('mommaincontrol_reviews',$_REQUEST['reviews']);}
-	if(isset($_POST['mom_shortcodes_mode_submit'])){update_option('mommaincontrol_shorts',$_REQUEST['shortcodes']);}
-	if(isset($_POST['MOMclear'])){update_option('mommaincontrol_focus','');}
-	if(isset($_POST['MOMthemetakeover'])){update_option('mommaincontrol_focus','themetakeover');}
-	if(isset($_POST['MOMexclude'])){update_option('mommaincontrol_focus','exclude');}
-	if(isset($_POST['MOMfontfa'])){update_option('mommaincontrol_focus','fontfa');}
-	if(isset($_POST['MOMcount'])){update_option('mommaincontrol_focus','count');}
-	if(isset($_POST['MOMjumparound'])){update_option('mommaincontrol_focus','jumparound');}
-	if(isset($_POST['MOMpasswords'])){update_option('mommaincontrol_focus','passwords');}
-	if(isset($_POST['MOMreviews'])){update_option('mommaincontrol_focus','reviews');}
-	if(isset($_POST['MOMshortcodes'])){update_option('mommaincontrol_focus','shortcodes');}
-	if(isset($_POST['mom_postasfront_post_submit'])){update_option('momMaintenance_url',$_REQUEST['momMaintenance_url']);}
-	if(isset($_POST['mom_postasfront_post_submit'])){update_option('momanalytics_code',$_REQUEST['momanalytics_code']);}
-	if(isset($_POST['mom_postasfront_post_submit'])){update_option('mompaf_post',$_REQUEST['mompaf_post']);}
-	if(isset($_POST['mom_fontawesome_mode_submit'])){update_option('mommaincontrol_fontawesome',$_REQUEST['mommaincontrol_fontawesome']);}
-	if(isset($_POST['mom_lazy_mode_submit'])){update_option('mommaincontrol_lazyload',$_REQUEST['mommaincontrol_lazyload']);}
-	if(isset($_POST['mom_versions_submit'])){update_option('mommaincontrol_versionnumbers',$_REQUEST['mommaincontrol_versionnumbers']);}
-	if(isset($_POST['mom_meta_mode_submit'])){update_option('mommaincontrol_meta',$_REQUEST['mommaincontrol_meta']);}
-	if(isset($_POST['mom_maintenance_mode_submit'])){update_option('mommaincontrol_maintenance',$_REQUEST['maintenanceMode']);}
-	if(isset($_POST['mom_analytics_mode_submit'])){update_option('mommaincontrol_analytics',$_REQUEST['analytics']);}
-	if(isset($_POST['mom_postasfront_mode_submit'])){update_option('mommaincontrol_mompaf',$_REQUEST['postasfront']);
-	if(!get_option('mommaincontrol_mompaf')){add_option('mompaf_post',0);}}
-	if(isset($_POST['mom_count_mode_submit'])){add_option('obwcountplus_1_countdownfrom',0);}
-	if(isset($_POST['mom_count_mode_submit'])){add_option('obwcountplus_2_remaining','remaining');}
-	if(isset($_POST['mom_count_mode_submit'])){add_option('obwcountplus_3_total','total');}
-	if(isset($_POST['mom_jumparound_mode_submit'])){add_option('jump_around_0','post');}
-	if(isset($_POST['mom_jumparound_mode_submit'])){add_option('jump_around_1','entry-title');}
-	if(isset($_POST['mom_jumparound_mode_submit'])){add_option('jump_around_2','previous-link');}
-	if(isset($_POST['mom_jumparound_mode_submit'])){add_option('jump_around_3','next-link');}
-	if(isset($_POST['mom_jumparound_mode_submit'])){add_option('jump_around_4',65);}
-	if(isset($_POST['mom_jumparound_mode_submit'])){add_option('jump_around_5',83);}
-	if(isset($_POST['mom_jumparound_mode_submit'])){add_option('jump_around_6',68);}
-	if(isset($_POST['mom_jumparound_mode_submit'])){add_option('jump_around_7',90);}
-	if(isset($_POST['mom_jumparound_mode_submit'])){add_option('jump_around_8',88);}
+	if(isset($_POST['mom_regularboard_mode_submit'])){
+		update_option('mommaincontrol_regularboard',$_REQUEST['regularboard']);
+	}
+	if(isset($_POST['mom_themetakeover_mode_submit'])){
+		update_option('mommaincontrol_themetakeover',$_REQUEST['themetakeover']);
+	}
+	if(isset($_POST['mom_protectrss_mode_submit'])){
+		update_option('mommaincontrol_protectrss',$_REQUEST['protectrss']);
+	}
+	if(isset($_POST['mom_footerscripts_mode_submit'])){
+		update_option('mommaincontrol_footerscripts',$_REQUEST['footerscripts']);
+	}
+	if(isset($_POST['mom_author_archives_mode_submit'])){
+		update_option('mommaincontrol_authorarchives',$_REQUEST['authorarchives']);
+	}
+	if(isset($_POST['mom_date_archives_mode_submit'])){
+		update_option('mommaincontrol_datearchives',$_REQUEST['datearchives']);
+	}
+	if(isset($_POST['mom_votes_mode_submit'])){
+		update_option('mommaincontrol_votes',$_REQUEST['votes']);
+	}
+	if(isset($_POST['mom_exclude_mode_submit'])){
+		update_option('mommaincontrol_momse',$_REQUEST['exclude']);
+	}
+	if(isset($_POST['mom_passwords_mode_submit'])){
+		update_option('mommaincontrol_momrups',$_REQUEST['passwords']);
+	}
+	if(isset($_POST['mom_reviews_mode_submit'])){
+		update_option('mommaincontrol_reviews',$_REQUEST['reviews']);
+	}
+	if(isset($_POST['mom_shortcodes_mode_submit'])){
+		update_option('mommaincontrol_shorts',$_REQUEST['shortcodes']);
+	}
+	if(isset($_POST['MOMclear'])){
+		update_option('mommaincontrol_focus','');
+	}
+	if(isset($_POST['MOMthemetakeover'])){
+		update_option('mommaincontrol_focus','themetakeover');
+	}
+	if(isset($_POST['MOMexclude'])){
+		update_option('mommaincontrol_focus','exclude');
+	}
+	if(isset($_POST['MOMfontfa'])){
+		update_option('mommaincontrol_focus','fontfa');
+	}
+	if(isset($_POST['MOMcount'])){
+		update_option('mommaincontrol_focus','count');
+	}
+	if(isset($_POST['MOMjumparound'])){
+		update_option('mommaincontrol_focus','jumparound');
+	}
+	if(isset($_POST['MOMpasswords'])){
+		update_option('mommaincontrol_focus','passwords');
+	}
+	if(isset($_POST['MOMreviews'])){
+		update_option('mommaincontrol_focus','reviews');
+	}
+	if(isset($_POST['MOMshortcodes'])){
+		update_option('mommaincontrol_focus','shortcodes');
+	}
+	if(isset($_POST['mom_postasfront_post_submit'])){
+		update_option('momMaintenance_url',$_REQUEST['momMaintenance_url']);
+		update_option('momanalytics_code',$_REQUEST['momanalytics_code']);
+		update_option('mompaf_post',$_REQUEST['mompaf_post']);
+	}
+	if(isset($_POST['mom_fontawesome_mode_submit'])){
+		update_option('mommaincontrol_fontawesome',$_REQUEST['mommaincontrol_fontawesome']);
+	}
+	if(isset($_POST['mom_lazy_mode_submit'])){
+		update_option('mommaincontrol_lazyload',$_REQUEST['mommaincontrol_lazyload']);
+	}
+	if(isset($_POST['mom_versions_submit'])){
+		update_option('mommaincontrol_versionnumbers',$_REQUEST['mommaincontrol_versionnumbers']);
+	}
+	if(isset($_POST['mom_meta_mode_submit'])){
+		update_option('mommaincontrol_meta',$_REQUEST['mommaincontrol_meta']);
+	}
+	if(isset($_POST['mom_maintenance_mode_submit'])){
+		update_option('mommaincontrol_maintenance',$_REQUEST['maintenanceMode']);
+	}
+	if(isset($_POST['mom_analytics_mode_submit'])){
+		update_option('mommaincontrol_analytics',$_REQUEST['analytics']);
+	}
+	if(isset($_POST['mom_postasfront_mode_submit'])){
+		update_option('mommaincontrol_mompaf',$_REQUEST['postasfront']);
+	}
+	if(!get_option('mommaincontrol_mompaf')){
+		add_option('mompaf_post',0);
+	}
+	if(isset($_POST['mom_count_mode_submit'])){
+		update_option('mommaincontrol_obwcountplus',$_REQUEST['countplus']);
+		add_option('obwcountplus_1_countdownfrom',0);
+		add_option('obwcountplus_2_remaining','remaining');
+		add_option('obwcountplus_3_total','total');
+	}
+	if(isset($_POST['mom_jumparound_mode_submit'])){
+		update_option('mommaincontrol_momja',$_REQUEST['jumparound']);
+		add_option('jump_around_0','.post');
+		add_option('jump_around_1','.entry-title');
+		add_option('jump_around_2','.previous-link');
+		add_option('jump_around_3','.next-link');
+		add_option('jump_around_4',65);
+		add_option('jump_around_5',83);
+		add_option('jump_around_6',68);
+		add_option('jump_around_7',90);
+		add_option('jump_around_8',88);
+	}
 	if(isset($_POST['mom_passwords_mode_submit'])){
 		$availableCharacters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890./';
 		$generateSalt = '';
@@ -569,49 +537,47 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 		}
 		add_option('mom_passwords_salt',$generateSalt);
 	}
-	
 	if(isset($_POST['mom_regularboard_mode_submit'])){
 		add_option('mommaincontrol_regularboard_activated',1);
 		if(get_option('mommaincontrol_regularboard_activated') == 1){
-		$regularboardSQLa = "CREATE TABLE $regularboard_boards(
-		ID INT(11) NOT NULL AUTO_INCREMENT , 
-		NAME TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-		SHORTNAME TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-		DESCRIPTION TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-		RULES TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-		PRIMARY KEY  (ID)
-		);";
-		$regularboardSQLb = "CREATE TABLE $regularboard_posts(
-		ID INT(11) NOT NULL AUTO_INCREMENT , 
-		PARENT INT(11) NOT NULL ,
-		IP INT(11) NOT NULL ,
-		DATE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-		EMAIL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-		SUBJECT TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-		COMMENT TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-		TYPE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-		URL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-		BOARD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-		MODERATOR TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-		LAST TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-		PRIMARY KEY  (ID)
-		);";
-		$regularboardSQLc = "CREATE TABLE $regularboard_users(
-		ID INT(11) NOT NULL AUTO_INCREMENT , 
-		IP INT(11) NOT NULL,
-		PARENT INT(11) NOT NULL,
-		BANNED INT(11) NOT NULL,
-		MESSAGE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-		PRIMARY KEY  (ID)
-		);";
-		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-		dbDelta($regularboardSQLa);
-		dbDelta($regularboardSQLb);
-		dbDelta($regularboardSQLc);
-		update_option('mommaincontrol_regularboard_activated',0);
+			$regularboardSQLa = "CREATE TABLE $regularboard_boards(
+			ID INT(11) NOT NULL AUTO_INCREMENT , 
+			NAME TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+			SHORTNAME TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+			DESCRIPTION TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+			RULES TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+			PRIMARY KEY  (ID)
+			);";
+			$regularboardSQLb = "CREATE TABLE $regularboard_posts(
+			ID INT(11) NOT NULL AUTO_INCREMENT , 
+			PARENT INT(11) NOT NULL ,
+			IP INT(11) NOT NULL ,
+			DATE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+			EMAIL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+			SUBJECT TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+			COMMENT TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+			TYPE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+			URL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+			BOARD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+			MODERATOR TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+			LAST TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+			PRIMARY KEY  (ID)
+			);";
+			$regularboardSQLc = "CREATE TABLE $regularboard_users(
+			ID INT(11) NOT NULL AUTO_INCREMENT , 
+			IP INT(11) NOT NULL,
+			PARENT INT(11) NOT NULL,
+			BANNED INT(11) NOT NULL,
+			MESSAGE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+			PRIMARY KEY  (ID)
+			);";
+			require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+			dbDelta($regularboardSQLa);
+			dbDelta($regularboardSQLb);
+			dbDelta($regularboardSQLc);
+			update_option('mommaincontrol_regularboard_activated',0);
 		}
 	}
-	
 	if(isset($_POST['mom_votes_mode_submit'])){
 		add_option('mommaincontrol_votes_activated',1);					
 		if(get_option('mommaincontrol_votes_activated') == 1){
@@ -633,16 +599,15 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 		update_option('mommaincontrol_votes_activated',0);
 		}
 	}
-	
-	if(isset($_POST['mom_passwords_mode_submit'])){add_option('rotating_universal_passwords_1','');}	
-	if(isset($_POST['mom_passwords_mode_submit'])){add_option('rotating_universal_passwords_2','');}	
-	if(isset($_POST['mom_passwords_mode_submit'])){add_option('rotating_universal_passwords_3','');}	
-	if(isset($_POST['mom_passwords_mode_submit'])){add_option('rotating_universal_passwords_4','');}	
-	if(isset($_POST['mom_passwords_mode_submit'])){add_option('rotating_universal_passwords_5','');}	
-	if(isset($_POST['mom_passwords_mode_submit'])){add_option('rotating_universal_passwords_6','');}	
-	if(isset($_POST['mom_passwords_mode_submit'])){add_option('rotating_universal_passwords_7','');}	
-	if(isset($_POST['mom_passwords_mode_submit'])){add_option('rotating_universal_passwords_8','7');}	
 	if(isset($_POST['mom_passwords_mode_submit'])){
+		add_option('rotating_universal_passwords_1','');
+		add_option('rotating_universal_passwords_2','');
+		add_option('rotating_universal_passwords_3','');
+		add_option('rotating_universal_passwords_4','');
+		add_option('rotating_universal_passwords_5','');
+		add_option('rotating_universal_passwords_6','');
+		add_option('rotating_universal_passwords_7','');
+		add_option('rotating_universal_passwords_8','7');
 		add_option('mommaincontrol_passwords_activated',1);					
 		if(get_option('mommaincontrol_passwords_activated') == 1){
 		$RUPs_sql = "CREATE TABLE $RUPs_table_name(
@@ -658,50 +623,51 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 		update_option('mommaincontrol_passwords_activated',0);
 		}
 	}
-	if(isset($_POST['mom_postasfront_mode_submit'])){add_option('mompaf_post',0);}	
+	if(isset($_POST['mom_postasfront_mode_submit'])){
+		add_option('mompaf_post',0);
+	}
 	if(isset($_POST['mom_reviews_mode_submit'])){
-	add_option('mommaincontrol_reviews_activated',1);
-	add_option('momreviews_search','');
-	add_option('momreviews_css',"/* Colors */\n.momreview .block {background-color: #fff; color: #000;}\n.momreview section.reviewed {background-color: #fff; color: #000;}\n.momreview ::selection {background: #222; color: #fff;}\n.momreview label {color: #111; text-shadow: 1px 1px 2px #ccc;}\n/* Containers */\n.momreview {margin: 0 auto; width: 95%;}\n.momreview .block {padding-top: 5px; margin: 0 auto 0 auto;}\n.momreview label {width: 95%; min-height: 35px; margin: 0 auto; display: block; cursor: pointer;}\n.momreview .reviewed {width: 93%; height: 0; padding: 0 15px 0 15px; display: block; overflow: hidden; box-sizing: border-box; margin: auto;}\n/* Do not edit below this line */\n/* unless you know what you're doing. */\n.momreview label span {font-weight: bold; float:right;}\n.momreview input[type='checkbox']{display: none;}\n.momreview .block input[type='checkbox']:checked ~ .reviewed {height: auto; margin: -25px auto 5px auto;}\n.momreview .block input[type='checkbox'] ~ label span:first-of-type {display:block; visibility:visible; float:right; margin:0 -5px 0 0;}\n.momreview .block input[type='checkbox'] ~ label span:last-of-type,\n.momreview .block input[type='checkbox']:checked ~ label span:first-of-type {display:none; visibility:hidden; float:right;}\n.momreview .block input[type='checkbox']:checked ~ label span:last-of-type {display:block; visibility:visible; float:right;}\n");
-	if(get_option('mommaincontrol_reviews_activated') == 1){
-	global $wpdb;
-	$review_table_name = $wpdb->prefix.'momreviews';
-	$reviews_sql = "CREATE TABLE $review_table_name (
-		ID INT(11) NOT NULL AUTO_INCREMENT,
-		TYPE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-		LINK TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-		TITLE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-		REVIEW TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-		RATING TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-		PRIMARY KEY  (ID)
-	);";
-	require_once(ABSPATH.'wp-admin/includes/upgrade.php');
-	dbDelta($reviews_sql);
-	update_option('mommaincontrol_reviews_activated',0);
-	}	
+		add_option('mommaincontrol_reviews_activated',1);
+		add_option('momreviews_search','');
+		add_option('momreviews_css',"/* Colors */\n.momreview .block {background-color: #fff; color: #000;}\n.momreview section.reviewed {background-color: #fff; color: #000;}\n.momreview ::selection {background: #222; color: #fff;}\n.momreview label {color: #111; text-shadow: 1px 1px 2px #ccc;}\n/* Containers */\n.momreview {margin: 0 auto; width: 95%;}\n.momreview .block {padding-top: 5px; margin: 0 auto 0 auto;}\n.momreview label {width: 95%; min-height: 35px; margin: 0 auto; display: block; cursor: pointer;}\n.momreview .reviewed {width: 93%; height: 0; padding: 0 15px 0 15px; display: block; overflow: hidden; box-sizing: border-box; margin: auto;}\n/* Do not edit below this line */\n/* unless you know what you're doing. */\n.momreview label span {font-weight: bold; float:right;}\n.momreview input[type='checkbox']{display: none;}\n.momreview .block input[type='checkbox']:checked ~ .reviewed {height: auto; margin: -25px auto 5px auto;}\n.momreview .block input[type='checkbox'] ~ label span:first-of-type {display:block; visibility:visible; float:right; margin:0 -5px 0 0;}\n.momreview .block input[type='checkbox'] ~ label span:last-of-type,\n.momreview .block input[type='checkbox']:checked ~ label span:first-of-type {display:none; visibility:hidden; float:right;}\n.momreview .block input[type='checkbox']:checked ~ label span:last-of-type {display:block; visibility:visible; float:right;}\n");
+		if(get_option('mommaincontrol_reviews_activated') == 1){
+			global $wpdb;
+			$review_table_name = $wpdb->prefix.'momreviews';
+			$reviews_sql = "CREATE TABLE $review_table_name (
+				ID INT(11) NOT NULL AUTO_INCREMENT,
+				TYPE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+				LINK TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+				TITLE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+				REVIEW TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+				RATING TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+				PRIMARY KEY  (ID)
+			);";
+			require_once(ABSPATH.'wp-admin/includes/upgrade.php');
+			dbDelta($reviews_sql);
+			update_option('mommaincontrol_reviews_activated',0);
+		}
 	}
-	if(isset($_POST['mom_reviews_mode_submit'])){add_option('mommaincontrol_reviews_activated',1);}
-	if(isset($_POST['mom_shortcodes_mode_submit'])){add_option('mommaincontrol_shorts_activated',1);}
 	if(isset($_POST['mom_shortcodes_mode_submit'])){
-	add_option('mommaincontrol_shorts_activated',1);
-	if(get_option('mommaincontrol_shorts_activated') == 1){
-		global $wpdb;
-		$verification_table_name = $wpdb->prefix.'momverification';
-		$verification_sql = "CREATE TABLE $verification_table_name(
-			ID INT(11) NOT NULL AUTO_INCREMENT,
-			POST INT(11) NOT NULL, 
-			CORRECT INT(11) NOT NULL, 
-			IP INT(11) NOT NULL,
-			PRIMARY KEY  (ID)
-		);";
-		require_once(ABSPATH.'wp-admin/includes/upgrade.php');
-		dbDelta($verification_sql);
-		update_option('mommaincontrol_shorts_activated',0);
-	}
+		add_option('mommaincontrol_shorts_activated',1);
+		if(get_option('mommaincontrol_shorts_activated') == 1){
+			global $wpdb;
+			$verification_table_name = $wpdb->prefix.'momverification';
+			$verification_sql = "CREATE TABLE $verification_table_name(
+				ID INT(11) NOT NULL AUTO_INCREMENT,
+				POST INT(11) NOT NULL, 
+				CORRECT INT(11) NOT NULL, 
+				IP INT(11) NOT NULL,
+				PRIMARY KEY  (ID)
+			);";
+			require_once(ABSPATH.'wp-admin/includes/upgrade.php');
+			dbDelta($verification_sql);
+			update_option('mommaincontrol_shorts_activated',0);
+		}
 	}
 	if(isset($_POST['mom_maintenance_mode_submit'])){
 			add_option('momMaintenance_url','');
-		}
+	}
+	
 }
 	if(isset($_POST['reset_rups'])){
 		delete_option('rotating_universal_passwords_1');delete_option('rotating_universal_passwords_2');delete_option('rotating_universal_passwords_3');delete_option('rotating_universal_passwords_4');delete_option('rotating_universal_passwords_5');delete_option('rotating_universal_passwords_6');delete_option('rotating_universal_passwords_7');	
@@ -764,7 +730,7 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 		}	
 	}
 }
-/****************************** SECTION C -/- (C0) Settings -/- Main Plugin Page ******************************/
+/****************************** SECTION C -/- (C0) Settings -/- Main Plugin Page */
 if(current_user_can('manage_options')){
 	// Add options page for plugin to Wordpress backend
 	add_action('admin_menu','my_optional_modules_add_options_page');
@@ -775,106 +741,72 @@ if(current_user_can('manage_options')){
 	function my_optional_modules_page_content(){
 		echo '
 		<div class="wrap">
-		<code>my optional modules / <a href="http://www.onebillionwords.com/my-optional-modules/">documentation</a> / <a href="http://wordpress.org/support/view/plugin-reviews/my-optional-modules">rate and review</a></code>
-		<code class="right"><a href="http://onebillionwords.com/">one billion words</a></code>
+		my optional modules / <a href="http://www.onebillionwords.com/my-optional-modules/">documentation</a> / <a href="http://wordpress.org/support/view/plugin-reviews/my-optional-modules">rate and review</a>
 		<div class="myoptionalmodules">
-		<code>click a module to <strong class="on">activate</strong>/<strong class="off">deactivate</strong> it.</code>
-		<section>
-		<div class="small left">
-		<form method="post" name="momReviews"><label for="mom_reviews_mode_submit" class="onoff';if(get_option('mommaincontrol_reviews') == 1){echo '1';}else{echo '0';}echo'">Reviews<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_reviews') == 1){echo '0';}if(get_option('mommaincontrol_reviews') == 0){echo '1';}echo '" name="reviews" /><input type="submit" id="mom_reviews_mode_submit" name="mom_reviews_mode_submit" value="Submit" class="hidden" /></form>
-		<form method="post" action="" name="momCount"><label for="mom_count_mode_submit" class="onoff';if(get_option('mommaincontrol_obwcountplus') == 1){echo '1';}else{echo '0';}echo'">Count++<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_obwcountplus') == 1){echo '0';}if(get_option('mommaincontrol_obwcountplus') == 0){echo '1';}echo '" name="countplus" /><input type="submit" id="mom_count_mode_submit" name="mom_count_mode_submit" value="Submit" class="hidden" /></form>
-		<form method="post" action="" name="momExclude"><label for="mom_exclude_mode_submit" class="onoff';if(get_option('mommaincontrol_momse') == 1){echo '1';}else{echo '0';}echo'">Exclude<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momse') == 1){echo '0';}if(get_option('mommaincontrol_momse') == 0){echo '1';}echo '" name="exclude" /><input type="submit" id="mom_exclude_mode_submit" name="mom_exclude_mode_submit" value="Submit" class="hidden" /></form>
-		<form method="post" action="" name="momVotes"><label for="mom_votes_mode_submit" class="onoff';if(get_option('mommaincontrol_votes') == 1){echo '1';}else{echo '0';}echo'">Post votes<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_votes') == 1){echo '0';}if(get_option('mommaincontrol_votes') == 0){echo '1';}echo '" name="votes" /><input type="submit" id="mom_votes_mode_submit" name="mom_votes_mode_submit" value="Submit" class="hidden" /></form>
-		</div>
-		<div class="small left">
-		<form method="post" action="" name="momJumpAround"><label for="mom_jumparound_mode_submit" class="onoff';if(get_option('mommaincontrol_momja') == 1){echo '1';}else{echo '0';}echo'">Jump Around<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momja') == 1){echo '0';}if(get_option('mommaincontrol_momja') == 0){echo '1';}echo '" name="jumparound" /><input type="submit" id="mom_jumparound_mode_submit" name="mom_jumparound_mode_submit" value="Submit" class="hidden" /></form>';
-		if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){ echo '<form method="post" action="" name="momPasswords"><label for="mom_passwords_mode_submit" class="onoff';if(get_option('mommaincontrol_momrups') == 1){echo '1';}else{echo '0';}echo'">Passwords<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momrups') == 1){echo '0';}if(get_option('mommaincontrol_momrups') == 0){echo '1';}echo '" name="passwords" /><input type="submit" id="mom_passwords_mode_submit" name="mom_passwords_mode_submit" value="Submit" class="hidden" /></form>';}
-		echo '<form method="post" action="" name="momShortcodes"><label for="mom_shortcodes_mode_submit" class="onoff';if(get_option('mommaincontrol_shorts') == 1){echo '1';}else{echo '0';}echo'">Shortcodes<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_shorts') == 1){echo '0';}if(get_option('mommaincontrol_shorts') == 0){echo '1';}echo '" name="shortcodes" /><input type="submit" id="mom_shortcodes_mode_submit" name="mom_shortcodes_mode_submit" value="Submit" class="hidden" /></form>
-		<form method="post" action="" name="protectrss"><label for="mom_protectrss_mode_submit" class="onoff';if(get_option('mommaincontrol_protectrss') == 1){echo '1';}else{echo '0';}echo'">&copy; RSS feed<span></span></label><input class="hidden" type="text" value="';if(get_option('mommaincontrol_protectrss') == 1){echo '0';}if(get_option('mommaincontrol_protectrss') == 0){echo '1';}echo '" name="protectrss" /><input type="submit" id="mom_protectrss_mode_submit" name="mom_protectrss_mode_submit" value="Submit" class="hidden" /></form>
-		</div>
-		<div class="small left">
-		<form method="post" action="" name="momThemTakeover"><label for="mom_themetakeover_mode_submit" class="onoff';if(get_option('mommaincontrol_themetakeover') == 1){echo '1';}else{echo '0';}echo'">Theme Takeover<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_themetakeover') == 1){echo '0';}if(get_option('mommaincontrol_themetakeover') == 0){echo '1';}echo '" name="themetakeover" /><input type="submit" id="mom_themetakeover_mode_submit" name="mom_themetakeover_mode_submit" value="Submit" class="hidden" /></form>
-		<form method="post" action="" name="fontawesome"><label for="mom_fontawesome_mode_submit" class="onoff';if(get_option('mommaincontrol_fontawesome') == 1){echo '1';}else{echo '0';}echo'">Font Awesome<span></span></label><input class="hidden" type="text" value="';if(get_option('mommaincontrol_fontawesome') == 1){echo '0';}if(get_option('mommaincontrol_fontawesome') == 0){echo '1';}echo '" name="mommaincontrol_fontawesome" /><input type="submit" id="mom_fontawesome_mode_submit" name="mom_fontawesome_mode_submit" value="Submit" class="hidden" /></form>
-		<form method="post" action="" name="hidewpversions"><label for="mom_versions_submit" class="onoff';if(get_option('mommaincontrol_versionnumbers') == 1){echo '1';}else{echo '0';}echo'">Hide WP Version<span></span></label><input class="hidden" type="text" value="';if(get_option('mommaincontrol_versionnumbers') == 1){echo '0';}if(get_option('mommaincontrol_versionnumbers') == 0){echo '1';}echo '" name="mommaincontrol_versionnumbers" /><input type="submit" id="mom_versions_submit" name="mom_versions_submit" value="Submit" class="hidden" /></form>
-		<form method="post" action="" name="footerscripts"><label for="mom_footerscripts_mode_submit" class="onoff';if(get_option('mommaincontrol_footerscripts') == 1){echo '1';}else{echo '0';}echo'">Move JS to Footer<span></span></label><input class="hidden" type="text" value="';if(get_option('mommaincontrol_footerscripts') == 1){echo '0';}if(get_option('mommaincontrol_footerscripts') == 0){echo '1';}echo '" name="footerscripts" /><input type="submit" id="mom_footerscripts_mode_submit" name="mom_footerscripts_mode_submit" value="Submit" class="hidden" /></form>
-		</div>
-		<div class="small left">
-		<form method="post" action="" name="lazyload"><label for="mom_lazy_mode_submit" class="onoff';if(get_option('mommaincontrol_lazyload') == 1){echo '1';}else{echo '0';}echo'">Lazy Load<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_lazyload') == 1){echo '0';}if(get_option('mommaincontrol_lazyload') == 0){echo '1';}echo '" name="mommaincontrol_lazyload" /><input type="submit" id="mom_lazy_mode_submit" name="mom_lazy_mode_submit" value="Submit" class="hidden" /></form>
-		<form method="post" action="" name="meta"><label for="mom_meta_mode_submit" class="onoff';if(get_option('mommaincontrol_meta') == 1){echo '1';}else{echo '0';}echo'">Meta<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_meta') == 1){echo '0';}if(get_option('mommaincontrol_meta') == 0){echo '1';}echo '" name="mommaincontrol_meta" /><input type="submit" id="mom_meta_mode_submit" name="mom_meta_mode_submit" value="Submit" class="hidden" /></form>
-		<form method="post" action="" name="authorarchives"><label for="mom_author_archives_mode_submit" class="onoff';if(get_option('mommaincontrol_authorarchives') == 1){echo '1';}else{echo '0';}echo'">Disable Authors<span></span></label><input class="hidden" type="text" value="';if(get_option('mommaincontrol_authorarchives') == 1){echo '0';}if(get_option('mommaincontrol_authorarchives') == 0){echo '1';}echo '" name="authorarchives" /><input type="submit" id="mom_author_archives_mode_submit" name="mom_author_archives_mode_submit" value="Submit" class="hidden" /></form>
-		<form method="post" action="" name="datearchives"><label for="mom_date_archives_mode_submit" class="onoff';if(get_option('mommaincontrol_datearchives') == 1){echo '1';}else{echo '0';}echo'">Disable Dates<span></span></label><input class="hidden" type="text" value="';if(get_option('mommaincontrol_datearchives') == 1){echo '0';}if(get_option('mommaincontrol_datearchives') == 0){echo '1';}echo '" name="datearchives" /><input type="submit" id="mom_date_archives_mode_submit" name="mom_date_archives_mode_submit" value="Submit" class="hidden" /></form>
-		</div>';
+		
+		';
 
-		echo '<div class="small left">
-		<form method="post" action="" name="regularboard"><label for="mom_regularboard_mode_submit" class="onoff';if(get_option('mommaincontrol_regularboard') == 1){echo '1';}else{echo '0';}echo'">Regular Board<span></span></label><input class="hidden" type="text" value="';if(get_option('mommaincontrol_regularboard') == 1){echo '0';}if(get_option('mommaincontrol_regularboard') == 0){echo '1';}echo '" name="regularboard" /><input type="submit" id="mom_regularboard_mode_submit" name="mom_regularboard_mode_submit" value="Submit" class="hidden" /></form>
+		echo '
+		<hr class="clear" />
+		<section class="switches">
+		<form method="post"><section><label class="configurationlabel" for="MOMclear">Home</label><input id="MOMclear" name="MOMclear" class="hidden" type="submit"></section></form>';
+		if(get_option('mommaincontrol_reviews') == 1){echo '<form class="config" method="post"><section><label class="configurationlabel" for="MOMreviews">Reviews</label><i class="fa fa-cogs"></i><input id="MOMreviews" name="MOMreviews" class="hidden" type="submit"></section></form>';}else{echo '<form method="post" action="" name="momReviews"><label for="mom_reviews_mode_submit">Reviews</label>';if(get_option('mommaincontrol_reviews') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input type="text" class="hidden" value="';if(get_option('mommaincontrol_reviews') == 1){echo '0';}else{echo '1';}echo '" name="reviews" /><input type="submit" id="mom_reviews_mode_submit" name="mom_reviews_mode_submit" value="Submit" class="hidden" /></form>';}
+		if(get_option('mommaincontrol_obwcountplus') == 1){echo '<form class="config" method="post"><section><label class="configurationlabel" for="MOMcount"></i>Count++</label><i class="fa fa-cogs"></i><input id="MOMcount" name="MOMcount" class="hidden" type="submit"></section></form>';}else{echo '<form method="post" action="" name="momCount"><label for="mom_count_mode_submit">Count++</label>';if(get_option('mommaincontrol_obwcountplus') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input type="text" class="hidden" value="';if(get_option('mommaincontrol_obwcountplus') == 1){echo '0';}else{echo '1';}echo '" name="countplus" /><input type="submit" id="mom_count_mode_submit" name="mom_count_mode_submit" value="Submit" class="hidden" /></form>';}
+		if(get_option('mommaincontrol_momse') == 1){echo '<form class="config" method="post"><section><label class="configurationlabel" for="MOMexclude">Exclude</label><i class="fa fa-cogs"></i><input id="MOMexclude" name="MOMexclude" class="hidden" type="submit"></section></form>';}else{echo '<form method="post" action="" name="momExclude"><label for="mom_exclude_mode_submit">Exclude</label>';if(get_option('mommaincontrol_momse') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input type="text" class="hidden" value="';if(get_option('mommaincontrol_momse') == 1){echo '0';}else{echo '1';}echo '" name="exclude" /><input type="submit" id="mom_exclude_mode_submit" name="mom_exclude_mode_submit" value="Submit" class="hidden" /></form>';}
+		if(get_option('mommaincontrol_momja') == 1){echo '<form class="config" method="post"><section><label class="configurationlabel" for="MOMjumparound">Jump Around</label><i class="fa fa-cogs"></i><input id="MOMjumparound" name="MOMjumparound" class="hidden" type="submit"></section></form>';}else{echo '<form method="post" action="" name="momJumpAround"><label for="mom_jumparound_mode_submit">Jump Around</label>';if(get_option('mommaincontrol_momja') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input type="text" class="hidden" value="';if(get_option('mommaincontrol_momja') == 1){echo '0';}else{echo '1';}echo '" name="jumparound" /><input type="submit" id="mom_jumparound_mode_submit" name="mom_jumparound_mode_submit" value="Submit" class="hidden" /></form>';}
+		if(get_option('mommaincontrol_shorts') == 1){echo '<form class="config" method="post"><section><label class="configurationlabel" for="MOMshortcodes"></i>Shortcodes</label><i class="fa fa-cogs"></i><input id="MOMshortcodes" name="MOMshortcodes" class="hidden" type="submit"></section></form>';}else{echo '<form method="post" action="" name="momShortcodes"><label for="mom_shortcodes_mode_submit">Shortcodes</label>';if(get_option('mommaincontrol_shorts') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input type="text" class="hidden" value="';if(get_option('mommaincontrol_shorts') == 1){echo '0';}else{echo '1';}echo '" name="shortcodes" /><input type="submit" id="mom_shortcodes_mode_submit" name="mom_shortcodes_mode_submit" value="Submit" class="hidden" /></form>';}
+		if(get_option('mommaincontrol_themetakeover') == 1){echo '<form class="config" method="post"><section><label class="configurationlabel" for="MOMthemetakeover"></i>Takeover</label><i class="fa fa-cogs"></i><input id="MOMthemetakeover" name="MOMthemetakeover" class="hidden" type="submit"></section></form>';}else{echo '<form method="post" action="" name="momThemTakeover"><label for="mom_themetakeover_mode_submit">Theme Takeover</label>';if(get_option('mommaincontrol_themetakeover') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input type="text" class="hidden" value="';if(get_option('mommaincontrol_themetakeover') == 1){echo '0';}else{echo '1';}echo '" name="themetakeover" /><input type="submit" id="mom_themetakeover_mode_submit" name="mom_themetakeover_mode_submit" value="Submit" class="hidden" /></form>';}
+		if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH && get_option('mommaincontrol_momrups') == 1){echo '<form class="config" method="post"><section><label class="configurationlabel" for="MOMpasswords">Passwords</label><i class="fa fa-cogs"></i><input id="MOMpasswords" name="MOMpasswords" class="hidden" type="submit"></section></form>';}else{if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){ echo '<form method="post" action="" name="momPasswords"><label for="mom_passwords_mode_submit">Passwords</label>';if(get_option('mommaincontrol_momrups') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input type="text" class="hidden" value="';if(get_option('mommaincontrol_momrups') == 1){echo '0';}else{echo '1';}echo '" name="passwords" /><input type="submit" id="mom_passwords_mode_submit" name="mom_passwords_mode_submit" value="Submit" class="hidden" /></form>';}}
+		echo '
+		<form method="post" action="" name="momVotes"><label for="mom_votes_mode_submit">Post votes</label>';if(get_option('mommaincontrol_votes') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input type="text" class="hidden" value="';if(get_option('mommaincontrol_votes') == 1){echo '0';}else{echo '1';}echo '" name="votes" /><input type="submit" id="mom_votes_mode_submit" name="mom_votes_mode_submit" value="Submit" class="hidden" /></form>
+		<form method="post" action="" name="protectrss"><label for="mom_protectrss_mode_submit">&copy; RSS feed</label>';if(get_option('mommaincontrol_protectrss') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input class="hidden" type="text" value="';if(get_option('mommaincontrol_protectrss') == 1){echo '0';}else{echo '1';}echo '" name="protectrss" /><input type="submit" id="mom_protectrss_mode_submit" name="mom_protectrss_mode_submit" value="Submit" class="hidden" /></form>
+		<form method="post" action="" name="fontawesome"><label for="mom_fontawesome_mode_submit">Font Awesome</label>';if(get_option('mommaincontrol_fontawesome') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input class="hidden" type="text" value="';if(get_option('mommaincontrol_fontawesome') == 1){echo '0';}else{echo '1';}echo '" name="mommaincontrol_fontawesome" /><input type="submit" id="mom_fontawesome_mode_submit" name="mom_fontawesome_mode_submit" value="Submit" class="hidden" /></form>
+		<form method="post" action="" name="hidewpversions"><label for="mom_versions_submit">Hide WP Version</label>';if(get_option('mommaincontrol_versionnumbers') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input class="hidden" type="text" value="';if(get_option('mommaincontrol_versionnumbers') == 1){echo '0';}else{echo '1';}echo '" name="mommaincontrol_versionnumbers" /><input type="submit" id="mom_versions_submit" name="mom_versions_submit" value="Submit" class="hidden" /></form>
+		<form method="post" action="" name="footerscripts"><label for="mom_footerscripts_mode_submit">JS to footer</label>';if(get_option('mommaincontrol_footerscripts') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input class="hidden" type="text" value="';if(get_option('mommaincontrol_footerscripts') == 1){echo '0';}else{echo '1';}echo '" name="footerscripts" /><input type="submit" id="mom_footerscripts_mode_submit" name="mom_footerscripts_mode_submit" value="Submit" class="hidden" /></form>
+		<form method="post" action="" name="lazyload"><label for="mom_lazy_mode_submit">Lazy Load</label>';if(get_option('mommaincontrol_lazyload') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input type="text" class="hidden" value="';if(get_option('mommaincontrol_lazyload') == 1){echo '0';}else{echo '1';}echo '" name="mommaincontrol_lazyload" /><input type="submit" id="mom_lazy_mode_submit" name="mom_lazy_mode_submit" value="Submit" class="hidden" /></form>
+		<form method="post" action="" name="meta"><label for="mom_meta_mode_submit">Meta</label>';if(get_option('mommaincontrol_meta') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input type="text" class="hidden" value="';if(get_option('mommaincontrol_meta') == 1){echo '0';}else{echo '1';}echo '" name="mommaincontrol_meta" /><input type="submit" id="mom_meta_mode_submit" name="mom_meta_mode_submit" value="Submit" class="hidden" /></form>
+		<form method="post" action="" name="authorarchives"><label for="mom_author_archives_mode_submit">Disable Authors</label>';if(get_option('mommaincontrol_authorarchives') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input class="hidden" type="text" value="';if(get_option('mommaincontrol_authorarchives') == 1){echo '0';}else{echo '1';}echo '" name="authorarchives" /><input type="submit" id="mom_author_archives_mode_submit" name="mom_author_archives_mode_submit" value="Submit" class="hidden" /></form>
+		<form method="post" action="" name="datearchives"><label for="mom_date_archives_mode_submit">Disable Dates</label>';if(get_option('mommaincontrol_datearchives') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input class="hidden" type="text" value="';if(get_option('mommaincontrol_datearchives') == 1){echo '0';}else{echo '1';}echo '" name="datearchives" /><input type="submit" id="mom_date_archives_mode_submit" name="mom_date_archives_mode_submit" value="Submit" class="hidden" /></form>
+		<form method="post" action="" name="regularboard"><label for="mom_regularboard_mode_submit">Regular Board</label>';if(get_option('mommaincontrol_regularboard') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input class="hidden" type="text" value="';if(get_option('mommaincontrol_regularboard') == 1){echo '0';}else{echo '1';}echo '" name="regularboard" /><input type="submit" id="mom_regularboard_mode_submit" name="mom_regularboard_mode_submit" value="Submit" class="hidden" /></form>
+		<form method="post" action="" name="momAnalytics"><label for="mom_analytics_mode_submit">Analytics</label>';if(get_option('mommaincontrol_analytics') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input type="text" class="hidden" value="';if(get_option('mommaincontrol_analytics') == 1){echo '0';}else{echo '1';}echo '" name="analytics" /><input type="submit" id="mom_analytics_mode_submit" name="mom_analytics_mode_submit" class="hidden" value="Submit" /></form>
+		<form method="post" action="" name="momMaintenance"><label for="mom_maintenance_mode_submit">Maintenance</label>';if(get_option('mommaincontrol_maintenance') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input type="text" class="hidden" value="';if(get_option('mommaincontrol_maintenance') == 1){echo '0';}else{echo '1';}echo '" name="maintenanceMode" class="hidden" /><input type="submit" id="mom_maintenance_mode_submit" name="mom_maintenance_mode_submit" class="hidden" value="Submit" /></form>
+		<form method="post" action="" name="mompaf"><label for="mom_postasfront_mode_submit">Post as Front</label>';if(get_option('mommaincontrol_mompaf') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input type="text" class="hidden" value="';if(get_option('mommaincontrol_mompaf') == 1){echo '0';}else{echo '1';}echo '" name="postasfront" class="hidden" /><input type="submit" id="mom_postasfront_mode_submit" name="mom_postasfront_mode_submit" class="hidden" value="Submit" /></form>
 		';
 		if(!isset($_POST['mom_delete_step_one'])){
 		echo '
-		<section>
-			<form method="post" action="" name="mom_delete_step_one">
-			<label for="mom_delete_step_one" class="onoff0">
-				Uninstall<span><i class="fa fa-exclamation"></i></span>
-			</label>
-			<input type="submit" id="mom_delete_step_one" name="mom_delete_step_one" class="hidden" value="Submit" />
-			</form>
-		</section>';
+		<form method="post" action="" name="mom_delete_step_one">
+		<label for="mom_delete_step_one" class="onoff0">Uninstall</label>
+		<input type="submit" id="mom_delete_step_one" name="mom_delete_step_one" class="hidden" value="Submit" />
+		</form>
+		';
 		}
 		if(isset($_POST['mom_delete_step_one'])){
 		echo '
-		<section>
 			<form method="post" action="" name="MOM_UNINSTALL_EVERYTHING">
-			<label for="MOM_UNINSTALL_EVERYTHING" class="onoff1">
-				Confirm this<span><i class="fa fa-exclamation-circle"></i></span>
-			</label>
+			<label for="MOM_UNINSTALL_EVERYTHING" class="onoff1">Confirm this</label>
 			<input type="submit" id="MOM_UNINSTALL_EVERYTHING" name="MOM_UNINSTALL_EVERYTHING" class="hidden" value="Submit" />
 			</form>
-		</section>';
+		';
 		}			
 		echo '
 		</div>
+		<div class="myoptionalmodules">
+		<form method="post" action="">
+		<section class="single left"><label>Analytics property ID</label><input onClick="this.select();" type="text" value="'.get_option('momanalytics_code').'" name="momanalytics_code" placeholder="UA-XXXXXXXX-X" /></section>
+		<section class="single left"><label>URL for maintenance mode</label><input placeholder="http://url.tld" onClick="this.select();" type="text" value="'.get_option('momMaintenance_url').'" name="momMaintenance_url" /></section>
+		<section class="single left"><label>Post as front</label><select name="mompaf_post" id="mompaf_0"><option value="0" ';$mompaf_post = get_option('mompaf_post');selected( $options['mompaf_post'], 0);echo '/>Latest post</option>';$showmeposts = get_posts(array('posts_per_page' => -1));foreach($showmeposts as $postsshown){echo '<option name="mompaf_post" id="mompaf_'.$postsshown->ID.'" value="'.$postsshown->ID.'"';$postID = $postsshown->ID;$selected = selected( $mompaf_post, $postID);echo '>'.$postsshown->post_title.'</option>';}echo '</select></section>
+		<section class="single left"><label for="mom_postasfront_post_submit" class="save"><i class="fa fa-save"></i></label><input type="submit" id="mom_postasfront_post_submit" name="mom_postasfront_post_submit" value="Submit" class="hidden"></section>
+		</form>
 		</section>
 		</div>
 		<div class="myoptionalmodules">
-		<section>
-		<div class="small left">
-		<form method="post" action="" name="momAnalytics"><label for="mom_analytics_mode_submit" class="onoff';if(get_option('mommaincontrol_analytics') == 1){echo '1';}else{echo '0';}echo'">Analytics<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_analytics') == 1){echo '0';}else{echo '1';}echo '" name="analytics" /><input type="submit" id="mom_analytics_mode_submit" name="mom_analytics_mode_submit" class="hidden" value="Submit" /></form>
-		<form method="post" action="" name="momMaintenance"><label for="mom_maintenance_mode_submit" class="onoff';if(get_option('mommaincontrol_maintenance') == 1){echo '1';}else{echo '0';}echo'">Maintenance<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_maintenance') == 1){echo '0';}else{echo '1';}echo '" name="maintenanceMode" class="hidden" /><input type="submit" id="mom_maintenance_mode_submit" name="mom_maintenance_mode_submit" class="hidden" value="Submit" /></form>
-		<form method="post" action="" name="mompaf"><label for="mom_postasfront_mode_submit" class="onoff';if(get_option('mommaincontrol_mompaf') == 1){echo '1';}else{echo '0';}echo'">Post as Front<span></span></label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_mompaf') == 1){echo '0';}else{echo '1';}echo '" name="postasfront" class="hidden" /><input type="submit" id="mom_postasfront_mode_submit" name="mom_postasfront_mode_submit" class="hidden" value="Submit" /></form>
-		</div>
-		<div class="small left">
-		<form method="post" action=""><input onClick="this.select();" type="text" value="'.get_option('momanalytics_code').'" name="momanalytics_code" placeholder="UA-XXXXXXXX-X" />
-		<input placeholder="http://url.tld" onClick="this.select();" type="text" value="'.get_option('momMaintenance_url').'" name="momMaintenance_url" />
-		<select name="mompaf_post" id="mompaf_0"><option value="0" ';$mompaf_post = get_option('mompaf_post');selected( $options['mompaf_post'], 0);echo '/>Latest post</option>';$showmeposts = get_posts(array('posts_per_page' => -1));foreach($showmeposts as $postsshown){echo '<option name="mompaf_post" id="mompaf_'.$postsshown->ID.'" value="'.$postsshown->ID.'"';$postID = $postsshown->ID;$selected = selected( $mompaf_post, $postID);echo '>'.$postsshown->post_title.'</option>';}echo '</select>
-		</div>
-		<div class="small left">
-		<label for="mom_postasfront_post_submit" class="onoff1_solo">Save<span></span></label><input type="submit" id="mom_postasfront_post_submit" name="mom_postasfront_post_submit" value="Submit" class="hidden"></form>
-		</div>
-		</section>
-		</div>
-		<div class="myoptionalmodules">
-		<code>Clutter clogs up your database.  Click one to get rid of it.</code>
 		<section>
 		<div class="large left">';
 		my_optional_modules_cleaner_module();
 		echo '
 		</div>
 		</section>
-		</div>
-		<div class="myoptionalmodules">
-		<section>
-		<code>If a module is <strong class="on">activated</strong>, you can configure it by clicking on its link in this box.</code>
-		<form method="post" class="topnavigation"><section><label class="configurationlabel" for="MOMclear">Home</label><input id="MOMclear" name="MOMclear" class="hidden" type="submit"></section>';
-		if(get_option('mommaincontrol_obwcountplus') == 1 || get_option('mommaincontrol_momse') == 1 || get_option('mommaincontrol_momrups') == 1 || get_option('mommaincontrol_momja') == 1 || get_option('mommaincontrol_shorts') == 1 || get_option('mommaincontrol_reviews') == 1 || get_option('mommaincontrol_themetakeover') == 1){
-		if(get_option('mommaincontrol_obwcountplus') == 1){echo '<section><label class="configurationlabel" for="MOMcount"></i>Count++</label><input id="MOMcount" name="MOMcount" class="hidden" type="submit"></section>';}
-		if(get_option('mommaincontrol_momse') == 1){echo '<section><label class="configurationlabel" for="MOMexclude">Exclude</label><input id="MOMexclude" name="MOMexclude" class="hidden" type="submit"></section>';}
-		if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){if(get_option('mommaincontrol_momrups') == 1){echo '<section><label class="configurationlabel" for="MOMpasswords">Passwords</label><input id="MOMpasswords" name="MOMpasswords" class="hidden" type="submit"></section>';}}
-		if(get_option('mommaincontrol_momja') == 1){echo '<section><label class="configurationlabel" for="MOMjumparound">Jump Around</label><input id="MOMjumparound" name="MOMjumparound" class="hidden" type="submit"></section>';}
-		if(get_option('mommaincontrol_reviews') == 1){echo '<section><label class="configurationlabel" for="MOMreviews">Reviews</label><input id="MOMreviews" name="MOMreviews" class="hidden" type="submit"></section>';}
-		if(get_option('mommaincontrol_shorts') == 1){echo '<section><label class="configurationlabel" for="MOMshortcodes"></i>Shortcodes</label><input id="MOMshortcodes" name="MOMshortcodes" class="hidden" type="submit"></section>';}if(get_option('mommaincontrol_themetakeover') == 1){echo '<section><label class="configurationlabel" for="MOMthemetakeover"></i>Takeover</label><input id="MOMthemetakeover" name="MOMthemetakeover" class="hidden" type="submit"></section>';}
-		echo '</form>';}
-		echo '
-		</section>
-		</div>';
+		';
 		if(get_option('mommaincontrol_focus') != ''){
 			echo '
 			<div class="panelSection clear plugin">';
@@ -890,7 +822,7 @@ if(current_user_can('manage_options')){
 			if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){}else{ '<code>CRYPT_BLOWFISH is not available.  Passwords module disabled.</code><br />';}
 			if(!isset($_POST['generateHash']))echo '<form action="" method="post" name="generateHash"><input type="submit" name="generateHash" id="generateHash" value="Generate the file hash to check."/></form>';
 			if(isset($_POST['generateHash'])){
-				echo '<code>The has generated for this file is: <strong class="on">';
+				echo '<hr class="clear" /><i class="fa fa-code"></i> The hash generated for this file is: <strong class="on">';
 				$file = plugin_dir_path( __FILE__ ).'plugin.php';
 				$file_handler = fopen($file,'r'); 
 				$contents = fread($file_handler, filesize($file)); 
@@ -898,16 +830,18 @@ if(current_user_can('manage_options')){
 				$contents = esc_attr($contents);
 				$contents = str_replace(array("\n","\t","\r"),"",$contents);
 				echo hash('sha1',$contents);
-				echo '</strong></code>';
+				echo '</strong>';
 			}
 		}
 	echo '</div>';
 	}
 }
-/****************************** SECTION D -/- (D0) Settings -/- Passwords ******************************/
+/****************************** SECTION D -/- (D0) Settings -/- Passwords */
 if(current_user_can('manage_options')){
 	function my_optional_modules_passwords_module(){
-		echo '<span class="moduletitle">__passwords<em>[rups]hide this content[/rups]</em></span><div class="clear"></div><div class="settings">';
+		echo '<span class="moduletitle">
+		<form method="post" action="" name="momPasswords"><label for="mom_passwords_mode_submit">Deactivate</label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momrups') == 1){echo '0';}else{echo '1';}echo '" name="passwords" /><input type="submit" id="mom_passwords_mode_submit" name="mom_passwords_mode_submit" value="Submit" class="hidden" /></form>		
+		</span><div class="clear"></div><div class="settings">';
 		echo '
 			<form method="post">
 				<div class="countplus">
@@ -1004,7 +938,7 @@ if(current_user_can('manage_options')){
 		echo '</div></div></div>';
 	}
 }
-/****************************** SECTION D -/- (D1) Functions -/- Passwords ******************************/
+/****************************** SECTION D -/- (D1) Functions -/- Passwords */
 function rotating_universal_passwords_shortcode($atts, $content = null){
 	if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){
 		ob_start();
@@ -1098,137 +1032,141 @@ function rotating_universal_passwords_shortcode($atts, $content = null){
 		}
 	}
 }
-/****************************** SECTION E -/- (E0) Settings -/- Reviews ******************************/
+/****************************** SECTION E -/- (E0) Settings -/- Reviews */
 if(current_user_can('manage_options')){
-	function my_optional_modules_reviews_module(){
-		function update_mom_reviews(){
-			global $table_prefix,$wpdb;
-			$reviews_table_name = $table_prefix.'momreviews';			
-				$reviews_type = str_replace('"','\'',($_REQUEST['reviews_type']));
-				$reviews_link = str_replace('"','\'',($_REQUEST['reviews_link']));
-				$reviews_title = str_replace('"','\'',($_REQUEST['reviews_title']));
-				$reviews_reviewed = $_REQUEST['reviews_review'];
-				$reviews_review = wpautop($reviews_reviewed);
-				$reviews_rating = str_replace('"','\'',($_REQUEST['reviews_rating']));
-				$wpdb->query("INSERT INTO $reviews_table_name (ID,TYPE,LINK,TITLE,REVIEW,RATING) VALUES ('','$reviews_type','$reviews_link','$reviews_title','$reviews_review','$reviews_rating')") ;
-				echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
-		}
-		if(isset($_POST['filterResults'])){
-			$filter_type = $_REQUEST['filterResults_type'];		
-			$filter_type_fetch = sanitize_text_field($filter_type);
-			update_option('momreviews_search',$filter_type_fetch);
-		}
-		function update_mom_css(){
-			$newCSS = stripslashes_deep($_REQUEST['css']);
-			update_option('momreviews_css',$newCSS); 
-			echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
-		}
-		if(isset($_POST['reviewsubmit']))update_mom_reviews();
-		if(isset($_POST['csssubmit']))update_mom_css();
-		function print_mom_reviews_form(){
-			echo "
-				<div class=\"settingsInput\">
-				<form method=\"post\" class=\"addForm\">
-							<section>title<input type=\"text\" name=\"reviews_title\" placeholder=\"Enter title here\"></section>
-							<section>type<input type=\"text\" name=\"reviews_type\" placeholder=\"Review type\"></section>
-							<section>url<input type=\"text\" name=\"reviews_link\" placeholder=\"Relevant URL\" ></section>
-							<section class=\"editor\">
+        function my_optional_modules_reviews_module(){
+                function update_mom_reviews(){
+                        global $table_prefix,$wpdb;
+                        $reviews_table_name = $table_prefix.'momreviews';                        
+                                $reviews_type = str_replace('"','\'',($_REQUEST['reviews_type']));
+                                $reviews_link = str_replace('"','\'',($_REQUEST['reviews_link']));
+                                $reviews_title = str_replace('"','\'',($_REQUEST['reviews_title']));
+                                $reviews_reviewed = $_REQUEST['reviews_review'];
+                                $reviews_review = wpautop($reviews_reviewed);
+                                $reviews_rating = str_replace('"','\'',($_REQUEST['reviews_rating']));
+                                $wpdb->query("INSERT INTO $reviews_table_name (ID,TYPE,LINK,TITLE,REVIEW,RATING) VALUES ('','$reviews_type','$reviews_link','$reviews_title','$reviews_review','$reviews_rating')") ;
+                                echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
+                }
+                if(isset($_POST['filterResults'])){
+                        $filter_type = $_REQUEST['filterResults_type'];                
+                        $filter_type_fetch = sanitize_text_field($filter_type);
+                        update_option('momreviews_search',$filter_type_fetch);
+                }
+                function update_mom_css(){
+                        $newCSS = stripslashes_deep($_REQUEST['css']);
+                        update_option('momreviews_css',$newCSS);
+                        echo "<meta http-equiv=\"refresh\" content=\"0;url=\"" . plugin_basename(__FILE__) . "\" />";
+                }
+                if(isset($_POST['reviewsubmit']))update_mom_reviews();
+                if(isset($_POST['csssubmit']))update_mom_css();
+                function print_mom_reviews_form(){
+                        echo "
+                                <div class=\"settingsInput\">
+                                <form method=\"post\" class=\"addForm\">
+                                                        <section>title<input type=\"text\" name=\"reviews_title\" placeholder=\"Enter title here\"></section>
+                                                        <section>type<input type=\"text\" name=\"reviews_type\" placeholder=\"Review type\"></section>
+                                                        <section>url<input type=\"text\" name=\"reviews_link\" placeholder=\"Relevant URL\" ></section>
+                                                        <section class=\"editor\">
+                                                                ";
+                                                                        wp_editor($content,$name = 'reviews_review',$id = 'reviews_review',$prev_id = 'title',$media_buttons = true, $tab_index = 2);
+                                                                echo "
+                                                        </section>
+                                                        <section><label>rating</label><input type=\"text\" name=\"reviews_rating\" placeholder=\"Your rating\"></section>
+                                                        <section><input id=\"reviewsubmit\" type=\"submit\" value=\"Add review\" name=\"reviewsubmit\"/></section>
+                                </form>
+                                </div>
+                                <form method=\"post\" class=\"csssubmit\">
+                                        <section><textarea name=\"css\">".get_option('momreviews_css')."</textarea></section>
+                                        <section><input id=\"csssubmit\" type=\"submit\" value=\"Save CSS\" name=\"csssubmit\" /></section>
+                                </form>
+                                </div>
+                        ";
+                }
+                function reviews_page_content(){
+                        echo "        
+                                <span class=\"moduletitle\">
 								";
-									wp_editor($content,$name = 'reviews_review',$id = 'reviews_review',$prev_id = 'title',$media_buttons = true, $tab_index = 2);
-								echo "
-							</section>
-							<section><label>rating</label><input type=\"text\" name=\"reviews_rating\" placeholder=\"Your rating\"></section>
-							<section><input id=\"reviewsubmit\" type=\"submit\" value=\"Add review\" name=\"reviewsubmit\"/></section>
-				</form>
-				</div>
-				<form method=\"post\" class=\"csssubmit\">
-					<section><textarea name=\"css\">".get_option('momreviews_css')."</textarea></section>
-					<section><input id=\"csssubmit\" type=\"submit\" value=\"Save CSS\" name=\"csssubmit\" /></section>
-				</form>
-				</div>
-			";
-		}
-		function reviews_page_content(){
-			echo "	
-				<span class=\"moduletitle\">__reviews<em>[momreviews]</em></span>
-				<div class=\"clear\"></div>
-				<div class=\"settings\">
-					<div class=\"settingsInfo taller\">
-					<form method=\"post\" class=\"reviews_item_form\">
-						<input type=\"text\" name=\"filterResults_type\" placeholder=\"Filter by type\"";if(get_option('momreviews_search') != "")echo "value=\"" . get_option('momreviews_search') . "\""; echo ">
-						<input type=\"submit\" name=\"filterResults\" value=\"Accept\">
-					</form>
-					";
-				global $wpdb;
-					$mom_reviews_table_name = $wpdb->prefix . "momreviews";
-					$filtered_search = get_option('momreviews_search');
-					if(get_option('momreviews_search') != ""){
-						$reviews = $wpdb->get_results("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE TYPE = '$filtered_search' ORDER BY ID DESC");
-					}else{
-						$reviews = $wpdb->get_results("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name ORDER BY ID DESC");
-					}
-					echo '<div class="momresults">';
-					foreach($reviews as $reviews_results){
-						$this_ID = $reviews_results->ID;
-							echo "<div class=\"momdata\">";
-							
-							echo "
-							<div class=\"reviewitem\">
-									<section class=\"id\">id:".$reviews_results->ID."</section>
-									<span class=\"review\">".$reviews_results->TITLE."</span>	
-								";
-				if(!isset($_POST['edit_'.$this_ID.''])){
-				if(!isset($_POST['delete_'.$this_ID.''])){echo "<form method=\"post\"><input class=\"deleteSubmit\" type=\"submit\" name=\"delete_".$this_ID."\" value=\"Delete\"></form>";}
-				else{echo "<form class=\"confirm\" method=\"post\"><input type=\"submit\" name=\"cancel\" id\"cancel\" value=\"No\"/><input class=\"deleteSubmit\" type=\"submit\" name=\"delete_confirm_".$this_ID."\" value=\"Confirm\"/></form>";}
-				echo "<form method=\"post\"><input class=\"editSubmit\" type=\"submit\" name=\"edit_".$this_ID."\" value=\"Edit\"></form>";
-				}	echo "								
-							<section class=\"type\">type: ".$reviews_results->TYPE."</section>
-							</div>";
-						if(isset($_POST['edit_'.$this_ID.''])){
-							echo "
-							<div class=\"editing\">
-							<form method=\"post\" class=\"addForm\">
-										<section>title<input type=\"text\" name=\"reviews_title_".$this_ID."\" placeholder=\"Enter title here\" value=\"".$reviews_results->TITLE."\"/></section>
-										<section>type<input type=\"text\" name=\"reviews_type_".$this_ID."\" placeholder=\"Review type\" value=\"".$reviews_results->TYPE."\"/></section>
-										<section>url<input type=\"text\" name=\"reviews_link_".$this_ID."\" placeholder=\"Relevant URL\" value=\"".$reviews_results->LINK."\"/></section>
-										<section class=\"editor\">
-											";
-												$thisContent = $reviews_results->REVIEW;
-												wp_editor($content = $thisContent, $name = 'edit_review_'.$this_ID.'', $id = 'edit_review_'.$this_ID.'', $prev_id = 'title', $media_buttons = true, $tab_index = 1);
-											echo "</section>
-										<section>rating<input type=\"text\" name=\"reviews_rating_".$this_ID."\" placeholder=\"Your rating\" value=\"".$reviews_results->RATING."\"/></section>
-										<section><input id=\"submit_edit_".$this_ID."\" type=\"submit\" value=\"Save these edits\" name=\"submit_edit_".$this_ID."\"><input type=\"submit\" name=\"cancel\" id\"cancel\" value=\"Nevermind, don't edit anything.\"/></section>
-							</form>
-							</div>";
-						}
-				if(isset($_POST['submit_edit_'.$this_ID.''])){
-					global $table_prefix, $wpdb;
-					$reviews_table_name = $table_prefix.'momreviews';			
-						$edit_type = str_replace('"','\'',($_REQUEST['reviews_type_'.$this_ID.'']));
-						$edit_link = str_replace('"','\'',($_REQUEST['reviews_link_'.$this_ID.'']));
-						$edit_title = str_replace('"','\'',($_REQUEST['reviews_title_'.$this_ID.'']));
-						$edit_reviewed = $_REQUEST['edit_review_'.$this_ID.''];
-						$edit_review = wpautop($edit_reviewed);
-						$edit_rating = str_replace('"','\'',($_REQUEST['reviews_rating_'.$this_ID.'']));
-						$wpdb->query("UPDATE $reviews_table_name SET TYPE = '$edit_type', LINK = '$edit_link', TITLE = '$edit_title', REVIEW = '$edit_review', RATING = '$edit_rating' WHERE ID = $this_ID") ;
-						echo "<meta http-equiv=\"refresh\" content=\"0;url=\"$current\" />";
-				}
-				if(isset($_POST['delete_confirm_'.$this_ID.''])){
-					$current = plugin_basename(__FILE__);
-					$wpdb->query("DELETE FROM $mom_reviews_table_name WHERE ID = '$this_ID'");
-					echo "<meta http-equiv=\"refresh\" content=\"0;url=\"$current\" />";
-				}
-				if(isset($_POST['cancel'])){
-				}
-				echo "</div>";
-				}
-				echo '</div></div>';
-				print_mom_reviews_form();
-		}
-		reviews_page_content();
-	}
-}	
-/****************************** SECTION E -/- (E1) Functions -/- Reviews ******************************/
+						echo '<form method="post" action="" name="momReviews"><label for="mom_reviews_mode_submit">Deactivate</label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_reviews') == 1){echo '0';}else{echo '1';}echo '" name="reviews" /><input type="submit" id="mom_reviews_mode_submit" name="mom_reviews_mode_submit" value="Submit" class="hidden" /></form>';
+						echo "
+								</span>
+                                <div class=\"clear\"></div>
+                                <div class=\"settings\">
+                                        <div class=\"settingsInfo taller\">
+                                        <form method=\"post\" class=\"reviews_item_form\">
+                                                <input type=\"text\" name=\"filterResults_type\" placeholder=\"Filter by type\"";if(get_option('momreviews_search') != "")echo "value=\"" . get_option('momreviews_search') . "\""; echo ">
+                                                <input type=\"submit\" name=\"filterResults\" value=\"Accept\">
+                                        </form>
+                                        ";
+                                global $wpdb;
+                                        $mom_reviews_table_name = $wpdb->prefix . "momreviews";
+                                        $filtered_search = get_option('momreviews_search');
+                                        if(get_option('momreviews_search') != ""){
+                                                $reviews = $wpdb->get_results("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE TYPE = '$filtered_search' ORDER BY ID DESC");
+                                        }else{
+                                                $reviews = $wpdb->get_results("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name ORDER BY ID DESC");
+                                        }
+                                        echo '<div class="momresults">';
+                                        foreach($reviews as $reviews_results){
+                                                $this_ID = $reviews_results->ID;
+                                                        echo "<div class=\"momdata\">";
+                                                        
+                                                        echo "
+                                                        <div class=\"reviewitem\">
+                                                                        <section class=\"id\">id:".$reviews_results->ID."</section>
+                                                                        <span class=\"review\">".$reviews_results->TITLE."</span>        
+                                                                ";
+                                if(!isset($_POST['edit_'.$this_ID.''])){
+                                if(!isset($_POST['delete_'.$this_ID.''])){echo "<form method=\"post\"><input class=\"deleteSubmit\" type=\"submit\" name=\"delete_".$this_ID."\" value=\"Delete\"></form>";}
+                                else{echo "<form class=\"confirm\" method=\"post\"><input type=\"submit\" name=\"cancel\" id\"cancel\" value=\"No\"/><input class=\"deleteSubmit\" type=\"submit\" name=\"delete_confirm_".$this_ID."\" value=\"Confirm\"/></form>";}
+                                echo "<form method=\"post\"><input class=\"editSubmit\" type=\"submit\" name=\"edit_".$this_ID."\" value=\"Edit\"></form>";
+                                }        echo "                                                                
+                                                        <section class=\"type\">type: ".$reviews_results->TYPE."</section>
+                                                        </div>";
+                                                if(isset($_POST['edit_'.$this_ID.''])){
+                                                        echo "
+                                                        <div class=\"editing\">
+                                                        <form method=\"post\" class=\"addForm\">
+                                                                                <section>title<input type=\"text\" name=\"reviews_title_".$this_ID."\" placeholder=\"Enter title here\" value=\"".$reviews_results->TITLE."\"/></section>
+                                                                                <section>type<input type=\"text\" name=\"reviews_type_".$this_ID."\" placeholder=\"Review type\" value=\"".$reviews_results->TYPE."\"/></section>
+                                                                                <section>url<input type=\"text\" name=\"reviews_link_".$this_ID."\" placeholder=\"Relevant URL\" value=\"".$reviews_results->LINK."\"/></section>
+                                                                                <section class=\"editor\">
+                                                                                        ";
+                                                                                                $thisContent = $reviews_results->REVIEW;
+                                                                                                wp_editor($content = $thisContent, $name = 'edit_review_'.$this_ID.'', $id = 'edit_review_'.$this_ID.'', $prev_id = 'title', $media_buttons = true, $tab_index = 1);
+                                                                                        echo "</section>
+                                                                                <section>rating<input type=\"text\" name=\"reviews_rating_".$this_ID."\" placeholder=\"Your rating\" value=\"".$reviews_results->RATING."\"/></section>
+                                                                                <section><input id=\"submit_edit_".$this_ID."\" type=\"submit\" value=\"Save these edits\" name=\"submit_edit_".$this_ID."\"><input type=\"submit\" name=\"cancel\" id\"cancel\" value=\"Nevermind, don't edit anything.\"/></section>
+                                                        </form>
+                                                        </div>";
+                                                }
+                                if(isset($_POST['submit_edit_'.$this_ID.''])){
+                                        global $table_prefix, $wpdb;
+                                        $reviews_table_name = $table_prefix.'momreviews';                        
+                                                $edit_type = str_replace('"','\'',($_REQUEST['reviews_type_'.$this_ID.'']));
+                                                $edit_link = str_replace('"','\'',($_REQUEST['reviews_link_'.$this_ID.'']));
+                                                $edit_title = str_replace('"','\'',($_REQUEST['reviews_title_'.$this_ID.'']));
+                                                $edit_reviewed = $_REQUEST['edit_review_'.$this_ID.''];
+                                                $edit_review = wpautop($edit_reviewed);
+                                                $edit_rating = str_replace('"','\'',($_REQUEST['reviews_rating_'.$this_ID.'']));
+                                                $wpdb->query("UPDATE $reviews_table_name SET TYPE = '$edit_type', LINK = '$edit_link', TITLE = '$edit_title', REVIEW = '$edit_review', RATING = '$edit_rating' WHERE ID = $this_ID") ;
+                                                echo "<meta http-equiv=\"refresh\" content=\"0;url=\"$current\" />";
+                                }
+                                if(isset($_POST['delete_confirm_'.$this_ID.''])){
+                                        $current = plugin_basename(__FILE__);
+                                        $wpdb->query("DELETE FROM $mom_reviews_table_name WHERE ID = '$this_ID'");
+                                        echo "<meta http-equiv=\"refresh\" content=\"0;url=\"$current\" />";
+                                }
+                                if(isset($_POST['cancel'])){
+                                }
+                                echo "</div>";
+                                }
+                                echo '</div></div>';
+                                print_mom_reviews_form();
+                }
+                reviews_page_content();
+        }
+}   
+/****************************** SECTION E -/- (E1) Functions -/- Reviews */
 $mom_review_global = 0;
 function mom_reviews_shortcode($atts, $content = null){
 	global $mom_review_global;
@@ -1274,10 +1212,16 @@ function mom_reviews_shortcode($atts, $content = null){
 	return ob_get_clean();
 }
 function mom_reviews_style(){echo '<style>'.get_option('momreviews_css').'</style>';}
-/****************************** SECTION F -/- (F0) Settings -/- Shortcodes ******************************/
+/****************************** SECTION F -/- (F0) Settings -/- Shortcodes */
 if(current_user_can('manage_options')){
 	function my_optional_modules_shortcodes_module(){
 		echo "
+			<span class=\"moduletitle\">";
+			echo '
+			<form method="post" action="" name="momShortcodes"><label for="mom_shortcodes_mode_submit">Deactivate</label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_shorts') == 1){echo '0';}else{echo '1';}echo '" name="shortcodes" /><input type="submit" id="mom_shortcodes_mode_submit" name="mom_shortcodes_mode_submit" value="Submit" class="hidden" /></form>
+			';
+			echo "
+			</span>
 			<div class=\"settings\">
 			<table class=\"form-table\" border=\"1\">
 				<tbody>
@@ -1516,7 +1460,7 @@ if(current_user_can('manage_options')){
 		</div>";
 	}
 }
-/****************************** SECTION F -/- (F1) Functions -/- Shortcodes ******************************/
+/****************************** SECTION F -/- (F1) Functions -/- Shortcodes */
 function mom_onthisday_template(){
 	$current_day = date('d');
 	$current_month = date('m');
@@ -1863,7 +1807,7 @@ function mom_verify_shortcode($atts,$content = null){
 	if($isCorrect == 1){return $content;}elseif($isCorrect == 0 && $deactivate != 1){return $failMessage;}
 	return ob_get_clean();
 }	
-/****************************** SECTION G -/- (G0) Functions -/- Meta ******************************/
+/****************************** SECTION G -/- (G0) Functions -/- Meta */
 function mom_SEO_header(){
 	global $post;
 	function mom_meta_module(){
@@ -1948,7 +1892,7 @@ function mom_SEO_header(){
 		if(is_search() || is_404() || is_archive())echo '<meta name="robots" content="noindex,nofollow"/>';
 	}
 }
-/****************************** SECTION H -/- (H0) Settings -/- Theme Takeover ******************************/
+/****************************** SECTION H -/- (H0) Settings -/- Theme Takeover */
 	if(current_user_can('manage_options')){
 		function my_optional_modules_theme_takeover_module(){
 			$MOM_themetakeover_topbar = get_option('MOM_themetakeover_topbar');
@@ -1960,7 +1904,9 @@ function mom_SEO_header(){
 			$MOM_themetakeover_wowhead = get_option('MOM_themetakeover_wowhead');
 			$showmepages = get_pages(); 		
 			echo '
-			<span class="moduletitle">__theme takeover<em>easy theme manipulation</em></span><div class="clear"></div><div class="settings"><form method="post">
+			<span class="moduletitle">
+			<form method="post" action="" name="momThemTakeover"><label for="mom_themetakeover_mode_submit">Deactivate</label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_themetakeover') == 1){echo '0';}else{echo '1';}echo '" name="themetakeover" /><input type="submit" id="mom_themetakeover_mode_submit" name="mom_themetakeover_mode_submit" value="Submit" class="hidden" /></form>
+			</span><div class="clear"></div><div class="settings"><form method="post">
 			<div class="clear"></div>
 			<div class="exclude">
 				<section><label for="MOM_themetakeover_youtubefrontpage">Youtube URL for 404s</label><input type="text" id="MOM_themetakeover_youtubefrontpage" name="MOM_themetakeover_youtubefrontpage" value="'.esc_url(get_option('MOM_themetakeover_youtubefrontpage')).'"></section>
@@ -2045,7 +1991,7 @@ function mom_SEO_header(){
 			</div></div><div class="new"></div>';
 		}
 	}
-/****************************** SECTION H -/- (H1) Functions -/- Theme Takeover ******************************/
+/****************************** SECTION H -/- (H1) Functions -/- Theme Takeover */
 if(get_option('MOM_themetakeover_youtubefrontpage') != ''){
 	function mom_youtube404(){
 		global $wp_query;
@@ -2234,7 +2180,7 @@ if(get_option('MOM_themetakeover_topbar') == 1 || get_option('MOM_themetakeover_
 	remove_action('wp_ajax_adminbar_render','wp_admin_bar_ajax_render');
 	remove_filter('wp_ajax_adminbar_render','wp_admin_bar_ajax_render');				
 }
-/****************************** SECTION I -/- (I0) Functions -/- Font Awesome ******************************/
+/****************************** SECTION I -/- (I0) Functions -/- Font Awesome */
 function font_fa_shortcode($atts, $content = null){
 	extract(
 		shortcode_atts(array(
@@ -2247,15 +2193,17 @@ function font_fa_shortcode($atts, $content = null){
 	echo '<i class="fa fa-'.$iconfinal.'"></i>';
 	return ob_get_clean();
 }
-/****************************** SECTION J -/- (J0) Settings -/- Count++ ******************************/
+/****************************** SECTION J -/- (J0) Settings -/- Count++ */
 if(current_user_can('manage_options')){
 	function my_optional_modules_count_module(){
-			echo '<form method="post"><span class="moduletitle">__count++<em>Count words published</em></span><div class="clear"></div><div class="settings">';
+			echo '<span class="moduletitle">';
+			echo '<form method="post" action="" name="momCount"><label for="mom_count_mode_submit">Deactivate</label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_obwcountplus') == 1){echo '0';}else{echo '1';}echo '" name="countplus" /><input type="submit" id="mom_count_mode_submit" name="mom_count_mode_submit" value="Submit" class="hidden" /></form>';
+			echo '</span><form method="post"><div class="clear"></div><div class="settings">';
 			echo '<div class="countplus"><section><label for="obwcountplus_1_countdownfrom">Goal (<em>0</em> for none)</label><input id="obwcountplus_1_countdownfrom" type="text" value="'.esc_attr(get_option('obwcountplus_1_countdownfrom')).'" name="obwcountplus_1_countdownfrom"></section><section><label for="obwcountplus_2_remaining">Text for remaining</label><input id="obwcountplus_2_remaining" type="text" value="'.esc_attr(get_option('obwcountplus_2_remaining')).'" name="obwcountplus_2_remaining"></section><section><label for="obwcountplus_3_total">Text for published</label><input id="obwcountplus_3_total" type="text" value="'.esc_attr(get_option('obwcountplus_3_total')).'" name="obwcountplus_3_total"></section><section><label for="obwcountplus_4_custom">Custom output</label><input id="obwcountplus_4_custom" type="text" value="'.esc_attr(get_option('obwcountplus_4_custom')).'" name="obwcountplus_4_custom"></section></div>';
 			echo '<input id="obwcountsave" type="submit" value="Save Changes" name="obwcountsave"></form><div class="templatetags"><section>Custom output example: (with goal)<span class="right">%total% words of %remain% published</span></section><section>Custom output example: (without goal) <span class="right">%total% words published</span></section><section>Custom output example: (numbers only)(total on blog) <span class="right">%total%</span></section><section>Custom output example: (numbers only)(total remain of goal) <span class="right">%remain%</span></section><section>Template tag: (single post word count)<span class="right"><code>obwcountplus_total();</code></span></section><section>Custom output:<span class="right"><code>countsplusplus();</code></span></section><section>Total words + remaining:<span class="right"><code>obwcountplus_count();</code></span></section><section>Total words:<span class="right"><code>obwcountplus_total();</code></span></section><section>Remainig:(displays total published if goal reached)<span class="right"><code>obwcountplus_remaining();</code></span></section></div><p class="creditlink">Count++ is adapted from <a href="http://wordpress.org/plugins/post-word-count/">Post Word Count</a> by <a href="http://profiles.wordpress.org/nickmomrik/">Nick Momrik</a>.</p>';
 		}
 	}
-/****************************** SECTION J -/- (J1) Functions -/- Count++ ******************************/
+/****************************** SECTION J -/- (J1) Functions -/- Count++ */
 function countsplusplus(){
 	$oldcount = 0;
 	global $wpdb;
@@ -2367,7 +2315,7 @@ function obwcountplus_count(){
 		echo esc_attr(number_format(get_option('obwcountplus_1_countdownfrom') - $totalcount).' '.get_option('obwcountplus_2_remaining').' ('.number_format($totalcount).' '.get_option('obwcountplus_3_total').')');
 	}
 }
-/****************************** SECTION K -/- (K0) Settings -/- Exclude ******************************/
+/****************************** SECTION K -/- (K0) Settings -/- Exclude */
 	if(current_user_can('manage_options')){
 		function my_optional_modules_exclude_module(){
 			$MOM_Exclude_PostFormats_RSS = get_option('MOM_Exclude_PostFormats_RSS');
@@ -2383,7 +2331,9 @@ function obwcountplus_count(){
 			$showmepages = get_pages(); 			
 			$showmecats = get_categories('taxonomy=category&hide_empty=0'); 
 			$showmetags = get_categories('taxonomy=post_tag&hide_empty=0');
-			echo '<span class="moduletitle">__exclude<em>separate multiple ids with commas (1,2,3,...)</em></span><div class="clear"></div><div class="settings"><form method="post">
+			echo '<span class="moduletitle">
+			<form method="post" action="" name="momExclude"><label for="mom_exclude_mode_submit">Deactivate</label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momse') == 1){echo '0';}else{echo '1';}echo '" name="exclude" /><input type="submit" id="mom_exclude_mode_submit" name="mom_exclude_mode_submit" value="Submit" class="hidden" /></form>
+			</span><div class="clear"></div><div class="settings"><form method="post">
 				<div class="listing">
 				<div class="list"><span>Category (<strong>ID</strong>)</span>';
 				foreach($showmecats as $catsshown){
@@ -2589,7 +2539,7 @@ function obwcountplus_count(){
 			<input id="momsesave" type="submit" value="Save Changes" name="momsesave"></form></div></div>';
 		}
 	}
-/****************************** SECTION K -/- (K1) Settings -/- Exclude ******************************/
+/****************************** SECTION K -/- (K1) Settings -/- Exclude */
 get_currentuserinfo();
 global $user_level;	
 if($user_level <=7 && get_option('MOM_Exclude_Hide_Dashboard') == 1){
@@ -2887,245 +2837,53 @@ function mom_exclude_filter_posts($query){
 		$query->set('tax_query',$tax_query);
 	}
 }
-/****************************** SECTION L -/- (L0) Settings -/- Jump Around ******************************/
-	if(current_user_can('manage_options')){
+
+	//	SECTION L (L0) // Settings // Jump Around 
+	if(current_user_can('manage_options') && is_admin() && get_option('mommaincontrol_momja') == 1){
 		function my_optional_modules_jump_around_module(){
-			$jump_around_4 = get_option('jump_around_4');
-			$jump_around_5 = get_option('jump_around_5');
-			$jump_around_6 = get_option('jump_around_6');
-			$jump_around_7 = get_option('jump_around_7');
-			$jump_around_8 = get_option('jump_around_8');
-			echo '<span class="moduletitle">__jump_around<em>keyboard navigation</em></span><div class="clear"></div><div class="settings"><form method="post">
-			<div class="countplus">
-				<section><label for="jump_around_0">Post container:</label>
-				<input type="text" name="jump_around_0" value="'.get_option('jump_around_0').'" /></section>
-				<section><label for="jump_around_1">Permalink:</label>
-				<input type="text" name="jump_around_1" value="'.get_option('jump_around_1').'" /></section>
-				<section><label for="jump_around_2">Previous posts</label>
-				<input type="text" name="jump_around_2" value="'.get_option('jump_around_2').'" /></section>
-				<section><label for="jump_around_3">Next posts</label>
-				<input type="text" name="jump_around_3" value="'.get_option('jump_around_3').'" /></section>
-				<section><label for="jump_around_4">Previous key</label>
-				<select name="jump_around_4">
-					<option value="65"'; selected($jump_around_4, '65'); echo '>a</option>
-					<option value="66"'; selected($jump_around_4, '66'); echo '>b</option>
-					<option value="67"'; selected($jump_around_4, '67'); echo '>c</option>
-					<option value="68"'; selected($jump_around_4, '68'); echo '>d</option>
-					<option value="69"'; selected($jump_around_4, '69'); echo '>e</option>
-					<option value="70"'; selected($jump_around_4, '70'); echo '>f</option>
-					<option value="71"'; selected($jump_around_4, '71'); echo '>g</option>
-					<option value="72"'; selected($jump_around_4, '72'); echo '>h</option>
-					<option value="73"'; selected($jump_around_4, '73'); echo '>i</option>
-					<option value="74"'; selected($jump_around_4, '74'); echo '>j</option>
-					<option value="75"'; selected($jump_around_4, '75'); echo '>k</option>
-					<option value="76"'; selected($jump_around_4, '76'); echo '>l</option>
-					<option value="77"'; selected($jump_around_4, '77'); echo '>m</option>
-					<option value="78"'; selected($jump_around_4, '78'); echo '>n</option>
-					<option value="79"'; selected($jump_around_4, '79'); echo '>o</option>
-					<option value="80"'; selected($jump_around_4, '80'); echo '>p</option>
-					<option value="81"'; selected($jump_around_4, '81'); echo '>q</option>
-					<option value="82"'; selected($jump_around_4, '82'); echo '>r</option>
-					<option value="83"'; selected($jump_around_4, '83'); echo '>s</option>
-					<option value="84"'; selected($jump_around_4, '84'); echo '>t</option>
-					<option value="85"'; selected($jump_around_4, '85'); echo '>u</option>
-					<option value="86"'; selected($jump_around_4, '86'); echo '>v</option>
-					<option value="87"'; selected($jump_around_4, '87'); echo '>w</option>
-					<option value="88"'; selected($jump_around_4, '88'); echo '>x</option>
-					<option value="89"'; selected($jump_around_4, '89'); echo '>y</option>
-					<option value="90"'; selected($jump_around_4, '90'); echo '>z</option>
-					<option value="48"'; selected($jump_around_4, '48'); echo '>0</option>
-					<option value="49"'; selected($jump_around_4, '49'); echo '>1</option>
-					<option value="50"'; selected($jump_around_4, '50'); echo '>2</option>
-					<option value="51"'; selected($jump_around_4, '51'); echo '>3</option>
-					<option value="52"'; selected($jump_around_4, '52'); echo '>4</option>
-					<option value="53"'; selected($jump_around_4, '53'); echo '>5</option>
-					<option value="54"'; selected($jump_around_4, '54'); echo '>6</option>
-					<option value="55"'; selected($jump_around_4, '55'); echo '>7</option>
-					<option value="56"'; selected($jump_around_4, '56'); echo '>8</option>
-					<option value="57"'; selected($jump_around_4, '57'); echo '>9</option>
-					<option value="37"'; selected($jump_around_4, '37'); echo '>left arrow</option>
-					<option value="38"'; selected($jump_around_4, '38'); echo '>up arrow</option>
-					<option value="39"'; selected($jump_around_4, '39'); echo '>right arrow</option>
-					<option value="40"'; selected($jump_around_4, '40'); echo '>down arrow</option>
-				</select></section>
-				<section><label for="jump_around_5">Open currently selected key</label>
-				<select name="jump_around_5">
-					<option value="65"'; selected($jump_around_5, '65'); echo '>a</option>
-					<option value="66"'; selected($jump_around_5, '66'); echo '>b</option>
-					<option value="67"'; selected($jump_around_5, '67'); echo '>c</option>
-					<option value="68"'; selected($jump_around_5, '68'); echo '>d</option>
-					<option value="69"'; selected($jump_around_5, '69'); echo '>e</option>
-					<option value="70"'; selected($jump_around_5, '70'); echo '>f</option>
-					<option value="71"'; selected($jump_around_5, '71'); echo '>g</option>
-					<option value="72"'; selected($jump_around_5, '72'); echo '>h</option>
-					<option value="73"'; selected($jump_around_5, '73'); echo '>i</option>
-					<option value="74"'; selected($jump_around_5, '74'); echo '>j</option>
-					<option value="75"'; selected($jump_around_5, '75'); echo '>k</option>
-					<option value="76"'; selected($jump_around_5, '76'); echo '>l</option>
-					<option value="77"'; selected($jump_around_5, '77'); echo '>m</option>
-					<option value="78"'; selected($jump_around_5, '78'); echo '>n</option>
-					<option value="79"'; selected($jump_around_5, '79'); echo '>o</option>
-					<option value="80"'; selected($jump_around_5, '80'); echo '>p</option>
-					<option value="81"'; selected($jump_around_5, '81'); echo '>q</option>
-					<option value="82"'; selected($jump_around_5, '82'); echo '>r</option>
-					<option value="83"'; selected($jump_around_5, '83'); echo '>s</option>
-					<option value="84"'; selected($jump_around_5, '84'); echo '>t</option>
-					<option value="85"'; selected($jump_around_5, '85'); echo '>u</option>
-					<option value="86"'; selected($jump_around_5, '86'); echo '>v</option>
-					<option value="87"'; selected($jump_around_5, '87'); echo '>w</option>
-					<option value="88"'; selected($jump_around_5, '88'); echo '>x</option>
-					<option value="89"'; selected($jump_around_5, '89'); echo '>y</option>
-					<option value="90"'; selected($jump_around_5, '90'); echo '>z</option>
-					<option value="48"'; selected($jump_around_5, '48'); echo '>0</option>
-					<option value="49"'; selected($jump_around_5, '49'); echo '>1</option>
-					<option value="50"'; selected($jump_around_5, '50'); echo '>2</option>
-					<option value="51"'; selected($jump_around_5, '51'); echo '>3</option>
-					<option value="52"'; selected($jump_around_5, '52'); echo '>4</option>
-					<option value="53"'; selected($jump_around_5, '53'); echo '>5</option>
-					<option value="54"'; selected($jump_around_5, '54'); echo '>6</option>
-					<option value="55"'; selected($jump_around_5, '55'); echo '>7</option>
-					<option value="56"'; selected($jump_around_5, '56'); echo '>8</option>
-					<option value="57"'; selected($jump_around_5, '57'); echo '>9</option>
-					<option value="37"'; selected($jump_around_5, '37'); echo '>left arrow</option>
-					<option value="38"'; selected($jump_around_5, '38'); echo '>up arrow</option>
-					<option value="39"'; selected($jump_around_5, '39'); echo '>right arrow</option>
-					<option value="40"'; selected($jump_around_5, '40'); echo '>down arrow</option>
-				</select></section>
-				<section><label for="jump_around_6">Next key</label>
-				<select name="jump_around_6">
-					<option value="65"'; selected($jump_around_6, '65'); echo '>a</option>
-					<option value="66"'; selected($jump_around_6, '66'); echo '>b</option>
-					<option value="67"'; selected($jump_around_6, '67'); echo '>c</option>
-					<option value="68"'; selected($jump_around_6, '68'); echo '>d</option>
-					<option value="69"'; selected($jump_around_6, '69'); echo '>e</option>
-					<option value="70"'; selected($jump_around_6, '70'); echo '>f</option>
-					<option value="71"'; selected($jump_around_6, '71'); echo '>g</option>
-					<option value="72"'; selected($jump_around_6, '72'); echo '>h</option>
-					<option value="73"'; selected($jump_around_6, '73'); echo '>i</option>
-					<option value="74"'; selected($jump_around_6, '74'); echo '>j</option>
-					<option value="75"'; selected($jump_around_6, '75'); echo '>k</option>
-					<option value="76"'; selected($jump_around_6, '76'); echo '>l</option>
-					<option value="77"'; selected($jump_around_6, '77'); echo '>m</option>
-					<option value="78"'; selected($jump_around_6, '78'); echo '>n</option>
-					<option value="79"'; selected($jump_around_6, '79'); echo '>o</option>
-					<option value="80"'; selected($jump_around_6, '80'); echo '>p</option>
-					<option value="81"'; selected($jump_around_6, '81'); echo '>q</option>
-					<option value="82"'; selected($jump_around_6, '82'); echo '>r</option>
-					<option value="83"'; selected($jump_around_6, '83'); echo '>s</option>
-					<option value="84"'; selected($jump_around_6, '84'); echo '>t</option>
-					<option value="85"'; selected($jump_around_6, '85'); echo '>u</option>
-					<option value="86"'; selected($jump_around_6, '86'); echo '>v</option>
-					<option value="87"'; selected($jump_around_6, '87'); echo '>w</option>
-					<option value="88"'; selected($jump_around_6, '88'); echo '>x</option>
-					<option value="89"'; selected($jump_around_6, '89'); echo '>y</option>
-					<option value="90"'; selected($jump_around_6, '90'); echo '>z</option>
-					<option value="48"'; selected($jump_around_6, '48'); echo '>0</option>
-					<option value="49"'; selected($jump_around_6, '49'); echo '>1</option>
-					<option value="50"'; selected($jump_around_6, '50'); echo '>2</option>
-					<option value="51"'; selected($jump_around_6, '51'); echo '>3</option>
-					<option value="52"'; selected($jump_around_6, '52'); echo '>4</option>
-					<option value="53"'; selected($jump_around_6, '53'); echo '>5</option>
-					<option value="54"'; selected($jump_around_6, '54'); echo '>6</option>
-					<option value="55"'; selected($jump_around_6, '55'); echo '>7</option>
-					<option value="56"'; selected($jump_around_6, '56'); echo '>8</option>
-					<option value="57"'; selected($jump_around_6, '57'); echo '>9</option>
-					<option value="37"'; selected($jump_around_6, '37'); echo '>left arrow</option>
-					<option value="38"'; selected($jump_around_6, '38'); echo '>up arrow</option>
-					<option value="39"'; selected($jump_around_6, '39'); echo '>right arrow</option>
-					<option value="40"'; selected($jump_around_6, '40'); echo '>down arrow</option>
-				</select></section>
-				<section><label for="jump_around_7">Older posts key</label>
-				<select name="jump_around_7">
-					<option value="65"'; selected($jump_around_7, '65'); echo '>a</option>
-					<option value="66"'; selected($jump_around_7, '66'); echo '>b</option>
-					<option value="67"'; selected($jump_around_7, '67'); echo '>c</option>
-					<option value="68"'; selected($jump_around_7, '68'); echo '>d</option>
-					<option value="69"'; selected($jump_around_7, '69'); echo '>e</option>
-					<option value="70"'; selected($jump_around_7, '70'); echo '>f</option>
-					<option value="71"'; selected($jump_around_7, '71'); echo '>g</option>
-					<option value="72"'; selected($jump_around_7, '72'); echo '>h</option>
-					<option value="73"'; selected($jump_around_7, '73'); echo '>i</option>
-					<option value="74"'; selected($jump_around_7, '74'); echo '>j</option>
-					<option value="75"'; selected($jump_around_7, '75'); echo '>k</option>
-					<option value="76"'; selected($jump_around_7, '76'); echo '>l</option>
-					<option value="77"'; selected($jump_around_7, '77'); echo '>m</option>
-					<option value="78"'; selected($jump_around_7, '78'); echo '>n</option>
-					<option value="79"'; selected($jump_around_7, '79'); echo '>o</option>
-					<option value="80"'; selected($jump_around_7, '80'); echo '>p</option>
-					<option value="81"'; selected($jump_around_7, '81'); echo '>q</option>
-					<option value="82"'; selected($jump_around_7, '82'); echo '>r</option>
-					<option value="83"'; selected($jump_around_7, '83'); echo '>s</option>
-					<option value="84"'; selected($jump_around_7, '84'); echo '>t</option>
-					<option value="85"'; selected($jump_around_7, '85'); echo '>u</option>
-					<option value="86"'; selected($jump_around_7, '86'); echo '>v</option>
-					<option value="87"'; selected($jump_around_7, '87'); echo '>w</option>
-					<option value="88"'; selected($jump_around_7, '88'); echo '>x</option>
-					<option value="89"'; selected($jump_around_7, '89'); echo '>y</option>
-					<option value="90"'; selected($jump_around_7, '90'); echo '>z</option>
-					<option value="48"'; selected($jump_around_7, '48'); echo '>0</option>
-					<option value="49"'; selected($jump_around_7, '49'); echo '>1</option>
-					<option value="50"'; selected($jump_around_7, '50'); echo '>2</option>
-					<option value="51"'; selected($jump_around_7, '51'); echo '>3</option>
-					<option value="52"'; selected($jump_around_7, '52'); echo '>4</option>
-					<option value="53"'; selected($jump_around_7, '53'); echo '>5</option>
-					<option value="54"'; selected($jump_around_7, '54'); echo '>6</option>
-					<option value="55"'; selected($jump_around_7, '55'); echo '>7</option>
-					<option value="56"'; selected($jump_around_7, '56'); echo '>8</option>
-					<option value="57"'; selected($jump_around_7, '57'); echo '>9</option>
-					<option value="37"'; selected($jump_around_7, '37'); echo '>left arrow</option>
-					<option value="38"'; selected($jump_around_7, '38'); echo '>up arrow</option>
-					<option value="39"'; selected($jump_around_7, '39'); echo '>right arrow</option>
-					<option value="40"'; selected($jump_around_7, '40'); echo '>down arrow</option>
-				</select></section>
-				<section><label for="jump_around_8">Newer posts key</label>
-				<select name="jump_around_8">
-					<option value="65"'; selected($jump_around_8, '65'); echo '>a</option>
-					<option value="66"'; selected($jump_around_8, '66'); echo '>b</option>
-					<option value="67"'; selected($jump_around_8, '67'); echo '>c</option>
-					<option value="68"'; selected($jump_around_8, '68'); echo '>d</option>
-					<option value="69"'; selected($jump_around_8, '69'); echo '>e</option>
-					<option value="70"'; selected($jump_around_8, '70'); echo '>f</option>
-					<option value="71"'; selected($jump_around_8, '71'); echo '>g</option>
-					<option value="72"'; selected($jump_around_8, '72'); echo '>h</option>
-					<option value="73"'; selected($jump_around_8, '73'); echo '>i</option>
-					<option value="74"'; selected($jump_around_8, '74'); echo '>j</option>
-					<option value="75"'; selected($jump_around_8, '75'); echo '>k</option>
-					<option value="76"'; selected($jump_around_8, '76'); echo '>l</option>
-					<option value="77"'; selected($jump_around_8, '77'); echo '>m</option>
-					<option value="78"'; selected($jump_around_8, '78'); echo '>n</option>
-					<option value="79"'; selected($jump_around_8, '79'); echo '>o</option>
-					<option value="80"'; selected($jump_around_8, '80'); echo '>p</option>
-					<option value="81"'; selected($jump_around_8, '81'); echo '>q</option>
-					<option value="82"'; selected($jump_around_8, '82'); echo '>r</option>
-					<option value="83"'; selected($jump_around_8, '83'); echo '>s</option>
-					<option value="84"'; selected($jump_around_8, '84'); echo '>t</option>
-					<option value="85"'; selected($jump_around_8, '85'); echo '>u</option>
-					<option value="86"'; selected($jump_around_8, '86'); echo '>v</option>
-					<option value="87"'; selected($jump_around_8, '87'); echo '>w</option>
-					<option value="88"'; selected($jump_around_8, '88'); echo '>x</option>
-					<option value="89"'; selected($jump_around_8, '89'); echo '>y</option>
-					<option value="90"'; selected($jump_around_8, '90'); echo '>z</option>
-					<option value="48"'; selected($jump_around_8, '48'); echo '>0</option>
-					<option value="49"'; selected($jump_around_8, '49'); echo '>1</option>
-					<option value="50"'; selected($jump_around_8, '50'); echo '>2</option>
-					<option value="51"'; selected($jump_around_8, '51'); echo '>3</option>
-					<option value="52"'; selected($jump_around_8, '52'); echo '>4</option>
-					<option value="53"'; selected($jump_around_8, '53'); echo '>5</option>
-					<option value="54"'; selected($jump_around_8, '54'); echo '>6</option>
-					<option value="55"'; selected($jump_around_8, '55'); echo '>7</option>
-					<option value="56"'; selected($jump_around_8, '56'); echo '>8</option>
-					<option value="57"'; selected($jump_around_8, '57'); echo '>9</option>
-					<option value="37"'; selected($jump_around_8, '37'); echo '>left arrow</option>
-					<option value="38"'; selected($jump_around_8, '38'); echo '>up arrow</option>
-					<option value="39"'; selected($jump_around_8, '39'); echo '>right arrow</option>
-					<option value="40"'; selected($jump_around_8, '40'); echo '>down arrow</option>
-				</select></section>
-			</div>
-			<input id="update_JA" type="submit" value="Save Changes" name="update_JA">
-			</form></div><div class="templatetags"><section>Filter for classes<span class="right">.div</span></section><section>Filter for links in classes<span class="right">.div a</span></section><section>Filter for elements in classes<span class="right">.div h1</span></section><section>Filter for linked elements in classes<span class="right">.div h1 a</span></section><div class="new"><p class="creditlink"><em>Thanks to <a href="http://stackoverflow.com/questions/1939041/change-hash-without-reload-in-jquery">jitter</a> &amp; <a href="http://stackoverflow.com/questions/13694277/scroll-to-next-div-using-arrow-keys">mVChr</a> for the help.</em></p></div></div>';
+			$o = array(0,1,2,3,4,5,6,7,8);
+			$f = array('Post container','Permalink','Previous Posts','Next posts','Previous Key','Open current','Next key','Older posts key','Newer posts key');
+			$k = array(65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,48,49,50,51,52,53,54,55,56,57,37,38,39,40);
+			$b = array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',0,1,2,3,4,5,6,7,8,9,'left arrow','up arrow','right arrow','down arrow');
+			echo '
+			<span class="moduletitle">
+			<form method="post" action="" name="momExclude"><label for="mom_exclude_mode_submit">Deactivate</label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momse') == 1){echo '0';}else{echo '1';}echo '" name="exclude" /><input type="submit" id="mom_exclude_mode_submit" name="mom_exclude_mode_submit" value="Submit" class="hidden" /></form>
+			</span>
+			<div class="countplus clear form">
+			<p class="clear">jump around / <em>Thanks to <a href="http://stackoverflow.com/questions/1939041/change-hash-without-reload-in-jquery">jitter</a> &amp; <a href="http://stackoverflow.com/questions/13694277/scroll-to-next-div-using-arrow-keys">mVChr</a> for the help.</em></p>
+			<p class="clear">Keyboard navigation on any area that isn\'t a single post or page view.</p>
+			<p class="clear">Example(s): <em>.div, .div a, .div h1, .div h1 a</em></p>
+			<form method="post">';
+				foreach ($o as &$value){
+					$text = str_replace($o,$f,$value);
+					$label = 'jump_around_'.$value;
+					if($value >= 0 && $value <= 3){
+						echo '
+						<section><label for="'.$label.'">'.$text.'</label>
+						<input type="text" id="'.$label.'" name="'.$label.'" value="'.get_option($label).'" /></section>';
+					}
+					if($value == 4)echo '<hr class="clear" />';
+					elseif($value >=4){
+						echo '
+						<section><label for="'.$label.'">'.$text.'</label>
+						<select name="'.$label.'">';
+							foreach($k as &$key){
+								echo '
+								<option value="'.$key.'"'; selected(get_option($label), ''.$key.''); echo '>'.str_replace($k,$b,$key).'</option>';
+							}
+						echo '
+						</select></section>';
+					}
+				}
+			echo '	
+			<hr class="clear" />
+			<input id="update_JA" type="submit" value="Save" name="update_JA">
+			</form>
+			</div>';
 		}
 	}
-/****************************** SECTION M -/- (M0) Functions -/- Post Voting *****************************************/
+	
+/****************************** SECTION M -/- (M0) Functions -/- Post Voting */
 function vote_the_posts_top($atts,$content = null){
 	extract(
 		shortcode_atts(array(
@@ -3203,7 +2961,7 @@ if(get_option('mommaincontrol_votes') == 1){
 		}		
 	}
 }
-/****************************** SECTION N -/- (N0) Functions -/- Regular Board****************************************/
+/****************************** SECTION N -/- (N0) Functions -/- Regular Board */
 function regularboard_shortcode($atts,$content = null){
 	extract(
 		shortcode_atts(array(
@@ -3952,7 +3710,7 @@ function regularboard_shortcode($atts,$content = null){
 }
 if(get_option('mommaincontrol_regularboard') == 1)add_shortcode('regularboard','regularboard_shortcode');
 if(get_option('mommaincontrol_regularboard') == 1)add_filter('the_content','do_shortcode','regularboard_shortcode');
-/****************************** SECTION W -/- (W0) Functions -/- Database Cleaner ******************************/
+/****************************** SECTION W -/- (W0) Functions -/- Database Cleaner */
 if(current_user_can('manage_options')){
 	function my_optional_modules_cleaner_module(){
 		global $table_prefix,$wpdb;
@@ -3976,7 +3734,7 @@ if(current_user_can('manage_options')){
 		echo '<section class="trash"><label for="delete_unused_terms"><i class="fa fa-trash-o"></i><span>Taxonomy clutter</span><em>'.esc_attr($terms_count).'</em></label><form method="post"><input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms"></form></section>';
 	}
 }
-/****************************** SECTION X -/- (X0) Functions -/- Main Javscript ******************************/
+/****************************** SECTION X -/- (X0) Functions -/- Main Javscript */
 function enqueueMOMscriptsFooter(){
 	function mom_jquery(){
 		wp_deregister_script('jquery');
@@ -4202,7 +3960,7 @@ function enqueueMOMscriptsFooter(){
 	add_action('wp_footer','MOMScriptsFooter',99999);
 }
 
-/****************************** SECTION Y -/- (Y0) Functions -/- Javascript for modules ******************************/
+/****************************** SECTION Y -/- (Y0) Functions -/- Javascript for modules */
 if(current_user_can('manage_options')){
 			$css = plugins_url().'/'.plugin_basename(dirname(__FILE__)).'/includes/';
 			add_action('wp_enqueue_admin_scripts','mom_plugin_scripts');		

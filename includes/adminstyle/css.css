@@ -1,48 +1,54 @@
-hr{color:#fff;}
-.wrap,code{-moz-box-shadow:1px 1px 2px 1px #343232;-webkit-box-shadow:1px 1px 2px 1px #343232;box-shadow:1px 1px 2px 1px #343232;}
-.myoptionalmodules{clear:both;margin:5px 0 5px 0;overflow:auto;border-left:25px solid #f5f5f5;border-top:3px solid #f5f5f5;border-right:2px solid #f5f5f5;border-bottom:1px solid #f5f5f5;background-color:#d6;width:774px;}
-.hidden{display:none;visibility:hidden;}
-.small{width:150px;background-color:#f2f2f2;color:#f5f5f5;border:1px solid #fff;margin-right:2px;}
-.small p{text-indent:15px;font-size:10px;padding:5px;}
-.small form {width: 150px;}
-.small form select,
-.small form input[type='text']{width:100%;margin:0 auto 0 auto;height:36px;padding:10px;}
-.large{width:640px;background-color:#f2f2f2;color:#f5f5f5;border:1px solid #fff;margin-right:1px;}
-.large p{text-indent:15px;font-size:10px;padding:5px;}
-.large form {width: 150px;}
-.large form select,
-.large form input[type='text']{width:100%;margin:0 auto 0 auto;height:36px;padding:10px;}
-.trash {width:150px;float:left;margin:0px auto 0px 2px;overflow:hidden;}
-.trash label{padding:5px; display:block; border:1px solid #000; height:60px; width:100%; background-color:#fff; cursor:pointer; font-size:20px; line-height:13px !important;}
-.trash label:hover {color:#651d1d;background-color:#f5eded;}
-.trash label i {float:left;width:100%;margin-bottom:-70px;text-align:center;line-height:65px;font-size:60px;color:#fff;}
-.trash em {clear:both;font-size:20px;margin:15px 0;display:block;width:155px;text-align:center;color:#666666;}
-.trash span {font-size:10px;margin:5px 0;width:155px;text-align:center;clear:both;display:block;color:#220a0a;text-shadow:1px 1px 1px #a66868;}
-.onoff1_solo{text-indent:5px;text-align:left;width:100%;height:30px;display:block;border-top:2px solid #f3ffec;padding:2px;color:#f5f5f5;text-shadow:-1px -1px 0 #000;background-color:#4e4e4e;}
-.onoff1{text-indent:5px;text-align:left;width:100%;height:30px;display:block;border-top:2px solid #f3ffec;padding:2px;color:#f5f5f5;text-shadow:-1px -1px 0 #000;background-color:#4e4e4e;}
-.onoff0{text-indent:5px;text-align:left;width:100%;height:30px;display:block;border-top:2px solid #ffe3e3;padding:2px;color:#f5f5f5;text-shadow:-1px -1px 0 #000;background-color:#4e4e4e;}
-.onoff0:hover{text-shadow:-1px -1px 0 #fff;}
-.onoff1_solo:hover,
-.onoff1:hover{text-shadow:-1px -1px 0 #fff;}
-.onoff1_solo span,.onoff0 span,.onoff1 span{height:30px;width:30px;float:right;display:block;text-align:center !important;padding-right:8px;color:#342f2f;text-shadow:-1px -1px 0 #fff;}
-.onoff0 span,strong.off{background-color:#ffe3e3;}
-.onoff1_solo span,
-.onoff1 span,strong.on{background-color:#f3ffec;}
-.topnavigation{width:570px;clear:both;height:30px;margin:0;}
-.topnavigation section{float:left;width:70px;}
-.topnavigation section label{width:100%;height:25px;display:block;text-align:center;font-size:10px;margin:0 15px 0 -5px;}
-.topnavigation section label:hover{border-bottom:1px solid #d0d0d0;}
-
-
-
-#myoptionalmodules section div form{text-align:right;}
 /* My Optional Modules Stylesheet 
 	(since version 4.0.5) */
+	#generateHash{margin:5px}
+	.form{font-size:10px;margin:-15px 0 10px -18px;width:400px!important;height:220px}
+	hr.clear{border:0!important;margin:5px!important}
+	p.clear{text-indent:10px;font-size:11px}
+	.form section{width:85px;float:left;height:50px;margin:0 0 0 5px!important;padding:5px}
+	.form input[type='submit']{font-size:10px;clear:both!important;width:80px!important;float:left!important;margin:15px 7px!important}
+	.form input[type='text'],.form select{font-size:10px;clear:both!important;width:80px!important;float:left!important;margin:-2px!important;height:30px}
+	.form input[type='text']:focus,.form select:focus{border:1px dashed #9aceff}
+	.config{background-color:#2f0f0f;color:#fce6e6}
+	.switches{width:auto!important;display:block;clear:both;margin:-5px 0 0 5px}
+	.moduletitle form,.switches form{width:100px!important;float:left;height:30px!important;display:block;margin:5px!important;font-size:10px;padding:5px;border-radius:3px}
+	.moduletitle form label,.switches form label{display:block;width:100%;height:100%}
+	.moduletitle form i,.switches form i{float:right;margin:-18px 0}
+	.moduletitle form:hover,.switches form:hover{background-color:#132739;color:#e1e8ef}
+	label.save{font-size:55px;float:right}
+	select#mompaf_0{width:210px}
+	section.single{width:150px;float:left;margin:5px;display:block}
+	section.single label{margin:5px}
+	section.single input[type='text'],section.single select{width:145px}
+	hr{color:#fff;}
+	code{-moz-box-shadow:1px 1px 2px 1px #343232;-webkit-box-shadow:1px 1px 2px 1px #343232;box-shadow:1px 1px 2px 1px #343232;}
+	.myoptionalmodules{clear:both;margin:5px 0 5px 0;background-color:#d6;width:774px;}
+	.hidden{display:none;visibility:hidden;}
+	.small{width:150px;background-color:#f2f2f2;color:#f5f5f5;border:1px solid #fff;margin-right:2px;}
+	.small p{text-indent:15px;font-size:10px;padding:5px;}
+	.small form {width: 150px;}
+	.small form select,
+	.small form input[type='text']{width:100%;margin:0 auto 0 auto;height:36px;padding:10px;}
+	.large{width:609px;background-color:#f2f2f2;color:#f5f5f5;border-right:1px solid #000;margin-left:5px;}
+	.large p{text-indent:15px;font-size:10px;padding:5px;}
+	.large form {width: 150px;}
+	.large form select,
+	.large form input[type='text']{width:100%;margin:0 auto 0 auto;height:36px;padding:10px;}
+	.trash {width:150px;float:left;margin:0px auto 0px 2px;overflow:hidden;}
+	.trash label{padding:5px; display:block; border:1px solid #000; height:60px; width:100%; background-color:#fff; cursor:pointer; font-size:20px; line-height:13px !important;}
+	.trash label:hover {color:#651d1d;background-color:#f5eded;}
+	.trash label i {float:left;width:100%;margin-bottom:-70px;text-align:center;line-height:65px;font-size:60px;color:#fff;}
+	.trash em {clear:both;font-size:20px;margin:15px 0;display:block;width:155px;text-align:center;color:#666666;}
+	.trash span {font-size:10px;margin:5px 0;width:155px;text-align:center;clear:both;display:block;color:#220a0a;text-shadow:1px 1px 1px #a66868;}
+	.topnavigation{width:auto;clear:both;height:30px;margin:0;display:block;margin:0 0 0 15px}
+	.topnavigation section{float:left;width:70px;margin:0 5px 0 0}
+	.topnavigation section label{width:100%;height:25px;display:block;text-align:left;font-size:10px;margin:0 15px 0 0;}
+	.topnavigation section label:hover{border-bottom:1px solid #d0d0d0;}
+	#myoptionalmodules section div form{text-align:right;}	
     div,i,section,label,a,input { -webkit-transition: all .6s ease-in-out; -moz-transition: all .6s ease-in-out; -o-transition: all .6s ease-in-out; transition: all .6s ease-in-out; }	
 	input,select { cursor:pointer; }
 	.new {margin:40px 0 10px 0;display:block;}
 	.break {margin:35px 0 10px 0;display:block;clear:both;height:20px;}
-	.wrap { line-height:17px; display:block; clear:both; width: 805px;background-color:#fcfcfc;border-left:5px solid #d2d2d2;border-top:2px solid #c0c0c0;border-right:1px solid #969696;border-bottom:5px solid #6e6e6e;padding:5px;}
+	.wrap { line-height:17px; display:block; clear:both; width: 770px;padding:5px;margin:5px 0 5px -10px;font-size:10px}
 	.moduleform section { width:95%; background-color:#1e292c; padding:5px; margin:5px auto; overflow:hidden; border:1px solid #a3aab0; font-size:20px; color:#f2fcff;}
 	.moduleform section p { width:95%; margin:5px auto; font-size:15px; color:#a2afb3; }
 	.moduleform section span { text-shadow:-1px -1px 0 #6d8c95; text-indent:1px; padding:5px; display:block; }
@@ -82,7 +88,7 @@ hr{color:#fff;}
 	.wrap section label { line-height: 30px;}
 	.wrap .settingsInput select,
 	.wrap .settingsInput input[type='text'],
-	.wrap .settingsInput input[type='password']{ width: 45%; float: right; }
+	.wrap .settingsInput input[type='password']{ width: 45%; float: right; margin:5px 0;}
 	.wrap .settingsInput input[type='submit'] { margin: 10px 0 0 2px; }
 	.message { width: 408px; background-color: #fff; padding: 10px; margin: 70px 25px 50px 27px;}
 	.right { float: right; }
@@ -108,7 +114,7 @@ hr{color:#fff;}
 	.top { height: 10px;}
 	.settingsExtra { margin: 65px 0 -65px 0; display: block; height: 10px;}
 	.settingsExtra select { width: 150px; display: block; float: left; }
-	.settingsExtra input[type='text'] { width: 150px; display: block; float: left; }
+	.settingsExtra input[type='text'] { width: 150px; display: block; float: left; margin:5px 0;}
 	.form-table { max-width: 99%; margin:0 auto; display:block; overflow:hidden;}
 	blockquote {padding:5px;width:95%;margin:5px auto;clear:both;}
 	blockquote p { padding:10px;  line-height:20px; font-size:15px;}	
@@ -177,7 +183,7 @@ hr{color:#fff;}
 	.right{float:right;}
 	.countplus{width:770px;padding:5px;display:block;clear:both;}
 	.countplus select,
-	.countplus input[type='text']{float:right;width:500px;}
+	.countplus input[type='text']{float:right;width:490px;margin:0;}
 	.addForm {  padding:5px;}
 	.addForm section {clear:both;line-height:30px;font-size:15px;text-indent:5px;}
 	.addForm section.editor{margin:10px auto 10px auto !important;display:block;clear:both;}
