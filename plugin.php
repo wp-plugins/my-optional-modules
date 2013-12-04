@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.9.2
+Version: 5.3.9.3
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -422,95 +422,43 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 }else{	
 	// Form handling for options a
 	if(isset($_POST['MOMsave'])){}
-	if(isset($_POST['mom_regularboard_mode_submit'])){
-		update_option('mommaincontrol_regularboard',$_REQUEST['regularboard']);
-	}
-	if(isset($_POST['mom_themetakeover_mode_submit'])){
-		update_option('mommaincontrol_themetakeover',$_REQUEST['themetakeover']);
-	}
-	if(isset($_POST['mom_protectrss_mode_submit'])){
-		update_option('mommaincontrol_protectrss',$_REQUEST['protectrss']);
-	}
-	if(isset($_POST['mom_footerscripts_mode_submit'])){
-		update_option('mommaincontrol_footerscripts',$_REQUEST['footerscripts']);
-	}
-	if(isset($_POST['mom_author_archives_mode_submit'])){
-		update_option('mommaincontrol_authorarchives',$_REQUEST['authorarchives']);
-	}
-	if(isset($_POST['mom_date_archives_mode_submit'])){
-		update_option('mommaincontrol_datearchives',$_REQUEST['datearchives']);
-	}
-	if(isset($_POST['mom_votes_mode_submit'])){
-		update_option('mommaincontrol_votes',$_REQUEST['votes']);
-	}
-	if(isset($_POST['mom_exclude_mode_submit'])){
-		update_option('mommaincontrol_momse',$_REQUEST['exclude']);
-	}
-	if(isset($_POST['mom_passwords_mode_submit'])){
-		update_option('mommaincontrol_momrups',$_REQUEST['passwords']);
-	}
-	if(isset($_POST['mom_reviews_mode_submit'])){
-		update_option('mommaincontrol_reviews',$_REQUEST['reviews']);
-	}
-	if(isset($_POST['mom_shortcodes_mode_submit'])){
-		update_option('mommaincontrol_shorts',$_REQUEST['shortcodes']);
-	}
-	if(isset($_POST['MOMclear'])){
-		update_option('mommaincontrol_focus','');
-	}
-	if(isset($_POST['MOMthemetakeover'])){
-		update_option('mommaincontrol_focus','themetakeover');
-	}
-	if(isset($_POST['MOMexclude'])){
-		update_option('mommaincontrol_focus','exclude');
-	}
-	if(isset($_POST['MOMfontfa'])){
-		update_option('mommaincontrol_focus','fontfa');
-	}
-	if(isset($_POST['MOMcount'])){
-		update_option('mommaincontrol_focus','count');
-	}
-	if(isset($_POST['MOMjumparound'])){
-		update_option('mommaincontrol_focus','jumparound');
-	}
-	if(isset($_POST['MOMpasswords'])){
-		update_option('mommaincontrol_focus','passwords');
-	}
-	if(isset($_POST['MOMreviews'])){
-		update_option('mommaincontrol_focus','reviews');
-	}
-	if(isset($_POST['MOMshortcodes'])){
-		update_option('mommaincontrol_focus','shortcodes');
-	}
+	
+	if(isset($_POST['mom_regularboard_mode_submit']))update_option('mommaincontrol_regularboard',$_REQUEST['regularboard']);
+	if(isset($_POST['mom_themetakeover_mode_submit']))update_option('mommaincontrol_themetakeover',$_REQUEST['themetakeover']);
+	if(isset($_POST['mom_protectrss_mode_submit']))update_option('mommaincontrol_protectrss',$_REQUEST['protectrss']);
+	if(isset($_POST['mom_footerscripts_mode_submit']))update_option('mommaincontrol_footerscripts',$_REQUEST['footerscripts']);
+	if(isset($_POST['mom_author_archives_mode_submit']))update_option('mommaincontrol_authorarchives',$_REQUEST['authorarchives']);
+	if(isset($_POST['mom_date_archives_mode_submit']))update_option('mommaincontrol_datearchives',$_REQUEST['datearchives']);
+	if(isset($_POST['mom_votes_mode_submit']))update_option('mommaincontrol_votes',$_REQUEST['votes']);
+	if(isset($_POST['mom_exclude_mode_submit']))update_option('mommaincontrol_momse',$_REQUEST['exclude']);
+	if(isset($_POST['mom_passwords_mode_submit']))update_option('mommaincontrol_momrups',$_REQUEST['passwords']);
+	if(isset($_POST['mom_reviews_mode_submit']))update_option('mommaincontrol_reviews',$_REQUEST['reviews']);
+	if(isset($_POST['mom_shortcodes_mode_submit']))update_option('mommaincontrol_shorts',$_REQUEST['shortcodes']);
+	if(isset($_POST['MOMclear']))update_option('mommaincontrol_focus','');
+	if(isset($_POST['MOMthemetakeover']))update_option('mommaincontrol_focus','themetakeover');
+	if(isset($_POST['MOMexclude']))update_option('mommaincontrol_focus','exclude');
+	if(isset($_POST['MOMfontfa']))update_option('mommaincontrol_focus','fontfa');
+	if(isset($_POST['MOMcount']))update_option('mommaincontrol_focus','count');
+	if(isset($_POST['MOMjumparound']))update_option('mommaincontrol_focus','jumparound');
+	if(isset($_POST['MOMpasswords']))update_option('mommaincontrol_focus','passwords');
+	if(isset($_POST['MOMreviews']))update_option('mommaincontrol_focus','reviews');
+	if(isset($_POST['MOMshortcodes']))update_option('mommaincontrol_focus','shortcodes');
+	if(isset($_POST['mom_fontawesome_mode_submit']))update_option('mommaincontrol_fontawesome',$_REQUEST['mommaincontrol_fontawesome']);
+	if(isset($_POST['mom_lazy_mode_submit']))update_option('mommaincontrol_lazyload',$_REQUEST['mommaincontrol_lazyload']);
+	if(isset($_POST['mom_versions_submit']))update_option('mommaincontrol_versionnumbers',$_REQUEST['mommaincontrol_versionnumbers']);
+	if(isset($_POST['mom_meta_mode_submit']))update_option('mommaincontrol_meta',$_REQUEST['mommaincontrol_meta']);
+	if(isset($_POST['mom_maintenance_mode_submit']))update_option('mommaincontrol_maintenance',$_REQUEST['maintenanceMode']);
+	if(isset($_POST['mom_analytics_mode_submit']))update_option('mommaincontrol_analytics',$_REQUEST['analytics']);
+	if(isset($_POST['mom_postasfront_mode_submit']))update_option('mommaincontrol_mompaf',$_REQUEST['postasfront']);
+	if(!get_option('mommaincontrol_mompaf'))add_option('mompaf_post',0);
+	if(isset($_POST['mom_maintenance_mode_submit']))add_option('momMaintenance_url','');
+	
 	if(isset($_POST['mom_postasfront_post_submit'])){
 		update_option('momMaintenance_url',$_REQUEST['momMaintenance_url']);
 		update_option('momanalytics_code',$_REQUEST['momanalytics_code']);
 		update_option('mompaf_post',$_REQUEST['mompaf_post']);
 	}
-	if(isset($_POST['mom_fontawesome_mode_submit'])){
-		update_option('mommaincontrol_fontawesome',$_REQUEST['mommaincontrol_fontawesome']);
-	}
-	if(isset($_POST['mom_lazy_mode_submit'])){
-		update_option('mommaincontrol_lazyload',$_REQUEST['mommaincontrol_lazyload']);
-	}
-	if(isset($_POST['mom_versions_submit'])){
-		update_option('mommaincontrol_versionnumbers',$_REQUEST['mommaincontrol_versionnumbers']);
-	}
-	if(isset($_POST['mom_meta_mode_submit'])){
-		update_option('mommaincontrol_meta',$_REQUEST['mommaincontrol_meta']);
-	}
-	if(isset($_POST['mom_maintenance_mode_submit'])){
-		update_option('mommaincontrol_maintenance',$_REQUEST['maintenanceMode']);
-	}
-	if(isset($_POST['mom_analytics_mode_submit'])){
-		update_option('mommaincontrol_analytics',$_REQUEST['analytics']);
-	}
-	if(isset($_POST['mom_postasfront_mode_submit'])){
-		update_option('mommaincontrol_mompaf',$_REQUEST['postasfront']);
-	}
-	if(!get_option('mommaincontrol_mompaf')){
-		add_option('mompaf_post',0);
-	}
+
 	if(isset($_POST['mom_count_mode_submit'])){
 		update_option('mommaincontrol_obwcountplus',$_REQUEST['countplus']);
 		add_option('obwcountplus_1_countdownfrom',0);
@@ -663,9 +611,6 @@ if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
 			dbDelta($verification_sql);
 			update_option('mommaincontrol_shorts_activated',0);
 		}
-	}
-	if(isset($_POST['mom_maintenance_mode_submit'])){
-			add_option('momMaintenance_url','');
 	}
 	
 }
@@ -2847,7 +2792,7 @@ function mom_exclude_filter_posts($query){
 			$b = array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',0,1,2,3,4,5,6,7,8,9,'left arrow','up arrow','right arrow','down arrow');
 			echo '
 			<span class="moduletitle">
-			<form method="post" action="" name="momExclude"><label for="mom_exclude_mode_submit">Deactivate</label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momse') == 1){echo '0';}else{echo '1';}echo '" name="exclude" /><input type="submit" id="mom_exclude_mode_submit" name="mom_exclude_mode_submit" value="Submit" class="hidden" /></form>
+				<form method="post" action="" name="momExclude"><label for="mom_jumparound_mode_submit">Deactivate</label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momse') == 1){echo '0';}else{echo '1';}echo '" name="exclude" /><input type="submit" id="mom_exclude_mode_submit" name="mom_exclude_mode_submit" value="Submit" class="hidden" /></form>
 			</span>
 			<div class="countplus clear form">
 			<p class="clear">jump around / <em>Thanks to <a href="http://stackoverflow.com/questions/1939041/change-hash-without-reload-in-jquery">jitter</a> &amp; <a href="http://stackoverflow.com/questions/13694277/scroll-to-next-div-using-arrow-keys">mVChr</a> for the help.</em></p>
@@ -3285,7 +3230,8 @@ function regularboard_shortcode($atts,$content = null){
 													$enteredSUBJECT = sanistripents($_REQUEST['SUBJECT']);
 													$enteredSUBJECT = substr($enteredSUBJECT,0,$maxtext);
 													$checkCOMMENT = strtolower($enteredCOMMENT);
-													$getDuplicate = $wpdb->get_results("SELECT COMMENT FROM $regularboard_posts WHERE COMMENT = '".$checkCOMMENT."' AND BOARD = '".$BOARD."' LIMIT 1");
+													$checkURL = sanistripents($_REQUEST['URL']);
+													$getDuplicate = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE COMMENT = '".$checkCOMMENT."' OR URL = '".$checkURL."' AND BOARD = '".$BOARD."' LIMIT 1");
 													if(count($getDuplicate) == 0){
 														if(filter_var($_REQUEST['EMAIL'],FILTER_VALIDATE_EMAIL)){
 															$enteredEMAIL = sanistripents(($_REQUEST['EMAIL']));
@@ -3303,8 +3249,11 @@ function regularboard_shortcode($atts,$content = null){
 															}
 															
 													}else{
-														echo '<h3 class="info">DUPLICATE CONTENT DETECTED - POST DISCARED<br />GO BACK AND FIX YOUR COMMENT.</h3></div></div></div>';
-													}
+														if(count($getDuplicate) > 0){
+															echo '<h3 class="info">DUPLICATE COMMENT (or URL) DETECTED - POST DISCARDED<br />GO BACK AND FIX YOUR COMMENT.</h3>';
+														}
+														echo '</div>';
+													}													
 												}
 											}
 											$LAST = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE COMMENT = '".$enteredCOMMENT."' LIMIT 1");
@@ -3314,8 +3263,10 @@ function regularboard_shortcode($atts,$content = null){
 											if($BOARD != '' && $THREAD == ''){$REDIRECTO = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$IDGOTO;}
 											}
 											if($BOARD != '' && $THREAD != ''){$REDIRECTO = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$THREAD;;}
-											echo '<h3 class="info">'.esc_attr($postedmessage).'<br />click <a href="'.esc_url($REDIRECTO).'">here</a> if you are not redirected.</h3></div></div></div>';
-											if(count($getDuplicate) == 0){echo '<meta http-equiv="refresh" content="5;URL= '.$REDIRECTO.'">';}
+											if(count($getDuplicate) == 0){
+												echo '<h3 class="info">'.esc_attr($postedmessage).'<br />click <a href="'.esc_url($REDIRECTO).'">here</a> if you are not redirected.</h3></div>';
+												echo '<meta http-equiv="refresh" content="5;URL= '.$REDIRECTO.'">';
+											}
 										}
 										if(!isset($_POST['FORMSUBMIT']))
 										{
@@ -3484,68 +3435,60 @@ function regularboard_shortcode($atts,$content = null){
 										if($BOARD != '' && $THREAD != '')$REDIRECTO = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$THREAD;
 										echo '<h3 class="info">'.$THISMESSAGE.'</h3>';
 										echo '<meta http-equiv="refresh" content="3;URL= '.$REDIRECTO.'">';
-									}else{								
-										echo '<div class="op" id="'.$ID.'">';
-										//echo '<i class="fa fa-minus toggelthis"></i>';	
-										//echo '<i class="fa fa-plus toggelthis hidden"></i>';	
-										if($URL != '' && $TYPE == 'image')echo '<span class="fileinfo">File:<a href="'.$URL.'">'.$URL.'</a></span>';
-										if($LAST == '9999-12-25 23:59:59')echo '<i class="fa fa-thumb-tack"></i> ';
-										if($LAST == '0')echo '<i class="fa fa-lock"></i> ';
+									}else{
+									
+									
+										// Thread parent (OP)
 										echo '
-										<span class="OP">';
+										<div class="op" id="'.$ID.'">';
 										if($SUBJECT != '')echo '<span class="subject">'.$SUBJECT.'</span>';
-										if($EMAIL != ''){
-											echo get_avatar($EMAIL,32);
-										}				
-										echo '<span class="name">';
-										if(strtolower($EMAIL) == 'heaven'){echo '';}
-										else{echo $defaultname;}
-										echo '
-										</span>';
-										if($EMAIL != ''){
-											echo '
-											<span class="trip">';
-											if(filter_var($EMAIL,FILTER_VALIDATE_EMAIL)){
-											}else{
-												echo $EMAIL;
-											} 
-												echo'
-												</span>';
-										}
-										echo '
-										</span>';
-										if($MODERATOR == 1)echo '<span class="mod">'.$modcode.'</span>';
-										if($LAST != '9999-12-25 23:59:59')echo '
-										<span class="date">'.$DATE.'</span>
-										<span class="postid">';
-										if($THREAD != '')echo ' No. '.$ID.'';
-										echo '</span>'; 
-										if($THREAD == '')echo ' [<a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">Reply</a>] ('.count($getReplies).')';
-										if($IP == $theIP_us32str){
-											echo '<div class="controlpaneluser">';
-											echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
-											echo '</div>';
-										}
-										if($ISMODERATOR === true){
-											echo '<div class="controlpanel">';
-											if($LAST != '9999-12-25 23:59:59')echo '<form method="post" class="inline" name="STICKY"><label for="STICKY'.$ID.'"><i class="off fa fa-thumb-tack"></i></label><input type="submit" class="hidden" id="STICKY'.$ID.'" name="STICKY'.$ID.'" /></form>';
-											if($LAST == '9999-12-25 23:59:59')echo '<form method="post" class="inline" name="UNSTICKY"><label for="UNSTICKY'.$ID.'"><i class="on fa fa-thumb-tack"></i></label><input type="submit" class="hidden" id="UNSTICKY'.$ID.'" name="UNSTICKY'.$ID.'" /></form>';
-											if($LAST != '0')echo '<form method="post" class="inline" name="LOCK"><label for="LOCK'.$ID.'"><i class="off fa fa-lock"></i></label><input type="submit" class="hidden" id="LOCK'.$ID.'" name="LOCK'.$ID.'" /></form>';
-											if($LAST == '0')echo '<form method="post" class="inline" name="UNLOCK"><label for="UNLOCK'.$ID.'"><i class="on fa fa-lock"></i></label><input type="submit" class="hidden" id="UNLOCK'.$ID.'" name="UNLOCK'.$ID.'" /></form>';
-											if($MODERATOR != 1){
-												echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
-												echo '<form method="post" class="inline" name="DELETE"><label for="BAN'.$ID.'">[Ban / </label><input type="text" name="MESSAGE" placeholder="Reason" />]<input type="submit" class="hidden" id="BAN'.$ID.'" name="BAN'.$ID.'" /></form>';
-											}
-											echo '</div>';
-										}
+										if($SUBJECT == '')echo '<span class="subject"><em>no subject</em></span>';
+										// Image (or video) content block
 										if($URL != '' && $TYPE == 'image'){
-											echo $purifier->purify('<img class="imageOP" src="'.$URL.'" height="250" />');
-										}elseif($TYPE == 'video' && $URL != ''){echo $URL;}
-										if($THREAD == '')echo substr($COMMENT,0,$cutoff);
-										if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
-										if($THREAD != '')echo $COMMENT;
+											echo $purifier->purify('<img class="imageOP" src="'.$URL.'" />');
+										}elseif($TYPE == 'video' && $URL != ''){
+											echo $URL.'<hr class="clear" />';
+										}else{
+											echo '<hr class="clear" />';
+										}
+										// User controls (delete) / mod controls (sticky/lock/ban)
+										if($IP == $theIP_us32str || $ISMODERATOR === true){
+											echo '<div class="controlpanel">';
+											echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
+											if($ISMODERATOR === true){if($LAST != '9999-12-25 23:59:59')echo '<form method="post" class="inline" name="STICKY"><label for="STICKY'.$ID.'"><i class="off fa fa-thumb-tack"></i></label><input type="submit" class="hidden" id="STICKY'.$ID.'" name="STICKY'.$ID.'" /></form>';if($LAST == '9999-12-25 23:59:59')echo '<form method="post" class="inline" name="UNSTICKY"><label for="UNSTICKY'.$ID.'"><i class="on fa fa-thumb-tack"></i></label><input type="submit" class="hidden" id="UNSTICKY'.$ID.'" name="UNSTICKY'.$ID.'" /></form>';if($LAST != '0')echo '<form method="post" class="inline" name="LOCK"><label for="LOCK'.$ID.'"><i class="off fa fa-lock"></i></label><input type="submit" class="hidden" id="LOCK'.$ID.'" name="LOCK'.$ID.'" /></form>';if($LAST == '0')echo '<form method="post" class="inline" name="UNLOCK"><label for="UNLOCK'.$ID.'"><i class="on fa fa-lock"></i></label><input type="submit" class="hidden" id="UNLOCK'.$ID.'" name="UNLOCK'.$ID.'" /></form>';if($MODERATOR != 1){echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';echo '<form method="post" class="inline" name="DELETE"><label for="BAN'.$ID.'">[Ban / </label><input type="text" name="MESSAGE" placeholder="Reason" />]<input type="submit" class="hidden" id="BAN'.$ID.'" name="BAN'.$ID.'" /></form>';}}
+											
+											echo '</div>';
+										}
+										// Get thread meta data
+										echo '
+										<div class="commentMeta">';
+										if($THREAD != '')echo ' Thread no. '.$ID.' ';
+										if($LAST == '9999-12-25 23:59:59')echo '<em>sticky</em> ';
+										if($LAST == '0')echo '<em>locked</em> ';
+										if($LAST != '9999-12-25 23:59:59')echo 'Posted '.human_time_diff( get_the_time('U'), current_time($DATE) ) . ' ago by ';
+										if($EMAIL != ''){echo get_avatar($EMAIL,32);}
+										if($MODERATOR == 1)echo '<span class="mod">'.$modcode.'</span>';
+										if($MODERATOR != 1)if(strtolower($EMAIL) == 'heaven'){echo '';}else{echo $defaultname;}
+										if(filter_var($EMAIL,FILTER_VALIDATE_EMAIL)){}else{echo ' '.$EMAIL;}										
+										if($THREAD == '')echo ' [<a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">Reply</a>] ('.count($getReplies).')';
+										echo '
+										</div>';
+										// Thread (parent) comment 
+										echo '
+										<div class="commentContainer">';
+											if($THREAD == ''){
+												echo substr($COMMENT,0,$cutoff);
+												if(strlen($COMMENT) > $cutoff)echo '...';
+											}else{
+												echo $COMMENT;
+											}
+										echo '
+										</div>';
+										
+										
 										$THISPAGE = get_permalink();
-										if($THREAD == '' && $totalREPLIES >= 4) echo '<span class="omittedinfo">'.$totalREPLYS.' posts omitted.  Click <i class="loadmore fa fa-plus" data="'.$THISPAGE.'?board='.$BOARD.'&amp;thread='.$ID.'"></i> <a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">here</a> to view.</span>';
+										if($THREAD == '' && $totalREPLIES >= 4) echo '
+											<i class="loadmore" data="'.$THISPAGE.'?board='.$BOARD.'&amp;thread='.$ID.'">'.$totalREPLYS.' posts omitted.  Click to load</i>';
 										echo '<div class="omitted'.$ID.'" id="omitted">';
 										if(count($gotReplies) > 0){
 											foreach($gotReplies as $REPLIES){
@@ -3591,7 +3534,10 @@ function regularboard_shortcode($atts,$content = null){
 													if($BOARD != '' && $THREAD != '')$REDIRECTO = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$THREAD;
 													echo '<h3 class="info">'.$THISMESSAGE.'</h3>';
 													echo '<meta http-equiv="refresh" content="3;URL= '.$REDIRECTO.'">';
-													}else{
+												}else{
+												
+												
+													// Thread children (replies)
 													echo '<div class="reply" id="'.$ID.'">';
 													echo '<div class="replycontent">';
 													if($URL != '' && $TYPE == 'image')echo '<span class="fileinfo">File:<a href="'.$URL.'">'.$URL.'</a></span>';
@@ -3622,33 +3568,40 @@ function regularboard_shortcode($atts,$content = null){
 													echo '
 													<span class="date">'.$DATE.'</span> 
 													<span class="postid">No. '.$ID.'</span>';
-												if($IP == $theIP_us32str){
+													if($IP == $theIP_us32str){
 														echo '<div class="controlpaneluser">';
 														echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
 														echo '</div>';
-												}								
-												if($ISMODERATOR === true){ 
-													echo '<div class="controlpanel">';
-													if($MODERATOR != 1){
-														echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
-														echo '<form method="post" class="inline" name="DELETE"><label for="BAN'.$ID.'">[Ban / </label><input type="text" name="MESSAGE" placeholder="Reason" />]<input type="submit" class="hidden" id="BAN'.$ID.'" name="BAN'.$ID.'" /></form>';
-													}
+													}								
+													if($ISMODERATOR === true){ 
+														echo '<div class="controlpanel">';
+														if($MODERATOR != 1){
+															echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
+															echo '<form method="post" class="inline" name="DELETE"><label for="BAN'.$ID.'">[Ban / </label><input type="text" name="MESSAGE" placeholder="Reason" />]<input type="submit" class="hidden" id="BAN'.$ID.'" name="BAN'.$ID.'" /></form>';
+														}
 													echo '</div>';
-												}
+													}
 													echo '<section>';
-												if($URL != '' && $TYPE == 'image'){
-													echo $purifier->purify('<img class="imageREPLY" src="'.$URL.'" height="125" />');
-												}elseif($TYPE == 'video' && $URL != ''){echo $URL;}
-														if($THREAD != '')echo $purifier->purify($COMMENT);
-														if($THREAD == '')echo substr($COMMENT,0,$cutoff);
-														if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
-														echo '</section></div>';								
+													if($URL != '' && $TYPE == 'image'){
+														echo $purifier->purify('<img class="imageREPLY" src="'.$URL.'"/>');
+													}elseif($TYPE == 'video' && $URL != ''){
+														echo $URL;
+													}
+													if($THREAD != '')echo $purifier->purify($COMMENT);
+													if($THREAD == '')echo substr($COMMENT,0,$cutoff);
+													if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
+													echo '</section></div></div>';
+
+
 												}
-												echo '</div>';
 											}
 										}
-										
 										echo '</div></div>';
+										
+										
+										
+										
+										
 									}
 								}
 								if($BOARD != '' && $THREAD == ''){
@@ -3695,6 +3648,9 @@ function regularboard_shortcode($atts,$content = null){
 		if(count($getBoards) > 0){
 			echo '<div>';
 			echo '<h3>Boards</h3>';
+			if($ISMODERATOR === true){
+				echo '<a href="?area=create">Add a board</a>';
+			}
 			foreach($getBoards as $gotBoards){
 				$BOARDNAME = sanistripents($gotBoards->SHORTNAME);
 				$BOARDLONG = sanistripents($gotBoards->NAME);

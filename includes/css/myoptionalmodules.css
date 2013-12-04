@@ -109,8 +109,7 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 .mycontrols div{clear:both;width:150px;overflow:hidden}
 .mycontrols div a{display:block;width:150px;height:100%}
 .mycontrols div:hover .attachedcomment{position:absolute;top:0;left:155px;display:block;visibility:visible;width:300px;background-color:#fff;font-size:10px;line-height:12px;margin:5px;padding:5px}
-.boardDisplay{display:block;background-color:#f2f8ff;color:#252523;border:1px solid #201f0f;text-shadow:none;width:100%;box-shadow:#c1ddfa .01em .01em 0 .02em .02em 0 .03em .03em 0 .04em .04em 0 .05em .05em 0 .06em .06em 0 .07em .07em 0 #c1ddfa .08em .08em 0 .09em .09em 0 .1em .1em 0;margin:10px auto;overflow:hidden}
-.boardDisplay .avatar-32{float:left;border-radius:3px;height:23px;width:23px;margin:-5px 5px}
+.boardDisplay{display:block;background-color:#eef2ff;color:#252523;border:1px solid #201f0f;text-shadow:none;width:100%;box-shadow:#c1ddfa .01em .01em 0 .02em .02em 0 .03em .03em 0 .04em .04em 0 .05em .05em 0 .06em .06em 0 .07em .07em 0 #c1ddfa .08em .08em 0 .09em .09em 0 .1em .1em 0;margin:10px auto;overflow:hidden}
 .boardDisplay .boardlist div{clear:both;width:95%;background-color:#fff;border:1px solid #133453;overflow-y:auto;overflow-x:hidden;margin:5px auto;padding:0}
 .boardDisplay .omittedinfo{color:#b2b0b0;font-weight:200;float:left;clear:left;margin:15px}
 .boardDisplay .boardlist div h3{width:100%;text-indent:15px;background-color:#eaf5ff;color:#0e263c;border-bottom:1px solid #3e7cb6;margin:0 auto;padding:5px 0}
@@ -130,7 +129,6 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 .boardDisplay .error{width:100%;text-align:center;font-size:25px;background-color:#ffb6b6;color:#4b2424;line-height:27px}
 .boardDisplay .reply{width:100%;text-align:center;font-size:15px;background-color:#133861;color:#eef6ff;line-height:17px;margin:-5px auto 5px}
 .boardDisplay .threadinformation{clear:both;text-align:right;font-size:12px;line-height:12px;width:95%;display:block;margin:-15px auto 0}
-.imageOP,.imageREPLY{position:relative;float:left;margin:15px}
 .boardDisplay input[type=checkbox]{float:left;margin:5px 5px 0}
 span.fileinfo{clear:both;display:block;text-indent:5px;margin:5px 0 8px}
 .boardDisplay .banned{background-color:#541616;color:#ffcfcf;display:block;width:100%;text-align:center;padding:10px 0}
@@ -141,7 +139,6 @@ h3.options{border:0;text-decoration:none;text-align:center;text-indent:-.12em;co
 h3.info{font-weight:900;text-align:center;width:100%;margin:10px auto}
 .boardDisplay article{display:block;font-size:13px;line-height:15px;background-color:#fffdf7;margin:10px auto;padding:5px}
 .boardDisplay .op{display:inline-block;font-size:12px;line-height:13px;float:left;width:100%;border-top:1px solid #b7c5d9;margin:0 auto;padding:5px 0}
-.boardDisplay div.reply{background-color:#d6daf0;color:#21272e;overflow:hidden;max-width:95%;width:auto;font-size:12px;line-height:14px;text-align:left;display:table;margin:10px;padding:5px}
 .boardDisplay .op p,.boardDisplay .reply p{max-width:95%;word-wrap:break-word;display:table;margin:2px 0 2px 15px;padding:5px}
 .boardDisplay .op iframe,.boardDisplay .reply iframe{display:table;width:95%;margin:0 auto}
 .boardDisplay article section{width:95%;display:block;font-size:14px;line-height:16px;margin:5px auto;padding:5px}
@@ -159,8 +156,7 @@ div.rules p{margin:2px auto}
 .banned input[type=text]{width:300px;font-size:20px;line-height:22px;border-radius:3px;clear:both;display:block;margin:5px auto;padding:5px}
 .boardDisplay span.name{color:#265942;font-weight:400}
 .boardDisplay span.trip{color:#5fa485;font-weight:200}
-.boardDisplay span.postid{font-size:11px}
-.boardDisplay span.subject{text-indent:5px;font-weight:900;color:#390b0b;float:left;padding:5px}
+.boardDisplay span.postid{font-size:8px}
 .boardDisplay .boardName{border-top:1px solid #f7f7f7;background-color:#4374a7;color:#7ca4cc;border:0;text-decoration:none;text-align:center;text-indent:-.12em;font:55px anchor-web-1,anchor-web-2, Impact, sans-serif;font-weight:900;display:inline-block;line-height:1;width:100%;text-shadow:#c1ddfa .01em .01em 0 .02em .02em 0 .03em .03em 0 .04em .04em 0 .05em .05em 0 .06em .06em 0 .07em .07em 0 #c1ddfa .08em .08em 0 .09em .09em 0 .1em .1em 0;margin:0 0 -15px;padding:15px 0}
 .boardDisplay .boardDescription{width:100%;text-align:center;font-size:12px;line-height:60px;background-color:#8eb8e3;color:#f2f8ff;margin:0 0 5px;padding:15px 0 0}
 .boardDisplay .topic .submit{width:270px;line-height:10px;height:10px;cursor:pointer;text-align:center;border:1px solid #a4a4a4;border-radius:3px;background-color:#fff;float:right;margin:0 0 10px;padding:5px}
@@ -172,11 +168,10 @@ div.rules p{margin:2px auto}
 .boardDisplay p.credits{font-size:10px;line-height:12px;text-align:center;width:90%;clear:both;display:block;margin:5px auto}
 .boardDisplay .toggled{display:block;height:20px;opacity:.5;overflow:hidden}
 .boardDisplay .toggelthis{clear:both;display:block;cursor:pointer;border:1px solid #000;background-color:#aa3535;color:#fee;width:3px;height:3px;text-align:center;border-radius:3px;font-size:6px;line-height:5px;position:absolute;left:8px;font-weight:500;margin:8px 0 -5px 5px;padding:5px}
-.boardDisplay .loadmore{cursor:pointer;border:1px solid #000;background-color:#aa3535;color:#fee;width:3px;height:3px;text-align:center;border-radius:3px;font-size:6px;line-height:5px;font-weight:500;padding:5px}
 .boardDisplay .shortinfo{clear:both;display:block;margin:-20px 0 5px 30px}
 .boardDisplay .leftmeta{float:left;cursor:pointer;font-size:12px;line-height:14px;margin:0}
 .boardDisplay .nav{font-size:12px;line-height:12px;margin:0 5px}
-.boardDisplay .catitem{width:250px;display:table;font-size:12px;line-height:14px;float:left;margin:5px}
+.boardDisplay .catitem{width:220px;display:table;font-size:12px;line-height:14px;float:left;margin:5px}
 .boardDisplay .catitem a{text-decoration:none;border:0}
 .boardDisplay .catitem img{width:95%;margin:5px auto}
 .boardDisplay .catitem span.catsubject{font-weight:400;clear:both;display:block;margin:0 auto}
@@ -196,10 +191,22 @@ div.momnavbar #navsearchform i,.banned textarea,.banned input[type=submit],.bann
 .momschemedefault .recentPostListing,#mom_onthisday section.mom_onthisday:hover{background-color:#fff}
 div.momlistcategories span,.right{float:right}
 .boardDisplay .pages a,.boardDisplay .reportdelete input,.op i{margin:5px}
-.controlpaneluser,.controlpanel{display:block;float:right;margin:0 5px}
-@media all and max-width 930px {
-.boardDisplay .catitem{width:48%;display:table;font-size:12px;line-height:14px;float:left;margin:5px}
-}
-@media all and max-width 610px {
-.boardDisplay .catitem{width:100%;display:table;font-size:12px;line-height:14px;float:left;margin:5px}
-}
+
+.boardDisplay div.op{border-top:3px solid #b7c5d9;margin:10px auto}
+hr.clear{border:none;margin:15px 0;clear:both}
+.controlpaneluser,.controlpanel{display:block;float:right}
+.controlpanel{margin:-35px 0;position:relative;z-index:2;width:auto;background-color:#f5f7ff}
+.controlpaneluser{margin:0 5px;position:relative;z-index:2;}
+.controlpaneluser label,.controlpanel label{background-color:transparent!important;color:#000!important}
+.boardDisplay span.subject{width:100%;margin:0 0 -18px 0;z-index:2;position:relative;clear:both;display:block;background-color:#f5f7ff;padding:5px 0;text-align:left;text-indent:10px;font-size:13px;font-weight:900}
+.boardDisplay .imageOP{width:100%;display:block;margin:0 auto!important;position:relative;z-index:1}
+.boardDisplay .imageREPLY{width:100%;display:block;margin:0 auto!important;position:relative;z-index:1}
+.boardDisplay .loadmore{cursor:pointer;border:1px solid #000;background-color:#aa3535;color:#fee;width:100%;height:10px;text-align:center;border-radius:3px;font-size:10px;line-height:2px;font-weight:500;padding:5px 0;display:block;margin:-6px -1px}
+.boardDisplay .loadmore:hover{background-color:#3574aa}
+.boardDisplay .commentMeta{display:block;clear:both;width:100%;margin:5px auto;text-indent:10px;padding:5px 0;font-size:9px}
+.boardDisplay .avatar-32{float:left;border-radius:3px;height:20px;width:20px;margin:-8px 5px 0 5px}
+.boardDisplay .commentContainer {display:block;clear:both;width:100%;margin:5px auto;border-bottom:1px solid #8ca8c2;border-top:1px solid #8ca8c2;background-color:#f5f7ff}
+.boardDisplay .commentContainer p{margin:5px;font-size:10px;line-height:11px}
+
+.boardDisplay div.reply{background-color:#d6daf0;color:#21272e;overflow:hidden;max-width:100%;width:100%;font-size:10px;line-height:14px;text-align:left;display:table;margin:0;border-bottom:1px solid #b7c5d9;padding:5px 0}
+.boardDisplay .replycontent{font-size:10px}
