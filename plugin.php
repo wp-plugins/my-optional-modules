@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.9.3
+Version: 5.3.9.4
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com
 *******************************
@@ -892,89 +892,91 @@ function rotating_universal_passwords_shortcode($atts, $content = null){
 		$passwordField++;	
 		if(isset($_SERVER["REMOTE_ADDR"])){
 			$RUPs_origin = esc_attr($_SERVER["REMOTE_ADDR"]);
-		} else if(isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
-			$RUPs_origin = esc_attr($_SERVER["HTTP_X_FORWARDED_FOR"]); 
-		} else if(isset($_SERVER["HTTP_CLIENT_IP"])){
-			$RUPs_origin = esc_attr($_SERVER["HTTP_CLIENT_IP"]); 
-		}
-		$RUPs_ip_addr = $RUPs_origin;
-		$RUPs_s32int = ip2long($RUPs_ip_addr);
-		$RUPs_us32str = sprintf("%u",$RUPs_s32int);
-		if(date('N') === '7'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_1');$rotating_universal_passwords_today_is = 'Sunday';}
-		if(date('N') === '1'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_2');$rotating_universal_passwords_today_is = 'Monday';}
-		if(date('N') === '2'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_3');$rotating_universal_passwords_today_is = 'Tuesday';}
-		if(date('N') === '3'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_4');$rotating_universal_passwords_today_is = 'Wednesday';}
-		if(date('N') === '4'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_5');$rotating_universal_passwords_today_is = 'Thursday';}
-		if(date('N') === '5'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_6');$rotating_universal_passwords_today_is = 'Friday';}
-		if(date('N') === '6'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_7');$rotating_universal_passwords_today_is = 'Saturday';}
-			if($rotating_universal_passwords_todays_password != ''){
-			$rups_md5passa = crypt($_REQUEST['rups_pass'],'$2a$'.$my_optional_modules_passwords_salt);
-			global $wpdb;
-			$RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
-			$RUPs_result = $wpdb->get_results("SELECT ID FROM $RUPs_table_name WHERE IP = '".$RUPs_s32int."'");
-			if(isset($_POST['rups_pass'])){
-				if($rups_md5passa === $rotating_universal_passwords_todays_password){
-					if(count($RUPs_result) > 0){
-						$RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
-						$wpdb->query("DELETE FROM $RUPs_table_name WHERE IP = '$RUPs_s32int'");
-				}
-					return $content;
-				}else{
-					$RUPs_date = date('Y-m-d H:i:s');
-					$RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
-					$RUPs_URL = esc_url(get_permalink());
-					if(count($RUPs_result) > 0){
-						$wpdb->query("UPDATE $RUPs_table_name SET ATTEMPTS = ATTEMPTS + 1 WHERE IP = $RUPs_s32int");
-						$wpdb->query("UPDATE $RUPs_table_name SET DATE = '$RUPs_date' WHERE IP = $RUPs_s32int");
-						$wpdb->query("UPDATE $RUPs_table_name SET URL = '".esc_url(get_permalink())."' WHERE IP = $RUPs_s32int");
-					}else{
-						$wpdb->query("INSERT INTO $RUPs_table_name (ID, DATE, IP, ATTEMPTS, URL) VALUES ('','$RUPs_date','$RUPs_s32int','1','$RUPs_URL')") ;
-					}
-				}
-			}
-			$RUPs_attempts = $wpdb->get_results("SELECT DATE,ATTEMPTS FROM $RUPs_table_name WHERE IP = '".$RUPs_s32int."'");
-			if(count($RUPs_attempts) > 0){
-				foreach($RUPs_attempts as $RUPs_attempt_count){
-					$RUPs_attempted = $RUPs_attempt_count->ATTEMPTS;
-					$RUPs_dated = $RUPs_attempt_count->DATE;
-					if($RUPs_attempted < get_option('rotating_universal_passwords_8')){
-						$attempts = get_option('rotating_universal_passwords_8');
-						$attemptsLeft = $attempts - $RUPs_attempted . ' attempts left.';
-						if(isset($_POST)){
-							echo '<form method="post" name="password_'.$passwordField.'" id="RUPS'.$passwordField.'" action="'.esc_url(get_permalink()).'">';
-							wp_nonce_field('password_'.$passwordField);
-							echo '<input type="text" class="password" name="rups_pass" placeholder="'.$attemptsLeft.'Enter the password for '.esc_attr($rotating_universal_passwords_today_is).'." >
-							<input type="submit" name="submit" class="hidden" value="Submit">
-							</form>';
-						}
-					}
-					elseif($RUPs_attempted >= get_option('rotating_universal_passwords_8')){
-						echo "<blockquote>You have been locked out.  If you feel this is an error, please contact the admin with the following <strong>id:".$RUPs_s32int."</strong> to inquire further.</blockquote>";
-					}else{			
-						if(isset($_POST)){
-							echo '<form method="post" name="password_'.$passwordField.'" id="RUPS'.$passwordField.'" action="'.esc_url(get_permalink()).'">';
-							wp_nonce_field('password_'.$passwordField);
-							echo '<input type="text" class="password" name="rups_pass" placeholder="'.$attemptsLeft.'Enter the password for '.esc_attr($rotating_universal_passwords_today_is).'." >
-							<input type="submit" name="submit" class="hidden" value="Submit">
-							</form>';
-						}
-					}
-				}
-			}else{
-				if(isset($_POST)){
-					echo '<form method="post" name="password_'.$passwordField.'" id="RUPS'.$passwordField.'" action="'.esc_url(get_permalink()).'">';
-					wp_nonce_field('password_'.$passwordField);
-					echo '<input type="text" class="password" name="rups_pass" placeholder="'.$attemptsLeft.'Enter the password for '.esc_attr($rotating_universal_passwords_today_is).'." >
-					<input type="submit" name="submit" class="hidden" value="Submit">
-					</form>';
-				}
-			}
-			return ob_get_clean();
 		}else{
-		ob_start();
-		echo '<blockquote>'.esc_attr($rotating_universal_passwords_today_is).'\'s password is blank or missing.</blockquote>';
-		return ob_get_clean();
+			$RUPs_origin = false;
 		}
+		if($RUPs_origin !== false){
+			$RUPs_ip_addr = $RUPs_origin;
+			$RUPs_s32int = ip2long($RUPs_ip_addr);
+			$RUPs_us32str = sprintf("%u",$RUPs_s32int);
+			if(date('N') === '7'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_1');$rotating_universal_passwords_today_is = 'Sunday';}
+			if(date('N') === '1'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_2');$rotating_universal_passwords_today_is = 'Monday';}
+			if(date('N') === '2'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_3');$rotating_universal_passwords_today_is = 'Tuesday';}
+			if(date('N') === '3'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_4');$rotating_universal_passwords_today_is = 'Wednesday';}
+			if(date('N') === '4'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_5');$rotating_universal_passwords_today_is = 'Thursday';}
+			if(date('N') === '5'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_6');$rotating_universal_passwords_today_is = 'Friday';}
+			if(date('N') === '6'){$rotating_universal_passwords_todays_password = get_option('rotating_universal_passwords_7');$rotating_universal_passwords_today_is = 'Saturday';}
+				if($rotating_universal_passwords_todays_password != ''){
+				$rups_md5passa = crypt($_REQUEST['rups_pass'],'$2a$'.$my_optional_modules_passwords_salt);
+				global $wpdb;
+				$RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
+				$RUPs_result = $wpdb->get_results("SELECT ID FROM $RUPs_table_name WHERE IP = '".$RUPs_s32int."'");
+				if(isset($_POST['rups_pass'])){
+					if($rups_md5passa === $rotating_universal_passwords_todays_password){
+						if(count($RUPs_result) > 0){
+							$RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
+							$wpdb->query("DELETE FROM $RUPs_table_name WHERE IP = '$RUPs_s32int'");
+					}
+						return $content;
+					}else{
+						$RUPs_date = date('Y-m-d H:i:s');
+						$RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
+						$RUPs_URL = esc_url(get_permalink());
+						if(count($RUPs_result) > 0){
+							$wpdb->query("UPDATE $RUPs_table_name SET ATTEMPTS = ATTEMPTS + 1 WHERE IP = $RUPs_s32int");
+							$wpdb->query("UPDATE $RUPs_table_name SET DATE = '$RUPs_date' WHERE IP = $RUPs_s32int");
+							$wpdb->query("UPDATE $RUPs_table_name SET URL = '".esc_url(get_permalink())."' WHERE IP = $RUPs_s32int");
+						}else{
+							$wpdb->query("INSERT INTO $RUPs_table_name (ID, DATE, IP, ATTEMPTS, URL) VALUES ('','$RUPs_date','$RUPs_s32int','1','$RUPs_URL')") ;
+						}
+					}
+				}
+				$RUPs_attempts = $wpdb->get_results("SELECT DATE,ATTEMPTS FROM $RUPs_table_name WHERE IP = '".$RUPs_s32int."'");
+				if(count($RUPs_attempts) > 0){
+					foreach($RUPs_attempts as $RUPs_attempt_count){
+						$RUPs_attempted = $RUPs_attempt_count->ATTEMPTS;
+						$RUPs_dated = $RUPs_attempt_count->DATE;
+						if($RUPs_attempted < get_option('rotating_universal_passwords_8')){
+							$attempts = get_option('rotating_universal_passwords_8');
+							$attemptsLeft = $attempts - $RUPs_attempted . ' attempts left.';
+							if(isset($_POST)){
+								echo '<form method="post" name="password_'.$passwordField.'" id="RUPS'.$passwordField.'" action="'.esc_url(get_permalink()).'">';
+								wp_nonce_field('password_'.$passwordField);
+								echo '<input type="text" class="password" name="rups_pass" placeholder="'.$attemptsLeft.'Enter the password for '.esc_attr($rotating_universal_passwords_today_is).'." >
+								<input type="submit" name="submit" class="hidden" value="Submit">
+								</form>';
+							}
+						}
+						elseif($RUPs_attempted >= get_option('rotating_universal_passwords_8')){
+							echo "<blockquote>You have been locked out.  If you feel this is an error, please contact the admin with the following <strong>id:".$RUPs_s32int."</strong> to inquire further.</blockquote>";
+						}else{			
+							if(isset($_POST)){
+								echo '<form method="post" name="password_'.$passwordField.'" id="RUPS'.$passwordField.'" action="'.esc_url(get_permalink()).'">';
+								wp_nonce_field('password_'.$passwordField);
+								echo '<input type="text" class="password" name="rups_pass" placeholder="'.$attemptsLeft.'Enter the password for '.esc_attr($rotating_universal_passwords_today_is).'." >
+								<input type="submit" name="submit" class="hidden" value="Submit">
+								</form>';
+							}
+						}
+					}
+				}else{
+					if(isset($_POST)){
+						echo '<form method="post" name="password_'.$passwordField.'" id="RUPS'.$passwordField.'" action="'.esc_url(get_permalink()).'">';
+						wp_nonce_field('password_'.$passwordField);
+						echo '<input type="text" class="password" name="rups_pass" placeholder="'.$attemptsLeft.'Enter the password for '.esc_attr($rotating_universal_passwords_today_is).'." >
+						<input type="submit" name="submit" class="hidden" value="Submit">
+						</form>';
+					}
+				}
+				return ob_get_clean();
+			}else{
+			ob_start();
+			echo '<blockquote>'.esc_attr($rotating_universal_passwords_today_is).'\'s password is blank or missing.</blockquote>';
+			return ob_get_clean();
+			}
+		}
+	}else{
+		// Return nothing, the IP address is fake.
 	}
 }
 /****************************** SECTION E -/- (E0) Settings -/- Reviews */
@@ -1623,134 +1625,136 @@ function mom_verify_shortcode($atts,$content = null){
 	global $post;
 	if(isset($_SERVER["REMOTE_ADDR"])){
 		$ipAddress = $_SERVER["REMOTE_ADDR"]; 
-	} else if(isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
-		$ipAddress = $_SERVER["HTTP_X_FORWARDED_FOR"]; 
-	} else if(isset($_SERVER["HTTP_CLIENT_IP"])){
-		$ipAddress = $_SERVER["HTTP_CLIENT_IP"]; 
+	}else{
+		$ipAddress = false;
 	}
-	$ipaddress = ip2long($ipAddress);
-	if(is_numeric($ipaddress)){
-		$theIP = $ipaddress;}else{
-		$theIP = 0;
-	}
-	ob_start();
-	extract(
-		shortcode_atts(array(
-			"age" => '',
-			"answer" => '',
-			"logged" => 1,
-			"message" => 'Please verify your age by typing it here',
-			"fail" => 'You are not able to view this content at this time.',
-			"logging" => 0,
-			"background" => 'transparent',
-			"stats" => '',
-			"single" => 0,
-			"cmessage" => 'Correct',
-			"imessage" => 'Incorrect',
-			"deactivate" => 0
-		), $atts)
-	);
-	global $momverifier_verification_step;
-	$momverifier_verification_step++;
-	$thePostId = $post->ID;
-	$theBackground = sanistripents($background);
-	$theAge = sanistripents($age);
-	$isLogged = sanistripents($logged);
-	$theMessage = sanistripents($message);
-	$theAnswer = sanistripents($answer);
-	$failMessage = $fail;
-	$isLogged = sanistripents($logged);
-	$isLogging = sanistripents($logging);
-	$attempts = sanistripents($single);
-	$correctResultMessage = sanistripents($cmessage);
-	$incorrectResultMessage = sanistripents($imessage);
-	$isDeactivated = sanistripents($deactivate);
-	$verificationID = $momverifier_verification_step.''.$thePostId;
-	$statsMessage = sanistripents($stats);
-	$alreadyAttempted = 0;
-	if(is_numeric($attempts) && $attempts == 1){
-		global $wpdb;
-		$verification_table_name = $wpdb->prefix.'momverification';
-		$getNumberofAttempts = $wpdb->get_results("SELECT IP,POST,CORRECT FROM $verification_table_name WHERE IP = '".$theIP."' AND POST = '" . $verificationID . "'");	
-		$alreadyAttempted = count($getNumberofAttempts);
-		foreach($getNumberofAttempts as $numberofattempts){
-			$isCorrect = $numberofattempts->CORRECT;
+		if($ipAddress !== false){
+		$ipaddress = ip2long($ipAddress);
+		if(is_numeric($ipaddress)){
+			$theIP = $ipaddress;}else{
+			$theIP = 0;
 		}
-	}
-	if(is_numeric($isLogged) && $isLogged == 0 && is_user_logged_in()){
-		$isCorrect = 1;
-	} elseif(is_numeric($isLogged) && $isLogged == 1){		
-		if($alreadyAttempted != 1){
-			if(!$_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.''] != '' && $isDeactivated != 1){
-			return '
-			<blockquote style="display:block;clear:both;margin:5px auto 5px auto;padding:5px;font-size:25px;">
-			<p>'.$theMessage.'</p>
-			<form style="clear:both;display:block;padding:5px;margin:0 auto 5px auto;width:98%;overflow:hidden;border-radius:3px;background-color:#'.$theBackground.';" class="momAgeVerification" method="post" action="'.esc_url(get_permalink()).'">
-				<input style="clear:both;font-size:25px;width:99%;margin:0 auto;" type="text" name="ageVerification'.esc_attr($momverifier_verification_step).esc_attr($thePostId).'">
-				<input style="clear:both;font-size:20px;width:100%;margin:0 auto;" type="submit" name="submit" class="submit" value="Submit">
-			</form>
-			</blockquote>
-			';
+		ob_start();
+		extract(
+			shortcode_atts(array(
+				"age" => '',
+				"answer" => '',
+				"logged" => 1,
+				"message" => 'Please verify your age by typing it here',
+				"fail" => 'You are not able to view this content at this time.',
+				"logging" => 0,
+				"background" => 'transparent',
+				"stats" => '',
+				"single" => 0,
+				"cmessage" => 'Correct',
+				"imessage" => 'Incorrect',
+				"deactivate" => 0
+			), $atts)
+		);
+		global $momverifier_verification_step;
+		$momverifier_verification_step++;
+		$thePostId = $post->ID;
+		$theBackground = sanistripents($background);
+		$theAge = sanistripents($age);
+		$isLogged = sanistripents($logged);
+		$theMessage = sanistripents($message);
+		$theAnswer = sanistripents($answer);
+		$failMessage = $fail;
+		$isLogged = sanistripents($logged);
+		$isLogging = sanistripents($logging);
+		$attempts = sanistripents($single);
+		$correctResultMessage = sanistripents($cmessage);
+		$incorrectResultMessage = sanistripents($imessage);
+		$isDeactivated = sanistripents($deactivate);
+		$verificationID = $momverifier_verification_step.''.$thePostId;
+		$statsMessage = sanistripents($stats);
+		$alreadyAttempted = 0;
+		if(is_numeric($attempts) && $attempts == 1){
+			global $wpdb;
+			$verification_table_name = $wpdb->prefix.'momverification';
+			$getNumberofAttempts = $wpdb->get_results("SELECT IP,POST,CORRECT FROM $verification_table_name WHERE IP = '".$theIP."' AND POST = '" . $verificationID . "'");	
+			$alreadyAttempted = count($getNumberofAttempts);
+			foreach($getNumberofAttempts as $numberofattempts){
+				$isCorrect = $numberofattempts->CORRECT;
 			}
 		}
-		if($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.''] != ''){
-			if($theAge != '' && is_numeric($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']) && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
-				$ageEntered = ($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']);
-				if($ageEntered >= $theAge){
-					$isCorrect = 1;
-				}else{
-					$isCorrect = 0;
-				}
-			} elseif($theAnswer != '' && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
-				$answerGiven = ($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']);
-				$correctAnswer = strtolower($theAnswer);
-				$answered = strtolower($answerGiven);					
-				if($answered === $correctAnswer){
-					$isCorrect = 1;
-				}else{
-					$isCorrect = 0;
-				}
-			}		
-		}			
-	}
-	if(is_numeric($isLogging) && $isLogging == 1 || is_numeric($isLogging) && $isLogging == 3 || is_numeric($attempts) && $attempts == 1){
-		global $wpdb;
-		$verification_table_name = $wpdb->prefix.'momverification';
-		$getIPforCurrentTransaction = $wpdb->get_results("SELECT IP,POST FROM $verification_table_name WHERE IP = '".$theIP."' AND POST = '".$verificationID."'");
-		if(count($getIPforCurrentTransaction) <= 0 && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
-			if($theAge != '' && is_numeric($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']) && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
-				$ageEntered	= ($_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']);
-				if($ageEntered >= $theAge){		
-				$wpdb->query("INSERT INTO $verification_table_name (ID, POST, CORRECT, IP) VALUES ('','$verificationID','1','$theIP')");
-				}else{
-				$wpdb->query("INSERT INTO $verification_table_name (ID, POST, CORRECT, IP) VALUES ('','$verificationID','0','$theIP')");
+		if(is_numeric($isLogged) && $isLogged == 0 && is_user_logged_in()){
+			$isCorrect = 1;
+		} elseif(is_numeric($isLogged) && $isLogged == 1){		
+			if($alreadyAttempted != 1){
+				if(!$_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.''] != '' && $isDeactivated != 1){
+				return '
+				<blockquote style="display:block;clear:both;margin:5px auto 5px auto;padding:5px;font-size:25px;">
+				<p>'.$theMessage.'</p>
+				<form style="clear:both;display:block;padding:5px;margin:0 auto 5px auto;width:98%;overflow:hidden;border-radius:3px;background-color:#'.$theBackground.';" class="momAgeVerification" method="post" action="'.esc_url(get_permalink()).'">
+					<input style="clear:both;font-size:25px;width:99%;margin:0 auto;" type="text" name="ageVerification'.esc_attr($momverifier_verification_step).esc_attr($thePostId).'">
+					<input style="clear:both;font-size:20px;width:100%;margin:0 auto;" type="submit" name="submit" class="submit" value="Submit">
+				</form>
+				</blockquote>
+				';
 				}
 			}
-			elseif($theAnswer != '' && $_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']){
-				$answerGiven = ($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']);
-				$correctAnswer = strtolower($theAnswer);
-				$answered = strtolower($answerGiven);				
-				if($answered === $correctAnswer){				
-				$wpdb->query("INSERT INTO $verification_table_name (ID, POST, CORRECT, IP) VALUES ('','$verificationID','1','$theIP')");
-				}else{
-				$wpdb->query("INSERT INTO $verification_table_name (ID, POST, CORRECT, IP) VALUES ('','$verificationID','0','$theIP')");
+			if($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.''] != ''){
+				if($theAge != '' && is_numeric($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']) && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
+					$ageEntered = ($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']);
+					if($ageEntered >= $theAge){
+						$isCorrect = 1;
+					}else{
+						$isCorrect = 0;
+					}
+				} elseif($theAnswer != '' && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
+					$answerGiven = ($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']);
+					$correctAnswer = strtolower($theAnswer);
+					$answered = strtolower($answerGiven);					
+					if($answered === $correctAnswer){
+						$isCorrect = 1;
+					}else{
+						$isCorrect = 0;
+					}
+				}		
+			}			
+		}
+		if(is_numeric($isLogging) && $isLogging == 1 || is_numeric($isLogging) && $isLogging == 3 || is_numeric($attempts) && $attempts == 1){
+			global $wpdb;
+			$verification_table_name = $wpdb->prefix.'momverification';
+			$getIPforCurrentTransaction = $wpdb->get_results("SELECT IP,POST FROM $verification_table_name WHERE IP = '".$theIP."' AND POST = '".$verificationID."'");
+			if(count($getIPforCurrentTransaction) <= 0 && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
+				if($theAge != '' && is_numeric($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']) && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
+					$ageEntered	= ($_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']);
+					if($ageEntered >= $theAge){		
+					$wpdb->query("INSERT INTO $verification_table_name (ID, POST, CORRECT, IP) VALUES ('','$verificationID','1','$theIP')");
+					}else{
+					$wpdb->query("INSERT INTO $verification_table_name (ID, POST, CORRECT, IP) VALUES ('','$verificationID','0','$theIP')");
+					}
+				}
+				elseif($theAnswer != '' && $_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']){
+					$answerGiven = ($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']);
+					$correctAnswer = strtolower($theAnswer);
+					$answered = strtolower($answerGiven);				
+					if($answered === $correctAnswer){				
+					$wpdb->query("INSERT INTO $verification_table_name (ID, POST, CORRECT, IP) VALUES ('','$verificationID','1','$theIP')");
+					}else{
+					$wpdb->query("INSERT INTO $verification_table_name (ID, POST, CORRECT, IP) VALUES ('','$verificationID','0','$theIP')");
+					}
 				}
 			}
+			if($isLogging != 1){
+				$incorrect = $wpdb->get_results("SELECT CORRECT FROM $verification_table_name WHERE POST = '".$verificationID."' AND CORRECT = '0'");
+				$correct = $wpdb->get_results("SELECT CORRECT FROM $verification_table_name WHERE POST = '".$verificationID."' AND CORRECT = '1'");
+				$incorrectCount = count($incorrect);
+				$correctCount = count($correct);
+				if(count($correct) > 0 && count($incorrect) > 0){$totalCount = ($incorrectCount + $correctCount);}else{$totalCount = 1;}					
+				$percentCorrect = ($correctCount/$totalCount * 100);
+				$percentIncorrect = ($incorrectCount/$totalCount * 100);
+				if($statsMessage == ''){$statsMessage = $theMessage;}
+				return '<div style="clear:both;display:block;width:99%;margin:10px auto 10px auto;overflow:auto;background-color:#f6fbff;border:1px solid #4a5863;border-radius:3px;padding:5px;"><p>'.$statsMessage.'</p><div class="mom_progress" style="clear:both;height:20px;display:block;width:95%; margin:5px auto 5px auto;background-color:#ff0000"><div title="'.$correctCount.'" style="display:block;height:20px;width:'.$percentCorrect.'%;background-color:#1eff00;"></div></div><div style="font-size:15px;margin:-5px auto;width:95%;"><span style="float:left;text-align:left;">'.$correctResultMessage.' ('.$percentCorrect.'%)</span><span style="float:right;text-align:right;">'.$incorrectResultMessage.' ('.$percentIncorrect.'%)</span></div></div>';
+			}
 		}
-		if($isLogging != 1){
-			$incorrect = $wpdb->get_results("SELECT CORRECT FROM $verification_table_name WHERE POST = '".$verificationID."' AND CORRECT = '0'");
-			$correct = $wpdb->get_results("SELECT CORRECT FROM $verification_table_name WHERE POST = '".$verificationID."' AND CORRECT = '1'");
-			$incorrectCount = count($incorrect);
-			$correctCount = count($correct);
-			if(count($correct) > 0 && count($incorrect) > 0){$totalCount = ($incorrectCount + $correctCount);}else{$totalCount = 1;}					
-			$percentCorrect = ($correctCount/$totalCount * 100);
-			$percentIncorrect = ($incorrectCount/$totalCount * 100);
-			if($statsMessage == ''){$statsMessage = $theMessage;}
-			return '<div style="clear:both;display:block;width:99%;margin:10px auto 10px auto;overflow:auto;background-color:#f6fbff;border:1px solid #4a5863;border-radius:3px;padding:5px;"><p>'.$statsMessage.'</p><div class="mom_progress" style="clear:both;height:20px;display:block;width:95%; margin:5px auto 5px auto;background-color:#ff0000"><div title="'.$correctCount.'" style="display:block;height:20px;width:'.$percentCorrect.'%;background-color:#1eff00;"></div></div><div style="font-size:15px;margin:-5px auto;width:95%;"><span style="float:left;text-align:left;">'.$correctResultMessage.' ('.$percentCorrect.'%)</span><span style="float:right;text-align:right;">'.$incorrectResultMessage.' ('.$percentIncorrect.'%)</span></div></div>';
-		}
+		if($isCorrect == 1){return $content;}elseif($isCorrect == 0 && $deactivate != 1){return $failMessage;}
+		return ob_get_clean();
+	}else{
+		// Return nothing, the IP address is fake.
 	}
-	if($isCorrect == 1){return $content;}elseif($isCorrect == 0 && $deactivate != 1){return $failMessage;}
-	return ob_get_clean();
 }	
 /****************************** SECTION G -/- (G0) Functions -/- Meta */
 function mom_SEO_header(){
@@ -2864,46 +2868,48 @@ if(get_option('mommaincontrol_votes') == 1){
 		$votesVotes = $wpdb->prefix.'momvotes_votes';
 		if(isset($_SERVER["REMOTE_ADDR"])){
 			$ip_address = esc_attr($_SERVER["REMOTE_ADDR"]);
-		} else if(isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
-			$ip_address = esc_attr($_SERVER["HTTP_X_FORWARDED_FOR"]);
-		} else if(isset($_SERVER["HTTP_CLIENT_IP"])){
-			$ip_address = esc_attr($_SERVER["HTTP_CLIENT_IP"]);
+		}else{
+			$ip_address = false;
 		}
-		$theIP = esc_attr($ip_address);
-		$theIP_s32int = esc_attr(ip2long($ip_address));
-		$theIP_us32str = esc_attr(sprintf("%u",$theIP_s32int));
-		$theID = intval($post->ID);
-		$getID = $wpdb->get_results("SELECT ID,UP,DOWN FROM $votesPosts WHERE ID = '".$theID."' LIMIT 1");
-		if(count($getID) == 0){
-			$wpdb->query("INSERT INTO $votesPosts (ID, UP, DOWN) VALUES ($theID,1,0)");
-		}
-		foreach($getID as $gotID){
-			$votesTOTAL = intval($gotID->UP);
-			$getIP = $wpdb->get_results("SELECT ID,IP,VOTE FROM $votesVotes WHERE ID = '".$theID."' AND IP = '".$theIP_us32str."' LIMIT 1");
-			if(count($getIP) == 0) {
-				if(isset($_POST[$theID.'-up-submit'])){
-					$wpdb->query("UPDATE $votesPosts SET UP = UP + 1 WHERE ID = $theID");
-					$wpdb->query("INSERT INTO $votesVotes (ID, IP, VOTE) VALUES ($theID,$theIP_us32str,1)");
-				}
-				echo '<div class="vote_the_post" id="'.esc_attr($theID).'">';
-				echo '<form action="" id="'.esc_attr($theID).'-up" method="post"><label for="'.esc_attr($theID).'-up-submit" class="upvote"><i class="fa fa-heart"></i></label><input type="submit" name="'.esc_attr($theID).'-up-submit" id="'.esc_attr($theID).'-up-submit" /></form>';
-				echo '<span>'.esc_attr($votesTOTAL).'</span>';
-				echo '</div>';
-			}else{
-				foreach($getIP as $gotIP){
-					$vote = esc_attr($gotIP->VOTE);
-					if($vote == 1 && isset($_POST[$theID.'-up-submit'])){
-						$wpdb->query("UPDATE $votesPosts SET UP = UP - 1 WHERE ID = $theID");
-						$wpdb->query("DELETE FROM $votesVotes WHERE IP = '$theIP_us32str' AND ID = '$theID'");
+			if($ip_address !== false){
+			$theIP = esc_attr($ip_address);
+			$theIP_s32int = esc_attr(ip2long($ip_address));
+			$theIP_us32str = esc_attr(sprintf("%u",$theIP_s32int));
+			$theID = intval($post->ID);
+			$getID = $wpdb->get_results("SELECT ID,UP,DOWN FROM $votesPosts WHERE ID = '".$theID."' LIMIT 1");
+			if(count($getID) == 0){
+				$wpdb->query("INSERT INTO $votesPosts (ID, UP, DOWN) VALUES ($theID,1,0)");
+			}
+			foreach($getID as $gotID){
+				$votesTOTAL = intval($gotID->UP);
+				$getIP = $wpdb->get_results("SELECT ID,IP,VOTE FROM $votesVotes WHERE ID = '".$theID."' AND IP = '".$theIP_us32str."' LIMIT 1");
+				if(count($getIP) == 0) {
+					if(isset($_POST[$theID.'-up-submit'])){
+						$wpdb->query("UPDATE $votesPosts SET UP = UP + 1 WHERE ID = $theID");
+						$wpdb->query("INSERT INTO $votesVotes (ID, IP, VOTE) VALUES ($theID,$theIP_us32str,1)");
 					}
-					if($vote == 1)$CLASS = ' active';
 					echo '<div class="vote_the_post" id="'.esc_attr($theID).'">';
-					echo '<form action="" id="'.esc_attr($theID).'-up" method="post"><label for="'.esc_attr($theID).'-up-submit" class="upvote"><i class="fa fa-heart'.$CLASS.'"></i></label><input type="submit" name="'.esc_attr($theID).'-up-submit" id="'.esc_attr($theID).'-up-submit" /></form>';
+					echo '<form action="" id="'.esc_attr($theID).'-up" method="post"><label for="'.esc_attr($theID).'-up-submit" class="upvote"><i class="fa fa-heart"></i></label><input type="submit" name="'.esc_attr($theID).'-up-submit" id="'.esc_attr($theID).'-up-submit" /></form>';
 					echo '<span>'.esc_attr($votesTOTAL).'</span>';
 					echo '</div>';
-				}
-			}			
-		}		
+				}else{
+					foreach($getIP as $gotIP){
+						$vote = esc_attr($gotIP->VOTE);
+						if($vote == 1 && isset($_POST[$theID.'-up-submit'])){
+							$wpdb->query("UPDATE $votesPosts SET UP = UP - 1 WHERE ID = $theID");
+							$wpdb->query("DELETE FROM $votesVotes WHERE IP = '$theIP_us32str' AND ID = '$theID'");
+						}
+						if($vote == 1)$CLASS = ' active';
+						echo '<div class="vote_the_post" id="'.esc_attr($theID).'">';
+						echo '<form action="" id="'.esc_attr($theID).'-up" method="post"><label for="'.esc_attr($theID).'-up-submit" class="upvote"><i class="fa fa-heart'.$CLASS.'"></i></label><input type="submit" name="'.esc_attr($theID).'-up-submit" id="'.esc_attr($theID).'-up-submit" /></form>';
+						echo '<span>'.esc_attr($votesTOTAL).'</span>';
+						echo '</div>';
+					}
+				}			
+			}		
+		}else{
+			// Return nothing, the IP address is fake.
+		}
 	}
 }
 /****************************** SECTION N -/- (N0) Functions -/- Regular Board */
@@ -2946,11 +2952,10 @@ function regularboard_shortcode($atts,$content = null){
 	$regularboard_users = $wpdb->prefix.'regularboard_users';
 	if(isset($_SERVER["REMOTE_ADDR"])){
 		$ip_address = sanistripents($_SERVER["REMOTE_ADDR"]);
-	} else if(isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
-		$ip_address = sanistripents($_SERVER["HTTP_X_FORWARDED_FOR"]);
-	} else if(isset($_SERVER["HTTP_CLIENT_IP"])){
-		$ip_address = sanistripents($_SERVER["HTTP_CLIENT_IP"]);
+	}else{
+		$ip_address = false;
 	}
+	if($ip_address !== false){
 	$theIP = sanistripents($ip_address);
 	$theIP_s32int = sanistripents(ip2long($ip_address));
 	$theIP_us32str = sanistripents(sprintf("%u",$theIP_s32int));
@@ -3068,7 +3073,7 @@ function regularboard_shortcode($atts,$content = null){
 					echo '<div class="attachedcomment">';
 					if($mySUBJECT != '')echo '<strong>'.$mySUBJECT.'</strong> /';
 					echo '('.$myDATE.')<br />';
-					if($myTYPE == 'image' && $myURL != '')echo '<img class="imageREPLY" src="'.$myURL.'" height="75" />';
+					if($myTYPE == 'image' && $myURL != '')echo '<img class="imageREPLY" src="'.$myURL.'" width="150"/>';
 					echo substr($myCOMMENT,0,$cutoff);if(strlen($myCOMMENT) > 500)echo '...';					
 					echo '</div></div>';
 				}
@@ -3445,7 +3450,7 @@ function regularboard_shortcode($atts,$content = null){
 										if($SUBJECT == '')echo '<span class="subject"><em>no subject</em></span>';
 										// Image (or video) content block
 										if($URL != '' && $TYPE == 'image'){
-											echo $purifier->purify('<img class="imageOP" src="'.$URL.'" />');
+											echo $purifier->purify('<a href="'.$URL.'"><img class="imageOP" src="'.$URL.'" /></a>');
 										}elseif($TYPE == 'video' && $URL != ''){
 											echo $URL.'<hr class="clear" />';
 										}else{
@@ -3455,7 +3460,7 @@ function regularboard_shortcode($atts,$content = null){
 										if($IP == $theIP_us32str || $ISMODERATOR === true){
 											echo '<div class="controlpanel">';
 											echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';
-											if($ISMODERATOR === true){if($LAST != '9999-12-25 23:59:59')echo '<form method="post" class="inline" name="STICKY"><label for="STICKY'.$ID.'"><i class="off fa fa-thumb-tack"></i></label><input type="submit" class="hidden" id="STICKY'.$ID.'" name="STICKY'.$ID.'" /></form>';if($LAST == '9999-12-25 23:59:59')echo '<form method="post" class="inline" name="UNSTICKY"><label for="UNSTICKY'.$ID.'"><i class="on fa fa-thumb-tack"></i></label><input type="submit" class="hidden" id="UNSTICKY'.$ID.'" name="UNSTICKY'.$ID.'" /></form>';if($LAST != '0')echo '<form method="post" class="inline" name="LOCK"><label for="LOCK'.$ID.'"><i class="off fa fa-lock"></i></label><input type="submit" class="hidden" id="LOCK'.$ID.'" name="LOCK'.$ID.'" /></form>';if($LAST == '0')echo '<form method="post" class="inline" name="UNLOCK"><label for="UNLOCK'.$ID.'"><i class="on fa fa-lock"></i></label><input type="submit" class="hidden" id="UNLOCK'.$ID.'" name="UNLOCK'.$ID.'" /></form>';if($MODERATOR != 1){echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';echo '<form method="post" class="inline" name="DELETE"><label for="BAN'.$ID.'">[Ban / </label><input type="text" name="MESSAGE" placeholder="Reason" />]<input type="submit" class="hidden" id="BAN'.$ID.'" name="BAN'.$ID.'" /></form>';}}
+											if($ISMODERATOR === true){if($LAST != '9999-12-25 23:59:59')echo '<form method="post" class="inline" name="STICKY"><label for="STICKY'.$ID.'"><i class="off fa fa-thumb-tack"></i></label><input type="submit" class="hidden" id="STICKY'.$ID.'" name="STICKY'.$ID.'" /></form>';if($LAST == '9999-12-25 23:59:59')echo '<form method="post" class="inline" name="UNSTICKY"><label for="UNSTICKY'.$ID.'"><i class="on fa fa-thumb-tack"></i></label><input type="submit" class="hidden" id="UNSTICKY'.$ID.'" name="UNSTICKY'.$ID.'" /></form>';if($LAST != '0')echo '<form method="post" class="inline" name="LOCK"><label for="LOCK'.$ID.'"><i class="off fa fa-lock"></i></label><input type="submit" class="hidden" id="LOCK'.$ID.'" name="LOCK'.$ID.'" /></form>';if($LAST == '0')echo '<form method="post" class="inline" name="UNLOCK"><label for="UNLOCK'.$ID.'"><i class="on fa fa-lock"></i></label><input type="submit" class="hidden" id="UNLOCK'.$ID.'" name="UNLOCK'.$ID.'" /></form>';if($MODERATOR != 1){echo '<form method="post" class="inline" name="DELETE"><label for="DELETE'.$ID.'"><i class="fa fa-trash-o"></i></label><input type="submit" class="hidden" id="DELETE'.$ID.'" name="DELETE'.$ID.'" /></form>';echo '<form method="post" class="inline" name="DELETE"><label for="BAN'.$ID.'">Ban / </label><input type="text" class="ban" name="MESSAGE" placeholder="Reason" /><input type="submit" class="hidden" id="BAN'.$ID.'" name="BAN'.$ID.'" /></form>';}}
 											
 											echo '</div>';
 										}
@@ -3540,7 +3545,6 @@ function regularboard_shortcode($atts,$content = null){
 													// Thread children (replies)
 													echo '<div class="reply" id="'.$ID.'">';
 													echo '<div class="replycontent">';
-													if($URL != '' && $TYPE == 'image')echo '<span class="fileinfo">File:<a href="'.$URL.'">'.$URL.'</a></span>';
 													echo '
 													<span class="OP">';
 													if($EMAIL != ''){
@@ -3581,12 +3585,12 @@ function regularboard_shortcode($atts,$content = null){
 														}
 													echo '</div>';
 													}
-													echo '<section>';
 													if($URL != '' && $TYPE == 'image'){
-														echo $purifier->purify('<img class="imageREPLY" src="'.$URL.'"/>');
+														echo $purifier->purify('<a href="'.$URL.'"><img class="imageREPLY" width="150" src="'.$URL.'"/></a>');
 													}elseif($TYPE == 'video' && $URL != ''){
 														echo $URL;
 													}
+													echo '<section>';
 													if($THREAD != '')echo $purifier->purify($COMMENT);
 													if($THREAD == '')echo substr($COMMENT,0,$cutoff);
 													if($THREAD == '' && strlen($COMMENT) > 500)echo '...';
@@ -3662,6 +3666,9 @@ function regularboard_shortcode($atts,$content = null){
 				}
 			echo '</div></div></div>';
 		}
+	}
+	}else{
+		// Return nothing, the IP address is fake.
 	}
 }
 if(get_option('mommaincontrol_regularboard') == 1)add_shortcode('regularboard','regularboard_shortcode');

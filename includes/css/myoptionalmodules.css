@@ -191,8 +191,8 @@ div.momnavbar #navsearchform i,.banned textarea,.banned input[type=submit],.bann
 .momschemedefault .recentPostListing,#mom_onthisday section.mom_onthisday:hover{background-color:#fff}
 div.momlistcategories span,.right{float:right}
 .boardDisplay .pages a,.boardDisplay .reportdelete input,.op i{margin:5px}
-
-.boardDisplay div.op{border-top:3px solid #b7c5d9;margin:10px auto}
+img.lazy{background-color:#b7c5d9}
+.boardDisplay div.op{border-top:3px solid #b7c5d9;margin:10px auto;display:block}
 hr.clear{border:none;margin:15px 0;clear:both}
 .controlpaneluser,.controlpanel{display:block;float:right}
 .controlpanel{margin:-35px 0;position:relative;z-index:2;width:auto;background-color:#f5f7ff}
@@ -200,13 +200,13 @@ hr.clear{border:none;margin:15px 0;clear:both}
 .controlpaneluser label,.controlpanel label{background-color:transparent!important;color:#000!important}
 .boardDisplay span.subject{width:100%;margin:0 0 -18px 0;z-index:2;position:relative;clear:both;display:block;background-color:#f5f7ff;padding:5px 0;text-align:left;text-indent:10px;font-size:13px;font-weight:900}
 .boardDisplay .imageOP{width:100%;display:block;margin:0 auto!important;position:relative;z-index:1}
-.boardDisplay .imageREPLY{width:100%;display:block;margin:0 auto!important;position:relative;z-index:1}
+.boardDisplay .imageREPLY{max-width:150px;display:block;margin:0!important;position:relative;z-index:1}
 .boardDisplay .loadmore{cursor:pointer;border:1px solid #000;background-color:#aa3535;color:#fee;width:100%;height:10px;text-align:center;border-radius:3px;font-size:10px;line-height:2px;font-weight:500;padding:5px 0;display:block;margin:-6px -1px}
 .boardDisplay .loadmore:hover{background-color:#3574aa}
 .boardDisplay .commentMeta{display:block;clear:both;width:100%;margin:5px auto;text-indent:10px;padding:5px 0;font-size:9px}
 .boardDisplay .avatar-32{float:left;border-radius:3px;height:20px;width:20px;margin:-8px 5px 0 5px}
 .boardDisplay .commentContainer {display:block;clear:both;width:100%;margin:5px auto;border-bottom:1px solid #8ca8c2;border-top:1px solid #8ca8c2;background-color:#f5f7ff}
 .boardDisplay .commentContainer p{margin:5px;font-size:10px;line-height:11px}
-
+.boardDisplay .ban{padding:5px}
 .boardDisplay div.reply{background-color:#d6daf0;color:#21272e;overflow:hidden;max-width:100%;width:100%;font-size:10px;line-height:14px;text-align:left;display:table;margin:0;border-bottom:1px solid #b7c5d9;padding:5px 0}
-.boardDisplay .replycontent{font-size:10px}
+.boardDisplay .replycontent{font-size:10px;}

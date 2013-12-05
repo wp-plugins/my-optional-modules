@@ -3,7 +3,7 @@ jQuery(document).ready(function($){
 		if($(this).hasClass("skipLazy")){
 		}else{
 			$(this).wrap(function(){
-				var newimg = '<img src="placeholder.jpg" data-original="' + $(this).attr('src') + '" width="' + $(this).attr('width') + '" height="' + $(this).attr('height') + '" class="lazy ' + $(this).attr('class') + '">';
+				var newimg = '<img src="" data-original="' + $(this).attr('src') + '" width="' + $(this).attr('width') + '" height="' + $(this).attr('height') + '" class="lazy ' + $(this).attr('class') + '">';
 				return newimg;
 			});
 			return '<noscript>';
