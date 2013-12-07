@@ -143,7 +143,6 @@ h3.info{font-weight:900;text-align:center;width:100%;margin:10px auto}
 .boardDisplay .op iframe,.boardDisplay .reply iframe{display:table;width:95%;margin:0 auto}
 .boardDisplay article section{width:95%;display:block;font-size:14px;line-height:16px;margin:5px auto;padding:5px}
 .boardDisplay .reportdelete{width:310px;float:right;margin:0 5px}
-input[type=submit]#UPGRADE{clear:both;display:block;margin:auto}
 .boardDisplay .OP{color:#d37b1c}
 .boardDisplay .postid,.boardDisplay .OP,.boardDisplay .date{display:inline-block;margin:5px 5px 10px}
 .inline{display:inline-block;height:auto;clear:none;float:right}
@@ -152,7 +151,6 @@ input[type=submit]#UPGRADE{clear:both;display:block;margin:auto}
 div.rules{width:100%;font-size:10px!important;line-height:11px!important;border-top:1px solid #b7c5d9;margin:10px auto;padding:5px}
 div.rules p{margin:2px auto}
 .banned textarea{width:300px;font-size:13px;line-height:15px;border-radius:3px;clear:both;display:block;height:250px;margin:5px auto;padding:5px}
-.banned input[type=submit]{width:313px;font-size:20px;line-height:22px;border-radius:3px;clear:both;display:block;margin:5px auto;padding:5px}
 .banned input[type=text]{width:300px;font-size:20px;line-height:22px;border-radius:3px;clear:both;display:block;margin:5px auto;padding:5px}
 .boardDisplay span.name{color:#265942;font-weight:400}
 .boardDisplay span.trip{color:#5fa485;font-weight:200}
@@ -210,3 +208,16 @@ hr.clear{border:none;margin:15px 0;clear:both}
 .boardDisplay .ban{padding:5px}
 .boardDisplay div.reply{background-color:#d6daf0;color:#21272e;overflow:hidden;max-width:100%;width:100%;font-size:10px;line-height:14px;text-align:left;display:table;margin:0;border-bottom:1px solid #b7c5d9;padding:5px 0}
 .boardDisplay .replycontent{font-size:10px;}
+
+section.smiley					{font-size:10px;padding:5px;line-height:23px;text-indent:50px}
+section.smiley span				{}
+div#admin						{width:410px;display:block;clear:both;margin:5px auto;overflow-y:auto;overflow-x:hidden}
+div.admin						{width:190px;margin:5px;float:left!important}
+.users							{height:225px;overflow-y:auto;overflow-x:hidden;display:block}
+form.create						{width:180px;margin:5px;font-size:10px;text-align:left}
+form.create span					{margin:5px}
+form.create input[type=submit]	{width:150px;margin:5px;clear:both;padding:5px;clear:both;display:block;text-align:left}
+form.create input#DELETEBOARD	{font-size:10px;width:80px;margin:5px;padding:5px;display:inline-block;float:left;clear:none}
+form.create select				{font-size:10px;width:80px;margin:5px;padding:5px;display:inline-block;float:left;clear:none}
+form.create textarea				{font-size:10px;width:180px;height:100px;margin:5px}
+form.create input[type=text]		{font-size:10px;width:180px;height:025px;margin:5px}

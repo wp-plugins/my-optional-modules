@@ -3,7 +3,7 @@
 	// Plugin Name: My Optional Modules
 	// Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 	// Description: Optional modules and additions for Wordpress.
-	// Version: 5.3.9.5
+	// Version: 5.3.9.6
 	// Author: Matthew Trevino
 	// Author URI: http://onebillionwords.com
 	
@@ -3045,102 +3045,173 @@
 					'credits' => 'All trademarks and copyrights on this page are owned by their respective parties.  Comments are owned by (and the responsibility of) the Poster.'
 				), $atts)
 			);	
-			global $purifier;
+			
+			global $purifier,$wpdb,$wp,$post,$ipaddress;
+			
 			if(current_user_can('manage_options'))$ISMODERATOR = true;
-			if(!current_user_can('manage_options'))$ISMODERATOR = false;
-			$credits = $purifier->purify($credits);
-			$nothreads = $purifier->purify($nothreads);
-			$noboard = $purifier->purify($noboard);
-			$defaultname = $purifier->purify($defaultname);
-			$bannedmessage = $purifier->purify($bannedmessage);
-			$postedmessage = $purifier->purify($postedmessage);
-			$modcode = $purifier->purify($modcode);
-			echo '<div class="boardDisplay">';
-			global $wpdb,$wp,$post;
-			$current_timestamp = date('Y-m-d H:i:s');
+
+			$credits             = $purifier->purify($credits);
+			$nothreads           = $purifier->purify($nothreads);
+			$noboard             = $purifier->purify($noboard);
+			$defaultname         = $purifier->purify($defaultname);
+			$bannedmessage       = $purifier->purify($bannedmessage);
+			$postedmessage       = $purifier->purify($postedmessage);
+			$modcode             = $purifier->purify($modcode);
+			
+			$current_timestamp   = date('Y-m-d H:i:s');
+			
 			$regularboard_boards = $wpdb->prefix.'regularboard_boards';
-			$regularboard_posts = $wpdb->prefix.'regularboard_posts';
-			$regularboard_users = $wpdb->prefix.'regularboard_users';
-			global $ipaddress;
+			$regularboard_posts  = $wpdb->prefix.'regularboard_posts';
+			$regularboard_users  = $wpdb->prefix.'regularboard_users';
+			
+			echo '<div class="boardDisplay">';
+			
 			if($ipaddress !== false){
-			$theIP = esc_sql(myoptionalmodules_sanistripents($ipaddress));
-			$theIP_s32int = esc_sql(myoptionalmodules_sanistripents(ip2long($ipaddress)));
-			$theIP_us32str = esc_sql(myoptionalmodules_sanistripents(sprintf("%u",$theIP_s32int)));
-			$checkThisIP = esc_sql(long2ip($theIP));
-			myoptionalmodules_checkdnsbl($checkThisIP);
-			$QUERY = myoptionalmodules_sanistripents($_SERVER['QUERY_STRING']);
-			$BOARD = esc_sql(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['board'])));
-			$AREA = esc_sql(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['area'])));
-			$THREAD = intval($_GET['thread']);
-			$BOARD = strtolower($BOARD);
-			$AREA = strtolower($AREA);
-			if($AREA == 'create'){
-				if($ISMODERATOR === true){
-					$getUsers = $wpdb->get_results("SELECT ID,IP,PARENT,BANNED,MESSAGE FROM $regularboard_users WHERE BANNED = 1");
-					echo '<div class="banned"><h3 class="options">CREATE/DELETE/UNBAN</h3>';
-					$checkTable = $wpdb->get_results("SHOW COLUMNS FROM `$regularboard_posts` LIKE 'URL'");
-					$checkTable = $wpdb->get_results("SHOW COLUMNS FROM `$regularboard_posts` LIKE 'TYPE'");
-					if(count($checkTable) > 0){}else{
+			
+				$theIP         = esc_sql(myoptionalmodules_sanistripents($ipaddress));
+				$theIP_s32int  = esc_sql(myoptionalmodules_sanistripents(ip2long($ipaddress)));
+				$theIP_us32str = esc_sql(myoptionalmodules_sanistripents(sprintf("%u",$theIP_s32int)));
+				$checkThisIP   = esc_sql(long2ip($theIP));
+			
+				myoptionalmodules_checkdnsbl($checkThisIP);
+				
+				$QUERY         = myoptionalmodules_sanistripents($_SERVER['QUERY_STRING']);
+				$BOARD         = esc_sql(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['board'])));
+				$AREA          = esc_sql(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['area'])));
+				$THREAD        = intval($_GET['thread']);
+				$BOARD         = strtolower($BOARD);
+				$AREA          = strtolower($AREA);
+
+
+
+
+				//Admin area
+				if($AREA == 'create'){
+					if($ISMODERATOR === true){
+						$getUsers = $wpdb->get_results("SELECT ID,IP,PARENT,BANNED,MESSAGE FROM $regularboard_users WHERE BANNED = 1");
+						echo '<div class="banned"><h3 class="options">CREATE/DELETE/UNBAN</h3><hr class="clear" />';
+						
+
 						echo '
-						<hr />
-						<form method="post" class="left">
-						<input type="submit" name="UPGRADE" id="UPGRADE" value="An upgrade is necessary." />
-						</form>
-						<hr />
-						';
-						if(isset($_POST['UPGRADE'])){
-							$wpdb->query("ALTER TABLE $regularboard_posts ADD URL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER COMMENT");
-							$wpdb->query("ALTER TABLE $regularboard_posts ADD TYPE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER URL");
+						<div id="admin">
+						<div class="admin users">
+						<form name="unban" action="?area=create" class="create" method="post">';
+						wp_nonce_field('unban');
+						foreach($getUsers as $gotUsers){
+							$userIP = long2ip($gotUsers->IP);
+							$thisID = esc_sql($gotUsers->ID);
+							$userMESSAGE = $gotUsers->MESSAGE;
+							echo '<span>'.$userIP.' / '.$userMESSAGE.'</span>';
+							echo '<input type="submit" name="'.$thisID.'" id="'.$thisID.'" value="Unban '.$userIP.'" />';
+							if(isset($_POST[$thisID])){
+								$wpdb->query("DELETE FROM $regularboard_users WHERE ID = '".$thisID."'");
+								echo '<meta http-equiv="refresh" content="0;URL=?area=create">';
+							}
 						}
-					}			
-					echo '<form method="post" name="OPTIONSFORM" action="?area=create">';
-					wp_nonce_field('OPTIONSFORM');
-					echo '<input type="text" name="SHORTNAME" id="SHORTNAME" placeholder="Shortname" />
-					<input type="text" name="NAME" id="NAME" placeholder="Expanded board name" />
-					<input type="text" name="DESCRIPTION" id="DESCRIPTION" placeholder="Short description" />
-					<textarea name="RULES" id="RULES" placeholder="Rules for this board (HTML allowed)"></textarea>
-					<input type="submit" name="CREATEBOARD" id="CREATEBOARD" value="Create this board" />
-					<input type="text" name="DELETETHIS" id="DELETETHIS" placeholder="Shortname of board to delete" />
-					<input type="submit" name="DELETEBOARD" id="DELETEBOARD" value="Delete this board" />';
-					foreach($getUsers as $gotUsers){
-					$userIP = long2ip($gotUsers->IP);
-					$userMESSAGE = $gotUsers->MESSAGE;
-					echo '<span>'.$userIP.' / '.$userMESSAGE.'</span>';
-					echo '<input type="submit" name="UNBAN'.$userIP.'" id="UNBAN'.$userIP.'" value="Unban '.$userIP.'" />';
-					if(isset($_POST['UNBAN'.$userIP.''])){
-						$wpdb->query("DELETE FROM $regularboard_users WHERE IP = '".$userIP."'");
+						echo '</form></div>';
+						echo '<div class="admin">';
+
+						// If we need to upgrade, this is where we'll throw it.
+						$checkTable = $wpdb->get_results("SHOW COLUMNS FROM `$regularboard_posts` LIKE 'URL'");
+						$checkTable = $wpdb->get_results("SHOW COLUMNS FROM `$regularboard_posts` LIKE 'TYPE'");
+						if(count($checkTable) == 0){
+							echo '
+							<hr />
+							<form method="post" class="left">
+							<input type="submit" name="UPGRADE" id="UPGRADE" value="An upgrade is necessary." />
+							</form>
+							<hr />
+							';
+							if(isset($_POST['UPGRADE'])){
+								$wpdb->query("ALTER TABLE $regularboard_posts ADD URL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER COMMENT");
+								$wpdb->query("ALTER TABLE $regularboard_posts ADD TYPE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER URL");
+							}
+						}
+						
+						echo '
+						<form method="post" class="create" name="createaboard" action="?area=create">';
+						wp_nonce_field('createaboard');
+						echo '
+						<input type="text" name="SHORTNAME" id="SHORTNAME" placeholder="Shortname" />
+						<input type="text" name="NAME" id="NAME" placeholder="Expanded board name" />
+						<input type="text" name="DESCRIPTION" id="DESCRIPTION" placeholder="Short description" />
+						<textarea name="RULES" id="RULES" placeholder="Rules for this board (HTML allowed)"></textarea>
+						<input type="submit" name="CREATEBOARD" id="CREATEBOARD" value="Create this board" />
+						</form>
+						<hr class="clear" />
+						';
+
+						echo '
+						<form method="post" class="create" name="banip" action="?area=create">';
+						wp_nonce_field('banip');
+						echo '
+						<input type="text" name="IP" id="IP" placeholder="IP Address to ban" />
+						<input type="text" name="REASON" id="REASON" placeholder="Reason" />
+						<input type="submit" name="BANIP" id="BANIP" value="Ban this IP" />
+						</form>
+						<hr class="clear" />
+						';
+
+						
+						$getBoards = $wpdb->get_results("SELECT SHORTNAME,NAME FROM $regularboard_boards");
+						if(count($getBoards) > 0){
+								echo '
+								<form method="post" class="create" name="deleteaboard" action="?area=create">';
+								wp_nonce_field('deleteaboard');
+								echo '
+								<select name="DELETETHIS" id="DELETETHIS">';
+								foreach($getBoards as $gotBoard){
+									$board = esc_sql($gotBoard->SHORTNAME);
+									$name  = ($gotBoard->NAME);
+									echo '
+									<option value="'.$board.'">/'.$board.'/ - '.$name.'</option>';
+								}
+								echo '
+								<input type="submit" name="DELETEBOARD" id="DELETEBOARD" value="Delete" />						
+								</form>';
+							}
+							if(isset($_POST['DELETEBOARD']) && $_REQUEST['DELETETHIS'] != '' ){
+								$DELETETHIS = esc_sql(myoptionalmodules_sanistripents($_REQUEST['DELETETHIS']));
+								$wpdb->query("DELETE FROM $regularboard_posts  WHERE BOARD     = '".$DELETETHIS."'");
+								$wpdb->query("DELETE FROM $regularboard_boards WHERE SHORTNAME = '".$DELETETHIS."'");
+								echo '<meta http-equiv="refresh" content="0;URL=?area=create">';
+							}
+							if(isset($_POST['BANIP']) && $_REQUEST['BANIP'] != '' ){
+								$BANIP  = esc_sql(myoptionalmodules_sanistripents(ip2long($_REQUEST['IP'])));
+								$REASON = esc_sql(myoptionalmodules_sanistripents($_REQUEST['REASON']));
+								$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$BANIP','','1','$REASON')");
+								echo '<meta http-equiv="refresh" content="0;URL=?area=create">';
+							}							
+						
+						echo '	
+						<hr class="clear" />
+						</div>';
+						
+
+						if(isset($_POST['CREATEBOARD']) && $_REQUEST['NAME'] != '' && $_REQUEST['SHORTNAME'] != ''){
+							$NAME = myoptionalmodules_sanistripents($_REQUEST['NAME']);
+							$SHORTNAME = esc_sql(myoptionalmodules_sanistripents($_REQUEST['SHORTNAME']));
+							$DESCRIPTION = esc_sql($purifier->purify($_REQUEST['DESCRIPTION']));
+							$RULES = esc_sql($purifier->purify(wpautop($_REQUEST['RULES'])));
+							$getBoards = $wpdb->get_results("SELECT SHORTNAME FROM $regularboard_boards WHERE SHORTNAME = '$SHORTNAME'");
+							if(count($getBoards) == 0){
+								$wpdb->query("INSERT INTO $regularboard_boards (NAME, SHORTNAME, DESCRIPTION, RULES) VALUES ('$NAME','$SHORTNAME','$DESCRIPTION','$RULES')") ;
+								echo '<h3 class="options">'.$SHORTNAME.' CREATED</h3>';
+							}else{
+								echo '<h3 class="options">'.$SHORTNAME.' EXISTS</h3>';
+							}
+						}
+						echo '
+						</div>
+						</div>
+						</div>';
 					}
-					}
-					echo '</form></div>';
-					if(isset($_POST['DELETEBOARD']) && $_REQUEST['DELETETHIS'] != '' ){
-					$DELETETHIS = esc_sql(myoptionalmodules_sanistripents($_REQUEST['DELETETHIS']));
-						$getBoards = $wpdb->get_results("SELECT SHORTNAME FROM $regularboard_boards WHERE SHORTNAME = '$DELETETHIS'");
-						if(count($getBoards) == 0){
-							echo '<h3 class="options">'.$DELETETHIS.' DOESN\'T EXIST</h3>';
-						}else{
-						$wpdb->query("DELETE FROM $regularboard_posts WHERE BOARD = '".$DELETETHIS."'");
-						$wpdb->query("DELETE FROM $regularboard_boards WHERE SHORTNAME = '".$DELETETHIS."'");
-						echo '<h3 class="options">'.$DELETETHIS.' DELETED</h3>';
-					}
-					}
-					if(isset($_POST['CREATEBOARD']) && $_REQUEST['NAME'] != '' && $_REQUEST['SHORTNAME'] != ''){
-					$NAME = myoptionalmodules_sanistripents($_REQUEST['NAME']);
-					$SHORTNAME = esc_sql(myoptionalmodules_sanistripents($_REQUEST['SHORTNAME']));
-					$DESCRIPTION = esc_sql($purifier->purify($_REQUEST['DESCRIPTION']));
-					$RULES = esc_sql($purifier->purify(wpautop($_REQUEST['RULES'])));
-					$getBoards = $wpdb->get_results("SELECT SHORTNAME FROM $regularboard_boards WHERE SHORTNAME = '$SHORTNAME'");
-					if(count($getBoards) == 0){
-						$wpdb->query("INSERT INTO $regularboard_boards (NAME, SHORTNAME, DESCRIPTION, RULES) VALUES ('$NAME','$SHORTNAME','$DESCRIPTION','$RULES')") ;
-						echo '<h3 class="options">'.$SHORTNAME.' CREATED</h3>';
-					}else{
-						echo '<h3 class="options">'.$SHORTNAME.' EXISTS</h3>';
-					}
-					}
-					echo '</div>';
-				}else{
-					echo '<div class="banned"><h3 class="banned">NOT LOGGED IN.</h3></div></div>';
 				}
-			}
+			
+
+
+
+
 			elseif($BOARD != ''){
 				// Get Results
 				$getBoards = $wpdb->get_results("SELECT SHORTNAME FROM $regularboard_boards ORDER BY SHORTNAME ASC");
@@ -3255,120 +3326,124 @@
 									// If user is not banned, and they haven't been listed on the DNSBL, let them view the board content.
 									else{
 										// Form handling
+										if(isset($_POST['FORMSUBMIT']) && $_REQUEST['SMILEY'] !== 'smiles'){
+												echo '<h3 class="info">Are you a human?</h3></div>';
+										}else{
 										if(isset($_POST['FORMSUBMIT'])){
-											$IS_IT_SPAM = 0;
-											if(function_exists('akismet_admin_init')){
-												$APIKey = myoptionalmodules_sanistripents(get_option('wordpress_api_key'));
-												$THISPAGE = get_permalink();
-												if($BOARD != '' && $THREAD == ''){$WebsiteURL = $THISPAGE.'?board='.$BOARD;}
-												elseif($BOARD != '' && $THREAD != ''){$WebsiteURL = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$THREAD;}
-												$akismet = new Akismet($WebsiteURL, $APIKey);
-												if($akismet->isKeyValid()) {}else{echo 'Your API key is NOT valid!';die();}
-												if ($_SERVER["REQUEST_METHOD"] == 'POST') {
-													//CHANGE the $_REQUEST items to match your form field input element names
-													$akismet = new Akismet($WebsiteURL, $APIKey); //
-													$akismet->setCommentAuthorEmail(esc_sql($_REQUEST["EMAIL"]));
-													$akismet->setCommentAuthorURL(esc_sql($_REQUEST["URL"]));
-													$akismet->setCommentContent(esc_sql($_REQUEST["COMMENT"]));
-													$akismet->setPermalink(esc_url($_SERVER["HTTP_REFERER"]));
-													if($akismet->isCommentSpam()) {
-													$IS_IS_SPAM = 1;
-													}
-												}					
-											}									
-											if($_REQUEST['COMMENT'] == '') {
-												echo '<h3 class="info">CAN\'T SUBMIT AN EMPTY COMMENT</h3>';
-											}elseif($_REQUEST['LINK'] != '' || $_REQUEST['PAGE'] != '' || $_REQUEST['LOGIN'] != '' || $_REQUEST['USERNAME'] != '' || $_REQUREST['PASSWORD'] != ''){
-												$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1','filling out hidden form areas (likely bot).')");
-											}elseif($IS_IT_SPAM == 1){
-												$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1','Akismet detected you as a spammer.')");
-											}else{
-												if($IS_IT_SPAM == 1) {
+												$IS_IT_SPAM = 0;
+												if(function_exists('akismet_admin_init')){
+													$APIKey = myoptionalmodules_sanistripents(get_option('wordpress_api_key'));
+													$THISPAGE = get_permalink();
+													if($BOARD != '' && $THREAD == ''){$WebsiteURL = $THISPAGE.'?board='.$BOARD;}
+													elseif($BOARD != '' && $THREAD != ''){$WebsiteURL = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$THREAD;}
+													$akismet = new Akismet($WebsiteURL, $APIKey);
+													if($akismet->isKeyValid()) {}else{echo 'Your API key is NOT valid!';die();}
+													if ($_SERVER["REQUEST_METHOD"] == 'POST') {
+														//CHANGE the $_REQUEST items to match your form field input element names
+														$akismet = new Akismet($WebsiteURL, $APIKey); //
+														$akismet->setCommentAuthorEmail(esc_sql($_REQUEST["EMAIL"]));
+														$akismet->setCommentAuthorURL(esc_sql($_REQUEST["URL"]));
+														$akismet->setCommentContent(esc_sql($_REQUEST["COMMENT"]));
+														$akismet->setPermalink(esc_url($_SERVER["HTTP_REFERER"]));
+														if($akismet->isCommentSpam()) {
+														$IS_IS_SPAM = 1;
+														}
+													}					
+												}									
+												if($_REQUEST['COMMENT'] == '') {
+													echo '<h3 class="info">CAN\'T SUBMIT AN EMPTY COMMENT</h3>';
+												}elseif($_REQUEST['LINK'] != '' || $_REQUEST['PAGE'] != '' || $_REQUEST['LOGIN'] != '' || $_REQUEST['USERNAME'] != '' || $_REQUREST['PASSWORD'] != ''){
+													$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1','filling out hidden form areas (likely bot).')");
+												}elseif($IS_IT_SPAM == 1){
+													$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$theIP_us32str','$ID','1','Akismet detected you as a spammer.')");
 												}else{
-													if($THREAD == '' && $enableurl == 1 || $THREAD != ''  && $enablerep == 1){
-														$cleanURL = esc_sql(myoptionalmodules_sanistripents($_REQUEST['URL']));
-														// http://frankkoehl.com/2009/09/http-status-code-curl-php/
-														$ch = curl_init();
-														$opts = array(CURLOPT_RETURNTRANSFER => true,
-														CURLOPT_URL => $cleanURL,
-														CURLOPT_NOBODY => true,
-														CURLOPT_TIMEOUT => 10);
-														curl_setopt_array($ch, $opts);
-														curl_exec($ch);
-														$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-														curl_close($ch);
-														if($cleanURL != ''){
-															$path_info = pathinfo($cleanURL);
-															if(strpos(strtolower($cleanURL),'youtu.be/')){
-																$VIDEOID = substr($cleanURL,16);
-																$TYPE = 'video';
-																$URL = '<iframe src="http://www.youtube.com/embed/'.myoptionalmodules_sanistripents($VIDEOID).'?loop=1&amp;playlist='.myoptionalmodules_sanistripents($VIDEOID).'&amp;controls=0&amp;showinfo=0&amp;autohide=1" frameborder="0" allowfullscreen></iframe>';
-															}
-															elseif(strpos(strtolower($cleanURL),'youtube.com/watch?v=')){
-																parse_str(parse_url($cleanURL, PHP_URL_QUERY), $VIDEO_VAR);
-																$VIDEOID = $VIDEO_VAR['v'];
-																$TYPE = 'video';
-																$URL = '<iframe src="http://www.youtube.com/embed/'.myoptionalmodules_sanistripents($VIDEOID).'?loop=1&amp;playlist='.myoptionalmodules_sanistripents($VIDEOID).'&amp;controls=0&amp;showinfo=0&amp;autohide=1" frameborder="0" allowfullscreen></iframe>';
-															}														
-															elseif($status == '200' && getimagesize($cleanURL) !== false){
-																if($path_info['extension'] == 'jpg' ||
-																	$path_info['extension'] == 'gif' ||
-																	$path_info['extension'] == 'jpeg' ||
-																	$path_info['extension'] == 'png'){
-																	$TYPE = 'image';
-																	$URL = $cleanURL;
-																}
-															}else{
-																$TYPE = '';
-																$URL = '';
-															}
-														}
-													}
-													if($THREAD != '')$enteredPARENT = intval($THREAD);
-													if($THREAD == '')$enteredPARENT = 0;
-													$cleanCOMMENT   = esc_sql($purifier->purify($_REQUEST['COMMENT']));
-													$checkCOMMENT   = esc_sql(strtolower($enteredCOMMENT));
-													$checkURL       = esc_sql(myoptionalmodules_sanistripents($_REQUEST['URL']));
-													$cleanCOMMENT   = substr($cleanCOMMENT,0,$maxbody);
-													$enteredCOMMENT = wpautop($cleanCOMMENT);
-													$enteredSUBJECT = myoptionalmodules_sanistripents($_REQUEST['SUBJECT']);
-													$enteredSUBJECT = substr($enteredSUBJECT,0,$maxtext);
-													$getDuplicate = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE COMMENT = '".$checkCOMMENT."' OR URL = '".$checkURL."' AND BOARD = '".$BOARD."' LIMIT 1");
-													if(count($getDuplicate) == 0){
-														if(filter_var($_REQUEST['EMAIL'],FILTER_VALIDATE_EMAIL)){
-															$enteredEMAIL = esc_sql(myoptionalmodules_sanistripents(($_REQUEST['EMAIL'])));
-														}else{
-															$enteredEMAIL = esc_sql(myoptionalmodules_sanistripents(myoptionalmodules_tripcode(($_REQUEST['EMAIL']))));
-														}
-														$enteredEMAIL = substr($enteredEMAIL,0,$maxtext);
-														if($ISMODERATOR === true){
-															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, URL, TYPE, BOARD, MODERATOR, LAST) VALUES ('','$enteredPARENT','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$URL','$TYPE','$BOARD','1','$current_timestamp')") ;
-														}else{
-															$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, URL, TYPE, BOARD, MODERATOR, LAST) VALUES ('','$enteredPARENT','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$URL','$TYPE','$BOARD','0','$current_timestamp')") ;
-														}
-															if($THREAD != '' && $LAST != '9999-12-25 23:59:59' && strtolower($enteredEMAIL) != 'sage'){
-																$wpdb->query("UPDATE $regularboard_posts SET LAST = '$current_timestamp' WHERE ID = '$THREAD'");
-															}
+													if($IS_IT_SPAM == 1) {
 													}else{
-														if(count($getDuplicate) > 0){
-															echo '<h3 class="info">DUPLICATE COMMENT (or URL) DETECTED - POST DISCARDED<br />GO BACK AND FIX YOUR COMMENT.</h3>';
+														if($THREAD == '' && $enableurl == 1 || $THREAD != ''  && $enablerep == 1){
+															$cleanURL = esc_sql(myoptionalmodules_sanistripents($_REQUEST['URL']));
+															// http://frankkoehl.com/2009/09/http-status-code-curl-php/
+															$ch = curl_init();
+															$opts = array(CURLOPT_RETURNTRANSFER => true,
+															CURLOPT_URL => $cleanURL,
+															CURLOPT_NOBODY => true,
+															CURLOPT_TIMEOUT => 10);
+															curl_setopt_array($ch, $opts);
+															curl_exec($ch);
+															$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+															curl_close($ch);
+															if($cleanURL != ''){
+																$path_info = pathinfo($cleanURL);
+																if(strpos(strtolower($cleanURL),'youtu.be/')){
+																	$VIDEOID = substr($cleanURL,16);
+																	$TYPE = 'video';
+																	$URL = '<iframe src="http://www.youtube.com/embed/'.myoptionalmodules_sanistripents($VIDEOID).'?loop=1&amp;playlist='.myoptionalmodules_sanistripents($VIDEOID).'&amp;controls=0&amp;showinfo=0&amp;autohide=1" frameborder="0" allowfullscreen></iframe>';
+																}
+																elseif(strpos(strtolower($cleanURL),'youtube.com/watch?v=')){
+																	parse_str(parse_url($cleanURL, PHP_URL_QUERY), $VIDEO_VAR);
+																	$VIDEOID = $VIDEO_VAR['v'];
+																	$TYPE = 'video';
+																	$URL = '<iframe src="http://www.youtube.com/embed/'.myoptionalmodules_sanistripents($VIDEOID).'?loop=1&amp;playlist='.myoptionalmodules_sanistripents($VIDEOID).'&amp;controls=0&amp;showinfo=0&amp;autohide=1" frameborder="0" allowfullscreen></iframe>';
+																}														
+																elseif($status == '200' && getimagesize($cleanURL) !== false){
+																	if($path_info['extension'] == 'jpg' ||
+																		$path_info['extension'] == 'gif' ||
+																		$path_info['extension'] == 'jpeg' ||
+																		$path_info['extension'] == 'png'){
+																		$TYPE = 'image';
+																		$URL = $cleanURL;
+																	}
+																}else{
+																	$TYPE = '';
+																	$URL = '';
+																}
+															}
 														}
-														echo '</div>';
-													}													
+														if($THREAD != '')$enteredPARENT = intval($THREAD);
+														if($THREAD == '')$enteredPARENT = 0;
+														$cleanCOMMENT   = esc_sql($purifier->purify($_REQUEST['COMMENT']));
+														$checkCOMMENT   = esc_sql(strtolower($enteredCOMMENT));
+														$checkURL       = esc_sql(myoptionalmodules_sanistripents($_REQUEST['URL']));
+														$cleanCOMMENT   = substr($cleanCOMMENT,0,$maxbody);
+														$enteredCOMMENT = wpautop($cleanCOMMENT);
+														$enteredSUBJECT = myoptionalmodules_sanistripents($_REQUEST['SUBJECT']);
+														$enteredSUBJECT = substr($enteredSUBJECT,0,$maxtext);
+														$getDuplicate = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE COMMENT = '".$checkCOMMENT."' AND BOARD = '".$BOARD."' LIMIT 1");
+														if(count($getDuplicate) == 0){
+															if(filter_var($_REQUEST['EMAIL'],FILTER_VALIDATE_EMAIL)){
+																$enteredEMAIL = esc_sql(myoptionalmodules_sanistripents(($_REQUEST['EMAIL'])));
+															}else{
+																$enteredEMAIL = esc_sql(myoptionalmodules_sanistripents(myoptionalmodules_tripcode(($_REQUEST['EMAIL']))));
+															}
+															$enteredEMAIL = substr($enteredEMAIL,0,$maxtext);
+															if($ISMODERATOR === true){
+																$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, URL, TYPE, BOARD, MODERATOR, LAST) VALUES ('','$enteredPARENT','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$URL','$TYPE','$BOARD','1','$current_timestamp')") ;
+															}else{
+																$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, URL, TYPE, BOARD, MODERATOR, LAST) VALUES ('','$enteredPARENT','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$URL','$TYPE','$BOARD','0','$current_timestamp')") ;
+															}
+																if($THREAD != '' && $LAST != '9999-12-25 23:59:59' && strtolower($enteredEMAIL) != 'sage'){
+																	$wpdb->query("UPDATE $regularboard_posts SET LAST = '$current_timestamp' WHERE ID = '$THREAD'");
+																}
+														}else{
+															if(count($getDuplicate) > 0){
+																echo '<h3 class="info">DUPLICATE COMMENT (or URL) DETECTED - POST DISCARDED<br />GO BACK AND FIX YOUR COMMENT.</h3>';
+															}
+															echo '</div>';
+														}													
+													}
+												}
+												$LAST = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE COMMENT = '".$enteredCOMMENT."' LIMIT 1");
+												$THISPAGE = get_permalink();
+												foreach($LAST as $LATEST){
+													$IDGOTO = $LATEST->ID;
+													if($BOARD != '' && $THREAD == ''){$REDIRECTO = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$IDGOTO;}
+												}
+												if($BOARD != '' && $THREAD != ''){$REDIRECTO = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$THREAD;;}
+												if(count($getDuplicate) == 0){
+													echo '<h3 class="info">'.esc_attr($postedmessage).'<br />click <a href="'.esc_url($REDIRECTO).'">here</a> if you are not redirected.</h3></div>';
+													echo '<meta http-equiv="refresh" content="5;URL= '.$REDIRECTO.'">';
 												}
 											}
-											$LAST = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE COMMENT = '".$enteredCOMMENT."' LIMIT 1");
-											$THISPAGE = get_permalink();
-											foreach($LAST as $LATEST){
-												$IDGOTO = $LATEST->ID;
-												if($BOARD != '' && $THREAD == ''){$REDIRECTO = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$IDGOTO;}
-											}
-											if($BOARD != '' && $THREAD != ''){$REDIRECTO = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$THREAD;;}
-											if(count($getDuplicate) == 0){
-												echo '<h3 class="info">'.esc_attr($postedmessage).'<br />click <a href="'.esc_url($REDIRECTO).'">here</a> if you are not redirected.</h3></div>';
-												echo '<meta http-equiv="refresh" content="5;URL= '.$REDIRECTO.'">';
-											}
-										}
+										}										
 										if(!isset($_POST['FORMSUBMIT'])){
 											if($AREA == 'catalog'){
 												echo '<h3 class="boardName">'.$boardName.'</h3>';
@@ -3458,6 +3533,7 @@
 																if($enablerep == 1 && $THREAD != ''){echo '<section><label for="URL"><i class="fa fa-camera-retro"></i> URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)" /></section>';}
 																echo '<section><label for="SUBJECT">Subject</label><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section>';
 																echo '<section><label for="COMMENT">Comment</label><textarea id="COMMENT" maxlength="'.$maxbody.'" name="COMMENT" placeholder="Comment"></textarea></section>';
+																echo '<section class="smiley"><input type="checkbox" name="SMILEY" value="smiles"><span>Check me if you\'re human.</span></section>';
 																echo '<section><label for="FORMSUBMIT" class="submit">Post a new ';if($THREAD == ''){echo 'topic';}elseif($THREAD != ''){echo 'reply';}echo '</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section>';
 																echo '</form>';
 															}
