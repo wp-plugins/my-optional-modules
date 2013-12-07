@@ -104,8 +104,8 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 .off{color:#ac1414;font-weight:500}
 .on{color:#23ac14;font-weight:500}
 .on:hover,.off:hover{font-weight:800;color:#000}
-.mycontrols{overflow:hidden;position:absolute;z-index:999;font-size:12px;line-height:24px;width:150px;height:25px;text-indent:5px;background-color:#103251;color:#e5f2ff;display:block;margin:0}
-.mycontrols:hover{color:#103251;background-color:#e5f2ff;cursor:pointer;height:150px;overflow:none;width:480px}
+.mycontrols{overflow:hidden;position:absolute;z-index:3;font-size:12px;line-height:24px;width:150px;height:25px;text-indent:5px;background-color:#103251;color:#e5f2ff;display:block;margin:0}
+.mycontrols:hover{color:#103251;background-color:#e5f2ff;cursor:pointer;height:150px;overflow:none;width:474px;border-bottom:1px solid #2d1212;border-right:1px solid #2d1212}
 .mycontrols div{clear:both;width:150px;overflow:hidden}
 .mycontrols div a{display:block;width:150px;height:100%}
 .mycontrols div:hover .attachedcomment{position:absolute;top:0;left:155px;display:block;visibility:visible;width:300px;background-color:#fff;font-size:10px;line-height:12px;margin:5px;padding:5px}
@@ -163,7 +163,8 @@ div.rules p{margin:2px auto}
 .boardDisplay .topic input[type=text],.boardDisplay .topic input[type=password]{width:275px!important;background-image:none!important;display:block;float:right;padding-right:0!important;margin:5px auto}
 .boardDisplay .topic textarea{width:273px;float:right;display:block;height:150px;margin:5px 0}
 .boardDisplay .topic label{width:55px;float:left;font-size:12px;line-height:10px;background-color:#f7f7f7;border-radius:3px;border:1px solid #ddd;text-align:left;margin:5px 0;padding:5px}
-.boardDisplay p.credits{font-size:10px;line-height:12px;text-align:center;width:90%;clear:both;display:block;margin:5px auto}
+.boardDisplay p.credits{font-size:10px;line-height:12px;text-align:center;width:100%;clear:both;display:block;margin:25px auto 15px auto;border-top:1px solid #2d1212;padding:10px 0}
+.boardDisplay p.credits span{width:95%;margin:0 auto;display:block}
 .boardDisplay .toggled{display:block;height:20px;opacity:.5;overflow:hidden}
 .boardDisplay .toggelthis{clear:both;display:block;cursor:pointer;border:1px solid #000;background-color:#aa3535;color:#fee;width:3px;height:3px;text-align:center;border-radius:3px;font-size:6px;line-height:5px;position:absolute;left:8px;font-weight:500;margin:8px 0 -5px 5px;padding:5px}
 .boardDisplay .shortinfo{clear:both;display:block;margin:-20px 0 5px 30px}
@@ -204,7 +205,7 @@ hr.clear{border:none;margin:15px 0;clear:both}
 .boardDisplay .loadmore{cursor:pointer;border:1px solid #000;background-color:#aa3535;color:#fee;width:100%;height:10px;text-align:center;border-radius:3px;font-size:10px;line-height:2px;font-weight:500;padding:5px 0;display:block;margin:-6px -1px}
 .boardDisplay .loadmore:hover{background-color:#3574aa}
 .boardDisplay .commentMeta{display:block;clear:both;width:100%;margin:5px auto;text-indent:10px;padding:5px 0;font-size:9px}
-.boardDisplay .avatar-32{float:left;border-radius:3px;height:20px;width:20px;margin:-8px 5px 0 5px}
+.boardDisplay .avatar-32{float:left;border-radius:3px;height:20px;width:20px;margin:-5px 5px 0 5px}
 .boardDisplay .commentContainer {display:block;clear:both;width:100%;margin:5px auto;border-bottom:1px solid #8ca8c2;border-top:1px solid #8ca8c2;background-color:#f5f7ff}
 .boardDisplay .commentContainer p{margin:5px;font-size:10px;line-height:11px}
 .boardDisplay .ban{padding:5px}
@@ -213,12 +214,13 @@ hr.clear{border:none;margin:15px 0;clear:both}
 
 section.smiley					{font-size:10px;padding:5px;line-height:23px;text-indent:50px}
 section.smiley span				{}
-div#admin						{width:410px;display:block;clear:both;margin:5px auto;overflow-y:auto;overflow-x:hidden}
+div#admin						{width:405px;display:block;clear:both;margin:5px auto;overflow-y:auto;overflow-x:hidden;padding:5px 0}
 div.admin						{width:190px;margin:5px;float:left!important}
-.users							{height:225px;overflow-y:auto;overflow-x:hidden;display:block}
+.users							{width:190px;margin:8px 5px 5px;float:left!important;height:400px;overflow-y:auto;overflow-x:hidden;display:block;border:1px solid #2d1212;background-color:#fff6f6;color:#2d1212}
+.users hr.clear					{border-top:1px solid #2d1212!important;margin:10px -5px -5px}
 form.create						{width:180px;margin:5px;font-size:10px;text-align:left}
-form.create span					{margin:5px}
-form.create input[type=submit]	{width:150px;margin:5px;clear:both;padding:5px;clear:both;display:block;text-align:left}
+form.create span					{margin:5px;width:140px;display:block;padding:5px 0}
+form.create input[type=submit]	{width:150px;margin:5px;clear:both;padding:5px;clear:both;display:block;text-align:left;-webkit-appearance: button;cursor: pointer}
 form.create input#DELETEBOARD	{font-size:10px;width:80px;margin:5px;padding:5px;display:inline-block;float:left;clear:none}
 form.create select				{font-size:10px;width:80px;margin:5px;padding:5px;display:inline-block;float:left;clear:none}
 form.create textarea				{font-size:10px;width:180px;height:100px;margin:5px}

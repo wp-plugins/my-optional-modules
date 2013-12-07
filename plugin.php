@@ -3,7 +3,7 @@
 	// Plugin Name: My Optional Modules
 	// Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 	// Description: Optional modules and additions for Wordpress.
-	// Version: 5.3.9.7
+	// Version: 5.3.9.8
 	// Author: Matthew Trevino
 	// Author URI: http://onebillionwords.com
 	
@@ -3042,7 +3042,7 @@
 					'enablerep' => '0',
 					'defaultname' => 'anonymous',
 					'requirelogged' => '0',
-					'credits' => 'All trademarks and copyrights on this page are owned by their respective parties.  Comments are owned by (and the responsibility of) the Poster.'
+					'credits' => 'All trademarks and copyrights on this page are owned by their respective parties.  Comments are owned by (and the responsibility of) the Poster. Powered by <a href="http://wordpress.org/">Wordpress</a> &amp; <a href="http://www.onebillionwords.com/my-optional-modules/">Regular Board</a>.'
 				), $atts)
 			);	
 			
@@ -3068,11 +3068,11 @@
 			
 			if($ipaddress !== false){
 			
-				$theIP         = esc_sql(myoptionalmodules_sanistripents($ipaddress));
-				$theIP_s32int  = esc_sql(myoptionalmodules_sanistripents(ip2long($ipaddress)));
-				$theIP_us32str = esc_sql(myoptionalmodules_sanistripents(sprintf("%u",$theIP_s32int)));
-				$checkThisIP   = esc_sql(long2ip($theIP));
-			
+				$theIP         = myoptionalmodules_sanistripents($ipaddress);
+				$theIP_s32int  = myoptionalmodules_sanistripents(ip2long($ipaddress));
+				$theIP_us32str = myoptionalmodules_sanistripents(sprintf("%u",$theIP_s32int));
+				$checkThisIP   = myoptionalmodules_sanistripents($theIP);
+
 				myoptionalmodules_checkdnsbl($checkThisIP);
 				
 				$QUERY         = myoptionalmodules_sanistripents($_SERVER['QUERY_STRING']);
@@ -3085,24 +3085,29 @@
 
 
 
+
 				//Admin area
 				if($AREA == 'create'){
 					if($ISMODERATOR === true){
-						$getUsers = $wpdb->get_results("SELECT ID,IP,PARENT,BANNED,MESSAGE FROM $regularboard_users WHERE BANNED = 1");
-						echo '<div class="banned"><h3 class="options">CREATE/DELETE/UNBAN</h3><hr class="clear" />';
-						
-
+						$getUsers = $wpdb->get_results("SELECT * FROM $regularboard_users WHERE BANNED = 1");
+						echo '<div class="banned">
+						<hr class="clear" />
+						<a href="?board=">[return]</a>';
 						echo '
 						<div id="admin">
-						<div class="admin users">
-						<form name="unban" action="?area=create" class="create" method="post">';
+						<div class="users">
+						<form name="unban" action="?area=create" class="create" method="post">
+						<span>Banned IPs</span>
+						<hr class="clear" />';
 						wp_nonce_field('unban');
 						foreach($getUsers as $gotUsers){
 							$userIP = long2ip($gotUsers->IP);
 							$thisID = esc_sql($gotUsers->ID);
 							$userMESSAGE = $gotUsers->MESSAGE;
-							echo '<span>'.$userIP.' / '.$userMESSAGE.'</span>';
+							if($userMESSAGE != '')echo '<span>'.$userMESSAGE.'</span>';
+							if($userMESSAGE == '')echo '<span>No ban reason given.</span>';
 							echo '<input type="submit" name="'.$thisID.'" id="'.$thisID.'" value="Unban '.$userIP.'" />';
+							echo '<hr class="clear" />';
 							if(isset($_POST[$thisID])){
 								$wpdb->query("DELETE FROM $regularboard_users WHERE ID = '".$thisID."'");
 								echo '<meta http-equiv="refresh" content="0;URL=?area=create">';
@@ -3272,7 +3277,7 @@
 				}
 				echo '[<a href="'.get_permalink().'">Home</a>]';
 				if($ISMODERATOR === true){
-					echo '[<a href="?area=create">Add/Delete/Unban</a>]';
+					echo '[<a href="?area=create">admin</a>]';
 				}
 				echo '</span>';
 				// Determine time between between the last post and the flood protection time amount
@@ -3488,10 +3493,6 @@
 															echo '</a>';
 															echo '</span>';											
 														}
-														echo '<div class="catcomment">';
-														echo substr($COMMENT,0,$cutoff);
-														if(strlen($COMMENT) > 500)echo '...';
-														echo '</div>';
 														echo '</div>';
 													}
 												}
@@ -3801,7 +3802,7 @@
 							}else{
 						echo '<h3 class="banned">'.$noboard.'</h3>';
 					}
-					if(!isset($_POST['FORMSUBMIT']))echo '<p class="credits">'.$credits.'</p></div>';
+					if(!isset($_POST['FORMSUBMIT']))echo '<p class="credits"><span>'.$credits.'</span></p></div>';
 				// Return a list of the available boards, and if logged in as admin, a link to the add/edit/unban area.
 				}else{
 					$getBoards = $wpdb->get_results("SELECT SHORTNAME,NAME,DESCRIPTION FROM $regularboard_boards ");
@@ -3811,7 +3812,7 @@
 							<h3>Boards</h3>';
 						if($ISMODERATOR === true){
 							echo '
-							<a href="?area=create">Add a board</a>';
+							<a href="?area=create">admin</a>';
 						}
 					if(count($getBoards) > 0){
 						foreach($getBoards as $gotBoards){
