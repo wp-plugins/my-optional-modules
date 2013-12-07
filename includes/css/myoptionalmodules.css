@@ -189,7 +189,9 @@ div.momnavbar #navsearchform i,.banned textarea,.banned input[type=submit],.bann
 .momschemedefault .recentPostListing,#mom_onthisday section.mom_onthisday:hover{background-color:#fff}
 div.momlistcategories span,.right{float:right}
 .boardDisplay .pages a,.boardDisplay .reportdelete input,.op i{margin:5px}
-img.lazy{background-color:#b7c5d9}
+
+
+
 .boardDisplay div.op{border-top:3px solid #b7c5d9;margin:10px auto;display:block}
 hr.clear{border:none;margin:15px 0;clear:both}
 .controlpaneluser,.controlpanel{display:block;float:right}

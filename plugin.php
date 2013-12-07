@@ -3,7 +3,7 @@
 	// Plugin Name: My Optional Modules
 	// Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 	// Description: Optional modules and additions for Wordpress.
-	// Version: 5.3.9.6
+	// Version: 5.3.9.7
 	// Author: Matthew Trevino
 	// Author URI: http://onebillionwords.com
 	
@@ -1178,13 +1178,13 @@
 			);	
 			$id_fetch_att = esc_sql($id);
 			if(is_numeric($id_fetch_att)){$id_fetch = $id_fetch_att;}
-			$result_type  = esc_sql($type);
 			$order_by     = esc_sql($orderby);
 			$order_dir    = esc_sql($order);
-			$meta_show    = esc_sql($meta);
-			$expand_this  = esc_sql($expand);
-			$retract_this = esc_sql($retract);
-			$is_open      = esc_sql($open);
+			$result_type  = myoptionalmodules_sanistripents($type);
+			$meta_show    = myoptionalmodules_sanistripents($meta);
+			$expand_this  = myoptionalmodules_sanistripents($expand);
+			$retract_this = myoptionalmodules_sanistripents($retract);
+			$is_open      = myoptionalmodules_sanistripents($open);
 			global $wpdb;
 			$mom_reviews_table_name = $wpdb->prefix.'momreviews';
 			if($id_fetch != ''){
@@ -3449,20 +3449,20 @@
 												echo '<h3 class="boardName">'.$boardName.'</h3>';
 												echo '<p class="boardDescription">Catalog</p>';
 												foreach($getParentPosts as $parentPosts){
-													$ID = $parentPosts->ID;
-													$IAMOP = $parentPosts->IP;
-													$TYPE = $parentPosts->TYPE;
+													$ID = $purifier->purify($parentPosts->ID);
+													$IAMOP = $purifier->purify($purifier->purify($parentPosts->IP));
+													$TYPE = $purifier->purify($parentPosts->TYPE);
 													if($TYPE == 'image')$THREADIMGS++;
-													$URL = $parentPosts->URL;
-													$MODERATOR = $parentPosts->MODERATOR;
-													$PARENT = $parentPosts->PARENT;
-													$IP = $parentPosts->IP;
-													$DATE = $parentPosts->DATE;
-													$EMAIL = $parentPosts->EMAIL;
-													$SUBJECT = $parentPosts->SUBJECT;
-													$COMMENT = $parentPosts->COMMENT;
-													$BOARD = $parentPosts->BOARD;
-													$LAST = $parentPosts->LAST;
+													$URL = $purifier->purify($parentPosts->URL);
+													$MODERATOR = $purifier->purify($parentPosts->MODERATOR);
+													$PARENT = $purifier->purify($parentPosts->PARENT);
+													$IP = $purifier->purify($parentPosts->IP);
+													$DATE = $purifier->purify($parentPosts->DATE);
+													$EMAIL = $purifier->purify($parentPosts->EMAIL);
+													$SUBJECT = $purifier->purify($parentPosts->SUBJECT);
+													$COMMENT = $purifier->purify($parentPosts->COMMENT);
+													$BOARD = $purifier->purify($parentPosts->BOARD);
+													$LAST = $purifier->purify($parentPosts->LAST);
 													$divclass = 'catpost';
 													if($TYPE == 'video')$divclass = 'catvideo';
 													if($TYPE == 'image')$divclass = 'catimage';
@@ -3560,18 +3560,18 @@
 															if($totalREPLIES == 0)$totalREPLYS = $totalREPLIES - 0;
 															if($THREAD == '')$gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."' ORDER BY DATE ASC LIMIT $totalREPLYS,3");
 															if($THREAD != '')$gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."' ORDER BY LAST ASC");
-															$TYPE = $parentPosts->TYPE;
+															$TYPE = $purifier->purify($parentPosts->TYPE);
 															if($TYPE == 'image')$THREADIMGS++;
-															$URL = $parentPosts->URL;
-															$MODERATOR = $parentPosts->MODERATOR;
-															$PARENT = $parentPosts->PARENT;
-															$IP = $parentPosts->IP;
-															$DATE = $parentPosts->DATE;
-															$EMAIL = $parentPosts->EMAIL;
-															$SUBJECT = $parentPosts->SUBJECT;
-															$COMMENT = $parentPosts->COMMENT;
-															$BOARD = $parentPosts->BOARD;
-															$LAST = $parentPosts->LAST;
+															$URL = $purifier->purify($parentPosts->URL);
+															$MODERATOR = $purifier->purify($parentPosts->MODERATOR);
+															$PARENT = $purifier->purify($parentPosts->PARENT);
+															$IP = $purifier->purify($parentPosts->IP);
+															$DATE = $purifier->purify($parentPosts->DATE);
+															$EMAIL = $purifier->purify($parentPosts->EMAIL);
+															$SUBJECT = $purifier->purify($parentPosts->SUBJECT);
+															$COMMENT = $purifier->purify($parentPosts->COMMENT);
+															$BOARD = $purifier->purify($parentPosts->BOARD);
+															$LAST = $purifier->purify($parentPosts->LAST);
 															if($IP == $theIP_us32str && isset($_POST['DELETE'.$ID.''])){
 																$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
 																$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
@@ -3662,17 +3662,17 @@
 																echo '<div class="omitted'.$ID.'" id="omitted">';
 																if(count($gotReplies) > 0){
 																	foreach($gotReplies as $REPLIES){
-																		$TYPE = $REPLIES->TYPE;
-																		$URL = $REPLIES->URL;
-																		$MODERATOR = intval($REPLIES->MODERATOR);
-																		$ID = intval($REPLIES->ID);
-																		$PARENT = intval($REPLIES->PARENT);
-																		$IP = intval($REPLIES->IP);
-																		$DATE = myoptionalmodules_sanistripents($REPLIES->DATE);
-																		$EMAIL = myoptionalmodules_sanistripents($REPLIES->EMAIL);
-																		$SUBJECT = myoptionalmodules_sanistripents($REPLIES->SUBJECT);
-																		$COMMENT = $REPLIES->COMMENT;
-																		$BOARD = myoptionalmodules_sanistripents($REPLIES->BOARD);							
+																		$TYPE = $purifier->purify($REPLIES->TYPE);
+																		$URL = $purifier->purify($REPLIES->URL);
+																		$MODERATOR = $purifier->purify(intval($REPLIES->MODERATOR));
+																		$ID = $purifier->purify(intval($REPLIES->ID));
+																		$PARENT = $purifier->purify(intval($REPLIES->PARENT));
+																		$IP = $purifier->purify(intval($REPLIES->IP));
+																		$DATE = $purifier->purify(myoptionalmodules_sanistripents($REPLIES->DATE));
+																		$EMAIL = $purifier->purify(myoptionalmodules_sanistripents($REPLIES->EMAIL));
+																		$SUBJECT = $purifier->purify(myoptionalmodules_sanistripents($REPLIES->SUBJECT));
+																		$COMMENT = $purifier->purify($REPLIES->COMMENT);
+																		$BOARD = $purifier->purify(myoptionalmodules_sanistripents($REPLIES->BOARD));							
 																		if($IP == $theIP_us32str && isset($_POST['DELETE'.$ID.''])){
 																			$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$ID."'");
 																			$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$ID."'");
