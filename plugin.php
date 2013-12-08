@@ -2,7 +2,7 @@
 	// Plugin Name: My Optional Modules
 	// Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 	// Description: Optional modules and additions for Wordpress.
-	// Version: 5.3.9.9.2
+	// Version: 5.3.9.9.3
 	// Author: Matthew Trevino
 	// Author URI: http://onebillionwords.com
 	
@@ -389,15 +389,20 @@
 		}
 		
 		function momMaintenance(){
-			if(!is_user_logged_in() && get_option('mommaincontrol_maintenance') == 1){
-				$maintenanceURL = esc_url(get_option('momMaintenance_url'));
-				if($maintenanceURL == ''){
-					die('Maintenance mode currently active.  Please try again later.');
-				}else{
-					header('location:'.$maintenanceURL);exit;
+			if(!function_exists('is_login_page')){
+				function is_login_page() {
+					return in_array($GLOBALS['pagenow'], array('wp-login.php', 'wp-register.php'));
+				}		
+			}
+			if(!is_login_page()){
+				if(!is_user_logged_in() && get_option('mommaincontrol_maintenance') == 1){
+					$maintenanceURL = esc_url(get_option('momMaintenance_url'));
+					if($maintenanceURL == ''){
+						die('Maintenance mode currently active.  Please try again later.');
+					}else{
+						header('location:'.$maintenanceURL);exit;
+					}
 				}
-			}else{
-					
 			}
 		}
 		
