@@ -1,9 +1,8 @@
 <?php 
-
 	// Plugin Name: My Optional Modules
 	// Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 	// Description: Optional modules and additions for Wordpress.
-	// Version: 5.3.9.9
+	// Version: 5.3.9.9.1
 	// Author: Matthew Trevino
 	// Author URI: http://onebillionwords.com
 	
@@ -690,7 +689,7 @@
 			}	
 			if(isset($_POST['momsesave'])){
 				foreach($_REQUEST as $k => $v){
-					update_option($k,myoptionalmodules_numbersnospaces($v));
+					update_option($k,$v);
 				}	
 				update_option('MOM_Exclude_PostFormats_Visitor',sanitize_text_field($_REQUEST['MOM_Exclude_PostFormats_Visitor']));
 				update_option('MOM_Exclude_PostFormats_RSS',sanitize_text_field($_REQUEST['MOM_Exclude_PostFormats_RSS']));
