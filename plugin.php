@@ -2,7 +2,7 @@
 	// Plugin Name: My Optional Modules
 	// Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 	// Description: Optional modules and additions for Wordpress.
-	// Version: 5.3.9.9.1
+	// Version: 5.3.9.9.2
 	// Author: Matthew Trevino
 	// Author URI: http://onebillionwords.com
 	
@@ -2895,7 +2895,16 @@
 		if(current_user_can('manage_options') && is_admin() && get_option('mommaincontrol_momja') == 1){
 			function my_optional_modules_jump_around_module(){
 				$o = array(0,1,2,3,4,5,6,7,8);
-				$f = array('Post container','Permalink','Previous Posts','Next posts','Previous Key','Open current','Next key','Older posts key','Newer posts key');
+				$f = array(
+					'Post container',
+					'Permalink',
+					'Previous Posts',
+					'Next posts',
+					'Previous Key',
+					'Open current',
+					'Next key',
+					'Older posts key',
+					'Newer posts key');
 				$k = array(65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,48,49,50,51,52,53,54,55,56,57,37,38,39,40);
 				$b = array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',0,1,2,3,4,5,6,7,8,9,'left arrow','up arrow','right arrow','down arrow');
 				echo '
@@ -2910,13 +2919,13 @@
 					foreach ($o as &$value){
 						$text = str_replace($o,$f,$value);
 						$label = 'jump_around_'.$value;
-						if($value >= 0 && $value <= 3){
+						if($value <= 3){
 							echo '
 							<section><label for="'.$label.'">'.$text.'</label>
 							<input type="text" id="'.$label.'" name="'.$label.'" value="'.get_option($label).'" /></section>';
 						}
-						if($value == 4)echo '<hr class="clear" />';
-						elseif($value >=4){
+						elseif($value == 4 || $value > 4){
+							if($value == 4)echo '<hr class="clear" />';
 							echo '
 							<section><label for="'.$label.'">'.$text.'</label>
 							<select name="'.$label.'">';
