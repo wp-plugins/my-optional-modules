@@ -1,3 +1,19 @@
+.momreview .block {background-color: #03090e ; color: #f4f1de;}
+.momreview section.reviewed {background-color: #03090e ; color: #f4f1de;}
+.momreview ::selection {background: #222; color: #fff;}
+.momreview label {color: #f4f1de;}
+.momreview {margin: 0 auto; width: 95%;}
+.momreview .block {padding-top: 5px; margin: 0 auto 0 auto;}
+.momreview label {width: 95%; min-height: 35px; margin: 0 auto; display: block; cursor: pointer;}
+.momreview .reviewed {width: 93%; height: 0; padding: 0 15px 0 15px; display: block; overflow: hidden; box-sizing: border-box; margin: auto;}
+.momreview label span {font-weight: bold; float:right;}
+.momreview input[type='checkbox']{display: none;}
+.momreview .block input[type='checkbox']:checked ~ .reviewed {height: auto; margin: -25px auto 5px auto;}
+.momreview .block input[type='checkbox'] ~ label span:first-of-type {display:block; visibility:visible; float:right; margin:0 -5px 0 0;}
+.momreview .block input[type='checkbox'] ~ label span:last-of-type,
+.momreview .block input[type='checkbox']:checked ~ label span:first-of-type {display:none; visibility:hidden; float:right;}
+.momreview .block input[type='checkbox']:checked ~ label span:last-of-type {display:block; visibility:visible; float:right;}
+
 .clearboth{clear:both}
 .topVotes{width:100%;margin:5px auto 25px}
 .topVotes ol li{clear:both;display:block;margin:5px auto}

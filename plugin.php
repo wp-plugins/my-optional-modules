@@ -3,7 +3,7 @@
 	// Plugin Name: My Optional Modules
 	// Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 	// Description: Optional modules and additions for Wordpress.
-	// Version: 5.3.9.8
+	// Version: 5.3.9.9
 	// Author: Matthew Trevino
 	// Author URI: http://onebillionwords.com
 	
@@ -356,6 +356,7 @@
 				update_option('mommaincontrol_momrups',0);
 			}
 			update_option('mommaincontrol_focus','');
+			delete_option('momreviews_css');
 			add_option('mommaincontrol_passwords_activated',1);					
 			add_option('mommaincontrol_reviews_activated',1);
 			add_option('mommaincontrol_shorts_activated',1);
@@ -614,7 +615,6 @@
 				if(isset($_POST['mom_reviews_mode_submit'])){
 					add_option('mommaincontrol_reviews_activated',1);
 					add_option('momreviews_search','');
-					add_option('momreviews_css',"/* Colors */\n.momreview .block {background-color: #fff; color: #000;}\n.momreview section.reviewed {background-color: #fff; color: #000;}\n.momreview ::selection {background: #222; color: #fff;}\n.momreview label {color: #111; text-shadow: 1px 1px 2px #ccc;}\n/* Containers */\n.momreview {margin: 0 auto; width: 95%;}\n.momreview .block {padding-top: 5px; margin: 0 auto 0 auto;}\n.momreview label {width: 95%; min-height: 35px; margin: 0 auto; display: block; cursor: pointer;}\n.momreview .reviewed {width: 93%; height: 0; padding: 0 15px 0 15px; display: block; overflow: hidden; box-sizing: border-box; margin: auto;}\n/* Do not edit below this line */\n/* unless you know what you're doing. */\n.momreview label span {font-weight: bold; float:right;}\n.momreview input[type='checkbox']{display: none;}\n.momreview .block input[type='checkbox']:checked ~ .reviewed {height: auto; margin: -25px auto 5px auto;}\n.momreview .block input[type='checkbox'] ~ label span:first-of-type {display:block; visibility:visible; float:right; margin:0 -5px 0 0;}\n.momreview .block input[type='checkbox'] ~ label span:last-of-type,\n.momreview .block input[type='checkbox']:checked ~ label span:first-of-type {display:none; visibility:hidden; float:right;}\n.momreview .block input[type='checkbox']:checked ~ label span:last-of-type {display:block; visibility:visible; float:right;}\n");
 					if(get_option('mommaincontrol_reviews_activated') == 1){
 						global $wpdb;
 						$review_table_name = $wpdb->prefix.'momreviews';
@@ -1032,12 +1032,15 @@
 							function update_mom_reviews(){
 								global $table_prefix,$wpdb;
 								$reviews_table_name = $table_prefix.'momreviews';                        
-								$reviews_type   = esc_sql(str_replace('"','\'',($_REQUEST['reviews_type'])));
-								$reviews_link   = esc_sql(str_replace('"','\'',($_REQUEST['reviews_link'])));
-								$reviews_title  = esc_sql(str_replace('"','\'',($_REQUEST['reviews_title'])));
-								$reviews_review = esc_sql($_REQUEST['reviews_review']);
+								$reviews_type   = esc_sql($_REQUEST['reviews_type']);
+								$reviews_link   = esc_url($_REQUEST['reviews_link']);
+								$reviews_title  = esc_sql($_REQUEST['reviews_title']);
+								$reviews_review = $_REQUEST['reviews_review'];
 								$reviews_review = wpautop($reviews_review);
-								$reviews_rating = esc_sql(str_replace('"','\'',($_REQUEST['reviews_rating'])));
+								$reviews_rating = esc_sql($_REQUEST['reviews_rating']);
+								$reviews_rating = stripslashes_deep($reviews_rating);
+								$reviews_type = stripslashes_deep($reviews_type);
+								$reviews_title = stripslashes_deep($reviews_title);
 								$wpdb->query("INSERT INTO $reviews_table_name (ID,TYPE,LINK,TITLE,REVIEW,RATING) VALUES ('','$reviews_type','$reviews_link','$reviews_title','$reviews_review','$reviews_rating')") ;
 								echo '<meta http-equiv="refresh" content="0;url="'.plugin_basename(__FILE__).'" />';
 							}
@@ -1046,13 +1049,7 @@
 								$filter_type_fetch = sanitize_text_field($filter_type);
 								update_option('momreviews_search',$filter_type_fetch);
 						}
-						function update_mom_css(){
-							$newCSS = esc_sql(stripslashes_deep($_REQUEST['css']));
-							update_option('momreviews_css',$newCSS);
-							echo '<meta http-equiv="refresh" content="0;url="'.plugin_basename(__FILE__).'" />';
-						}
 						if(isset($_POST['reviewsubmit']))update_mom_reviews();
-						if(isset($_POST['csssubmit']))update_mom_css();
 						function print_mom_reviews_form(){
 							echo '
 							<div class="settingsInput">
@@ -1068,10 +1065,6 @@
 							<section><input id="reviewsubmit" type="submit" value="Add review" name="reviewsubmit"/></section>
 							</form>
 							</div>
-							<form method="post" class="csssubmit">
-							<section><textarea name="css">'.get_option('momreviews_css').'</textarea></section>
-							<section><input id="csssubmit" type="submit" value="Save CSS" name="csssubmit" /></section>
-							</form>
 							</div>';
 						}
 						function reviews_page_content(){
@@ -1129,12 +1122,15 @@
 								if(isset($_POST['submit_edit_'.$this_ID.''])){
 									global $table_prefix, $wpdb;
 									$reviews_table_name = $table_prefix.'momreviews';                        
-									$edit_type     = esc_sql(str_replace('"','\'',($_REQUEST['reviews_type_'.$this_ID.''])));
-									$edit_link     = esc_sql(str_replace('"','\'',($_REQUEST['reviews_link_'.$this_ID.''])));
-									$edit_title    = esc_sql(str_replace('"','\'',($_REQUEST['reviews_title_'.$this_ID.''])));
-									$edit_review   = esc_sql($_REQUEST['edit_review_'.$this_ID.'']);
+									$edit_type     = esc_sql($_REQUEST['reviews_type_'.$this_ID.'']);
+									$edit_link     = esc_sql($_REQUEST['reviews_link_'.$this_ID.'']);
+									$edit_title    = esc_sql($_REQUEST['reviews_title_'.$this_ID.'']);
+									$edit_review   = $_REQUEST['edit_review_'.$this_ID.''];
 									$edit_review   = wpautop($edit_review);
-									$edit_rating   = esc_sql(str_replace('"','\'',($_REQUEST['reviews_rating_'.$this_ID.''])));
+									$edit_rating   = esc_sql($_REQUEST['reviews_rating_'.$this_ID.'']);
+									$edit_rating   = stripslashes_deep($edit_rating);
+									$edit_type     = stripslashes_deep($edit_type);
+									$edit_title    = stripslashes_deep($edit_title);
 									$wpdb->query("UPDATE $reviews_table_name SET TYPE = '$edit_type', LINK = '$edit_link', TITLE = '$edit_title', REVIEW = '$edit_review', RATING = '$edit_rating' WHERE ID = $this_ID") ;
 									echo '<meta http-equiv="refresh" content="0;url='.$current.'" />';
 								}
@@ -1162,7 +1158,6 @@
 		function mom_reviews_shortcode($atts, $content = null){
 			global $mom_review_global;
 			$mom_review_global++;
-			if($mom_review_global == 1){mom_reviews_style();}
 			ob_start();
 			extract(
 				shortcode_atts(array(
@@ -1197,13 +1192,20 @@
 				}
 			}
 			foreach($reviews as $reviews_results){
+				if($reviews_results->RATING == '.5') $reviews_results->RATING = '<i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+				if($reviews_results->RATING == '1') $reviews_results->RATING = '<i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+				if($reviews_results->RATING == '2') $reviews_results->RATING = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+				if($reviews_results->RATING == '3') $reviews_results->RATING = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+				if($reviews_results->RATING == '4') $reviews_results->RATING = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i>';
+				if($reviews_results->RATING == '5') $reviews_results->RATING = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>';
+				if($reviews_results->RATING == '1.5') $reviews_results->RATING = '<i class="fa fa-star"></i><i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+				if($reviews_results->RATING == '2.5') $reviews_results->RATING = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
+				if($reviews_results->RATING == '3.5') $reviews_results->RATING = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i>';
+				if($reviews_results->RATING == '4.5') $reviews_results->RATING = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i>';
 				if($reviews_results->REVIEW != ''){$this_ID = $reviews_results->ID;echo '<div ';if($result_type != ''){echo 'id="'.esc_attr($result_type).'"';}echo ' class="momreview"><article class="block"><input type="checkbox" name="review" id="'.$this_ID.''.$mom_review_global.'" ';if($is_open == 1){echo ' checked';}echo '/><label for="'.$this_ID.''.$mom_review_global.'">';if($reviews_results->TITLE != ''){echo $reviews_results->TITLE;}echo '<span>'.$expand_this.'</span><span>'.$retract_this.'</span></label><section class="reviewed">';if($meta_show == 1){if($reviews_results->TYPE != ''){echo ' [ <em>'.$reviews_results->TYPE.'</em> ] ';}if($reviews_results->LINK != ''){echo ' [ <a href="'.esc_url($reviews_results->LINK).'">#</a> ] ';}}echo '<hr />'.$reviews_results->REVIEW;if($reviews_results->RATING != ''){echo ' <p>'.$reviews_results->RATING.'</p> ';}echo '</section></article></div>';}
 				elseif($reviews_results->REVIEW == ''){$this_ID = $reviews_results->ID;echo '<div ';if($result_type != ''){echo 'id="'.esc_attr($result_type).'"';}echo ' class="momreview"><article class="block"><input type="checkbox" name="review" id="'.$this_ID.''.$mom_review_global.'" ';if($is_open == 1){echo ' checked';}echo '/><label>';if($reviews_results->TITLE != ''){if($reviews_results->LINK != ''){echo '<a href="'.esc_url($reviews_results->LINK).'">';}echo $reviews_results->TITLE;if($reviews_results->LINK != ''){echo '</a>';}}echo '<span>'.$reviews_results->RATING.'</span><span></span></label></article></div>';}
 			}
 			return ob_get_clean();
-		}
-		function mom_reviews_style(){
-			echo '<style>'.get_option('momreviews_css').'</style>';
 		}
 	//
 
