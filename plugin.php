@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.9.9.6
+Version: 5.3.9.9.7
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com 
 */
@@ -2970,21 +2970,16 @@ Author URI: http://onebillionwords.com
 			$query_sql = "SELECT ID,UP from $votesPosts  WHERE UP > 1 ORDER BY UP DESC LIMIT $amount";
 			$query_result = $wpdb->get_col( $wpdb->prepare ($query_sql, OBJECT));
 			if ($query_result) {
-				echo '
-				<div class="topVotes">
-					<ol>';
 				foreach ($query_result as $post_id) {
 					$post = &get_post( $post_id );
 					setup_postdata($post);
 					echo '<li><a href="';the_permalink();echo'" rel="bookmark" title="Permanent Link to ';the_title_attribute();echo'">';the_title();echo'</a></li>';
 				}
 			}else{}
-			echo '
-				</ol>
-			</div>';
 			wp_reset_query();
 			return ob_get_clean();
 		}
+		
 		if(get_option('mommaincontrol_votes') == 1){	
 			add_shortcode('topvoted','vote_the_posts_top');
 			add_filter('the_content','do_shortcode','vote_the_posts_top');
@@ -3420,7 +3415,7 @@ Author URI: http://onebillionwords.com
 														}
 														if($THREAD != '')$enteredPARENT = intval($THREAD);
 														if($THREAD == '')$enteredPARENT = 0;
-														$cleanCOMMENT   = esc_sql($purifier->purify($_REQUEST['COMMENT']));
+														$cleanCOMMENT   = $purifier->purify(esc_sql(wpautop(($_REQUEST['COMMENT']))));
 														$checkCOMMENT   = esc_sql(strtolower($enteredCOMMENT));
 														$checkURL       = esc_sql(myoptionalmodules_sanistripents($_REQUEST['URL']));
 														$cleanCOMMENT   = substr($cleanCOMMENT,0,$maxbody);
@@ -3631,7 +3626,6 @@ Author URI: http://onebillionwords.com
 																echo '
 																<div class="op" id="'.$ID.'">';
 																if($SUBJECT != '')echo '<span class="subject">'.$SUBJECT.'</span>';
-																if($SUBJECT == '')echo '<span class="subject"><em>no subject</em></span>';
 																// Image (or video) content block
 																if($URL != '' && $TYPE == 'image'){
 																	echo $purifier->purify('<a href="'.$URL.'"><img class="imageOP" src="'.$URL.'" /></a>');
