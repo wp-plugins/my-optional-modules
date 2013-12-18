@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.3.9.9.7
+Version: 5.3.9.9.8
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com 
 */
@@ -3052,7 +3052,7 @@ Author URI: http://onebillionwords.com
 					'enablerep' => '0',
 					'defaultname' => 'anonymous',
 					'requirelogged' => '0',
-					'credits' => 'All trademarks and copyrights on this page are owned by their respective parties.  Comments are owned by (and the responsibility of) the Poster. Powered by <a href="http://wordpress.org/">Wordpress</a> &amp; <a href="http://www.onebillionwords.com/my-optional-modules/">Regular Board</a>.'
+					'credits' => 'Trademarks/comments/copyrights owned by their respectived parties/Posters'
 				), $atts)
 			);	
 			
@@ -3241,40 +3241,11 @@ Author URI: http://onebillionwords.com
 				if($THREAD == '')$getParentPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0 ORDER BY LAST DESC LIMIT $start,$postsperpage");
 				if($THREAD != '')$getParentPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND ID = '".$THREAD."' AND PARENT = 0 LIMIT 1");
 				$getLastPost = $wpdb->get_results("SELECT IP,DATE,ID,MODERATOR FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' ORDER BY ID DESC LIMIT 1");
-				$getLastPosts = $wpdb->get_results("SELECT ID,PARENT,BOARD,COMMENT,SUBJECT,TYPE,URL,DATE FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' ORDER BY ID DESC LIMIT 5");
+				$getLastPosts = $wpdb->get_results("SELECT ID,PARENT,BOARD,COMMENT,SUBJECT,TYPE,URL,DATE FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' ORDER BY ID DESC LIMIT 10");
 				if($THREAD != '')$countimgresults = $wpdb->get_results("SELECT ID from $regularboard_posts WHERE TYPE = 'image' AND PARENT = '".$THREAD."'");
 				if($THREAD != '')$countrepresults = $wpdb->get_results("SELECT ID from $regularboard_posts WHERE PARENT = '".$THREAD."'");
 				if($THREAD != '')$THREADREPLIES = count($countrepresults);
 				if($THREAD != '')$THREADIMGS = count($countimgresults);
-				echo '
-				<div class="left mycontrols">
-					<i class="fa fa-plus-square"></i> User Menu';
-					if(count($getLastPosts) >0){
-						foreach($getLastPosts as $MYLASTPOSTS){
-							$myID = $MYLASTPOSTS->ID;
-							$myPARENT = $MYLASTPOSTS->PARENT;
-							$myBOARD = $MYLASTPOSTS->BOARD;
-							$myCOMMENT = $MYLASTPOSTS->COMMENT;
-							$mySUBJECT = $MYLASTPOSTS->SUBJECT;
-							$myTYPE = $MYLASTPOSTS->TYPE;
-							$myURL = $MYLASTPOSTS->URL;
-							$myDATE = $MYLASTPOSTS->DATE;
-							echo '<div>';
-							if($myPARENT == 0)echo '<a href="?board='.$myBOARD.'&amp;thread='.$myID.'"><i class="fa fa-pencil"></i> '.$myID.'</a>';
-							if($myPARENT != 0)echo '<a href="?board='.$myBOARD.'&amp;thread='.$myPARENT.'?goto#'.$myID.'"><i class="fa fa-comment"></i> '.$myID.'</a>';
-							
-							echo '<div class="attachedcomment">';
-							if($mySUBJECT != '')echo '<strong>'.$mySUBJECT.'</strong> /';
-							echo '('.$myDATE.')<br />';
-							if($myTYPE == 'image' && $myURL != '')echo '<img class="imageREPLY" src="'.$myURL.'" width="150"/>';
-							echo substr($myCOMMENT,0,$cutoff);if(strlen($myCOMMENT) > $cutoff)echo '...';					
-							echo '</div></div>';
-						}
-					}else{
-						echo '<h3 class="info">Nothing but dust.  You haven\'t posted anything... yet.</h3>';
-					}
-				echo '</div>
-				';
 				// Board listing
 				echo '<span class="boardlisting textright">';
 				if(count($getBoards) > 0){
@@ -3545,17 +3516,43 @@ Author URI: http://onebillionwords.com
 																echo '<section><label for="SUBJECT">Subject</label><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section>';
 																echo '<section><label for="COMMENT">Comment</label><textarea id="COMMENT" maxlength="'.$maxbody.'" name="COMMENT" placeholder="Comment"></textarea></section>';
 																echo '<section class="smiley"><input type="checkbox" name="SMILEY" value="smiles"><span>Check me if you\'re human.</span></section>';
-																echo '<section><label for="FORMSUBMIT" class="submit">Post a new ';if($THREAD == ''){echo 'topic';}elseif($THREAD != ''){echo 'reply';}echo '</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section>';
+																echo '<section><label for="FORMSUBMIT" class="submit">>>Post a new ';if($THREAD == ''){echo 'topic';}elseif($THREAD != ''){echo 'reply';}echo '</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section>';
 																echo '</form>';
 															}
 														}
 													}
+													
+													
+				echo '
+				<div class="myposts">My posts<br />';
+					if(count($getLastPosts) >0){
+						foreach($getLastPosts as $MYLASTPOSTS){
+							$myID = $MYLASTPOSTS->ID;
+							$myPARENT = $MYLASTPOSTS->PARENT;
+							$myBOARD = $MYLASTPOSTS->BOARD;
+							$myCOMMENT = $MYLASTPOSTS->COMMENT;
+							$mySUBJECT = $MYLASTPOSTS->SUBJECT;
+							$myTYPE = $MYLASTPOSTS->TYPE;
+							$myURL = $MYLASTPOSTS->URL;
+							$myDATE = $MYLASTPOSTS->DATE;
+							if($myPARENT == 0)echo '<a href="?board='.$myBOARD.'&amp;thread='.$myID.'"><i class="fa fa-pencil"></i> '.$myID.'</a>';
+							if($myPARENT != 0)echo '<a href="?board='.$myBOARD.'&amp;thread='.$myPARENT.'?goto#'.$myID.'"><i class="fa fa-comment"></i> '.$myID.'</a>';
+						}
+					}else{
+						echo '<h3 class="info">Nothing but dust.  You haven\'t posted anything... yet.</h3>';
+					}
+				echo '</div>
+				';
+													
+													
+													
+													
 													echo '</div><div class="boardposts">';
 													if($boardrules != ''){echo '<div class="rules">'.$boardrules.'</div>';}
 													echo '
-													<hr class="clearboth"></hr>
+													
 													<a class="nav" rel="nofollow" href="?board='.$BOARD.'&amp;area=catalog">[ Catalog ]</a>
-													<hr class="clearboth"></hr>';
+													';
 													$totalREPLIES = 0;
 													if(count($getParentPosts) > 0){
 														// Start board loop
@@ -3647,7 +3644,7 @@ Author URI: http://onebillionwords.com
 																if($THREAD != '')echo ' Thread no. '.$ID.' ';
 																if($LAST == '9999-12-25 23:59:59')echo '<em>sticky</em> ';
 																if($LAST == '0')echo '<em>locked</em> ';
-																if($LAST != '9999-12-25 23:59:59')echo 'Posted '.human_time_diff( get_the_time('U'), current_time($DATE) ) . ' ago by ';
+																if($LAST != '9999-12-25 23:59:59')echo 'Posted '.$DATE.' by ';
 																if($EMAIL != ''){echo get_avatar($EMAIL,32);}
 																if($MODERATOR == 1)echo '<span class="mod">'.$modcode.'</span>';
 																if($MODERATOR != 1)if(strtolower($EMAIL) == 'heaven'){echo '';}else{echo $defaultname;}
@@ -3795,6 +3792,7 @@ Author URI: http://onebillionwords.com
 													$THISPAGE = get_permalink();
 													if($THREAD != '' ){ 
 														echo '
+														<hr class="clear" />
 														<div class="leftmeta">
 															<a rel="nofollow" href="?board='.$BOARD.'">[ Return ]</a>
 															<a rel="nofollow" href="?board='.$BOARD.'&amp;area=catalog">[ Catalog ]</a>
