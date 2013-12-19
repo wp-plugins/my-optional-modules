@@ -122,14 +122,15 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 .on:hover,.off:hover{font-weight:800;color:#000}
 
 
-.boardDisplay{font-size:12px;line-height:13px;display:block;text-shadow:none;width:100%;margin:5px;overflow:hidden}
-.boardDisplay .myposts{clear:both;width:95%;margin:20px auto;display:block;overflow:auto;padding:50px 0}
+.boardDisplay{font-size:12px;line-height:13px;display:block;text-shadow:none;width:800px;margin:5px;overflow:hidden}
+.boardDisplay a{text-decoration:none;border:0}
+.boardDisplay .myposts{clear:both;width:95%;margin:20px auto;display:block;overflow:auto;color:#fff;background-color:#000;border-radius:3px;padding:5px}
 .boardDisplay .myposts a{display:block;margin:5px;float:left}
 .boardDisplay .boardlist div{clear:both;width:95%;overflow-y:auto;overflow-x:hidden;margin:5px auto;padding:0}
 .boardDisplay .omittedinfo{font-weight:200;float:left;clear:left;margin:15px}
 .boardDisplay .boardlist div h3{width:100%;text-indent:15px;margin:0 auto;padding:5px 0}
 .boardDisplay .boardlist div a{float:left;min-width:100px;text-decoration:none;margin:15px}
-.boardDisplay .boardlisting{display:block;height:14px;overflow:hidden;margin-left:150px;width:calc(100%-150px);padding:5px 0}
+.boardDisplay .boardlisting{display:block;height:14px;overflow:hidden;width:95%;padding:5px 0}
 .boardDisplay .active{-webkit-box-shadow:inset 1px 1px 3px 3px rgba(203,46,46,.5);box-shadow:inset 1px 1px 1px 1px rgba(203,46,46,.2);border:1px dotted red}
 .boardDisplay .pages{clear:both;width:100%;text-align:center;margin:0 5px;padding:5px}
 .boardDisplay .pages a.focus{padding:2px}
@@ -152,7 +153,7 @@ span.fileinfo{clear:both;display:block;text-indent:5px;margin:5px 0 8px}
 h3.readonly{text-decoration:none;text-align:center;text-indent:-.12em;font:70px anchor-web-1,anchor-web-2, Impact, sans-serif;font-weight:900;display:inline-block;width:100%;text-shadow:#691616 .01em .01em 0 .02em .02em 0 .03em .03em 0 .04em .04em 0 .05em .05em 0 .06em .06em 0 .07em .07em 0 #691616 .08em .08em 0 .09em .09em 0 .1em .1em 0;margin:50px auto}
 h3.banned{overflow:hidden;text-decoration:none;text-align:center;text-indent:-.12em;font:100px anchor-web-1,anchor-web-2, Impact, sans-serif;font-weight:900;display:inline-block;width:100%;text-shadow:#691616 .01em .01em 0 .02em .02em 0 .03em .03em 0 .04em .04em 0 .05em .05em 0 .06em .06em 0 .07em .07em 0 #691616 .08em .08em 0 .09em .09em 0 .1em .1em 0;margin:0}
 h3.options{text-decoration:none;text-align:center;text-indent:-.12em;font:40px anchor-web-1,anchor-web-2, Impact, sans-serif;font-weight:900;display:inline-block;width:100%;text-shadow:#691616 .01em .01em 0 .02em .02em 0 .03em .03em 0 .04em .04em 0 .05em .05em 0 .06em .06em 0 .07em .07em 0 #691616 .08em .08em 0 .09em .09em 0 .1em .1em 0;margin:0 auto;padding:10px}
-h3.info{font-weight:900;text-align:center;width:100%;margin:10px auto}
+h3.info{font-weight:900;text-align:center;width:100%;margin:20px auto}
 .boardDisplay article{display:block;margin:10px auto;padding:5px}
 .boardDisplay .op{display:inline-block;clear:bothwidth:100%;margin:0 auto;padding:5px 0}
 .boardDisplay .op p,.boardDisplay .reply p{max-width:95%;word-wrap:break-word;display:table;margin:2px 0 2px 15px;padding:5px}
@@ -169,14 +170,18 @@ div.rules p{margin:2px auto}
 .banned input[type=text]{width:300px;clear:both;display:block;margin:5px auto;padding:5px}
 .boardDisplay span.name{font-weight:400}
 .boardDisplay span.trip{font-weight:200}
-.boardDisplay .boardName{text-align:center;font-size:200%;margin:25px auto}
-.boardDisplay .boardDescription{width:100%;text-align:center;margin:0 0 5px;padding:15px 0 0}
-.boardDisplay .topic .submit{width:100%;height:10px;cursor:pointer;text-align:left;clear:both;margin:0;padding:5px}
+.boardDisplay .boardName{text-align:left;font-size:200%;margin:25px auto}
+.boardDisplay .boardDescription{width:100%;text-align:left;margin:0 0 5px;padding:15px 0 0}
+.boardDisplay .submit{height:10px;cursor:pointer;text-align:left;clear:both;margin:0;}
+.boardDisplay .nomber{background-color:#fff;color:#000;padding:3px;border-radius:3px;margin-left:-10px}
+.boardDisplay .submit:hover{background-color:#fff;color:#000}
 .boardDisplay .topic section{clear:both;width:auto;margin:5px auto}
-.boardDisplay .topic input[type=text],.boardDisplay .topic input[type=password]{width:95%;display:block;clear:both;margin:5px}
-.boardDisplay .topic textarea{width:95%;clear:both;display:block;height:150px;margin:5px}
-.boardDisplay .topic label{width:95%;clear:both;text-align:left;margin:5px 0;padding:5px}
-.boardDisplay p.credits{opacity:.6;text-align:center;width:100%;clear:both;display:block;margin:25px auto 15px auto;padding:10px 0}
+.boardDisplay .topic input[type=text],.boardDisplay .topic input[type=password]{border-radius:3px;width:95%;display:block;clear:both;margin:5px;opacity:.8;text-indent:65px}
+.boardDisplay .topic textarea:focus,.boardDisplay .topic input[type=text]:focus,.boardDisplay .topic input[type=password]:focus{opacity:1}
+.boardDisplay .topic .absolute{position:absolute;background-color:#000;z-index:3;margin:0;width:60px;text-align:left}
+.boardDisplay .topic textarea{width:95%;clear:both;display:block;height:150px;margin:5px;opacity:.8;border-radius:3px;text-indent:65px;line-height:155%}
+.boardDisplay .topic label{clear:both;padding:5px}
+.boardDisplay p.credits{opacity:.4;text-align:center;width:100%;clear:both;display:block;margin:25px auto 15px auto;padding:10px 0;color:#fff;background-color:#000;border-radius:3px}
 .boardDisplay p.credits span{width:95%;margin:0 auto;display:block}
 .boardDisplay .toggled{display:block;height:20px;opacity:.5;overflow:hidden}
 .boardDisplay .toggelthis{clear:both;display:block;cursor:pointer;width:3px;height:3px;text-align:center;position:absolute;left:8px;font-weight:500;margin:8px 0 -5px 5px;padding:5px}
@@ -203,7 +208,7 @@ hr.clear{clear:both}
 .controlpaneluser,.controlpanel{display:block;float:right}
 .controlpanel{margin:-35px 0;position:relative;z-index:2;width:auto}
 .controlpaneluser{margin:0 5px;position:relative;z-index:2}
-.boardDisplay span.subject{width:100%;margin:0 0 -18px 0;z-index:2;position:relative;clear:both;display:block;padding:5px 0;text-align:left;text-indent:10px;font-weight:900}
+.boardDisplay span.subject{width:100%;margin:0 0 -18px 0;z-index:2;position:relative;clear:both;display:block;padding:5px 0;text-align:left;text-indent:10px;font-weight:900;background-color: rgba(0, 0, 0, .8)}
 .boardDisplay .imageOP{width:100%;display:block;margin:0;position:relative;z-index:1}
 .boardDisplay .imageREPLY{max-width:150px;display:block;margin:0!important;position:relative;z-index:1}
 .boardDisplay .loadmore{cursor:pointer;width:100%;height:20px;text-align:center;font-weight:500;padding:5px 0;display:block;margin:-6px -1px}
