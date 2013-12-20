@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.4
+Version: 5.4.1
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com 
 */
@@ -3148,14 +3148,6 @@ Author URI: http://onebillionwords.com
 						<input type="submit" name="CREATEBOARD" id="CREATEBOARD" value="Create this board" />
 						</form>
 						<hr class="clear" />
-						<form method="post" class="create" name="banip" action="?area=create">';
-						wp_nonce_field('banip');
-						echo '
-						<input type="text" name="IP" id="IP" placeholder="IP Address to ban" />
-						<input type="text" name="REASON" id="REASON" placeholder="Reason" />
-						<input type="submit" name="BANIP" id="BANIP" value="Ban this IP" />
-						</form>
-						<hr class="clear" />
 						';
 						$getBoards = $wpdb->get_results("SELECT SHORTNAME,NAME FROM $regularboard_boards");
 						if(count($getBoards) > 0){
@@ -3173,19 +3165,13 @@ Author URI: http://onebillionwords.com
 								echo '
 								<input type="submit" name="DELETEBOARD" id="DELETEBOARD" value="Delete" />						
 								</form>';
-							}
-							if(isset($_POST['DELETEBOARD']) && $_REQUEST['DELETETHIS'] != '' ){
+						}
+						if(isset($_POST['DELETEBOARD']) && $_REQUEST['DELETETHIS'] != '' ){
 								$DELETETHIS = esc_sql(myoptionalmodules_sanistripents($_REQUEST['DELETETHIS']));
 								$wpdb->query("DELETE FROM $regularboard_posts  WHERE BOARD     = '".$DELETETHIS."'");
 								$wpdb->query("DELETE FROM $regularboard_boards WHERE SHORTNAME = '".$DELETETHIS."'");
 								echo '<meta http-equiv="refresh" content="0;URL=?area=create">';
-							}
-							if(isset($_POST['BANIP']) && $_REQUEST['BANIP'] != '' ){
-								$BANIP  = esc_sql(myoptionalmodules_sanistripents(ip2long($_REQUEST['IP'])));
-								$REASON = esc_sql(myoptionalmodules_sanistripents($_REQUEST['REASON']));
-								$wpdb->query("INSERT INTO $regularboard_users (ID, IP, PARENT, BANNED, MESSAGE) VALUES ('','$BANIP','','1','$REASON')");
-								echo '<meta http-equiv="refresh" content="0;URL=?area=create">';
-							}							
+						}
 						echo '	
 						<hr class="clear" />
 						</div>';
