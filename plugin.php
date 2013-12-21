@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.4.1
+Version: 5.4.2
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com 
 */
@@ -532,7 +532,7 @@ Author URI: http://onebillionwords.com
 					add_option('mommaincontrol_regularboard_activated',1);
 					if(get_option('mommaincontrol_regularboard_activated') == 1){
 						$regularboardSQLa = "CREATE TABLE $regularboard_boards(
-						ID INT(11) NOT NULL AUTO_INCREMENT , 
+						ID BIGINT(22) NOT NULL AUTO_INCREMENT , 
 						NAME TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						SHORTNAME TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						DESCRIPTION TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
@@ -540,8 +540,8 @@ Author URI: http://onebillionwords.com
 						PRIMARY KEY  (ID)
 						);";
 						$regularboardSQLb = "CREATE TABLE $regularboard_posts(
-						ID INT(11) NOT NULL AUTO_INCREMENT , 
-						PARENT INT(11) NOT NULL ,
+						ID BIGINT(22) NOT NULL AUTO_INCREMENT , 
+						PARENT BIGINT(22) NOT NULL ,
 						IP INT(11) NOT NULL ,
 						DATE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						EMAIL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
@@ -552,12 +552,14 @@ Author URI: http://onebillionwords.com
 						BOARD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						MODERATOR TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						LAST TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+						STICKY TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+						LOCKED TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						PRIMARY KEY  (ID)
 						);";
 						$regularboardSQLc = "CREATE TABLE $regularboard_users(
-						ID INT(11) NOT NULL AUTO_INCREMENT , 
+						ID BIGINT(22) NOT NULL AUTO_INCREMENT , 
 						IP INT(11) NOT NULL,
-						PARENT INT(11) NOT NULL,
+						PARENT BIGINT(22) NOT NULL,
 						BANNED INT(11) NOT NULL,
 						MESSAGE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						PRIMARY KEY  (ID)
@@ -3118,15 +3120,11 @@ Author URI: http://onebillionwords.com
 						}
 						echo '</form></div>';
 						echo '<div class="admin">';
-						$checkTable = $wpdb->get_results("SHOW COLUMNS FROM `$regularboard_posts` LIKE 'URL'");
-						$checkTable = $wpdb->get_results("SHOW COLUMNS FROM `$regularboard_posts` LIKE 'TYPE'");
-						$checkTable = $wpdb->get_results("SHOW COLUMNS FROM `$regularboard_posts` LIKE 'STICKY'");
-						$checkTable = $wpdb->get_results("SHOW COLUMNS FROM `$regularboard_posts` LIKE 'LOCKED'");
-						if(count($checkTable) == 0){
 							echo '
 							<hr />
 							<form method="post" class="left">
-							<input type="submit" name="UPGRADE" id="UPGRADE" value="An upgrade is necessary." />
+							<label for="UPGRADE"> [ Click to Force update tables ]</label>
+							<input type="submit" name="UPGRADE" id="UPGRADE" value="An upgrade is necessary." class="hidden" />
 							</form>
 							<hr />
 							';
@@ -3135,8 +3133,11 @@ Author URI: http://onebillionwords.com
 								$wpdb->query("ALTER TABLE $regularboard_posts ADD TYPE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER URL");
 								$wpdb->query("ALTER TABLE $regularboard_posts ADD STICKY TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER LAST");
 								$wpdb->query("ALTER TABLE $regularboard_posts ADD LOCKED TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER STICKY");
+								$wpdb->query("ALTER TABLE $regularboard_posts CHANGE `ID` `ID` BIGINT( 22 ) NOT NULL AUTO_INCREMENT");
+								$wpdb->query("ALTER TABLE $regularboard_posts CHANGE `PARENT` `PARENT` BIGINT( 22 ) NOT NULL");
+								$wpdb->query("ALTER TABLE $regularboard_users CHANGE `ID` `ID` BIGINT( 22 ) NOT NULL AUTO_INCREMENT");
+								$wpdb->query("ALTER TABLE $regularboard_users CHANGE `PARENT` `PARENT` BIGINT( 22 ) NOT NULL");
 							}
-						}
 						echo '
 						<form method="post" class="create" name="createaboard" action="?area=create">';
 						wp_nonce_field('createaboard');
@@ -3462,6 +3463,8 @@ Author URI: http://onebillionwords.com
 														}
 													}
 													
+														if($boardrules != ''){echo '<hr /><div class="rules">'.$boardrules.'</div><hr />';}
+													
 													// Moderator thread and reply tools (for stickying/locking/deleting/banning via Post Nomber
 													if(current_user_can('manage_options')){
 														echo '
@@ -3549,7 +3552,6 @@ Author URI: http://onebillionwords.com
 													echo '</div>';
 													
 													echo '</div><div class="boardposts">';
-													if($boardrules != ''){echo '<div class="rules">'.$boardrules.'</div>';}
 													$totalREPLIES = 0;
 													if(count($getParentPosts) > 0){
 														// Start board loop
@@ -3793,25 +3795,62 @@ Author URI: http://onebillionwords.com
 				// Return a list of the available boards, and if logged in as admin, a link to the add/edit/unban area.
 				}else{
 					$getBoards = $wpdb->get_results("SELECT SHORTNAME,NAME,DESCRIPTION FROM $regularboard_boards ");
-					echo '
-					<div class="boardlist">
-						<div>';
+					echo '<div class="boardlist">';
 						if($ISMODERATOR === true){
-							echo '<a href="?area=create"> >>admin</a>';
+							echo '<a href="?area=create">Moderate your boards</a>
+							<hr />';
+							
 						}
+					echo '
+					<span class="right">Threads</span>
+					<span class="right">&mdash;</span>
+					<span class="right">Replies</span>
+					<em>Board / latest thread</em>
+					<hr />';
 					if(count($getBoards) > 0){
 						foreach($getBoards as $gotBoards){
 							$BOARDNAME = esc_sql(myoptionalmodules_sanistripents($gotBoards->SHORTNAME));
 							$BOARDLONG = esc_sql(myoptionalmodules_sanistripents($gotBoards->NAME));
 							$BOARDDESC = esc_sql(myoptionalmodules_sanistripents($gotBoards->DESCRIPTION));
-							$getBoardPostsPosts  = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' ");
-							$getBoardPostsTopics = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT = '0'");
+							if($BOARDDESC != '')$BOARDDESC = ' &mdash; <em>'.$BOARDDESC.'</em>';
+							$countPosts  = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT = '0'");
+							$countReplies  = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT != '0'");
+							$count = 0;
+							$repls = 0;
+							foreach($countPosts as $counted){$count++;}
+							foreach($countReplies as $replied){$repls++;}
+							$getBoardPostsTopics = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT = '0' LIMIT 1");
 							echo '
-							<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDLONG.'</a>';
+							<section>
+							<span class="right">'.$count.'</span>
+							<span class="right">&mdash;</span>
+							<span class="right">'.$repls.'</span>
+							<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDLONG.'</a>'.$BOARDDESC.'<br />';
+							foreach($getBoardPostsTopics as $posts){
+								$subject = $posts->SUBJECT;
+								if($subject == '')$subject = '<em>no subject</em>';
+								$id = $posts->ID;
+								echo '<em>latest thread</em> &mdash; <a rel="nofollow" href="?board='.$BOARDNAME.'&amp;thread='.$id.'">'.$subject.'</a>';
+							}
+							echo '
+							</section>';
 						}
 					}
+					$countall  = $wpdb->get_results("SELECT ID FROM $regularboard_posts");
+					$countips  = $wpdb->get_results("SELECT Distinct IP FROM $regularboard_posts");
 					echo '
-						</div>
+					<hr />';
+					if($posting == 1) $postingm = '<em>posting enabled</em>';
+					if($posting == 0) $postingm = '<em>read-only</em>';
+					$allCounted = 0;
+					$ipCounted = 0;
+					foreach($countall as $countAll){$allCounted++;}
+					foreach($countips as $countIPS){$ipCounted++;}
+					echo '
+					<span class="right">Total posts: '.$allCounted.'</span> 
+					<span class="right"> &mdash; </span>
+					<span class="right">Unique posters: '.$ipCounted.'</span> 
+					<span class="left">Board status: '.$postingm.';
 					</div>	
 				</div>';
 				}

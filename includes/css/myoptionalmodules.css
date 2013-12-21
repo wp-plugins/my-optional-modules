@@ -122,14 +122,13 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 .on:hover,.off:hover{font-weight:800;color:#000}
 
 
-.boardDisplay{font-size:12px;line-height:13px;display:block;text-shadow:none;width:800px;margin:5px;overflow:hidden}
+.boardDisplay{font-size:12px;line-height:13px;display:block;text-shadow:none;max-width:800px;margin:5px;overflow:hidden}
 .boardDisplay a{text-decoration:none;border:0}
 .boardDisplay .myposts{clear:both;width:95%;margin:20px auto;display:block;overflow:auto;color:#fff;background-color:#000;border-radius:3px;padding:5px}
 .boardDisplay .myposts a{display:block;margin:5px;float:left}
-.boardDisplay .boardlist div{clear:both;width:95%;overflow-y:auto;overflow-x:hidden;margin:5px auto;padding:0}
+.boardDisplay .boardlist{clear:both;width:95%;margin:5px auto;padding:0}
+.boardDisplay .boardlist section{clear:both;margin:15px 0}
 .boardDisplay .omittedinfo{font-weight:200;float:left;clear:left;margin:15px}
-.boardDisplay .boardlist div h3{width:100%;text-indent:15px;margin:0 auto;padding:5px 0}
-.boardDisplay .boardlist div a{float:left;min-width:100px;text-decoration:none;margin:15px}
 .boardDisplay .boardlisting{display:block;height:14px;overflow:hidden;width:95%;padding:5px 0}
 .boardDisplay .active{-webkit-box-shadow:inset 1px 1px 3px 3px rgba(203,46,46,.5);box-shadow:inset 1px 1px 1px 1px rgba(203,46,46,.2);border:1px dotted red}
 .boardDisplay .pages{clear:both;width:100%;text-align:center;margin:0 5px;padding:5px}
@@ -144,7 +143,7 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 .textleft{text-align:left}
 .boardDisplay .boardlisting a{text-decoration:none;margin:5px}
 .boardDisplay .error{width:100%;text-align:center}
-.boardDisplay .reply{width:100%;text-align:center;margin:-5px auto 5px}
+.boardDisplay .reply{width:100%;text-align:left;margin:-5px auto 5px}
 .boardDisplay .threadinformation{clear:both;text-align:right;width:95%;display:block;margin:-15px auto 0}
 .boardDisplay input[type=checkbox]{float:left;margin:5px 5px 0}
 span.fileinfo{clear:both;display:block;text-indent:5px;margin:5px 0 8px}
@@ -170,8 +169,8 @@ div.rules p{margin:2px auto}
 .banned input[type=text]{width:300px;clear:both;display:block;margin:5px auto;padding:5px}
 .boardDisplay span.name{font-weight:400}
 .boardDisplay span.trip{font-weight:200}
-.boardDisplay .boardName{text-align:left;font-size:200%;margin:25px auto}
-.boardDisplay .boardDescription{width:100%;text-align:left;margin:0 0 5px;padding:15px 0 0}
+.boardDisplay .boardName{text-align:left;font-size:200%;margin:5px auto}
+.boardDisplay .boardDescription{width:100%;text-align:left;margin:0 0 5px;padding:0;opacity:.8}
 .boardDisplay .submit{height:10px;cursor:pointer;text-align:left;clear:both;margin:0;}
 .boardDisplay .nomber{background-color:#fff;color:#000;padding:3px;border-radius:3px;margin-left:-10px}
 .boardDisplay .submit:hover{background-color:#fff;color:#000}
