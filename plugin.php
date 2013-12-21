@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.4.2
+Version: 5.4.3
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com 
 */
@@ -3053,9 +3053,14 @@ Author URI: http://onebillionwords.com
 					'threadsper' => '15',
 					'enableurl' => '1',
 					'enablerep' => '0',
+					'enableemail' => '1',
 					'defaultname' => 'anonymous',
 					'requirelogged' => '0',
 					'maxreplies' => '500',
+					'showboards' => '1',
+					'board' => '',
+					'loggedonly' => '',
+					'lock' => '',
 					'credits' => 'Trademarks/comments/copyrights owned by their respectived parties/Posters'
 				), $atts)
 			);	
@@ -3063,7 +3068,13 @@ Author URI: http://onebillionwords.com
 			global $purifier,$wpdb,$wp,$post,$ipaddress;
 			if(current_user_can('manage_options'))$ISMODERATOR = true;
 			$current_timestamp   = date('Y-m-d H:i:s');
-			$maxreplies          = $purifier->purify($maxreplies);
+			$requirelogged       = intval($requirelogged);
+			$showboards          = intval($showboards);
+			$maxreplies          = intval($maxreplies);
+			$enableemail         = intval($enableemail);
+			$lock                = $purifier->purify($lock);
+			$board               = $purifier->purify($board);
+			$loggedonly          = $purifier->purify($loggedonly);
 			$credits             = $purifier->purify($credits);
 			$nothreads           = $purifier->purify($nothreads);
 			$noboard             = $purifier->purify($noboard);
@@ -3084,7 +3095,30 @@ Author URI: http://onebillionwords.com
 				$theIP_us32str = myoptionalmodules_sanistripents(sprintf("%u",$theIP_s32int));
 				$checkThisIP   = myoptionalmodules_sanistripents($theIP);
 				$QUERY         = myoptionalmodules_sanistripents($_SERVER['QUERY_STRING']);
-				$BOARD         = esc_sql(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['board'])));
+				
+				if($board == '')$BOARD = esc_sql(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['board'])));
+				if($board != '')$BOARD = $board;
+				
+				
+				if($loggedonly != ''){
+					$loggedonly = array($loggedonly);
+					foreach($loggedonly as $LOGGEDONLY){
+						$LOGGEDONLY = explode(',',$LOGGEDONLY);
+						if(in_array($BOARD,$LOGGEDONLY)){
+							$requirelogged = 1;
+						}
+					}
+				}
+				if($lock != ''){
+					$lock = array($lock);
+					foreach($lock as $LOCK);
+					$LOCK = explode(',',$LOCK);
+					if(in_array($BOARD,$LOCK)){
+						$posting = 0;
+					}
+				}
+				
+				
 				$AREA          = esc_sql(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['area'])));
 				$THREAD        = intval($_GET['thread']);
 				$BOARD         = strtolower($BOARD);
@@ -3220,21 +3254,25 @@ Author URI: http://onebillionwords.com
 				if($THREAD != '')$countrepresults = $wpdb->get_results("SELECT ID from $regularboard_posts WHERE PARENT = '".$THREAD."'");
 				if($THREAD != '')$THREADREPLIES = count($countrepresults);
 				if($THREAD != '')$THREADIMGS = count($countimgresults);
+				
 				// Board listing
 				echo '<span class="boardlisting textright">';
-				if(count($getBoards) > 0){
-					echo '[';
-					foreach($getBoards as $gotBoards){
-						$BOARDNAME = myoptionalmodules_sanistripents($gotBoards->SHORTNAME);
-						echo '<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDNAME.'</a>';
+				if($showboards == 1){
+					if(count($getBoards) > 0){
+						echo '[';
+						foreach($getBoards as $gotBoards){
+							$BOARDNAME = myoptionalmodules_sanistripents($gotBoards->SHORTNAME);
+							echo '<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDNAME.'</a>';
+						}
+						echo ']';
 					}
-					echo ']';
-				}
 				echo '[<a href="'.get_permalink().'">Home</a>]';
+				}
 				if($ISMODERATOR === true){
 					echo '[<a href="?area=create">admin</a>]';
 				}
 				echo '</span>';
+				
 				
 				// Determine time between between the last post and the flood protection time amount
 				if(count($getLastPost) > 0){
@@ -3378,12 +3416,16 @@ Author URI: http://onebillionwords.com
 														$enteredSUBJECT = substr($enteredSUBJECT,0,$maxtext);
 														$getDuplicate = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE COMMENT = '".$checkCOMMENT."' AND BOARD = '".$BOARD."' LIMIT 1");
 														if(count($getDuplicate) == 0){
-															if(filter_var($_REQUEST['EMAIL'],FILTER_VALIDATE_EMAIL)){
-																$enteredEMAIL = esc_sql(myoptionalmodules_sanistripents(($_REQUEST['EMAIL'])));
+															if($enableemail == 1){
+																if(filter_var($_REQUEST['EMAIL'],FILTER_VALIDATE_EMAIL)){
+																	$enteredEMAIL = esc_sql(myoptionalmodules_sanistripents(($_REQUEST['EMAIL'])));
+																}else{
+																	$enteredEMAIL = esc_sql(myoptionalmodules_sanistripents(myoptionalmodules_tripcode(($_REQUEST['EMAIL']))));
+																}
+																$enteredEMAIL = substr($enteredEMAIL,0,$maxtext);
 															}else{
-																$enteredEMAIL = esc_sql(myoptionalmodules_sanistripents(myoptionalmodules_tripcode(($_REQUEST['EMAIL']))));
+																$enteredEMAIL = '';
 															}
-															$enteredEMAIL = substr($enteredEMAIL,0,$maxtext);
 															if($ISMODERATOR === true){
 																$wpdb->query("INSERT INTO $regularboard_posts (ID, PARENT, IP, DATE, EMAIL, SUBJECT, COMMENT, URL, TYPE, BOARD, MODERATOR, LAST, STICKY, LOCKED) VALUES ('','$enteredPARENT','$theIP_us32str','$current_timestamp','$enteredEMAIL','$enteredSUBJECT','$enteredCOMMENT','$URL','$TYPE','$BOARD','1','$current_timestamp','0','0')") ;
 															}else{
@@ -3450,9 +3492,9 @@ Author URI: http://onebillionwords.com
 																	echo '<input type="hidden" value="" name="LOGIN" />';
 																	echo '<input type="hidden" value="" name="USERNAME" />';
 																	echo '<input type="hidden" value="" name="PASSWORD" />';
-																	echo '<section><label class="absolute" for="EMAIL">E-mail</label><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="E-mail" /></section>';
-																	if($enableurl == 1 && $THREAD == ''){echo '<section><label class="absolute" for="URL"><i class="fa fa-camera-retro"></i> URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)" /></section>';}
-																	if($enablerep == 1 && $THREAD != ''){echo '<section><label class="absolute" for="URL"><i class="fa fa-camera-retro"></i> URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)" /></section>';}
+																	if($enableemail == 1)echo '<section><label class="absolute" for="EMAIL">E-mail</label><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="E-mail" /></section>';
+																	if($enableurl == 1 && $THREAD == '')echo '<section><label class="absolute" for="URL"><i class="fa fa-camera-retro"></i> URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)" /></section>';
+																	if($enablerep == 1 && $THREAD != '')echo '<section><label class="absolute" for="URL"><i class="fa fa-camera-retro"></i> URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)" /></section>';
 																	echo '<section><label class="absolute" for="SUBJECT">Subject</label><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section>';
 																	echo '<section><label class="absolute" for="COMMENT">Comment</label><textarea id="COMMENT" maxlength="'.$maxbody.'" name="COMMENT" placeholder="Comment"></textarea></section>';
 																	echo '<section class="smiley"><input type="checkbox" name="SMILEY" value="smiles"><span>Check me if you\'re human.</span></section>';
@@ -3824,13 +3866,31 @@ Author URI: http://onebillionwords.com
 							<section>
 							<span class="right">'.$count.'</span>
 							<span class="right">&mdash;</span>
-							<span class="right">'.$repls.'</span>
+							<span class="right">'.$repls.'</span>';
+
+							if($lock != '' || $loggedonly != ''){
+								if($lock != ''){
+									if(in_array($BOARDNAME,$LOCK)){
+										echo '<i class="fa fa-lock"></i> ';
+									}
+								}
+								if($loggedonly != ''){
+									if(in_array($BOARDNAME,$LOGGEDONLY)){
+										echo '<i class="fa fa-users"></i> ';
+									}
+								}
+							}			
+
+							echo '
 							<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDLONG.'</a>'.$BOARDDESC.'<br />';
-							foreach($getBoardPostsTopics as $posts){
-								$subject = $posts->SUBJECT;
-								if($subject == '')$subject = '<em>no subject</em>';
-								$id = $posts->ID;
-								echo '<em>latest thread</em> &mdash; <a rel="nofollow" href="?board='.$BOARDNAME.'&amp;thread='.$id.'">'.$subject.'</a>';
+
+							if($membersonly != 1){
+								foreach($getBoardPostsTopics as $posts){
+									$subject = $posts->SUBJECT;
+									if($subject == '')$subject = '<em>no subject</em>';
+									$id = $posts->ID;
+									echo '<em>latest thread</em> &mdash; <a rel="nofollow" href="?board='.$BOARDNAME.'&amp;thread='.$id.'">'.$subject.'</a>';
+								}
 							}
 							echo '
 							</section>';
