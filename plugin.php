@@ -3040,38 +3040,51 @@ Author URI: http://onebillionwords.com
 
 			extract(
 				shortcode_atts(array(
-					'timebetween' => '0',
-					'cutoff' => '500',
-					'maxbody' => '1800',
-					'maxtext' => '75',
-					'nothreads' => 'No threads to display',
-					'noboard' => 'Board does not exist',
+					'boardrules'         => '',
+					'timebetween'   => '0',
+					'cutoff'        => '500',
+					'maxbody'       => '1800',
+					'maxtext'       => '75',
+					'nothreads'     => 'No threads to display',
+					'noboard'       => 'Board does not exist',
 					'bannedmessage' => 'YOU ARE BANNED',
 					'postedmessage' => 'POSTED!!!',
-					'modcode' => '##MOD',
-					'posting' => '1',
-					'threadsper' => '15',
-					'enableurl' => '1',
-					'enablerep' => '0',
-					'enableemail' => '1',
-					'defaultname' => 'anonymous',
+					'modcode'       => '##MOD',
+					'posting'       => '1',
+					'threadsper'    => '15',
+					'enableurl'     => '1',
+					'enablerep'     => '0',
+					'enableemail'   => '1',
+					'defaultname'   => 'anonymous',
 					'requirelogged' => '0',
-					'maxreplies' => '500',
-					'showboards' => '1',
-					'board' => '',
-					'loggedonly' => '',
-					'lock' => '',
-					'credits' => 'Trademarks/comments/copyrights owned by their respectived parties/Posters'
+					'maxreplies'    => '500',
+					'showboards'    => '1',
+					'board'         => '',
+					'loggedonly'    => '',
+					'lock'          => '',
+					'userposts'     => '10',
+					'sfw'           => '',
+					'nsfw'          => '',
+					'boardform'     => 'left',
+					'boardposts'    => 'right',
+					'clear'         => '0',
+					'credits'       => 'Trademarks/comments/copyrights owned by their respectived parties/Posters'
 				), $atts)
 			);	
 			
 			global $purifier,$wpdb,$wp,$post,$ipaddress;
 			if(current_user_can('manage_options'))$ISMODERATOR = true;
 			$current_timestamp   = date('Y-m-d H:i:s');
+			$userposts           = intval($userposts);
 			$requirelogged       = intval($requirelogged);
 			$showboards          = intval($showboards);
 			$maxreplies          = intval($maxreplies);
 			$enableemail         = intval($enableemail);
+			$sfw                 = $purifier->purify($sfw);
+			$nsfw                = $purifier->purify($nsfw);
+			$sfw                 = array($sfw);
+			$nsfw                = array($nsfw);
+			$boardrules          = esc_url($boardrules);
 			$lock                = $purifier->purify($lock);
 			$board               = $purifier->purify($board);
 			$loggedonly          = $purifier->purify($loggedonly);
@@ -3099,7 +3112,6 @@ Author URI: http://onebillionwords.com
 				if($board == '')$BOARD = esc_sql(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['board'])));
 				if($board != '')$BOARD = $board;
 				
-				
 				if($loggedonly != ''){
 					$loggedonly = array($loggedonly);
 					foreach($loggedonly as $LOGGEDONLY){
@@ -3118,12 +3130,19 @@ Author URI: http://onebillionwords.com
 					}
 				}
 				
-				
 				$AREA          = esc_sql(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['area'])));
 				$THREAD        = intval($_GET['thread']);
 				$BOARD         = strtolower($BOARD);
 				$AREA          = strtolower($AREA);
 
+				$isSFW = 0;
+				$isNSFW = 0;
+				$sfwnsfw = '';
+				if($sfw != '')if(in_array($BOARD,$sfw))$isSFW = 1;
+				if($nsfw != '')if(in_array($BOARD,$nsfw))$isNSFW = 1;
+				if($isSFW == 1) $sfwnsfw = ' >> This board is explicitly SFW.';
+				if($isNSFW == 1) $sfwnsfw = ' >> This board is explicitly NSFW.';
+				
 				// Admin
 				if($AREA == 'create'){
 					if($ISMODERATOR === true){
@@ -3236,38 +3255,46 @@ Author URI: http://onebillionwords.com
 			// Board view
 			elseif($BOARD != ''){
 				// Get Results
-				$getBoards = $wpdb->get_results("SELECT SHORTNAME FROM $regularboard_boards ORDER BY SHORTNAME ASC");
-				$getCurrentBoard = $wpdb->get_results("SELECT ID,NAME,SHORTNAME,DESCRIPTION,RULES FROM $regularboard_boards WHERE SHORTNAME = '".$BOARD."' LIMIT 1");
-				$getUser = $wpdb->get_results("SELECT ID,IP,PARENT,BANNED,MESSAGE FROM $regularboard_users WHERE IP = '".$theIP_us32str."' AND BANNED = 1 LIMIT 1");
-				if($THREAD == '')$postsperpage = intval($threadsper);
-				if($THREAD == '')$targetpage = '?board='.$BOARD;
-				if($THREAD == '')$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0");
-				if($THREAD == '')$totalpages = count($countpages);
-				if($THREAD == '')$results = mysql_escape_string($_GET['results']);
-				if($THREAD == '')if($results){$start = ($results - 1) * $postsperpage;}else{$start = 0;}
-				if($THREAD == '')$getParentPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0 ORDER BY STICKY DESC, LAST DESC LIMIT $start,$postsperpage");
-				if($THREAD != '')$getParentPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND ID = '".$THREAD."' AND PARENT = 0 LIMIT 1");
-				if($THREAD != '')$countParentReplies = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = '".$THREAD."'");
-				$getLastPost = $wpdb->get_results("SELECT IP,DATE,ID,MODERATOR FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' ORDER BY ID DESC LIMIT 1");
-				$getLastPosts = $wpdb->get_results("SELECT ID,PARENT,BOARD,COMMENT,SUBJECT,TYPE,URL,DATE FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' ORDER BY ID DESC LIMIT 10");
-				if($THREAD != '')$countimgresults = $wpdb->get_results("SELECT ID from $regularboard_posts WHERE TYPE = 'image' AND PARENT = '".$THREAD."'");
-				if($THREAD != '')$countrepresults = $wpdb->get_results("SELECT ID from $regularboard_posts WHERE PARENT = '".$THREAD."'");
-				if($THREAD != '')$THREADREPLIES = count($countrepresults);
-				if($THREAD != '')$THREADIMGS = count($countimgresults);
+				
+				$getBoards = $wpdb->get_results("SELECT * FROM $regularboard_boards ORDER BY SHORTNAME ASC");
+				$getCurrentBoard = $wpdb->get_results("SELECT * FROM $regularboard_boards WHERE SHORTNAME = '".$BOARD."' LIMIT 1");
+				$getUser = $wpdb->get_results("SELECT * FROM $regularboard_users WHERE IP = '".$theIP_us32str."' AND BANNED = 1 LIMIT 1");
+				$getLastPost = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' ORDER BY ID DESC LIMIT 1");
+				if($userposts > 0)$getLastPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' ORDER BY ID DESC LIMIT ".$userposts."");
+				
+				if($THREAD == ''){
+					$postsperpage = intval($threadsper);
+					$targetpage = '?board='.$BOARD;
+					$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0");
+					$totalpages = count($countpages);
+					$results = mysql_escape_string($_GET['results']);
+					if($results){$start = ($results - 1) * $postsperpage;}else{$start = 0;}
+					$getParentPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0 ORDER BY STICKY DESC, LAST DESC LIMIT $start,$postsperpage");
+				}
+				
+				if($THREAD != ''){
+					$getParentPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND ID = '".$THREAD."' AND PARENT = 0 LIMIT 1");
+					$countParentReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = '".$THREAD."'");
+					$THREADREPLIES = 0;
+					$THREADIMGS = 0;
+				}
 				
 				// Board listing
 				echo '<span class="boardlisting textright">';
-				if($showboards == 1){
-					if(count($getBoards) > 0){
-						echo '[';
-						foreach($getBoards as $gotBoards){
-							$BOARDNAME = myoptionalmodules_sanistripents($gotBoards->SHORTNAME);
-							echo '<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDNAME.'</a>';
+				if($board == ''){
+					if($showboards == 1){
+						if(count($getBoards) > 0){
+							echo '[';
+							foreach($getBoards as $gotBoards){
+								$BOARDNAME = myoptionalmodules_sanistripents($gotBoards->SHORTNAME);
+								echo '<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDNAME.'</a>';
+							}
+							echo ']';
 						}
-						echo ']';
+					echo '[<a href="'.get_permalink().'">home</a>]';
 					}
-				echo '[<a href="'.get_permalink().'">Home</a>]';
 				}
+				if($boardrules != '')echo '[<a href="'.$boardrules.'">rules</a>]';
 				if($ISMODERATOR === true){
 					echo '[<a href="?area=create">admin</a>]';
 				}
@@ -3379,6 +3406,8 @@ Author URI: http://onebillionwords.com
 															$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 															curl_close($ch);
 															if($cleanURL != ''){
+																if(!filter_var($cleanURL,FILTER_VALIDATE_URL))$cleanURL = '';
+																if(filter_var($cleanURL,FILTER_VALIDATE_URL))$cleanURL = $cleanURL;
 																$path_info = pathinfo($cleanURL);
 																if(strpos(strtolower($cleanURL),'youtu.be/')){
 																	$VIDEOID = substr($cleanURL,16);
@@ -3400,10 +3429,14 @@ Author URI: http://onebillionwords.com
 																		$URL = $cleanURL;
 																	}
 																}else{
+																	$TYPE = 'URL';
+																	$URL = $cleanURL;
+																}
+															}
+																else{
 																	$TYPE = '';
 																	$URL = '';
 																}
-															}
 														}
 														if($THREAD != '')$enteredPARENT = intval($THREAD);
 														if($THREAD == '')$enteredPARENT = 0;
@@ -3457,9 +3490,10 @@ Author URI: http://onebillionwords.com
 										}										
 										if(!isset($_POST['FORMSUBMIT'])){
 												echo '<h3 class="boardName">'.$boardName.'</h3>';
+												echo $sfwnsfw;
 												echo '<p class="boardDescription">'.$boardDescription.'</p>';
 												if($THREAD != ''){echo '<p class="reply">Posting Mode: Reply <a rel="nofollow" href="?board='.$BOARD.'">[Return]</a></p>';}
-												echo '<div class="mainboard"><div class="boardform">';
+												echo '<div class="mainboard"><div class="boardform '.$boardform.' clear'.intval($clear).'">';
 												if(filter_var($checkThisIP,FILTER_VALIDATE_IP)){ $IPPASS = true; }
 												elseif(filter_var($checkThisIP,FILTER_VALIDATE_IP,FILTER_FLAG_IPV6)){ $IPPASS = true; }
 												else{ $IPPASS = false;}
@@ -3493,8 +3527,8 @@ Author URI: http://onebillionwords.com
 																	echo '<input type="hidden" value="" name="USERNAME" />';
 																	echo '<input type="hidden" value="" name="PASSWORD" />';
 																	if($enableemail == 1)echo '<section><label class="absolute" for="EMAIL">E-mail</label><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="E-mail" /></section>';
-																	if($enableurl == 1 && $THREAD == '')echo '<section><label class="absolute" for="URL"><i class="fa fa-camera-retro"></i> URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)" /></section>';
-																	if($enablerep == 1 && $THREAD != '')echo '<section><label class="absolute" for="URL"><i class="fa fa-camera-retro"></i> URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)" /></section>';
+																	if($enableurl == 1 && $THREAD == '')echo '<section><label class="absolute" for="URL">URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)(http://)" /></section>';
+																	if($enablerep == 1 && $THREAD != '')echo '<section><label class="absolute" for="URL">URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)(http://)" /></section>';
 																	echo '<section><label class="absolute" for="SUBJECT">Subject</label><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section>';
 																	echo '<section><label class="absolute" for="COMMENT">Comment</label><textarea id="COMMENT" maxlength="'.$maxbody.'" name="COMMENT" placeholder="Comment"></textarea></section>';
 																	echo '<section class="smiley"><input type="checkbox" name="SMILEY" value="smiles"><span>Check me if you\'re human.</span></section>';
@@ -3573,33 +3607,37 @@ Author URI: http://onebillionwords.com
 													}
 
 													// User's latest posts
-													echo '
-													<div class="myposts">My posts<hr />';
-														if(count($getLastPosts) > 0){
-															foreach($getLastPosts as $MYLASTPOSTS){
-																$myID = $MYLASTPOSTS->ID;
-																$myPARENT = $MYLASTPOSTS->PARENT;
-																$myBOARD = $MYLASTPOSTS->BOARD;
-																$myCOMMENT = $MYLASTPOSTS->COMMENT;
-																$mySUBJECT = $MYLASTPOSTS->SUBJECT;
-																$myTYPE = $MYLASTPOSTS->TYPE;
-																$myURL = $MYLASTPOSTS->URL;
-																$myDATE = $MYLASTPOSTS->DATE;
-																if($myPARENT == 0)echo '<a href="?board='.$myBOARD.'&amp;thread='.$myID.'"><i class="fa fa-pencil"></i> '.$myID.'</a>';
-																if($myPARENT != 0)echo '<a href="?board='.$myBOARD.'&amp;thread='.$myPARENT.'?goto#'.$myID.'"><i class="fa fa-comment"></i> '.$myID.'</a>';
+													if($userposts > 0){
+														echo '
+														<div class="myposts">My '.intval($userposts).' latest posts<hr />';
+															if(count($getLastPosts) > 0){
+																foreach($getLastPosts as $MYLASTPOSTS){
+																	$myID = $MYLASTPOSTS->ID;
+																	$myPARENT = $MYLASTPOSTS->PARENT;
+																	$myBOARD = $MYLASTPOSTS->BOARD;
+																	$myCOMMENT = $MYLASTPOSTS->COMMENT;
+																	$mySUBJECT = $MYLASTPOSTS->SUBJECT;
+																	$myTYPE = $MYLASTPOSTS->TYPE;
+																	$myURL = $MYLASTPOSTS->URL;
+																	$myDATE = $MYLASTPOSTS->DATE;
+																	if($myPARENT == 0)echo '<a href="?board='.$myBOARD.'&amp;thread='.$myID.'"><i class="fa fa-pencil"></i> '.$myID.'</a>';
+																	if($myPARENT != 0)echo '<a href="?board='.$myBOARD.'&amp;thread='.$myPARENT.'?goto#'.$myID.'"><i class="fa fa-comment"></i> '.$myID.'</a>';
+																}
+															}else{
+																echo '<h3 class="info">Nothing but dust.  You haven\'t posted anything... yet.</h3>';
 															}
-														}else{
-															echo '<h3 class="info">Nothing but dust.  You haven\'t posted anything... yet.</h3>';
-														}
-													echo '</div>';
+														echo '</div>';
+													}
 													
-													echo '</div><div class="boardposts">';
+													echo '</div><div class="boardposts '.$boardposts.' clear'.intval($clear).'">';
 													$totalREPLIES = 0;
 													if(count($getParentPosts) > 0){
 														// Start board loop
 														foreach($getParentPosts as $parentPosts){
-															$ID = $parentPosts->ID;
-															$IAMOP = $parentPosts->IP;
+															$ID = intval($parentPosts->ID);
+															$PARENT = intval($parentPosts->PARENT);
+															$IP = intval($parentPosts->IP);
+															$IAMOP = intval($parentPosts->IP);
 															$getReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."'");
 															$totalREPLIES = count($getReplies);
 															if($totalREPLIES >= 4)$totalREPLYS = $totalREPLIES - 3;
@@ -3613,8 +3651,6 @@ Author URI: http://onebillionwords.com
 															if($TYPE == 'image')$THREADIMGS++;
 															$URL = $purifier->purify($parentPosts->URL);
 															$MODERATOR = $purifier->purify($parentPosts->MODERATOR);
-															$PARENT = $purifier->purify($parentPosts->PARENT);
-															$IP = $purifier->purify($parentPosts->IP);
 															$DATE = $purifier->purify($parentPosts->DATE);
 															$EMAIL = $purifier->purify($parentPosts->EMAIL);
 															$SUBJECT = $purifier->purify($parentPosts->SUBJECT);
@@ -3677,6 +3713,7 @@ Author URI: http://onebillionwords.com
 																if($MODERATOR != 1)if(strtolower($EMAIL) == 'heaven'){echo '';}else{echo $defaultname;}
 																if(filter_var($EMAIL,FILTER_VALIDATE_EMAIL)){}else{echo ' '.$EMAIL;}										
 																if($THREAD == '')echo ' [<a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">Reply</a>] ('.count($getReplies).')';
+																if($TYPE == 'URL' && $URL != '')echo ' [ <a href="'.$purifier->purify($URL).'">Attached link</a> ] ';
 																echo '
 																</div>';
 																// Thread (parent) comment 
@@ -3697,6 +3734,7 @@ Author URI: http://onebillionwords.com
 																if(count($gotReplies) > 0){
 																	foreach($gotReplies as $REPLIES){
 																		$TYPE = $purifier->purify($REPLIES->TYPE);
+																		if($TYPE == 'image')$THREADIMGS++;
 																		$URL = $purifier->purify($REPLIES->URL);
 																		$MODERATOR = $purifier->purify(intval($REPLIES->MODERATOR));
 																		$ID = $purifier->purify(intval($REPLIES->ID));
@@ -3739,6 +3777,7 @@ Author URI: http://onebillionwords.com
 																			echo '<meta http-equiv="refresh" content="3;URL= '.$REDIRECTO.'">';
 																		}else{
 																			// Thread children (replies)
+																			$THREADREPLIES++;
 																			echo '<div class="reply" id="'.$ID.'">';
 																			echo '<div class="replycontent">';
 																			echo '
@@ -3780,6 +3819,7 @@ Author URI: http://onebillionwords.com
 																				}
 																			echo '</div>';
 																			}
+																			if($TYPE == 'URL' && $URL != '')echo ' [ <a href="'.$purifier->purify($URL).'">Attached link</a> ] ';
 																			if($URL != '' && $TYPE == 'image'){
 																				echo $purifier->purify('<a href="'.$URL.'"><img class="imageREPLY" width="150" src="'.$URL.'"/></a>');
 																			}elseif($TYPE == 'video' && $URL != ''){

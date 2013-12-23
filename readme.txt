@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: 4chan,gravatar,youtube,DNSBL,akismet,ipv4,ipv6,htmlpurifier,tripcode,sage,chan,capcodes,board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.8
 Tested up to: 3.8
-Stable tag: 5.4.3
+Stable tag: 5.4.4
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -32,7 +32,6 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Post Voting: Add a vote box to each post via template function. (display top posts with a shortcode).  
 
 = Regular Board = 
-* 4-chan clone
 * Can set board to private (logged in users only)
 * Supports Gravatar
 * Supports Youtube/Youtu.be/image embedding (via URL)
@@ -79,11 +78,17 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= .5.4.3 =
-* (addition) Regular Board \ (board="") designate a specific board to show (shortname)
-* (addition) Regular Board \ (showboards="0/1") disable board navigation list
-* (addition) Regular Board \ (enableemail="0/1") enable/disable email field (enabled by default)
-* (addition) Regular Board \ (loggedonly="") comma separated list of boards (shortname) that are only viewable by logged in users
+= .5.4.4 =
+* Regular Board:
+* (addition) regular URLs now accepted in URL, validated with FILTER_VALIDATE_URL beforehand (for all types)
+* (addition) userposts="10" / how many of the users latest posts to show (default is 10).  Set to "0" to disable recent user posts altogether.
+* (addition) sfw=""/nsfw="" / designate a comma separated list of boards (by shortname) that are explicitly sfw/nsfw.
+* (addition) boardrules="" / URL to a page that houses all of the rules for your boards.  (default is blank).
+* (addition) boardform="" / boardposts="" / left or right.  Floats the individual elements to the left or right. (defaults: boardform="left",boardposts="right")
+* (addition) clear="1/0" / whether or not to clear the form and board content and have them take up the width of the div.  default is 0 (they will be floated, taking up only 45% of the div).  Will override left/right if set to 1 (for obvious reasons).
+* (change) if board is preset to display only a single board, showboards will be disabled (since we're only showing one board with the shortcode, board links are now useless, so we won't show them).
+* (update) fewer database calls
+* (update) when viewing board front pages, and 'click to load' button is pressed (to load more replies inline), button is hidden after being pressed.
 
 = .5 =
 * HTMLPurifier (added)
