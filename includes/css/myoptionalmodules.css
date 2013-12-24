@@ -204,24 +204,23 @@ div.momnavbar #navsearchform i,.banned textarea,.banned input[type=submit],.bann
 .momnavbar_pagesup a,.momnavbar_pagesdown a{text-decoration:none;padding:3px}
 div.momlistcategories span,.right{float:right}
 .boardDisplay .pages a,.boardDisplay .reportdelete input,.op i{margin:5px}
-.boardDisplay div.op{margin:10px auto 85px;display:block}
-hr.clear{clear:both}
-.controlpaneluser,.controlpanel{display:block;float:right}
-.controlpanel{margin:-35px 0;position:relative;z-index:2;width:auto}
-.controlpaneluser{margin:0 5px;position:relative;z-index:2}
-.boardDisplay span.subject{width:100%;margin:0 0 -18px 0;z-index:2;position:relative;clear:both;display:block;padding:5px 0;text-align:left;text-indent:10px;font-weight:900;background-color: rgba(0, 0, 0, .8)}
-.boardDisplay .imageOP{width:100%;display:block;margin:0;position:relative;z-index:1}
-.boardDisplay .imageREPLY{max-width:150px;display:block;margin:0!important;position:relative;z-index:1}
-.boardDisplay .loadmore{cursor:pointer;width:100%;height:20px;text-align:center;font-weight:500;padding:5px 0;display:block;margin:-6px -1px}
-.boardDisplay .commentMeta{display:block;clear:both;width:100%;margin:5px auto;text-indent:10px;padding:5px 0}
-.boardDisplay .avatar-32{float:left;height:20px;width:20px;margin:-5px 5px 0 5px}
-.boardDisplay .commentContainer {display:block;clear:both;width:100%;margin:5px auto}
+.boardDisplay div.op				{margin:10px auto 85px;display:block}
+hr.clear						{clear:both}
+.controlpaneluser,.controlpanel	{display:block;float:right}
+.controlpanel					{margin:-35px 0;position:relative;z-index:2;width:auto}
+.controlpaneluser				{margin:0 5px;position:relative;z-index:2}
+.boardDisplay span.subject		{width:100%;margin:0 0 -18px 0;z-index:2;position:relative;clear:both;display:block;padding:5px 0;text-align:left;text-indent:10px;font-weight:900;background-color: rgba(0, 0, 0, .8)}
+.boardDisplay .imageOP			{width:100%;display:block;margin:0;position:relative;z-index:1}
+.boardDisplay .imageREPLY		{max-width:150px;display:block;margin:0!important;position:relative;z-index:1}
+.boardDisplay .loadmore			{cursor:pointer;width:100%;height:20px;text-align:center;font-weight:500;padding:5px 0;display:block;margin:-6px -1px}
+.boardDisplay .commentMeta		{display:block;clear:both;width:100%;margin:5px auto;text-indent:10px;padding:5px 0}
+.boardDisplay .avatar-32			{float:left;height:20px;width:20px;margin:-5px 5px 0 5px}
+.boardDisplay .commentContainer 	{display:block;clear:both;width:100%;margin:5px auto}
 .boardDisplay .commentContainer p{margin:5px}
-.boardDisplay .ban{padding:5px}
-.boardDisplay div.reply{overflow:hidden;max-width:100%;width:100%;text-align:left;display:table;margin:0;padding:5px 0}
-
-section.smiley					{font-size:10px;padding:5px;line-height:23px;text-indent:50px}
-div#admin						{width:405px;display:block;clear:both;margin:5px auto;overflow-y:auto;overflow-x:hidden;padding:5px 0}
+.boardDisplay .ban				{padding:5px}
+.boardDisplay div.reply			{overflow:hidden;max-width:100%;width:100%;text-align:left;display:table;margin:0;padding:5px 0}
+section.smiley					{font-size:10px;padding:5px;line-height:23px;text-indent:5px}
+div#admin						{width:100%;display:block;clear:both;margin:5px auto;overflow-y:auto;overflow-x:hidden;padding:5px 0}
 div.admin						{width:190px;margin:5px;float:left!important}
 .users							{width:190px;margin:8px 5px 5px;float:left!important;height:400px;overflow-y:auto;overflow-x:hidden;display:block;border:1px solid #2d1212;background-color:#fff6f6;color:#2d1212}
 .users hr.clear					{border-top:1px solid #2d1212!important;margin:10px -5px -5px}
