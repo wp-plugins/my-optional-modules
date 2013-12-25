@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: 4chan,gravatar,youtube,DNSBL,akismet,ipv4,ipv6,htmlpurifier,tripcode,sage,chan,capcodes,board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.8
 Tested up to: 3.8
-Stable tag: 5.4.5
+Stable tag: 5.4.6
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -78,14 +78,12 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= .5.4.5 =
-* Regular Board:
-* (addition) - usermod="" / comma separated list of usernames who can ban, delete, sticky and unsticky posts and replies.  Posts that were made by the ##MOD can not be altered by users in the usermod list for security reasons (like preventing usermods from being able to ban and delete all ##MOD posts).
-* (addition) - usermodcode="##JUNIORMOD" / code to display next to usermods.  (Default: ##JUNIORMOD)
-* (addition) - userflood="" / comma separated list of usernames who can bypass flood protection.  Admin account bypasses this by default (this cannot be changed).
-* (addition) - enablereports="1/0" / enable the report form, which allows users to report comments and threads to the moderator for deletion.  Threads/replies may only appear in mod queue on a unique basis, meaning the same thread/reply cannot be reported on multiple times.
-* (bugfix) - ;; removed from 2 lines of code
-* (change) - If board is defined in the shortcode, ?board is no longer required for the URLs - it has been removed from URLs if board is predefined.
+= .5.4.6 =
+* Regular Board
+* Requires table update (admin -> 'click to force update tables')
+* (bugfix) New thread creation.
+* (change) Delete moved to report form.  Passwords initiated, threads no longer able to be deleted based on IP.
+
 
 
 = .5 =
