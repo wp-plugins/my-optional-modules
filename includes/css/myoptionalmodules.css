@@ -122,23 +122,26 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 .on:hover,.off:hover{font-weight:800;color:#000}
 
 
-.boardDisplay{font-size:12px;line-height:13px;display:block;text-shadow:none;max-width:800px;margin:5px;overflow:hidden}
+.boardDisplay{border:1px solid #131313;background-color:#000;color:#C2C2C2;font-size:10px;line-height:11px;display:block;text-shadow:none;max-width:95%;min-width:650px;margin:5px auto;padding:5px;text-shadow: 1px 1px 3px #363636;}
+.boardDisplay .sfw{font-size:8px;padding:3px;border-radius:3px;background-color:#fff;color:#000}
+.boardDisplay ol,.boardDisplay ul{width:94%;margin:5px auto}
 .boardDisplay a{text-decoration:none;border:0}
-.boardDisplay .myposts{clear:both;width:95%;margin:20px auto;display:block;overflow:auto;border-radius:3px;padding:5px}
+.boardDisplay .myposts{clear:both;width:95%;margin:5px auto;display:block;padding:5px;overflow:auto}
 .boardDisplay .myposts a{display:block;margin:5px;float:left}
 .boardDisplay .boardlist{clear:both;width:95%;margin:5px auto;padding:0}
 .boardDisplay .boardlist section{clear:both;margin:15px 0}
 .boardDisplay .omittedinfo{font-weight:200;float:left;clear:left;margin:15px}
-.boardDisplay .boardlisting{display:block;height:14px;overflow:hidden;width:95%;padding:5px 0}
-.boardDisplay .active{-webkit-box-shadow:inset 1px 1px 3px 3px rgba(203,46,46,.5);box-shadow:inset 1px 1px 1px 1px rgba(203,46,46,.2);border:1px dotted red}
-.boardDisplay .pages{clear:both;width:100%;text-align:center;margin:0 5px;padding:5px}
-.boardDisplay .pages a.focus{padding:2px}
-.mainboard{width:100%;clear:both;display:block;margin:25px auto;overflow:auto}
-.boardDisplay .topic{clear:both;width:100%;margin:0;padding:5px}
-.clear0{width:45%}
+.boardDisplay .boardlisting{display:block;height:14px;overflow:hidden;width:100%;padding:5px 0}
+.boardDisplay .active{background-color:#131313;-webkit-box-shadow:inset 1px 1px 3px 3px rgba(203,46,46,.5);box-shadow:inset 1px 1px 1px 1px rgba(203,46,46,.2);border:1px dotted red}
+.boardDisplay .pages a{display:block;width:10px;margin:5px;float:left;padding:5px}
+.boardDisplay .pages{clear:both;width:100%;text-align:center;margin:25px 0;padding:5px;display:block;overflow:auto}
+.boardDisplay .pages a.focus{font-weight:900}
+.mainboard{clear:both;display:block;margin:0 auto;}
+.boardDisplay .topic{clear:both;width:100%;margin:0 -5px;padding:5px}
+.clear0{width:48%}
 .clear1{width:95%}
-.boardDisplay .boardposts{padding:0;margin:0 0 0 5%}
-.boardDisplay .boardform{overflow:hidden;margin:10px auto}
+.boardDisplay .boardposts{padding:0;margin:0}
+.boardDisplay .boardform{overflow:hidden;margin:0 auto 50px auto;border:1px solid #fff;padding:5px;background-color:#131313;-webkit-box-shadow: 0 0 50px 0 #000;box-shadow: 0 0 50px 0 #000;z-index:999;position:relative}
 .boardDisplay .boardform label{text-align:center!important}
 .left{float:left}
 .textright{text-align:right}
@@ -172,8 +175,8 @@ div.rules p{margin:2px auto}
 .banned input[type=text]{width:300px;clear:both;display:block;margin:5px auto;padding:5px}
 .boardDisplay span.name{font-weight:400}
 .boardDisplay span.trip{font-weight:200}
-.boardDisplay .boardName{text-align:left;font-size:200%;margin:5px 0;padding:5px}
-.boardDisplay .boardDescription{width:100%;text-align:left;margin:0 0 5px;padding:0;opacity:.8}
+.boardDisplay .boardName{text-align:left;font-size:200%;margin:-5px -5px 5px -5px;padding:5px;width:100%;display:block;background-color:#000}
+.boardDisplay .boardDescription{width:100%;text-align:left;margin:-5px -5px 5px -5px;padding:5px;opacity:.8;background-color:#000}
 .boardDisplay .submit{height:10px;cursor:pointer;text-align:left;clear:both;margin:0;}
 .boardDisplay .nomber{font-weight:900;border-radius:3px;margin:5px}
 .boardDisplay .submit:hover{background-color:#fff;color:#000}
@@ -183,7 +186,7 @@ div.rules p{margin:2px auto}
 .boardDisplay .topic .absolute{position:relative;z-index:3;margin:5px 0;width:60px;text-align:left!important;text-indent:3px}
 .boardDisplay .topic textarea{width:95%;clear:both;display:block;height:150px;margin:5px;opacity:.8;border-radius:3px;line-height:155%}
 .boardDisplay .topic label{clear:both;padding:5px}
-.boardDisplay p.credits{margin:75px auto 0;opacity:.4;text-align:center;width:95%;clear:both;display:block;padding:10px 0;color:#fff;background-color:#000;border:1px solid #fff}
+.boardDisplay p.credits{margin:75px auto -20px auto;opacity:.4;text-align:center;width:95%;clear:both;display:block;padding:10px 0;color:#fff;background-color:#000;border:1px solid #fff}
 .boardDisplay p.credits span{width:95%;margin:0 auto;display:block}
 .boardDisplay .toggled{display:block;height:20px;opacity:.5;overflow:hidden}
 .boardDisplay .toggelthis{clear:both;display:block;cursor:pointer;width:3px;height:3px;text-align:center;position:absolute;left:8px;font-weight:500;margin:8px 0 -5px 5px;padding:5px}
@@ -204,7 +207,7 @@ div.rules p{margin:2px auto}
 div.momnavbar #navsearchform i,.banned textarea,.banned input[type=submit],.banned input[type=text]{cursor:pointer}
 .momnavbar_pagesup a,.momnavbar_pagesdown a{text-decoration:none;padding:3px}
 div.momlistcategories span,.right{float:right}
-.boardDisplay .pages a,.boardDisplay .reportdelete input,.op i{margin:5px}
+.boardDisplay .reportdelete input,.op i{margin:5px}
 .boardDisplay div.op				{margin:10px auto 85px;display:block}
 hr.clear						{clear:both}
 .controlpaneluser,.controlpanel	{display:block;float:right}
@@ -232,3 +235,7 @@ form.create input#DELETEBOARD	{font-size:10px;width:80px;margin:5px;padding:5px;
 form.create select				{font-size:10px;width:80px;margin:5px;padding:5px;display:inline-block;float:left;clear:none}
 form.create textarea				{font-size:10px;width:180px;height:100px;margin:5px}
 form.create input[type=text]		{font-size:10px;width:180px;height:025px;margin:5px}
+
+.boardDisplay label.expand{width:95%;cursor:pointer;padding:5px;display:block;text-align:left!important}
+.boardDisplay label.expand:hover{background-color:#fff;color:#000}
+.boardDisplay input[type=checkbox].hidden:checked ~ section {display:block;visibility:visible;border:1px solid #fff;padding:5px;background-color:#000}

@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.4.6
+Version: 5.4.7
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com 
 */
@@ -3163,11 +3163,11 @@ Author URI: http://onebillionwords.com
 
 				$isSFW = 0;
 				$isNSFW = 0;
-				$sfwnsfw = '';
 				if($sfw != '')if(in_array($BOARD,$sfw))$isSFW = 1;
 				if($nsfw != '')if(in_array($BOARD,$nsfw))$isNSFW = 1;
-				if($isSFW == 1) $sfwnsfw = ' >> This board is explicitly SFW.';
-				if($isNSFW == 1) $sfwnsfw = ' >> This board is explicitly NSFW.';
+				if($isSFW == 1) $sfwnsfw = 'sfw';
+				if($isNSFW == 1) $sfwnsfw = 'nsfw';
+				if($isSFW == '' && $isNSFW == '') $sfwnsfw = 'sfw';
 				
 				// Admin
 				if($AREA == 'create'){
@@ -3611,14 +3611,17 @@ Author URI: http://onebillionwords.com
 											}
 										}										
 										if(!isset($_POST['FORMSUBMIT'])){
-												echo '<h3 class="boardName">'.$boardName.'</h3>';
-												echo $sfwnsfw;
+
+												echo '<div class="mainboard"><div class="boardform '.$boardform.' clear'.intval($clear).'">';
+												
+												echo '<h3 class="boardName">'.$boardName.' <span class="sfw right">'.$sfwnsfw.'</span></h3>';
 												echo '<p class="boardDescription">'.$boardDescription.'</p>';
+
 												if($THREAD != ''){echo '<p class="reply">Posting Mode: Reply ';
 												if($BoardIsSet !== true) echo '<a rel="nofollow" href="?board='.$BOARD.'">[Return]</a></p>';
 												if($BoardIsSet === true) echo '<a rel="nofollow" href="'.get_permalink().'">[Return]</a></p>';
-												}
-												echo '<div class="mainboard"><div class="boardform '.$boardform.' clear'.intval($clear).'">';
+												}												
+												
 												if(filter_var($checkThisIP,FILTER_VALIDATE_IP)){ $IPPASS = true; }
 												elseif(filter_var($checkThisIP,FILTER_VALIDATE_IP,FILTER_FLAG_IPV6)){ $IPPASS = true; }
 												else{ $IPPASS = false;}
@@ -3716,24 +3719,33 @@ Author URI: http://onebillionwords.com
 														}
 													}
 														echo '
+														<div>
+														<label for="deletereport" class="expand"> >> Delete / Report</label>
+														<input type="checkbox" class="hidden" id="deletereport" />
+														<section class="hidden">';
+														echo '
 														<form name="reporttomods" method="post" action="'.$ACTION.'">';
 															wp_nonce_field('reporttomods');
 															echo '
 															<section><input type="text" name="report_ids" value="" placeholder="Thread/Reply No." />';
 															if($enablereports == 1)echo '<input type="text" name="report_reason" value="" placeholder="Reason for reporting" /></section>';
-															echo '<section>Password (to delete): <input type="password" name="DELETEPASSWORD" id="DELETEPASSWORD" /></section>
+															echo '<section>Password (to delete):<br /><input type="password" name="DELETEPASSWORD" id="DELETEPASSWORD" /></section>
 															<section class="smiley"><input type="checkbox" name="IAMHUMAN" value="YESIAM"><span>Check this box so we know that you are human.</span></section><section>';
 															if($enablereports == 1)echo '<label class="submit" for="report_this">[ report this ]</label>  ';
 															if($enablereports == 1)echo '<input type="submit" name="report_this" value="report" id="report_this" class="hidden" />';
-															echo '<label class="submit" for="delete_this">[ delete this ]</label></section>
+															echo '<label class="submit" for="delete_this">[ delete this ]</label>
+															</section>
 															<input type="submit" name="delete_this" value="delete" id="delete_this" class="hidden" />
 														</form>
-														<section><hr /></section>
+														</section>
+														</div>
 														';													
 
 													if(current_user_can('manage_options') || $usermod != '' && in_array($MYID,$usermod)){
 														echo '
-														Delete / ban<hr />';
+														<label for="deleteban" class="expand"> >> Mod: Delete / Ban form</label>
+														<input type="checkbox" class="hidden" id="deleteban" />
+														<section class="hidden">';
 														echo '
 														<form name="moderator" method="post" action="'.$ACTION.'">';
 															wp_nonce_field('moderator');
@@ -3757,6 +3769,7 @@ Author URI: http://onebillionwords.com
 															<input type="submit" name="admin_unlock" value="Unlock" id="admin_unlock" class="hidden" />
 														</form>
 														';
+														echo '</section>';
 														if($_REQUEST['FROWNY'] === 'frowns'){
 															$ID2SET = $_REQUEST['admin_ids'];
 															if(isset($_POST['admin_sticky']) && $ID2SET != ''){
@@ -3798,7 +3811,11 @@ Author URI: http://onebillionwords.com
 													// User's latest posts
 													if($userposts > 0){
 														echo '
-														<div class="myposts">My '.intval($userposts).' latest posts<hr />';
+														<label for="userhistory" class="expand"> >> My '.intval($userposts).' latest posts</label>
+														<input type="checkbox" class="hidden" id="userhistory" />
+														<section class="hidden">';
+														echo '
+														<div class="myposts">';
 															if(count($getLastPosts) > 0){
 																foreach($getLastPosts as $MYLASTPOSTS){
 																	$myID = $MYLASTPOSTS->ID;
@@ -3818,7 +3835,7 @@ Author URI: http://onebillionwords.com
 															}else{
 																echo '<h3 class="info">Nothing but dust.  You haven\'t posted anything... yet.</h3>';
 															}
-														echo '</div>';
+														echo '</div></section>';
 													}
 													
 													echo '</div><div class="boardposts '.$boardposts.' clear'.intval($clear).'">';
@@ -4017,13 +4034,14 @@ Author URI: http://onebillionwords.com
 														if($BOARD != '' && $THREAD == ''){
 															$i = 0;
 															$paging = round($totalpages / $postsperpage);
+															
 															if($paging > 0){
-															echo '<div class="pages">Go to page ';
-																while ($i < $paging) {
+															echo '<div class="pages">';
+																while ($i < $paging && $paging > 1) {
 																	$i++;
 																	echo '<a ';if($i == $results){ echo 'class="focus" '; }{
-																		if($BoardIsSet !== true)echo 'href="?board='.$BOARD.'&amp;results='.$i.'">'.$i.'</a>';
-																		if($BoardIsSet === true)echo 'href="?results='.$i.'">'.$i.'</a>';
+																		if($BoardIsSet !== true)echo 'href="?board='.$BOARD.'&amp;results='.$i.'">'.$i.'</a> ';
+																		if($BoardIsSet === true)echo 'href="?results='.$i.'">'.$i.'</a> ';
 																	}
 																}
 															echo '</div>';
