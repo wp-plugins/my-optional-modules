@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: 4chan,gravatar,youtube,DNSBL,akismet,ipv4,ipv6,htmlpurifier,tripcode,sage,chan,capcodes,board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.8
 Tested up to: 3.8
-Stable tag: 5.4.8
+Stable tag: 5.4.9
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -77,15 +77,14 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= .5.4.8 =
+= .5.4.9 =
 * Regular Board
-* (addition) linkbase="/boards" / define a link base for your board links.  Must have a page set up that will show your specific boards; must use pretty permalinks; don't end with a trailing slash; turns ?board=b into /boards/b (example); default is blank (disabled).
-* (addition) trustedimg="" / comma separated list of trusted image hosts (example: trustedimg="imgur.com,tinypic.com,memedad.com")  Domains in this list will be the only domains that image URLs can be posted from
-* (addition) untrusteddomain="" / comma separated list of untrusted domains (example: untrusteddomain="9gag.com,buzzfeed.com") Domains in this list can not be attached to posts.
-* (addition) boardimage="" / URL to a logo for your board. (example: boardimage="http://i.imgur.com/z0CghAh.jpg")
-* (change) URL handling changed to properly incorporate non-http:// links (to add http:// if it isn't present, and we aren't looking at an img url or a Youtube video URL/ID).
-* (change) board list / home + rules + admin links moved to a collapsible column located at top of boards.  Full board name displayed (instead of shortname).
-
+* (bugfix) Usermods
+* (bugfix) Trustedimg
+* (bugfix) Duplicate comment checking
+* (bugfix) main mod couldn't lock/delete/sticky posts made by the main mod account
+* (bugfix) minor formatting fixes to get rid of extra \'s in output.
+* (change) Post/reply creation uses wpdb->prepare.
 
 = .5 =
 * HTMLPurifier (added)
