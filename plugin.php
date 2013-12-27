@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.4.7
+Version: 5.4.8
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com 
 */
@@ -3040,39 +3040,43 @@ Author URI: http://onebillionwords.com
 
 			extract(
 				shortcode_atts(array(
-					'boardrules'    => '',
-					'timebetween'   => '0',
-					'cutoff'        => '500',
-					'maxbody'       => '1800',
-					'maxtext'       => '75',
-					'nothreads'     => 'No threads to display',
-					'noboard'       => 'Board does not exist',
-					'bannedmessage' => 'YOU ARE BANNED',
-					'postedmessage' => 'POSTED!!!',
-					'modcode'       => '##MOD',
-					'usermodcode'   => '##JUNIORMOD',
-					'posting'       => '1',
-					'threadsper'    => '15',
-					'enableurl'     => '1',
-					'enablerep'     => '0',
-					'enableemail'   => '1',
-					'defaultname'   => 'anonymous',
-					'requirelogged' => '0',
-					'maxreplies'    => '500',
-					'showboards'    => '1',
-					'board'         => '',
-					'loggedonly'    => '',
-					'lock'          => '',
-					'userposts'     => '10',
-					'sfw'           => '',
-					'nsfw'          => '',
-					'boardform'     => 'left',
-					'boardposts'    => 'right',
-					'clear'         => '0',
-					'userflood'     => '',
-					'usermod'       => '',
-					'enablereports' => '1',
-					'credits'       => 'Trademarks/comments/copyrights owned by their respectived parties/Posters'
+					'linkbase'        => '',
+					'boardrules'      => '',
+					'timebetween'     => '0',
+					'cutoff'          => '500',
+					'maxbody'         => '1800',
+					'maxtext'         => '75',
+					'nothreads'       => 'No threads to display',
+					'noboard'         => 'Board does not exist',
+					'bannedmessage'   => 'YOU ARE BANNED',
+					'postedmessage'   => 'POSTED!!!',
+					'modcode'         => '##MOD',
+					'usermodcode'     => '##JUNIORMOD',
+					'posting'         => '1',
+					'threadsper'      => '15',
+					'enableurl'       => '1',
+					'enablerep'       => '0',
+					'enableemail'     => '1',
+					'defaultname'     => 'anonymous',
+					'requirelogged'   => '0',
+					'maxreplies'      => '500',
+					'showboards'      => '1',
+					'board'           => '',
+					'loggedonly'      => '',
+					'lock'            => '',
+					'userposts'       => '10',
+					'sfw'             => '',
+					'nsfw'            => '',
+					'boardform'       => 'left',
+					'boardposts'      => 'right',
+					'clear'           => '0',
+					'userflood'       => '',
+					'usermod'         => '',
+					'enablereports'   => '1',
+					'trustedimg'      => '',
+					'untrusteddomain' => '',
+					'boardimage'      => '',
+					'credits'         => 'Trademarks/comments/copyrights owned by their respectived parties/Posters'
 				), $atts)
 			);	
 			
@@ -3107,7 +3111,9 @@ Author URI: http://onebillionwords.com
 			$sfw                 = $purifier->purify($sfw);
 			$nsfw                = $purifier->purify($nsfw);
 			$sfw                 = array($sfw);
-			$nsfw                = array($nsfw);
+			$nsfw                = array($nsfw);			
+			$trustedimg          = explode(',',$trustedimg);
+			$untrusteddomain     = explode(',',$untrusteddomain);
 			$boardrules          = esc_url($boardrules);
 			$lock                = $purifier->purify($lock);
 			$board               = $purifier->purify($board);
@@ -3125,6 +3131,8 @@ Author URI: http://onebillionwords.com
 			$regularboard_users  = $wpdb->prefix.'regularboard_users';
 
 			echo '<div class="boardDisplay">';
+			
+			
 			
 			if($ipaddress !== false){
 				myoptionalmodules_checkdnsbl($checkThisIP);
@@ -3165,9 +3173,9 @@ Author URI: http://onebillionwords.com
 				$isNSFW = 0;
 				if($sfw != '')if(in_array($BOARD,$sfw))$isSFW = 1;
 				if($nsfw != '')if(in_array($BOARD,$nsfw))$isNSFW = 1;
-				if($isSFW == 1) $sfwnsfw = 'sfw';
-				if($isNSFW == 1) $sfwnsfw = 'nsfw';
-				if($isSFW == '' && $isNSFW == '') $sfwnsfw = 'sfw';
+				if($isSFW == 1) $sfwnsfw = 'S F W';
+				if($isNSFW == 1) $sfwnsfw = 'N S F W';
+				if($isSFW == '' && $isNSFW == '') $sfwnsfw = 'S F W';
 				
 				// Admin
 				if($AREA == 'create'){
@@ -3323,7 +3331,7 @@ Author URI: http://onebillionwords.com
 
 
 			// Board view
-			elseif($BOARD != ''){
+			elseif($BOARD != '' && $linkbase == ''){
 				// Get Results
 				
 				$getBoards = $wpdb->get_results("SELECT * FROM $regularboard_boards ORDER BY SHORTNAME ASC");
@@ -3353,25 +3361,31 @@ Author URI: http://onebillionwords.com
 				}
 				
 				// Board listing
-				echo '<span class="boardlisting textright">';
+				echo '
+				<div>
+				<label for="boardlisting" class="button"><i class="fa fa-chevron-left"></i> Navigation</label>
+				<input type="checkbox" id="boardlisting" class="hidden"/>
+				<section class="hidden" id="boards">';
 				if($board == ''){
 					if($showboards == 1){
 						if(count($getBoards) > 0){
-							echo '[';
 							foreach($getBoards as $gotBoards){
-								$BOARDNAME = myoptionalmodules_sanistripents($gotBoards->SHORTNAME);
-								echo '<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDNAME.'</a>';
+								$BOARDSHORT = myoptionalmodules_sanistripents($gotBoards->SHORTNAME);
+								$BOARDNAME = myoptionalmodules_sanistripents($gotBoards->NAME);
+								if($linkbase != '')echo '<a rel="nofollow" href="'.$linkbase.'/'.$BOARDSHORT.'/">'.$BOARDNAME.'</a><br />';
+								if($linkbase == '')echo '<a rel="nofollow" href="?board='.$BOARDSHORT.'">'.$BOARDNAME.'</a><br />';
+								
 							}
-							echo ']';
 						}
-					echo '[<a href="'.get_permalink().'">home</a>]';
+					echo '<hr /><a href="'.get_permalink().'">home</a><br />';
 					}
 				}
-				if($boardrules != '')echo '[<a href="'.$boardrules.'">rules</a>]';
+				if($boardrules != '')echo '<a href="'.$boardrules.'">rules</a><br />';
 				if($ISMODERATOR === true){
-					echo '[<a href="?area=create">admin</a>]';
+					echo '<hr /><a href="?area=create">admin</a><br />';
 				}
-				echo '</span>';
+				echo '</section>
+				</div>';
 				
 				
 				// Determine time between between the last post and the flood protection time amount
@@ -3520,9 +3534,27 @@ Author URI: http://onebillionwords.com
 															curl_exec($ch);
 															$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 															curl_close($ch);
-															if($cleanURL != ''){
-																if(!filter_var($cleanURL,FILTER_VALIDATE_URL))$cleanURL = '';
-																if(filter_var($cleanURL,FILTER_VALIDATE_URL))$cleanURL = $cleanURL;
+															
+															function get_domain($url){
+																$pieces = parse_url($url);
+																$domain = isset($pieces['host']) ? $pieces['host'] : '';
+																if (preg_match('/(?P<domain>[a-z0-9][a-z0-9\-]{1,63}\.[a-z\.]{2,6})$/i', $domain, $regs)) {
+																	return $regs['domain'];
+																}
+																return false;
+															}
+															if($untrusteddomain != ''){
+																foreach($untrusteddomain as $UNTRUSTED){
+																	$untrusteddomain = get_domain($cleanURL);
+																	if($untrusteddomain === $UNTRUSTED){$untrusted = 1;}
+																	else{$untrusted = 0;}
+																}
+															}
+															if($untrusteddomain == ''){
+																$untrusted = 0;
+															}
+															
+															if($cleanURL != '' && $untrusted == 0){
 																$path_info = pathinfo($cleanURL);
 																if(strpos(strtolower($cleanURL),'youtu.be/')){
 																	$VIDEOID = substr($cleanURL,16);
@@ -3536,22 +3568,38 @@ Author URI: http://onebillionwords.com
 																	$URL = '<iframe src="http://www.youtube.com/embed/'.myoptionalmodules_sanistripents($VIDEOID).'?loop=1&amp;playlist='.myoptionalmodules_sanistripents($VIDEOID).'&amp;controls=0&amp;showinfo=0&amp;autohide=1" frameborder="0" allowfullscreen></iframe>';
 																}														
 																elseif($status == '200' && getimagesize($cleanURL) !== false){
+																if($trustedimg != ''){
+																	foreach($trustedimg as $TRUSTED){
+																		$trusteddomain = get_domain($cleanURL);
+																		if($trusteddomain === $TRUSTED)$trusted = 1;
+																	}
+																}
+																if($trustedimg == ''){
+																	$trusted = 1;
+																}									
+																
 																	if($path_info['extension'] == 'jpg' ||
 																		$path_info['extension'] == 'gif' ||
 																		$path_info['extension'] == 'jpeg' ||
 																		$path_info['extension'] == 'png'){
-																		$TYPE = 'image';
-																		$URL = $cleanURL;
+																		
+																		if($trusted == 1){
+																			$TYPE = 'image';
+																			$URL = $cleanURL;
+																		}																		
 																	}
 																}else{
 																	$TYPE = 'URL';
-																	$URL = $cleanURL;
+																	if (false === strpos($cleanURL, '://')) {
+																		$URL = 'http://'.$cleanURL;
+																	}else{
+																		$URL = esc_url($cleanURL);
+																	}
 																}
+															}else{
+																$TYPE = '';
+																$URL = '';
 															}
-																else{
-																	$TYPE = '';
-																	$URL = '';
-																}
 														}
 														if($THREAD != '')$enteredPARENT = intval($THREAD);
 														if($THREAD == '')$enteredPARENT = 0;
@@ -3613,7 +3661,8 @@ Author URI: http://onebillionwords.com
 										if(!isset($_POST['FORMSUBMIT'])){
 
 												echo '<div class="mainboard"><div class="boardform '.$boardform.' clear'.intval($clear).'">';
-												
+								
+												if($boardimage != '')echo '<img src="'.esc_url($boardimage).'" class="logo" />';
 												echo '<h3 class="boardName">'.$boardName.' <span class="sfw right">'.$sfwnsfw.'</span></h3>';
 												echo '<p class="boardDescription">'.$boardDescription.'</p>';
 
@@ -3662,6 +3711,9 @@ Author URI: http://onebillionwords.com
 																	if($enableemail == 1)echo '<section><label class="absolute" for="EMAIL">E-mail</label><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="E-mail" /></section>';
 																	if($enableurl == 1 && $THREAD == '')echo '<section><label class="absolute" for="URL">URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)(http://)" /></section>';
 																	if($enablerep == 1 && $THREAD != '')echo '<section><label class="absolute" for="URL">URL</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)(http://)" /></section>';
+																	
+																	if($trustedimg != '')echo '<section><label>Trusted image hosts: '; foreach($trustedimg as $trusted){echo ' [ <a href="'.esc_url('http://'.$trusted).'">'.$trusted.'</a> ] ';}echo '</label></section>';
+																																		
 																	echo '<section><label class="absolute" for="SUBJECT">Subject</label><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section>';
 																	echo '<section><label class="absolute" for="COMMENT">Comment</label><textarea id="COMMENT" maxlength="'.$maxbody.'" name="COMMENT" placeholder="Comment"></textarea></section>';
 																	echo '<section><label class="absolute" for="PASSWORD">Password (used for deletion)</label><input type="password" id="PASSWORD" maxlength="'.$maxtext.'" name="PASSWORD" value="'.$rand.'" /></section>';
@@ -4126,15 +4178,18 @@ Author URI: http://onebillionwords.com
 								}
 							}			
 
-							echo '
-							<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDLONG.'</a>'.$BOARDDESC.'<br />';
+							if($linkbase != '')echo '<a rel="nofollow" href="'.$linkbase.'/'.$BOARDNAME.'/">'.$BOARDLONG.'</a>'.$BOARDDESC.'<br />';
+							if($linkbase == '')echo '<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDLONG.'</a>'.$BOARDDESC.'<br />';
 
 							if($membersonly != 1){
 								foreach($getBoardPostsTopics as $posts){
 									$subject = $posts->SUBJECT;
 									if($subject == '')$subject = '<em>no subject</em>';
 									$id = $posts->ID;
-									echo '<em>latest thread</em> &mdash; <a rel="nofollow" href="?board='.$BOARDNAME.'&amp;thread='.$id.'">'.$subject.'</a>';
+									echo '<em>latest thread</em> &mdash;';
+									
+									if($linkbase != '')echo '<a rel="nofollow" href="'.$linkbase.'/'.$BOARDNAME.'/?thread='.$id.'">'.$subject.'</a>';
+									if($linkbase == '')echo '<a rel="nofollow" href="?board='.$BOARDNAME.'&amp;thread='.$id.'">'.$subject.'</a>';
 								}
 							}
 							echo '

@@ -122,7 +122,8 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 .on:hover,.off:hover{font-weight:800;color:#000}
 
 
-.boardDisplay{border:1px solid #131313;background-color:#000;color:#C2C2C2;font-size:10px;line-height:11px;display:block;text-shadow:none;max-width:95%;min-width:650px;margin:5px auto;padding:5px;text-shadow: 1px 1px 3px #363636;}
+.boardDisplay{border:1px solid #131313;background-color:#000;color:#C2C2C2;font-size:10px;line-height:11px;display:block;text-shadow:none;max-width:95%;min-width:650px;margin:5px auto;padding:5px;text-shadow: 1px 1px 3px #363636;position:relative;-webkit-box-shadow: 0 0 50px 0 #000;box-shadow: 0 0 50px 0 #000}
+.boardDisplay img.logo{max-width:100%;margin:0 auto 10px auto}
 .boardDisplay .sfw{font-size:8px;padding:3px;border-radius:3px;background-color:#fff;color:#000}
 .boardDisplay ol,.boardDisplay ul{width:94%;margin:5px auto}
 .boardDisplay a{text-decoration:none;border:0}
@@ -131,7 +132,6 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 .boardDisplay .boardlist{clear:both;width:95%;margin:5px auto;padding:0}
 .boardDisplay .boardlist section{clear:both;margin:15px 0}
 .boardDisplay .omittedinfo{font-weight:200;float:left;clear:left;margin:15px}
-.boardDisplay .boardlisting{display:block;height:14px;overflow:hidden;width:100%;padding:5px 0}
 .boardDisplay .active{background-color:#131313;-webkit-box-shadow:inset 1px 1px 3px 3px rgba(203,46,46,.5);box-shadow:inset 1px 1px 1px 1px rgba(203,46,46,.2);border:1px dotted red}
 .boardDisplay .pages a{display:block;width:10px;margin:5px;float:left;padding:5px}
 .boardDisplay .pages{clear:both;width:100%;text-align:center;margin:25px 0;padding:5px;display:block;overflow:auto}
@@ -139,14 +139,18 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 .mainboard{clear:both;display:block;margin:0 auto;}
 .boardDisplay .topic{clear:both;width:100%;margin:0 -5px;padding:5px}
 .clear0{width:48%}
-.clear1{width:95%}
+.clear1{width:100%}
 .boardDisplay .boardposts{padding:0;margin:0}
 .boardDisplay .boardform{overflow:hidden;margin:0 auto 50px auto;border:1px solid #fff;padding:5px;background-color:#131313;-webkit-box-shadow: 0 0 50px 0 #000;box-shadow: 0 0 50px 0 #000;z-index:999;position:relative}
 .boardDisplay .boardform label{text-align:center!important}
 .left{float:left}
 .textright{text-align:right}
 .textleft{text-align:left}
-.boardDisplay .boardlisting a{text-decoration:none;margin:5px}
+.boardDisplay .button{float:right;padding:10px;cursor:pointer}
+.boardDisplay .button:hover{background-color:#fff;color:#000}
+.boardDisplay .button:checked ~ div{display:block;visibility:visible;}
+#boards{width:auto;padding:5px;float:right;margin:5px;clear:both;position:absolute;right:75px;z-index:1000;font-size:14px;line-height:15px}
+#boards a:hover{text-decoration:underline}
 .boardDisplay .error{width:100%;text-align:center}
 .boardDisplay .reply{width:100%;text-align:left;margin:-5px auto 5px}
 .boardDisplay .threadinformation{clear:both;text-align:right;width:95%;display:block;margin:-15px auto 0}
@@ -186,7 +190,7 @@ div.rules p{margin:2px auto}
 .boardDisplay .topic .absolute{position:relative;z-index:3;margin:5px 0;width:60px;text-align:left!important;text-indent:3px}
 .boardDisplay .topic textarea{width:95%;clear:both;display:block;height:150px;margin:5px;opacity:.8;border-radius:3px;line-height:155%}
 .boardDisplay .topic label{clear:both;padding:5px}
-.boardDisplay p.credits{margin:75px auto -20px auto;opacity:.4;text-align:center;width:95%;clear:both;display:block;padding:10px 0;color:#fff;background-color:#000;border:1px solid #fff}
+.boardDisplay p.credits{margin:75px auto -20px auto;text-align:center;width:95%;clear:both;display:block;padding:10px 0;color:#fff;background-color:#000;border:1px solid #fff}
 .boardDisplay p.credits span{width:95%;margin:0 auto;display:block}
 .boardDisplay .toggled{display:block;height:20px;opacity:.5;overflow:hidden}
 .boardDisplay .toggelthis{clear:both;display:block;cursor:pointer;width:3px;height:3px;text-align:center;position:absolute;left:8px;font-weight:500;margin:8px 0 -5px 5px;padding:5px}
