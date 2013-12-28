@@ -18,3 +18,20 @@
 			$('#omitted').load(regbo_relurl + ' div#omitted div.reply');
 		});
 	});
+
+	var left = document.getElementById("boardform"), // left div outside of the event.
+		// this saves javascript from doing extra work
+		stop = (left.offsetTop - 60); // -60 so it won't be jumpy
+
+	window.onscroll = function (e) {
+		 // cross-browser compatible scrollTop.
+	 var scrollTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
+
+
+	 if (scrollTop >= stop) { // if user scrolls to 60px from the top of the left div
+		left.className = 'stick'; // add the sticky class
+	 } else {
+		left.className = ''; // remove the sticky class
+	 }
+
+	}	

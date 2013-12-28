@@ -121,15 +121,20 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 .on{color:#23ac14;font-weight:500}
 .on:hover,.off:hover{font-weight:800;color:#000}
 
-
-.boardDisplay{width:720px;color:#C2C2C2;font-size:10px;line-height:11px;display:block;text-shadow:none;margin:5px auto;padding:5px;text-shadow: 1px 1px 3px #363636;position:relative;}
+.boardAll{background-color:#282626;overflow-x:hidden;overflow-y:auto;border-radius:4px;width:100%;color:#C2C2C2;font-size:10px;line-height:11px;display:block;text-shadow:none;margin:25px auto;text-shadow: 1px 1px 3px #363636;position:relative;clear:both;padding:25px 25px 25px 225px;}
+.boardInformation{background-color:#201f1f;border-radius:2px;width:200px;color:#C2C2C2;font-size:12px;line-height:15px;display:block;text-shadow:none;text-shadow: 1px 1px 3px #363636;position:absolute;float:left;padding:5px;left:10px;top:0}
+.boardDisplay{border-radius:4px;width:100%;color:#C2C2C2;font-size:10px;line-height:11px;display:block;text-shadow:none;text-shadow: 1px 1px 3px #363636;position:relative;float:left}
+br.clear,section.clear{clear:both;display:block;width:95%;margin:0 auto;padding:5px;}
+.boardDisplay .posttitle{line-height:15px}
+.boardDisplay .posttitle:hover{text-decoration:none;color:#fff}
 .boardDisplay img.logo{max-width:100%;margin:0 auto 10px auto;display:block}
 .boardDisplay .sfw{font-size:8px;padding:3px;border-radius:3px;background-color:#fff;color:#000}
 .boardDisplay ol,.boardDisplay ul{width:94%;margin:5px auto}
 .boardDisplay a{text-decoration:none;border:0}
 .boardDisplay .myposts{clear:both;width:95%;margin:5px auto;display:block;padding:5px;overflow:auto}
 .boardDisplay .myposts a{display:block;margin:5px;float:left}
-.boardDisplay .boardlist{clear:both;width:95%;margin:5px auto;padding:0}
+.boardDisplay #admin{margin:-30px auto}
+.boardDisplay .boardlist{clear:both;width:100%;margin:-20px auto;padding:0;font-size:13px;line-height:14px}
 .boardDisplay .boardlist section{clear:both;margin:15px 0}
 .boardDisplay .omittedinfo{font-weight:200;float:left;clear:left;margin:15px}
 .boardDisplay .active{background-color:#131313;-webkit-box-shadow:inset 1px 1px 3px 3px rgba(203,46,46,.5);box-shadow:inset 1px 1px 1px 1px rgba(203,46,46,.2);border:1px dotted red}
@@ -139,31 +144,38 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 .mainboard{clear:both;display:block;margin:0 auto;}
 .boardDisplay .topic{clear:both;width:100%;margin:0 -5px;padding:5px}
 .clear1{width:100%}
-.boardDisplay .boardposts{padding:0;margin:0;width:480px}
-.boardDisplay .boardform{width:220px;overflow:hidden;margin:25px auto 50px auto;border:1px solid #fff;padding:5px;background-color:#131313;-webkit-box-shadow: 0 0 50px 0 #000;box-shadow: 0 0 50px 0 #000;z-index:999;position:relative}
+.boardDisplay .boardposts{padding:0;margin:0 auto;width:100%;clear:both}
+
+
+#boardform{display:none;visibility:hidden}
+#postformshow:checked ~ #boardform{visibility:visible;display:block;width:100%;overflow:hidden;border:1px solid #000;padding:5px;background-color:#131313;z-index:999;position:relative;overflow:auto;clear:both}
+#showme{position:relative;cursor:pointer;padding:10px;background-color: rgba(0, 0, 0, .9);float:left;margin:-30px 0 0 1px}
+#showme:hover{background-color:#fff;color:#000}
+
 .boardDisplay .boardform label{text-align:center!important}
 .left{float:left}
 .textright{text-align:right}
 .textleft{text-align:left}
-.boardDisplay .button{float:right;padding:10px;cursor:pointer}
+.boardDisplay .button{float:right;padding:10px;cursor:pointer;margin-right:-5px;}
 .boardDisplay .button:hover{background-color:#fff;color:#000}
 .boardDisplay .button:checked ~ div{display:block;visibility:visible;}
 #boards{width:auto;padding:5px;float:right;margin:5px;clear:both;position:absolute;right:75px;z-index:1000;font-size:14px;line-height:15px}
 #boards a:hover{text-decoration:underline}
 .boardDisplay .error{width:100%;text-align:center}
 .boardDisplay .reply{width:100%;text-align:left;margin:-5px auto 5px}
-.boardDisplay .threadinformation{clear:both;text-align:right;width:95%;display:block;margin:-15px auto 0}
+.boardDisplay .threadinformation{clear:both;text-align:right;width:100%;display:block;margin:-15px auto 0}
 .boardDisplay input[type=checkbox]{float:left;margin:5px 5px 0}
 span.fileinfo{clear:both;display:block;text-indent:5px;margin:5px 0 8px}
-.boardDisplay .banned{display:block;width:100%;text-align:center;padding:10px 0}
-.timegate h3{text-decoration:none;text-align:center;text-indent:-.12em;font:40px anchor-web-1,anchor-web-2, Impact, sans-serif;font-weight:900;display:inline-block;width:100%;text-shadow:#0c2c3e .01em .01em 0 .02em .02em 0 .03em .03em 0 .04em .04em 0 .05em .05em 0 .06em .06em 0 .07em .07em 0 #0c2c3e .08em .08em 0 .09em .09em 0 .1em .1em 0;margin:10px auto;padding:5px}
-h3.readonly{text-decoration:none;text-align:center;text-indent:-.12em;font:70px anchor-web-1,anchor-web-2, Impact, sans-serif;font-weight:900;display:inline-block;width:100%;text-shadow:#691616 .01em .01em 0 .02em .02em 0 .03em .03em 0 .04em .04em 0 .05em .05em 0 .06em .06em 0 .07em .07em 0 #691616 .08em .08em 0 .09em .09em 0 .1em .1em 0;margin:50px auto}
+
+.timegate h3{text-decoration:none;text-align:center;text-indent:-.12em;font:30px anchor-web-1,anchor-web-2, Impact, sans-serif;font-weight:900;display:inline-block;width:100%;text-shadow:#0c2c3e .01em .01em 0 .02em .02em 0 .03em .03em 0 .04em .04em 0 .05em .05em 0 .06em .06em 0 .07em .07em 0 #0c2c3e .08em .08em 0 .09em .09em 0 .1em .1em 0;margin:10px auto;padding:5px}
+h3.readonly{text-decoration:none;text-align:center;text-indent:-.12em;font:30px anchor-web-1,anchor-web-2, Impact, sans-serif;font-weight:900;display:inline-block;width:100%;text-shadow:#691616 .01em .01em 0 .02em .02em 0 .03em .03em 0 .04em .04em 0 .05em .05em 0 .06em .06em 0 .07em .07em 0 #691616 .08em .08em 0 .09em .09em 0 .1em .1em 0;margin:50px auto}
 h3.banned{overflow:hidden;text-decoration:none;text-align:center;text-indent:-.12em;font:100px anchor-web-1,anchor-web-2, Impact, sans-serif;font-weight:900;display:inline-block;width:100%;text-shadow:#691616 .01em .01em 0 .02em .02em 0 .03em .03em 0 .04em .04em 0 .05em .05em 0 .06em .06em 0 .07em .07em 0 #691616 .08em .08em 0 .09em .09em 0 .1em .1em 0;margin:0}
 h3.options{text-decoration:none;text-align:center;text-indent:-.12em;font:40px anchor-web-1,anchor-web-2, Impact, sans-serif;font-weight:900;display:inline-block;width:100%;text-shadow:#691616 .01em .01em 0 .02em .02em 0 .03em .03em 0 .04em .04em 0 .05em .05em 0 .06em .06em 0 .07em .07em 0 #691616 .08em .08em 0 .09em .09em 0 .1em .1em 0;margin:0 auto;padding:10px}
-h3.info{font-weight:900;text-align:left;width:100%;margin:20px auto}
+h3.info{font-weight:900;text-align:center;width:100%;margin:20px auto;font-size:30px;display:block;line-height:65px}
+.boardDisplay .infoimg{max-width:100%;clear:both;display:block;margin:10px auto;height:auto}
 .boardDisplay article{display:block;margin:10px auto;padding:5px}
 .boardDisplay .op input[type=checkbox]{margin:0px}
-.boardDisplay .op{display:inline-block;clear:bothwidth:100%;margin:0 auto;padding:5px 0}
+.boardDisplay .op{display:block;clear:both;width:100%;margin:0 auto;padding:5px;background-color: rgba(0, 0, 0, .1)}
 .boardDisplay .op p,.boardDisplay .reply p{max-width:95%;word-wrap:break-word;display:table;margin:2px 0 2px 15px;padding:5px}
 .boardDisplay .op iframe,.boardDisplay .reply iframe{display:table;width:95%;margin:0 auto}
 .boardDisplay article section{width:95%;display:block;margin:5px auto;padding:5px}
@@ -189,8 +201,8 @@ div.rules p{margin:2px auto}
 .boardDisplay .topic .absolute{position:relative;z-index:3;margin:5px 0;width:60px;text-align:left!important;text-indent:3px}
 .boardDisplay .topic textarea{width:95%;clear:both;display:block;height:150px;margin:5px;opacity:.8;border-radius:3px;line-height:155%}
 .boardDisplay .topic label{clear:both;padding:5px}
-.boardDisplay p.credits{margin:75px auto -20px auto;text-align:center;width:95%;clear:both;display:block;padding:10px 0;color:#fff}
-.boardDisplay p.credits span{width:95%;margin:0 auto;display:block}
+.boardDisplay p.credits{margin:0 auto;text-align:left;width:100%;clear:both;display:block;padding:10px 0;color:#fff;}
+.boardDisplay p.credits span{width:100%;margin:0 auto;display:block;padding:15px;line-height:13px;font-size:11px;opacity:.5}
 .boardDisplay .toggled{display:block;height:20px;opacity:.5;overflow:hidden}
 .boardDisplay .toggelthis{clear:both;display:block;cursor:pointer;width:3px;height:3px;text-align:center;position:absolute;left:8px;font-weight:500;margin:8px 0 -5px 5px;padding:5px}
 .boardDisplay .shortinfo{clear:both;display:block;margin:-20px 0 5px 30px}
@@ -211,34 +223,35 @@ div.momnavbar #navsearchform i,.banned textarea,.banned input[type=submit],.bann
 .momnavbar_pagesup a,.momnavbar_pagesdown a{text-decoration:none;padding:3px}
 div.momlistcategories span,.right{float:right}
 .boardDisplay .reportdelete input,.op i{margin:5px}
-.boardDisplay div.op				{margin:10px auto 85px;display:block}
-hr.clear						{clear:both}
-.controlpaneluser,.controlpanel	{display:block;float:right}
-.controlpanel					{margin:-35px 0;position:relative;z-index:2;width:auto}
-.controlpaneluser				{margin:0 5px;position:relative;z-index:2}
-.boardDisplay span.subject		{width:100%;margin:0 0 -18px 0;z-index:2;position:relative;clear:both;display:block;padding:5px 0;text-align:left;text-indent:10px;font-weight:900;background-color: rgba(0, 0, 0, .8)}
-.boardDisplay .imageOP			{width:100%;display:block;margin:0;position:relative;z-index:1}
-.boardDisplay .imageREPLY		{max-width:150px;display:inline-block;margin:0!important;position:relative;z-index:1;float:left}
+.boardDisplay div.op				{margin:10px auto;display:block}
+hr.clear						       {clear:both}
+.boardDisplay .controlpaneluser,
+.boardDisplay .controlpanel	{display:block;float:right}
+.boardDisplay .controlpanel					{margin:-35px 0;position:relative;z-index:2;width:auto}
+.boardDisplay .controlpaneluser				{margin:0 5px;position:relative;z-index:2}
+.boardDisplay span.subject		{width:100%;margin:0;z-index:2;position:relative;clear:both;display:block;padding:5px 0;text-align:left;text-indent:10px;font-weight:900;}
+.boardDisplay .imageREPLY,
+.boardDisplay .imageOP			{max-width:100%;margin:10px;position:relative;z-index:1;}
 .boardDisplay .loadmore			{cursor:pointer;width:100%;height:20px;text-align:center;font-weight:500;padding:5px 0;display:block;margin:-6px -1px}
-.boardDisplay .commentMeta		{display:block;clear:both;width:100%;margin:5px auto;padding:5px 0}
-.boardDisplay .avatar-32			{float:left;height:20px;width:20px;margin:-5px 5px 0 5px}
+.boardDisplay .commentMeta		{display:block;clear:both;width:100%;margin:15px auto 0;padding:5px}
+.boardDisplay .avatar-32			{float:left;height:20px;width:20px;margin:-5px 5px 0 -5px}
 .boardDisplay .commentContainer 	{display:block;clear:both;width:100%;margin:5px auto;font-size:14px;line-height:15px}
 .boardDisplay .commentContainer p{margin:5px}
 .boardDisplay .ban				{padding:5px}
+.boardDisplay .attached		       {clear:both;width:100%;padding:5px;display:block;text-align:center;background-color:#000}
 .boardDisplay div.reply			{overflow:hidden;max-width:100%;width:100%;text-align:left;display:table;margin:0;padding:5px 0;font-size:13px;line-height:14px;opacity:.7}
 section.smiley					{font-size:10px;padding:5px;line-height:23px;text-indent:5px}
-div#admin						{width:100%;display:block;clear:both;margin:5px auto;overflow-y:auto;overflow-x:hidden;padding:5px 0}
+
 div.admin						{width:190px;margin:5px;float:left!important}
 .users							{width:190px;margin:8px 5px 5px;float:left!important;height:400px;overflow-y:auto;overflow-x:hidden;display:block;border:1px solid #2d1212;background-color:#fff6f6;color:#2d1212}
 .users hr.clear					{border-top:1px solid #2d1212!important;margin:10px -5px -5px}
 form.create						{width:180px;margin:5px;font-size:10px;text-align:left}
 form.create span					{margin:5px;width:140px;display:block;padding:5px 0}
-form.create input[type=submit]	{width:150px;margin:5px;clear:both;padding:5px;clear:both;display:block;text-align:left;-webkit-appearance:button;cursor:pointer}
-form.create input#DELETEBOARD	{font-size:10px;width:80px;margin:5px;padding:5px;display:inline-block;float:left;clear:none}
-form.create select				{font-size:10px;width:80px;margin:5px;padding:5px;display:inline-block;float:left;clear:none}
+form.create input[type=submit]        {width:150px;margin:5px;clear:both;padding:5px;clear:both;display:block;text-align:left;-webkit-appearance:button;cursor:pointer}
+form.create input#DELETEBOARD		{font-size:10px;width:80px;margin:5px;padding:5px;display:inline-block;float:left;clear:none}
+form.create select					{font-size:10px;width:80px;margin:5px;padding:5px;display:inline-block;float:left;clear:none}
 form.create textarea				{font-size:10px;width:180px;height:100px;margin:5px}
 form.create input[type=text]		{font-size:10px;width:180px;height:025px;margin:5px}
-
-.boardDisplay label.expand{width:95%;cursor:pointer;padding:5px;display:block;text-align:left!important}
-.boardDisplay label.expand:hover{background-color:#fff;color:#000}
+.boardDisplay label.expand		{width:95%;cursor:pointer;padding:5px;display:block;text-align:left!important}
+.boardDisplay label.expand:hover	{background-color:#fff;color:#000}
 .boardDisplay input[type=checkbox].hidden:checked ~ section {display:block;visibility:visible;border:1px solid #fff;padding:5px;background-color:#000}
