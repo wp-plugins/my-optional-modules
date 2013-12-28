@@ -77,11 +77,9 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= .5.4.9.2 =
+= .5.4.9.2.1 =
 * Regular Board
-* (bugfix) Board Activity links if linkbase is being used as well as single board display
-* (bugfix) locking/sticky
-* (removed) Gravatar support.
+* (bugfix) CSS prevented boardimage from working properly.
 
 = .5 =
 * HTMLPurifier (added)

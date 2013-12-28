@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.4.9.2
+Version: 5.4.9.2.1
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com 
 */
@@ -3177,17 +3177,17 @@ Author URI: http://onebillionwords.com
 			echo '
 			<div class="boardAll">
 			<div class="boardInformation">';
+			if($boardimage != '')echo '<img src="'.esc_url($boardimage).'" class="logo" />';
 			echo '<hr />';
 			if($showboards == 1){
 				echo '
 				<strong>Board Activity</strong>';
-					if($boardimage != '')echo '<img src="'.esc_url($boardimage).'" class="logo" />';
 					if(count($getBoards) > 0){
 						foreach($getBoards as $gotBoards){
 							$BOARDNAME = esc_sql(myoptionalmodules_sanistripents($gotBoards->SHORTNAME));
 							$BOARDLONG = esc_sql(myoptionalmodules_sanistripents($gotBoards->NAME));
 							$BOARDDESC = esc_sql(myoptionalmodules_sanistripents($gotBoards->DESCRIPTION));
-							$getBoardPostsTopics = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT = '0' ORDER BY LAST DESC LIMIT 1");
+							$getBoardPostsTopics = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' ORDER BY LAST DESC LIMIT 1");
 							echo '<section>';
 							
 							if($board != '' && $linkbase != '' || $linkbase != ''){echo '<a rel="nofollow" href="'.$linkbase.'/'.$BOARDNAME.'/">'.$BOARDLONG.'</a><br />';}
@@ -4028,13 +4028,13 @@ Author URI: http://onebillionwords.com
 															if($style === 'imageboard' && $THREAD == '' || $style === 'imageboard' && $THREAD != '' || $style === 'textboard' && $THREAD != ''){
 																echo '
 																<div class="commentMeta">';
-																echo '<span class="nomber">No. '.$ID.'</span>';
-																if($STICKY == 1)echo '<em>sticky</em> ';
-																if($LOCKED == 1)echo '<em>locked</em> ';
-																if($STICKY != 1)echo 'Posted '.timesincethis($DATE).' by ';
-																if($MODERATOR == 1)echo '<span class="mod">'.$modcode.'</span>';
-																if($MODERATOR == 2)echo '<span class="mod">'.$usermodcode.'</span>';
-																if($MODERATOR == 0)if(strtolower($EMAIL) == 'heaven'){echo '';}else{echo $defaultname;}
+																echo '<span class="nomber">No. '.$ID.'</span> / ';
+																if($STICKY == 1)echo '<i class="fa fa-thumb-tack"></i> ';
+																if($LOCKED == 1)echo '<i class="fa fa-lock"></i>  ';
+																if($STICKY != 1)echo 'Posted '.timesincethis($DATE);
+																if($MODERATOR == 1)echo ' / <span class="mod">'.$modcode.'</span>';
+																if($MODERATOR == 2)echo ' / <span class="mod">'.$usermodcode.'</span>';
+																if($MODERATOR == 0)if(strtolower($EMAIL) == 'heaven'){echo '';}else{echo ' / '.$defaultname;}
 																if(filter_var($EMAIL,FILTER_VALIDATE_EMAIL)){}else{echo ' '.$EMAIL;}										
 																if($BoardIsSet !== true)if($THREAD == '')echo ' [<a rel="nofollow" href="?board='.$BOARD.'&amp;thread='.$ID.'">Reply</a>] ('.count($getReplies).')';
 																if($BoardIsSet === true)if($THREAD == '')echo ' [<a rel="nofollow" href="?thread='.$ID.'">Reply</a>] ('.count($getReplies).')';
@@ -4278,7 +4278,7 @@ Author URI: http://onebillionwords.com
 							$repls = 0;
 							foreach($countPosts as $counted){$count++;}
 							foreach($countReplies as $replied){$repls++;}
-							$getBoardPostsTopics = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT = '0' LIMIT 1");
+							$getBoardPostsTopics = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT = '0' ORDER BY LAST DESC LIMIT 1");
 							echo '
 							<section>
 							<span class="right">'.$count.'</span>
