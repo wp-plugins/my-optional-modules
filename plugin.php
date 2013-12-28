@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.4.9.1
+Version: 5.4.9.2
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com 
 */
@@ -3171,29 +3171,27 @@ Author URI: http://onebillionwords.com
 			$regularboard_users              = $wpdb->prefix.'regularboard_users';
 
 			$getBoards = $wpdb->get_results("SELECT * FROM $regularboard_boards");				
-			
+
+
+			if($ipaddress !== false){			
 			echo '
 			<div class="boardAll">
 			<div class="boardInformation">';
-			
-			
 			echo '<hr />';
-			
 			if($showboards == 1){
 				echo '
 				<strong>Board Activity</strong>';
-
 					if($boardimage != '')echo '<img src="'.esc_url($boardimage).'" class="logo" />';
-					
 					if(count($getBoards) > 0){
 						foreach($getBoards as $gotBoards){
 							$BOARDNAME = esc_sql(myoptionalmodules_sanistripents($gotBoards->SHORTNAME));
 							$BOARDLONG = esc_sql(myoptionalmodules_sanistripents($gotBoards->NAME));
 							$BOARDDESC = esc_sql(myoptionalmodules_sanistripents($gotBoards->DESCRIPTION));
-							$getBoardPostsTopics = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT = '0' LIMIT 1");
+							$getBoardPostsTopics = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT = '0' ORDER BY LAST DESC LIMIT 1");
 							echo '<section>';
-							if($linkbase != '')echo '<a rel="nofollow" href="'.$linkbase.'/'.$BOARDNAME.'/">'.$BOARDLONG.'</a><br />';
-							if($linkbase == '')echo '<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDLONG.'</a><br />';
+							
+							if($board != '' && $linkbase != '' || $linkbase != ''){echo '<a rel="nofollow" href="'.$linkbase.'/'.$BOARDNAME.'/">'.$BOARDLONG.'</a><br />';}
+							elseif($board == '' && $linkbase == '' || $linkbase == ''){echo '<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDLONG.'</a><br />';}
 								foreach($getBoardPostsTopics as $posts){
 									$DATE = $posts->DATE;
 									$DATE = timesincethis($DATE);
@@ -3205,16 +3203,12 @@ Author URI: http://onebillionwords.com
 					}
 			}
 			echo '<hr />';
-			echo '<a href="'.get_permalink().'">home</a><br />';
-			if($boardrules != '')echo '<a href="'.$boardrules.'">rules</a><br />';
-			if($ISMODERATOR === true){echo '<a href="?area=create">admin</a><br />';}
+			if($boardrules != '')echo ' >> <a href="'.$boardrules.'">rules</a><br />';
+			if($ISMODERATOR === true){echo ' >> <a href="?area=create">admin</a><br />';}
 
 			echo '</div>
 			<div class="boardDisplay">';
-			
-			
-			
-			if($ipaddress !== false){
+
 				myoptionalmodules_checkdnsbl($checkThisIP);
 				$theIP         = myoptionalmodules_sanistripents($ipaddress);
 				$theIP_s32int  = myoptionalmodules_sanistripents(ip2long($ipaddress));
@@ -3910,14 +3904,10 @@ Author URI: http://onebillionwords.com
 														echo '</section>';
 														if($_REQUEST['FROWNY'] === 'frowns'){
 															$ID2SET     = $_REQUEST['admin_ids'];
-															$doLock     = $wpdb->update( ''.$regularboard_posts.'', array( 'LOCKED' => '1' ), array( 'ID' => ''.$ID2SET.''), array( '%d'));
-															$doSticky   = $wpdb->update( ''.$regularboard_posts.'', array( 'STICKY' => '1' ), array( 'ID' => ''.$ID2SET.''), array( '%d') );
-															$doUnsticky = $wpdb->update( ''.$regularboard_posts.'', array( 'STICKY' => '0' ), array( 'ID' => ''.$ID2SET.''), array( '%d') );	
-															$doUnlock   = $wpdb->update( ''.$regularboard_posts.'', array( 'LOCKED' => '0' ), array( 'ID' => ''.$ID2SET.''), array( '%d') );
-															if(isset($_POST['admin_sticky'])   && $ID2SET != ''  ){ $doSticky;   }
-															if(isset($_POST['admin_lock'])     && $ID2SET != ''  ){ $doLock;     }
-															if(isset($_POST['admin_unsticky']) && $ID2SET != ''  ){ $doUnsticky; }
-															if(isset($_POST['admin_unlock'])   && $ID2SET != ''  ){ $doUnlock;   }
+															if(isset($_POST['admin_lock'])     && $ID2SET != ''  )$doLock     = $wpdb->update( ''.$regularboard_posts.'', array( 'LOCKED' => '1' ), array( 'ID' => ''.$ID2SET.''), array( '%d'));
+															if(isset($_POST['admin_sticky'])   && $ID2SET != ''  )$doSticky   = $wpdb->update( ''.$regularboard_posts.'', array( 'STICKY' => '1' ), array( 'ID' => ''.$ID2SET.''), array( '%d') );
+															if(isset($_POST['admin_unsticky']) && $ID2SET != ''  )$doUnsticky = $wpdb->update( ''.$regularboard_posts.'', array( 'STICKY' => '0' ), array( 'ID' => ''.$ID2SET.''), array( '%d') );	
+															if(isset($_POST['admin_unlock'])   && $ID2SET != ''  )$doUnlock   = $wpdb->update( ''.$regularboard_posts.'', array( 'LOCKED' => '0' ), array( 'ID' => ''.$ID2SET.''), array( '%d') );
 															
 															if(isset($_POST['admin_delete'])   && $ID2SET != ''){
 																$getIDfromID = $wpdb->get_results("SELECT PARENT FROM $regularboard_posts WHERE ID = '".$ID2SET."' LIMIT 1");
@@ -4025,7 +4015,7 @@ Author URI: http://onebillionwords.com
 															// Thread parent (OP)
 															echo '<div class="op" id="'.$ID.'">';
 															if($style === 'imageboard' && $THREAD == '' || $style === 'imageboard' && $THREAD != '' || $style === 'textboard' && $THREAD != ''){
-															if($SUBJECT != '')echo '<span class="subject">'.$SUBJECT.'</span>';
+															if($SUBJECT != '')echo '<span class="subject"><h1>'.$SUBJECT.'</h1></span>';
 															if($SUBJECT == '')echo '<span class="subject"><em>no subject</em></span>';
 																// Image (or video) content block
 																if($URL != '' && $TYPE == 'image'){
@@ -4042,7 +4032,6 @@ Author URI: http://onebillionwords.com
 																if($STICKY == 1)echo '<em>sticky</em> ';
 																if($LOCKED == 1)echo '<em>locked</em> ';
 																if($STICKY != 1)echo 'Posted '.timesincethis($DATE).' by ';
-																if($EMAIL != ''){echo get_avatar($EMAIL,32);}
 																if($MODERATOR == 1)echo '<span class="mod">'.$modcode.'</span>';
 																if($MODERATOR == 2)echo '<span class="mod">'.$usermodcode.'</span>';
 																if($MODERATOR == 0)if(strtolower($EMAIL) == 'heaven'){echo '';}else{echo $defaultname;}
@@ -4160,12 +4149,7 @@ Author URI: http://onebillionwords.com
 																				echo '<div class="replycontent">';
 																				echo '
 																				<span class="OP">';
-																				
 																				echo '<span class="nomber">No. '.$ID.'</span>';
-																				
-																				if($EMAIL != ''){
-																					echo get_avatar($EMAIL,32);
-																				}										
 																				echo '<span class="name">';
 																				if(strtolower($EMAIL) == 'heaven'){echo '';}
 																				else{echo $defaultname;}
