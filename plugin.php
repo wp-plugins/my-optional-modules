@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.4.9.2.1
+Version: 5.4.9.2.2
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com 
 */
@@ -834,7 +834,7 @@ Author URI: http://onebillionwords.com
 					if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){}else{ '<code>CRYPT_BLOWFISH is not available.  Passwords module disabled.</code><br />';}
 					if(!isset($_POST['generateHash']))echo '<form action="" method="post" name="generateHash"><input type="submit" name="generateHash" id="generateHash" value="Generate the file hash to check."/></form>';
 					if(isset($_POST['generateHash'])){
-						echo '<hr class="clear" /><i class="fa fa-code"></i> The hash generated for this file is: <strong class="on">';
+						echo '<i class="fa fa-code"></i> The hash generated for this file is: <strong class="on">';
 						$file = plugin_dir_path( __FILE__ ).'plugin.php';
 						$file_handler = fopen($file,'r'); 
 						$contents = fread($file_handler, filesize($file)); 
@@ -2958,7 +2958,7 @@ Author URI: http://onebillionwords.com
 							<input type="text" id="'.$label.'" name="'.$label.'" value="'.get_option($label).'" /></section>';
 						}
 						elseif($value == 4 || $value > 4){
-							if($value == 4)echo '<hr class="clear" />';
+							if($value == 4)echo '';
 							echo '
 							<section><label for="'.$label.'">'.$text.'</label>
 							<select name="'.$label.'">';
@@ -2971,7 +2971,7 @@ Author URI: http://onebillionwords.com
 						}
 					}
 				echo '	
-				<hr class="clear" />
+				
 				<input id="update_JA" type="submit" value="Save" name="update_JA">
 				</form>
 				</div>';
@@ -3063,14 +3063,9 @@ Author URI: http://onebillionwords.com
 
 	/****************************** SECTION N -/- (N0) Functions -/- Regular Board */
 		function regularboard_shortcode($atts,$content = null){
-			$mtime = microtime();
-			$mtime = explode(" ",$mtime);
-			$mtime = $mtime[1] + $mtime[0];
-			$starttime = $mtime; 		
 			$wordpressname = get_bloginfo('name');
 			extract(
 				shortcode_atts(array(
-					'linkbase'        => '',
 					'boardrules'      => '',
 					'timebetween'     => '0',
 					'cutoff'          => '500',
@@ -3098,7 +3093,6 @@ Author URI: http://onebillionwords.com
 					'board'           => '',
 					'loggedonly'      => '',
 					'lock'            => '',
-					'userposts'       => '10',
 					'sfw'             => '',
 					'nsfw'            => '',
 					'userflood'       => '',
@@ -3108,7 +3102,6 @@ Author URI: http://onebillionwords.com
 					'untrusteddomain' => '',
 					'boardimage'      => '',
 					'style'           => 'imageboard',
-					'credits'         => '<code>Trademarks/comments/copyrights owned by their respectived parties/Posters<br />Boards powered by Wordpress, Regular Board (2011-'.date('Y').')<br /> &copy '.date('Y').' '.$wordpressname.'</code>'
 				), $atts)
 			);	
 			
@@ -3136,7 +3129,6 @@ Author URI: http://onebillionwords.com
 			
 			
 			$current_timestamp               = date('Y-m-d H:i:s');
-			$userposts                       = intval($userposts);
 			$requirelogged                   = intval($requirelogged);
 			$showboards                      = intval($showboards);
 			$maxreplies                      = intval($maxreplies);
@@ -3172,54 +3164,9 @@ Author URI: http://onebillionwords.com
 
 			$getBoards = $wpdb->get_results("SELECT * FROM $regularboard_boards");				
 
-
-			if($ipaddress !== false){			
-			echo '
-			<div class="boardAll">
-			<div class="boardInformation">';
-			if($boardimage != '')echo '<img src="'.esc_url($boardimage).'" class="logo" />';
-			echo '<hr />';
-			if($showboards == 1){
-				echo '
-				<strong>Board Activity</strong>';
-					if(count($getBoards) > 0){
-						foreach($getBoards as $gotBoards){
-							$BOARDNAME = esc_sql(myoptionalmodules_sanistripents($gotBoards->SHORTNAME));
-							$BOARDLONG = esc_sql(myoptionalmodules_sanistripents($gotBoards->NAME));
-							$BOARDDESC = esc_sql(myoptionalmodules_sanistripents($gotBoards->DESCRIPTION));
-							$getBoardPostsTopics = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' ORDER BY LAST DESC LIMIT 1");
-							echo '<section>';
-							
-							if($board != '' && $linkbase != '' || $linkbase != ''){echo '<a rel="nofollow" href="'.$linkbase.'/'.$BOARDNAME.'/">'.$BOARDLONG.'</a><br />';}
-							elseif($board == '' && $linkbase == '' || $linkbase == ''){echo '<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDLONG.'</a><br />';}
-								foreach($getBoardPostsTopics as $posts){
-									$DATE = $posts->DATE;
-									$DATE = timesincethis($DATE);
-									echo $DATE;
-								}
-							echo '
-							</section>';
-						}
-					}
-			}
-			echo '<hr />';
-			if($boardrules != '')echo ' >> <a href="'.$boardrules.'">rules</a><br />';
-			if($ISMODERATOR === true){echo ' >> <a href="?area=create">admin</a><br />';}
-
-			echo '</div>
-			<div class="boardDisplay">';
-
-				myoptionalmodules_checkdnsbl($checkThisIP);
-				$theIP         = myoptionalmodules_sanistripents($ipaddress);
-				$theIP_s32int  = myoptionalmodules_sanistripents(ip2long($ipaddress));
-				$theIP_us32str = myoptionalmodules_sanistripents(sprintf("%u",$theIP_s32int));
-				$checkThisIP   = myoptionalmodules_sanistripents($theIP);
-				$QUERY         = myoptionalmodules_sanistripents($_SERVER['QUERY_STRING']);
-				
 				if($board == '')$BOARD = esc_sql(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['board'])));
 				if($board != '')$BOARD = $board;
 				if($board != '')$BoardIsSet = true;
-				
 				if($loggedonly != ''){
 					$loggedonly = array($loggedonly);
 					foreach($loggedonly as $LOGGEDONLY){
@@ -3237,12 +3184,6 @@ Author URI: http://onebillionwords.com
 						$posting = 0;
 					}
 				}
-				
-				$AREA          = esc_sql(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['area'])));
-				$THREAD        = intval($_GET['thread']);
-				$BOARD         = strtolower($BOARD);
-				$AREA          = strtolower($AREA);
-
 				$isSFW = 0;
 				$isNSFW = 0;
 				if($sfw != '')if(in_array($BOARD,$sfw))$isSFW = 1;
@@ -3250,6 +3191,155 @@ Author URI: http://onebillionwords.com
 				if($isSFW == 1) $sfwnsfw = 'S F W';
 				if($isNSFW == 1) $sfwnsfw = 'N S F W';
 				if($isSFW == '' && $isNSFW == '') $sfwnsfw = 'S F W';
+				$AREA          = esc_sql(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['area'])));
+				$THREAD        = intval($_GET['thread']);
+				$BOARD         = strtolower($BOARD);
+				$AREA          = strtolower($AREA);
+				$THISPAGE      = get_permalink();
+				if($BOARDURL != ''){
+						if($BOARD != '' && $THREAD != '' && $ID == $THREAD)$ACTION = $THISPAGE;
+						elseif($BOARD != '' && $THREAD == '')$ACTION = $THISPAGE;
+						elseif($BOARD != '' && $THREAD != '')$ACTION = $THISPAGE.'?thread='.$THREAD;
+				}else{
+					if($BoardIsSet !== true){
+						if($BOARD != '' && $THREAD != '' && $ID == $THREAD)$ACTION = $THISPAGE.'?board='.$BOARD;
+						elseif($BOARD != '' && $THREAD == '')$ACTION = $THISPAGE.'?board='.$BOARD;
+						elseif($BOARD != '' && $THREAD != '')$ACTION = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$THREAD;
+					}
+					if($BoardIsSet === true){
+						if($BOARD != '' && $THREAD != '' && $ID == $THREAD)$ACTION = $THISPAGE;
+						elseif($BOARD != '' && $THREAD == '')$ACTION = $THISPAGE;
+						elseif($BOARD != '' && $THREAD != '')$ACTION = $THISPAGE.'?thread='.$THREAD;
+					}													
+				}				
+				
+			if($ipaddress !== false){			
+			echo '
+			<div class="boardAll">
+			<div class="boardInformation">';
+			if($boardimage != '')echo '<img src="'.esc_url($boardimage).'" class="logo" />';
+			echo '<hr />';
+			if($showboards == 1){
+				echo '
+				<strong>Board Activity</strong>';
+					if(count($getBoards) > 0){
+						foreach($getBoards as $gotBoards){
+							$BOARDNAME = esc_sql(myoptionalmodules_sanistripents($gotBoards->SHORTNAME));
+							$BOARDLONG = esc_sql(myoptionalmodules_sanistripents($gotBoards->NAME));
+							$BOARDDESC = esc_sql(myoptionalmodules_sanistripents($gotBoards->DESCRIPTION));
+							$BOARDURL = esc_sql(myoptionalmodules_sanistripents($gotBoards->URL));
+							$getBoardPostsTopics = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' ORDER BY LAST DESC LIMIT 1");
+							echo '<section>';
+							
+							if($BOARDURL != ''){echo '<a rel="nofollow" href="'.$BOARDURL.'/">'.$BOARDLONG.'</a><br />';}
+							elseif($BOARDURL == ''){echo '<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDLONG.'</a><br />';}
+								foreach($getBoardPostsTopics as $posts){
+									$DATE = $posts->DATE;
+									$DATE = timesincethis($DATE);
+									echo $DATE;
+								}
+							echo '
+							</section>';
+						}
+					}
+			}
+			
+			echo '<hr />';
+			if($boardrules != '')echo ' >> <a href="'.$boardrules.'">rules</a><br />';
+			if($ISMODERATOR === true){echo ' >> <a href="?area=create">admin</a><br />';}
+
+			echo '
+			<div class="reportdelete">
+			<form name="reporttomods" method="post" action="'.$ACTION.'">';
+				wp_nonce_field('reporttomods');
+				echo '
+				<section><input type="text" name="report_ids" value="" placeholder="Post No." />';
+				if($enablereports == 1)echo '<input type="text" name="report_reason" value="" placeholder="Reason for reporting" /></section>';
+				echo '<section>Password (to delete):<br /><input type="password" name="DELETEPASSWORD" id="DELETEPASSWORD" /></section>
+				<section class="smiley"><input type="checkbox" name="IAMHUMAN" value="YESIAM"><span>Humans check the box.</span></section><section>';
+				if($enablereports == 1)echo '<label class="submit" for="report_this">report this</label>  ';
+				if($enablereports == 1)echo '<input type="submit" name="report_this" value="report" id="report_this" class="hidden" />';
+				echo '<label class="submit" for="delete_this">delete this</label>
+				</section>
+				<input type="submit" name="delete_this" value="delete" id="delete_this" class="hidden" />
+			</form>
+			</div>
+			';													
+
+													if(current_user_can('manage_options') || $ISUSERMOD === true){
+														echo '<div class="modactions">';
+														echo '
+														<form name="moderator" method="post" action="'.$ACTION.'">';
+															wp_nonce_field('moderator');
+															echo '
+															<section><input type="text" name="admin_ids" value="" placeholder="Post No." />
+															<input type="text" name="admin_reason" value="" placeholder="Reason (if banning)" /></section>
+															<section class="smiley"><input type="checkbox" name="FROWNY" value="frowns"><span>Check box to confirm.</span></section>
+															<section><label class="submit" for="admin_delete">delete</label>
+															<label class="submit" for="admin_ban">ban</label>
+															<label class="submit" for="admin_sticky">+ sticky</label>
+															<label class="submit" for="admin_lock">+ lock</label>
+															<label class="submit" for="admin_unsticky">- sticky</label>
+															<label class="submit" for="admin_unlock">- lock</label></section>
+															<input type="submit" name="admin_delete" value="Delete" id="admin_delete" class="hidden" />
+															<input type="submit" name="admin_ban" value="Ban" id="admin_ban" class="hidden" />
+															<input type="submit" name="admin_sticky" value="Sticky" id="admin_sticky" class="hidden" />
+															<input type="submit" name="admin_lock" value="Lock" id="admin_lock" class="hidden" />
+															<input type="submit" name="admin_unsticky" value="Unsticky" id="admin_unsticky" class="hidden" />
+															<input type="submit" name="admin_unlock" value="Unlock" id="admin_unlock" class="hidden" />
+														</form>
+														';
+														echo '</div>';
+														if($_REQUEST['FROWNY'] === 'frowns'){
+															$ID2SET     = $_REQUEST['admin_ids'];
+															if(isset($_POST['admin_lock'])     && $ID2SET != ''  )$doLock     = $wpdb->update( ''.$regularboard_posts.'', array( 'LOCKED' => '1' ), array( 'ID' => ''.$ID2SET.''), array( '%d'));
+															if(isset($_POST['admin_sticky'])   && $ID2SET != ''  )$doSticky   = $wpdb->update( ''.$regularboard_posts.'', array( 'STICKY' => '1' ), array( 'ID' => ''.$ID2SET.''), array( '%d') );
+															if(isset($_POST['admin_unsticky']) && $ID2SET != ''  )$doUnsticky = $wpdb->update( ''.$regularboard_posts.'', array( 'STICKY' => '0' ), array( 'ID' => ''.$ID2SET.''), array( '%d') );	
+															if(isset($_POST['admin_unlock'])   && $ID2SET != ''  )$doUnlock   = $wpdb->update( ''.$regularboard_posts.'', array( 'LOCKED' => '0' ), array( 'ID' => ''.$ID2SET.''), array( '%d') );
+															
+															if(isset($_POST['admin_delete'])   && $ID2SET != ''){
+																$getIDfromID = $wpdb->get_results("SELECT PARENT FROM $regularboard_posts WHERE ID = '".$ID2SET."' LIMIT 1");
+																$wpdb->delete( ''.$regularboard_posts.'', array('ID' => ''.$ID2SET.''),array( '%d') );
+																foreach($getIDfromID as $parentCheck){
+																	$parent = $parentCheck->PARENT;
+																	if($PARENT == 0){
+																		$wpdb->delete( ''.$regularboard_posts.'', array('PARENT' => ''.$ID2SET.''),array( '%d') );
+																	}
+																}
+															}
+															
+															if(isset($_POST['admin_ban']) && $ID2SET != ''){
+																$getIPfromID = $wpdb->get_results("SELECT IP FROM $regularboard_posts WHERE ID = '".$ID2SET."' LIMIT 1");
+																foreach($getIPfromID as $gotIP){
+																	$IP = $gotIP->IP;
+																	$MESSAGE = esc_sql($_REQUEST['admin_reason']);
+																	$wpdb->query(
+																		$wpdb->prepare(
+																			"INSERT INTO $regularboard_users 
+																			( ID, IP, PARENT, BANNED, MESSAGE ) 
+																			VALUES ( %d, %d, %d, %d, %s )",
+																			'',
+																			$IP,
+																			$ID2SET,
+																			1,
+																			$MESSAGE
+																		)
+																	);																	
+																	$wpdb->delete( ''.$regularboard_posts.'', array('IP' => ''.$IP.''),array( '%d') );
+																}
+															}
+														}
+													}
+			
+			echo '</div>
+			<div class="boardDisplay">';
+
+				myoptionalmodules_checkdnsbl($checkThisIP);
+				$theIP         = myoptionalmodules_sanistripents($ipaddress);
+				$theIP_s32int  = myoptionalmodules_sanistripents(ip2long($ipaddress));
+				$theIP_us32str = myoptionalmodules_sanistripents(sprintf("%u",$theIP_s32int));
+				$checkThisIP   = myoptionalmodules_sanistripents($theIP);
+				$QUERY         = myoptionalmodules_sanistripents($_SERVER['QUERY_STRING']);
 				
 				// Admin
 				if($AREA == 'create'){
@@ -3265,7 +3355,7 @@ Author URI: http://onebillionwords.com
 						<div class="users">
 						<form name="reports" action="?area=create" class="create" method="post">
 						<span>Reported threads/replies</span>
-						<hr class="clear" />';
+						';
 						wp_nonce_field('reports');
 						foreach($getReports as $gotReports){
 							$userIP = long2ip($gotReports->IP);
@@ -3282,17 +3372,17 @@ Author URI: http://onebillionwords.com
 							if($userMESSAGE == '')echo '<span>No reason given.</span>';
 							echo '<input type="submit" name="dismiss'.$thisID.'" id="dismiss'.$thisID.'" value="Dismiss report" />';
 							echo '<input type="submit" name="delete'.$thisID.'" id="delete'.$thisID.'" value="Delete report/thread" />';
-							echo '</p><hr class="clear" />';
+							echo '</p>';
 							if(isset($_POST['dismiss'.$thisID])){
 								$wpdb->query("DELETE FROM $regularboard_users WHERE THREAD = '".$thisID."'");
 								echo '<meta http-equiv="refresh" content="0;URL=?area=create">';
 							}
 							if(isset($_POST['delete'.$thisID])){
 								if($thisParent == 0){
-									$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$thisID."'");
+									$wpdb->delete( ''.$regularboard_posts.'', array('PARENT' => ''.$thisID.''),array( '%d') );
 								}
-								$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$thisID."'");
-								$wpdb->query("DELETE FROM $regularboard_users WHERE THREAD = '".$thisID."'");
+								$wpdb->delete( ''.$regularboard_posts.'', array('ID' => ''.$thisID.''),array( '%d') );
+								$wpdb->delete( ''.$regularboard_users.'', array('THREAD' => ''.$thisID.''),array( '%d') );
 								echo '<meta http-equiv="refresh" content="0;URL=?area=create">';
 							}							
 						}
@@ -3301,7 +3391,7 @@ Author URI: http://onebillionwords.com
 						<div class="users">
 						<form name="unban" action="?area=create" class="create" method="post">
 						<span>Banned IPs</span>
-						<hr class="clear" />';
+						';
 						wp_nonce_field('unban');
 						foreach($getUsers as $gotUsers){
 							$userIP = long2ip($gotUsers->IP);
@@ -3310,9 +3400,9 @@ Author URI: http://onebillionwords.com
 							if($userMESSAGE != '')echo '<span>'.$userMESSAGE.'</span>';
 							if($userMESSAGE == '')echo '<span>No ban reason given.</span>';
 							echo '<input type="submit" name="'.$thisID.'" id="'.$thisID.'" value="Unban '.$userIP.'" />';
-							echo '<hr class="clear" />';
+							echo '';
 							if(isset($_POST[$thisID])){
-								$wpdb->query("DELETE FROM $regularboard_users WHERE ID = '".$thisID."'");
+								$wpdb->delete( ''.$regularboard_users.'', array('ID' => ''.$thisID.''),array( '%d') );
 								echo '<meta http-equiv="refresh" content="0;URL=?area=create">';
 							}
 						}
@@ -3321,7 +3411,7 @@ Author URI: http://onebillionwords.com
 							echo '
 							<hr />
 							<form method="post" class="left">
-							<label for="UPGRADE"> [ Click to Force update tables ]</label>
+							<label for="UPGRADE" class="UPGRADE">Click to Force update tables</label>
 							<input type="submit" name="UPGRADE" id="UPGRADE" value="An upgrade is necessary." class="hidden" />
 							</form>
 							<hr />
@@ -3338,6 +3428,7 @@ Author URI: http://onebillionwords.com
 								$wpdb->query("ALTER TABLE $regularboard_users CHANGE `PARENT` `PARENT` BIGINT( 22 ) NOT NULL");
 								$wpdb->query("ALTER TABLE $regularboard_users ADD THREAD BIGINT ( 22 ) NOT NULL AFTER IP");
 								$wpdb->query("ALTER TABLE $regularboard_users ADD BOARD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER PARENT");
+								$wpdb->query("ALTER TABLE $regularboard_boards ADD URL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER RULES");
 							}
 						echo '
 						<form method="post" class="create" name="createaboard" action="?area=create">';
@@ -3346,10 +3437,11 @@ Author URI: http://onebillionwords.com
 						<input type="text" name="SHORTNAME" id="SHORTNAME" placeholder="Shortname" />
 						<input type="text" name="NAME" id="NAME" placeholder="Expanded board name" />
 						<input type="text" name="DESCRIPTION" id="DESCRIPTION" placeholder="Short description" />
+						<input type="text" name="URL" id="URL" placeholder="Board URL (OPTIONAL)" />
 						<textarea name="RULES" id="RULES" placeholder="Rules for this board (HTML allowed)"></textarea>
 						<input type="submit" name="CREATEBOARD" id="CREATEBOARD" value="Create this board" />
 						</form>
-						<hr class="clear" />
+						
 						';
 						if(count($getBoards) > 0){
 								echo '
@@ -3359,34 +3451,58 @@ Author URI: http://onebillionwords.com
 								<select name="DELETETHIS" id="DELETETHIS">';
 								foreach($getBoards as $gotBoard){
 									$board = esc_sql($gotBoard->SHORTNAME);
-									$name  = ($gotBoard->NAME);
+									$name  = esc_sql($gotBoard->NAME);
 									echo '
 									<option value="'.$board.'">/'.$board.'/ - '.$name.'</option>';
 								}
 								echo '
-								<input type="submit" name="DELETEBOARD" id="DELETEBOARD" value="Delete" />						
+								</select>
+								<input type="submit" name="DELETEBOARD" id="DELETEBOARD" value="Nuke" />
 								</form>';
 						}
 						if(isset($_POST['DELETEBOARD']) && $_REQUEST['DELETETHIS'] != '' ){
 								$DELETETHIS = esc_sql(myoptionalmodules_sanistripents($_REQUEST['DELETETHIS']));
-								$wpdb->query("DELETE FROM $regularboard_posts  WHERE BOARD     = '".$DELETETHIS."'");
-								$wpdb->query("DELETE FROM $regularboard_boards WHERE SHORTNAME = '".$DELETETHIS."'");
+								$wpdb->delete( ''.$regularboard_posts.'', array('BOARD' => ''.$DELETETHIS.''),array( '%s') );
+								$wpdb->delete( ''.$regularboard_boards.'', array('SHORTNAME' => ''.$DELETETHIS.''),array( '%s') );
 								echo '<meta http-equiv="refresh" content="0;URL=?area=create">';
 						}
 						echo '	
-						<hr class="clear" />
+						
 						</div>';
 						if(isset($_POST['CREATEBOARD']) && $_REQUEST['NAME'] != '' && $_REQUEST['SHORTNAME'] != ''){
 							$NAME = myoptionalmodules_sanistripents($_REQUEST['NAME']);
-							$SHORTNAME = esc_sql(myoptionalmodules_sanistripents($_REQUEST['SHORTNAME']));
+							$SHORTNAME = esc_sql(myoptionalmodules_sanistripents(strtolower($_REQUEST['SHORTNAME'])));
 							$DESCRIPTION = esc_sql($purifier->purify($_REQUEST['DESCRIPTION']));
 							$RULES = esc_sql($purifier->purify(wpautop($_REQUEST['RULES'])));
+							$URL = esc_url($_REQUEST['URL']);
 							$getBoards = $wpdb->get_results("SELECT SHORTNAME FROM $regularboard_boards WHERE SHORTNAME = '$SHORTNAME'");
 							if(count($getBoards) == 0){
-								$wpdb->query("INSERT INTO $regularboard_boards (NAME, SHORTNAME, DESCRIPTION, RULES) VALUES ('$NAME','$SHORTNAME','$DESCRIPTION','$RULES')") ;
-								echo '<h3 class="options">'.$SHORTNAME.' CREATED</h3>';
+								$wpdb->query( 
+									$wpdb->prepare(
+										"INSERT INTO $regularboard_boards 
+										( NAME, SHORTNAME, DESCRIPTION, RULES, URL ) 
+										VALUES ( %s, %s, %s, %s, %s )",
+											$NAME,
+											$SHORTNAME,
+											$DESCRIPTION,
+											$RULES,
+											$URL
+										)
+								);								
 							}else{
-								echo '<h3 class="options">'.$SHORTNAME.' EXISTS</h3>';
+								$wpdb->delete( ''.$regularboard_boards.'', array('SHORTNAME' => ''.$SHORTNAME.''),array( '%s') );							
+								$wpdb->query( 
+									$wpdb->prepare(
+										"INSERT INTO $regularboard_boards 
+										( NAME, SHORTNAME, DESCRIPTION, RULES, URL ) 
+										VALUES ( %s, %s, %s, %s, %s )",
+											$NAME,
+											$SHORTNAME,
+											$DESCRIPTION,
+											$RULES,
+											$URL
+										)
+								);								
 							}
 						}
 						echo '
@@ -3399,14 +3515,12 @@ Author URI: http://onebillionwords.com
 
 
 			// Board view
-			elseif($BOARD != '' && $linkbase == ''){
+			elseif($BOARD != '' && $BOARD != '_front'){
 				// Get Results
-				
 				$getBoards = $wpdb->get_results("SELECT * FROM $regularboard_boards ORDER BY SHORTNAME ASC");
 				$getCurrentBoard = $wpdb->get_results("SELECT * FROM $regularboard_boards WHERE SHORTNAME = '".$BOARD."' LIMIT 1");
 				$getUser = $wpdb->get_results("SELECT * FROM $regularboard_users WHERE IP = '".$theIP_us32str."' AND BANNED = 1 LIMIT 1");
 				$getLastPost = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' ORDER BY ID DESC LIMIT 1");
-				if($userposts > 0)$getLastPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' ORDER BY ID DESC LIMIT ".$userposts."");
 				
 				if($THREAD == ''){
 					$postsperpage = intval($threadsper);
@@ -3473,7 +3587,6 @@ Author URI: http://onebillionwords.com
 							}
 					}
 
-					$THISPAGE = get_permalink();
 					if($BoardIsSet !== true)if($BOARD != '' && $THREAD == ''){$REDIRECTO = $THISPAGE.'?board='.$BOARD;}
 					if($BoardIsSet === true)if($BOARD != '' && $THREAD == ''){$REDIRECTO = $THISPAGE;}
 					if($BoardIsSet !== true)if($BOARD != '' && $THREAD != ''){$REDIRECTO = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$THREAD;}
@@ -3498,7 +3611,10 @@ Author URI: http://onebillionwords.com
 									$boardName = myoptionalmodules_sanistripents($gotCurrentBoard->NAME);
 									$boardShort = myoptionalmodules_sanistripents($gotCurrentBoard->SHORTNAME);
 									$boardDescription = $purifier->purify($gotCurrentBoard->DESCRIPTION);
+									$boardDescription = str_replace('\\\\\\\'','\'',$boardDescription);
 									$boardrules = $purifier->purify($gotCurrentBoard->RULES);
+									$boardrules  = str_replace('\n','',$boardrules);
+									$boardrules  = str_replace('\r','',$boardrules);
 									// If user is not banned, check if their IP is blacklisted on the DNSBL.  If it is, autoban them.
 									if ($DNSBL === true)
 									{
@@ -3538,6 +3654,8 @@ Author URI: http://onebillionwords.com
 												if(function_exists('akismet_admin_init')){
 													$APIKey = myoptionalmodules_sanistripents(get_option('wordpress_api_key'));
 													$THISPAGE = get_permalink();
+													if($BOARDURL   != ''   )if($BOARD != '' && $THREAD == ''){$WebsiteURL = $BOARDURL.'/';}
+													if($BOARDURL   != ''   )if($BOARD != '' && $THREAD != ''){$WebsiteURL = $BOARDURL.'/?thread='.$THREAD;}
 													if($BoardIsSet !== true)if($BOARD != '' && $THREAD == ''){$WebsiteURL = $THISPAGE.'?board='.$BOARD;}
 													if($BoardIsSet === true)if($BOARD != '' && $THREAD == ''){$WebsiteURL = $THISPAGE;}
 													if($BoardIsSet !== true)if($BOARD != '' && $THREAD != ''){$WebsiteURL = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$THREAD;}
@@ -3733,22 +3851,15 @@ Author URI: http://onebillionwords.com
 										if(!isset($_POST['FORMSUBMIT'])){
 												echo '<div class="mainboard">
 												
-												<div class="boardform '.$boardform.' clear'.intval($clear).'">
-												<label for="postformshow" id="showme">Control panel + ';
-												if($THREAD == '') echo 'Create a new Post ';
-												if($THREAD != '') echo 'Create a new Reply ';
-												echo '<i class="fa fa-chevron-right"></i></label>
-												<input id="postformshow" type="checkbox" class="hidden" />
+												<div class="boardform '.$boardform.'">
 												<div id="boardform">';
 								
-												echo '<h3 class="boardName">'.$boardName.' <span class="sfw right">'.$sfwnsfw.'</span></h3>';
+												echo '<h3 class="boardName">'.$boardName.' <span class="sfw left">'.$sfwnsfw.'</span></h3>';
 												echo '<p class="boardDescription">'.$boardDescription.'</p>';
-
-												if($THREAD != ''){echo '<p class="reply">Posting Mode: Reply ';
-												if($BoardIsSet !== true) echo '<a rel="nofollow" href="?board='.$BOARD.'">[Return]</a></p>';
-												if($BoardIsSet === true) echo '<a rel="nofollow" href="'.get_permalink().'">[Return]</a></p>';
-												}												
-												
+												echo '<span class="clear">';
+												if($THREAD == ''){echo ' >> Posting Mode: New';}
+												if($THREAD != ''){echo ' >> Posting Mode: Reply ';}
+												echo '</span>';
 												if(filter_var($checkThisIP,FILTER_VALIDATE_IP)){ $IPPASS = true; }
 												elseif(filter_var($checkThisIP,FILTER_VALIDATE_IP,FILTER_FLAG_IPV6)){ $IPPASS = true; }
 												else{ $IPPASS = false;}
@@ -3771,22 +3882,13 @@ Author URI: http://onebillionwords.com
 																if(count($checkLOCK) == 1)$LOCKED = 1;
 																if($LOCKED == 1 )echo '<h3 class="readonly"><i class="fa fa-lock"></i> THREAD LOCKED</h3>';
 																if($LOCKED == 0){
-																	echo '<form class="topic" name="regularboard" method="post" action="';
-																	if($BoardIsSet !== true){
-																		if($BOARD != '' && $THREAD == '')echo '?board='.$BOARD;
-																		if($BOARD != '' && $THREAD != '')echo '?board='.$BOARD.'&amp;thread='.$THREAD;
-																	}
-																	if($BoardIsSet === true){
-																		if($BOARD != '' && $THREAD == '')echo '';get_permalink();
-																		if($BOARD != '' && $THREAD != '')echo '';get_permalink();echo '?thread='.$THREAD;
-																	}
-																	echo '" id="COMMENTFORM">';
+																	echo '<form class="topic" name="regularboard" method="post" action="'.$ACTION.'" id="COMMENTFORM">';
 																	wp_nonce_field('regularboard');
 																	echo '<input type="hidden" value="" name="LINK" />';
 																	echo '<input type="hidden" value="" name="PAGE" />';
 																	echo '<input type="hidden" value="" name="LOGIN" />';
 																	echo '<input type="hidden" value="" name="USERNAME" />';
-																	if($enableemail == 1)echo '<section><label class="absolute" for="EMAIL">E-mail (won\'t be published)(optional)</label><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="E-mail" /></section>';
+																	if($enableemail == 1)echo '<section><label class="absolute" for="EMAIL">E-mail (optional)</label><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="E-mail" /></section>';
 																	if($enableurl == 1 && $THREAD == '')echo '<section><label class="absolute" for="URL">Attach a URL (optional)</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)(http://)" /></section>';
 																	if($enablerep == 1 && $THREAD != '')echo '<section><label class="absolute" for="URL">Attach a URL (optional)</label><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder="URL (.jpg/.gif/.png)(youtube)(http://)" /></section>';
 																	
@@ -3804,27 +3906,12 @@ Author URI: http://onebillionwords.com
 															}
 														}
 													}
-													
-														if($boardrules != ''){echo '<hr /><div class="rules">'.$boardrules.'</div><hr />';}
+													if($boardrules != ''){echo '<div class="rules">'.$boardrules.'</div>';}
 													
 													// Moderator thread and reply tools (for stickying/locking/deleting/banning via Post Nomber
 													if($usermod != ''){
 														$usermod = array($usermod);
 													}
-													
-													echo '<div class="myposts">';
-
-														if($BoardIsSet !== true){
-															if($BOARD != '' && $THREAD != '' && $ID == $THREAD)$ACTION = $THISPAGE.'?board='.$BOARD;
-															elseif($BOARD != '' && $THREAD == '')$ACTION = $THISPAGE.'?board='.$BOARD;
-															elseif($BOARD != '' && $THREAD != '')$ACTION = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$THREAD;
-														}
-														if($BoardIsSet === true){
-															if($BOARD != '' && $THREAD != '' && $ID == $THREAD)$ACTION = $THISPAGE;
-															elseif($BOARD != '' && $THREAD == '')$ACTION = $THISPAGE;
-															elseif($BOARD != '' && $THREAD != '')$ACTION = $THISPAGE.'?thread='.$THREAD;
-														}													
-
 													if($enablereports == 1){
 														if($_REQUEST['IAMHUMAN'] === 'YESIAM' && $_REQUEST['DELETEPASSWORD'] == ''){
 															if($_REQUEST['report_ids'] != ''){
@@ -3850,132 +3937,8 @@ Author URI: http://onebillionwords.com
 															}
 														}
 													}
-														echo '
-														<div>
-														<label for="deletereport" class="expand"> >> Delete / Report</label>
-														<input type="checkbox" class="hidden" id="deletereport" />
-														<section class="hidden">';
-														echo '
-														<form name="reporttomods" method="post" action="'.$ACTION.'">';
-															wp_nonce_field('reporttomods');
-															echo '
-															<section><input type="text" name="report_ids" value="" placeholder="Thread/Reply No." />';
-															if($enablereports == 1)echo '<input type="text" name="report_reason" value="" placeholder="Reason for reporting" /></section>';
-															echo '<section>Password (to delete):<br /><input type="password" name="DELETEPASSWORD" id="DELETEPASSWORD" /></section>
-															<section class="smiley"><input type="checkbox" name="IAMHUMAN" value="YESIAM"><span>Humans check the box.</span></section><section>';
-															if($enablereports == 1)echo '<label class="submit" for="report_this">[ report this ]</label>  ';
-															if($enablereports == 1)echo '<input type="submit" name="report_this" value="report" id="report_this" class="hidden" />';
-															echo '<label class="submit" for="delete_this">[ delete this ]</label>
-															</section>
-															<input type="submit" name="delete_this" value="delete" id="delete_this" class="hidden" />
-														</form>
-														</section>
-														</div>
-														';													
-
-													if(current_user_can('manage_options') || $ISUSERMOD === true){
-														echo '
-														<label for="deleteban" class="expand"> >> Mod: Delete / Ban form</label>
-														<input type="checkbox" class="hidden" id="deleteban" />
-														<section class="hidden">';
-														echo '
-														<form name="moderator" method="post" action="'.$ACTION.'">';
-															wp_nonce_field('moderator');
-															echo '
-															<section><input type="text" name="admin_ids" value="" placeholder="Thread/Reply No." />
-															<input type="text" name="admin_reason" value="" placeholder="Reason (if banning)" /></section>
-															<section><hr /></section>
-															<section class="smiley"><input type="checkbox" name="FROWNY" value="frowns"><span>Check box to confirm.</span></section>
-															<section><hr /></section>
-															<section><label class="submit" for="admin_delete">[ delete ]</label>
-															<label class="submit" for="admin_ban">[ ban ]</label>
-															<label class="submit" for="admin_sticky">[ + sticky ]</label>
-															<label class="submit" for="admin_lock">[ + lock ]</label>
-															<label class="submit" for="admin_unsticky">[ - sticky ]</label>
-															<label class="submit" for="admin_unlock">[ - lock ]</label></section>
-															<input type="submit" name="admin_delete" value="Delete" id="admin_delete" class="hidden" />
-															<input type="submit" name="admin_ban" value="Ban" id="admin_ban" class="hidden" />
-															<input type="submit" name="admin_sticky" value="Sticky" id="admin_sticky" class="hidden" />
-															<input type="submit" name="admin_lock" value="Lock" id="admin_lock" class="hidden" />
-															<input type="submit" name="admin_unsticky" value="Unsticky" id="admin_unsticky" class="hidden" />
-															<input type="submit" name="admin_unlock" value="Unlock" id="admin_unlock" class="hidden" />
-														</form>
-														';
-														echo '</section>';
-														if($_REQUEST['FROWNY'] === 'frowns'){
-															$ID2SET     = $_REQUEST['admin_ids'];
-															if(isset($_POST['admin_lock'])     && $ID2SET != ''  )$doLock     = $wpdb->update( ''.$regularboard_posts.'', array( 'LOCKED' => '1' ), array( 'ID' => ''.$ID2SET.''), array( '%d'));
-															if(isset($_POST['admin_sticky'])   && $ID2SET != ''  )$doSticky   = $wpdb->update( ''.$regularboard_posts.'', array( 'STICKY' => '1' ), array( 'ID' => ''.$ID2SET.''), array( '%d') );
-															if(isset($_POST['admin_unsticky']) && $ID2SET != ''  )$doUnsticky = $wpdb->update( ''.$regularboard_posts.'', array( 'STICKY' => '0' ), array( 'ID' => ''.$ID2SET.''), array( '%d') );	
-															if(isset($_POST['admin_unlock'])   && $ID2SET != ''  )$doUnlock   = $wpdb->update( ''.$regularboard_posts.'', array( 'LOCKED' => '0' ), array( 'ID' => ''.$ID2SET.''), array( '%d') );
-															
-															if(isset($_POST['admin_delete'])   && $ID2SET != ''){
-																$getIDfromID = $wpdb->get_results("SELECT PARENT FROM $regularboard_posts WHERE ID = '".$ID2SET."' LIMIT 1");
-																$wpdb->delete( ''.$regularboard_posts.'', array('ID' => ''.$ID2SET.''),array( '%d') );
-																foreach($getIDfromID as $parentCheck){
-																	$parent = $parentCheck->PARENT;
-																	if($PARENT == 0){
-																		$wpdb->delete( ''.$regularboard_posts.'', array('PARENT' => ''.$ID2SET.''),array( '%d') );
-																	}
-																}
-															}
-															
-															if(isset($_POST['admin_ban']) && $ID2SET != ''){
-																$getIPfromID = $wpdb->get_results("SELECT IP FROM $regularboard_posts WHERE ID = '".$ID2SET."' LIMIT 1");
-																foreach($getIPfromID as $gotIP){
-																	$IP = $gotIP->IP;
-																	$MESSAGE = esc_sql($_REQUEST['admin_reason']);
-																	$wpdb->query(
-																		$wpdb->prepare(
-																			"INSERT INTO $regularboard_users 
-																			( ID, IP, PARENT, BANNED, MESSAGE ) 
-																			VALUES ( %d, %d, %d, %d, %s )",
-																			'',
-																			$IP,
-																			$ID2SET,
-																			1,
-																			$MESSAGE
-																		)
-																	);																	
-																	$wpdb->delete( ''.$regularboard_posts.'', array('IP' => ''.$IP.''),array( '%d') );
-																}
-															}
-														}
-													}
-													echo '</div>';
-
 													
-													// User's latest posts
-													if($userposts > 0){
-														echo '
-														<label for="userhistory" class="expand"> >> My '.intval($userposts).' latest posts</label>
-														<input type="checkbox" class="hidden" id="userhistory" />
-														<section class="hidden">';
-														echo '
-														<div class="myposts">';
-															if(count($getLastPosts) > 0){
-																foreach($getLastPosts as $MYLASTPOSTS){
-																	$myID = $MYLASTPOSTS->ID;
-																	$myPARENT = $MYLASTPOSTS->PARENT;
-																	$myBOARD = $MYLASTPOSTS->BOARD;
-																	$myCOMMENT = $MYLASTPOSTS->COMMENT;
-																	$mySUBJECT = $MYLASTPOSTS->SUBJECT;
-																	$myTYPE = $MYLASTPOSTS->TYPE;
-																	$myURL = $MYLASTPOSTS->URL;
-																	$myDATE = $MYLASTPOSTS->DATE;
-																	
-																	if($BoardIsSet !== true)if($myPARENT == 0)echo '<a href="?board='.$myBOARD.'&amp;thread='.$myID.'"><i class="fa fa-pencil"></i> '.$myID.'</a>';
-																	if($BoardIsSet !== true)if($myPARENT != 0)echo '<a href="?board='.$myBOARD.'&amp;thread='.$myPARENT.'?'.$myID.'#'.$myID.'"><i class="fa fa-comment"></i> '.$myID.'</a>';
-																	if($BoardIsSet === true)if($myPARENT == 0)echo '<a href="?thread='.$myID.'"><i class="fa fa-pencil"></i> '.$myID.'</a>';
-																	if($BoardIsSet === true)if($myPARENT != 0)echo '<a href="?thread='.$myPARENT.'?goto#'.$myID.'"><i class="fa fa-comment"></i> '.$myID.'</a>';
-																}
-															}else{
-																echo 'Nothing but dust.  You haven\'t posted anything... yet.';
-															}
-														echo '</div></section>';
-													}
-													
-													echo '</div></div><div class="boardposts '.$boardposts.' clear'.intval($clear).'">';
+													echo '</div><div class="boardposts">';
 													
 													$totalREPLIES = 0;
 													if(count($getParentPosts) > 0){
@@ -4077,8 +4040,9 @@ Author URI: http://onebillionwords.com
 																$THISPAGE = get_permalink();
 																if($THREAD == '' && $totalREPLIES >= 4){ echo '
 																<i class="loadmore" data="';
-																if($BoardIsSet !== true) echo $THISPAGE.'?board='.$BOARD.'&amp;thread='.$ID;
-																if($BoardIsSet === true) echo $THISPAGE.'?thread='.$ID;
+																if($BOARDURL != '') echo $BOARDURL.'/?thread='.$ID;
+																elseif($BoardIsSet !== true) echo $THISPAGE.'?board='.$BOARD.'&amp;thread='.$ID;
+																elseif($BoardIsSet === true) echo $THISPAGE.'?thread='.$ID;
 																echo '">'.$totalREPLYS.' posts omitted.  Click to load</i>';
 																}
 															}
@@ -4215,11 +4179,10 @@ Author URI: http://onebillionwords.com
 														if($THREAD == '')echo '</div></div>';
 													}
 													if($THREAD != '')echo '</div></div>';
-													if($THREAD != '')echo '<span class="threadinformation">';
+													if($THREAD != '')echo '<div class="threadinformation">';
 													$THISPAGE = get_permalink();
 													if($THREAD != '' ){ 
 														echo '
-														<hr class="clear" />
 														<div class="leftmeta">';
 															if($BoardIsSet !== true) echo '<a rel="nofollow" href="?board='.$BOARD.'">[ Return ]</a>';
 															if($BoardIsSet === true) echo '<a rel="nofollow" href="'.esc_url(get_permalink($post->ID)).'">[ Return ]</a>';
@@ -4229,7 +4192,7 @@ Author URI: http://onebillionwords.com
 															if($BoardIsSet === true) echo $THISPAGE.'?thread='.$THREAD;
 															echo '">[ <i class="fa fa-refresh"> Update</i> ]</span>
 														</div>';
-														echo '['.$THREADREPLIES.' replies] ['.$THREADIMGS.' images]</span>';
+														echo '['.$THREADREPLIES.' replies] ['.$THREADIMGS.' images]';
 													}
 											}
 										}
@@ -4240,20 +4203,10 @@ Author URI: http://onebillionwords.com
 						echo '<h3 class="banned">'.$noboard.'</h3>';
 					}
 					}
-					if(!isset($_POST['FORMSUBMIT'])){
-						echo '<p class="credits"><span>'.$credits;
-						$mtime = microtime();
-						$mtime = explode(" ",$mtime);
-						$mtime = $mtime[1] + $mtime[0];
-						$endtime = $mtime;
-						$totaltime = ($endtime - $starttime);
-						echo '<br /><code>'.round(($totaltime),4).'</code>';
-						echo '</span></p>';
-						echo '</div>';
-					}
 				// Return a list of the available boards, and if logged in as admin, a link to the add/edit/unban area.
 				}else{
-					$getBoards = $wpdb->get_results("SELECT SHORTNAME,NAME,DESCRIPTION FROM $regularboard_boards ");
+					if($BOARD == '' && $AREA == '' || $BOARD == '_front'){
+					$getBoards = $wpdb->get_results("SELECT * FROM $regularboard_boards ");
 					echo '<div class="boardlist">';
 						if($ISMODERATOR === true){
 							echo '<a href="?area=create">Moderate your boards</a>
@@ -4271,6 +4224,7 @@ Author URI: http://onebillionwords.com
 							$BOARDNAME = esc_sql(myoptionalmodules_sanistripents($gotBoards->SHORTNAME));
 							$BOARDLONG = esc_sql(myoptionalmodules_sanistripents($gotBoards->NAME));
 							$BOARDDESC = esc_sql(myoptionalmodules_sanistripents($gotBoards->DESCRIPTION));
+							$BOARDURL  = esc_url(myoptionalmodules_sanistripents($gotBoards->URL)); 
 							if($BOARDDESC != '')$BOARDDESC = ' &mdash; <em>'.$BOARDDESC.'</em>';
 							$countPosts  = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT = '0'");
 							$countReplies  = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT != '0'");
@@ -4297,9 +4251,9 @@ Author URI: http://onebillionwords.com
 									}
 								}
 							}			
-
-							if($linkbase != '')echo '<a rel="nofollow" href="'.$linkbase.'/'.$BOARDNAME.'/">'.$BOARDLONG.'</a>'.$BOARDDESC.'<br />';
-							if($linkbase == '')echo '<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDLONG.'</a>'.$BOARDDESC.'<br />';
+							$BOARDDESC = str_replace('\\\\\\\\\\\\\\\'','\'',$BOARDDESC);
+							if($BOARDURL != '')echo '<a rel="nofollow" href="'.$BOARDURL.'/">'.$BOARDLONG.'</a>'.$BOARDDESC.'<br />';
+							if($BOARDURL == '')echo '<a rel="nofollow" href="?board='.$BOARDNAME.'">'.$BOARDLONG.'</a>'.$BOARDDESC.'<br />';
 
 							if($membersonly != 1){
 								foreach($getBoardPostsTopics as $posts){
@@ -4308,8 +4262,8 @@ Author URI: http://onebillionwords.com
 									$id = $posts->ID;
 									echo '<em>latest thread</em> &mdash;';
 									
-									if($linkbase != '')echo '<a rel="nofollow" href="'.$linkbase.'/'.$BOARDNAME.'/?thread='.$id.'">'.$subject.'</a>';
-									if($linkbase == '')echo '<a rel="nofollow" href="?board='.$BOARDNAME.'&amp;thread='.$id.'">'.$subject.'</a>';
+									if($BOARDURL != '')echo '<a rel="nofollow" href="'.$BOARDURL.'/?thread='.$id.'">'.$subject.'</a>';
+									if($BOARDURL == '')echo '<a rel="nofollow" href="?board='.$BOARDNAME.'&amp;thread='.$id.'">'.$subject.'</a>';
 								}
 							}
 							echo '
@@ -4334,8 +4288,11 @@ Author URI: http://onebillionwords.com
 					</div>	
 				</div>';
 				}
+				}
 			// Return nothing, the IP address is fake.
 			echo '</div>';
+			if($THREAD != '')echo '</div></div></div>';
+			if($AREA != '')echo '</div>';
 			}else{}
 		}
 		if(get_option('mommaincontrol_regularboard') == 1)add_shortcode('regularboard','regularboard_shortcode');
