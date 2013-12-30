@@ -34,4 +34,9 @@
 		left.className = ''; // remove the sticky class
 	 }
 
-	}	
+	}
+	
+	function replyThis(event){
+		var targ = event.target || event.srcElement;
+		document.getElementById("REPLYTO").value += targ.textContent || targ.innerText;
+	}

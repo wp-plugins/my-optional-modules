@@ -123,6 +123,7 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 
 .boardAll{background-color:#282626;border-radius:4px;width:100%;color:#C2C2C2;font-size:10px;line-height:11px;display:block;text-shadow:none;margin:25px auto;text-shadow: 1px 1px 3px #363636;position:relative;clear:both;padding:25px 25px 25px 225px;}
 .boardInformation{background-color:#201f1f;border-radius:2px;width:200px;color:#C2C2C2;font-size:12px;line-height:15px;display:block;text-shadow:none;text-shadow: 1px 1px 3px #363636;position:absolute;float:left;padding:5px;left:10px;top:0}
+.boardInformation .adsense{width:200px;height:200px;margin:5px 0;display:block;background:url('adblocked.png') center no-repeat;clear:both;}
 .boardInformation .myposts,
 .boardInformation .reportdelete,
 .boardInformation .modactions{margin:25px auto;clear:both;border-top:1px solid #3e3e3e;padding:5px}
@@ -140,6 +141,10 @@ label.UPGRADE:hover{opacity:1}
 .boardInformation .reportdelete input[type=text]:focus,
 .boardInformation .reportdelete input[type=password]:focus{opacity:1}
 .boardDisplay{border-radius:4px;width:100%;width:calc(100% - 250px);color:#C2C2C2;font-size:10px;line-height:11px;display:block;text-shadow:none;text-shadow: 1px 1px 3px #363636;position:relative;float:left}
+
+.boardDisplay section.small{width:50%;float:left;}
+.boardDisplay section.full{width:100%;clear:both;display:block}
+
 .boardDisplay #COMMENTFORM{float:left;width:calc(100% - 180px);}
 .boardDisplay .rules{width:150px;margin:25px 0;padding:5px;float:right;background-color:#000;opacity:.7}
 .boardDisplay .rules p{margin:2px auto}
@@ -155,6 +160,9 @@ br.clear,section.clear{clear:both;display:block;width:100%;margin:0 auto;}
 .boardDisplay #admin{margin:-30px auto}
 .boardDisplay .boardlist{clear:both;width:100%;margin:-20px auto;padding:0;font-size:13px;line-height:14px}
 .boardDisplay .boardlist section{clear:both;margin:15px 0}
+.boardDisplay #omitted .reply:nth-child(even){background-color:rgba(27,36,42,1);padding:5px;margin:2px -5px}
+.boardDisplay #omitted .reply:nth-child(odd){background-color:rgba(34,34,34,1);padding:5px;margin:2px -5px}
+.iamop{background-color:#000!important}
 .boardDisplay .omittedinfo{font-weight:200;float:left;clear:left;margin:15px}
 .boardDisplay .active{background-color:#131313;-webkit-box-shadow:inset 1px 1px 3px 3px rgba(203,46,46,.5);box-shadow:inset 1px 1px 1px 1px rgba(203,46,46,.2);border:1px dotted red}
 .boardDisplay .pages a{display:block;width:10px;margin:5px;float:left;padding:5px}
@@ -162,10 +170,8 @@ br.clear,section.clear{clear:both;display:block;width:100%;margin:0 auto;}
 .boardDisplay .pages a.focus{font-weight:900}
 .mainboard{clear:both;display:block;margin:0 auto;}
 .boardDisplay .topic{clear:both;width:100%;margin:0 -5px;padding:5px}
-
 .boardDisplay .boardform{}
 .boardDisplay .boardposts{padding:0;margin:0 auto;width:100%;clear:both}
-
 .boardDisplay .boardform label{text-align:center!important}
 .left{float:left}
 .textright{text-align:right}
@@ -177,7 +183,7 @@ br.clear,section.clear{clear:both;display:block;width:100%;margin:0 auto;}
 #boards a:hover{text-decoration:underline}
 .boardDisplay .error{width:100%;text-align:center}
 .boardDisplay .reply{width:100%;text-align:left;margin:-5px auto 5px}
-.boardDisplay .threadinformation{clear:both;text-align:right;width:100%;display:block;margin:0 auto 45px auto}
+.boardDisplay .threadinformation{clear:both;text-align:right;width:100%;display:block;margin:0;background-color:#000;padding:5px}
 .boardDisplay input[type=checkbox]{float:left;margin:5px 5px 0}
 span.fileinfo{clear:both;display:block;text-indent:5px;margin:5px 0 8px}
 .timegate h3{text-decoration:none;text-align:center;text-indent:-.12em;font:30px anchor-web-1,anchor-web-2, Impact, sans-serif;font-weight:900;display:inline-block;width:100%;text-shadow:#0c2c3e .01em .01em 0 .02em .02em 0 .03em .03em 0 .04em .04em 0 .05em .05em 0 .06em .06em 0 .07em .07em 0 #0c2c3e .08em .08em 0 .09em .09em 0 .1em .1em 0;margin:10px auto;padding:5px}
@@ -188,9 +194,9 @@ h3.info{font-weight:900;text-align:center;width:100%;margin:20px auto;font-size:
 .boardDisplay .infoimg{max-width:100%;clear:both;display:block;margin:10px auto;height:auto}
 .boardDisplay article{display:block;margin:10px auto;padding:5px}
 .boardDisplay .op input[type=checkbox]{margin:0px}
-.boardDisplay .op{display:block;clear:both;width:100%;margin:0 auto;padding:5px;background-color: rgba(0, 0, 0, .1)}
+.boardDisplay .op{display:block;clear:both;width:100%;margin:0 auto;padding:5px;background-color: rgba(0, 0, 0, .4);border:1px solid #000}
 .boardDisplay .op p,.boardDisplay .reply p{max-width:95%;word-wrap:break-word;display:table;margin:2px 0 2px 15px;padding:5px}
-.boardDisplay .op iframe,.boardDisplay .reply iframe{display:table;width:95%;margin:0 auto}
+.boardDisplay .op iframe,.boardDisplay .reply iframe{display:table;width:45%;margin:0 auto}
 .boardDisplay article section{width:95%;display:block;margin:5px auto;padding:5px}
 .boardDisplay .reportdelete{width:310px;float:right;margin:0 5px}
 .boardDisplay .postid,.boardDisplay .OP,.boardDisplay .date{display:inline-block;margin:5px 5px 10px}
@@ -200,17 +206,17 @@ h3.info{font-weight:900;text-align:center;width:100%;margin:20px auto;font-size:
 .banned textarea{width:300px;clear:both;display:block;height:250px;margin:5px auto;padding:5px}
 .banned input[type=text]{width:300px;clear:both;display:block;margin:5px auto;padding:5px}
 .boardDisplay span.name{font-weight:400}
-.boardDisplay span.trip{font-weight:200}
+.boardDisplay span.trip{font-weight:200;opacity:.5}
 .boardDisplay .boardName{text-align:left;line-height:30px;font-size:25px;margin:-25px -5px 5px -5px;padding:5px;width:100%;display:block}
 .boardDisplay .boardDescription{width:100%;text-align:left;margin:0;padding:5px;opacity:.8}
-.boardDisplay .submit{height:10px;cursor:pointer;text-align:left;clear:both;margin:0;}
+.boardDisplay .submit{font-size:15px;cursor:pointer;padding:10px;clear:both;margin:0;width:calc(100% - 10px);display:block;background-color:rgba(0,0,0,.2);color:#fff}
 .boardDisplay .nomber{font-weight:900;border-radius:3px;margin:5px}
 .boardDisplay .submit:hover{background-color:#fff;color:#000}
-.boardDisplay .topic section{clear:both;width:auto;margin:5px auto}
-.boardDisplay .topic input[type=text],.boardDisplay .topic input[type=password]{border-radius:3px;width:100%;display:block;clear:both;margin:5px;opacity:.8}
+
+.boardDisplay .topic input[type=text],.boardDisplay .topic input[type=password]{border-radius:3px;width:calc(100% - 10px);display:block;clear:both;margin:5px;opacity:.8}
+.boardDisplay .topic textarea{width:calc(100% - 10px);clear:both;display:block;height:150px;margin:5px;opacity:.8;border-radius:3px;line-height:155%}
 .boardDisplay .topic textarea:focus,.boardDisplay .topic input[type=text]:focus,.boardDisplay .topic input[type=password]:focus{opacity:1}
 .boardDisplay .topic .absolute{position:relative;z-index:3;margin:5px 0;width:60px;text-align:left!important;text-indent:3px}
-.boardDisplay .topic textarea{width:100%;clear:both;display:block;height:150px;margin:5px;opacity:.8;border-radius:3px;line-height:155%}
 .boardDisplay .topic label{clear:both;padding:5px}
 .boardDisplay p.credits{margin:0 auto;text-align:left;width:100%;clear:both;display:block;padding:10px 0;color:#fff;}
 .boardDisplay p.credits span{width:100%;margin:0 auto;display:block;padding:15px;line-height:13px;font-size:11px;opacity:.5}
@@ -240,13 +246,21 @@ hr.clear						       {clear:both}
 .boardDisplay .controlpanel	{display:block;float:right}
 .boardDisplay .controlpanel					{margin:-35px 0;position:relative;z-index:2;width:auto}
 .boardDisplay .controlpaneluser				{margin:0 5px;position:relative;z-index:2}
-.boardDisplay span.subject		{width:100%;margin:0;z-index:2;position:relative;clear:both;display:block;padding:5px 0;text-align:left;text-indent:10px;font-weight:900;}
-.boardDisplay .imageREPLY,
-.boardDisplay .imageOP			{max-width:100%;margin:10px;position:relative;z-index:1;}
+.boardDisplay span.subject		{width:100%;margin:-5px -5px 5px;position:relative;clear:both;display:block;padding:5px;text-align:left;font-weight:900;background-color:#000;overflow:auto;font-size:14px;line-height:16px}
+.boardDisplay span.replysubject	{width:100%;margin:0 -5px -5px;text-indent:5px;position:relative;clear:both;display:block;padding:5px;text-align:left;font-weight:900;background-color:#000;overflow:auto;font-size:14px;line-height:16px;opacity:.5}
+.boardDisplay span.countreplies   {width:auto;position:absolute;right:5px;display:block;padding:5px;z-index:2;margin:-28px -15px 0 0}
+.boardDisplay .imageREPLY             {max-width:25%;margin:10px;position:relative;z-index:1;float:left}
+.boardDisplay .imageOP			{max-width:75%;margin:5px 5px 15px;position:relative;z-index:1}
 .boardDisplay .loadmore			{cursor:pointer;width:100%;height:20px;text-align:center;font-weight:500;padding:5px 0;display:block;margin:-6px -1px}
-.boardDisplay .commentMeta		{display:block;clear:both;width:100%;margin:15px auto 0;padding:5px}
+.boardDisplay .commentMeta		{display:block;clear:both;width:100%;margin:0 -5px 0;padding:5px;background-color: rgba(0, 0, 0, .4);overflow:auto;font-size:12px;line-height:14px}
+.boardDisplay .commentMeta span    {float:left;margin:5px;background-color:#000;border-radius:3px;border:1px solid rgba(255, 255, 255, .2)}
+.boardDisplay .commentReplies	{display:block;clear:both;width:100%;margin:-5px -5px 0;padding:5px;background-color: rgba(0, 0, 0, 1);overflow:auto;font-size:10px;line-height:12px}
+.boardDisplay .commentReplies span  {float:left;margin:5px;background-color:#000;border-radius:3px;border:1px solid rgba(255, 255, 255, .2)}
+.boardDisplay .commentOP               {background-color: rgba(0, 0, 0, .6);width:100%;margin:-2px -5px;display:block;padding:5px;border-bottom:1px solid rgba(255, 255, 255, .2)}
+.boardDisplay .commentREPLY          {background-color: rgba(0, 0, 0, .6);width:100%;margin:0 -5px;display:block;padding:5px;overflow:auto}
+.boardDisplay .replyto                   {width:95%!important;margin:0 auto!important;border-radius:3px;border:1px solid #000}
 .boardDisplay .avatar-32			{float:left;height:20px;width:20px;margin:-5px 5px 0 -5px}
-.boardDisplay .commentContainer 	{display:block;clear:both;width:100%;margin:5px auto;font-size:14px;line-height:15px}
+.boardDisplay .commentContainer 	{display:block;clear:both;font-size:14px;line-height:15px}
 .boardDisplay .commentContainer p{margin:5px}
 .boardDisplay .ban				{padding:5px}
 .boardDisplay .attached		       {clear:both;width:100%;padding:5px;display:block;text-align:center;background-color:#000}

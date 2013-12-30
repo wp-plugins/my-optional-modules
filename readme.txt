@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: 4chan,gravatar,youtube,DNSBL,akismet,ipv4,ipv6,htmlpurifier,tripcode,sage,chan,capcodes,board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.8
 Tested up to: 3.8
-Stable tag: 5.4.9.2.2
+Stable tag: 5.4.9.2.3
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -32,6 +32,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Post Voting: Add a vote box to each post via template function. (display top posts with a shortcode).  
 
 = Regular Board = 
+* [Regular Board Support Forum](http://regularboard.org/r) located @ [regularboard.org](http://regularboard.org)
 * Disclaimer: may not work with all installations as CSS may need to be tweaked on a THEME level.
 * Can set board to private (logged in users only)
 * Supports Youtube/Youtu.be/image embedding (via URL)
@@ -77,18 +78,10 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= .5.4.9.2.2 =
-* Regular Board
-* (addition) When creating a new board, if you use the same shortname as a board that already exists, it will update the board that already exists with the new information.  (Otherwise, it will create the new board). (Use this functionality to edit board information)
-* (addition) Defining board as _front will display the board overview (base).  Use in conjunction with separate board shortcodes/URLs to force a front page that can't be traversed.
-* (bugfix) Superfluous characters in board descriptions (from escaped HTML) no longer displayed.
-* (bugfix) CSS (paragraphs) word-break implemented for long text strings (so they don't just disappear off of the edge of the page).
-* (changed) Mod forms use proper wpdb->functions to insert and delete from the table.
-* (changed) Delete/report form, mod:delete / ban form moved to sidebar; my recent posts display removed; board rules floated to the right of post form - post form no longer a toggle (better compatability with mobile browsers)
-* (removed) [return] link while in Reply Posting Mode.
-* (removed) User's latest posts / IP based; unreliable
-* (removed) linkbase.  Board URL added to board creation.  Designate a FULL URL to your board (no trailing slash) (the page you are pointing to should have a shortcode that has a board already designated via board="")
-* (removed) credits at footer of boards removed.
+= .5.4.9.2.3 =
+* (added) adsense and dataadslot.  adsense="YOUR_PUBLISHER_ID", dataadslot="DATA_AD_SLOT_ID".  Publisher ID (WITHOUT CA-PUB).  Will only show on boards that are SFW.  (Make sure your add unit is 200x200.)
+* (added) Replies can be replied to; replies for replies are tracked with links to replies.  (Yo dawg, I heard you liked replies, so I tracked your replies so you could reply to your replies while you see how many replies replied to your reply.)
+* (change) CSS - display for meta and reply/thread content updated.
 
 = .5 =
 * HTMLPurifier (added)
