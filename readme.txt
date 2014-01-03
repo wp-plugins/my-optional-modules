@@ -41,7 +41,6 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Supports Tripcodes and saging
 * Unlike other *chan scripts, the important details that are inserted into the database are handled server-side, not client side with hidden fields.
 * Capcodes for logged in mods
-* tinymce comment form
 * Deployed via [shortcode]
 
 = Tweaks: =
