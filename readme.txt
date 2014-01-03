@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: 4chan,gravatar,youtube,DNSBL,akismet,ipv4,ipv6,htmlpurifier,tripcode,sage,chan,capcodes,board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.8
 Tested up to: 3.8
-Stable tag: 5.4.9.2.4
+Stable tag: 5.4.9.2.5
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -78,17 +78,17 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= .5.4.9.2.4 =
-* Regular Board
-* Additions
-* - Search form: search for tripcodes, and search for text in thread subjects, URLs, and comments. Search is limited to the board that it is performed from, disabled on the front page, and disabled in threads.
-* - Open Graph: Open graph has been enabled for boards and threads, and it is highly recommended that you also read the information thread (http://regularboard.org/r/?thread=8) and enable Pretty Canon and Fix Canon to make this new feature work for you properly, as it fixes things like the canonical link to reflect the proper URL to the board and thread.
-* - Thread / reply editing: users who set their own password (not using the default, randomly generated password) are allowed the opportunity to edit their posts. Moderators of the boards can freely edit any post. Moderators can change the passwords of posts (to prevent further editing). Users may not change their passwords.
-* Changes
-* - Adsense: users who are logged in will no longer see adsense (if it has been enabled for the boards).
-* - Ban and delete buttons: have been moved and separated by an warning icon. They were too close to the edit button, and the possibility of clicking one of them instead of edit was too high. Hopefully, this should solve that.
-* - Checkboxes for forms: have been labeled so you can click the box (or the general area of the box) to check it (instead of having to click directly on the checkbox itself.
-* - Reply box for threads: has been moved below the OP. Encourages discussion as the poster will (hopefully) have read the content before submitting a reply to it.
+= .5.4.9.2.5 =
+* My Optional Modules / (update) jQuery .min version updated to 1.10.2
+* Regular Board / WARNING: -> FORCE UPDATE TABLES from within the board admin screen for these updates.
+* Regular Board / (addition) Main moderator / User Moderators can move threads to different boards.
+* Regular Board / (addition) User Janitors have been added.  Janitors can only delete threads (that aren't made by Main Moderators).  (userjanitor="",userjanitorcode="") (comma-separated list of WordPress usernames, like usermods)
+* Regular Board / (addition) Threads that aren't started by main moderators (but have had a main moderator respond to them) will have a star next to their subject and the background-color for the subject wll be blue, to indicate that a Main Moderator has responded.
+* Regular Board / (addition) Ban lengths can be determined for when banning users.  (ie 1 minute, 1 hour, 1 day, 1 week, 1 month, 1 year).  If no time indicator is present (like day or month) then it will assume minutes.  (so 1 would be 1 minute, 10 would be 10 minutes).  If 0, ban is permanent.
+* Regular Board / (bugfix) Banning.
+* Regular Board / (change) cutoff for comments that are above the cutoff amount in length use a different function to return content
+* Regular Board / (change) Messaging (throughout) dealing with board actions has been better integrated.
+* Regular Board / (change) Form handling for comments (attempts) to take HTML tags into consideration when looking at character count for entered comments and does not count that towards final count.
 
 = .5 =
 * HTMLPurifier (added)
