@@ -122,7 +122,7 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 .on:hover,.off:hover{font-weight:800;color:#000}
 
 .hidden{display:none;visibility:hidden;height:0;width:0}
-.boardAll  div.reply,.boardAll label.UPGRADE,.boardAll  p.credits,.boardAll  p.credits span,.boardAll  section.full,.boardAll  span.replysubject,.boardAll  span.subject,.boardAll,.boardAll  .attached,.boardAll  .boardDescription,.boardAll  .boardlist,.boardAll  .boardName,.boardAll  .boardposts,.boardAll  .commentMeta,.boardAll  .commentReplies,.boardAll  .commentOP,.boardAll  .commentREPLY,.boardAll  .error,.boardAll  .loadmore,.boardAll  .pages,.boardAll  .op,.boardAll  .threadinformation,.boardAll  .topic,.boardAll  .reply,.boardDisplay
+.boardAll  div.reply,.boardAll label.UPGRADE,.boardAll  p.credits,.boardAll  p.credits span,.boardAll  section.full,.boardAll  span.replysubject,.boardAll  span.subject,.boardAll,.boardAll  .attached,.boardAll  .boardDescription,.boardAll  .boardlist,.boardAll  .boardName,.boardAll  .boardposts,.boardAll  .commentMeta,.boardAll  .commentReplies,.boardAll  .commentOP,.boardAll  .commentREPLY,.boardAll  .error,.boardAll  .loadmore,.boardAll  .op,.boardAll  .threadinformation,.boardAll  .topic,.boardAll  .reply,.boardDisplay
 {width:100%;clear:both}
 .boardAll clear
 {clear:both}
@@ -130,6 +130,13 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 {font-size:30px;font-weight:900;float:left;margin:5px}
 .boardDisplay a,.boardAll h3,.boardAll label,.boardAll input,.boardAll section
 {text-decoration:none}
+.boardAll table.stats{clear:both;width:calc(100% - 10px);display:block;margin:15px 5px;padding:5px;background-color:rgba(34,34,34,1);}
+.boardAll table.stats tr:hover td{background-color:#000!important;color:#fff}
+.boardAll table.stats td{padding:5px;border:1px solid #fff;}
+.boardAll table.stats td:nth-child(even){background-color:rgba(27,36,42,1);padding:5px;margin:2px -5px}
+.boardAll table.stats td:nth-child(odd) {background-color:rgba(34,34,34,1);padding:5px;margin:2px -5px}
+
+
 .boardAll .modreplied										{background-color:rgba(0,144,255,.1)!important}
 .boardAll													{background-color:#282626;border-radius:2px;color:#C2C2C2;font-size:10px;line-height:11px;display:block;text-shadow:none;margin:25px auto;text-shadow: 1px 1px 3px #363636;position:relative;padding:25px 25px 25px 225px;}
 .boardInformation											{background-color:#201f1f;border-radius:2px;width:200px;color:#C2C2C2;font-size:12px;line-height:15px;display:block;text-shadow:none;text-shadow: 1px 1px 3px #363636;position:absolute;float:left;padding:5px;left:10px;top:0;overflow:hidden}
@@ -176,8 +183,7 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 .boardAll .iamop												{background-color:#000!important}
 .boardDisplay .omittedinfo									{font-weight:200;float:left;clear:left;margin:15px}
 .boardDisplay .active										{background-color:#131313;-webkit-box-shadow:inset 1px 1px 3px 3px rgba(203,46,46,.5);box-shadow:inset 1px 1px 1px 1px rgba(203,46,46,.2);border:1px dotted red}
-.boardDisplay .pages a										{display:block;width:10px;margin:5px;float:left;padding:5px}
-.boardDisplay .pages											{text-align:center;margin:25px 0;padding:5px;display:block;overflow:auto}
+.boardDisplay .pages											{text-align:left;margin:25px 0;padding:5px;background-color:rgba(0,0,0,.5);border-radius:3px;font-size:14px;line-height:18px}
 .boardDisplay .pages a.focus									{font-weight:900}
 .boardAll .mainboard											{display:block;margin:0 auto;}
 .boardDisplay .topic											{margin:0 -5px;padding:5px}
@@ -204,7 +210,7 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 .boardDisplay .infoimg										{max-width:100%;display:block;margin:10px auto;height:auto}
 .boardDisplay article{display:block;margin:10px auto;padding:5px}
 .boardDisplay .op input[type=checkbox]{margin:0px}
-.boardDisplay .op{display:block;margin:10px auto -10px!important;padding:5px;background-color: rgba(0, 0, 0, .4);border:1px solid #000}
+.boardDisplay .op{display:block;margin:10px auto -10px!important;padding:5px;background-color: rgba(0, 0, 0, .4);border-top:1px solid #000;border-left:1px solid #000;border-right:1px solid #000;border-bottom:10px solid #000}
 .boardDisplay .op p,.boardDisplay .reply p{max-width:95%;word-wrap:break-word;display:table;margin:2px 0 2px 15px;padding:5px}
 .boardDisplay .op iframe,.boardDisplay .reply iframe{display:table;width:calc(100% - 20px);height:auto;max-width:560px;min-height:315px;margin:10px;float:left}
 .boardDisplay article section{width:95%;display:block;margin:5px auto;padding:5px}
@@ -234,10 +240,13 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 .boardAll .threadform{width:100%!important;clear:both!important;display:block!important;margin:5px -6px!important}
 .boardDisplay .controlpaneluser,.boardDisplay .controlpanel								
 {display:block;float:right}
-
+.fa-thumbs-o-up,.fa-thumbs-up							{cursor:pointer;}
+.boardDisplay small										{font-size:9px;margin-top:-3px;float:right}
+.boardDisplay .karma										{color:#99CC99}
 .boardDisplay .controlpanel								{margin:-35px 0;position:relative;z-index:2;width:auto}
 .boardDisplay .controlpaneluser							{margin:0 5px;position:relative;z-index:2}
 .boardDisplay span.subject								{margin:-4px -5px 0;position:relative;display:block;padding:5px;text-align:left;font-weight:900;background-color:#000;overflow:auto;font-size:14px;line-height:16px}
+.boardDisplay span.subject a								{display:block;width:100%;height:100%}
 .boardDisplay span.replysubject							{margin:0 -5px -5px;text-indent:5px;position:relative;display:block;padding:5px;text-align:left;font-weight:900;background-color:#000;overflow:auto;font-size:14px;line-height:16px;opacity:.5}
 .boardDisplay span.countreplies   						{width:auto;position:absolute;right:5px;display:block;padding:5px;z-index:2;margin:-28px -15px 0 0}
 .boardDisplay .imageREPLY             						{max-width:25%;margin:10px;position:relative;z-index:1;float:left}

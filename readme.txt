@@ -77,17 +77,13 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-= .5.4.9.2.5 =
-* My Optional Modules / (update) jQuery .min version updated to 1.10.2
-* Regular Board / WARNING: -> FORCE UPDATE TABLES from within the board admin screen for these updates.
-* Regular Board / (addition) Main moderator / User Moderators can move threads to different boards.
-* Regular Board / (addition) User Janitors have been added.  Janitors can only delete threads (that aren't made by Main Moderators).  (userjanitor="",userjanitorcode="") (comma-separated list of WordPress usernames, like usermods)
-* Regular Board / (addition) Threads that aren't started by main moderators (but have had a main moderator respond to them) will have a star next to their subject and the background-color for the subject wll be blue, to indicate that a Main Moderator has responded.
-* Regular Board / (addition) Ban lengths can be determined for when banning users.  (ie 1 minute, 1 hour, 1 day, 1 week, 1 month, 1 year).  If no time indicator is present (like day or month) then it will assume minutes.  (so 1 would be 1 minute, 10 would be 10 minutes).  If 0, ban is permanent.
-* Regular Board / (bugfix) Banning.
-* Regular Board / (change) cutoff for comments that are above the cutoff amount in length use a different function to return content
-* Regular Board / (change) Messaging (throughout) dealing with board actions has been better integrated.
-* Regular Board / (change) Form handling for comments (attempts) to take HTML tags into consideration when looking at character count for entered comments and does not count that towards final count.
+= .5.4.9.2.6 =
+* Regular Board FORCE UPDATE YOUR TABLES as additions have been made
+* Regular Board (bugfix) Form handling logic for time gate extended to make sure the user can't post if under certain circumstances and their flood timer hasn't expire yet.
+* Regular Board (addition) Approval buttons for threads and replies.  Users who make posts (after update) will have their approval rating (hearts) trackked for each reply and thread they make that is approved (by an ip other than their own).  
+* Regular Board (addition) Threads will be sorted by: sticky->approvals->date (the more approved a thread or reply is, the higher it appears on the board index)
+* Regular Board (change) Commet form on thread view moved to bottom of thread with link provided to skip to comment form if there (exists) more than (or equal to) 3 replies to the current thread.
+* Regular Board (change) Paging navigation updated, page number navigation removed; changed to next and previous with current page number indicator 
 
 = .5 =
 * HTMLPurifier (added)
