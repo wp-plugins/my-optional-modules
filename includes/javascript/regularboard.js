@@ -1,10 +1,5 @@
 	jQuery(document).ready(function($){
-		$( function() {
-			$("form").sisyphus( {
-				excludeFields: $( ":checkbox" )
 
-			});
-		});
 		var hash = window.location.hash.substr(1);
 		if(hash != false && hash != 'undefined'){
 			$('#'+hash+'').addClass('current');
@@ -29,6 +24,10 @@
 		var targ = event.target || event.srcElement;
 		document.getElementById("REPLYTO").value += targ.textContent || targ.innerText;
 	}
+	function formatThis(event){
+		var targ = event.target || event.srcElement;
+		document.getElementById("COMMENT").value += targ.textContent || targ.innerText;
+	}	
 	function reportThis(event){
 		var targ = event.target || event.srcElement;
 		document.getElementById("report_ids").value += targ.textContent || targ.innerText;
