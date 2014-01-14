@@ -1,0 +1,129 @@
+.momreview .block {background-color:#03090e ; color:#f4f1de}
+.momreview section.reviewed {background-color:#03090e ; color:#f4f1de}
+.momreview ::selection {background:#222; color:#fff}
+.momreview label {color:#f4f1de}
+.momreview {margin:0 auto; width:95%}
+.momreview .block {padding-top:5px; margin:0 auto 0 auto}
+.momreview label {width:95%; min-height:35px; margin:0 auto; display:block; cursor:pointer}
+.momreview .reviewed {width:93%; height:0; padding:0 15px 0 15px; display:block; overflow:hidden; box-sizing:border-box; margin:auto}
+.momreview label span {font-weight:bold; float:right}
+.momreview input[type='checkbox']{display:none}
+.momreview .block input[type='checkbox']:checked ~ .reviewed {height:auto; margin:-25px auto 5px auto}
+.momreview .block input[type='checkbox'] ~ label span:first-of-type {display:block; visibility:visible; float:right; margin:0 -5px 0 0}
+.momreview .block input[type='checkbox'] ~ label span:last-of-type,
+.momreview .block input[type='checkbox']:checked ~ label span:first-of-type {display:none; visibility:hidden; float:right}
+.momreview .block input[type='checkbox']:checked ~ label span:last-of-type {display:block; visibility:visible; float:right}
+
+.clearboth{clear:both}
+.topVotes{width:100%;margin:5px auto 25px}
+.topVotes ol li{clear:both;display:block;margin:5px auto}
+.votedPost{width:100%;min-height:50px;margin:0 auto;padding:5px}
+.topVotes a{display:block;float:left;margin:10px 0 0}
+.vote_the_post{height:40px;width:40px;text-align:center;font-size:15px;line-height:17px;display:inline-block;position:relative;border:1px solid #6f8095;background-color:#f7fbff;margin:-10px 5px 10px;padding:5px}
+.vote_the_post span{font-size:12px;line-height:18px;background-color:#454545;color:#f1f1f1;display:block;text-shadow:none;border-radius:2px;overflow:hidden;clear:both;margin:2px auto;padding:0 5px}
+.downvote .active,.downvote:hover{color:#3f6dac}
+.upvote .active,.upvote:hover{color:#ac3f3f}
+.upvote{clear:both;width:100%;text-align:center;font-size:15px;z-index:99;margin:0 auto 5px}
+.vote_the_post label{display:block;cursor:pointer}
+body.custom-background{background:no-repeat center center fixed;-webkit-background-size:cover;-moz-background-size:cover;-o-background-size:cover;background-size:cover}
+input[type=text].password{width:95%;margin:10px auto}
+.momnavbar{z-index:99999;text-transform:uppercase;width:100%;display:block;text-align:left;line-height:35px}
+.navbardark,.navbardark a{background-color:#f5f5f5;color:#9f9f9f}
+.navbarlight,.navbarlight a{background-color:#9f9f9f;color:#f5f5f5}
+.navbarred,.navbarred a{background-color:#f25e5e;color:#fff6f6}
+.navbarblue,.navbarblue a{background-color:#5ea0f2;color:#f0f7ff}
+.navbargreen,.navbargreen a{background-color:#5ef26c;color:#072406}
+.navbaryellow,.navbaryellow a{background-color:#e2f25e;color:#1d1e02}
+.navbartop{height:46px;position:relative;border-bottom:1px solid #000}
+.navbarbottom{height:46px;position:relative;border-top:1px solid #000}
+div.momnavbar .item{height:20px;cursor:pointer;margin:0;padding:5px}
+.momnavbarcategories{width:calc(100% - 50px);height:100%;overflow:hidden;display:block;clear:both;line-height:53px;font-size:15px;margin:-5px 0;padding:0}
+.momnavbarcategories li{float:left;list-style:none;margin:0 5px}
+.momnavbar label.momsearchthis{position:absolute;right:5px;top:15px;cursor:pointer;background-color:transparent !important;color:#000 !important}
+.momnavbar .search-form,.momnavbar #searchform{position:absolute;right:25px;top:10px}
+.momnavbar #searchform input[type=text]{height:25px!important;font-size:20px!important;width:35px!important;border:0!important;cursor:pointer!important;float:right!important;display:block!important;padding:0!important}
+.momnavbar #searchform input[type=text]:focus{width:150px !important}
+.navbartop,.stucktothetop{position:fixed!important;top:0!important;left:0!important;z-index:99999!important}
+.navbarbottom,.stucktothebottom{position:fixed!important;bottom:0!important;left:0!important;z-index:99999!important}
+.momnavbar_pagesup{width:799px;height:25px;overflow:hidden;clear:both;position:absolute;text-align:right;line-height:15px;background-color:#fff;border-top:1px solid #000;border-right:1px solid #000;margin:0 0 0 10px}
+.momnavbar_pagesup li{float:right;list-style:none;border:0;text-decoration:none;margin:5px}
+.momnavbar_pagesdown{width:784px;height:25px;overflow:hidden;clear:both;position:absolute;text-align:left;line-height:15px;background-color:#fff;border-bottom:1px solid #000;border-right:1px solid #000;margin:0 0 0 26px}
+.momnavbar_pagesdown li{float:left;list-style:none;border:0;text-decoration:none;margin:5px}
+.momnavbar_extendeddown{position:fixed;top:43px;left:0;z-index:99999}
+.momnavbar_extendedup{position:fixed;bottom:73px;left:0;z-index:99999}
+.momnavbar_tab{position:absolute;width:25px;height:25px;background-color:#fff;z-index:99999}
+.momnavbar_tab:hover{background-color:#000;color:#fff}
+.momnavbar_extendeddown .momnavbar_tab{border-left:1px solid #000;border-right:1px solid #000;border-bottom:1px solid #000;text-align:center;cursor:pointer}
+.momnavbar_extendedup .momnavbar_tab{border-left:1px solid #000;border-right:1px solid #000;border-top:1px solid #000;text-align:center;cursor:pointer}
+.momnavbar_extended_inner{visibility:hidden;display:none;width:500px;height:0;-webkit-transition:all .6s ease-in-out;-moz-transition:all .6s ease-in-out;-o-transition:all .6s ease-in-out;transition:all .6s ease-in-out}
+.momnavbar_extendedup #momnavbarextended:checked ~ .momnavbar_extended_inner{height:300px;width:500px;border:1px solid #000;visibility:visible;display:block;overflow:hidden;box-shadow:1px #000;background-color:#fff;z-index:9999999;margin:25px 0 -27px;padding:5px}
+.momnavbar_extendeddown #momnavbarextended:checked ~ .momnavbar_extended_inner{height:300px;width:500px;border:1px solid #000;visibility:visible;display:block;overflow:hidden;box-shadow:1px #000;background-color:#fff;z-index:9999999;margin:3px 0 -2px;padding:5px}
+.momnavbar_extendedup .recentPostListingThumbnails{position:absolute;bottom:-27px;left:499px;width:310px;height:311px;overflow-x:hidden;overflow-y:auto;z-index:1;border-top:1px solid #000;border-right:1px solid #000}
+.momnavbar_extendeddown .recentPostListingThumbnails{position:absolute;bottom:-2px;left:500px;width:310px;height:311px;overflow-x:hidden;overflow-y:auto;z-index:1;border-top:1px solid #000;border-right:1px solid #000}
+.greyscale{filter:gray;-webkit-filter:grayscale(100%)}
+.greyscale:hover{filter:url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 1 0\'/></filter></svg>#grayscale");-webkit-filter:grayscale(0%)}
+.momnavbar_extended_inner .recentPostListingThumbnails .thumbnail img{float:left;width:310px;border:0}
+.momnavbar_extended_inner h3{font-size:25px;height:35px;line-height:35px;width:100%;clear:both;display:block;border-bottom:1px solid #8f8d8d;text-indent:5px;overflow:hidden;margin:0 0 0 -5px}
+.momnavbar_extended_inner p{display:block;width:285px;font-size:12px;line-height:14px;margin:5px 0;padding:5px}
+.momnavbar_extended_inner .listalltags{width:285px;display:block;font-size:12px}
+.momnavbar_extended_inner span{float:left;background-color:#fff;border-radius:3px;color:#000;font-size:10px;margin:2px;padding:3px}
+.momnavbar_extended_inner .listalltags a{float:left;background-color:#000;border-radius:3px;color:#ccd7ff;font-size:10px;margin:2px;padding:3px}
+.momschemedark{background-color:#9b9b9b;color:#f8f8f8}
+.momschemelight{background-color:#f8f8f8;color:#9b9b9b}
+.momschemered{background-color:#ffebeb;color:#431919}
+.momschemeblue{background-color:#ebf4ff;color:#192d43}
+.momschemegreen{background-color:#ebffef;color:#19431d}
+.momschemeyellow{background-color:#fdffe9;color:#404319}
+.momschemedefault .recentPostListing a{color:#2b2d2b}
+.momschemedark .recentPostListing a{color:#a4a4a3}
+.momschemelight .recentPostListing a{color:#2c2c28}
+.momschemered .recentPostListing a{color:#ffeded}
+.momschemeblue .recentPostListing a{color:#edf9ff}
+.momschemegreen .recentPostListing a{color:#edfff1}
+.momschemeyellow .recentPostListing a{color:#ffffed}
+.momschemedefault .recentPostListing a:hover{color:#4a4b4a}
+.momschemedark .recentPostListing a:hover{color:#5c5c5c}
+.momschemelight .recentPostListing a:hover{color:#161612}
+.momschemered .recentPostListing a:hover{color:#9f5a5a}
+.momschemeblue .recentPostListing a:hover{color:#5a7c9f}
+.momschemegreen .recentPostListing a:hover{color:#659f5a}
+.momschemeyellow .recentPostListing a:hover{color:#949f5a}
+.momschemedark .recentPostListing{background-color:#2c2c28}
+.momschemelight .recentPostListing{background-color:#a4a4a3}
+.momschemered .recentPostListing{background-color:#ff6868}
+.momschemeblue .recentPostListing{background-color:#689aff}
+.momschemegreen .recentPostListing{background-color:#68ff7a}
+.momschemeyellow .recentPostListing{background-color:#f5ff88}
+.momnavbar_extendedup .momnavbar_extended_inner .recentPostListing{position:absolute;right:0;top:25px;width:200px;border:1px solid #000;height:300px;z-index:99999;overflow:hidden;padding:5px}
+.momnavbar_extendeddown .momnavbar_extended_inner .recentPostListing{position:absolute;right:0;top:3px;width:200px;border:1px solid #000;height:300px;z-index:99999;overflow:hidden;padding:5px}
+.momnavbar_extended_inner .recentPostListing ul{list-style:none;margin:0;padding:0}
+.momnavbar_extended_inner .recentPostListing ul li{clear:both;width:200px;height:22px;overflow:hidden;display:block;font-size:12px}
+.momnavbar_extended_inner .recentPostListing ul li a{display:block;width:200px;height:28px;text-decoration:none;border:0}
+div.momlistcategories{clear:both;width:95%;margin:25px auto}
+div.momlistcategories h4{margin:55px 0 25px}
+div.momlistcategories div{clear:both;overflow:hidden;width:100%;margin:5px auto;padding:5px}
+div.momlistcategories div:hover{height:auto;overflow-y:auto;overflow-x:hidden;border:1px solid #454343;background-color:#f7f7f7}
+div.momlistcategories section{clear:both;width:100%;font-size:14px;margin:5px auto}
+div.momlistcategories section article{clear:both;width:100%;font-size:15px;line-height:18px;margin:0 auto}
+.scrolltotop{position:fixed;right:10px;bottom:10px;z-index:99999;display:none;visibility:hidden}
+.show{visibility:visible;display:block}
+span#createalisttog,span#createalisttogd{cursor:pointer;margin:0 auto}
+div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
+#mom_onthisday{font-size:12px;border:1px solid #eee;display:block;width:250px;background-color:#fcfcfc;margin:30px auto;padding:5px}
+#mom_onthisday span.onthisday{display:block;clear:both;border:1px solid #eee;background-color:#fff;width:auto;text-transform:lowercase;font-size:20px;text-align:center;margin:-20px auto 0;padding:10px}
+#mom_onthisday section.mom_onthisday{clear:both;width:100%;cursor:pointer;height:40px;overflow:hidden;margin:0 auto 0 -5px;padding:5px}
+#mom_onthisday section.mom_onthisday a{display:block;width:100%;height:100%}
+#mom_onthisday section.mom_onthisday div.mom_onthisday{width:95%;clear:both;display:block;overflow:hidden;margin:0 auto 0 -5px;padding:5px}
+#mom_onthisday section.mom_onthisday div.mom_onthisday span.title{float:left;text-align:left;display:block;width:80%}
+#mom_onthisday section.mom_onthisday div.mom_onthisday span.theyear{float:right;text-align:right;display:block;width:10%;margin:5px 0}
+#mom_onthisday section.mom_onthisday div.mom_onthisday section.nothing{text-align:center;color:#bcbcbc}
+.off{color:#ac1414;font-weight:500}
+.on{color:#23ac14;font-weight:500}
+.on:hover,.off:hover{font-weight:800;color:#000}
+.hidden{display:none;visibility:hidden;height:0;width:0}
+.vote_the_post input[type=submit],.hidden,.momnavbar #searchform label,.momnavbar #searchform input[type=submit],.mycontrols div .attachedcomment{display:none;visibility:hidden}
+.momnavbar a:hover{text-decoration:underline}
+.navbartop #navsearchform,.navbarbottom #navsearchform{position:absolute;right:0;top:0;cursor:pointer;margin:0;padding:5px}
+div.momnavbar #navsearchform i{cursor:pointer}
+.momnavbar_pagesup a,.momnavbar_pagesdown a{text-decoration:none;padding:3px}
+div.momlistcategories span,.right{float:right}

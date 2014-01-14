@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: 4chan,gravatar,youtube,DNSBL,akismet,ipv4,ipv6,htmlpurifier,tripcode,sage,chan,capcodes,board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.8
 Tested up to: 3.8
-Stable tag: 5.4.9.2.7
+Stable tag: 5.4.9.2.8
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -77,29 +77,13 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-* Regular Board (force update tables from admin)
-* Additions
-* User profiles for every user that posts. Highlights 10 recent images, 10 most approved threads and replies, and user milestones (board admin created achievements that are tracked by both post count and approval rating, and creating using the Reviews module).
-* Reviews module has been integrated with the new user profiles. Board admins can specify achievements based on both karma (by creating a review of type of karma, the achievement title being the title of the review, and the necessary heart amount as the rating (with optional body content) or by creating a review of type activeposts, the achievement title being the title of the review, and the necessary post amount as the rating (with optional body content)) to display milestones on the user's profile.
-* Automute will mute the user for 10 minutes (a mute is a temporary ban) if they try to submit an unoriginal comment 5 times (over any given period of time). Unoriginal comments are comments that already exist on the board.
-* Disapprove buttons added, and the text for the buttons has been removed. (They are now just thumbs up and thumbs down icons)
-* Changes
-* _front properly tracks latest replies and threads without doubling output of thread if the latest reply is to a parent thread (previously listed by field LAST, now lists by field DATE).
-* Board information, links, etc. has been moved to a collapsed section to the side of the main content to center focus on that content. Board navigation added to the top to allow navigation while this area is collapse.
-* Sisyphus removed as it was causing issues with the editing of posts and replies.
-* SFW/NSFW removed from [shortcode] in favor of new SFW designation when creating a board. Designate the board as either NSFW or SFW. (Requires a Force Update Tables).
-* HTML formatting swapped for Reddit-style formatting (removes HTML tags from the equation). New formatting help available below the comment form.
-* Banning a user no longer deletes all of their posts.
-* Automuting pays attention to duplicate comments as well as duplicate URLs.
-* Empty comments can be made as long as a unique URL is attached.
-* Updates
-* Youtube embedding has been changed. If you have Youtube embeds, you will need to manually edit them in the database to retain the video IDs and get rid of the iframe HTML code. This is all handled outside of the database now.
-* Bugfix: When editing a post, upon successful edits, user is redirected back to the post.
-* Time since had a minor bug (threads were trying to grab data for the date before it was actually available) making the time ago time stamp wrong. fixed
-* Setting max replies to 0 no longer forces the form for new threads to quit functioning correctly.
-* Stats should now be tracking videos, images, and URLs correctly.
-* CSS updated so that certain comment/image combinations wouldn't push the comment past the edge of the screen.
-* CSS updated so that the board would adapt better to certain themes.
+* Regular Board
+* Regular Board installation process has been cleaned up and corrected, fixing the problem of having to force update the tables after a fresh installation.
+* Posting form has been tidied up.
+* Regular Board CSS has been moved to its own file and had redundant/old classes removed.
+* Regular Board has been moved from the main plugin file to its own file, and is now called from the includes/modules folder.
+* Several new [shortcode] attributes have been added (be sure to check the documentation on how to use them.)
+
 
 
 = .5 =
