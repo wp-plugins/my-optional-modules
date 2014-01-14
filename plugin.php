@@ -1,10 +1,10 @@
 <?php /*
 Plugin Name: My Optional Modules
-Plugin URI: http://www.onebillionwords.com/my-optional-modules/
+Plugin URI: http://www.regularboard.org
 Description: Optional modules and additions for Wordpress.
-Version: 5.4.9.2.8
+Version: 5.4.9.2.9
 Author: Matthew Trevino
-Author URI: http://onebillionwords.com 
+Author URI: http://regularboard.org
 */
 	
 	// LICENSE
@@ -980,7 +980,7 @@ Author URI: http://onebillionwords.com
 			function my_optional_modules_page_content(){
 				echo '
 				<div class="wrap">
-				my optional modules / <a href="http://www.onebillionwords.com/my-optional-modules/">documentation</a> / <a href="http://wordpress.org/support/view/plugin-reviews/my-optional-modules">rate and review</a>
+				my optional modules / <a href="http://www.regularboard.org/">documentation + support</a> / <a href="http://wordpress.org/support/view/plugin-reviews/my-optional-modules">rate and review</a>
 				<div class="myoptionalmodules">
 				<section class="switches clear">
 				<form method="post"><section><label class="configurationlabel" for="MOMclear">Home</label><input id="MOMclear" name="MOMclear" class="hidden" type="submit"></section></form>';
@@ -3646,9 +3646,9 @@ Author URI: http://onebillionwords.com
 
 
 	// (Z) Etc
-	//		Report all bugs to admin@onebillionwords.com
+	//		Report all bugs to admin@regularboard.org
 	//		Additional support can be provided to those who ask for it at the following URL:
-	//		http://www.onebillionwords.com/my-optional-modules/
+	//		http://www.regularboard.org/
 	//		Ends
 	//
 	
