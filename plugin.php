@@ -2,7 +2,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.regularboard.org
 Description: Optional modules and additions for Wordpress.
-Version: 5.4.9.2.9
+Version: 5.4.9.3
 Author: Matthew Trevino
 Author URI: http://regularboard.org
 */
@@ -241,12 +241,13 @@ Author URI: http://regularboard.org
 	$input = array(
 	'/\\\r/is',
 	'/\\\n/is',
-	'/\ - (.*?)\|\|/is',
-	'/\ - (.*?)\|\|\|\|/is',	
+	'/\  - (.*?)\|\|/is',
+	'/\  - (.*?)\|\|\|\|/is',	
 	'/\    (.*?)\|\|/is',
 	'/\    (.*?)\|\|\|\|/is',
 	'/\:\:(.*?)\|\|/is',
 	'/\:\:(.*?)\|\|\|\|/is',
+	'/\*\*\*(.*?)\*\*\*/is',
 	'/\*\*(.*?)\*\*/is',
 	'/\*(.*?)\*/is',
 	'/\~\~(.*?)\~\~/is',
@@ -265,9 +266,10 @@ Author URI: http://regularboard.org
 	'<span class="quotes"> &#62; $1 </span><br />',
 	'<a href="#$1"> &#62;&#62; $1 </a><br />',
 	'<a href="#$1"> &#62;&#62; $1 </a><br />',
+	'<strong><em>$1</em></strong>',
 	'<strong>$1</strong>',
 	'<em>$1</em>',
-	'<strike>$1</strike>',
+	'<span class="strike">$1</span>',
 	'<blockquote>$1</blockquote>',
 	'<hr />',
 	'<br />',

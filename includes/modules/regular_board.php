@@ -1,19 +1,44 @@
 <?php 
 	if(!defined('MyOptionalModules')){ die('You can not call this file directly.');}
 	
-	// Regular Board (build 05492715)
+	// Regular Board (build 05492751)
 
+	function rb_style(){
+		global $wp,$post;
+		$content = $post->post_content;
+		if( has_shortcode( $content, 'regularboard' )){
+			$regbostyle = WP_PLUGIN_URL . '/my-optional-modules/includes/css/regularboard05492751.css';
+			wp_register_style('regular_board',$regbostyle);
+			wp_enqueue_style('regular_board');	
+		}
+	}
+	add_action('wp_enqueue_scripts','rb_style');
+	
+	if(get_option('mommaincontrol_regularboard') == 1){
+		function custom_sidebar() {
+			$args = array(
+				'id'            => 'regbo-sidebar',
+				'name'          => __( 'Regular Board Sidebar', 'text_domain' ),
+				'description'   => __( 'Appears in the sidebar of the Regular Board.', 'text_domain' ),
+				'before_title'  => '<h3 class="widget-title">',
+				'after_title'   => '</h3>',
+				'before_widget' => '<div id="%1$s" class="widget %2$s">',
+				'after_widget'  => '</div>',
+			);
+			register_sidebar( $args );
+		}
+		// Hook into the 'widgets_init' action
+		add_action( 'widgets_init', 'custom_sidebar' );
+	}
+
+	
 	function rb_head($atts){
 		global $wp,$post,$wpdb,$purifier;
 		$regularboard_boards  = $wpdb->prefix.'regularboard_boards';
 		$regularboard_posts   = $wpdb->prefix.'regularboard_posts';
 		$content              = $post->post_content;
 		if( has_shortcode( $content, 'regularboard' )){
-		
-			$regbostyle = WP_PLUGIN_URL . '/my-optional-modules/includes/css/regularboard05492715.css';
-			wp_register_style('regular_board',$regbostyle);
-			wp_enqueue_style('regular_board');
-		
+	
 			$BOARD             = '';
 			if($_GET['board'] != '')$BOARD  = esc_sql(strtolower(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['board']))));
 			if($_GET['board'] == '')$BOARD  = esc_sql(strtolower(myoptionalmodules_sanistripents($post->post_name)));
@@ -40,8 +65,8 @@
 						$author          =          $purifier->purify($site.' admin');
 						$title           =          $purifier->purify($site);
 						$description     =          $purifier->purify(strip_tags($meta->DESCRIPTION));
-						$description     =          str_replace('\\\\\\\'','\'',$description);
-						$description     =          str_replace('\\\\\\','',$description);
+						
+						$description     =			str_replace(array('||||','||','*','{{','}}','>>',' >','~~',' - ','----','::','`','    '),'',(str_replace('\\\\\\\'','\'',(str_replace('\\\\\\','',(str_replace(array('\\n','\\t','\\r'),'||',$description)))))));
 						$description     =          substr($description,0,150);
 						echo "\n";
 						if($author      != ''){echo '<meta property="og:author" content="'.$author.'" />           ';echo "\n";}
@@ -81,8 +106,7 @@
 						if($type        == 'image') $purifier->purify($image       = $meta->URL);
 						if($type        == 'video') $purifier->purify($video       = $meta->URL);
 						$description     =          $purifier->purify(strip_tags($meta->COMMENT));
-						$description     =          str_replace('\\\\\\\'','\'',$description);
-						$description     =          str_replace('\\\\\\','',$description);
+						$description     =			str_replace(array('||||','||','*','{{','}}','>>',' >','~~',' - ','----','::','`','    '),'',(str_replace('\\\\\\\'','\'',(str_replace('\\\\\\','',(str_replace(array('\\n','\\t','\\r'),'||',$description)))))));
 						$description     =          substr($description,0,150);
 						
 						if($type        == 'video'){
@@ -118,6 +142,7 @@
 		$wordpressname = get_bloginfo('name');
 		extract(
 			shortcode_atts(array(
+				'sideopen'		  => '1',
 				'boardheader'	  => '',
 				'homelink'		  => '',
 				'boards'		  => '',
@@ -194,6 +219,7 @@
 		$showboards                      = intval($showboards);
 		$maxreplies                      = intval($maxreplies);
 		$enableemail                     = intval($enableemail);
+		$sideopen					     = intval($sideopen);
 		$enablereports                   = intval($enablereports);
 		$dataadslot                      = $dataadslot;
 		$style                           = $style;
@@ -224,6 +250,7 @@
 		if($boards == ''){
 			$getBoards = $wpdb->get_results("SELECT * FROM $regularboard_boards ORDER BY NAME ASC");
 		}
+		
 		if($boards != ''){
 			$boards = explode(',',$boards);
 			$boards = array_map('rb_apply_quotes',$boards);
@@ -257,6 +284,11 @@
 		$PROFILE          = esc_sql(myoptionalmodules_sanistripents(preg_replace("/[^0-9 ]/", '', $_GET['profile'])));
 		$THREAD        = intval($_GET['thread']);
 		$BOARD         = strtolower($BOARD);
+
+		if($BOARD != ''){
+			$getCurrentBoard = $wpdb->get_results("SELECT * FROM $regularboard_boards WHERE SHORTNAME = '".$BOARD."' LIMIT 1");
+		}
+		
 		$AREA          = strtolower($AREA);
 		$PROFILE       = intval($PROFILE);
 		$THISPAGE      = get_permalink();
@@ -275,7 +307,7 @@
 		if($isSFW == 1) $sfwnsfw = 'S F W';
 		if($isNSFW == 1) $sfwnsfw = 'N S F W';
 		if($isSFW == '' && $isNSFW == '') $sfwnsfw = 'S F W';
-		
+
 		if($BOARDURL != ''){
 			if($BOARD != '' && $THREAD != '' && $ID == $THREAD)$ACTION = $THISPAGE;
 			elseif($BOARD != '' && $THREAD == '')$ACTION = $THISPAGE;
@@ -301,6 +333,16 @@
 			if($homelink != '')$homelink = esc_url($homelink);
 			
 			echo '<div class="boardAll">';
+			
+			if(count($getCurrentBoard) > 0){
+				foreach($getCurrentBoard as $thisBoardDesc){ 
+					$BOARDDESC = $purifier->purify($thisBoardDesc->DESCRIPTION);
+					$BOARDNAME = $purifier->purify($thisBoardDesc->NAME);
+					echo '<div class="boardDescription"><h1>'.$BOARDNAME.'</h1><p>'.$BOARDDESC.'</p></div>';
+				}
+			}
+			
+			
 			if(count($myinformation) > 0){foreach($myinformation as $myinfo){$mykarma = $myinfo->KARMA;echo '<span class="alert" id="mybar"><em><a href="'.$homelink.'"><i class="fa fa-home"></i></a></em> / <a href="?profile='.intval($myinfo->ID).'"><i class="fa fa-user"> <em>My Stats</em></i></a> ( <em class="karma"><i class="fa fa-heart"> '.$mykarma.' </i></em> )</span>';}}
 			echo '<div class="boardheader">';
 			if($boardheader != '')echo '<img src="'.$boardheader.'" alt="'.$boardheader.'" />';
@@ -329,15 +371,13 @@
 			}
 			echo '</div>';
 			
+			
 			echo '
-			<div class="boardinfohelp"><i class="fa fa-hand-o-left"> Click for: board activity, report/edit form, and important links</i></div>
-			<label id="boardinfo" for="boardInfo"><i class="fa fa-chevron-right"></i></label>
-			<input id="boardInfo" type="checkbox" class="hidden" />
 			<div class="boardInformation">';
 			// Search form
-			if($BOARD != '_front' && $THREAD == ''){
+			
 				echo '<form name="regularboardsearch" id="regularboardsearch" method="post" action="'.$ACTION.'">';wp_nonce_field('regularboardsearch');echo '<input type="text" name="boardsearch" id="boardsearch" placeholder="Search '.$BOARD.' for..." /><input type="submit" class="hidden" id="searchsub" name="searchsub" value="Search" /></form>';
-			}
+			
 			// Display Board activity
 			if($showboards == 1){
 				if(count($getBoards) > 0){
@@ -369,7 +409,6 @@
 				
 				echo '<hr />';
 				if($BOARD != '' && $BOARD != '_front'){
-					if($BOARDDESC != '')echo '<section class="infolink">'.$BOARDDESC.'</section>';
 					if($enableurl == 1 || $enablerep == 1){
 						if($trustedimg != ''){
 							$trstd = 0;
@@ -377,19 +416,24 @@
 						}
 					}
 					if($BOARDRULES != ''){ echo '<section class="infolink">'.$BOARDRULES.'</section>'; }
+					
 					echo '<hr />';
 				}
 				
+				
+				if ( dynamic_sidebar('Regular Board Sidebar') );
+
+				
 				if($ISUSER === true){
 					echo '
-					<div class="reportdelete clear">
+					<div class="reportdelete">
 					<i class="fa fa-user"> User Controls</i><br />
 					<form name="reporttomods" method="post" action="'.$ACTION.'">';
 					wp_nonce_field('reporttomods');
 					echo '
-					<section class="small"><input type="text" name="report_ids" id="report_ids" value="" placeholder="Post No." /></section>
-					<section class="small"><input type="text" name="report_reason" value="" placeholder="Reason" /></section>
-					<section class="small"><input type="password" name="DELETEPASSWORD" id="DELETEPASSWORD" value="'.$rand.'" /></section>
+					<section class="full"><input type="text" name="report_ids" id="report_ids" value="" placeholder="Post No." /></section>
+					<section class="full"><input type="text" name="report_reason" value="" placeholder="Reason (if reporting)" /></section>
+					<section class="full"><input type="password" name="DELETEPASSWORD" id="DELETEPASSWORD" value="'.$rand.'" /></section>
 					<label title="Edit (password required)" for="edit_this"><i class="fa fa-pencil"></i></label>
 					<label title="Report" for="report_this"><i class="fa fa-warning"></i></label>
 					<label title="Delete (password required)" for="delete_this"><i class="fa fa-trash-o"></i></label>
@@ -401,7 +445,7 @@
 				}
 				
 			if(current_user_can('manage_options') || $ISUSERMOD === true || $ISUSERJANITOR === true){
-				echo '<div class="modactions clear">';
+				echo '<div class="modactions">';
 				echo '
 				<i class="fa fa-user"> Board Moderation Controls</i><br />
 				<form name="moderator" method="post" action="'.$ACTION.'">';
@@ -418,7 +462,7 @@
 					<label class="submit" title="Make sticky" for="admin_sticky"><i class="fa fa-thumb-tack"></i></label>
 					<label class="submit" title="Lock thread" for="admin_lock"><i class="fa fa-lock"></i></label>
 					<label class="submit" title="Unsticky" for="admin_unsticky"><i class="fa fa-ban"></i><i class="fa fa-thumb-tack absolute"></i></label>
-					<label class="submit" title="Unlock thread" for="admin_unlock"><i class="fa fa-ban"></i><i class="fa fa-lock absolute"></i></label></section>
+					<label class="submit" title="Unlock thread" for="admin_unlock"><i class="fa fa-ban"></i><i class="fa fa-lock absolute"></i></label>
 					<label class="submit" title="Ban" for="admin_ban"><i class="fa fa-ban"></i></label>
 					<input type="submit" name="admin_move" value="Move" id="admin_move" class="hidden" />
 					<input type="submit" name="admin_ban" value="Ban" id="admin_ban" class="hidden" />
@@ -580,7 +624,7 @@
 						$postcount = count($posts);
 						$userid    = intval($theprofile->ID);
 						$userkarma = intval($theprofile->KARMA);
-						echo '<div class="mainboard clear"><div class="boardposts"><div class="op">';
+						echo '<div><div class="boardposts"><div class="op">';
 						echo '<div class="commentMeta">';
 						echo '<span><i class="fa fa-heart karma"> '.$userkarma.'</i></span>';
 						echo '<span><i class="fa fa-clock-o"> First seen '.timesincethis($theprofile->DATE).'</i></span>';
@@ -645,7 +689,7 @@
 							
 							$postc = 0;
 							foreach($count as $thisuserposts){
-								if(intval($thisuserposts->UP) >= 1 && $thisuserposts->COMMENT != ''){
+								if(intval($thisuserposts->UP) >= 1){
 									$postc++;
 									if($postc <= 10){
 										echo '<div id="'.intval($thisuserposts->ID).'" class="reply '.intval($thisuserposts->ID).'">';
@@ -685,16 +729,16 @@
 						
 					}
 				}else{
-					echo '<meta http-equiv="refresh" content="0;URL='.$THISPAGE.'">';
+					//echo '<meta http-equiv="refresh" content="0;URL='.$THISPAGE.'">';
 				}
 				
 			
 			}elseif($AREA == 'stats'){
 			
-				echo '<div class="boardlist clear"><div class="op clear">
+				echo '<div class="boardlist"><div class="op">
 				<span class="subject"><em>Stats for '.get_bloginfo('site_name').'</em></span>';
 				echo '<div class="commentMeta"><span><i class="fa fa-exclamation"> Counts active (non-deleted) content only.</i></span></div>';
-				echo '<div class="commentContainer clear commentOP">';
+				echo '<div class="commentContainer commentOP">';
 				echo '<table class="stats">';
 				if(count($getBoards) > 0){
 				echo '<tr valign="top">
@@ -840,7 +884,7 @@
 					$grabAll = $wpdb->get_results("SELECT * FROM $regularboard_posts");
 					
 
-					echo '<div class="mainboard clear boardposts"><div class="op clear"><span class="subject clear">Board Moderation</span>';
+					echo '<div class="mainboard boardposts"><div class="op"><span class="subject">Board Moderation</span>';
 
 					// Force update tables
 					if(isset($_POST['UPGRADE'])){
@@ -867,7 +911,7 @@
 					}else{
 						echo '
 						<hr />
-						<form method="post" class="topic clear threadform" >
+						<form method="post" class="topic threadform" >
 						<label for="UPGRADE" class="full submit">Click HERE to Force update tables (if new installation or upgrading)</label>
 						<input type="submit" name="UPGRADE" id="UPGRADE" value="An upgrade is necessary." class="hidden" />
 						</form>
@@ -878,7 +922,7 @@
 					echo '
 					<hr />
 					Create a new board (or edit an existing one by using the <strong>shortname</strong> of a board that already exists)
-					<form method="post" id="COMMENTFORM" class="topic clear threadform" name="createaboard" action="?area=create">';
+					<form method="post" id="COMMENTFORM" class="topic threadform" name="createaboard" action="?area=create">';
 					wp_nonce_field('createaboard');
 					echo '
 					<section class="small"><input type="text" name="SHORTNAME" id="SHORTNAME" placeholder="Shortname" /></section>
@@ -933,7 +977,7 @@
 							echo '</p>';
 							if(isset($_POST['dismiss'.$thisID])){
 								$wpdb->query("DELETE FROM $regularboard_users WHERE ID = '".$thisID."'");
-								echo '<meta http-equiv="refresh" content="0;URL=?area=create">';
+								//echo '<meta http-equiv="refresh" content="0;URL=?area=create">';
 							}
 							if(isset($_POST['delete'.$thisID])){
 								if($thisParent == 0){
@@ -941,7 +985,7 @@
 								}
 								$wpdb->delete( ''.$regularboard_posts.'', array('ID' => ''.$thisID.''),array( '%d' ) );
 								$wpdb->delete( ''.$regularboard_users.'', array('ID' => ''.$thisID.''),array( '%d' ) );
-								echo '<meta http-equiv="refresh" content="0;URL=?area=create">';
+								//echo '<meta http-equiv="refresh" content="0;URL=?area=create">';
 							}							
 						}
 					}else{
@@ -966,7 +1010,7 @@
 							echo '';
 							if(isset($_POST['unban'.$thisID])){
 								$wpdb->delete( ''.$regularboard_users.'', array('ID' => ''.$thisID.'','BANNED' => '1'),array( '%d','%d') );
-								echo '<meta http-equiv="refresh" content="0;URL=?area=create">';
+								//echo '<meta http-equiv="refresh" content="0;URL=?area=create">';
 							}
 							echo '</p>';
 						}
@@ -980,7 +1024,7 @@
 							$DELETETHIS = esc_sql(myoptionalmodules_sanistripents($_REQUEST['DELETETHIS']));
 							$wpdb->delete( ''.$regularboard_posts.'', array('BOARD' => ''.$DELETETHIS.''),array( '%s') );
 							$wpdb->delete( ''.$regularboard_boards.'', array('SHORTNAME' => ''.$DELETETHIS.''),array( '%s') );
-							echo '<meta http-equiv="refresh" content="0;URL=?area=create">';
+							//echo '<meta http-equiv="refresh" content="0;URL=?area=create">';
 					}
 					echo '	
 					
@@ -1037,7 +1081,6 @@
 		elseif($BOARD != '' && $BOARD != '_front'){
 			// Get Results
 			$getBoards = $wpdb->get_results("SELECT * FROM $regularboard_boards ORDER BY SHORTNAME ASC");
-			$getCurrentBoard = $wpdb->get_results("SELECT * FROM $regularboard_boards WHERE SHORTNAME = '".$BOARD."' LIMIT 1");
 			$getUser = $wpdb->get_results("SELECT * FROM $regularboard_users WHERE IP = '".$theIP_us32str."' AND BANNED = 1 LIMIT 1");
 			$getLastPost = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' ORDER BY ID DESC LIMIT 1");
 			
@@ -1111,7 +1154,7 @@
 					if($correct == 0)echo 'Wrong password.';
 					if($correct == 1)echo 'Post deleted!';
 					echo '<br />click <a href="'.esc_url($REDIRECTO).'">here</a> if you are not redirected.';
-					echo '<meta http-equiv="refresh" content="5;URL= '.$REDIRECTO.'">';
+					//echo '<meta http-equiv="refresh" content="5;URL= '.$REDIRECTO.'">';
 					echo '</h3>';
 				}
 			}else{
@@ -1165,8 +1208,8 @@
 									$banLifted = 0;
 								}
 									{
-										echo '<div class="mainboard clear boardposts"><div class="op clear">';
-										echo '<span class="subject clear">'.$purifier->purify($bannedmessage).'</span><div class="commentMeta clear">';
+										echo '<div class="mainboard boardposts"><div class="op">';
+										echo '<span class="subject">'.$purifier->purify($bannedmessage).'</span><div class="commentMeta">';
 										if($bannedimg != '')echo '<img class="imageOP" src="'.$bannedimg.'" />';
 										foreach($getUser as $gotUser){
 											$BANID = intval($gotUser->ID);
@@ -1177,7 +1220,7 @@
 											if($MESSAGE == '')$MESSAGE = '<em>No reason given</em>';
 											echo '<span><i class="fa fa-user"> Your IP: '.$ipaddress.'</i></span>
 											<span><i class="fa fa-clock-o"> Length: '.$LENGTH.'</i></span></div>';
-											echo '<div class="commentContainer clear commentOP">';
+											echo '<div class="commentContainer commentOP">';
 											echo '<p>You have been banned from using these boards';
 											if ($LENGTH === 'Permanent'){echo ' permanently';}
 											if ($LENGTH !== 'Permanent'){echo ' for '.$LENGTH;}
@@ -1190,7 +1233,7 @@
 								if($LENGTH != '0'){
 									if($banLifted == '1'){
 										$wpdb->delete( ''.$regularboard_users.'', array('ID' => ''.$BANID.'','BANNED' => '1'),array( '%d','%d') );
-										echo '<div class="mainboard clear boardposts"><div class="op clear"><span class="subject">Your ban is lifted - refresh the page to continue.</span></div></div>';
+										echo '<div class="mainboard boardposts"><div class="op"><span class="subject">Your ban is lifted - refresh the page to continue.</span></div></div>';
 									}
 								}
 								
@@ -1234,7 +1277,7 @@
 													}					
 												}						
 												if($_REQUEST['COMMENT'] == '' && $_REQUEST['URL'] == '') {
-													echo '<div class="mainboard clear"><div class="boardposts"><div class="op clear"><span class="subject clear">Can\'t submit an empty comment or URL.  Go back and fill one of those out.</span>';
+													echo '<div><div class="boardposts"><div class="op"><span class="subject">Can\'t submit an empty comment or URL.  Go back and fill one of those out.</span>';
 													echo '</div></div></div>';
 												}elseif($_REQUEST['LINK'] != '' || $_REQUEST['PAGE'] != '' || $_REQUEST['LOGIN'] != '' || $_REQUEST['USERNAME'] != ''){
 													$wpdb->query("INSERT INTO $regularboard_users (ID, DATE, IP, THREAD, PARENT, BANNED, MESSAGE, LENGTH, KARMA) VALUES ('','$current_timestamp','$theIP_us32str','0','0','1','filling out hidden form areas (likely bot).','0','0')");
@@ -1457,6 +1500,12 @@
 																}else{
 																	$wpdb->query("INSERT INTO $regularboard_users (ID, DATE, IP, THREAD, PARENT, BANNED, MESSAGE, LENGTH, KARMA) VALUES ('','$current_timestamp','$theIP_us32str','0','0','5','unoriginal','10 minutes','')");
 																}
+																if($getMuted->BANNED == 5){$mutecount = 4;}
+																elseif($getMuted->BANNED == 4){$mutecount = 3;}
+																elseif($getMuted->BANNED == 3){$mutecount = 2;}
+																elseif($getMuted->BANNED == 2){$mutecount = 1;}
+																elseif($getMuted->BANNED == 1){$mutecount = 0;}
+																else{$mutecount = 5;}
 																$duplicate_found = true;
 															}
 														}
@@ -1481,20 +1530,61 @@
 												
 												if($edited == 0 || $edited == 1 || $timegateactive !== true){
 													
-													echo '<div class="mainboard clear"><div class="boardposts"><div class="op clear"><span class="subject clear">';if($edited == 1){ echo 'Edited successfully!'; }elseif($duplicate_found === true){echo 'Duplicate found.  Redirecting you to original.';}else{echo esc_attr($postedmessage);}echo '</span>';
-													if($postedimg != ''){echo '<img class="infoimg clear" src="'.$postedimg.'" />';}
-													echo '<div class="commentMeta"><span><i class="fa fa-link"> <a href="'.esc_url($REDIRECTO).'">click to proceed if not redirected</a></i></span></div>';
-													echo '</div></div></div>';
-													echo '<meta http-equiv="refresh" content="5;URL= '.esc_url($REDIRECTO).'">';
+													echo '<span class="postedMessage">';
+													if($edited == 1){ echo 'Edited successfully!'; }
+													elseif($duplicate_found === true){echo 'Duplicate found  -  Post discarded.';}
+													else{echo esc_attr($postedmessage);}
+													echo '</span>';
+													
+													if($edited == 1){
+														echo '
+														<p>Automatically forwarding you to your edited <a href="'.$REDIRECTO.'">post</a>.</p>
+														<hr />';
+														echo '<meta http-equiv="refresh" content="3;URL= '.esc_url($REDIRECTO).'">';
+													}elseif($duplicate_found === true){
+														echo '
+														<p>To view the found duplicate content, you may click <a href="'.$REDIRECTO.'">here</a>.  Otherwise, please go back and correct your post.  You have '.$mutecount.' more attempts before Auto-Mute is enabled.  Once Auto-Mute is enabled, you will not be able to interact with these boards for 10 minutes.</p>
+														<hr />
+														<p class="information"><i class="fa fa-warning"></i> As part of this board\'s Auto-Mute feature, content that has already been submitted may not be submitted again.  
+														What this means is that you can not submit the exact same content more than once.  Any IP address that attempts 
+														to do this more than 5 times will be temporarily banned from using this board for 10 minutes.</p>
+														<p class="information"><i class="fa fa-question"></i> The simplest way that you can avoid these temporary bans by submitting thought provoking and <strong>original</strong> content and links,
+														instead of submitting things that have already been submitted before.  There <strong>is</strong> a search function to browse the board via keywords.  Perhaps searching for your 
+														content before submitting it will aid you in the future.</p>';
+													}else{
+														if($isnew == 0){
+															if($postedimg != ''){echo '<img class="infoimg" src="'.$postedimg.'" />';}
+															if(count($checkUserExists) == 0){
+																echo '
+																<p>You\'ve just your first post.  Click <a href="'.$REDIRECTO.'">here</a> to be taken to it.</p>
+																<hr />';
+																echo '<p class="information"><i class="fa fa-thumbs-up"></i> Posts and replies can be Approved of (or Disapproved) - which will add (or detract) from your overall Approval rating on this site.
+																Ratings are tracked by IP address alone - posting from different IP addresses will obviously mean different Approval ratings for each of your posts.</p>
+																<p class="information"><i class="fa fa-user"></i> We use your IP address to identify you, for the purposes of user stats, and for the purposes of board moderation.  Your IP address is never made 
+																publicly available.  All users are <em>anonymous</em> (in the sense that there are no names attached to their posts).</p>
+																<p class="information"><i class="fa fa-terminal"></i> Did you know that you can format your comments using special code?  Surrounding a word with *s, like *this*, will result in an <em>italicized</em> 
+																word, while **this** will result in a <strong>bold</strong> word.  Toggle the formatting help for more info on this!</p>
+																<p class="information"><i class="fa fa-warning"></i> Now that you\'ve made your first post, this information screen will no longer be presented to you.  Instead, in the future, when making new posts,
+																you will simply be automatically forwarded to them.  Now go forth - and be a productive member of this community!</p>';
+															}else{
+															echo '
+																<p>Automatically forwarding you to your new <a href="'.$REDIRECTO.'">post</a>.</p>
+																<hr />';
+																echo '<meta http-equiv="refresh" content="3;URL= '.esc_url($REDIRECTO).'">';
+															}
+														}
+													}
+													
+													
+													
 												}
 											}
 										}elseif(isset($_POST['FORMSUBMIT']) && $timegateactive === true){
-													echo '<div class="mainboard clear"><div class="boardposts"><div class="op clear"><span class="subject clear">You can\'t do that yet.</span>';
-													echo '<div class="commentMeta"><span><i class="fa fa-clock-o"> Try again in '.($timebetween - $timegate).' seconds.</i></span></div>';
-													echo '</div></div></div>';
+													echo 'You can\'t do that yet.';
+													
 									}}
 									if(!isset($_POST['FORMSUBMIT'])){
-											echo '<div class="mainboard clear">';
+											echo '<div>';
 											if($posting == 1 && $SEARCH == ''){
 											if($THREAD == ''){
 												if(filter_var($checkThisIP,FILTER_VALIDATE_IP)){ $IPPASS = true; }
@@ -1540,46 +1630,50 @@
 																			foreach($checkPass as $EDITTHREAD){
 																					$editComment = str_replace('\\\\\\\'','\'',(str_replace('\\\\\\','',(str_replace(array('\\n','\\t','\\r'),'||',(str_replace('\\r\\n','||',($EDITTHREAD->COMMENT))))))));
 																					$editSubject = str_replace('\\\\\\\'','\'',(str_replace('\\\\\\','',(str_replace(array("\n","\t","\r"),"||",($EDITTHREAD->SUBJECT))))));
-																				echo '<form class="topic clear" name="editform" method="post" action="'.$ACTION.'" id="COMMENTFORM">';
+																				echo '<form class="topic newthread" name="editform" method="post" action="'.$ACTION.'" id="COMMENTFORM">';
 																				wp_nonce_field('editform');
 																				echo '<input type="hidden" value="" name="LINK" />';
 																				echo '<input type="hidden" value="" name="PAGE" />';
 																				echo '<input type="hidden" value="" name="LOGIN" />';
 																				echo '<input type="hidden" value="" name="USERNAME" />';
 																				echo '<input type="hidden" value="'.$checkID.'" id="editthisthread" name="editthisthread" />';
-																				echo '<label for="formextra" class="formtoggle">Formatting help</label><input type="checkbox" class="hidden" id="formextra" name="formextra" />';
+																				echo '<label for="formextra" class="formtoggle"><i class="fa fa-plus-square-o"> toggle formatting help</i></label><input type="checkbox" class="hidden" id="formextra" name="formextra" />';
 																				echo '<section class="formextras">';
-																				echo '<section class="full"><table class="formatting clear"><tr><td colspan="3">Hover for formatting help</td></tr><tr><td>Effect</td><td>What you type</td><td>What you get</td></tr><tr><td>Bold</td><td><span title="Bold" onclick="formatThis(event)">**bold**</span></td><td><strong>bold</strong></tr><tr><td>Italics</td><td><span title="Italics" onclick="formatThis(event)">*italics*</span></td><td><em>italics</em></td></tr><tr><td>Strike</td><td><span title="Strike" onclick="formatThis(event)">~~strike~~</span></td><td><strike>strike</strike></td></tr><tr><td>Bold+Italic</td><td><span title="Bold and Italic" onclick="formatThis(event)">***bold italic***</span></td><td><strong><em>bold italic</em></strong></td></tr><tr><td>Quote</td><td><span title="Quote" onclick="formatThis(event)">{{Quoted text}}</span></td><td><blockquote>quoted text</blockquote></td></tr><tr><td>Alt. quote</td><td>4 spaces:<br />&nbsp;&nbsp;&nbsp;&nbsp;this is a quote</td><td><br /><span class="quotes">> this is a quote</span></td></tr><tr><td>Alt. Reply to</td><td>::101||</td><td><a href="#101">>> 101</a></td></tr><tr><td>New line, new paragraph</td><td><span title="New line" onclick="formatThis(event)">||</span>,<span title="New paragraph" onclick="formatThis(event)">||||</span></td><td>(trust us, it happens.)</td></tr><tr><td>List</td><td><span title="New list" onclick="formatThis(event)"> - Liste item ||</span></td><td><ul><li>List item</li></ul></td></tr><tr><td>Code</td><td><span title="Code" onclick="formatThis(event)">`code`</span></td><td><code>code</code></td></tr><tr><td>Spoiler</td><td>This is a [spoiler]spoiler[/spoiler].</td><td>This is a <span class="spoiler">spoiler</span>.</td></tr></table></section>';
+																				echo '<section class="full"><table class="formatting"><tr><td>Effect</td><td>What you type</td><td>What you get</td></tr><tr><td>Bold</td><td><span title="Bold" onclick="formatThis(event)">**bold**</span></td><td><strong>bold</strong></tr><tr><td>Italics</td><td><span title="Italics" onclick="formatThis(event)">*italics*</span></td><td><em>italics</em></td></tr><tr><td>Strike</td><td><span title="Strike" onclick="formatThis(event)">~~strike~~</span></td><td><span class="strike">strike</span></td></tr><tr><td>Bold+Italic</td><td><span title="Bold and Italic" onclick="formatThis(event)">***bold italic***</span></td><td><strong><em>bold italic</em></strong></td></tr><tr><td>Quote</td><td><span title="Quote" onclick="formatThis(event)">{{Quoted text}}</span></td><td><blockquote>quoted text</blockquote></td></tr><tr><td>Alt. quote</td><td>4 spaces:<br />&nbsp;&nbsp;&nbsp;&nbsp;this is a quote</td><td><br /><span class="quotes">> this is a quote</span></td></tr><tr><td>Alt. Reply to</td><td>::101||</td><td><a href="#101">>> 101</a></td></tr><tr><td>New line, new paragraph</td><td><span title="New line" onclick="formatThis(event)">||</span>,<span title="New paragraph" onclick="formatThis(event)">||||</span></td><td>(trust us, it happens.)</td></tr><tr><td>List</td><td><span title="New list" onclick="formatThis(event)">2 spaces<br />&nbsp;&nbsp;- List item ||</span></td><td><ul><li>List item</li></ul></td></tr><tr><td>Code</td><td><span title="Code" onclick="formatThis(event)">`code`</span></td><td><code>code</code></td></tr><tr><td>Spoiler</td><td>This is a [spoiler]spoiler[/spoiler].</td><td>This is a <span class="spoiler">spoiler</span>.</td></tr></table></section>';
 																				echo '</section>';
 																				if($ISUSER !== true || $ISUSERJANITOR !== true)echo '<section class="passwordthis"><input type="password" id="PASSWORD" maxlength="'.$maxtext.'" name="PASSWORD" value="'.$EDITTHREAD->PASSWORD.'" /></section>';
 																				echo '<section class="full"><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" value="'.$editSubject.'" /></section>';
-																				echo '<section class="full"><textarea id="COMMENT" name="COMMENT">'.$editComment.'</textarea><span id="count"></span></section>';
+																				echo '<section class="full"><textarea id="COMMENT" name="COMMENT">'.$editComment.'</textarea></section>';
+																				echo '<section class="formbottom">';
 																				if($enableurl == 1 && $THREAD == '')echo '<section class="attachURL"><input type="text" id="URL" maxlength="'.$maxtext.'" value="'.$EDITTHREAD->URL.'" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';
 																				echo '<section class="replytothis"><input type="text" id="REPLYTO" maxlength="'.$maxtext.'" name="REPLYTO" '; if($EDITTHREAD->REPLYTO != 0){ echo 'value="'.$EDITTHREAD->REPLYTO.'"';}echo ' placeholder="No. ###" /></section>';
+																				echo '</section><span id="count"></span>';
 																				$correct = 3;
 																			}
 																		}
 																	}
 																	if($correct == 0){
-																		echo '<form class="topic clear" name="regularboard" method="post" action="'.$ACTION.'" id="COMMENTFORM">';
+																		echo '
+																		<form class="topic newthread" name="regularboard" method="post" action="'.$ACTION.'" id="COMMENTFORM">';
 																		wp_nonce_field('regularboard');
 																		echo '<input type="hidden" value="" name="LINK" />';
 																		echo '<input type="hidden" value="" name="PAGE" />';
 																		echo '<input type="hidden" value="" name="LOGIN" />';
 																		echo '<input type="hidden" value="" name="USERNAME" />';
-																		echo '<label for="formextra" class="formtoggle">Formatting help</label><input type="checkbox" class="hidden" id="formextra" name="formextra" />';
+																		echo '<label for="formextra" class="formtoggle"><i class="fa fa-plus-square-o"> toggle formatting help</i></label><input type="checkbox" class="hidden" id="formextra" name="formextra" />';
 																		echo '<section class="formextras">';
-																		echo '<section class="full"><table class="formatting clear"><tr><td colspan="3">Hover for formatting help</td></tr><tr><td>Effect</td><td>What you type</td><td>What you get</td></tr><tr><td>Bold</td><td><span title="Bold" onclick="formatThis(event)">**bold**</span></td><td><strong>bold</strong></tr><tr><td>Italics</td><td><span title="Italics" onclick="formatThis(event)">*italics*</span></td><td><em>italics</em></td></tr><tr><td>Strike</td><td><span title="Strike" onclick="formatThis(event)">~~strike~~</span></td><td><strike>strike</strike></td></tr><tr><td>Bold+Italic</td><td><span title="Bold and Italic" onclick="formatThis(event)">***bold italic***</span></td><td><strong><em>bold italic</em></strong></td></tr><tr><td>Quote</td><td><span title="Quote" onclick="formatThis(event)">{{Quoted text}}</span></td><td><blockquote>quoted text</blockquote></td></tr><tr><td>Alt. quote</td><td>4 spaces:<br />&nbsp;&nbsp;&nbsp;&nbsp;this is a quote</td><td><br /><span class="quotes">> this is a quote</span></td></tr><tr><td>Alt. Reply to</td><td>::101||</td><td><a href="#101">>> 101</a></td></tr><tr><td>New line, new paragraph</td><td><span title="New line" onclick="formatThis(event)">||</span>,<span title="New paragraph" onclick="formatThis(event)">||||</span></td><td>(trust us, it happens.)</td></tr><tr><td>List</td><td><span title="New list" onclick="formatThis(event)"> - Liste item ||</span></td><td><ul><li>List item</li></ul></td></tr><tr><td>Code</td><td><span title="Code" onclick="formatThis(event)">`code`</span></td><td><code>code</code></td></tr><tr><td>Spoiler</td><td>This is a [spoiler]spoiler[/spoiler].</td><td>This is a <span class="spoiler">spoiler</span>.</td></tr></table></section>';
+																		echo '<section class="full"><table class="formatting"><tr><td>Effect</td><td>What you type</td><td>What you get</td></tr><tr><td>Bold</td><td><span title="Bold" onclick="formatThis(event)">**bold**</span></td><td><strong>bold</strong></tr><tr><td>Italics</td><td><span title="Italics" onclick="formatThis(event)">*italics*</span></td><td><em>italics</em></td></tr><tr><td>Strike</td><td><span title="Strike" onclick="formatThis(event)">~~strike~~</span></td><td><span class="strike">strike</span></td></tr><tr><td>Bold+Italic</td><td><span title="Bold and Italic" onclick="formatThis(event)">***bold italic***</span></td><td><strong><em>bold italic</em></strong></td></tr><tr><td>Quote</td><td><span title="Quote" onclick="formatThis(event)">{{Quoted text}}</span></td><td><blockquote>quoted text</blockquote></td></tr><tr><td>Alt. quote</td><td>4 spaces:<br />&nbsp;&nbsp;&nbsp;&nbsp;this is a quote</td><td><br /><span class="quotes">> this is a quote</span></td></tr><tr><td>Alt. Reply to</td><td>::101||</td><td><a href="#101">>> 101</a></td></tr><tr><td>New line, new paragraph</td><td><span title="New line" onclick="formatThis(event)">||</span>,<span title="New paragraph" onclick="formatThis(event)">||||</span></td><td>(trust us, it happens.)</td></tr><tr><td>List</td><td><span title="New list" onclick="formatThis(event)">2 spaces<br />&nbsp;&nbsp;- List item ||</span></td><td><ul><li>List item</li></ul></td></tr><tr><td>Code</td><td><span title="Code" onclick="formatThis(event)">`code`</span></td><td><code>code</code></td></tr><tr><td>Spoiler</td><td>This is a [spoiler]spoiler[/spoiler].</td><td>This is a <span class="spoiler">spoiler</span>.</td></tr></table></section>';
 																		echo '</section>';
 																		echo '<section class="passwordthis"><input type="password" id="PASSWORD" maxlength="'.$maxtext.'" name="PASSWORD" value="'.$rand.'" /></section>';
 																		echo '<section class="full"><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section>';
-																		echo '<section class="full"><textarea id="COMMENT" name="COMMENT" placeholder="Comment"></textarea><span id="count"></span></section>';
+																		echo '<section class="full"><textarea id="COMMENT" name="COMMENT" placeholder="Comment"></textarea></section>';
+																		echo '<section class="formbottom">';
 																		if($enableurl == 1 && $THREAD == ''){echo '<section class="attachURL"><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';}
 																		if($enablerep == 1 && $THREAD != '')echo '<section class="attachURL"><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';
 																		if($enableemail == 1)echo '<section class="email"><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="E-mail" /></section>';
-																		
+																		echo '</section><span id="count"></span>';
 																	}
-																	echo '<section class="full clear submission"><label for="FORMSUBMIT" class="submit clear">Post</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section>';
+																	echo '<section class="full submission"><label for="FORMSUBMIT" class="submit">Post</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section>';
 																	echo '</form>';
 																}
 																
@@ -1713,14 +1807,16 @@
 															}else{
 																$COMMENT = $COMMENT;
 															}
-															$COMMENT = '<div class="commentContainer clear commentOP">'.$COMMENT.'</div>';
+															$COMMENT = '<div class="commentContainer commentOP">'.$COMMENT.'</div>';
 															$show_thread_comment = true;
 														}												
 														$SUBJECT          =            str_replace('\\\\\\\'','\'',$SUBJECT);
 														if($SUBJECT      == '')        $SUBJECT = 'No subject';
 														if($SUBJECT      != '')        $SUBJECT = $SUBJECT;
-														if($THREAD       != '')        $gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."' ORDER BY UP DESC, LAST ASC");
-														if($THREAD       != '')        $gotReply   = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE REPLYTO = '".$ID."' ORDER BY REPLYTO DESC");
+														if($SEARCH != '' && $THREAD != '') $gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE ( EMAIL = '".$SEARCH."' OR COMMENT LIKE '%".$SEARCH."%' OR SUBJECT LIKE '%".$SEARCH."%' OR URL LIKE '%".$SEARCH."%' ) AND PARENT = $ID ORDER BY UP DESC, LAST ASC");
+														if($SEARCH == '' && $THREAD       != '')            $gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."' ORDER BY UP DESC, LAST ASC");
+														if($SEARCH != '')echo '<hr /><em>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-search"></i> Searching this thread for '.$SEARCH.'.  Returned '.count($gotReplies).' results.</em><hr />';
+														if($THREAD       != '')            $gotReply   = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE REPLYTO = '".$ID."' ORDER BY REPLYTO DESC");
 														$checkforupvote   =  0;
 														$checkfordownvote =  0;
 														$getvotestatus    =            $wpdb->get_results("SELECT * FROM $regularboard_users WHERE IP = '".$theIP_us32str."' AND THREAD = '".$ID."'");
@@ -1728,7 +1824,7 @@
 															if($votestatus->MESSAGE == 'Upvote')$checkforupvote++;
 															if($votestatus->MESSAGE == 'Downvote')$checkfordownvote++;
 														}
-														$getReplies       =            $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."'");
+														$getReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."'");
 														$totalREPLIES     = count(     $getReplies);
 														if($BoardIsSet !== true)if($THREAD == '')$thread_reply_link = '<span><i class="fa fa-reply"> <a href="?board='.$BOARD.'&amp;thread='.$ID.'">Reply</a> ('.count($getReplies).')</i></span>';
 														if($BoardIsSet === true)if($THREAD == '')$thread_reply_link = '<span><i class="fa fa-reply"> <a href="?thread='.$ID.'">Reply</a> ('.count($getReplies).')</i></span>';															
@@ -1745,11 +1841,11 @@
 															if($MODERATOR == 0)$getModReply       = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$ID."' AND MODERATOR = '1' LIMIT 1");
 															if(count($getModReply) > 0)$gotModReply = ' modreplied';
 															if($gotModReply != '')$modishere = ' <i class="fa fa-star"></i>';
-															if($BoardIsSet  !== true)    $SUBJECT =  '<span class="subject clear'.$gotModReply.'"> <a class="left posttitle" href="?board='.$BOARD.'&amp;thread='.$ID.'">'.$modishere.$SUBJECT.'</a></span>';
-															if($BoardIsSet  === true)    $SUBJECT =  '<span class="subject clear'.$gotModReply.'"> <a class="left posttitle" href="?thread='.$ID.'">'.$modishere.$SUBJECT.'</a></span>';
+															if($BoardIsSet  !== true)    $SUBJECT =  '<span class="subject'.$gotModReply.'"> <a class="left posttitle" href="?board='.$BOARD.'&amp;thread='.$ID.'">'.$modishere.$SUBJECT.'</a></span>';
+															if($BoardIsSet  === true)    $SUBJECT =  '<span class="subject'.$gotModReply.'"> <a class="left posttitle" href="?thread='.$ID.'">'.$modishere.$SUBJECT.'</a></span>';
 														}else{
-															if($BoardIsSet  !== true)    $SUBJECT =  '<span class="subject clear"> <a class="left posttitle" href="?board='.$BOARD.'&amp;thread='.$PARENT.'#'.$ID.'">'.$SUBJECT.'</a></span>';
-															if($BoardIsSet  === true)    $SUBJECT =  '<span class="subject clear"> <a class="left posttitle" href="?thread='.$PARENT.'#'.$ID.'">'.$SUBJECT.'</a></span>';
+															if($BoardIsSet  !== true)    $SUBJECT =  '<span class="subject"> <a class="left posttitle" href="?board='.$BOARD.'&amp;thread='.$PARENT.'#'.$ID.'">'.$SUBJECT.'</a></span>';
+															if($BoardIsSet  === true)    $SUBJECT =  '<span class="subject"> <a class="left posttitle" href="?thread='.$PARENT.'#'.$ID.'">'.$SUBJECT.'</a></span>';
 														}
 														if($style === 'imageboard' && $THREAD == '' || $style === 'imageboard' && $THREAD != '' || $style === 'textboard' && $THREAD != ''){
 															if($URL != '' && $TYPE == 'image'){
@@ -1763,7 +1859,7 @@
 															$imageboard_subject = '';
 														}
 														$imageboard_subject = $SUBJECT.$op_embed;
-														if(isset($_POST['DISAPPROVE'.$ID]) && $IP != $theIP_us32str){
+														if(isset($_POST['DISAPPROVE'.$ID])){
 															echo '<meta http-equiv="refresh" content="0">';
 															$getUP   = $wpdb->get_results("SELECT UP FROM $regularboard_posts WHERE ID = '".$ID."' LIMIT 1");
 															foreach($getUP as $gotUP){
@@ -1788,7 +1884,7 @@
 																$wpdb->update( $regularboard_users, array( 'KARMA' => $kdown ), array( 'IP' => $IP, 'BANNED' => '8'), array( '%d') );
 															}
 														}
-														if(isset($_POST['APPROVE'.$ID]) && $IP != $theIP_us32str){
+														if(isset($_POST['APPROVE'.$ID])){
 															echo '<meta http-equiv="refresh" content="0">';
 															$getUP   = $wpdb->get_results("SELECT UP FROM $regularboard_posts WHERE ID = '".$ID."' LIMIT 1");
 															foreach($getUP as $gotUP){
@@ -1830,7 +1926,7 @@
 														if($style === 'imageboard' && $THREAD == '' || $style === 'imageboard' && $THREAD != '' || $style === 'textboard' && $THREAD != ''){
 															$thread_header = 
 															 $imageboard_subject
-															. '<div class="commentMeta clear">'
+															. '<div class="commentMeta">'
 															. $op_approval_button
 															. $op_disapproval_button
 															. $thread_karma
@@ -1846,9 +1942,9 @@
 															. '</div>';
 														}else{
 															$thread_header = 
-															 '<section class="clear">'
+															 '<section>'
 															. $SUBJECT
-															. '<div class="commentMeta clear">'
+															. '<div class="commentMeta">'
 															. $op_approval_button
 															. $op_disapproval_button
 															. $thread_karma
@@ -1866,7 +1962,7 @@
 														}
 														
 														// All of the parent thread information comes together here:
-														echo '<div class="op clear" id="'.$ID.'">'.$thread_header;if($show_thread_comment === true)echo $COMMENT;
+														echo '<div class="op" id="'.$ID.'">'.$thread_header;if($show_thread_comment === true)echo $COMMENT;
 														
 														// Replies DIV/load more link opens up here
 														if($style === 'imageboard'){
@@ -1914,8 +2010,8 @@
 																	if(strtolower($EMAIL) == 'heaven'){$reply_name = '<span><i class="fa fa-user"> ???'.$this_is_op;}
 																	if($MODERATOR != 1 && $MODERATOR != 2){$reply_name = '<span><i class="fa fa-user"><a href="'.$profilelink.'"> '.$defaultname.$this_is_op.'</a></i></span>';}
 																	if($EMAIL != ''){ if(filter_var($EMAIL,FILTER_VALIDATE_EMAIL)){ $reply_trip = ''; }else{ $reply_trip = '<span class="trip"> <i class="fa fa-exclamation"> '.$EMAIL.'</i></span>'; } }		
-																	if(isset($_POST['DISAPPROVE'.$ID]) && $IP != $theIP_us32str){ echo '<meta http-equiv="refresh" content="0">'; $getUP   = $wpdb->get_results("SELECT UP FROM $regularboard_posts WHERE ID = '".$ID."' LIMIT 1"); foreach($getUP as $gotUP){ $UP = $gotUP->UP; $up = $UP + 1; $down = $UP - 1; } $getUSER   = $wpdb->get_results("SELECT KARMA FROM $regularboard_users WHERE IP = '".$IP."' AND BANNED = '8' LIMIT 1"); foreach($getUSER as $USERED){ $KARMA = $USERED->KARMA; $kup = $KARMA + 1; $kdown = $KARMA - 1; } if($checkfordownvote > 0){ $wpdb->delete( $regularboard_users, array('THREAD' => $ID, 'IP' => $theIP_us32str),array( '%d','%d') ); $wpdb->update( $regularboard_posts, array( 'UP' => $up ), array( 'ID' => $ID), array( '%d') ); $wpdb->update( $regularboard_users, array( 'KARMA' => $kup ), array( 'IP' => $IP, 'BANNED' => '8'), array( '%d','%d') ); } if($checkfordownvote == 0){ $wpdb->query("INSERT INTO $regularboard_users (ID, DATE, IP, THREAD, PARENT, BANNED, MESSAGE, LENGTH, KARMA) VALUES ('','$current_timestamp','$theIP_us32str','$ID','$PARENT','9','Downvote','','0')"); $wpdb->update( $regularboard_posts, array( 'UP' => $down ), array( 'ID' => $ID), array( '%d') ); $wpdb->update( $regularboard_users, array( 'KARMA' => $kdown ), array( 'IP' => $IP, 'BANNED' => '8'), array( '%d') ); } }
-																	if(isset($_POST['APPROVE'.$ID]) && $IP != $theIP_us32str){ echo '<meta http-equiv="refresh" content="0">'; $getUP   = $wpdb->get_results("SELECT UP FROM $regularboard_posts WHERE ID = '".$ID."' LIMIT 1"); foreach($getUP as $gotUP){ $UP = $gotUP->UP; $up = $UP + 1; $down = $UP - 1; } $getUSER   = $wpdb->get_results("SELECT KARMA FROM $regularboard_users WHERE IP = '".$IP."' AND BANNED = '8' LIMIT 1"); foreach($getUSER as $USERED){$KARMA = $USERED->KARMA; $kup = $KARMA + 1; $kdown = $KARMA - 1; } if($checkforupvote > 0){ $wpdb->delete($regularboard_users, array('THREAD' => $ID, 'IP' => $theIP_us32str),array( '%d','%d') ); $wpdb->update($regularboard_posts, array( 'UP' => $down ), array( 'ID' => $ID), array( '%d') ); $wpdb->update($regularboard_users, array( 'KARMA' => $kdown ), array( 'IP' => $IP, 'BANNED' => '8'), array( '%d','%d') ); } if($checkforupvote == 0){ $wpdb->query("INSERT INTO $regularboard_users (ID, DATE, IP, THREAD, PARENT, BANNED, MESSAGE, LENGTH, KARMA) VALUES ('','$current_timestamp','$theIP_us32str','$ID','$PARENT','9','Upvote','','0')"); $wpdb->update($regularboard_posts, array( 'UP' => $up ), array( 'ID' => $ID), array( '%d') ); $wpdb->update($regularboard_users, array( 'KARMA' => $kup ), array( 'IP' => $IP, 'BANNED' => '8'), array( '%d') ); }  }
+																	if(isset($_POST['DISAPPROVE'.$ID])){ echo '<meta http-equiv="refresh" content="0">'; $getUP   = $wpdb->get_results("SELECT UP FROM $regularboard_posts WHERE ID = '".$ID."' LIMIT 1"); foreach($getUP as $gotUP){ $UP = $gotUP->UP; $up = $UP + 1; $down = $UP - 1; } $getUSER   = $wpdb->get_results("SELECT KARMA FROM $regularboard_users WHERE IP = '".$IP."' AND BANNED = '8' LIMIT 1"); foreach($getUSER as $USERED){ $KARMA = $USERED->KARMA; $kup = $KARMA + 1; $kdown = $KARMA - 1; } if($checkfordownvote > 0){ $wpdb->delete( $regularboard_users, array('THREAD' => $ID, 'IP' => $theIP_us32str),array( '%d','%d') ); $wpdb->update( $regularboard_posts, array( 'UP' => $up ), array( 'ID' => $ID), array( '%d') ); $wpdb->update( $regularboard_users, array( 'KARMA' => $kup ), array( 'IP' => $IP, 'BANNED' => '8'), array( '%d','%d') ); } if($checkfordownvote == 0){ $wpdb->query("INSERT INTO $regularboard_users (ID, DATE, IP, THREAD, PARENT, BANNED, MESSAGE, LENGTH, KARMA) VALUES ('','$current_timestamp','$theIP_us32str','$ID','$PARENT','9','Downvote','','0')"); $wpdb->update( $regularboard_posts, array( 'UP' => $down ), array( 'ID' => $ID), array( '%d') ); $wpdb->update( $regularboard_users, array( 'KARMA' => $kdown ), array( 'IP' => $IP, 'BANNED' => '8'), array( '%d') ); } }
+																	if(isset($_POST['APPROVE'.$ID])){ echo '<meta http-equiv="refresh" content="0">'; $getUP   = $wpdb->get_results("SELECT UP FROM $regularboard_posts WHERE ID = '".$ID."' LIMIT 1"); foreach($getUP as $gotUP){ $UP = $gotUP->UP; $up = $UP + 1; $down = $UP - 1; } $getUSER   = $wpdb->get_results("SELECT KARMA FROM $regularboard_users WHERE IP = '".$IP."' AND BANNED = '8' LIMIT 1"); foreach($getUSER as $USERED){$KARMA = $USERED->KARMA; $kup = $KARMA + 1; $kdown = $KARMA - 1; } if($checkforupvote > 0){ $wpdb->delete($regularboard_users, array('THREAD' => $ID, 'IP' => $theIP_us32str),array( '%d','%d') ); $wpdb->update($regularboard_posts, array( 'UP' => $down ), array( 'ID' => $ID), array( '%d') ); $wpdb->update($regularboard_users, array( 'KARMA' => $kdown ), array( 'IP' => $IP, 'BANNED' => '8'), array( '%d','%d') ); } if($checkforupvote == 0){ $wpdb->query("INSERT INTO $regularboard_users (ID, DATE, IP, THREAD, PARENT, BANNED, MESSAGE, LENGTH, KARMA) VALUES ('','$current_timestamp','$theIP_us32str','$ID','$PARENT','9','Upvote','','0')"); $wpdb->update($regularboard_posts, array( 'UP' => $up ), array( 'ID' => $ID), array( '%d') ); $wpdb->update($regularboard_users, array( 'KARMA' => $kup ), array( 'IP' => $IP, 'BANNED' => '8'), array( '%d') ); }  }
 																	if($checkforupvote > 0 && $checkfordownvote == 0){ $reply_approval_button = '<span><form method="post" action="'.$ACTION.'" name="APPROVE"><label for="APPROVE'.$ID.'"><i class="fa fa-thumbs-up"></i></label><input type="submit" class="hidden" name="APPROVE'.$ID.'" id="APPROVE'.$ID.'" /></form></span>'; }elseif($checkforupvote == 0 && $checkfordownvote > 0){ $reply_approval_button = ''; }else{ $reply_approval_button = '<span><form method="post" action="'.$ACTION.'" name="APPROVE"><label for="APPROVE'.$ID.'"><i class="fa fa-thumbs-o-up"></i></label><input type="submit" class="hidden" name="APPROVE'.$ID.'" id="APPROVE'.$ID.'" /></form></span>'; }
 																	if($checkfordownvote > 0 && $checkforupvote == 0){ $reply_disapproval_button = '<span><form method="post" action="'.$ACTION.'" name="DISAPPROVE"><label for="DISAPPROVE'.$ID.'"><i class="fa fa-thumbs-down"></i></label><input type="submit" class="hidden" name="DISAPPROVE'.$ID.'" id="DISAPPROVE'.$ID.'" /></form></span>'; }elseif($checkfordownvote == 0 && $checkforupvote > 0){ $reply_disapproval_button = ''; }else{ $reply_disapproval_button = '<span><form method="post" action="'.$ACTION.'" name="DISAPPROVE"><label for="DISAPPROVE'.$ID.'"><i class="fa fa-thumbs-o-down"></i></label><input type="submit" class="hidden" name="DISAPPROVE'.$ID.'" id="DISAPPROVE'.$ID.'" /></form></span>'; }
 																	$reply_karma = '<span><em class="karma"><i class="fa fa-heart"> '.$KARMA.'</i></em></span>'; 
@@ -1924,7 +2020,7 @@
 																	if($TYPE == 'image') $THREADIMGS++;
 																	$reply_attached_link = '';
 																	if($TYPE == 'URL' && $URL != '')$reply_attached_link = '<span><i class="fa fa-link"> <a href="'.esc_url($URL).'">Attached link</a></i></span>';
-																	$SUBJECT  = rb_format(str_replace('\\\\\\\'','\'',(str_replace('\\\\\\','',('<span class="replysubject clear">'.$REPLIES->SUBJECT.'</span>')))));
+																	$SUBJECT  = rb_format(str_replace('\\\\\\\'','\'',(str_replace('\\\\\\','',('<span class="replysubject">'.$REPLIES->SUBJECT.'</span>')))));
 																	if($THREAD != '')$COMMENT = wpautop(rb_format(str_replace('\\\\\\\'','\'',(str_replace('\\\\\\','',(str_replace(array("\n","\t","\r"),"<br />",($REPLIES->COMMENT))))))));
 																	if($THREAD == '' && strlen($REPLIES->COMMENT) <= $cutoff)$COMMENT = regularboard_html_cut(rb_format(str_replace('\\\\\\\'','\'',(str_replace('\\\\\\','',(str_replace(array("\n","\t","\r"),"<br />",($REPLIES->COMMENT))))))),$cutoff);
 																	if($THREAD == '' && strlen($REPLIES->COMMENT) > $cutoff)$COMMENT = regularboard_html_cut(rb_format(str_replace('\\\\\\\'','\'',(str_replace('\\\\\\','',(str_replace(array("\n","\t","\r"),"<br />",($REPLIES->COMMENT))))))),$cutoff).'...';
@@ -1939,7 +2035,7 @@
 																	}elseif($TYPE == 'video' && $URL != ''){ $reply_embed = '<iframe src="http://www.youtube.com/embed/'.$URL.'?loop=1&amp;playlist='.$URL.'&amp;controls=0&amp;showinfo=0&amp;autohide=1" frameborder="0" allowfullscreen></iframe>'; }
 																	// Reply->data_setup[end]
 																	// Reply->content[start]
-																	echo '<div class="reply'; if($EMAIL == $IAMOP && $EMAIL != ''){echo ' iamop';} echo '" id="'.$ID.'"><div class="replycontent">' . $SUBJECT . '<div class="commentMeta clear">' . $reply_approval_button . $reply_disapproval_button . $thread_karma . $postNo;
+																	echo '<div class="reply'; if($EMAIL == $IAMOP && $EMAIL != ''){echo ' iamop';} echo '" id="'.$ID.'"><div class="replycontent">' . $SUBJECT . '<div class="commentMeta">' . $reply_approval_button . $reply_disapproval_button . $thread_karma . $postNo;
 																	if($REPLYTO != 0){
 																		if($BoardIsSet !== true)$reply_link = '?board='.$BOARD.'&amp;thread='.$THREAD.'&amp;'.$REPLYTO.'#'.$REPLYTO.'">';
 																		if($BoardIsSet === true)$reply_link = '?thread='.$THREAD.'&amp;'.$REPLYTO.'#'.$REPLYTO.'">';																		
@@ -1947,7 +2043,7 @@
 																	}
 																	echo $reply_name . $reply_trip . $reply_karma . $reply_date . $reply_attached_link . '</div>';
 																	if(count($gotReply) > 0){
-																		echo '<span class="commentReplies clear"><span><i class="fa fa-reply"> Replies</i></span>'; foreach($gotReply as $replyid){ $replychild = intval($replyid->ID); $replyparent = intval($replyid->PARENT); $replyboard = strtolower($replyid->BOARD); 
+																		echo '<span class="commentReplies"><span><i class="fa fa-reply"> Replies</i></span>'; foreach($gotReply as $replyid){ $replychild = intval($replyid->ID); $replyparent = intval($replyid->PARENT); $replyboard = strtolower($replyid->BOARD); 
 																		if($BoardIsSet !== true)$reply_link = '?board='.$replyboard.'&amp;thread='.$replyparent.'&amp;'.$replychild.'#'.$replychild.'">'.$replychild; 
 																		if($BoardIsSet === true)$reply_link = '?thread='.$replyparent.'&amp;'.$replychild.'#'.$replychild.'">'.$replychild; 
 																		echo '<span><i class="fa fa-dot-circle-o"> <a href="'.$reply_link.'</a></i></span>'; } echo '</span>'; 
@@ -1960,9 +2056,7 @@
 														}
 														if($style == 'imageboard' && $THREAD == '')echo '</div>';
 														// Replies[end]
-
-
-
+														
 
 														// Reply-form->thread[start]
 														if($THREAD != ''){
@@ -2018,49 +2112,53 @@
 																					foreach($checkPass as $EDITTHREAD){
 																						$editComment = str_replace('\\\\\\\'','\'',(str_replace('\\\\\\','',(str_replace(array('\\n','\\t','\\r'),'||',(str_replace('\\r\\n','||',($EDITTHREAD->COMMENT))))))));
 																						$editSubject = str_replace('\\\\\\\'','\'',(str_replace('\\\\\\','',(str_replace(array("\n","\t","\r"),"||",($EDITTHREAD->SUBJECT))))));
-																						echo '<form class="topic clear threadform" name="editform" method="post" action="'.$ACTION.'" id="COMMENTFORM">';
+																						echo '<form class="topic threadform" name="editform" method="post" action="'.$ACTION.'" id="COMMENTFORM">';
 																						wp_nonce_field('editform');
 																						echo '<input type="hidden" value="" name="LINK" />';
 																						echo '<input type="hidden" value="" name="PAGE" />';
 																						echo '<input type="hidden" value="" name="LOGIN" />';
 																						echo '<input type="hidden" value="" name="USERNAME" />';
 																						echo '<input type="hidden" value="'.$checkID.'" id="editthisthread" name="editthisthread" />';
-																						echo '<label for="formextra" class="formtoggle">Formatting help</label><input type="checkbox" class="hidden" id="formextra" name="formextra" />';
+																						echo '<label for="formextra" class="formtoggle"><i class="fa fa-plus-square-o"> toggle formatting help</i></label><input type="checkbox" class="hidden" id="formextra" name="formextra" />';
 																						echo '<section class="formextras">';
-																						echo '<section class="full"><table class="formatting clear"><tr><td colspan="3">Hover for formatting help</td></tr><tr><td>Effect</td><td>What you type</td><td>What you get</td></tr><tr><td>Bold</td><td><span title="Bold" onclick="formatThis(event)">**bold**</span></td><td><strong>bold</strong></tr><tr><td>Italics</td><td><span title="Italics" onclick="formatThis(event)">*italics*</span></td><td><em>italics</em></td></tr><tr><td>Strike</td><td><span title="Strike" onclick="formatThis(event)">~~strike~~</span></td><td><strike>strike</strike></td></tr><tr><td>Bold+Italic</td><td><span title="Bold and Italic" onclick="formatThis(event)">***bold italic***</span></td><td><strong><em>bold italic</em></strong></td></tr><tr><td>Quote</td><td><span title="Quote" onclick="formatThis(event)">{{Quoted text}}</span></td><td><blockquote>quoted text</blockquote></td></tr><tr><td>Alt. quote</td><td>4 spaces:<br />&nbsp;&nbsp;&nbsp;&nbsp;this is a quote</td><td><br /><span class="quotes">> this is a quote</span></td></tr><tr><td>Alt. Reply to</td><td>::101||</td><td><a href="#101">>> 101</a></td></tr><tr><td>New line, new paragraph</td><td><span title="New line" onclick="formatThis(event)">||</span>,<span title="New paragraph" onclick="formatThis(event)">||||</span></td><td>(trust us, it happens.)</td></tr><tr><td>List</td><td><span title="New list" onclick="formatThis(event)"> - Liste item ||</span></td><td><ul><li>List item</li></ul></td></tr><tr><td>Code</td><td><span title="Code" onclick="formatThis(event)">`code`</span></td><td><code>code</code></td></tr><tr><td>Spoiler</td><td>This is a [spoiler]spoiler[/spoiler].</td><td>This is a <span class="spoiler">spoiler</span>.</td></tr></table></section>';
+																						echo '<section class="full"><table class="formatting"><tr><td>Effect</td><td>What you type</td><td>What you get</td></tr><tr><td>Bold</td><td><span title="Bold" onclick="formatThis(event)">**bold**</span></td><td><strong>bold</strong></tr><tr><td>Italics</td><td><span title="Italics" onclick="formatThis(event)">*italics*</span></td><td><em>italics</em></td></tr><tr><td>Strike</td><td><span title="Strike" onclick="formatThis(event)">~~strike~~</span></td><td><span class="strike">strike</span></td></tr><tr><td>Bold+Italic</td><td><span title="Bold and Italic" onclick="formatThis(event)">***bold italic***</span></td><td><strong><em>bold italic</em></strong></td></tr><tr><td>Quote</td><td><span title="Quote" onclick="formatThis(event)">{{Quoted text}}</span></td><td><blockquote>quoted text</blockquote></td></tr><tr><td>Alt. quote</td><td>4 spaces:<br />&nbsp;&nbsp;&nbsp;&nbsp;this is a quote</td><td><br /><span class="quotes">> this is a quote</span></td></tr><tr><td>Alt. Reply to</td><td>::101||</td><td><a href="#101">>> 101</a></td></tr><tr><td>New line, new paragraph</td><td><span title="New line" onclick="formatThis(event)">||</span>,<span title="New paragraph" onclick="formatThis(event)">||||</span></td><td>(trust us, it happens.)</td></tr><tr><td>List</td><td><span title="New list" onclick="formatThis(event)">2 spaces<br />&nbsp;&nbsp;- List item ||</span></td><td><ul><li>List item</li></ul></td></tr><tr><td>Code</td><td><span title="Code" onclick="formatThis(event)">`code`</span></td><td><code>code</code></td></tr><tr><td>Spoiler</td><td>This is a [spoiler]spoiler[/spoiler].</td><td>This is a <span class="spoiler">spoiler</span>.</td></tr></table></section>';
 																						echo '</section>';
 																						if($ISUSER !== true || $ISUSERJANITOR !== true)echo '<section class="passwordthis"><input type="password" id="PASSWORD" maxlength="'.$maxtext.'" name="PASSWORD" value="'.$EDITTHREAD->PASSWORD.'" /></section>';
 																						echo '<section class="full"><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" value="'.$editSubject.'" /></section>';
-																						echo '<section class="full"><textarea id="COMMENT" name="COMMENT">'.$editComment.'</textarea><span id="count"></span></section>';
+																						echo '<section class="full"><textarea id="COMMENT" name="COMMENT">'.$editComment.'</textarea></section>';
+																						echo '<section class="formbottom">';
 																						if($enableurl == 1 && $THREAD == '')echo '<section class="attachURL"><input type="text" id="URL" maxlength="'.$maxtext.'" value="'.$EDITTHREAD->URL.'" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';
 																						if($enablerep == 1 && $THREAD != '')echo '<section class="attachURL"><input type="text" id="URL" maxlength="'.$maxtext.'" value="'.$EDITTHREAD->URL.'" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';
 																						echo '<section class="replytothis"><input type="text" id="REPLYTO" maxlength="'.$maxtext.'" name="REPLYTO" '; if($EDITTHREAD->REPLYTO != 0){ echo 'value="'.$EDITTHREAD->REPLYTO.'"';}echo ' placeholder="No. ###" /></section>';
+																						echo '</section><span id="count"></span>';
 																						$correct = 3;
 																					}
 																				}
 																			}
 																			if($correct == 0){
-																				echo '<form class="reply topic clear threadform" name="regularboard" method="post" action="'.$ACTION.'" id="COMMENTFORM">';
+																				echo '<form class="reply topic threadform" name="regularboard" method="post" action="'.$ACTION.'" id="COMMENTFORM">';
 																				wp_nonce_field('regularboard');
 																				echo '<input type="hidden" value="" name="LINK" />';
 																				echo '<input type="hidden" value="" name="PAGE" />';
 																				echo '<input type="hidden" value="" name="LOGIN" />';
 																				echo '<input type="hidden" value="" name="USERNAME" />';
-																				echo '<label for="formextra" class="formtoggle">Formatting help</label><input type="checkbox" class="hidden" id="formextra" name="formextra" />';
+																				echo '<label for="formextra" class="formtoggle"><i class="fa fa-plus-square-o"> toggle formatting help</i></label><input type="checkbox" class="hidden" id="formextra" name="formextra" />';
 																				echo '<section class="formextras">';
-																				echo '<section class="full"><table class="formatting clear"><tr><td colspan="3">Hover for formatting help</td></tr><tr><td>Effect</td><td>What you type</td><td>What you get</td></tr><tr><td>Bold</td><td><span title="Bold" onclick="formatThis(event)">**bold**</span></td><td><strong>bold</strong></tr><tr><td>Italics</td><td><span title="Italics" onclick="formatThis(event)">*italics*</span></td><td><em>italics</em></td></tr><tr><td>Strike</td><td><span title="Strike" onclick="formatThis(event)">~~strike~~</span></td><td><strike>strike</strike></td></tr><tr><td>Bold+Italic</td><td><span title="Bold and Italic" onclick="formatThis(event)">***bold italic***</span></td><td><strong><em>bold italic</em></strong></td></tr><tr><td>Quote</td><td><span title="Quote" onclick="formatThis(event)">{{Quoted text}}</span></td><td><blockquote>quoted text</blockquote></td></tr><tr><td>Alt. quote</td><td>4 spaces:<br />&nbsp;&nbsp;&nbsp;&nbsp;this is a quote</td><td><br /><span class="quotes">> this is a quote</span></td></tr><tr><td>Alt. Reply to</td><td>::101||</td><td><a href="#101">>> 101</a></td></tr><tr><td>New line, new paragraph</td><td><span title="New line" onclick="formatThis(event)">||</span>,<span title="New paragraph" onclick="formatThis(event)">||||</span></td><td>(trust us, it happens.)</td></tr><tr><td>List</td><td><span title="New list" onclick="formatThis(event)"> - Liste item ||</span></td><td><ul><li>List item</li></ul></td></tr><tr><td>Code</td><td><span title="Code" onclick="formatThis(event)">`code`</span></td><td><code>code</code></td></tr><tr><td>Spoiler</td><td>This is a [spoiler]spoiler[/spoiler].</td><td>This is a <span class="spoiler">spoiler</span>.</td></tr></table></section>';
+																				echo '<section class="full"><table class="formatting"><tr><td>Effect</td><td>What you type</td><td>What you get</td></tr><tr><td>Bold</td><td><span title="Bold" onclick="formatThis(event)">**bold**</span></td><td><strong>bold</strong></tr><tr><td>Italics</td><td><span title="Italics" onclick="formatThis(event)">*italics*</span></td><td><em>italics</em></td></tr><tr><td>Strike</td><td><span title="Strike" onclick="formatThis(event)">~~strike~~</span></td><td><span class="strike">strike</span></td></tr><tr><td>Bold+Italic</td><td><span title="Bold and Italic" onclick="formatThis(event)">***bold italic***</span></td><td><strong><em>bold italic</em></strong></td></tr><tr><td>Quote</td><td><span title="Quote" onclick="formatThis(event)">{{Quoted text}}</span></td><td><blockquote>quoted text</blockquote></td></tr><tr><td>Alt. quote</td><td>4 spaces:<br />&nbsp;&nbsp;&nbsp;&nbsp;this is a quote</td><td><br /><span class="quotes">> this is a quote</span></td></tr><tr><td>Alt. Reply to</td><td>::101||</td><td><a href="#101">>> 101</a></td></tr><tr><td>New line, new paragraph</td><td><span title="New line" onclick="formatThis(event)">||</span>,<span title="New paragraph" onclick="formatThis(event)">||||</span></td><td>(trust us, it happens.)</td></tr><tr><td>List</td><td><span title="New list" onclick="formatThis(event)">2 spaces<br />&nbsp;&nbsp;- List item ||</span></td><td><ul><li>List item</li></ul></td></tr><tr><td>Code</td><td><span title="Code" onclick="formatThis(event)">`code`</span></td><td><code>code</code></td></tr><tr><td>Spoiler</td><td>This is a [spoiler]spoiler[/spoiler].</td><td>This is a <span class="spoiler">spoiler</span>.</td></tr></table></section>';
 																				echo '</section>';
 																				echo '<section class="passwordthis"><input type="password" id="PASSWORD" maxlength="'.$maxtext.'" name="PASSWORD" value="'.$rand.'" /></section>';
 																				echo '<section class="full"><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section>';
-																				echo '<section class="full"><textarea id="COMMENT" name="COMMENT" placeholder="Comment"></textarea><span id="count"></span></section>';
+																				echo '<section class="full"><textarea id="COMMENT" name="COMMENT" placeholder="Comment"></textarea></section>';
+																				echo '<section class="formbottom">';
 																				if($enableurl == 1 && $THREAD == ''){echo '<section class="attachURL"><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';}
 																				if($enablerep == 1 && $THREAD != '')echo '<section class="attachURL"><input type="text" id="URL" maxlength="'.$maxtext.'" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';
 																				if($enableemail == 1)echo '<section class="email"><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="E-mail" /></section>';
 																				if($THREAD != '')echo '<section class="replytothis"><input type="text" id="REPLYTO" maxlength="'.$maxtext.'" name="REPLYTO" placeholder="No. ###" /></section>';
+																				echo '</section><span id="count"></span>';
 																				
 																			}
 
-																				echo '<section class="full clear submission"><label for="FORMSUBMIT" class="submit clear">Post</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section>';
+																				echo '<section class="full submission"><label for="FORMSUBMIT" class="submit">Post</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section>';
 																				echo '</form>';
 																				
 																				echo '<script type="text/javascript">
@@ -2078,9 +2176,9 @@
 																		}
 																	}
 																}
-															}															
+															}												
 															echo '<div>';
-														}								
+														}
 														// Reply-form->thread[end]
 														
 														
@@ -2097,6 +2195,7 @@
 													if($BOARD != '' && $THREAD == ''){
 														// Board index paging
 														$i = 0;
+														$results = 1;
 														$paging = round($totalpages / $postsperpage);
 														if($paging > 0){
 															$pageresults = round($paging / 10);
@@ -2105,20 +2204,21 @@
 															if($results > 1)if($BoardIsSet !== true)echo '<a href="?board='.$BOARD.'&amp;results='.($results - 1).'">Previous</a> ';
 															if($results > 1)if($BoardIsSet === true)echo '<a href="?results='.($results - 1).'">Previous</a> ';
 															echo ' &mdash; Page '.$results.' of '.$paging.' &mdash; ';
-															if($results == $paging ){ echo 'Next'; $results = 1; }
+															if($results == $paging ){ echo 'Next'; $results = 1; $paging = 1; }
 															elseif($results < $paging)if($BoardIsSet !== true)echo '<a href="?board='.$BOARD.'&amp;results='.($results + 1).'">Next</a> ';
 															elseif($results < $paging)if($BoardIsSet === true)echo '<a href="?results='.($results + 1).'">Next</a> ';
 															echo '</div>';
 														}
+													if($THREAD == '' && $BOARD != ''){ echo '<div class="threadinformation"></div>';}
 														echo '</div></div>';
 													}
-													echo '</div>';														
+													echo '</div>';
 													$threadexists = 1;
 													
 												}else{
 													// If no board or thread to display start
 													$threadexists = 0;
-													echo '<div class="op clear"><span class="subject clear">'.$nothreads.'</span>';
+													echo '<div class="op"><span class="subject">'.$nothreads.'</span>';
 													if($nothreadsimg != '')echo '<img class="imageOP" src="'.$nothreadsimg.'" />';
 													echo '</div>';
 												}
@@ -2126,7 +2226,7 @@
 												if($THREAD != '' && $threadexists != 0){
 													// [Return],[Top],[Refresh] links as well as image and reply count stars-bar
 													echo '
-													<div class="threadinformation clear">
+													<div class="threadinformation">
 														<div class="leftmeta">';
 															if($BoardIsSet !== true) echo '<a href="?board='.$BOARD.'">[ Return ]</a>';
 															if($BoardIsSet === true) echo '<a href="'.esc_url(get_permalink($post->ID)).'">[ Return ]</a>';
@@ -2148,7 +2248,7 @@
 							
 						}else{
 							// Requested board does not exist
-							echo '<div class="mainboard clear"><div class="boardposts"><div class="op clear"><span class="subject clear">'.$noboard.'</span>';
+							echo '<div><div class="boardposts"><div class="op"><span class="subject">'.$noboard.'</span>';
 							if($nothreadsimg != ''){echo '<img class="imageOP" src="'.$noboardimg.'" />';}
 							echo '</div></div>';
 						}
@@ -2156,7 +2256,7 @@
 					}
 			}else{
 				if($BOARD == '' && $AREA == '' || $BOARD == '_front'){
-				echo '<div class="boardlist clear">';
+				echo '<div class="boardlist">';
 				if(count($getBoards) > 0){
 					foreach($getBoards as $gotBoards){
 						$BOARDNAME = esc_sql(myoptionalmodules_sanistripents($gotBoards->SHORTNAME));
@@ -2166,25 +2266,19 @@
 						$BOARDSFW  = $gotBoards->SFW;
 						$BOARDURL  = esc_url(myoptionalmodules_sanistripents($gotBoards->URL)); 
 						if($BOARDDESC != '')$BOARDDESC = ' &mdash; <em>'.$BOARDDESC.'</em>';
-						$countPosts  = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT = '0'");
-						$countReplies  = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PARENT != '0'");
-						$count = 0;
-						$repls = 0;
-						foreach($countPosts as $counted){$count++;}
-						foreach($countReplies as $replied){$repls++;}
 						$getBoardPostsTopics = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' ORDER BY DATE DESC LIMIT 10");
 						echo '
 						<section class="clear item">';
 						echo '<span class="item">';
 						if($BOARDURL != '')echo '<a href="'.$BOARDURL.'/">'.$BOARDLONG;
 						if($BOARDURL == '')echo '<a href="?board='.$BOARDNAME.'">'.$BOARDLONG;
-						echo '<small>'.$repls.' &mdash;'.$count.'</small></a></span>';
+						echo '</a></span>';
 						$c = 1;
 						if($membersonly != 1){
 							foreach($getBoardPostsTopics as $posts){
 								
 								$subject = '';
-								if($posts->TYPE == '' || $posts->TYPE == 'image' && $BOARDSFW == 'NSFW' || $posts->TYPE == 'video'){
+								if($posts->TYPE == '' || $posts->TYPE == 'URL' || $posts->TYPE == 'image' && $BOARDSFW == 'NSFW' || $posts->TYPE == 'video'){
 									$subject = $posts->SUBJECT;
 									$subject = str_replace('\\\\\\\'','\'',$subject);
 									if($subject == '')$subject = '<em>no subject</em>';
@@ -2209,27 +2303,11 @@
 				
 			
 				
-				if($boards == '')$countall  = $wpdb->get_results("SELECT ID FROM $regularboard_posts");
-				if($boards != '')$countall  = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD IN (".join(',',$boards).")");
-				if($boards == '')$countips  = $wpdb->get_results("SELECT Distinct IP FROM $regularboard_posts");
-				if($boards != '')$countips  = $wpdb->get_results("SELECT Distinct IP FROM $regularboard_posts WHERE BOARD IN (".join(',',$boards).")");
-				if($posting == 1) $postingm = '<em>posting enabled</em>';
-				if($posting == 0) $postingm = '<em>read-only</em>';
-				$allCounted = 0;
-				$ipCounted = 0;
-				foreach($countall as $countAll){$allCounted++;}
-				foreach($countips as $countIPS){$ipCounted++;}
 				echo '
-				<div class="info">
-				<span class="right"><i class="fa fa-pencil"></i> '.$allCounted.'</span> 
-				<span class="right"> &mdash; </span>
-				<span class="right"><i class="fa fa-user"></i> '.$ipCounted.'</span> 
-				<span class="left"><i class="fa fa-info"></i> '.$postingm.'</span>
-				</div>
 			</div>';
 			}
 			}
-		if($AREA != '_front')echo '</div></div>';
+		if($THREAD != '')echo '</div></div>';
 		if($AREA != '')echo '</div>';
 		}
 	}
