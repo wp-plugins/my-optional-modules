@@ -982,7 +982,7 @@ Author URI: http://onebillionwords.com/
 			function my_optional_modules_page_content(){
 				echo '
 				<div class="wrap">
-				my optional modules / <a href="http://www.regularboard.org/">documentation + support</a> / <a href="http://wordpress.org/support/view/plugin-reviews/my-optional-modules">rate and review</a>
+				my optional modules / <a href="http://www.onebillionwords.com/boards/?board=mom/">documentation + support</a> / <a href="http://wordpress.org/support/view/plugin-reviews/my-optional-modules">rate and review</a>
 				<div class="myoptionalmodules">
 				<section class="switches clear">
 				<form method="post"><section><label class="configurationlabel" for="MOMclear">Home</label><input id="MOMclear" name="MOMclear" class="hidden" type="submit"></section></form>';
