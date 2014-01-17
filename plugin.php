@@ -1,10 +1,10 @@
 <?php /*
 Plugin Name: My Optional Modules
-Plugin URI: http://www.regularboard.org
+Plugin URI: http://www.onebillionwords.com/boards/?board=mom
 Description: Optional modules and additions for Wordpress.
 Version: 5.4.9.3
 Author: Matthew Trevino
-Author URI: http://regularboard.org
+Author URI: http://onebillionwords.com/
 */
 	
 	// LICENSE

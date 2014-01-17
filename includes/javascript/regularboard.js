@@ -5,6 +5,11 @@
 			$('#'+hash+'').addClass('current');
 			$(location.hash + '.reply').addClass('active');
 		};
+		var hash = window.location.hash.substr(1);
+		if(hash != false && hash != 'undefined'){
+			$('#'+hash+'').addClass('current');
+			$(location.hash + '.tinycomment').addClass('active');
+		};		
 		
 		$('.loadmore').click(function(){
 			var regbo_urlid = $(this).attr('xdata');
