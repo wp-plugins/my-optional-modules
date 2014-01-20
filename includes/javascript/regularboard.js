@@ -11,16 +11,9 @@
 			$(location.hash + '.tinycomment').addClass('active');
 		};		
 		
-		$('.loadmore').click(function(){
-			var regbo_urlid = $(this).attr('xdata');
-			var regbo_url = $(this).attr('data');
-			$('.omitted'+regbo_urlid).load(regbo_url + ' div.op div.reply');
-			$(this).addClass('hidden');
-		});
-		
 		$('.reload').click(function(){
 			var regbo_relurl = $(this).attr('data');
-			$('#omitted').load(regbo_relurl + ' div.reply');
+			$('#omitted').load(regbo_relurl + ' div.tinycomment.below');
 		});
 		
 	});
