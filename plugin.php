@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/boards/?board=mom
 Description: Optional modules and additions for Wordpress.
-Version: 5.4.9.5
+Version: 5.4.9.6
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com/
 */
@@ -654,7 +654,9 @@ Author URI: http://onebillionwords.com/
 				'dnsbl-2.uceprotect.net',
 				'dnsbl-3.uceprotect.net',
 				'dnsbl.sorbs.net',
-				'zen.spamhaus.org'
+				'zen.spamhaus.org',
+				'dnsbl-2.uceprotect.net',
+				'dnsbl-3.uceprotect.net'
 				);
 			if($ip){
 				$reverse_ip=implode(".",array_reverse(explode(".",$ip)));
@@ -978,7 +980,6 @@ Author URI: http://onebillionwords.com/
 						SHORTNAME TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						DESCRIPTION TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						RULES TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						URL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						SFW TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						MODS TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						JANITORS TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
@@ -1016,6 +1017,10 @@ Author URI: http://onebillionwords.com/
 						MESSAGE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						LENGTH TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						KARMA BIGINT(22) NOT NULL , 
+						PASSWORD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+						HEAVEN TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+						VIDEO TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+						BOARDS TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						PRIMARY KEY  (ID)
 						);";
 						require_once(ABSPATH . 'wp-admin/includes/upgrade.php');

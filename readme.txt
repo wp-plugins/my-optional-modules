@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: 4chan,gravatar,youtube,DNSBL,akismet,ipv4,ipv6,htmlpurifier,tripcode,sage,chan,capcodes,board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.8
 Tested up to: 3.8
-Stable tag: 5.4.9.5
+Stable tag: 5.4.9.6
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -77,14 +77,16 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-* Admin has been broken into multiple areas to make it easier to navigate and interact with the admin functions of Regular Board.
-* Single IP banning from the admin has been enabled - simply enter an IP to ban and click on Ban this IP.
-* Boards can now be edited from the admin area (directly).
-* Usermods and userjanitors have been removed from the shortcode and are now a part of the board creation process. (Same as before - designate a list of WordPress usernames that can be janitors or moderators). Board locking has also been moved to the board creation form. In order to lock a board, simply designate it as such (or edit a currently existing board to include the lock). Boards that are locked can still be posted to by moderator (main) accounts.
-* Some unclosed divs have been closed.
-* Several IPs have been added to a blocklist that is used throughout the entire plugin. The hope is that this will help to curb spam.
-* An Imgur uploader has been added. Simply added imgurid="YOUR APPLICATION ID" to the shortcode to enable it.
-* Styles have been removed, and a default style has been set. (It just makes things easier and more uniform overall.)
+* You will need to force update tables upon updating the plugin.
+* Users may subscribe to different boards, and have this specialized feed show up in the subscribed area. The subscribed feed will only show results for the boards the user is subscribed to.
+* User options added, allowing a user to set their password, whether or not they want heaven to be enable by default, and whether or not Youtube videos will be embedded or linked to by default.
+* noboard + noboardimg + nothreads + nothreadsimg (no longer used), homelink (no longer used),board (no longer used), threadsper (default changed to 50), timebetween (default changed to 10), cutoff (no longer used) removed from shortcode, boardurl, boardheader (no longer used), bannedimage + boardimage + postedimg (no longer used) removed from board creation.
+* OG:Video tags fixed.
+* Post editing and post creation moved to their own screens.
+* User profile results are now paged.
+* Minor glitches with the overall paging system have been fixed.
+* Sorting done by LAST instead of UP to preserve timeline.
+* HTML5 Reset for .boardAll to help ease integration of Regular Board with current WordPress theme.
 
 = .5 =
 * HTMLPurifier (added)
