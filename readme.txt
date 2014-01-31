@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: 4chan,gravatar,youtube,DNSBL,akismet,ipv4,ipv6,htmlpurifier,tripcode,sage,chan,capcodes,board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.8
 Tested up to: 3.8
-Stable tag: 5.4.9.6
+Stable tag: 5.4.9.7
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -77,16 +77,26 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-* You will need to force update tables upon updating the plugin.
-* Users may subscribe to different boards, and have this specialized feed show up in the subscribed area. The subscribed feed will only show results for the boards the user is subscribed to.
-* User options added, allowing a user to set their password, whether or not they want heaven to be enable by default, and whether or not Youtube videos will be embedded or linked to by default.
-* noboard + noboardimg + nothreads + nothreadsimg (no longer used), homelink (no longer used),board (no longer used), threadsper (default changed to 50), timebetween (default changed to 10), cutoff (no longer used) removed from shortcode, boardurl, boardheader (no longer used), bannedimage + boardimage + postedimg (no longer used) removed from board creation.
-* OG:Video tags fixed.
-* Post editing and post creation moved to their own screens.
-* User profile results are now paged.
-* Minor glitches with the overall paging system have been fixed.
-* Sorting done by LAST instead of UP to preserve timeline.
-* HTML5 Reset for .boardAll to help ease integration of Regular Board with current WordPress theme.
+* Removed: trustedimg, untrusteddomain (from shortcode).
+* If an image is loaded from imgur on topics/replies/all, the small thumbnail is used for the display.
+* Board list added above menu.
+* If there are thread/reply reports in queue, an alert will let you know (provided you are logged in as admin).
+* Following added, allowing, like board subscriptions, for users to set up feeds that contain threads and replies from only the people they follow.
+* Password field removed from form – if a password is not set in options (for the user), a random password will be used.
+* Remove from shortcode: modcode, usermodcode, janitorcode, enableemail. When a mod or usermod makes a post, the link will be styled.
+* E-mail field now only accepts 3 values: heaven, sage, and roll. With the overall usage of IDs, tripcodes were removed as they no longer explicitly served a purpose to the overall functionality of the software.
+* Added the ability to expand/retract threads/replies from front page to view content without loading the thread/reply in question traditionally.
+* Disabling Youtube embeds (from the user options page) now displays the thumbnail for the video that, when clicked (and if javascript is enabled), will load the video on to the page – if javascript is disabled, the image is hyperlinked to the video page.
+* Bugfix: reporting threads needed an extra parameter to check, as it was returning upvotes as well.
+* Bugfix: front page results for all (area) weren’t being called correctly.
+* Users who find that simply approving of a post to be insufficient enough means of showing gratitude towards the content may donate some of their own points to whomever they so chose – simply by going to options, entering the user id of the user and the amount of points to allot them will transfer that amount of points from their own to the user id specified. (Users can not donate more points than they have).
+* imgur.com made default trusted image domain – you don’t need to add it in the shortcode attribute trustedimg.
+* Youtube images being called too early on board top threads – fixed so correct image is called for correct thread.
+* Added ability to create rules for the entire board listing (shows up in info area) (mainrules is a reserved shortname, and cannot be used as it is reserved for the system)
+* In order to for the output to be displayed properly (ie: where it should be on the WordPress page in relation to the content around it), several elements of the code had to be minimized in such a way that would prevent wpautop from automatically breaking these elements into new paragraphs – like form elements.
+* If the current poster is the creator of the thread, or the last person to post in the thread, they can not post anything until another person has made a new reply. (They can edit their current reply or thread, but cannot post a new reply to it.)
+* Imgur uploading moved to separate area – once image is uploaded, URL is presented along with the image itself.
+* Voting changed to jquery only – no HTML fallback. (I felt that this was better in the long run.)
 
 = .5 =
 * HTMLPurifier (added)

@@ -247,11 +247,8 @@ Author URI: http://onebillionwords.com/
 	$input = array(
 	'/\\\r/is',
 	'/\\\n/is',
-	'/\  - (.*?)\|\|/is',
-	'/\  - (.*?)\|\|\|\|/is',	
-	'/\    (.*?)\|\|/is',
-	'/\    (.*?)\|\|\|\|/is',
-	'/\:\:(.*?)\:\:/is',
+	'/\    (.*?)    /is',
+	'/\>\>(.*?)\>\>/is',
 	'/\*\*\*(.*?)\*\*\*/is',
 	'/\*\*(.*?)\*\*/is',
 	'/\*(.*?)\*/is',
@@ -261,14 +258,14 @@ Author URI: http://onebillionwords.com/
 	'/\|\|/is',
 	'/\`(.*?)\`/is',
 	'/\[spoiler](.*?)\[\/spoiler]/is',
+	'/\ http:\/\/i.imgur.com\/(.*?) /is',
+	'/\[/is',
+	'/\]/is',
 	);
 	$output = array(
-	'||',
-	'||',
-	'<ul><li>$1</li></ul>',
-	'<ul><li>$1</li></ul>',
-	'<p><span class="quotes"> &#62; $1 </span></p>',
-	'<a href="#$1"> &#62;&#62; $1 </a><br />',
+	'<br />',
+	'',
+	'<span class="quotes"> &#62; $1 </span><br />',
 	'<a href="#$1"> &#62;&#62; $1 </a><br />',
 	'<strong><em>$1</em></strong>',
 	'<strong>$1</strong>',
@@ -279,6 +276,9 @@ Author URI: http://onebillionwords.com/
 	'<br />',
 	'<code>$1</code>',
 	'<span class="spoiler">$1</span>',
+	' <a href="http://i.imgur.com/$1" class="imageEXPAC" /><i class="fa fa-camera"><i class="fa fa-plus"></i></i><img src="http://i.imgur.com/$1" class="image hidden"></a> ',
+	'&#91;',
+	'&#93;',
 	);
 	$rtrn = preg_replace ($input, $output, $data);
 	return $rtrn;
@@ -395,15 +395,15 @@ Author URI: http://onebillionwords.com/
 			if($_GET['board'] != ''                    )$BOARD  = esc_sql(strtolower(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['board']))));
 			if($_GET['board'] == ''                    )$BOARD  = esc_sql(strtolower(myoptionalmodules_sanistripents($post->post_name)));
 			if($BOARD         != ''                    )$THREAD = esc_sql(intval($_GET['thread']));	
-			if($BOARD         != '' && $THREAD != 0    ){$canonical = $THISPAGE.'?board='.$BOARD.'&amp;thread='.$THREAD;}
-			elseif($BOARD     != '' && $THREAD == 0    ){$canonical = $THISPAGE.'?board='.$BOARD;}
+			if($BOARD         != '' && $THREAD != 0    ){$canonical = $THISPAGE.'?b='.$BOARD.'&amp;t='.$THREAD;}
+			elseif($BOARD     != '' && $THREAD == 0    ){$canonical = $THISPAGE.'?b='.$BOARD;}
 		}
 		elseif($prettycanon == 1 && is_page() && $_GET['board'] != '' || $prettycanon == 1 && is_single() && $_GET['board'] != ''){
 			$THISPAGE          = home_url('/');
 			if($_GET['board'] != ''                    )$BOARD  = esc_sql(strtolower(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['board']))));
 			if($_GET['board'] == ''                    )$BOARD  = esc_sql(strtolower(myoptionalmodules_sanistripents($post->post_name)));
 			if($BOARD         != ''                    )$THREAD = esc_sql(intval($_GET['thread']));	
-			if($BOARD         != '' && $THREAD != 0    ){$canonical = $THISPAGE.'?thread='.$THREAD;}
+			if($BOARD         != '' && $THREAD != 0    ){$canonical = $THISPAGE.'?t='.$THREAD;}
 			elseif($BOARD     != '' && $THREAD == 0    ){$canonical = $THISPAGE;}
 		}		
 		elseif(is_home()){
@@ -417,7 +417,7 @@ Author URI: http://onebillionwords.com/
 		
 		
 		echo "\n";
-		echo '<link rel=\'canonical\' href=\''.$canonical.'\' />';echo "\n";
+		echo '<link rel=\'canonical\' href=\''.htmlentities($canonical).'\' />';echo "\n";
 	}
 	
 	function timesincethis($date,$granularity=2) {
@@ -448,10 +448,22 @@ Author URI: http://onebillionwords.com/
 	
 	
 		if(esc_attr($_SERVER['SERVER_ADDR']) == '127.0.0.1' || esc_attr($_SERVER['SERVER_ADDR']) == '::1'){
-			$ipaddress = esc_attr($_SERVER["REMOTE_ADDR"]);		
+				if(isset($_SERVER["REMOTE_ADDR"])){
+				$ipaddress = esc_attr($_SERVER["REMOTE_ADDR"]);
+				} else if(isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
+				$ipaddress = esc_attr($_SERVER["HTTP_X_FORWARDED_FOR"]);
+				} else if(isset($_SERVER["HTTP_CLIENT_IP"])){
+				$ipaddress = esc_attr($_SERVER["HTTP_CLIENT_IP"]);
+				}
 		}else{
 			if(isset($_SERVER["REMOTE_ADDR"])){
+				if(isset($_SERVER["REMOTE_ADDR"])){
 				$ipaddress = esc_attr($_SERVER["REMOTE_ADDR"]);
+				} else if(isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
+				$ipaddress = esc_attr($_SERVER["HTTP_X_FORWARDED_FOR"]);
+				} else if(isset($_SERVER["HTTP_CLIENT_IP"])){
+				$ipaddress = esc_attr($_SERVER["HTTP_CLIENT_IP"]);
+				}
 			}else{
 				$ipaddress = false;
 			}
@@ -994,7 +1006,7 @@ Author URI: http://onebillionwords.com/
 						DATE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						EMAIL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						SUBJECT TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						COMMENT TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+						COMMENT LONGTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						TYPE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						URL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						BOARD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
@@ -3561,14 +3573,6 @@ Author URI: http://onebillionwords.com/
 					wp_register_script('wowheadtooltips',$wowheadtooltips,'','',null,false);
 					wp_enqueue_script('wowheadtooltips');			
 				}		
-				global $wp,$post;
-				$content = $post->post_content;
-				$regularboard = plugins_url().'/my-optional-modules/includes/javascript/regularboard.js';
-				if( has_shortcode( $content, 'regularboard' )){
-					wp_deregister_script('regularboard');
-					wp_register_script('regularboard',$regularboard,'','',null,false);
-					wp_enqueue_script('regularboard');		
-				}
 				if(get_option('MOM_themetakeover_topbar') == 1){
 					$stucktothetop = plugins_url().'/my-optional-modules/includes/javascript/stucktothetop.js';
 					wp_deregister_script('stucktothetop');

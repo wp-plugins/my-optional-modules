@@ -1,0 +1,1678 @@
+/*	Regular Board CSS ****
+	
+	HTML5 Reset
+	Contents	
+	Various elements
+	Main containers
+	_front
+	Top bar	
+	User stats page
+	Toggle button
+	Transformation
+	Approval buttons
+	Form elements
+	Report/delete form / Mod form
+	Format help
+	Board stats
+	Board activity
+	Images
+	Post and reply containers and elements
+	Style: Tiny
+	Imgur
+	Admin
+	Userbar
+
+	
+/*HTML5 Reset*/
+.boardAll html,.boardAll body,.boardAll div,.boardAll span,.boardAll object,.boardAll iframe,.boardAll h1,.boardAll h2,.boardAll h3,.boardAll h4,.boardAll h5,.boardAll h6,.boardAll p,.boardAll blockquote,.boardAll pre,.boardAll abbr,.boardAll address,.boardAll cite,.boardAll code,.boardAll del,.boardAll dfn,.boardAll em,.boardAll img,.boardAll ins,.boardAll kbd,.boardAll q,.boardAll samp,.boardAll small,.boardAll strong,.boardAll sub,.boardAll sup,.boardAll var,.boardAll b,.boardAll i,.boardAll dl,.boardAll dt,.boardAll dd,.boardAll ol,.boardAll ul,.boardAll li,.boardAll fieldset,.boardAll form,.boardAll label,.boardAll legend,.boardAll table,.boardAll caption,.boardAll tbody,.boardAll tfoot,.boardAll thead,.boardAll tr,.boardAll th,.boardAll td,.boardAll article,.boardAll aside,.boardAll canvas,.boardAll details,.boardAll figcaption,.boardAll figure,.boardAll footer,.boardAll header,.boardAll hgroup,.boardAll menu,.boardAll nav,.boardAll section,.boardAll summary,.boardAll time,.boardAll mark,.boardAll audio,.boardAll video{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent;}
+body{line-height:1;}
+.boardAll article,.boardAll aside,.boardAll details,.boardAll figcaption,.boardAll figure,.boardAll footer,.boardAll header,.boardAll hgroup,.boardAll menu,.boardAll nav,.boardAll section{display:block;}
+.boardAll nav ul{list-style:none;}
+.boardAll blockquote,q{quotes:none;}
+.boardAll blockquote p{line-height:13px;font-size:12px}
+.boardAll blockquote:before,.boardAll blockquote:after,.boardAll q:before,.boardAll q:after{content:'';content:none;}
+.boardAll {margin:0;padding:0;font-size:100%;vertical-align:baseline;background:transparent;color:#c0daf2}
+.boardAll a:hover{color:#f2c0c0}
+.boardAll ins{background-color:#ff9;color:#000;text-decoration:none;}
+.boardAll mark{background-color:#ff9;color:#000;font-style:italic;font-weight:bold;}
+.boardAll del{text-decoration:line-through;}
+.boardAll abbr[title],.boardAll dfn[title]{border-bottom:1px dotted #192f43;cursor:help;}
+.boardAll table{border-collapse:collapse;border-spacing:0;}
+.boardAll hr{display:block;height:1px;border:0;border-top:1px solid #fff;margin:15px 0;padding:0;opacity:.2}
+.boardAll input,.boardAll select{vertical-align:middle;}
+	
+/* Various elements */
+.boardAll .promote{
+	color:				#000!important;
+	background-color:	#eed714!important;
+}
+.boardAll .promote:hover{
+	color:				#eed714!important;
+	background-color:	#000!important;
+}
+.boardAll .ytthumb{
+	margin:				5px auto;
+	display:			block;
+	clear:				both;
+}
+.loadme,.hideme{
+	float:				left;
+	width:				15px;
+	padding:			0 5px 0 5px!important;
+	display:			block!important;
+	cursor:				pointer;
+}
+.boardAll .placeholder{
+	display:			block;
+	height:				25px;
+	width:				100%;
+	clear:				both;
+}
+.boardAll i{
+	margin: 			0!important;
+	font-size:			12px!important;
+	line-height:		12px!important;
+	padding:			0!important
+}
+.boardAll a{
+	color: 				#f6efa7!important;
+	text-decoration:	underline!important;
+}
+.boardAll a:hover{
+	color:				#fff!important;
+}
+.boardAll a.mod{
+	border-radius:		3px;
+	background-color:	#f5e4e4;
+	padding:			5px;
+}
+.boardAll a.usermod{
+	border-radius:		3px;
+	background-color:	#e4e6f5;
+	padding:			5px;
+}
+.boardAll input[type=password],
+.boardAll input[type=text]{
+	padding:			5px!important;
+	text-align:			left!important;
+	font-size:			12px!important;
+	color:				#000!important;
+	box-shadow:			none!important;
+	background-color:	#fff!important;
+	display:			block!important;
+	visibility:			visible!important;
+}
+.boardAll .faded{
+	opacity:			.3;
+}
+.boardAll .postedMessage{
+	width:				100%;
+	text-align:			center;
+	font-size:			25px;
+	line-height:		50px;
+	padding:			10px;
+}
+.boardAll p.information{
+	width:				100%;
+	margin:				10px 0;
+	font-size:			12px;
+	line-height:		14px;
+	color:				rgba(255,255,255,.9);
+}
+.boardAll p.information i{
+	float:				left!important;
+	font-size:			25px!important;
+	padding:			5px!important;
+	margin:				10px 10px 15px 10px!important;
+	color:				rgba(255,255,255,.5)!important;
+}
+.boardAll .strike{
+	text-decoration:	line-through;
+}
+.boardAll .karma{
+	color:				#99CC99;
+}
+.boardAll .alert{
+	clear:				both;
+	color:				rgba(255,255,255,.5);
+	display:			block;
+	margin:				-25px 0 25px 100px;
+	padding:			15px 0;
+	width:				calc(100% - 342px);
+}
+.boardAll .loadmore{
+	cursor:				pointer;
+	display:			block;
+	font-size:			12px;
+	font-weight:		500;
+	line-height:		18px;
+	margin:				0 -1px;
+	padding:			5px;
+	text-align:			center;
+	width:				100%;
+}
+.boardDisplay small{
+	float:				right;
+	font-size:			9px;
+	margin-top:			-3px;
+}
+.boardAll h3{
+	float:				left;
+	font-size:			30px;
+	font-weight:		900;
+	margin:				5px;
+}
+.boardAll a,
+.boardAll h3,
+.boardAll label,
+.boardAll input,
+.boardAll section{
+	text-decoration:	none;
+	border:				none;
+}
+.boardAll .infolink,
+.boardAll i,
+.boardAll span,
+.boardAll a{
+	-webkit-transition: all .5s ease-in-out;
+	-moz-transition: 	all .5s ease-in-out;
+	-ms-transition: 	all .5s ease-in-out;
+	-o-transition: 		all .5s ease-in-out;
+	transition: 		all .5s ease-in-out;
+}
+.boardAll hr{
+	border-top:			1px solid rgba(255,255,255,.4);
+}
+.boardAll hr:before,.boardAll hr:after{
+	content:			"";
+	clear:				both;
+	display:			table;
+}
+.boardAll p{
+	word-wrap:			break-word;
+	padding:			5px;
+}
+.boardAll blockquote{
+	background-color:	rgba(0,0,0,.4);
+	margin:				5px;
+	opacity:			.6;
+	padding:			5px;
+	width:				95%;
+	width:				calc(100% - 35px);
+}
+.boardAll ul li{
+	margin:				0 0 5px 10px;
+	width:				95%;
+}
+.boardAll span.spoiler{
+	background-color:	#fff;
+	color:				#fff;
+}
+.boardAll span.spoiler:hover{
+	color:				#000;
+}
+.boardAll span.quotes{
+	color:				#93e36c;
+}
+.boardAll .left{
+	float:				left;
+}
+.boardAll .right{
+	float:				right;
+}
+.boardAll ol,
+.boardAll ul{
+	margin:				5px auto;
+	width:				94%;
+}
+.boardAll .tinyvid{
+	float:				left;
+	display:			block;
+	height:				15px;
+	margin:				0 5px 0 0;
+}
+.boardAll .op iframe,
+.boardAll .reply iframe{
+	display:			table;
+	height:				auto;
+	margin:				10px;
+	width:				520px;
+	height:				415px;
+}
+.boardAll .boardDescription{
+	position:			absolute;
+	right:				10px;
+	top:				31px;
+	z-index:			98;
+	background-color:	rgba(0,0,0,.8);
+	color:				rgba(255,255,255,.8);
+	border:				1px solid rgba(255,255,255,.1);
+	padding:			5px;
+	width:				350px;
+	height:				100px;
+	cursor:				default;
+	overflow:			hidden;
+}
+
+/* Main containers */
+.boardAll{
+	font-family:		Arial, Verdana;
+	border:				1px solid rgba(0,0,0,.1);
+	background-color:	#161617;
+	color:				#C2C2C2;
+	display:			block;
+	font-size:			10px;
+	line-height:		11px;
+	margin:				10px auto;
+	overflow:			hidden;
+	padding:			0 5px 0 5px;
+	position:			relative;
+	width:			    100%;
+}
+.boardAll:after{
+	clear:				both;
+	content: 			"";
+	display:			table;
+}
+.boardAll .mainboard{
+	display:			block;
+	margin:				0 auto;
+}
+.boardAll .mainboard:after{
+	clear:				both;
+	content:			"";
+	display:			table;
+}
+.boardAll .pages{
+	border-radius:		3px;
+	font-size:			14px;
+	line-height:		18px;
+	margin:				25px -10px;
+	width:				100%;
+	padding:			5px;
+	text-align:			center;
+}
+.boardAll .pages:after{
+	clear:				both;
+	content:			"";
+	display:			table;
+}
+.boardAll .pages a{
+	margin:				5px;
+	padding:			5px;
+}
+.boardAll .pages a.focus{
+	font-weight:		900;
+}
+.boardAll .boardposts{
+	background-color:	rgba(0,0,0,.9);
+	margin:				0 0 -25px 0;
+	min-height:			100px;
+}
+
+/* _front */
+.boardAll .info{
+	padding:			5px;
+	width:				100%;
+	width:				calc(100% - 10px);
+}
+.boardAll .boardlist:after{
+	clear:				both;
+	content:			"";
+	display:			table;
+}
+.boardAll .boardlist{
+	background-color:	rgba(0,0,0,.5);
+	font-size:			13px;
+	line-height:		14px;
+	margin:				0;
+	padding:			5px;
+	position:			relative;
+}
+.boardAll .boardlist section{
+	margin:				0 0 15px 0;
+}
+
+/* Top bar */
+.boardAll #mybar{
+	display:			block;
+	font-size:			12px;
+	height:				10px;
+	right:				10px;
+	line-height:		10px;
+	margin:				0;
+	position:			absolute;
+	padding:			5px;
+	top:				10px;
+	width:				250px;
+	z-index:			98;
+	background-color:	rgba(0,0,0,.8);
+	border:				1px solid rgba(255,255,255,.1);
+}
+.boardheader{
+	background-color:	#000;
+	border-bottom:		5px solid #fff;
+	display:			block;
+	height:				220px;
+	width:				100%;
+	overflow:			hidden;
+	position:			absolute;
+	top: 0;
+}
+.boardheader img{
+	margin: 			0 auto;
+	display:			block;
+ }
+.boardnav{
+	background-color:	rgba(0,0,0,.8);
+	border:				1px solid rgba(255,255,255,.5);
+	clear:				both;
+	cursor:				pointer;
+	height:				15px;
+	line-height:		20px;
+	margin:				-5px 0 -5px -5px;
+	overflow:			hidden;
+	padding:			5px;
+	position:			absolute;
+	left:				25px;
+	top:				10px;
+	text-align:			left;
+	width:				auto;
+	z-index:			98;
+}
+.boardnav a{
+	clear:				both;
+	display:			block;
+	margin:				0 5px 0 5px;
+}
+.boardnav:after{
+	clear:				both;
+	content:			"";
+	display:			table;
+}
+.boardnav:hover{
+	height:				auto;
+}
+
+/* User stats page */
+#trophycase .trophy:nth-child(even){
+	background-color:	rgba(0,0,0,.1);
+}
+#trophycase .trophy:nth-child(odd){
+	background-color:	rgba(34,34,34,.4);
+}
+#trophycase .trophy{
+	border-bottom:		1px solid rgba(255,255,255,.1);
+	font-size:			12px;
+	line-height:		14px;
+	width:				650px;
+	display:			block;
+	margin:				0 auto 0 5px;
+	padding:			5px;
+}
+#trophycase .trophy:hover{
+	background-color:	rgba(0,0,0,.9);
+	cursor:				pointer;
+}
+#trophycase .trophy:after{
+	clear:				both;
+	content:			"";
+	display:			table;
+}
+#trophycase .trophytitle{
+	color:				rgba(255,255,255,.8)!important;
+	float:				left;
+	width:				200px;
+	overflow:			hidden;
+	display:			block;
+}
+#trophycase .trophytext{
+	color:				rgba(255,255,255,.7)!important;
+	float:				right;
+	width:				400px;
+	display:			block;
+}
+#trophycase .trophynumber{
+	float:				right;
+	width:				20px;
+	display:			block;
+	color:				rgba(255,255,255,.6);
+	font-size:			10px;
+	text-align:			center;
+}
+
+.boardAll #trophycase blockquote,
+.boardAll blockquote.topten{
+	background-color:	rgba(241,192,104,.1);
+	border-radius:		3px;
+	margin:				2px;
+	padding:			5px;
+}
+.boardAll #trophycase blockquote:after{
+	clear:				both;
+	content:			"";
+	display:			table;
+}
+.boardAll .gold{
+	color:				#f1c068;
+	font-weight:		900;
+}
+
+/* Approval buttons */
+.boardAll span.points{
+	display:			block;
+	margin:				15px 0 0 0!important;
+}
+div.approvalrating p{
+	text-indent:0;
+	padding:0;
+	display:block;
+	overflow:hidden;
+	height:15px;
+	line-height:10px;
+	font-size:10px;
+	clear:none;
+	width:50px;
+	margin:2px 0 0 0;
+	cursor:pointer;
+	text-align:center;
+}
+div.approvalrating label{
+	color: rgba(255,255,255,.5);
+	text-indent:0;
+	padding:0;
+	display:block;
+	overflow:hidden;
+	height:15px;
+	line-height:10px;
+	font-size:10px;
+	clear:none;
+	width:50px;
+	margin:0;
+	cursor:pointer;
+	text-align:center;
+}
+div.approvalrating label:hover{
+	color: rgba(255,255,255,.9);
+}
+
+/* Form elements */
+.board{
+	margin:				5px!important;
+	display:			block;
+	float:				left;
+	padding:			5px!important;
+	background-color:	#000;
+	color:				#fff;
+}
+.addme{
+	margin:				5px;
+	width:				150px;
+}
+form.boardselect{
+	width:				500px;
+	margin:				5px auto;
+	display:			block;
+	clear:				both;
+	padding:			5px;
+}
+form.boardselect input[type=submit],
+form.boardselect label,
+form.boardselect select{
+	width:				100%;
+}
+form.boardcreation{
+	clear:				both!important;
+	height:				auto!important;
+	border:				none!important;
+}
+form.boardcreation input[type=text]#URL,
+form.boardcreation input[type=text]{
+	width:				100%!important;
+	height:				25px!important;
+	margin:				5px 0 0 -1px!important;
+}
+form.boardcreation textarea{
+	height:				100px!important;
+	padding:			5px!important;
+}
+a.boardedit{
+	float:				left;
+	color:				rgba(255,255,255,.8);
+	clear:				none;
+	margin:				5px;
+	display:			block;
+	background-color:	rgba(0,0,0,.5);
+	border-radius:		3px;
+	padding:			7px;
+}
+form.upgrade{
+	float:				left;
+	color:				rgba(255,255,255,.8);
+	clear:				none;
+	margin:				5px 25px;
+	display:			block;
+	width:				170px;
+	background-color:	rgba(0,0,0,.5);
+	border-radius:		3px;
+}
+form.upgrade label{
+	padding:			5px;
+	display:			block;
+	width:				100%;
+	height:				100%;
+}
+form.upgrade label:hover{
+	cursor:				pointer;
+	color:				rgba(255,255,255,1);
+}
+.boardDisplay input[type=checkbox].hidden:checked ~ section{
+	display:			block;
+	visibility:			visible;
+}
+form[name=reporttomods]{
+	clear:				both;
+	display:			block;
+}
+form[name=reporttomods]:after{
+	clear:				both;
+	content:			"";
+	display:			table;
+}
+form[name=reporttomods] input[type=text],
+form[name=reporttomods] input[type=password],
+form[name=moderator] input[type=text]{
+	width:				255px!important;
+	margin:				0 0 0 -10px!important;
+	padding:			5px 5px 5px 10px;
+}
+.boardAll section.formbottom{
+	margin:				-37px 0 -8px 0;
+	width:				100%;
+	height:				36px;
+	background-color:	#000;
+	display:			block;
+	z-index:			98;
+	position:			relative;
+	overflow:			hidden;
+}
+.boardAll label.submit{
+	width: 				auto;
+	float:				left;
+	background-color:	#000;
+}
+.boardAll .submit{
+	border-radius:		3px;
+	font-size:			15px;
+	cursor:				pointer;
+	padding:			10px;
+	margin:				0;
+	width:				100%;
+	display:			block;
+	color:				#fff;
+	height:				20px;
+	border-radius:		3px;
+	background:			rgb(69,72,77);
+	background:			url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzQ1NDg0ZCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background:			-moz-linear-gradient(top,  rgba(69,72,77,1) 0%, rgba(0,0,0,1) 100%);
+	background:			-webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(69,72,77,1)), color-stop(100%,rgba(0,0,0,1)));
+	background:			-webkit-linear-gradient(top,  rgba(69,72,77,1) 0%,rgba(0,0,0,1) 100%);
+	background:			-o-linear-gradient(top,  rgba(69,72,77,1) 0%,rgba(0,0,0,1) 100%);
+	background:			-ms-linear-gradient(top,  rgba(69,72,77,1) 0%,rgba(0,0,0,1) 100%);
+	background:			linear-gradient(to bottom,  rgba(69,72,77,1) 0%,rgba(0,0,0,1) 100%);
+	filter:				progid:DXImageTransform.Microsoft.gradient( startColorstr='#45484d', endColorstr='#000000',GradientType=0 );
+	border:				1px solid #000;
+	text-align:			center;
+}
+.boardAll .submit:hover{
+	opacity:			1;
+}
+.boardAll label.create{
+	background-color:	#000;
+	cursor:				pointer;
+	color:				#fff;
+	display:			block;
+	margin:				15px auto;
+	opacity:			.5;
+	padding:			5px;
+	text-align:			center;
+}
+.boardAll label.UPGRADE{
+	background-color:	#000;
+	cursor:				pointer;
+	color:				#fff;
+	display:			block;
+	margin:				15px auto;
+	opacity:			.5;
+	padding:			5px;
+	text-align:			center;
+}
+.boardAll label.UPGRADE:hover{
+	opacity:			1;
+}
+.boardAll #video,
+.boardAll #heaven,
+.boardAll #LOGGED,
+.boardAll #LOCKED,
+.boardAll #SFW{
+	border-radius:		0;
+	margin:				0;
+	padding:			5px;
+	width:				100%;
+}
+.boardAll .COMMENTFORM input[type=submit]{
+	display:			none;
+	visibility:			hidden;
+}
+.boardAll .COMMENTFORM .absolute{
+	margin:				5px 0;
+	text-align:			left;
+	text-indent:		3px;
+}
+.boardAll .COMMENTFORM label{
+	padding:			5px;
+}
+.boardAll .COMMENTFORM{
+	display:			block;
+	overflow:			hidden;
+	margin:				0px auto 25px;
+	padding:			0;
+	width:				100%;
+	height:				435px;
+	z-index:			1;
+	position:			relative;
+}
+.boardAll .COMMENTFORM:after{
+	clear:				both;
+	content:			"";
+	display:			table;
+}
+.boardAll section.small{
+	float:				left;
+	width:				50%;
+}
+.boardAll section.full{
+	clear:				both;
+	width:				100%;
+}
+.boardAll section.full label{
+	border-radius:		3px;
+	margin:				5px;
+	width:				100%;
+	width:				calc(100% - 20px);
+}
+
+.boardAll section.full input[type=text],
+.boardAll section.full input[type=password],
+.boardAll .COMMENTFORM input[type=text],
+.boardAll .COMMENTFORM input[type=password]{
+	border-radius:		3px;
+	margin:				5px;
+	width:				100%;
+	height:				20px!important;
+}
+.boardAll section.full textarea,
+.boardAll .COMMENTFORM textarea{
+	border-radius:		3px;
+	margin:				5px -2px;
+	width:				100%;
+	padding:			35px 10px 35px 5px;
+	opacity:			1;
+}
+.boardAll .submission label{
+	width:				49px!important;
+	height:				23px;
+	font-size:			14px!important;
+	line-height:		18px!important;
+	margin:				-48px 0 -44px -3px!important;
+	z-index:			98;
+	position:			relative;
+	border-radius:		0px!important;
+}
+.boardAll input[type=text],
+.boardAll input[type=password],
+.boardAll textarea{
+	opacity:			1;
+}
+.boardAll input[type=text]:focus,
+.boardAll input[type=password]:focus,
+.boardAll textarea:focus{
+	opacity:			1;
+}
+.boardAll .COMMENTFORM #SUBJECT{
+	border-radius:		0px!important;
+	margin:				0 -5px 0 -2px;
+	width:				100%;
+	text-indent:		0;
+	height:				25px;
+	font-size:			15px;
+	padding:			5px 10px;
+	position:			absolute;
+	z-index:			98;
+	opacity:			1!important;
+	background-color:	#fff!important;
+	box-shadow:			none!important;
+	border-bottom:		1px solid #000;
+}
+.boardAll .COMMENTFORM #EMAIL{
+	box-shadow:			none!important;
+	font-size:			45px;
+	height:				35px!important;
+	margin:				1px 0 0 -1px!important;
+	float:				left;
+}
+.boardAll .COMMENTFORM #PASSWORD{
+		box-shadow:			none!important;
+		font-size:			45px;
+		height:				15px!important;
+		margin:				-2px 0 0 0!important;
+		border-radius:		0!important;
+}
+.boardAll .COMMENTFORM #URL,
+.boardAll .COMMENTFORM #REPLYTO{
+	box-shadow:			none!important;
+	font-size:			45px;
+	height:				35px!important;
+	margin:				-2px 0 0 0!important;
+	border-radius:		0!important;
+}
+.boardAll .COMMENTFORM #COMMENT{
+	font-size:			20px;
+	height:				290px;
+	width:				99%;
+}
+.boardAll .COMMENTFORM section.full label{
+	font-size:			25px;
+	line-height:		28px
+}
+.boardAll span#count{
+	color:				rgba(255,255,255,.5);
+	display:			block;
+	font-weight:		900;
+	font-size:			13px;
+	line-height:		10px;
+	padding:			10px 20px 10px 20px;
+	position:			relative;
+	text-align:			right;
+	width:				100px;
+	height:				16px;
+	margin:				-30px 0;
+	float:				right;
+	z-index:			98;
+}
+.boardAll label.formtoggle{
+	background-color:	rgba(0,0,0,1);
+	border-bottom:		1px solid rgba(255,255,255,1);
+	cursor:				pointer;
+	display:			block;
+	font-size:			15px;
+	line-height:		20px;
+	margin:				-5px -5px -40px -5px;
+	padding:			10px 5px;
+	text-align:			center;
+	width:				100%;
+	z-index:			98;
+	position:			relative;
+}
+.boardAll .replytothis{
+	width:				80px;
+	position:			relative;
+	z-index:			98;
+	margin:				2px 0 -36px 398px;
+
+}
+.boardAll .attachURL{
+	width:				200px;
+	position:			relative;
+	z-index:			98;
+	margin:				0 0 -45px 58px;
+}
+.boardAll .email{
+	width:				130px;
+	position:			relative;
+	z-index:			98;
+	margin:				-20px 0 -47px 263px!important;
+}
+.boardAll .passwordthis{
+	background-color:	#fff;
+	width:				100px;
+	height:				19px;
+	border-bottom:		1px solid rgba(0,0,0,.1);
+	position:			relative;
+	z-index:			99;
+	padding:			5px 0 0 0;
+	margin:				5px 0 -20px -5px;
+}
+.boardAll .passwordthis input[type=password]{
+	height:				15px!important;
+	font-size:			12px!important;
+	margin:				0 0 -2px 0!important;
+	text-indent:		5px;
+	border-radius:		0px!important;
+}
+.boardAll .replytothis input[type=text],
+.boardAll .email select,
+.boardAll .attachURL input[type=text]{
+	background-color:	#fff!important;
+	height:				32px!important;
+	font-size:			12px!important;
+	margin-top:			-3px!important;
+	border-radius:		0px!important;
+}
+.boardAll section.formextras{
+	display:			none;
+	visibility:			hidden;
+	position:			absolute;
+	margin:				15px 0 30px 0;
+	padding:			0;
+	z-index:			98;
+	width:				100%;
+}
+
+/* Report/delete form / Mod form */
+.boardAll .modactions,
+.boardAll .reportdelete{
+	background-color:	#000;
+	border-radius:		3px;
+	margin:				5px 0;
+	padding:			5px;
+	width:				95%;
+	width:				calc(100% - 10px);
+}
+.boardAll .modactions:after,
+.boardAll .reportdelete:after{
+	clear:				both;
+	content:			"";
+	display:			table;
+}
+.boardAll .modactions label,
+.boardAll .reportdelete label{
+	color:				#fff;
+	cursor:				pointer;
+	float:				left;
+	margin:				1px;
+	opacity:			.5;
+	padding:			5px;
+}
+.boardAll .modactions input[type=text],
+.boardAll .modactions input[type=password],
+.boardAll .reportdelete input[type=text],
+.boardAll .reportdelete input[type=password]{
+	margin:				2px auto;
+}
+.boardAll .modactions i.fa-ban{
+	color:				red;
+	opacity:			.5;
+	position:			relative;
+	z-index:			2;
+}
+.boardAll .modactions i.absolute{
+	font-size:			15px;
+	margin-left:		-10px;
+	position:			relative;
+	z-index:			1;
+}
+
+/* Format help */
+.boardAll .formatting{
+	margin:				25px 0 0 0;
+	display:			table;
+	width:				100%;
+	height:				100%;
+	clear:				both;
+	position:			relative;
+	z-index:			98;
+	background-color:	rgba(0,0,0,.9);
+}
+.boardAll .formatting tr{
+	width:				100%;
+}
+.boardAll .formatting:after{
+	clear:				both;
+	content:			"";
+	display:			table;
+}
+.boardAll .formatting td{
+	border:				1px solid rgba(255,255,255,.1);
+	padding:			5px;
+	width:				33%;
+}
+
+/* Board stats */
+.boardAll table.stats{
+	background-color:	rgba(34,34,34,1);
+	clear:				both;
+	display:			block;
+	margin:				15px 5px;
+	padding:			5px;
+	width:				95%;
+	width:				calc(100% - 10px);
+}
+.boardAll table.stats tr:hover td{
+	background-color:	#000;
+	color:				#fff;	
+}
+.boardAll table.stats td{
+	padding:			5px;
+	border:				1px solid #fff;
+}
+.boardAll table.stats td:nth-child(even){
+	background-color:	rgba(27,36,42,1);
+	padding:			5px;
+	margin:				2px -5px;
+}
+.boardAll table.stats td:nth-child(odd) {
+	background-color:	rgba(34,34,34,1);
+	padding:			5px;
+	margin:				2px -5px;
+}
+
+/* Board activity */
+.boardAll section.item{
+	background-color:	rgba(0,0,0,.2);
+	padding:			5px;
+	width:				95%;
+	width:				calc(100% - 15px);
+}
+.boardAll span.item{
+	background-color:	rgba(0,0,0,.3);
+	display:			block;
+	margin:				5px 0;
+	padding:			5px;
+	width:				95%;
+	width:				calc(100% - 15px);
+}
+.boardAll span.item:hover{
+	background-color:	rgba(255,255,255,.1);
+}
+.boardAll span.item:after{
+	clear:				both;
+	content:			"";
+	display:			table;
+}
+.boardAll span.item a{
+	color:				rgba(255,255,255,.8)!important;
+	display:			block;
+	height:				100%;
+	width:				100%;
+}
+.boardAll span.item a:hover{
+	color:				rgba(255,255,255,1)!important;
+}
+.boardAll section.infolink{
+	border-left:		5px solid rgba(255,255,255,1);
+	background-color:	rgba(0,0,0,.4);
+	margin:				5px 0;
+	padding:			5px;
+}
+.boardAll section.infolink:hover{
+	background-color:	rgba(0,0,0,.7);
+	border-left:		5px solid rgba(255,255,255,.5);
+}
+.boardAll section.infolink a{
+	display:			block;
+	height:				100%;
+	padding:			2px;
+	text-decoration:	none;
+	width:				100%;
+}
+
+/* Images */
+.boardDisplay .infoimg{
+	display:			block;
+	height:				auto;
+	margin:				10px auto;
+	max-width:			100%;
+}
+.boardAll .imageREPLY{
+	height:				auto;
+	max-width:			250px;
+	margin:				12px 5px 5px -1px;
+	position:			relative;
+	
+	float:				left;
+}
+.boardAll .404{
+	height:				auto!important;
+	width:			    100%!important;
+	margin:				5px 5px 5px -5px!important;
+	position:			relative!important;
+	padding:			5px!important;
+	clear:              both!important;
+	display:			block!important;
+}
+.boardAll .imageOP{
+	height:				auto;
+	max-width:			250px;
+	margin:				5px 5px 5px -1px;
+	position:			relative;
+	padding:			5px;
+	float:				left;
+}
+.boardAll .imageEXPAND{
+	height:				auto;
+	max-width:			100%;
+	margin:				5px 5px 5px -5px;
+	position:			relative;
+	padding:			5px;
+	float:				left;
+}
+.boardAll .logoContainer{
+	background-color:	#000;
+	position:			absolute;
+	top: 				55px;
+	left: 				20px;
+	width: 				248px;
+	height:				150px;
+	display:			block;
+	overflow:			hidden;
+	border:				5px solid #fff;
+	margin:				0 auto 10px auto;
+	z-index:			98;
+}
+.boardAll .commentREPLYuser img{
+	float:				left;
+	height:				125px;
+	margin:				0;
+	width:				auto;
+}
+
+/* Post and reply containers and elements */
+.boardAll .postid,
+.boardAll .date{
+	display:			inline-block;
+	margin:				5px;
+}
+.boardAll .commentMeta{
+	background-color:	rgba(0, 0, 0, .4);
+	display:			block;
+	font-size:			12px;
+	line-height:		14px;
+	margin:				0;
+	overflow:			auto;
+	padding:			5px;
+}
+.boardAll .commentMeta span{
+	cursor:				default;
+	background-color:	#000;
+	border-radius:		3px;
+	float:				left;
+	margin:				5px;
+	padding:			5px;
+}
+.boardAll .commentReplies{
+	background-color:	rgba(0, 0, 0, 1);
+	display:			block;
+	font-size:			10px;
+	line-height:		12px;
+	margin:				0 -5px 0;
+	overflow:			auto;
+	padding:			5px;
+}
+.boardAll .commentReplies span{
+	background-color:	#000;
+	border:				1px solid rgba(255, 255, 255, .2);
+	border-radius:		3px;
+	float:				left;
+	margin:				5px;
+}
+.boardAll .commentOP{
+	background-color:	rgba(0, 0, 0, .6);
+	display:			block;
+	margin:				-2px -5px;
+	padding:			10px;
+}
+.boardAll .commentREPLY{
+	background-color:	rgba(0, 0, 0, .6);
+	display:			block;
+	margin:				-5px -5px -7px;
+	overflow:			auto;
+	padding:			10px;
+	width:				95%;
+	width:				calc(100% - 10px);
+}
+.boardAll .commentREPLYuser{
+	height:125px;
+	width:100%;
+	overflow-y:hidden;
+	overflow-x:auto;
+	margin:5px 0;
+}
+.boardAll .commentContainer{
+	display:			block;
+	font-size:			14px;
+	line-height:		15px;
+	padding:			5px;
+	width:				100%;
+}
+.boardAll .commentContainer:after{
+	clear:				both;
+	content:			"";
+	display:			table;
+}
+.boardAll .op i{
+	margin:				5px;
+}
+.boardAll .op:nth-child(even){
+	background-color:	rgba(27,36,42,.4);
+}
+.boardAll .op:nth-child(odd){
+	background-color:	rgba(34,34,34,.4);
+}
+.boardAll div.op{
+	width:				100%;
+	margin:				0;
+	padding:			0;
+	height:				auto;
+	display:			block;
+	overflow:			hidden;
+	min-height:			100px;
+}
+.boardAll div.op:after{
+	content:			"";
+	clear:				both;
+	display:			table;
+}
+.boardAll .active{
+	border-bottom:		5px solid rgba(255,255,255,.1);
+	border-right:		5px solid rgba(255,255,255,.1);
+	background-color:	rgba(0,0,0,.1)!important;
+}
+.boardAll .modreplied{
+	border-left:		5px solid rgba(0,144,255,.2);
+}
+.boardAll .modreplied:hover{
+	border-left:		5px solid rgba(0,144,255,.5);
+}
+.boardAll #omitted{
+	width:				100%;
+	display:			block;
+}
+.boardAll #omitted .reply:nth-child(even){
+	background-color:	rgba(27,36,42,1);
+	margin:				2px -5px;
+}
+.boardAll #omitted .reply:nth-child(odd){
+	background-color:	rgba(34,34,34,1);
+	margin:				2px -5px;
+}
+.boardAll .posttitle{
+	line-height:		25px;
+}
+.boardAll .posttitle:hover{
+	color:				#fff;
+}
+.boardAll span.subject{
+	background-color:	rgba(0,0,0,1);
+	display:			block;
+	font-size:			15px;
+	font-weight:		900;
+	line-height:		17px;
+	margin:				5px 0;
+	overflow:			auto;
+	padding:			0;
+	position:			relative;
+	text-align:			left;
+	width:				100%;
+	width:				calc(100% - 10px);
+	
+}
+.boardAll span.subject a{
+	display:			block;
+	padding:			15px 10px;
+
+}
+.boardAll span.replysubject{
+	background-color:	#000;
+	display:			block;
+	font-size:			14px;
+	font-weight:		900;
+	line-height:		16px;
+	margin:				0 -5px -5px;
+	opacity:			.5;
+	overflow:			auto;
+	padding:			5px 10px;
+	position:			relative;
+	text-align:			left;
+	text-indent:		5px;
+}
+.boardAll .reply{
+	display:			table;
+	font-size:			13px;
+	line-height:		14px;
+	opacity:			.9;
+	padding:			5px;
+	width:				100%;
+}
+.boardAll span.name{
+	font-weight:		400;
+}
+.boardAll span.trip{
+	font-weight:		200;
+	opacity:			.5;
+}
+.boardAll .leftmeta{
+	cursor:				pointer;
+	float:				left;
+	margin:				-5px 0 0 0;
+}
+.boardAll .threadinformation{
+	background-color:	#000;
+	color:				rgba(255,255,255,.6);
+	font-weight:		500;
+	width:				100%;
+	display:			block;
+	margin:				0 5px 5px -5px;
+	padding:			10px 5px;
+	text-align:			right;
+}
+.boardAll .threadinformation a{
+	line-height:		20px;
+	margin:				5px;
+	padding:			5px;
+	text-decoration:	none!important;
+}
+
+/* Style: Tiny */
+.tinycreplies{
+	width:				100%!important;
+	padding:			5px!important;
+	margin:				0 0 0 -5px!important;
+	font-size:			12px!important;
+	line-height:		15px!important;
+	background-color:	#162b38!important;
+	display:			block!important;
+	border-bottom:		1px solid rgba(255,255,255,.4)!important;
+	border-top:			1px solid rgba(255,255,255,.4)!important;
+}
+.tinynav a{
+	color:				#030d14;
+	text-decoration:	underline;
+}
+.tinybottom{
+	border-top:			1px solid rgba(0,0,0,.1);
+	clear:				both;
+	position:			relative;
+	width:				610px;
+	margin:				0 auto!important;
+	padding:			5px;
+}
+.tinybottom .full{
+	width:				190px!important;
+	clear:				none!important;
+	display:			block!important;
+	float:				left!important;
+	margin:				5px 5px 5px 5px!important;
+}
+.tinybottom .full input[type=password],
+.tinybottom .full input[type=text]{
+	width:				175px!important;
+	border:				1px solid rgba(0,0,0,.1);
+	border-radius:		0px!important;
+	cursor:				pointer;
+	margin:				5px!important;
+}
+.tinybottom label{
+	margin:				5px 5px 0 0!important;
+	font-size:			12px!important;
+	height:				14px!important;
+	opacity:			.8;
+}
+.tinybottom .labels{
+	clear:				both;
+	display:			block;
+	width:				430px;
+	margin:				-20px auto 5px auto;
+}
+.tinybottom .labels:after{
+	clear:				both;
+	content:			"";
+	display:			table;
+}
+.tinybottom .infolink{
+	background-color:	rgba(0,0,0,.8)!important;
+	width:				190px;
+	float:				left;
+	margin:				0;
+	clear:				none;
+}
+#tinysearch{
+	color:				#000!important;
+	height:				15px;
+	width:				100%;
+	margin:				0 0 0 -5px;
+	padding:			10px 5px 5px 5px;
+	border-top:			5px solid rgba(0,0,0,.1);
+}
+#tinysearch #boardsearch{
+	cursor:				pointer;
+	padding:			10px 5px 5px 10px;
+	margin:				-15px 0 10px -5px;
+	opacity:			1;
+	position:			relative;
+	height:				25px;
+	width:				100%;
+	color:				#000;
+	display:			block;
+	box-shadow:			none!important;
+}
+.tinyheader{
+	position:			absolute;
+	height:				200px;
+	width:				640px;
+	margin:				0;
+	display:			block;
+	top:				5px;
+}
+.tinylogo{
+	background-color:	#000;
+	position:			absolute;
+	top: 				10px;
+	left: 				220px;
+	width: 				248px;
+	height:				150px;
+	display:			block;
+	overflow:			hidden;
+	border:				5px solid #fff;
+	margin:				0 auto 10px auto;
+	z-index:			98;
+}
+.tinynav{
+	position:			absolute;
+	top:				5px;
+	width:				640px;
+	height:				13px;
+	overflow:			hidden;
+	border-bottom:		1px solid rgba(0,0,0,.1);
+}
+.tinynav a{
+	float:				right;
+	margin:				0 5px;
+}
+.boardAll .tinythread:nth-child(even){
+	background-color:	#29363e;
+}
+.boardAll .tinythread:nth-child(odd){
+	background-color:	#151f25;
+}
+.boardAll .tinythread{
+	color:				rgba(255,255,255,.8);
+	font-size:			10px;
+	line-height:		12px;
+	width:				100%;
+	margin:				0 0 0 -5px;
+	display:			block;
+	padding:			5px;
+	clear:				both;
+}
+.boardAll .tinythread:hover{
+	background-color:	#0a1217;
+}
+.boardAll .tinythread:after{
+	content:			"";
+	clear:				both;
+	display:			table;
+}
+.boardAll .tinythread .boards{
+	font-size:			10px;
+	width:				100%;
+	display:			block;
+	margin:				0 0 0 -5px;
+}
+.boardAll .tinythread .boards span{
+	padding:			5px;
+	margin:				0 5px 0 0;
+}
+.boardAll .tinythread .tinyspan{
+	float:				left;
+	width:				300px;
+	font-size:			10px;
+	height:				15px;
+	overflow:			hidden;
+	color:				rbga(255,255,255,.8)!important;
+}
+.boardAll .tinythread .tinysubject{
+	float:				left;
+	width:				335px;
+	font-size:			10px;
+	height:				20px;
+	overflow:			hidden;
+	color:				rbga(255,255,255,.8)!important;
+}
+.boardAll .tinythread .tinyreplies{
+	text-align:			right;
+	width:				50px;
+	height:				20px;
+	overflow:			hidden;
+	float:				right;
+	padding:			0 5px;
+	border-left:		1px solid rgba(255,255,255,.1);
+	font-size:			10px;
+}
+.boardAll .tinythread .tinydate{
+	text-align:			right!important;
+	float:				right!important;
+	height:				20px!important;
+	overflow:			hidden!important;	
+	padding:			0 5px!important;
+	margin:				0 5px!important;
+	font-size:			10px!important;
+}
+.boardAll .tinycomment{
+	overflow:			hidden;
+	font-size:			13px;
+	line-height:		14px;
+	font-weight:		500;
+	color:				#e4f1f9;
+	width:				100%;
+	padding:			5px;
+	margin:				0 0 0 -5px;
+	clear:				both;
+	display:			block;
+	background-color:	#08151d;
+}
+.boardAll .tinycomment .meta:after,
+.boardAll .tinycomment:after{
+	content:			"";
+	clear:				both;
+	display:			table;
+}
+.boardAll .tinycomment blockquote{
+	color:				rgba(255,255,255,.8);
+}
+.boardAll .tinycomment .meta{
+	background-color:	#13191d;
+	width:				100%;
+	margin:				-5px 0 5px -5px;
+	padding:			5px;
+	border-top:			1px solid rgba(255,255,255,.1);
+	border-bottom:		1px solid rgba(255,255,255,.1);
+	clear:				both;
+	display:			block;
+}
+.boardAll .tinycomment .meta span{
+	padding:			5px;
+	float:				left;
+}
+.boardAll .tinycomment .meta span a{
+	color:				#14415e;
+	text-decoration:	underline;
+}
+.boardAll .tinyreply{
+	padding:			0!important;
+	margin:				20px 0 5px 0;
+	overflow:			hidden;
+	height:				425px;
+}
+.boardAll .tinycomment .approvalrating{
+	margin:				5px 0;
+	display:			block;
+	width:				50px;
+	font-size:			10px;
+	overflow:			hidden;
+	border-right:		1px solid rgba(255,255,255,.1);
+	float:				left;
+	text-align:			center!important;
+}
+.boardAll .tinycomment .tinymeta{
+	font-size:			10px;
+	width:				150px;
+	height:				50px;
+	margin:				5px 0;
+	display:			block;
+	float:				left;
+	border-right:		1px solid rgba(255,255,255,.1);
+}
+.boardAll .tinycomment .full{
+	width:				235px!important;
+	border:				none;
+}
+.boardAll .tinycomment .tinymeta span{
+	float:				left!important;
+	margin:				20px 5px!important;
+	width:				60px!important;
+	text-align:			center!important;
+	cursor:				default!important;
+}
+.boardAll .tinycomment .full span.tinydate{
+	float:				left!important;
+	margin:				20px 5px!important;
+	width:				235px!important;
+	text-align:			center!important;
+	cursor:				default!important;
+}
+.boardAll .tinycomment .tinymeta span.tinyname{
+	font-size:			10px!important;
+	float:				left!important;
+	margin:				20px 5px!important;
+	width:				150px!important;
+	text-align:			center!important;
+	cursor:				default!important;
+}
+.boardAll .tinycomment .tinymeta span.tinyname a{
+	color:				#0f3b57!important;
+	text-decoration:	underline!important;
+}
+.boardAll .tinygate{
+	text-align:			center;
+	font-size:			12px;
+	background-color:	#212b32;
+	width:				608px;
+	margin:				0 0 0 15px;
+	padding:			5px;
+}
+p.tiny i,
+p.tiny{
+	color:				rgba(255,255,255,.8)!important;
+	border:				none!important;
+}
+.tinystats{
+	color:				#000;
+	margin:				10px 0 0 -10px;
+}
+.tinystats .item{
+	background-color:	rgba(0,0,0,.6)!important;
+}
+.tinystats section.item{
+	margin:				5px 8px!important;
+}
+.tinystats table,
+.tinystats .commentREPLY,
+.tinystats .commentMeta{
+	color:				rgba(255,255,255,.8)!important;
+}
+.tinyban{
+	width:				608px;
+	padding:			5px;
+	margin:				0 auto -90px auto!important;
+}
+.opURL{
+	text-align:			center;
+	float:				left;
+	width:				20px;
+	height:				25px;
+	font-size:			10px;
+	line-height:		30px;
+	background-color:	#000;
+	padding:			0px 5px;
+	margin:				-5px 5px -5px -5px;
+}
+
+/** Imgur **/
+.imgur{
+	position:			relative;
+	clear:				both;
+	display:			block;
+	margin:				0 0 5px 0!important;
+	height:				20px!important;
+}
+
+/** Admin **/
+#DELETEBOARD{
+	margin:				0 0 25px 10px;
+}
+.boardAll .button{
+	margin:				0 0 0 5px;
+	cursor:				pointer;
+	opacity:			.8;
+}
+.boardAll .button:hover{
+	opacity:			1;
+}
+.boardreports{
+	clear:				both;
+	width:				100%;
+	display:			block;
+	background-color:	rgba(0,0,0,.5);
+	color:				rgba(255,255,255,.8);
+	margin:				5px auto 25px;
+	font-size:			12px;
+	line-height:		14px;
+}
+.adminnav{
+	width:				620px;
+	display:			block;
+	padding:			5px;
+	margin:				0 auto 0;
+}
+.adminnav:after{
+	clear:				both;
+	content:			"";
+	display:			table;
+}
+.adminnav a{
+	float:				left;
+	padding:			5px;
+	margin:				5px;
+	border-radius:		3px;
+	background-color:	#000;
+}
+
+/** Userbar **/
+.boardAll .userbar{
+	width:				100%;
+	position:			relative;
+	overflow:			hidden;
+	display:			block;
+	cursor:				pointer;
+	border:				1px solid rgba(0,0,0,.1);
+	background-color:	rgba(255,255,255,1);
+	margin:				0 0 0 -5px;
+	padding:			5px;
+	
+}
+.boardAll .userbar span,
+.boardAll .userbar a{
+	line-height:		26px;
+	height:				100%;
+	float:				left;
+	margin:				0;
+	padding:			5px;
+	background-color:	#000;
+	color:				#fff;
+	text-decoration:	none!important;
+	border-right:		1px solid rgba(255,255,255,.6);
+}
+.boardAll .userbar a:hover{
+	background-color:	rgba(0,0,0,.8);
+}
