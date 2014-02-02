@@ -1,5 +1,4 @@
-	<?php 
-	if(!defined('MyOptionalModules')){ die('You can not call this file directly.');}
+<?php if(!defined('MyOptionalModules')){ die('You can not call this file directly.');}
 
 	if(isset($_POST['report_this']) && $_REQUEST['report_ids'] != ''){
 		$ID2REPORT = intval($_REQUEST['report_ids']);

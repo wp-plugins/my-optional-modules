@@ -1,5 +1,4 @@
-	<?php 
-	if(!defined('MyOptionalModules')){ die('You can not call this file directly.');}
+<?php if(!defined('MyOptionalModules')){ die('You can not call this file directly.');}
 	
 	if($BOARD != '' && $THREAD == ''){$WebsiteURL = $THISPAGE.'?b='.$BOARD;}
 	if($BOARD != '' && $THREAD != ''){$WebsiteURL = $THISPAGE.'?b='.$BOARD.'&amp;t='.$THREAD;}
@@ -26,8 +25,8 @@
 		if(strtolower($posts->EMAIL) != 'heaven'){if($posts->MODERATOR == 1){$name = '<a class="mod" href="'.$profilelink.'"> '.$posts->USERID.'</a>';}if($posts->MODERATOR == 2){$name = '<a class="usermod" href="'.$profilelink.'"> '.$posts->USERID.'</a>';}if($posts->MODERATOR == 0){$name = '<a href="'.$profilelink.'"> '.$posts->USERID.'</a>';}}
 		else{$name = ' --- ';}
 		if($posts->TYPE == 'URL' && $posts->URL != '')$thread_url = '<a class="opURL" href="'.esc_url($posts->URL).'"><i class="fa fa-link"></i></a>';
-		$COMMENT = wpautop(rb_format(str_replace('\\','',(str_replace(array("\n","\t","\r"),"<br />",($posts->COMMENT))))));
-		$SUBJECT = str_replace('\\','',(str_replace(array("\n","\t","\r"),"<br />",rb_format($SUBJECT))));
+		$COMMENT = rb_format($posts->COMMENT);
+		$SUBJECT = $SUBJECT;
 		if($SUBJECT == ''){$SUBJECT = 'No subject';}else{$SUBJECT = $SUBJECT;}
 		foreach($getvotestatus as $votestatus){if($votestatus->MESSAGE == 'Upvote'){$checkforupvote++;}if($votestatus->MESSAGE == 'Downvote'){$checkfordownvote++;}}
 		$totalREPLIES = count($getReplies);
@@ -73,8 +72,8 @@
 				$reply_date = timesincethis($replies->DATE);
 				if($replies->TYPE == 'image'){$THREADIMGS++;}
 				if($replies->TYPE == 'URL' && $replies->URL != '')$reply_attached_link = '<span><i class="fa fa-angle-right"> <a href="'.esc_url($replies->URL).'">Attached link</a></i></span>';
-				$SUBJECT  = rb_format(str_replace('\\','',('<span>'.$replies->SUBJECT.'</span>')));
-				$COMMENT = wpautop(rb_format(str_replace('\\','',(str_replace(array("\n","\t","\r"),"<br />",($replies->COMMENT))))));
+				$SUBJECT  = '<span>'.$replies->SUBJECT.'</span>';
+				$COMMENT = rb_format($replies->COMMENT);
 				$postNo = '<span><i class="fa fa-angle-right"> No. <a href="#COMMENTFORM" onclick="replyThis(event)">'.$replies->ID.'</a></i></span>';
 				$thread_karma = '<span><i class="fa fa-heart"> '.intval($replies->UP).'</i></span>';
 				if($replies->URL != '' && $replies->TYPE == 'image'){if($COMMENT != ''){$imgclass = 'REPLY';}if($COMMENT == ''){$imgclass = 'OP';}$reply_embed = '<a href="'.$replies->URL.'"><img class="image'.$imgclass.'" alt="'.$replies->URL.'" src="'.$replies->URL.'"/></a>'; }

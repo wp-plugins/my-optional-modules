@@ -189,8 +189,16 @@ body{line-height:1;}
 	display:			table;
 }
 .boardAll p{
+	background-color:	rgba(0,0,0,.3);
 	word-wrap:			break-word;
-	padding:			5px;
+	padding:			10px;
+	margin:				5px auto;
+	width:				95%;
+}
+.boardAll p:after{
+	clear:				both;
+	content:			"";
+	display:			table;
 }
 .boardAll blockquote{
 	background-color:	rgba(0,0,0,.4);
@@ -267,7 +275,9 @@ body{line-height:1;}
 	overflow:			hidden;
 	padding:			0 5px 0 5px;
 	position:			relative;
-	width:			    100%;
+	width:			    650px;
+	-webkit-box-shadow: 0 0 50px 10px rgba(0,0,0,.1);
+	box-shadow: 		0 0 50px 10px rgba(0,0,0,.1);
 }
 .boardAll:after{
 	clear:				both;
@@ -410,6 +420,8 @@ body{line-height:1;}
 	margin:				0 auto 0 5px;
 	padding:			5px;
 }
+.srchideme,
+.srcme,
 #trophycase .trophy:hover{
 	background-color:	rgba(0,0,0,.9);
 	cursor:				pointer;
@@ -675,10 +687,8 @@ form[name=moderator] input[type=text]{
 .boardAll .COMMENTFORM{
 	display:			block;
 	overflow:			hidden;
-	margin:				0px auto 25px;
 	padding:			0;
 	width:				100%;
-	height:				435px;
 	z-index:			1;
 	position:			relative;
 }
@@ -711,6 +721,13 @@ form[name=moderator] input[type=text]{
 	width:				100%;
 	height:				20px!important;
 }
+.src{
+	display:			block;
+	width:				100%;
+	height:				150px;
+	padding:			5px;
+	margin:				0 0 0 -5px;
+}
 .boardAll section.full textarea,
 .boardAll .COMMENTFORM textarea{
 	border-radius:		3px;
@@ -724,7 +741,7 @@ form[name=moderator] input[type=text]{
 	height:				23px;
 	font-size:			14px!important;
 	line-height:		18px!important;
-	margin:				-48px 0 -44px -3px!important;
+	margin:				-68px 0 -44px -3px!important;
 	z-index:			98;
 	position:			relative;
 	border-radius:		0px!important;
@@ -1500,9 +1517,9 @@ form[name=moderator] input[type=text]{
 }
 .boardAll .tinyreply{
 	padding:			0!important;
-	margin:				20px 0 5px 0;
+	margin:				0;
 	overflow:			hidden;
-	height:				425px;
+	height:				385px;
 }
 .boardAll .tinycomment .approvalrating{
 	margin:				5px 0;
@@ -1609,7 +1626,8 @@ p.tiny{
 
 /** Admin **/
 #DELETEBOARD{
-	margin:				0 0 25px 10px;
+	margin:				0 auto;
+	width:				300px;
 }
 .boardAll .button{
 	margin:				0 0 0 5px;

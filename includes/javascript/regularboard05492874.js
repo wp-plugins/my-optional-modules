@@ -15,7 +15,6 @@
 			var regbo_relurl = $(this).attr('data');
 			$('#omitted').load(regbo_relurl + ' div.tinycomment.below');
 		});
-
 		$('.rb_yt').click(function(e){
 			e.preventDefault();
 			var youtube_id = $(this).attr('data');

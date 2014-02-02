@@ -1,5 +1,4 @@
-	<?php 
-	if(!defined('MyOptionalModules')){ die('You can not call this file directly.');}
+<?php if(!defined('MyOptionalModules')){ die('You can not call this file directly.');}
 	
 	if(count($post) > 0){
 		foreach($post as $p){
@@ -13,8 +12,8 @@
 				if(strtolower($p->EMAIL) != 'heaven'){ if($p->MODERATOR == 1){$NAME = '<a class="mod" href="'.$profilelink.'"> '.$p->USERID.'</a>';} if($p->MODERATOR == 2){$NAME = '<a class="usermod" href="'.$profilelink.'"> '.$p->USERID.'</a>';} if($p->MODERATOR == 0){$NAME = '<a href="'.$profilelink.'"> '.$p->USERID.'</a>';} }
 				else{$NAME = '---';}
 				if($p->TYPE == 'URL' && $p->URL != '')$LINK = '<span><i class="fa fa-angle-right"> <a href="'.esc_url($p->URL).'">Attached link</a></i></span>';
-				$SUBJECT = rb_format(str_replace('\\','',('<span>'.$p->SUBJECT.'</span>')));
-				$COMMENT = wpautop(rb_format(str_replace('\\','',(str_replace(array("\n","\t","\r"),"<br />",($p->COMMENT))))));
+				$SUBJECT = rb_format('<span>'.$p->SUBJECT.'</span>');
+				$COMMENT = rb_format($p->COMMENT);
 				if($p->PARENT == 0) $perma = '?b='.$p->BOARD.'&amp;t='.$p->ID;
 				if($p->PARENT != 0) $perma = '?b='.$p->BOARD.'&amp;t='.$p->PARENT.'#'.$p->ID;
 				$NO = '<span><i class="fa fa-angle-right"> No. <a href="'.$perma.'">'.$p->ID.'</a></i></span>';
@@ -26,7 +25,7 @@
 				
 				if($p->COMMENT != ''){
 					echo '<div class="tinythread"><span class="tinysubject">Source:</span></div>
-					<div class="tinycomment src"><form class="COMMENTFORM"><textarea id="COMMENT">'.str_replace(array('[',']','\n','\r','\\'),array('&#91;','&#93;','','',''),$p->COMMENT).'</textarea></form></div>';
+					<div class="tinycomment src"><textarea class="src">'.str_replace(array('[',']','\n','\r','\\'),array('&#91;','&#93;','','',''),$p->COMMENT).'</textarea></div>';
 				}
 				
 				

@@ -1,5 +1,4 @@
-	<?php 
-	if(!defined('MyOptionalModules')){ die('You can not call this file directly.');}
+<?php if(!defined('MyOptionalModules')){ die('You can not call this file directly.');}
 
 	echo '<div class="tinythread"><span class="tinysubject">Users</span><span class="tinyreplies">Points</span><span class="tinydate">Member for</span></div>';
 	if(count($getposts) > 0){

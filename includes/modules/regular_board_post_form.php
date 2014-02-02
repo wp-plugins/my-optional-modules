@@ -1,10 +1,16 @@
-	<?php 
-	if(!defined('MyOptionalModules')){ die('You can not call this file directly.');}
+<?php if(!defined('MyOptionalModules')){ die('You can not call this file directly.');}
 	
 	if($posting == 0){
 		if($AREA == 'newtopic'){echo '<div class="tinythread"><span class="tinysubject">This board is currently locked.</span></div></div>';}
 	}elseif($posting == 1 && $SEARCH == ''){
-		if($BOARD != ''){												
+		
+		if(count($getBoards) == 1){
+			foreach($getBoards as $Board){
+				$BOARD = $Board->SHORTNAME;
+			}
+		}
+		
+		if($BOARD != ''){
 			if(filter_var($checkThisIP,FILTER_VALIDATE_IP)){ $IPPASS = true; }
 			elseif(filter_var($checkThisIP,FILTER_VALIDATE_IP,FILTER_FLAG_IPV6)){ $IPPASS = true; }
 			else{ $IPPASS = false;}
@@ -52,7 +58,7 @@
 							}			
 							echo '<div class="tinythread"><p>In order to verify that you are not a bot, you will need to fill out this form.  You will only need to do this once.  Until you fill out this form, you may not comment on this board.</p><form method="post" class="upgrade"><label for="iexist">Type <code>'.$theIP_s32int.'</code> and press enter.</label><input type="text" id="addme" name="addme" class="addme" value="" placeholder="'.$theIP_s32int.'" /><input type="submit" name="iexist" id="iexist" value="Add me." class="hidden" /></form></div>';
 							if($AREA == 'newtopic')echo '</div>';
-							}else{															
+							}else{										
 								if(isset($_POST['edit_this']) && $_REQUEST['report_ids'] !== '' && $_REQUEST['DELETEPASSWORD'] !== '' || 
 								$ISMODERATOR === true && isset($_POST['admin_edit']) && $_REQUEST['admin_ids'] !== '' || 
 								$ISUSERMOD === true && isset($_POST['admin_edit']) && $_REQUEST['admin_ids'] !== '') {
@@ -72,9 +78,9 @@
 									if(count($checkPass) > 0){
 										echo '<div class="tinyreply">';
 										foreach($checkPass as $EDITTHREAD){
-											$editComment = str_replace(array('[',']','\n','\r','\\'),array('&#91;','&#93;','','',''),$EDITTHREAD->COMMENT);
-											$editSubject = str_replace('\\\\\\\'','\'',(str_replace('\\\\\\','',(str_replace(array("\n","\t","\r"),"||",($EDITTHREAD->SUBJECT))))));
-											echo '<form name="editform" method="post" action="'.$ACTION.'" class="COMMENTFORM">';wp_nonce_field('editform');echo '<input type="hidden" value="" name="LINK" /><input type="hidden" value="" name="PAGE" /><input type="hidden" value="" name="LOGIN" /><input type="hidden" value="" name="USERNAME" /><input type="hidden" value="'.$checkID.'" id="editthisthread" name="editthisthread" /><section class="full"><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" value="'.$editSubject.'" /></section><section class="full"><textarea id="COMMENT" name="COMMENT">'.$editComment.'</textarea></section><section class="formbottom"><section class="attachURL"><input type="text" id="URL" maxlength="'.$maxtext.'" value="';if($EDITTHREAD->TYPE == 'video'){ echo 'http://youtube.com/watch?v='.$EDITTHREAD->URL; } else { echo $EDITTHREAD->URL; } echo '" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section><section class="email"><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="heaven/sage/roll" value="';if($profileheaven == 1){echo 'heaven';}echo '" /></section><section class="replytothis"><input type="text" id="REPLYTO" maxlength="'.$maxtext.'" name="REPLYTO" '; if($EDITTHREAD->REPLYTO != 0){ echo 'value="'.$EDITTHREAD->REPLYTO.'"';}echo ' placeholder="No. ###" /></section></section><span id="count"></span><section class="full submission"><label for="FORMSUBMIT" class="submit">Post</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section></form></div>';
+											$editComment = $EDITTHREAD->COMMENT;
+											$editSubject = str_replace('\\','',$EDITTHREAD->SUBJECT);
+											echo '<form name="editform" method="post" action="'.$THISPAGE.'?a=post" class="COMMENTFORM">';wp_nonce_field('editform');echo '<input type="hidden" value="" name="LINK" /><input type="hidden" value="" name="PAGE" /><input type="hidden" value="" name="LOGIN" /><input type="hidden" value="" name="USERNAME" /><input type="hidden" value="'.$checkID.'" id="editthisthread" name="editthisthread" /><section class="full"><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" value="'.$editSubject.'" /></section><section class="full"><textarea id="COMMENT" name="COMMENT">'.str_replace(array('[',']'),array('&#91;','&#93;'),$editComment).'</textarea></section><section class="formbottom"><section class="attachURL"><input type="text" id="URL" maxlength="'.$maxtext.'" value="';if($EDITTHREAD->TYPE == 'video'){ echo 'http://youtube.com/watch?v='.$EDITTHREAD->URL; } else { echo $EDITTHREAD->URL; } echo '" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section><section class="email"><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="heaven/sage/roll" value="';if($profileheaven == 1){echo 'heaven';}echo '" /></section><section class="replytothis"><input type="text" id="REPLYTO" maxlength="'.$maxtext.'" name="REPLYTO" '; if($EDITTHREAD->REPLYTO != 0){ echo 'value="'.$EDITTHREAD->REPLYTO.'"';}echo ' placeholder="No. ###" /></section></section><span id="count"></span><section class="full submission"><label for="FORMSUBMIT" class="submit">Post</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section></form></div>';
 											echo '<script type="text/javascript">
 												var area = document.getElementById("COMMENT");
 												var message = document.getElementById("count");
@@ -93,7 +99,7 @@
 								}
 								if($correct == 0 && $AREA == 'newtopic' || $correct == 0 && $THREAD != '' && count($getposts) > 0){
 									if($tlast == 0){
-										echo '<div class="tinyreply"><form name="regularboard" method="post" action="'.$ACTION.'" class="COMMENTFORM">';wp_nonce_field('regularboard');echo '<input type="hidden" value="" name="LINK" /><input type="hidden" value="" name="PAGE" /><input type="hidden" value="" name="LOGIN" /><input type="hidden" value="" name="USERNAME" />';if($profilepassword == ''){$profilepassword = $rand;}echo '<section class="full"><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section><section class="full"><textarea id="COMMENT" name="COMMENT" placeholder="Comment"></textarea></section><section class="formbottom">';if($enableurl == 1 && $THREAD == ''){echo '<section class="attachURL"><input type="text" id="URL" maxlength="'.$maxtext.'" value="'.$thisimageupload.'" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';}if($enablerep == 1 && $THREAD != ''){echo '<section class="attachURL"><input type="text" id="URL" maxlength="'.$maxtext.'" value="'.$thisimageupload.'" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';}echo '<section class="email"><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="heaven/sage/roll" value="';if($profileheaven == 1){echo 'heaven';}echo '" /></section>';if($THREAD != ''){echo '<section class="replytothis"><input type="text" id="REPLYTO" maxlength="'.$maxtext.'" name="REPLYTO" placeholder="No. ###" /></section>';}echo '</section><span id="count"></span><section class="full submission"><label for="FORMSUBMIT" class="submit">';if($THREAD != ''){echo 'Reply';}else{echo 'Post';}echo '</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section></form></div>';if($AREA == 'newtopic'){echo '</div>';}
+										echo '<div class="tinyreply"><form name="regularboard" method="post" action="'.$THISPAGE.'?a=post" class="COMMENTFORM">';wp_nonce_field('regularboard');echo '<input type="hidden" value="" name="LINK" /><input type="hidden" value="" name="PAGE" /><input type="hidden" value="" name="LOGIN" /><input type="hidden" value="" name="USERNAME" />';if($profilepassword == ''){$profilepassword = $rand;}echo '<section class="full"><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section><section class="full"><textarea id="COMMENT" name="COMMENT" placeholder="Comment"></textarea></section><section class="formbottom">';if($enableurl == 1 && $THREAD == ''){echo '<section class="attachURL"><input type="text" id="URL" maxlength="'.$maxtext.'" value="'.$thisimageupload.'" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';}if($enablerep == 1 && $THREAD != ''){echo '<section class="attachURL"><input type="text" id="URL" maxlength="'.$maxtext.'" value="'.$thisimageupload.'" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';}echo '<section class="email"><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="heaven/sage/roll" value="';if($profileheaven == 1){echo 'heaven';}echo '" /></section>';if($THREAD != ''){echo '<section class="replytothis"><input type="text" id="REPLYTO" maxlength="'.$maxtext.'" name="REPLYTO" placeholder="No. ###" /></section>';}echo '</section><span id="count"></span><section class="full submission"><label for="FORMSUBMIT" class="submit">';if($THREAD != ''){echo 'Reply';}else{echo 'Post';}echo '</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section></form></div>';if($AREA == 'newtopic'){echo '</div>';}
 										echo '<script type="text/javascript">
 										var area = document.getElementById("COMMENT");
 										var message = document.getElementById("count");
