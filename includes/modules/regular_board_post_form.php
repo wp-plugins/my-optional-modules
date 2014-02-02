@@ -30,7 +30,6 @@
 							if($LOCKED == 0){
 							$correct = 0;
 							if($iexist == 0){
-							if(isset($_POST['iexist']) && $_REQUEST['addme'] == $theIP_s32int && $iexist == 0){
 								$IP      = $theIP_s32int;
 								$wpdb->query(
 									$wpdb->prepare(
@@ -55,8 +54,6 @@
 									)
 								);
 								echo '<meta http-equiv="refresh" content="0">';
-							}			
-							echo '<div class="tinythread"><p>In order to verify that you are not a bot, you will need to fill out this form.  You will only need to do this once.  Until you fill out this form, you may not comment on this board.</p><form method="post" class="upgrade"><label for="iexist">Type <code>'.$theIP_s32int.'</code> and press enter.</label><input type="text" id="addme" name="addme" class="addme" value="" placeholder="'.$theIP_s32int.'" /><input type="submit" name="iexist" id="iexist" value="Add me." class="hidden" /></form></div>';
 							if($AREA == 'newtopic')echo '</div>';
 							}else{										
 								if(isset($_POST['edit_this']) && $_REQUEST['report_ids'] !== '' && $_REQUEST['DELETEPASSWORD'] !== '' || 

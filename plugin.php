@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com/boards/?board=mom
 Description: Optional modules and additions for Wordpress.
-Version: 5.4.9.8
+Version: 5.4.9.9
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com/
 */
