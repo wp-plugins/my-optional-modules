@@ -608,37 +608,6 @@ form[name=moderator] input[type=text]{
 	position:			relative;
 	overflow:			hidden;
 }
-.boardAll label.submit{
-	width: 				auto;
-	float:				left;
-	background-color:	#000;
-}
-.boardAll .submit{
-	border-radius:		3px;
-	font-size:			15px;
-	cursor:				pointer;
-	padding:			10px;
-	margin:				0;
-	width:				100%;
-	display:			block;
-	color:				#fff;
-	height:				20px;
-	border-radius:		3px;
-	background:			rgb(69,72,77);
-	background:			url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzQ1NDg0ZCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMwMDAwMDAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
-	background:			-moz-linear-gradient(top,  rgba(69,72,77,1) 0%, rgba(0,0,0,1) 100%);
-	background:			-webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(69,72,77,1)), color-stop(100%,rgba(0,0,0,1)));
-	background:			-webkit-linear-gradient(top,  rgba(69,72,77,1) 0%,rgba(0,0,0,1) 100%);
-	background:			-o-linear-gradient(top,  rgba(69,72,77,1) 0%,rgba(0,0,0,1) 100%);
-	background:			-ms-linear-gradient(top,  rgba(69,72,77,1) 0%,rgba(0,0,0,1) 100%);
-	background:			linear-gradient(to bottom,  rgba(69,72,77,1) 0%,rgba(0,0,0,1) 100%);
-	filter:				progid:DXImageTransform.Microsoft.gradient( startColorstr='#45484d', endColorstr='#000000',GradientType=0 );
-	border:				1px solid #000;
-	text-align:			center;
-}
-.boardAll .submit:hover{
-	opacity:			1;
-}
 .boardAll label.create{
 	background-color:	#000;
 	cursor:				pointer;
@@ -671,10 +640,6 @@ form[name=moderator] input[type=text]{
 	margin:				0;
 	padding:			5px;
 	width:				100%;
-}
-.boardAll .COMMENTFORM input[type=submit]{
-	display:			none;
-	visibility:			hidden;
 }
 .boardAll .COMMENTFORM .absolute{
 	margin:				5px 0;
@@ -771,51 +736,54 @@ form[name=moderator] input[type=text]{
 	box-shadow:			none!important;
 	border-bottom:		1px solid #000;
 }
-.boardAll .COMMENTFORM #EMAIL{
-	box-shadow:			none!important;
-	font-size:			45px;
-	height:				35px!important;
-	margin:				1px 0 0 -1px!important;
-	float:				left;
+.boardAll .COMMENTFORM input[type=submit]{
+	width:650px;
+	clear:both;
+	display:block;
+	padding:5px;
+	margin: 1px auto 1px auto;
+	text-align:center;
+	border-radius:3px;
+	cursor:pointer;
 }
-.boardAll .COMMENTFORM #PASSWORD{
-		box-shadow:			none!important;
-		font-size:			45px;
-		height:				15px!important;
-		margin:				-2px 0 0 0!important;
-		border-radius:		0!important;
-}
+.boardAll .COMMENTFORM #EMAIL,
+.boardAll .COMMENTFORM #PASSWORD,
 .boardAll .COMMENTFORM #URL,
 .boardAll .COMMENTFORM #REPLYTO{
-	box-shadow:			none!important;
-	font-size:			45px;
-	height:				35px!important;
-	margin:				-2px 0 0 0!important;
-	border-radius:		0!important;
+	width:640px;
+	clear:both;
+	display:block;
+	padding:5px;
+	margin: 1px 0 1px 0;
 }
 .boardAll .COMMENTFORM #COMMENT{
 	font-size:			20px;
 	height:				290px;
 	width:				99%;
+	margin:				0 0 0 -3px;
+	font-size:			12px;
 }
 .boardAll .COMMENTFORM section.full label{
 	font-size:			25px;
 	line-height:		28px
 }
-.boardAll span#count{
-	color:				rgba(255,255,255,.5);
+.boardAll label.submit{
+	width:				auto;
+	float:				left;
+	background-color:	#000;
+}
+.boardAll .submit{
+	border-radius:		3px;
+	font-size:			15px;
+	cursor:				pointer;
+	padding:			10px;
+	margin:				0;
+	width:				100%;
 	display:			block;
-	font-weight:		900;
-	font-size:			13px;
-	line-height:		10px;
-	padding:			10px 20px 10px 20px;
-	position:			relative;
-	text-align:			right;
-	width:				100px;
-	height:				16px;
-	margin:				-30px 0;
-	float:				right;
-	z-index:			98;
+	color:				#fff;
+	height:				20px;
+	border-radius:		3px;
+	background:			rgb(69,72,77);
 }
 .boardAll label.formtoggle{
 	background-color:	rgba(0,0,0,1);
@@ -1516,10 +1484,10 @@ form[name=moderator] input[type=text]{
 	text-decoration:	underline;
 }
 .boardAll .tinyreply{
-	padding:			0!important;
+	padding:			5px 0;
 	margin:				0;
 	overflow:			hidden;
-	height:				385px;
+	height:				auto;
 }
 .boardAll .tinycomment .approvalrating{
 	margin:				5px 0;

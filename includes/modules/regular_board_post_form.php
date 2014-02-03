@@ -4,10 +4,10 @@
 		if($AREA == 'newtopic'){echo '<div class="tinythread"><span class="tinysubject">This board is currently locked.</span></div></div>';}
 	}elseif($posting == 1 && $SEARCH == ''){
 		
-		if(count($getBoards) == 1){
-			foreach($getBoards as $Board){
-				$BOARD = $Board->SHORTNAME;
-			}
+		if($THISBOARD != ''){
+			$BOARD = $THISBOARD;
+		}else{
+			$BOARD = $BOARD;
 		}
 		
 		if($BOARD != ''){
@@ -77,37 +77,24 @@
 										foreach($checkPass as $EDITTHREAD){
 											$editComment = $EDITTHREAD->COMMENT;
 											$editSubject = str_replace('\\','',$EDITTHREAD->SUBJECT);
-											echo '<form name="editform" method="post" action="'.$THISPAGE.'?a=post" class="COMMENTFORM">';wp_nonce_field('editform');echo '<input type="hidden" value="" name="LINK" /><input type="hidden" value="" name="PAGE" /><input type="hidden" value="" name="LOGIN" /><input type="hidden" value="" name="USERNAME" /><input type="hidden" value="'.$checkID.'" id="editthisthread" name="editthisthread" /><section class="full"><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" value="'.$editSubject.'" /></section><section class="full"><textarea id="COMMENT" name="COMMENT">'.str_replace(array('[',']'),array('&#91;','&#93;'),$editComment).'</textarea></section><section class="formbottom"><section class="attachURL"><input type="text" id="URL" maxlength="'.$maxtext.'" value="';if($EDITTHREAD->TYPE == 'video'){ echo 'http://youtube.com/watch?v='.$EDITTHREAD->URL; } else { echo $EDITTHREAD->URL; } echo '" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section><section class="email"><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="heaven/sage/roll" value="';if($profileheaven == 1){echo 'heaven';}echo '" /></section><section class="replytothis"><input type="text" id="REPLYTO" maxlength="'.$maxtext.'" name="REPLYTO" '; if($EDITTHREAD->REPLYTO != 0){ echo 'value="'.$EDITTHREAD->REPLYTO.'"';}echo ' placeholder="No. ###" /></section></section><span id="count"></span><section class="full submission"><label for="FORMSUBMIT" class="submit">Post</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section></form></div>';
-											echo '<script type="text/javascript">
-												var area = document.getElementById("COMMENT");
-												var message = document.getElementById("count");
-												var maxLength = '.$maxbody.';
-												var checkLength = function() {
-													if(area.value.length < maxLength) {
-														message.innerHTML = (maxLength-area.value.length);
-													}
-												}
-												setInterval(checkLength, 300);
-											</script>
-											</div>';																																						
+											echo '<form enctype="multipart/form-data" name="editform" method="post" action="'.$THISPAGE.'?a=post" class="COMMENTFORM">';wp_nonce_field('editform');
+											echo '<input type="hidden" value="'.$BOARD.'" NAME="board" />';if($THREAD != ''){echo '<input type="hidden" name="PARENT" value="'.$THREAD.'" />';}echo '<input type="hidden" value="" name="LINK" /><input type="hidden" value="" name="PAGE" /><input type="hidden" value="" name="LOGIN" /><input type="hidden" value="" name="USERNAME" /><input type="hidden" value="'.$checkID.'" id="editthisthread" name="editthisthread" /><section class="full"><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" value="'.$editSubject.'" /></section><section class="full"><textarea id="COMMENT" name="COMMENT">'.str_replace(array('[',']'),array('&#91;','&#93;'),$editComment).'</textarea></section>
+											<section class="full"><input type="text" id="URL" maxlength="'.$maxtext.'" value="';if($EDITTHREAD->TYPE == 'video'){ echo 'http://youtube.com/watch?v='.$EDITTHREAD->URL; } else { echo $EDITTHREAD->URL; } echo '" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';
+											if($imgurid != ''){echo '<input name="img" size="35" type="file"/>';}
+											echo '<section class="full"><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="heaven/sage/roll" value="';if($profileheaven == 1){echo 'heaven';}echo '" /></section><section class="full"><input type="text" id="REPLYTO" maxlength="'.$maxtext.'" name="REPLYTO" '; if($EDITTHREAD->REPLYTO != 0){ echo 'value="'.$EDITTHREAD->REPLYTO.'"';}echo ' placeholder="No. ###" /></section><section class="full"><input type="submit" value="Edit" name="FORMSUBMIT" id="FORMSUBMIT" /></section></form></div>';
+											echo '</div>';																																						
 											$correct = 3;
 										}
 									}
 								}
 								if($correct == 0 && $AREA == 'newtopic' || $correct == 0 && $THREAD != '' && count($getposts) > 0){
 									if($tlast == 0){
-										echo '<div class="tinyreply"><form name="regularboard" method="post" action="'.$THISPAGE.'?a=post" class="COMMENTFORM">';wp_nonce_field('regularboard');echo '<input type="hidden" value="" name="LINK" /><input type="hidden" value="" name="PAGE" /><input type="hidden" value="" name="LOGIN" /><input type="hidden" value="" name="USERNAME" />';if($profilepassword == ''){$profilepassword = $rand;}echo '<section class="full"><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section><section class="full"><textarea id="COMMENT" name="COMMENT" placeholder="Comment"></textarea></section><section class="formbottom">';if($enableurl == 1 && $THREAD == ''){echo '<section class="attachURL"><input type="text" id="URL" maxlength="'.$maxtext.'" value="'.$thisimageupload.'" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';}if($enablerep == 1 && $THREAD != ''){echo '<section class="attachURL"><input type="text" id="URL" maxlength="'.$maxtext.'" value="'.$thisimageupload.'" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';}echo '<section class="email"><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="heaven/sage/roll" value="';if($profileheaven == 1){echo 'heaven';}echo '" /></section>';if($THREAD != ''){echo '<section class="replytothis"><input type="text" id="REPLYTO" maxlength="'.$maxtext.'" name="REPLYTO" placeholder="No. ###" /></section>';}echo '</section><span id="count"></span><section class="full submission"><label for="FORMSUBMIT" class="submit">';if($THREAD != ''){echo 'Reply';}else{echo 'Post';}echo '</label><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" /></section></form></div>';if($AREA == 'newtopic'){echo '</div>';}
-										echo '<script type="text/javascript">
-										var area = document.getElementById("COMMENT");
-										var message = document.getElementById("count");
-										var maxLength = '.$maxbody.';
-										var checkLength = function() {
-										if(area.value.length < maxLength) {
-										message.innerHTML = (maxLength-area.value.length);
-										}
-										}
-										setInterval(checkLength, 300);
-										</script>';
+										echo '<div class="tinyreply"><form enctype="multipart/form-data" name="regularboard" method="post" action="'.$THISPAGE.'?a=post" class="COMMENTFORM">';wp_nonce_field('regularboard');
+										echo '<input type="hidden" value="'.$BOARD.'" NAME="board" />';if($THREAD != ''){echo '<input type="hidden" name="PARENT" value="'.$THREAD.'" />';}echo '<input type="hidden" value="" name="LINK" /><input type="hidden" value="" name="PAGE" /><input type="hidden" value="" name="LOGIN" /><input type="hidden" value="" name="USERNAME" />';if($profilepassword == ''){$profilepassword = $rand;}echo '<section class="full"><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" /></section><section class="full"><textarea id="COMMENT" name="COMMENT" placeholder="Comment"></textarea></section>';
+										if($enableurl == 1 && $THREAD == ''){echo '<section class="full"><input type="text" id="URL" maxlength="'.$maxtext.'" value="'.$thisimageupload.'" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';}
+										if($enablerep == 1 && $THREAD != ''){echo '<section class="full"><input type="text" id="URL" maxlength="'.$maxtext.'" value="'.$thisimageupload.'" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';}
+										if($imgurid != ''){echo '<input name="img" size="35" type="file"/>';}
+										echo '<section class="full"><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="heaven/sage/roll" value="';if($profileheaven == 1){echo 'heaven';}echo '" /></section><section class="full"><input type="text" id="REPLYTO" maxlength="'.$maxtext.'" name="REPLYTO" placeholder="Reply to Post No. ###" /></section><section class="full"><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" value="';if($THREAD != ''){echo 'Reply';}else{echo 'Post';}echo '"/></section></form></div>';if($AREA == 'newtopic'){echo '</div>';}
 									}else{
 										echo '<div class="tinythread">You were the last poster.  Edit your previous post or wait for a new post to comment further.</div>';
 									}

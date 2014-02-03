@@ -1,12 +1,19 @@
 <?php if(!defined('MyOptionalModules')){ die('You can not call this file directly.');}
-		
-		if($posting == 1 && $timegateactive !== true){
-			if(count($getBoards) == 1){
-				foreach($getBoards as $Board){
-					$BOARD = $Board->SHORTNAME;
-				}
+
+		if($THISBOARD != ''){
+			$BOARD = $THISBOARD;
+		}else{
+			$BOARD = esc_sql($_REQUEST['board']);
+			$checkboard = $wpdb->get_results("SELECT * FROM $regularboard_boards WHERE SHORTNAME = '$BOARD' LIMIT 1");
+			if(count($checkboard) == 0){
+				$timegateactive = true;
 			}
-			if(isset($_POST['FORMSUBMIT']) && $posting == 1 && $THREAD == '' || isset($_POST['FORMSUBMIT']) && $currentCountNomber < $maxreplies && $posting == 1 && $THREAD != '' || isset($_POST['FORMSUBMIT']) && $AREA == 'post'){
+		}
+
+		if($timegateactive !== true){
+			
+			if($posting == 1 && $THREAD == '' || $currentCountNomber < $maxreplies && $posting == 1 && $THREAD != '' || $AREA == 'post'){
+			
 					$IS_IT_SPAM = 0;
 					if(function_exists('akismet_admin_init')){
 						$APIKey = myoptionalmodules_sanistripents(get_option('wordpress_api_key'));
@@ -27,7 +34,7 @@
 						}					
 					}
 					$empty = 0;
-					if($_REQUEST['COMMENT'] == '' && $_REQUEST['URL'] == '') {
+					if($_REQUEST['COMMENT'] == '' && $URL == '') {
 						$empty = 1;
 					}elseif($_REQUEST['LINK'] != '' || $_REQUEST['PAGE'] != '' || $_REQUEST['LOGIN'] != '' || $_REQUEST['USERNAME'] != ''){
 						$wpdb->query("INSERT INTO $regularboard_users (ID, DATE, IP, THREAD, PARENT, BANNED, MESSAGE, LENGTH, KARMA, PASSWORD, HEAVEN, VIDEO, BOARDS, FOLLOWING) VALUES ('','$current_timestamp','$theIP_us32str','0','0','1','filling out hidden form areas (likely bot).','0','0','','0','0','','')");
@@ -37,7 +44,8 @@
 						if($IS_IT_SPAM == 1) {
 						}else{
 							if($THREAD == '' && $enableurl == 1 || $THREAD != ''  && $enablerep == 1){
-								$cleanURL = sanitize_text_field(wp_strip_all_tags($_REQUEST['URL']));
+								if($URL == '')$cleanURL = sanitize_text_field(wp_strip_all_tags($_REQUEST['URL']));
+								if($URL != '')$cleanURL = $URL;
 								// http://frankkoehl.com/2009/09/http-status-code-curl-php/
 								$ch = curl_init();
 								$opts = array(CURLOPT_RETURNTRANSFER => true,
@@ -49,38 +57,40 @@
 								$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 								curl_close($ch);
 								
-								if($cleanURL != ''){
-									$path_info = pathinfo($cleanURL);
-									
-									if(preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $cleanURL, $match)) {
-										$VIDEOID = $match[1];																
-										$TYPE = 'video';
-										$URL = sanitize_text_field(wp_strip_all_tags($VIDEOID));
-									}
-									elseif($status == '200' && getimagesize($cleanURL) !== false){
-										if($path_info['extension'] == 'jpg' ||
-											$path_info['extension'] == 'gif' ||
-											$path_info['extension'] == 'jpeg' ||
-											$path_info['extension'] == 'png'){
-											$TYPE = 'image';
-											$URL = $cleanURL;
+								if($URL == ''){
+									if($cleanURL != ''){
+										$path_info = pathinfo($cleanURL);
+										if(preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $cleanURL, $match)) {
+											$VIDEOID = $match[1];																
+											$TYPE = 'video';
+											$URL = sanitize_text_field(wp_strip_all_tags($VIDEOID));
+										}
+										elseif($status == '200' && getimagesize($cleanURL) !== false){
+											if($path_info['extension'] == 'jpg' ||
+												$path_info['extension'] == 'gif' ||
+												$path_info['extension'] == 'jpeg' ||
+												$path_info['extension'] == 'png'){
+												$TYPE = 'image';
+												$URL = $cleanURL;
+											}
+										}else{
+											$TYPE = 'URL';
+											if (false === strpos($cleanURL, '://')) {
+												$URL = 'http://'.$cleanURL;
+											}else{
+												$URL = esc_url($cleanURL);
+											}
 										}
 									}else{
-										$TYPE = 'URL';
-										if (false === strpos($cleanURL, '://')) {
-											$URL = 'http://'.$cleanURL;
-										}else{
-											$URL = esc_url($cleanURL);
-										}
+										$TYPE = '';
+										$URL = '';
 									}
-								}else{
-									$TYPE = '';
-									$URL = '';
 								}
 							}
-							
-							if($THREAD != '')$enteredPARENT = intval($THREAD);
-							if($THREAD == '')$enteredPARENT = 0;
+
+							if($_REQUEST['PARENT'] != ''){$enteredPARENT = intval($_REQUEST['PARENT']);}
+							elseif($THREAD != ''){$enteredPARENT = intval($THREAD);}
+							elseif($THREAD == ''){$enteredPARENT = 0;}
 							
 							if($_REQUEST['COMMENT'] != ''){
 								$enteredCOMMENT    = $_REQUEST['COMMENT'];
@@ -240,7 +250,8 @@
 					
 					foreach($LAST as $LATEST){
 						$IDGOTO = $LATEST->ID;
-						if($BOARD != '' && $THREAD == ''){$REDIRECTO = $THISPAGE.'?b='.$BOARD.'&amp;t='.$IDGOTO;}
+						if($LATEST->PARENT == 0 && $BOARD != '' && $THREAD == ''){$REDIRECTO = $THISPAGE.'?b='.$BOARD.'&amp;t='.$IDGOTO;}
+						if($LATEST->PARENT != 0 && $BOARD != '' && $THREAD == ''){$REDIRECTO = $THISPAGE.'?b='.$BOARD.'&amp;t='.$LATEST->PARENT.'#'.$LATEST->ID;}
 					}
 					
 					if($BOARD != '' && $THREAD != ''){$REDIRECTO = $THISPAGE.'?b='.$BOARD.'&amp;t='.$THREAD;}
@@ -300,12 +311,11 @@
 						
 						
 					}
-						
+					
 					}
 				}else{
 					echo '<div class="tinythread"><span class="tinysubject">Nothing submitted.</span></div>';		
 				}
 			}elseif(isset($_POST['FORMSUBMIT']) && $timegateactive === true){ echo 'You can\'t do that yet.'; }
-		
 		
 	?>

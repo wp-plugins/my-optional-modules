@@ -32,38 +32,36 @@
 			if(count($posts) > 0){
 				echo '<div class="tinystats"><div id="trophycase"><div class="tinythread"><span class="tinysubject">Active posts: '.$postcount.'</span><span class="tinyreplies"> '.($userkarma + $dust).'</i></span><span class="tinydate">First seen '.timesincethis($theprofile->DATE).'</span></div>';
 				foreach($posts as $thisuserposts){
-					if(intval($thisuserposts->UP) >= 1){
-						echo '<div id="'.intval($thisuserposts->ID).'" class="tinythread">';
-						$board = $thisuserposts->BOARD;
-						$id = $thisuserposts->ID;
-						$date = $thisuserposts->DATE;
-						$parent = '';
-						if($thisuserposts->PARENT == 0){
-							$posttype = 'new thread';
-						}
-						if($thisuserposts->PARENT != 0){
-							$posttype = 'new reply';
-						}
-						$bl =  $wpdb->get_results("SELECT URL FROM $regularboard_boards WHERE SHORTNAME = '".$board."' LIMIT 1");
-						if($thisuserposts->PARENT != 0){
-							$parent = $thisuserposts->PARENT;
-						}
-						if($thisuserposts->PARENT  > 0){
-							$parent = 't='.$parent.'#'.$id;
-						}
-						if($thisuserposts->PARENT == 0){
-							$parent = 't='.$id;
-						}
-						$link = $THISPAGE.'?b='.$board.'&amp;'.$parent;
-						$SUBJECT =  $thisuserposts->SUBJECT;
-						echo '<span class="tinysubject"><a href="'.$link.'">';
-						if($SUBJECT != ''){
-							echo $SUBJECT;
-						}else{
-							echo 'No subject specified';
-						}
-						echo '</a><i id="'.$id.'" class="fa fa-plus-square loadme hidden" data="'.$THISPAGE.'?t='.$id.'"></i><i id="'.$id.'" class="fa fa-minus-square hideme hidden"></i></span></span><span class="tinyreplies">'.intval($thisuserposts->UP).'</span><span class="tinydate">'.timesincethis($date).' <a href="?t='.intval($thisuserposts->ID).'">##</a></span><div id="load'.$id.'"></div></div>';
+					echo '<div id="'.intval($thisuserposts->ID).'" class="tinythread">';
+					$board = $thisuserposts->BOARD;
+					$id = $thisuserposts->ID;
+					$date = $thisuserposts->DATE;
+					$parent = '';
+					if($thisuserposts->PARENT == 0){
+						$posttype = 'new thread';
 					}
+					if($thisuserposts->PARENT != 0){
+						$posttype = 'new reply';
+					}
+					$bl = $wpdb->get_results("SELECT URL FROM $regularboard_boards WHERE SHORTNAME = '".$board."' LIMIT 1");
+					if($thisuserposts->PARENT != 0){
+						$parent = $thisuserposts->PARENT;
+					}
+					if($thisuserposts->PARENT  > 0){
+						$parent = 't='.$parent.'#'.$id;
+					}
+					if($thisuserposts->PARENT == 0){
+						$parent = 't='.$id;
+					}
+					$link = $THISPAGE.'?b='.$board.'&amp;'.$parent;
+					$SUBJECT =  $thisuserposts->SUBJECT;
+					echo '<span class="tinysubject"><a href="'.$link.'">';
+					if($SUBJECT != ''){
+						echo $SUBJECT;
+					}else{
+						echo 'No subject specified';
+					}
+					echo '</a><i id="'.$id.'" class="fa fa-plus-square loadme hidden" data="'.$THISPAGE.'?t='.$id.'"></i><i id="'.$id.'" class="fa fa-minus-square hideme hidden"></i></span></span><span class="tinyreplies">'.intval($thisuserposts->UP).'</span><span class="tinydate">'.timesincethis($date).' <a href="?t='.intval($thisuserposts->ID).'">##</a></span><div id="load'.$id.'"></div></div>';
 				}
 				echo '</div></div>';
 			}else{

@@ -1,7 +1,7 @@
 <?php 
 	if(!defined('MyOptionalModules')){die('You can not call this file directly.');}
 	if(get_option('mommaincontrol_regularboard') == 1){
-		$rb_v = '05492874';
+		$rb_v = '05492875';
 		add_action('wp_enqueue_scripts','rb_style');
 		add_action('wp_head','rb_head');
 		add_shortcode('regularboard','regularboard_shortcode');
@@ -45,32 +45,6 @@
 			$wordpressname = get_bloginfo('name');
 			$blog_title = get_bloginfo();
 			
-			if($imgurid != '' && isset($_POST['submitimgur'])){
-				$img = $_FILES['img'];
-				if($img['name'] != ''){
-					$filename = $img['tmp_name'];
-					$client_id = "$imgurid";
-					$handle = fopen($filename, "r");
-					$data = fread($handle, filesize($filename));
-					$pvars = array('image' => base64_encode($data));
-					$timeout = 30;
-					$curl = curl_init();
-					curl_setopt($curl, CURLOPT_URL, 'https://api.imgur.com/3/image.json');
-					curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
-					curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Client-ID ' . $client_id));
-					curl_setopt($curl, CURLOPT_POST, 1);
-					curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-					curl_setopt($curl, CURLOPT_POSTFIELDS, $pvars);
-					$out = curl_exec($curl);
-					curl_close ($curl);
-					$pms = json_decode($out,true);
-					$url = $pms['data']['link'];
-					if($url!= ''){
-						$thisimageupload = $url;
-					}
-				}
-			}
-				
 			$THISPAGE            = get_permalink();
 			myoptionalmodules_checkdnsbl($checkThisIP);
 			$theIP               = esc_sql($ipaddress);
@@ -127,7 +101,7 @@
 					
 				}
 			}
-			$getBoards     = $wpdb->get_results("SELECT * FROM $regularboard_boards WHERE SHORTNAME != '' ORDER BY NAME ASC");
+			$getBoards = $wpdb->get_results("SELECT * FROM $regularboard_boards WHERE SHORTNAME != '' ORDER BY NAME ASC");
 			if(count($getBoards) == 1){
 				foreach($getBoards as $Board){
 					$THISBOARD = $Board->SHORTNAME;
@@ -142,7 +116,7 @@
 			if($BOARD != ''){
 				$getCurrentBoard = $wpdb->get_results("SELECT * FROM $regularboard_boards WHERE SHORTNAME = '".$BOARD."' LIMIT 1");
 			}
-			if($BOARD == '' && count($getBoards) == 1){
+			if($BOARD == '' && $THISBOARD != ''){
 				$getCurrentBoard  = $wpdb->get_results("SELECT * FROM $regularboard_boards WHERE SHORTNAME = '".$THISBOARD."' LIMIT 1");
 			}
 			
@@ -342,7 +316,7 @@
 				}
 			}
 				
-			if(count($getBoards == 1)){
+			if($THISBOARD != ''){
 				if($BOARD != '' && $THREAD != '' && $ID == $THREAD){
 					$ACTION = $THISPAGE.'?b='.$THISBOARD;
 				}elseif($BOARD != '' && $THREAD == ''){
@@ -414,14 +388,6 @@
 				
 			echo '</div><div class="newtopic"></div>';
 				
-			if($imgurid != ''){
-				if(!isset($_POST['submitimgur'])){
-					echo '<div class="tinythread"><form class="imgur" enctype="multipart/form-data" method="POST"><span class="tinysubject"><input name="img" size="35" type="file"/></span><span class="tinyreplies"><input type="submit" id="submitimgur" name="submitimgur" value="Upload"/></span></form></div>';
-				}else{
-					echo '<div class="tinythread"><span class="tinysubject">Image URL:'.$thisimageupload.'</span></div><div class="tinycomment"><img src="'.$thisimageupload.'" class="imageOP" alt="'.$thisimageupload.'" /></div>';
-				}
-			}
-				
 			if($AREA == 'newtopic'){
 				if(count($getBoards) == 1){
 					foreach($getBoards as $Board){
@@ -470,6 +436,31 @@
 										$currentCountNomber = count($countParentReplies);
 									}
 									if(isset($_POST['FORMSUBMIT'])){
+										$img = $_FILES['img'];
+										if($_FILES['img']['size'] != 0){
+											if($img['name'] != ''){
+												$filename = $img['tmp_name'];
+												$client_id = "$imgurid";
+												$handle = fopen($filename, "r");
+												$data = fread($handle, filesize($filename));
+												$pvars = array('image' => base64_encode($data));
+												$timeout = 30;
+												$curl = curl_init();
+												curl_setopt($curl, CURLOPT_URL, 'https://api.imgur.com/3/image.json');
+												curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
+												curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Client-ID ' . $client_id));
+												curl_setopt($curl, CURLOPT_POST, 1);
+												curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+												curl_setopt($curl, CURLOPT_POSTFIELDS, $pvars);
+												$out = curl_exec($curl);
+												curl_close ($curl);
+												$pms = json_decode($out,true);
+												$URL = $pms['data']['link'];
+												$TYPE = 'image';
+											}
+										}else{
+											$URL = sanitize_text_field(wp_strip_all_tags($_REQUEST['URL']));
+										}
 										include(plugin_dir_path(__FILE__).'/regular_board_post_action.php');
 									}
 									if(!isset($_POST['FORMSUBMIT'])){
@@ -480,7 +471,10 @@
 										if($AREA != 'newtopic' && $correct != 3){
 											if(count($getposts) > 0){
 												include(plugin_dir_path(__FILE__) . '/regular_board_board_loop.php');
-											}
+											}else{
+												echo '<div class="tinythread"><span class="tinysubject">Nothing to see here.</span></div></div>';
+											}	
+
 										}
 										if($THREAD != '' && $threadexists == 1){
 											echo '</div><div class="threadinformation"><div class="leftmeta">';
@@ -522,7 +516,36 @@
 					}
 				}
 			}elseif($AREA == 'post'){
-				include(plugin_dir_path(__FILE__).'/regular_board_post_action.php');
+				
+				if(isset($_POST['FORMSUBMIT'])){			
+					$img = $_FILES['img'];
+					if($_FILES['img']['size'] != 0){
+						if($img['name'] != ''){
+							$filename = $img['tmp_name'];
+							$client_id = "$imgurid";
+							$handle = fopen($filename, "r");
+							$data = fread($handle, filesize($filename));
+							$pvars = array('image' => base64_encode($data));
+							$timeout = 30;
+							$curl = curl_init();
+							curl_setopt($curl, CURLOPT_URL, 'https://api.imgur.com/3/image.json');
+							curl_setopt($curl, CURLOPT_TIMEOUT, $timeout);
+							curl_setopt($curl, CURLOPT_HTTPHEADER, array('Authorization: Client-ID ' . $client_id));
+							curl_setopt($curl, CURLOPT_POST, 1);
+							curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+							curl_setopt($curl, CURLOPT_POSTFIELDS, $pvars);
+							$out = curl_exec($curl);
+							curl_close ($curl);
+							$pms = json_decode($out,true);
+							$URL = $pms['data']['link'];
+							$TYPE = 'image';
+						}
+					}else{
+							$URL = sanitize_text_field(wp_strip_all_tags($_REQUEST['URL']));
+					}
+					include(plugin_dir_path(__FILE__).'/regular_board_post_action.php');
+				}
+				
 				echo '</div>';
 			}elseif($BOARD == '' && $AREA == '' && $THREAD == '' || $AREA == 'topics' || $AREA  == 'replies' || $AREA  == 'subscribed' || $AREA  == 'following' || $AREA  == 'all'){
 				include(plugin_dir_path(__FILE__).'/regular_board_activity_loops.php');
