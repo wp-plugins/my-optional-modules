@@ -57,7 +57,7 @@
 								$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 								curl_close($ch);
 								
-								if($URL == ''){
+								
 									if($cleanURL != ''){
 										$path_info = pathinfo($cleanURL);
 										if(preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $cleanURL, $match)) {
@@ -85,7 +85,7 @@
 										$TYPE = '';
 										$URL = '';
 									}
-								}
+								
 							}
 
 							if($_REQUEST['PARENT'] != ''){$enteredPARENT = intval($_REQUEST['PARENT']);}
