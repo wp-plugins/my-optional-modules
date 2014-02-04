@@ -1,6 +1,7 @@
 <?php if(!defined('MyOptionalModules')){ die('You can not call this file directly.');}
 	//https://www.countryipblocks.net/bogons/htaccessdeny_ipv4_bogons.txt
 		$rb_blacklist_ips = array(
+			'127.255.255.255',
 			'127.255.255..*',
 			'0.0.0.0..*',
 			'5.133.64.0..*',

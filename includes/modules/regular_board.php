@@ -1,7 +1,7 @@
 <?php 
 	if(!defined('MyOptionalModules')){die('You can not call this file directly.');}
 	if(get_option('mommaincontrol_regularboard') == 1){
-		$rb_v = '05492875';
+		$rb_v = '05492876';
 		add_action('wp_enqueue_scripts','rb_style');
 		add_action('wp_head','rb_head');
 		add_shortcode('regularboard','regularboard_shortcode');
@@ -18,8 +18,28 @@
 		}
 		return false;
 	}
-	function rb_style(){global $wp,$post,$rb_v;$content = $post->post_content;if( has_shortcode( $content, 'regularboard' )){$regularboard = plugins_url().'/my-optional-modules/includes/javascript/regularboard'.$rb_v.'.js';$regbostyle = WP_PLUGIN_URL . '/my-optional-modules/includes/css/regularboard'.$rb_v.'.css';wp_register_style('regular_board',$regbostyle);wp_enqueue_style('regular_board');	wp_deregister_script('regularboard');wp_register_script('regularboard',$regularboard,'','',null,false);wp_enqueue_script('regularboard');}}
-	function rb_head($atts){global $wp,$post,$wpdb,$purifier;$regularboard_boards = $wpdb->prefix.'regularboard_boards';$regularboard_posts = $wpdb->prefix.'regularboard_posts';$content = $post->post_content;if( has_shortcode( $content, 'regularboard' )){$BOARD = esc_sql(strtolower(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['b'])));$THREAD = esc_sql(intval($_GET['t']));if($THREAD != ''){$getres = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE ID = '".$THREAD."' LIMIT 1");}if(count($getres) == 1){foreach($getres as $meta){$canonical = $author = $title = $site = $locale = $published = $last = $image = $video = $description = '';$locale = get_locale();$site = get_bloginfo('name'); $THISPAGE = home_url('/');$pretty = esc_attr(get_option('mommaincontrol_prettycanon'));$BOARD = esc_sql(strtolower(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['b']))));if($meta->PARENT == 0){$THREAD = intval($_GET['t']);}if($meta->PARENT != 0){$THREAD = intval($meta->PARENT).'#'.intval($_GET['t']);}$canonical = $THISPAGE.'?b='.$meta->BOARD.'&amp;t='.$THREAD;$author = $purifier->purify($meta->MODERATOR);$title = str_replace('\\\\\\\'','\'',(str_replace('\\\\\\','',$meta->SUBJECT)));if($title == ''){$title = 'No subject';}$published = $purifier->purify($meta->DATE);$last = $purifier->purify($meta->LAST);$type = $purifier->purify($meta->TYPE);if($type == 'image'){$purifier->purify($image = $meta->URL);}if($type == 'video'){$video = 'http://youtube.com/watch?v='.$meta->URL;}$description = $purifier->purify(strip_tags($meta->COMMENT));$description = str_replace(array('||||','||','*','{{','}}','>>',' >','~~',' - ','----','::','`','    '),'',(str_replace('\\\\\\\'','\'',(str_replace('\\\\\\','',(str_replace(array('\\n','\\t','\\r'),'||',$description)))))));$description = substr($description,0,150);echo "\n";if($canonical != ''){echo '<meta property="og:url" content="'.$canonical.'" /> ';echo "\n";}if($title != ''){echo '<meta property="og:title" content="'.$title.'" /> ';echo "\n";}if($site != ''){echo '<meta property="og:site_name" content="'.$site.'" /> ';echo "\n";}if($locale != ''){echo '<meta property="og:locale" content="'.$locale.'" /> ';echo "\n";}if($image != ''){echo '<meta property="og:image" content="'.$image.'" /> ';echo "\n";}if($video != ''){echo '<meta property="og:video" content="http://www.youtube.com/v/'.$meta->URL.'?autohide=1&amp;version=3" /> ';echo "\n";echo '<meta property="og:video:type" content="application/x-shockwave-flash" /> ';echo "\n";echo '<meta property="og:video:height" content="720" /> ';echo "\n";echo '<meta property="og:video:width" content="1280" /> ';echo "\n";echo '<meta property="og:type" content="video" /> ';echo "\n";echo '<meta property="og:image" content="http://img.youtube.com/vi/'.$meta->URL.'/0.jpg" /> ';echo "\n";}else{if($published != ''){echo '<meta property="og:published_time" content="'.$published.'" /> ';echo "\n";}if($published != ''){echo '<meta property="og:modified_time" content="'.$published.'" /> ';echo "\n";}if($last != ''){echo '<meta property="og:updated" content="'.$last.'" /> ';echo "\n";}echo '<meta property="og:type" content="article" /> ';echo "\n";}if($description != ''){echo '<meta property="og:description" content="'.$description.'" /> ';echo "\n\n";}}}}}
+	function rb_style(){
+		global $wp,$post,$rb_v;$content = $post->post_content;
+		if( has_shortcode($content, 'regularboard')){
+			$regularboard = plugins_url().'/my-optional-modules/includes/javascript/regularboard'.$rb_v.'.js';
+			$regbostyle = WP_PLUGIN_URL . '/my-optional-modules/includes/css/regularboard'.$rb_v.'.css';
+			wp_register_style('regular_board',$regbostyle);
+			wp_enqueue_style('regular_board');
+			wp_deregister_script('regularboard');
+			wp_register_script('regularboard',$regularboard,array( 'jquery' ),'',null,false);
+			wp_enqueue_script('regularboard');
+		}
+	}
+	
+	function rb_head($atts){
+		global $wp,$post,$wpdb;
+		$regularboard_boards = $wpdb->prefix.'regularboard_boards';
+		$regularboard_posts = $wpdb->prefix.'regularboard_posts';
+		$content = $post->post_content;
+		if( has_shortcode( $content, 'regularboard' )){
+			include(plugin_dir_path(__FILE__).'/regular_board_meta.php');
+		}
+	}
 
 	function regularboard_shortcode($atts,$content = null){
 		extract(
@@ -44,7 +64,6 @@
 			$thisimageupload = $SEARCH = $modishere = $THREADIMGS = $profilelink = $boardid = $boardname = $boardshort = $boarddescription = $boardmods = $boardjans = $boardposts = '';
 			$wordpressname = get_bloginfo('name');
 			$blog_title = get_bloginfo();
-			
 			$THISPAGE            = get_permalink();
 			myoptionalmodules_checkdnsbl($checkThisIP);
 			$theIP               = esc_sql($ipaddress);

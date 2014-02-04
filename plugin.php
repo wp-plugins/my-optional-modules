@@ -1,9 +1,9 @@
 <?php 
 /*
 Plugin Name: My Optional Modules
-Plugin URI: http://www.onebillionwords.com/boards/?board=mom
+Plugin URI: http://www.onebillionwords.com
 Description: Optional modules and additions for Wordpress.
-Version: 5.4.9.9.1
+Version: 5.4.9.9.2
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com/
 */
@@ -37,7 +37,6 @@ Author URI: http://onebillionwords.com/
 	// (W) Database Cleaner (functions)
 	// (X) Plugin javascript
 	// (Y) Quick press
-	// (Z) Etc.
 	
 	// 	SECTION D > Passwords
 	// 		(D0) Settings > Settings page
@@ -66,14 +65,8 @@ Author URI: http://onebillionwords.com/
 	// (A) Dependencies
 		define('MyOptionalModules',true);
 		require_once(ABSPATH.'wp-includes/pluggable.php');
-		require_once('HTMLPurifier.standalone.php');
-		$config                             = HTMLPurifier_Config::createDefault();
-		$purifier                           = new HTMLPurifier($config);
-		
-		
 		$my_optional_modules_passwords_salt = get_option('mom_passwords_salt');
 		$passwordField                      = 0;
-
 		if(function_exists('akismet_admin_init')){
 			require_once('akismet.class.php');
 		}
@@ -256,7 +249,7 @@ Author URI: http://onebillionwords.com/
 	'/\{\{(.*?)\}\}/is',
 	'/-\-\-\-/is',
 	'/—\-/is',
-	'/\|\|/is',
+	'/\|/is',
 	'/\`(.*?)\`/is',
 	'/\[spoiler](.*?)\[\/spoiler]/is',
 	'/\ http:\/\/i.imgur.com\/(.*?) /is',
@@ -276,7 +269,7 @@ Author URI: http://onebillionwords.com/
 	'<blockquote>$1</blockquote>',
 	'<hr />',
 	'<hr />',
-	'<br /><br />',
+	'<br />',
 	'<code>$1</code>',
 	'<span class="spoiler">$1</span>',
 	' <a href="http://i.imgur.com/$1" class="imageEXPAC" /><i class="fa fa-camera"><i class="fa fa-plus"></i></i><img src="http://i.imgur.com/$1" class="image hidden"></a> ',
@@ -393,7 +386,6 @@ Author URI: http://onebillionwords.com/
 		$BOARD                 = '';
 		$THREAD                = '';
 		$pretty = esc_attr(get_option('mommaincontrol_prettycanon'));
-		
 		if($prettycanon != 1 && is_page() && $_GET['board'] != '' || $prettycanon != 1 && is_single() && $_GET['board'] != ''){
 			$THISPAGE          = home_url('/');
 			if($_GET['board'] != ''                    )$BOARD  = esc_sql(strtolower(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['board']))));
@@ -417,9 +409,6 @@ Author URI: http://onebillionwords.com/
 			$THISPAGE          = 'http://'.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
 			$canonical         = $THISPAGE;
 		}
-		
-		
-		
 		echo "\n";
 		echo '<link rel=\'canonical\' href=\''.htmlentities($canonical).'\' />';echo "\n";
 	}
@@ -450,62 +439,47 @@ Author URI: http://onebillionwords.com/
 		return $retval.' ago';      
 	}	
 	
+
+	if(inet_pton($_SERVER['REMOTE_ADDR']) === false)$ipaddress = false;
+	if(inet_pton($_SERVER['REMOTE_ADDR']) !== false)$ipaddress = esc_attr($_SERVER['REMOTE_ADDR']);
 	
-		if(esc_attr($_SERVER['SERVER_ADDR']) == '127.0.0.1' || esc_attr($_SERVER['SERVER_ADDR']) == '::1'){
-				if(isset($_SERVER["REMOTE_ADDR"])){
-				$ipaddress = esc_attr($_SERVER["REMOTE_ADDR"]);
-				} else if(isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
-				$ipaddress = esc_attr($_SERVER["HTTP_X_FORWARDED_FOR"]);
-				} else if(isset($_SERVER["HTTP_CLIENT_IP"])){
-				$ipaddress = esc_attr($_SERVER["HTTP_CLIENT_IP"]);
+	include(plugin_dir_path(__FILE__).'/ipblocklist.php');
+	foreach($rb_blacklist_ips as $blacklistedip){
+		if(eregi($blacklistedip,$_SERVER['REMOTE_ADDR'])){
+			$ipaddress = false;
+		}
+	}
+
+	//http://snipplr.com/view/64564/
+	function myoptionalmodules_checkdnsbl($ip){
+		$dnsbl_lookup=array(
+			'dnsbl-1.uceprotect.net',
+			'dnsbl-2.uceprotect.net',
+			'dnsbl-3.uceprotect.net',
+			'dnsbl.sorbs.net',
+			'zen.spamhaus.org',
+			'dnsbl-2.uceprotect.net',
+			'dnsbl-3.uceprotect.net'
+			);
+		if($ip){
+			$reverse_ip=implode(".",array_reverse(explode(".",$ip)));
+			foreach($dnsbl_lookup as $host){
+				if(checkdnsrr($reverse_ip.".".$host.".","A")){
+					$listed.=$reverse_ip.'.'.$host;
 				}
+			}
+		}
+		if($listed){
+			$DNSBL === true;
 		}else{
-			if(isset($_SERVER["REMOTE_ADDR"])){
-				if(isset($_SERVER["REMOTE_ADDR"])){
-				$ipaddress = esc_attr($_SERVER["REMOTE_ADDR"]);
-				} else if(isset($_SERVER["HTTP_X_FORWARDED_FOR"])){
-				$ipaddress = esc_attr($_SERVER["HTTP_X_FORWARDED_FOR"]);
-				} else if(isset($_SERVER["HTTP_CLIENT_IP"])){
-				$ipaddress = esc_attr($_SERVER["HTTP_CLIENT_IP"]);
-				}
-			}else{
-				$ipaddress = false;
-			}
-			include(plugin_dir_path(__FILE__).'/ipblocklist.php');
-			foreach($rb_blacklist_ips as $blacklistedip){
-				if(eregi($blacklistedip,$_SERVER['REMOTE_ADDR'])){
-					$ipaddress = false;
-				}
-			}
+			$DNSBL === false;
 		}
-			
+	}
 		
 		
-		//http://snipplr.com/view/64564/
-		function myoptionalmodules_checkdnsbl($ip){
-			$dnsbl_lookup=array(
-				'dnsbl-1.uceprotect.net',
-				'dnsbl-2.uceprotect.net',
-				'dnsbl-3.uceprotect.net',
-				'dnsbl.sorbs.net',
-				'zen.spamhaus.org',
-				'dnsbl-2.uceprotect.net',
-				'dnsbl-3.uceprotect.net'
-				);
-			if($ip){
-				$reverse_ip=implode(".",array_reverse(explode(".",$ip)));
-				foreach($dnsbl_lookup as $host){
-					if(checkdnsrr($reverse_ip.".".$host.".","A")){
-						$listed.=$reverse_ip.'.'.$host;
-					}
-				}
-			}
-			if($listed){
-				$DNSBL === true;
-			}else{
-				$DNSBL === false;
-			}
-		}
+		
+		
+		
 		
 		//http://stackoverflow.com/questions/2422482/how-do-i-create-a-tripcode-system
 		function myoptionalmodules_tripcode($name){
@@ -824,7 +798,7 @@ Author URI: http://onebillionwords.com/
 						$regularboardSQLb = "CREATE TABLE $regularboard_posts(
 						ID BIGINT(22) NOT NULL AUTO_INCREMENT , 
 						PARENT BIGINT(22) NOT NULL ,
-						IP INT(11) NOT NULL ,
+						IP BIGINT(22) NOT NULL ,
 						DATE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						EMAIL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						SUBJECT TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
@@ -844,7 +818,7 @@ Author URI: http://onebillionwords.com/
 						$regularboardSQLc = "CREATE TABLE $regularboard_users(
 						ID BIGINT(22) NOT NULL AUTO_INCREMENT , 
 						DATE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						IP INT(11) NOT NULL,
+						IP BIGINT(22) NOT NULL,
 						THREAD BIGINT(22) NOT NULL  , 
 						PARENT BIGINT(22) NOT NULL,
 						BANNED INT(11) NOT NULL,
@@ -1026,7 +1000,7 @@ Author URI: http://onebillionwords.com/
 			function my_optional_modules_page_content(){
 				echo '
 				<div class="wrap">
-				my optional modules / <a href="http://www.onebillionwords.com/boards/?board=mom/">documentation + support</a> / <a href="http://wordpress.org/support/view/plugin-reviews/my-optional-modules">rate and review</a>
+				my optional modules / <a href="http://www.onebillionwords.com/">documentation + support</a> / <a href="http://wordpress.org/support/view/plugin-reviews/my-optional-modules">rate and review</a>
 				<div class="myoptionalmodules">
 				<section class="switches clear">
 				<form method="post"><section><label class="configurationlabel" for="MOMclear">Home</label><input id="MOMclear" name="MOMclear" class="hidden" type="submit"></section></form>';
@@ -1101,17 +1075,64 @@ Author URI: http://onebillionwords.com/
 					echo '</div>';
 				}else{
 					if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){}else{ '<code>CRYPT_BLOWFISH is not available.  Passwords module disabled.</code><br />';}
-					if(!isset($_POST['generateHash']))echo '<form action="" method="post" name="generateHash"><input type="submit" name="generateHash" id="generateHash" value="Generate the file hash to check."/></form>';
+					if(!isset($_POST['generateHash'])){
+						echo '<form action="" method="post" name="generateHash"><input type="submit" name="generateHash" id="generateHash" value="Generate the file hash to check."/></form>';
+					}
 					if(isset($_POST['generateHash'])){
-						echo '<i class="fa fa-code"></i> The hash generated for this file is: <strong class="on">';
-						$file = plugin_dir_path( __FILE__ ).'plugin.php';
-						$file_handler = fopen($file,'r'); 
-						$contents = fread($file_handler, filesize($file)); 
+						echo '<hr class="clear" />';
+
+					$file = array( 
+					/*1*/	'plugin.php',
+					/*2*/	'akismet.class.php',
+					/*3*/	'ipblocklist.php',
+					/*4*/	'includes/templates/404.php',
+					/*5*/	'includes/templates/comments.php',
+					/*6*/	'includes/modules/regular_board.php',
+					/*7*/	'includes/modules/regular_board_activity_loops.php',
+					/*8*/	'includes/modules/regular_board_admin_form_action.php',
+					/*9*/	'includes/modules/regular_board_admin_panel.php',
+					/*10*/	'includes/modules/regular_board_board_information.php',
+					/*11*/	'includes/modules/regular_board_board_loop.php',
+					/*12*/	'includes/modules/regular_board_board_stats.php',
+					/*13*/	'includes/modules/regular_board_delete_post_action.php',
+					/*14*/	'includes/modules/regular_board_help.php',
+					/*15*/	'includes/modules/regular_board_meta.php',
+					/*16*/	'includes/modules/regular_board_post_action.php',
+					/*17*/	'includes/modules/regular_board_post_form.php',
+					/*18*/	'includes/modules/regular_board_post_voting.php',
+					/*19*/	'includes/modules/regular_board_posting_checkflood.php',
+					/*20*/	'includes/modules/regular_board_posting_deletepost.php',
+					/*21*/	'includes/modules/regular_board_posting_userbanned.php',
+					/*22*/	'includes/modules/regular_board_profile_loop.php',
+					/*23*/	'includes/modules/regular_board_single.php',
+					/*24*/	'includes/modules/regular_board_user_loop.php',
+					/*25*/	'includes/javascript/fitvids.js',
+					/*26*/	'includes/javascript/lazyload.js',
+					/*27*/	'includes/javascript/regularboard05492876.js',
+					/*28*/	'includes/javascript/stucktothebottom.js',
+					/*29*/	'includes/javascript/stucktothetop.js',
+					/*30*/	'includes/javascript/wowheadtooltips.js',
+					/*31*/	'includes/adminstyle/css.css',
+					/*32*/	'includes/css/_404style.css',
+					/*33*/	'includes/css/myoptionalmodules05492702.css',
+					/*34*/	'includes/css/regularboard05492876.css'
+					);
+					echo '<blockquote>';
+					$line = 0;
+					foreach ($file as $value){
+						$line++;
+						$file = $value;
+						$file_handler = fopen(plugin_dir_path( __FILE__ ).$value,'r'); 
+						$contents = fread($file_handler, filesize(plugin_dir_path( __FILE__ ).$value));
 						fclose($file_handler); 
 						$contents = esc_attr($contents);
 						$contents = str_replace(array("\n","\t","\r"),"",$contents);
-						echo hash('sha1',$contents);
-						echo '</strong>';
+						echo '('.$line.')'.hash('sha1',$contents);
+						if($line % 2 == 0)echo '<br />';
+					}
+					echo '</blockquote>';
+						
+						
 					}
 				}
 			echo '</div>';
@@ -3680,17 +3701,8 @@ Author URI: http://onebillionwords.com/
 		}
 	//
 
-
-
-
-	// (Z) Etc
-	//		Report all bugs to admin@regularboard.org
-	//		Additional support can be provided to those who ask for it at the following URL:
-	//		http://www.regularboard.org/
-	//		Ends
-	//
 	
 	
 	
-
+	
 ?>

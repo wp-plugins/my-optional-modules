@@ -24,6 +24,7 @@
 
 	
 /*HTML5 Reset*/
+.bordAll *{text-shadow:none;background:none}
 .boardAll html,.boardAll body,.boardAll div,.boardAll span,.boardAll object,.boardAll iframe,.boardAll h1,.boardAll h2,.boardAll h3,.boardAll h4,.boardAll h5,.boardAll h6,.boardAll p,.boardAll blockquote,.boardAll pre,.boardAll abbr,.boardAll address,.boardAll cite,.boardAll code,.boardAll del,.boardAll dfn,.boardAll em,.boardAll img,.boardAll ins,.boardAll kbd,.boardAll q,.boardAll samp,.boardAll small,.boardAll strong,.boardAll sub,.boardAll sup,.boardAll var,.boardAll b,.boardAll i,.boardAll dl,.boardAll dt,.boardAll dd,.boardAll ol,.boardAll ul,.boardAll li,.boardAll fieldset,.boardAll form,.boardAll label,.boardAll legend,.boardAll table,.boardAll caption,.boardAll tbody,.boardAll tfoot,.boardAll thead,.boardAll tr,.boardAll th,.boardAll td,.boardAll article,.boardAll aside,.boardAll canvas,.boardAll details,.boardAll figcaption,.boardAll figure,.boardAll footer,.boardAll header,.boardAll hgroup,.boardAll menu,.boardAll nav,.boardAll section,.boardAll summary,.boardAll time,.boardAll mark,.boardAll audio,.boardAll video{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent;}
 body{line-height:1;}
 .boardAll article,.boardAll aside,.boardAll details,.boardAll figcaption,.boardAll figure,.boardAll footer,.boardAll header,.boardAll hgroup,.boardAll menu,.boardAll nav,.boardAll section{display:block;}
@@ -696,9 +697,9 @@ form[name=moderator] input[type=text]{
 .boardAll section.full textarea,
 .boardAll .COMMENTFORM textarea{
 	border-radius:		3px;
-	margin:				5px -2px;
-	width:				100%;
-	padding:			35px 10px 35px 5px;
+	margin:				31px -2px 0 0!important;
+	width:				640px!important;
+	padding:			5px;
 	opacity:			1;
 }
 .boardAll .submission label{
@@ -723,28 +724,29 @@ form[name=moderator] input[type=text]{
 }
 .boardAll .COMMENTFORM #SUBJECT{
 	border-radius:		0px!important;
-	margin:				0 -5px 0 -2px;
-	width:				100%;
+	margin:				0 0 0 -2px;
+	width:				642px;
 	text-indent:		0;
-	height:				25px;
+	height:				30px;
 	font-size:			15px;
 	padding:			5px 10px;
 	position:			absolute;
 	z-index:			98;
-	opacity:			1!important;
 	background-color:	#fff!important;
 	box-shadow:			none!important;
 	border-bottom:		1px solid #000;
 }
 .boardAll .COMMENTFORM input[type=submit]{
-	width:650px;
-	clear:both;
-	display:block;
-	padding:5px;
-	margin: 1px auto 1px auto;
-	text-align:center;
-	border-radius:3px;
-	cursor:pointer;
+	background-color:	#fff;
+	color:				#000;
+	width:				650px;
+	clear:				both;
+	display:			block;
+	padding:			5px;
+	margin:				1px auto 1px auto;
+	text-align:			center;
+	border-radius:		3px;
+	cursor:				pointer;
 }
 .boardAll .COMMENTFORM #EMAIL,
 .boardAll .COMMENTFORM #PASSWORD,
