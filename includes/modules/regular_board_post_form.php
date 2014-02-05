@@ -75,7 +75,7 @@
 									if(count($checkPass) > 0){
 										echo '<div class="tinyreply">';
 										foreach($checkPass as $EDITTHREAD){
-											$editComment = $EDITTHREAD->COMMENT;
+											$editComment = str_replace('\\','',$EDITTHREAD->COMMENT);
 											$editSubject = str_replace('\\','',$EDITTHREAD->SUBJECT);
 											echo '<form enctype="multipart/form-data" name="editform" method="post" action="'.$THISPAGE.'?a=post" class="COMMENTFORM">';wp_nonce_field('editform');
 											echo '<input type="hidden" value="'.$BOARD.'" NAME="board" />';if($THREAD != ''){echo '<input type="hidden" name="PARENT" value="'.$THREAD.'" />';}echo '<input type="hidden" value="" name="LINK" /><input type="hidden" value="" name="PAGE" /><input type="hidden" value="" name="LOGIN" /><input type="hidden" value="" name="USERNAME" /><input type="hidden" value="'.$checkID.'" id="editthisthread" name="editthisthread" /><section class="full"><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" value="'.$editSubject.'" /></section><section class="full"><textarea id="COMMENT" name="COMMENT">'.str_replace(array('[',']'),array('&#91;','&#93;'),$editComment).'</textarea></section>

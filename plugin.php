@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com
 Description: Optional modules and additions for Wordpress.
-Version: 5.4.9.9.2
+Version: 5.4.9.9.3
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com/
 */
@@ -609,6 +609,55 @@ Author URI: http://onebillionwords.com/
 			add_option('mommaincontrol_passwords_activated',1);					
 			add_option('mommaincontrol_reviews_activated',1);
 			add_option('mommaincontrol_shorts_activated',1);
+			$mommodule_rb = esc_attr(get_option('mommaincontrol_regularboard'));
+			if($mommodule_rb == 1){
+				global $wpdb,$wp;
+				$regularboard_boards = $wpdb->prefix.'regularboard_boards';
+				$regularboard_posts = $wpdb->prefix.'regularboard_posts';
+				$regularboard_users = $wpdb->prefix.'regularboard_users';
+				$wpdb->query("ALTER TABLE $regularboard_posts ADD URL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER COMMENT");
+				$wpdb->query("ALTER TABLE $regularboard_posts ADD TYPE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER URL");
+				$wpdb->query("ALTER TABLE $regularboard_posts ADD STICKY TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER LAST");
+				$wpdb->query("ALTER TABLE $regularboard_posts ADD LOCKED TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER STICKY");
+				$wpdb->query("ALTER TABLE $regularboard_posts ADD PASSWORD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER LOCKED");
+				$wpdb->query("ALTER TABLE $regularboard_posts ADD UP BIGINT( 22 ) NOT NULL AFTER REPLYTO");
+				$wpdb->query("ALTER TABLE $regularboard_posts ADD REPLYTO BIGINT( 22 ) NOT NULL AFTER PASSWORD");
+				$wpdb->query("ALTER TABLE $regularboard_posts ADD USERID BIGINT( 22 ) NOT NULL AFTER UP");
+				$wpdb->query("ALTER TABLE $regularboard_posts CHANGE `ID` `ID` BIGINT( 22 ) NOT NULL AUTO_INCREMENT");
+				$wpdb->query("ALTER TABLE $regularboard_posts CHANGE `COMMENT` `COMMENT` LONGTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL");
+				$wpdb->query("ALTER TABLE $regularboard_posts CHANGE `PARENT` `PARENT` BIGINT( 22 ) NOT NULL");
+				$wpdb->query("ALTER TABLE $regularboard_users CHANGE `ID` `ID` BIGINT( 22 ) NOT NULL AUTO_INCREMENT");
+				$wpdb->query("ALTER TABLE $regularboard_users CHANGE `PARENT` `PARENT` BIGINT( 22 ) NOT NULL");
+				$wpdb->query("ALTER TABLE $regularboard_posts CHANGE `IP` `IP` BIGINT( 22 ) NOT NULL");
+				$wpdb->query("ALTER TABLE $regularboard_users CHANGE `IP` `IP` BIGINT( 22 ) NOT NULL");
+				$wpdb->query("ALTER TABLE $regularboard_users ADD KARMA BIGINT( 22 ) NOT NULL AFTER LENGTH");
+				$wpdb->query("ALTER TABLE $regularboard_users ADD THREAD BIGINT ( 22 ) NOT NULL AFTER IP");
+				$wpdb->query("ALTER TABLE $regularboard_users ADD DATE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER ID");
+				$wpdb->query("ALTER TABLE $regularboard_users ADD BOARD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER PARENT");
+				$wpdb->query("ALTER TABLE $regularboard_users ADD LENGTH TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER MESSAGE");
+				$wpdb->query("ALTER TABLE $regularboard_users ADD PASSWORD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER KARMA");
+				$wpdb->query("ALTER TABLE $regularboard_users ADD HEAVEN TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER PASSWORD");
+				$wpdb->query("ALTER TABLE $regularboard_users ADD VIDEO TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER HEAVEN");
+				$wpdb->query("ALTER TABLE $regularboard_users ADD BOARDS TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER VIDEO");
+				$wpdb->query("ALTER TABLE $regularboard_users ADD FOLLOWING TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER BOARDS");
+				$wpdb->query("ALTER TABLE $regularboard_boards ADD URL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER RULES");
+				$wpdb->query("ALTER TABLE $regularboard_boards ADD SFW TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER URL");
+				$wpdb->query("ALTER TABLE $regularboard_boards ADD MODS TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER SFW");
+				$wpdb->query("ALTER TABLE $regularboard_boards ADD JANITORS TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER MODS");
+				$wpdb->query("ALTER TABLE $regularboard_boards ADD POSTCOUNT BIGINT( 22 ) NOT NULL AFTER JANITORS");
+				$wpdb->query("ALTER TABLE $regularboard_boards ADD LOCKED BIGINT( 22 ) NOT NULL AFTER POSTCOUNT");
+				$wpdb->query("ALTER TABLE $regularboard_boards ADD LOGGED BIGINT( 22 ) NOT NULL AFTER LOCKED");
+				$wpdb->query("ALTER TABLE $regularboard_boards DROP URL");
+				$allusers = $wpdb->get_results("SELECT * FROM $regularboard_users BANNED = '8'");
+				foreach($allusers as $users){
+					$ip = $users->IP;
+					$id = $users->ID;
+					foreach($allposts as $posts){
+						$wpdb->query("UPDATE $regularboard_posts SET USERID = $id WHERE IP = '$ip' AND EMAIL != 'heaven'");
+					}
+				}
+			}
+			
 		}
 		
 		if(get_option('mommaincontrol_momse') == 1 && get_option('MOM_themetakeover_youtubefrontpage') == ''){
@@ -793,6 +842,7 @@ Author URI: http://onebillionwords.com/
 						JANITORS TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						POSTCOUNT BIGINT(22) NOT NULL ,
 						LOCKED BIGINT(22) NOT NULL ,
+						LOGGED BIGINT(22) NOT NULL ,
 						PRIMARY KEY  (ID)
 						);";
 						$regularboardSQLb = "CREATE TABLE $regularboard_posts(
@@ -813,6 +863,7 @@ Author URI: http://onebillionwords.com/
 						PASSWORD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						REPLYTO BIGINT(22) NOT NULL ,
 						UP BIGINT(22) NOT NULL ,
+						USERID BIGINT(22) NOT NULL ,
 						PRIMARY KEY  (ID)
 						);";
 						$regularboardSQLc = "CREATE TABLE $regularboard_users(
@@ -820,7 +871,8 @@ Author URI: http://onebillionwords.com/
 						DATE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						IP BIGINT(22) NOT NULL,
 						THREAD BIGINT(22) NOT NULL  , 
-						PARENT BIGINT(22) NOT NULL,
+						PARENT BIGINT(22) NOT NULL ,
+						BOARD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						BANNED INT(11) NOT NULL,
 						MESSAGE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						LENGTH TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
@@ -829,6 +881,7 @@ Author URI: http://onebillionwords.com/
 						HEAVEN TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						VIDEO TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						BOARDS TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+						FOLLOW TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						PRIMARY KEY  (ID)
 						);";
 						require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -1108,14 +1161,14 @@ Author URI: http://onebillionwords.com/
 					/*24*/	'includes/modules/regular_board_user_loop.php',
 					/*25*/	'includes/javascript/fitvids.js',
 					/*26*/	'includes/javascript/lazyload.js',
-					/*27*/	'includes/javascript/regularboard05492876.js',
+					/*27*/	'includes/javascript/regularboard05492877.js',
 					/*28*/	'includes/javascript/stucktothebottom.js',
 					/*29*/	'includes/javascript/stucktothetop.js',
 					/*30*/	'includes/javascript/wowheadtooltips.js',
 					/*31*/	'includes/adminstyle/css.css',
 					/*32*/	'includes/css/_404style.css',
 					/*33*/	'includes/css/myoptionalmodules05492702.css',
-					/*34*/	'includes/css/regularboard05492876.css'
+					/*34*/	'includes/css/regularboard05492877.css'
 					);
 					echo '<blockquote>';
 					$line = 0;

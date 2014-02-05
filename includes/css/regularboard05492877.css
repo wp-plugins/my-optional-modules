@@ -114,8 +114,11 @@ body{line-height:1;}
 	padding:			10px;
 }
 .boardAll p.information{
-	width:				100%;
-	margin:				10px 0;
+	background-color:	rgba(0,0,0,.3);
+	word-wrap:			break-word;
+	padding:			10px;
+	margin:				5px auto;
+	width:				95%;
 	font-size:			12px;
 	line-height:		14px;
 	color:				rgba(255,255,255,.9);

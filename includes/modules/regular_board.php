@@ -1,7 +1,7 @@
 <?php 
 	if(!defined('MyOptionalModules')){die('You can not call this file directly.');}
 	if(get_option('mommaincontrol_regularboard') == 1){
-		$rb_v = '05492876';
+		$rb_v = '05492877';
 		add_action('wp_enqueue_scripts','rb_style');
 		add_action('wp_head','rb_head');
 		add_shortcode('regularboard','regularboard_shortcode');
