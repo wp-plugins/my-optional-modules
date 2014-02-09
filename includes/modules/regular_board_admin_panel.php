@@ -103,7 +103,7 @@
 						$delete = 0;
 						$delete++;
 						if($thisParent == 0){
-							$countreps = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = $thisThread");
+							$countreps = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = $thisThread AND PUBLIC = 1");
 							foreach($countreps as $countedreplies){
 								$delete++;
 							}
@@ -126,7 +126,7 @@
 				$BOARD = '';
 				$MESSAGE = ' (Banned by admin).';
 				$LENGTH  = 0;
-				$wpdb->query($wpdb->prepare("INSERT INTO $regularboard_users ( ID, DATE, IP, THREAD, PARENT, BOARD, BANNED, MESSAGE, LENGTH, KARMA, PASSWORD, HEAVEN, VIDEO, BOARDS, FOLLOWING ) VALUES ( %d,%s,%d,%d,%d,%s,%d,%s,%d,%d,%s,%d,%d,%s,%s )",'',$current_timestamp,$IP,$ID2SET,$PARENT,$BOARD,1,$MESSAGE,$LENGTH,0,'',0,0,'',''));
+				$wpdb->query($wpdb->prepare("INSERT INTO $regularboard_users ( ID, DATE, IP, NAME, EMAIL, THREAD, PARENT, BOARD, BANNED, MESSAGE, LENGTH, KARMA, PASSWORD, HEAVEN, VIDEO, BOARDS, FOLLOWING ) VALUES ( %d,%s,%d,%s,%s,%d,%d,%s,%d,%s,%d,%d,%s,%d,%d,%s,%s )",'',$current_timestamp,$IP,'','',$ID2SET,$PARENT,$BOARD,1,$MESSAGE,$LENGTH,0,'',0,0,'',''));
 				echo '<meta http-equiv="refresh" content="0;URL=?a=bans">';
 			}
 			echo '<form method="post" id="createban" class="COMMENTFORM boardcreation" name="createban" action="?a=bans">';

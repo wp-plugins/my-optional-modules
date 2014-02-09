@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://www.onebillionwords.com
 Description: Optional modules and additions for Wordpress.
-Version: 5.4.9.9.3
+Version: 5.5
 Author: Matthew Trevino
 Author URI: http://onebillionwords.com/
 */
@@ -252,7 +252,8 @@ Author URI: http://onebillionwords.com/
 	'/\|/is',
 	'/\`(.*?)\`/is',
 	'/\[spoiler](.*?)\[\/spoiler]/is',
-	'/\ http:\/\/i.imgur.com\/(.*?) /is',
+	'/\[http:\/\/i.imgur.com\/(.*?)]/is',
+	'/\[http:\/\/imgur.com\/a\/(.*?)]/is',
 	'/\[/is',
 	'/\]/is',
 	'/\\\/is',
@@ -272,15 +273,16 @@ Author URI: http://onebillionwords.com/
 	'<br />',
 	'<code>$1</code>',
 	'<span class="spoiler">$1</span>',
-	' <a href="http://i.imgur.com/$1" class="imageEXPAC" /><i class="fa fa-camera"><i class="fa fa-plus"></i></i><img src="http://i.imgur.com/$1" class="image hidden"></a> ',
+	' <a href="http://i.imgur.com/$1"/><img src="http://i.imgur.com/$1" class="imageOP" /></a> ',
+	'<iframe class="imgur-album" width="100%" height="550" frameborder="0" src="http://imgur.com/a/$1/embed"></iframe>',
 	'&#91;',
 	'&#93;',
 	'',
 	);
 	$rtrn = preg_replace ($input, $output, $data);
 	return wpautop($rtrn);
-	}																
-	
+	}										
+
 	// http://stackoverflow.com/questions/2398725/using-php-substr-and-strip-tags-while-retaining-formatting-and-without-break
 	function regularboard_html_cut($text, $max_length)
 	{
@@ -451,7 +453,7 @@ Author URI: http://onebillionwords.com/
 	}
 
 	//http://snipplr.com/view/64564/
-	function myoptionalmodules_checkdnsbl($ip){
+	function myoptionalmodules_checkdnsbl($ipaddress){
 		$dnsbl_lookup=array(
 			'dnsbl-1.uceprotect.net',
 			'dnsbl-2.uceprotect.net',
@@ -461,8 +463,8 @@ Author URI: http://onebillionwords.com/
 			'dnsbl-2.uceprotect.net',
 			'dnsbl-3.uceprotect.net'
 			);
-		if($ip){
-			$reverse_ip=implode(".",array_reverse(explode(".",$ip)));
+		if($ipaddress){
+			$reverse_ip=implode(".",array_reverse(explode(".",$ipaddress)));
 			foreach($dnsbl_lookup as $host){
 				if(checkdnsrr($reverse_ip.".".$host.".","A")){
 					$listed.=$reverse_ip.'.'.$host;
@@ -623,6 +625,7 @@ Author URI: http://onebillionwords.com/
 				$wpdb->query("ALTER TABLE $regularboard_posts ADD UP BIGINT( 22 ) NOT NULL AFTER REPLYTO");
 				$wpdb->query("ALTER TABLE $regularboard_posts ADD REPLYTO BIGINT( 22 ) NOT NULL AFTER PASSWORD");
 				$wpdb->query("ALTER TABLE $regularboard_posts ADD USERID BIGINT( 22 ) NOT NULL AFTER UP");
+				$wpdb->query("ALTER TABLE $regularboard_posts ADD PUBLIC BIGINT( 22 ) NOT NULL AFTER USERID");
 				$wpdb->query("ALTER TABLE $regularboard_posts CHANGE `ID` `ID` BIGINT( 22 ) NOT NULL AUTO_INCREMENT");
 				$wpdb->query("ALTER TABLE $regularboard_posts CHANGE `COMMENT` `COMMENT` LONGTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL");
 				$wpdb->query("ALTER TABLE $regularboard_posts CHANGE `PARENT` `PARENT` BIGINT( 22 ) NOT NULL");
@@ -630,6 +633,8 @@ Author URI: http://onebillionwords.com/
 				$wpdb->query("ALTER TABLE $regularboard_users CHANGE `PARENT` `PARENT` BIGINT( 22 ) NOT NULL");
 				$wpdb->query("ALTER TABLE $regularboard_posts CHANGE `IP` `IP` BIGINT( 22 ) NOT NULL");
 				$wpdb->query("ALTER TABLE $regularboard_users CHANGE `IP` `IP` BIGINT( 22 ) NOT NULL");
+				$wpdb->query("ALTER TABLE $regularboard_users ADD NAME TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER IP");
+				$wpdb->query("ALTER TABLE $regularboard_users ADD EMAIL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER NAME");
 				$wpdb->query("ALTER TABLE $regularboard_users ADD KARMA BIGINT( 22 ) NOT NULL AFTER LENGTH");
 				$wpdb->query("ALTER TABLE $regularboard_users ADD THREAD BIGINT ( 22 ) NOT NULL AFTER IP");
 				$wpdb->query("ALTER TABLE $regularboard_users ADD DATE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL AFTER ID");
@@ -656,6 +661,7 @@ Author URI: http://onebillionwords.com/
 						$wpdb->query("UPDATE $regularboard_posts SET USERID = $id WHERE IP = '$ip' AND EMAIL != 'heaven'");
 					}
 				}
+				$wpdb->query("UPDATE $regularboard_posts SET PUBLIC = 1 WHERE PUBLIC = 0");
 			}
 			
 		}
@@ -863,13 +869,16 @@ Author URI: http://onebillionwords.com/
 						PASSWORD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						REPLYTO BIGINT(22) NOT NULL ,
 						UP BIGINT(22) NOT NULL ,
-						USERID BIGINT(22) NOT NULL ,
+						USERID BIGINT(22) NOT NULL , 
+						PUBLIC BIGINT(22) NOT NULL ,
 						PRIMARY KEY  (ID)
 						);";
 						$regularboardSQLc = "CREATE TABLE $regularboard_users(
 						ID BIGINT(22) NOT NULL AUTO_INCREMENT , 
 						DATE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						IP BIGINT(22) NOT NULL,
+						NAME TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
+						EMAIL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 						THREAD BIGINT(22) NOT NULL  , 
 						PARENT BIGINT(22) NOT NULL ,
 						BOARD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
@@ -1161,14 +1170,14 @@ Author URI: http://onebillionwords.com/
 					/*24*/	'includes/modules/regular_board_user_loop.php',
 					/*25*/	'includes/javascript/fitvids.js',
 					/*26*/	'includes/javascript/lazyload.js',
-					/*27*/	'includes/javascript/regularboard05492877.js',
+					/*27*/	'includes/javascript/regularboard05492883.js',
 					/*28*/	'includes/javascript/stucktothebottom.js',
 					/*29*/	'includes/javascript/stucktothetop.js',
 					/*30*/	'includes/javascript/wowheadtooltips.js',
 					/*31*/	'includes/adminstyle/css.css',
 					/*32*/	'includes/css/_404style.css',
 					/*33*/	'includes/css/myoptionalmodules05492702.css',
-					/*34*/	'includes/css/regularboard05492877.css'
+					/*34*/	'includes/css/regularboard05492883.css'
 					);
 					echo '<blockquote>';
 					$line = 0;

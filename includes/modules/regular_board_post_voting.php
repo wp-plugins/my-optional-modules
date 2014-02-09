@@ -3,7 +3,7 @@
 	$checkforupvote = 0;
 	$checkfordownvote = 0;
 	$getvotestatus = $wpdb->get_results("SELECT * FROM $regularboard_users WHERE IP = '".$theIP_us32str."' AND THREAD = '".$THREAD."'");
-	$getthreadkarma = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE ID = '".$THREAD."' LIMIT 1");
+	$getthreadkarma = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE ID = $THREAD AND PUBLIC = 1 LIMIT 1");
 	foreach($getthreadkarma as $karma){
 		$points = intval($karma->UP);
 		$user = intval($karma->USERID);
@@ -17,7 +17,7 @@
 		}
 	}
 	if($VOTE == 2){
-		$getUP = $wpdb->get_results("SELECT UP FROM $regularboard_posts WHERE ID = '".$THREAD."' LIMIT 1");
+		$getUP = $wpdb->get_results("SELECT UP FROM $regularboard_posts WHERE ID = $THREAD AND PUBLIC = 1 LIMIT 1");
 		foreach($getUP as $gotUP){
 			$UP = $gotUP->UP;
 			$up = $UP + 1;
@@ -36,14 +36,14 @@
 			echo '<span class="points">'.($points + 1).'</span>';
 		}
 		if($checkfordownvote == 0){
-			$wpdb->query("INSERT INTO $regularboard_users (ID, DATE, IP, THREAD, PARENT, BANNED, MESSAGE, LENGTH, KARMA, PASSWORD, HEAVEN, VIDEO, BOARDS, FOLLOWING) VALUES ('','$current_timestamp','$theIP_us32str','$THREAD','0','9','Downvote','','0','','0','0','','')");
+			$wpdb->query("INSERT INTO $regularboard_users (ID, DATE, IP, NAME, EMAIL, THREAD, PARENT, BANNED, MESSAGE, LENGTH, KARMA, PASSWORD, HEAVEN, VIDEO, BOARDS, FOLLOWING) VALUES ('','$current_timestamp','$theIP_us32str','','','$THREAD','0','9','Downvote','','0','','0','0','','')");
 			$wpdb->update( $regularboard_posts, array( 'UP' => $down ), array( 'ID' => $THREAD), array( '%d') );
 			$wpdb->update( $regularboard_users, array( 'KARMA' => $kdown ), array( 'ID' => $user, 'BANNED' => '8'), array( '%d') );
 			echo '<span class="points">'.($points - 1).'</span>';
 		}
 	}
 	if($VOTE == 1){
-		$getUP = $wpdb->get_results("SELECT UP FROM $regularboard_posts WHERE ID = '".$THREAD."' LIMIT 1");
+		$getUP = $wpdb->get_results("SELECT UP FROM $regularboard_posts WHERE ID = $THREAD AND PUBLIC = 1 LIMIT 1");
 		foreach($getUP as $gotUP){
 			$UP = $gotUP->UP;
 			$up = $UP + 1;
@@ -62,7 +62,7 @@
 			echo '<span class="points">'.($points - 1).'</span>';
 		}
 		if($checkforupvote == 0){
-			$wpdb->query("INSERT INTO $regularboard_users (ID, DATE, IP, THREAD, PARENT, BANNED, MESSAGE, LENGTH, KARMA, PASSWORD, HEAVEN, VIDEO, BOARDS, FOLLOWING) VALUES ('','$current_timestamp','$theIP_us32str','$THREAD','0','9','Upvote','','0','','0','0','','')");
+			$wpdb->query("INSERT INTO $regularboard_users (ID, DATE, IP, NAME, EMAIL, THREAD, PARENT, BANNED, MESSAGE, LENGTH, KARMA, PASSWORD, HEAVEN, VIDEO, BOARDS, FOLLOWING) VALUES ('','$current_timestamp','$theIP_us32str','','','$THREAD','0','9','Upvote','','0','','0','0','','')");
 			$wpdb->update($regularboard_posts, array( 'UP' => $up ), array( 'ID' => $THREAD), array( '%d') );
 			$wpdb->update($regularboard_users, array( 'KARMA' => $kup ), array( 'IP' => $theIP_us32str, 'BANNED' => '8'), array( '%d') );
 			echo '<span class="points">'.($points + 1).'</span>';

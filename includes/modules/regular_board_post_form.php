@@ -1,8 +1,22 @@
 <?php if(!defined('MyOptionalModules')){ die('You can not call this file directly.');}
 	
+	$archived = 0;
+	if($THREAD != ''){
+		$enteredPARENT = intval($THREAD);
+		$checkPARENT = $wpdb->get_results("SELECT DATE FROM $regularboard_posts WHERE ID = $enteredPARENT AND PUBLIC = 1 LIMIT 1");		
+		foreach($checkPARENT as $checked){
+			$checkTIME = strtotime($checked->DATE);
+			$currentTIME = strtotime($current_timestamp);
+			$finalTIME = $currentTIME - $checkTIME;
+			if($finalTIME > 5356800){
+				$archived = 1;
+			}				
+		}	
+	}
+	
 	if($posting == 0){
 		if($AREA == 'newtopic'){echo '<div class="tinythread"><span class="tinysubject">This board is currently locked.</span></div></div>';}
-	}elseif($posting == 1 && $SEARCH == ''){
+	}elseif($posting == 1 && $SEARCH == '' && $archived == 0){
 		
 		if($THISBOARD != ''){
 			$BOARD = $THISBOARD;
@@ -24,7 +38,7 @@
 						if($THREAD != '' && $currentCountNomber >= $maxreplies){
 						}else{
 							$LOCKED = 0;
-							if($THREAD != '')$checkLOCK = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE LOCKED = '1' AND ID = '".$THREAD."' LIMIT 1");
+							if($THREAD != '')$checkLOCK = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE LOCKED = 1 AND ID = $THREAD AND PUBLIC = 1 LIMIT 1");
 							if(count($checkLOCK) == 1)$LOCKED = 1;
 							if($LOCKED == 1 )echo '<div class="tinythread"><span class="tinysubject">Thread locked.</span></div>';
 							if($LOCKED == 0){
@@ -34,11 +48,13 @@
 								$wpdb->query(
 									$wpdb->prepare(
 										"INSERT INTO $regularboard_users 
-										( ID, DATE, IP, THREAD, PARENT, BOARD, BANNED, MESSAGE, LENGTH, KARMA, PASSWORD, HEAVEN, VIDEO, BOARDS, FOLLOWING ) 
-										VALUES ( %d,%s,%d,%d,%d,%s,%d,%s,%d,%d,%s,%d,%d,%s,%s )",
+										( ID, DATE, IP, NAME, EMAIL, THREAD, PARENT, BOARD, BANNED, MESSAGE, LENGTH, KARMA, PASSWORD, HEAVEN, VIDEO, BOARDS, FOLLOWING ) 
+										VALUES ( %d,%s,%s,%s,%d,%d,%d,%s,%d,%s,%d,%d,%s,%d,%d,%s,%s )",
 										'',
 										$current_timestamp,
 										$IP,
+										'',
+										'',
 										0,
 										0,
 										'',
@@ -62,15 +78,15 @@
 									$checkPassword = esc_sql($_REQUEST['DELETEPASSWORD']);
 									if($ISMODERATOR === true){
 										$checkID = intval($_REQUEST['admin_ids']);
-										$checkPass = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE ID = $checkID");
+										$checkPass = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE ID = $checkID AND PUBLIC = 1");
 									}
 									elseif($ISUSERMOD === true){
 										$checkID = intval($_REQUEST['admin_ids']);
-										$checkPass = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE ID = $checkID AND MODERATOR != '1'");
+										$checkPass = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE ID = $checkID AND MODERATOR != 1 AND PUBLIC = 1");
 									}
 									elseif($ISMODERATOR !== true){
 										$checkID = intval($_REQUEST['report_ids']);
-										$checkPass = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PASSWORD = '".$checkPassword."' AND ID = $checkID");
+										$checkPass = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PASSWORD = '".$checkPassword."' AND ID = $checkID AND PUBLIC = 1");
 									}
 									if(count($checkPass) > 0){
 										echo '<div class="tinyreply">';
@@ -81,7 +97,7 @@
 											echo '<input type="hidden" value="'.$BOARD.'" NAME="board" />';if($THREAD != ''){echo '<input type="hidden" name="PARENT" value="'.$THREAD.'" />';}echo '<input type="hidden" value="" name="LINK" /><input type="hidden" value="" name="PAGE" /><input type="hidden" value="" name="LOGIN" /><input type="hidden" value="" name="USERNAME" /><input type="hidden" value="'.$checkID.'" id="editthisthread" name="editthisthread" /><section class="full"><input type="text" id="SUBJECT" maxlength="'.$maxtext.'" name="SUBJECT" placeholder="Subject" value="'.$editSubject.'" /></section><section class="full"><textarea id="COMMENT" name="COMMENT">'.str_replace(array('[',']'),array('&#91;','&#93;'),$editComment).'</textarea></section>
 											<section class="full"><input type="text" id="URL" maxlength="'.$maxtext.'" value="';if($EDITTHREAD->TYPE == 'video'){ echo 'http://youtube.com/watch?v='.$EDITTHREAD->URL; } else { echo $EDITTHREAD->URL; } echo '" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';
 											if($imgurid != ''){echo '<input name="img" size="35" type="file"/>';}
-											echo '<section class="full"><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="heaven/sage/roll" value="';if($profileheaven == 1){echo 'heaven';}echo '" /></section><section class="full"><input type="text" id="REPLYTO" maxlength="'.$maxtext.'" name="REPLYTO" '; if($EDITTHREAD->REPLYTO != 0){ echo 'value="'.$EDITTHREAD->REPLYTO.'"';}echo ' placeholder="No. ###" /></section><section class="full"><input type="submit" value="Edit" name="FORMSUBMIT" id="FORMSUBMIT" /></section></form></div>';
+											echo '<section class="full"><input type="text" id="REPLYTO" maxlength="'.$maxtext.'" name="REPLYTO" '; if($EDITTHREAD->REPLYTO != 0){ echo 'value="'.$EDITTHREAD->REPLYTO.'"';}echo ' placeholder="No. ###" /></section><section class="full"><input type="submit" value="Edit" name="FORMSUBMIT" id="FORMSUBMIT" /></section></form></div>';
 											echo '</div>';																																						
 											$correct = 3;
 										}
@@ -94,7 +110,15 @@
 										if($enableurl == 1 && $THREAD == ''){echo '<section class="full"><input type="text" id="URL" maxlength="'.$maxtext.'" value="'.$thisimageupload.'" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';}
 										if($enablerep == 1 && $THREAD != ''){echo '<section class="full"><input type="text" id="URL" maxlength="'.$maxtext.'" value="'.$thisimageupload.'" name="URL" placeholder=".jpg,gif,png/youtube/http" /></section>';}
 										if($imgurid != ''){echo '<input name="img" size="35" type="file"/>';}
-										echo '<section class="full"><input type="text" id="EMAIL" maxlength="'.$maxtext.'" name="EMAIL" placeholder="heaven/sage/roll" value="';if($profileheaven == 1){echo 'heaven';}echo '" /></section><section class="full"><input type="text" id="REPLYTO" maxlength="'.$maxtext.'" name="REPLYTO" placeholder="Reply to Post No. ###" /></section><section class="full"><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" value="';if($THREAD != ''){echo 'Reply';}else{echo 'Post';}echo '"/></section></form></div>';if($AREA == 'newtopic'){echo '</div>';}
+											echo '<section class="full">
+												<select id="EMAIL" name="EMAIL">
+													<option value="">...posting options</option>
+													<option value="heaven"';if($profileheaven == 1){echo ' selected="selected"';}echo '>Make this post anonymously</option>
+													<option value="roll">Make this post and roll the dice</option>';
+													if($THREAD != ''){ echo '<option value="sage">Make this post without bumping the thread</option>'; }
+												echo '</select>
+											</section>										
+										<section class="full"><input type="text" id="REPLYTO" maxlength="'.$maxtext.'" name="REPLYTO" placeholder="Reply to Post No. ###" /></section><section class="full"><input type="submit" name="FORMSUBMIT" id="FORMSUBMIT" value="';if($THREAD != ''){echo 'Reply';}else{echo 'Post';}echo '"/></section></form></div>';if($AREA == 'newtopic'){echo '</div>';}
 									}else{
 										echo '<div class="tinythread">You were the last poster.  Edit your previous post or wait for a new post to comment further.</div>';
 									}
@@ -106,5 +130,7 @@
 			}
 		}
 		$doesnotexist = 0;
+	}elseif($archived == 1){
+		echo '<div class="tinythread">This thread has been archived.  It can no longer be replied to.</div>';
 	}
 ?>

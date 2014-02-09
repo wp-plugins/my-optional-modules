@@ -5,7 +5,7 @@
 		$REPORTMESSAGE = esc_sql($_REQUEST['report_reason']);
 		$IP = esc_sql($theIP_us32str);
 		$grabReport = $wpdb->get_results("SELECT * FROM $regularboard_users WHERE THREAD = $ID2REPORT AND BANNED = 3");
-		$grabParentofReport = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE ID = $ID2REPORT");
+		$grabParentofReport = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE ID = $ID2REPORT AND PUBLIC = 1");
 		$exists = 0;
 		if(count($grabReport) > 0){
 			foreach($grabParentofReport as $theParent){
@@ -20,11 +20,13 @@
 		$wpdb->query(
 			$wpdb->prepare(
 				"INSERT INTO $regularboard_users 
-				( ID, DATE, IP, THREAD, PARENT, BOARD, BANNED, MESSAGE, LENGTH, KARMA, PASSWORD, HEAVEN, VIDEO, BOARDS, FOLLOWING ) 
-				VALUES ( %d,%s,%d,%d,%d,%s,%d,%s,%d,%d,%s,%d,%d,%s,%s )",
+				( ID, DATE, IP, NAME, EMAIL, THREAD, PARENT, BOARD, BANNED, MESSAGE, LENGTH, KARMA, PASSWORD, HEAVEN, VIDEO, BOARDS, FOLLOWING ) 
+				VALUES ( %d,%s,%d,%s,%s,%d,%d,%s,%d,%s,%d,%d,%s,%d,%d,%s,%s )",
 				'',
 				$current_timestamp,
 				$IP,
+				'',
+				'',
 				$ID2REPORT,
 				$THEPARENT,
 				$BOARD,

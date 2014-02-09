@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: 4chan,gravatar,youtube,DNSBL,akismet,ipv4,ipv6,htmlpurifier,tripcode,sage,chan,capcodes,board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.8
 Tested up to: 3.8
-Stable tag: 5.4.9.9.3
+Stable tag: 5.5
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -77,7 +77,11 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-* Repo update
+* Hotfix to banning system that wasn’t properly being utilized due to the nature of the method of posting.
+* Admin/usermods/janitors have a new Spam button that will render a post non-accessible to the public, but keep its contents in the database to continue working with the automute feature.
+* regularboard.js: change .click to .on so that all jquery dependent features (like voting and image/video expansion) can take place from non-thread sources (like expanding threads and replies from different areas of the board, like all or topics.)
+* Auto-archiving feature to disable commenting on threads that are two-months old.
+* When upgrading the plugin, if any database changes need to take place, these changes will happen during the upgrade process (Force Upgrade button has been removed from the admin page).
 
 = .5 =
 * HTMLPurifier (added)

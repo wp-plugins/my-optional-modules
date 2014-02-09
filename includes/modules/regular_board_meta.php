@@ -3,7 +3,7 @@
 	$BOARD = esc_sql(strtolower(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['b'])));
 	$THREAD = esc_sql(intval($_GET['t']));
 	if($THREAD != ''){
-		$getres = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE ID = '".$THREAD."' LIMIT 1");
+		$getres = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE ID = $THREAD AND PUBLIC = 1 LIMIT 1");
 	}
 	if(count($getres) == 1){
 		foreach($getres as $meta){

@@ -8,19 +8,19 @@
 	
 	foreach($getposts as $posts){
 			$loadme = $imageboard_subject = $TYPE = $URL = $thread_url = $COMMENT = $SUBJECT = $gotModReply = $thread_url = $title = $ID = $thread_reply = $IP = $locked = $sticky = $date = $MODERATOR = $PARENT = $VUP = $board = $EMAIL = $USERID = $name = '';
-			$SUBJECT = $posts->SUBJECT;
+			$SUBJECT = str_replace('\\','',$posts->SUBJECT);
 			$checkforupvote = $checkfordownvote = $threads = 0;
-			$getReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = $posts->ID");
+			$getReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = $posts->ID WHERE PUBLIC = 1");
 			$getvotestatus = $wpdb->get_results("SELECT * FROM $regularboard_users WHERE IP = $theIP_us32str AND THREAD = $posts->ID");
-			if($SEARCH != '' && $THREAD != '')$gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE ( EMAIL = '".$SEARCH."' OR COMMENT LIKE '%".$SEARCH."%' OR SUBJECT LIKE '%".$SEARCH."%' OR URL LIKE '%".$SEARCH."%' ) AND PARENT = $posts->ID ORDER BY LAST ASC");
-			if($SEARCH == '' && $THREAD != '')$gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = $posts->ID ORDER BY LAST ASC");
-			if($THREAD != '')$gotReply = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE REPLYTO = $posts->ID ORDER BY REPLYTO DESC");
+			if($SEARCH != '' && $THREAD != '')$gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE ( EMAIL = '".$SEARCH."' OR COMMENT LIKE '%".$SEARCH."%' OR SUBJECT LIKE '%".$SEARCH."%' OR URL LIKE '%".$SEARCH."%' ) AND PARENT = $posts->ID AND PUBLIC = 1 ORDER BY LAST ASC");
+			if($SEARCH == '' && $THREAD != '')$gotReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = $posts->ID AND PUBLIC = 1 ORDER BY LAST ASC");
+			if($THREAD != '')$gotReply = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE REPLYTO = $posts->ID AND PUBLIC = 1 ORDER BY REPLYTO DESC");
 			if($THREAD != ''){$title = $posts->SUBJECT;if($title == ''){$title = 'No subject';}$title = str_replace('\\','',$title);echo '<script type="text/javascript">document.title = \''.$title.'\';</script>';}
 			if($SEARCH != '' && $THREAD != '')echo '<hr /><em>&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-search"></i> Searching this thread for '.$SEARCH.'.  Returned '.count($gotReplies).' results.</em><hr />';
 			$thread_reply = '<span><i class="fa fa-angle-right"> No. <a href="#COMMENTFORM" onclick="replyThis(event)">'.$posts->ID.'</a></i></span> ';
 			$date = '<span class="tinydate">'.timesincethis($posts->DATE).' <a href="?t='.intval($posts->ID).'">##</a></span>';
 			if($posts->STICKY == 1){$sticky = '<span><i class="fa fa-thumb-tack"></i></span>';}if($posts->STICKY == 0){$sticky = '<span><i class="fa fa-thumb-tack faded"></i></span>';}if($posts->LOCKED == 1){$locked = '<span><i class="fa fa-lock"></i></span>';}if($posts->LOCKED == 0){$locked = '<span><i class="fa fa-unlock"></i></span>';}
-			if(strtolower($posts->EMAIL) != 'heaven'){if($posts->MODERATOR == 1){$name = '<a class="mod" href="'.$profilelink.'"> '.$posts->USERID.'</a>';}if($posts->MODERATOR == 2){$name = '<a class="usermod" href="'.$profilelink.'"> '.$posts->USERID.'</a>';}if($posts->MODERATOR == 0){$name = '<a href="'.$profilelink.'"> '.$posts->USERID.'</a>';}}
+			if(is_numeric($posts->EMAIL)){$name = $posts->EMAIL;}elseif(strtolower($posts->EMAIL) != 'heaven'){if($posts->MODERATOR == 1){$name = '<a class="mod" href="?u='.$posts->USERID.'"> '.$posts->USERID.'</a>';}if($posts->MODERATOR == 2){$name = '<a class="usermod" href="?u='.$posts->USERID.'"> '.$posts->USERID.'</a>';}if($posts->MODERATOR == 0){$name = '<a href="?u='.$posts->USERID.'"> '.$posts->USERID.'</a>';}}
 			else{$name = ' --- ';}
 			if($posts->TYPE == 'URL' && $posts->URL != '')$thread_url = '<a class="opURL" href="'.esc_url($posts->URL).'"><i class="fa fa-link"></i></a>';
 			$COMMENT = rb_format($posts->COMMENT);
@@ -33,7 +33,7 @@
 			if($THREAD == ''){$loadme = '<i id="'.$posts->ID.'" class="fa fa-plus-square loadme hidden" data="'.$THISPAGE.'?t='.$posts->ID.'"></i><i id="'.$posts->ID.'" class="fa fa-minus-square hideme hidden"></i>';}
 			if($posts->TYPE == 'video'){$vidimg = '<img class="tinyvid" src="http://img.youtube.com/vi/'.$posts->URL.'/0.jpg" />';}
 			else{$vidimg = '';}																
-			if($posts->PARENT == 0){if($posts->MODERATOR == 0){$getModReply = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = '".$posts->ID."' AND MODERATOR = '1' LIMIT 1");}if($posts->MODERATOR != 0){$getModReply = 0;}if(count($getModReply) > 0 && $getModReply != 0){$gotModReply = ' modreplied';}if($gotModReply != ''){$modishere = ' <i class="fa fa-star"></i>';}$SUBJECT =  '<span class="tinysubject'.$gotModReply.'">'.$thread_url.$vidimg.'<a href="?b='.$posts->BOARD.'&amp;t='.$posts->ID.'#'.$posts->ID.'">'.$modishere.$SUBJECT.'</a> '.$loadme.'</span>';}
+			if($posts->PARENT == 0){if($posts->MODERATOR == 0){$getModReply = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = $posts->ID AND MODERATOR = 1 AND PUBLIC = 1 LIMIT 1");}if($posts->MODERATOR != 0){$getModReply = 0;}if(count($getModReply) > 0 && $getModReply != 0){$gotModReply = ' modreplied';}if($gotModReply != ''){$modishere = ' <i class="fa fa-star"></i>';}$SUBJECT =  '<span class="tinysubject'.$gotModReply.'">'.$thread_url.$vidimg.'<a href="?b='.$posts->BOARD.'&amp;t='.$posts->ID.'#'.$posts->ID.'">'.$modishere.$SUBJECT.'</a> '.$loadme.'</span>';}
 			else{$SUBJECT =  '<span class="tinysubject">'.$thread_url.$vidimg.'<a href="?b='.$posts->BOARD.'&amp;t='.$posts->PARENT.'#'.$posts->ID.'#'.$posts->ID.'">'.$SUBJECT.'</a> '.$loadme.'</span> <a href="?b='.$posts->BOARD.'">'.$posts->BOARD.'</a></span>';}
 			if($posts->URL != '' && $posts->TYPE == 'image'){$op_embed = '<a href="'.$posts->URL.'"><img class="imageOP" src="'.$posts->URL.'" alt="'.$posts->URL.'" /></a>';}
 			elseif($posts->TYPE == 'video' && $posts->URL != ''){if($profilevideo == 0){$op_embed = '<iframe src="http://www.youtube.com/embed/'.$posts->URL.'?loon=1&amp;playlist='.$posts->URL.'&amp;controls=0&amp;showinfo=0&amp;autohide=1" width="420" height="315" frameborder="0" allowfullscreen></iframe>';}elseif($profilevideo ==1){$op_embed = '<a class="rb_yt" data="'.$posts->URL.'" href="http://youtube.com/watch?v='.$posts->URL.'"><img class="ytthumb" src="http://img.youtube.com/vi/'.$posts->URL.'/0.jpg"></a><div id="'.$posts->URL.'"></div>';}}
@@ -54,12 +54,16 @@
 					$THREADREPLIES++;
 					$checkforupvote = $checkfordownvote =  0;
 					$reply_attached_link = $reply_embed = $imgclass = $reply_date = $reply_attached_link = '';
-					$gotReply = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE REPLYTO = $replies->ID ORDER BY REPLYTO DESC");
+					$gotReply = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE REPLYTO = $replies->ID AND PUBLIC = 1 ORDER BY REPLYTO DESC");
 					$getvotestatus = $wpdb->get_results("SELECT * FROM $regularboard_users WHERE IP = '$theIP_us32str' AND THREAD = $replies->ID");
-					if($replies->MODERATOR == 1 && strtolower($replies->EMAIL) != 'heaven'){$reply_name = '<a class="mod" href="'.$profilelink.'"> '.$replies->USERID.'</a>';}
-					if($replies->MODERATOR == 2 && strtolower($replies->EMAIL) != 'heaven'){$reply_name = '<a class="usermod" href="'.$profilelink.'"> '.$replies->USERID.'</a>';}
-					if(strtolower($replies->EMAIL) == 'heaven'){$reply_name = ' ???';}
-					if($replies->MODERATOR != 1 && $replies->MODERATOR != 2){$reply_name = '<a href="'.$profilelink.'"> '.$replies->USERID.'</a>';}
+					if(is_numeric($replies->EMAIL)){
+						$reply_name = $replies->EMAIL;
+					}else{
+						if($replies->MODERATOR == 1 && strtolower($replies->EMAIL) != 'heaven'){$reply_name = '<a class="mod" href="?u='.$replies->USERID.'"> '.$replies->USERID.'</a>';}
+						if($replies->MODERATOR == 2 && strtolower($replies->EMAIL) != 'heaven'){$reply_name = '<a class="usermod" href="?u='.$replies->USERID.'"> '.$replies->USERID.'</a>';}
+						if(strtolower($replies->EMAIL) == 'heaven'){$reply_name = ' ???';}
+					}
+					if($replies->MODERATOR != 1 && $replies->MODERATOR != 2){$reply_name = '<a href="?u='.$replies->USERID.'"> '.$replies->USERID.'</a>';}
 					foreach($getvotestatus as $votestatus){if($votestatus->MESSAGE == 'Upvote'){$checkforupvote++;}if($votestatus->MESSAGE == 'Downvote'){$checkfordownvote++;}}
 					if($checkforupvote > 0 && $checkfordownvote == 0){$reply_approval_button = '<label for="APPROVE'.$replies->ID.'" id="'.$replies->ID.'" data="'.$THISPAGE.'?t='.$replies->ID.'&amp;a=vote&amp;v=1"><i class="fa fa-thumbs-up"></i></label>'; }
 					elseif($checkforupvote == 0 && $checkfordownvote > 0){$reply_approval_button = ''; }
@@ -70,7 +74,7 @@
 					$reply_date = timesincethis($replies->DATE);
 					if($replies->TYPE == 'image'){$THREADIMGS++;}
 					if($replies->TYPE == 'URL' && $replies->URL != '')$reply_attached_link = '<span><i class="fa fa-angle-right"> <a href="'.esc_url($replies->URL).'">Attached link</a></i></span>';
-					$SUBJECT  = '<span>'.$replies->SUBJECT.'</span>';
+					$SUBJECT  = '<span>'.str_replace('\\','',$replies->SUBJECT).'</span>';
 					$COMMENT = rb_format($replies->COMMENT);
 					$postNo = '<span><i class="fa fa-angle-right"> No. <a href="#COMMENTFORM" onclick="replyThis(event)">'.$replies->ID.'</a></i></span>';
 					$thread_karma = '<span><i class="fa fa-heart"> '.intval($replies->UP).'</i></span>';

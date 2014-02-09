@@ -7,7 +7,7 @@
 			echo '<tr valign="top">';
 			$BOARDNAME = esc_sql(myoptionalmodules_sanistripents($gotBoards->SHORTNAME));
 			$BOARDLONG = esc_sql(myoptionalmodules_sanistripents($gotBoards->NAME));
-			$countPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."'");
+			$countPosts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARDNAME."' AND PUBLIC = 1");
 			$min10_t = 0;
 			$hou02_t = 0;
 			$hou12_t = 0;

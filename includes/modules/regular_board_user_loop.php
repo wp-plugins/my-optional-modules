@@ -12,7 +12,23 @@
 	$i = 0;
 	$results = intval($_GET['n']);
 	$paging  = round($totalpages / $postsperpage);
-	if($paging > 0){$pageresults = round($paging / 10);echo '<div class="pages">';if($results > 1) echo '<a href="?a=all">Latest</a> ';if($results > 2) echo '<a href="?a=all&amp;n='.($results - 1).'">Newer</a> ';if($results < $paging && $results == '')echo '<a href="?a=all&amp;n=2">Older</a> ';if($results < $paging && $results != '')echo '<a href="?a=all&amp;n='.($results + 1).'">Older</a> ';echo '</div>';}
+	if($paging > 0){
+		$pageresults = round($paging / 10);
+		echo '<div class="pages">';
+		if($results > 1){
+			echo '<a href="?a=users">Latest</a> ';
+		}
+		if($results > 2){
+			echo '<a href="?a=users&amp;n='.($results - 1).'">Newer</a> ';
+		}
+		if($results < $paging && $results == ''){
+			echo '<a href="?a=users&amp;n=2">Older</a> ';
+		}
+		if($results < $paging && $results != ''){
+			echo '<a href="?a=users&amp;n='.($results + 1).'">Older</a> ';
+		}
+		echo '</div>';
+	}
 	echo '</div>';
 	echo '<script type="text/javascript">document.title = \'All users\';</script>';
 	

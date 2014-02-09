@@ -3,7 +3,7 @@
 	if(count($usprofile) > 0){
 		foreach($usprofile as $theprofile){
 			$userip = intval($theprofile->IP);
-			$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE USERID = $PROFILE AND EMAIL != 'heaven'");
+			$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE USERID = $PROFILE AND EMAIL != 'heaven' AND PUBLIC = 1");
 			$totalpages = count($countpages);
 			$results = intval($_GET['n']);
 			if($results){
@@ -11,8 +11,8 @@
 			}else{
 				$start = 0;
 			}
-			$count = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE USERID = $PROFILE AND EMAIL != 'heaven' ORDER BY DATE DESC");
-			$posts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE USERID = $PROFILE AND EMAIL != 'heaven' ORDER BY DATE DESC LIMIT $start,$postsperpage");
+			$count = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE USERID = $PROFILE AND EMAIL != 'heaven' AND PUBLIC = 1 ORDER BY DATE DESC");
+			$posts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE USERID = $PROFILE AND EMAIL != 'heaven' AND PUBLIC = 1 ORDER BY DATE DESC LIMIT $start,$postsperpage");
 			$postcount = count($countpages);
 			$userid = intval($theprofile->ID);
 			$userkarma = intval($theprofile->KARMA);

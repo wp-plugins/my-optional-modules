@@ -2,14 +2,14 @@
 
 	$checkPassword = esc_sql($_REQUEST['DELETEPASSWORD']);
 	$checkID = esc_sql(intval($_REQUEST['report_ids']));
-	$checkPass = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PASSWORD = '".$checkPassword."' AND ID = '".$checkID."'");
+	$checkPass = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PASSWORD = '".$checkPassword."' AND ID = $checkID AND PUBLIC = 1");
 	$correct = 0;
 	if(count($checkPass) > 0){
 		foreach($checkPass as $checked){
 			$PARENT = $checked->PARENT;
-			$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = '".$checkID."'");
+			$wpdb->query("DELETE FROM $regularboard_posts WHERE ID = $checkID AND PUBLIC = 1");
 			if($PARENT == 0){
-				$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = '".$checkID."'");
+				$wpdb->query("DELETE FROM $regularboard_posts WHERE PARENT = $checkID AND PUBLIC = 1");
 			}
 			$correct = 1;
 		}

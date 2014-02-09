@@ -3,7 +3,7 @@
 	foreach($getUser as $banneddetails){
 		$LENGTH = $banneddetails->LENGTH;
 		$FILED = $banneddetails->DATE;
-		if($LENGTH != '0'){
+		if($LENGTH != 0){
 			$DATEFILED = strtotime($banneddetails->DATE);
 			$CURRENTDATE = strtotime($current_timestamp);
 			if(strpos(strtolower($LENGTH),'minute')) {
@@ -23,10 +23,10 @@
 			}
 			$banIsActiveFor = ($DATEFILED + $bantime);
 		}
-		if($LENGTH == '0'){
+		if($LENGTH == 0){
 			$LENGTH = 'Permanent';
 		}
-		if($LENGTH != '0'){
+		if($LENGTH != 0){
 			if($CURRENTDATE > $banIsActiveFor){ 
 				$banLifted = 1;
 			}else{
@@ -57,7 +57,7 @@
 			echo '</div>';
 		}
 		echo '</div>';
-		if($LENGTH != '0'){
+		if($LENGTH != 0){
 			if($banLifted == '1'){
 				$wpdb->delete( ''.$regularboard_users.'', array('ID' => ''.$BANID.'','BANNED' => '1'),array( '%d','%d') );
 			}

@@ -43,6 +43,29 @@
 			$wpdb->query("UPDATE $regularboard_boards SET POSTCOUNT = POSTCOUNT - ".$delete." WHERE SHORTNAME = '$BOARD'");
 		}
 	}
+	
+	if(isset($_POST['admin_spam']) && $ID2SET != ''){
+		$getIDfromID = $wpdb->get_results("SELECT PARENT FROM $regularboard_posts WHERE ID = $ID2SET LIMIT 1");
+		if(current_user_can('manage_options')){
+			$wpdb->update($regularboard_posts,array('PUBLIC' => 2),array('ID' => $ID2SET), array('%d'));
+			foreach($getIDfromID as $parentCheck){
+				$parent = $parentCheck->PARENT;
+				if($PARENT == 0){
+					$wpdb->update($regularboard_posts,array('PUBLIC' => 2),array('PARENT' => $ID2SET),array('%d'));
+				}
+			}
+		}
+		if($ISUSERMOD === true || $ISUSERJANITOR === true){
+			$wpdb->update($regularboard_posts,array('PUBLIC' => 2),array('ID' => $ID2SET,'MODERATOR' => 0),array('%d'));
+			foreach($getIDfromID as $parentCheck){
+				$parent = $parentCheck->PARENT;
+				if($PARENT == 0){
+					$wpdb->update($regularboard_posts,array('PUBLIC' => 2),array('PARENT' => $ID2SET),array('%d'));
+				}
+			}
+		}
+	}	
+	
 	if(isset($_POST['admin_move']) && $ID2SET != '' && $_REQUEST['admin_reason'] != ''){
 		$getIDfromID = $wpdb->get_results("SELECT PARENT FROM $regularboard_posts WHERE ID = $ID2SET LIMIT 1");
 		$setBoard = esc_sql($_REQUEST['admin_reason']);
@@ -72,7 +95,7 @@
 			$PARENT = $gotIP->PARENT;
 			$MESSAGE = esc_sql($_REQUEST['admin_reason']);
 			$LENGTH = esc_sql($_REQUEST['admin_length']);
-			$wpdb->query($wpdb->prepare("INSERT INTO $regularboard_users ( ID, DATE, IP, THREAD, PARENT, BOARD, BANNED, MESSAGE, LENGTH, KARMA, PASSWORD, HEAVEN, VIDEO, BOARDS, FOLLOWING ) VALUES ( %d,%s,%d,%d,%d,%s,%d,%s,%d,%d,%s,%d,%d,%s,%s )",'',$current_timestamp,$IP,$ID2SET,$PARENT,$BOARD,1,$MESSAGE,$LENGTH,0,'',0,0,'',''));
+			$wpdb->query($wpdb->prepare("INSERT INTO $regularboard_users ( ID, DATE, IP, NAME, EMAIL, THREAD, PARENT, BOARD, BANNED, MESSAGE, LENGTH, KARMA, PASSWORD, HEAVEN, VIDEO, BOARDS, FOLLOWING ) VALUES ( %d,%s,%d,%s,%s,%d,%d,%s,%d,%s,%d,%d,%s,%d,%d,%s,%s )",'',$current_timestamp,$IP,'','',$ID2SET,$PARENT,$BOARD,1,$MESSAGE,$LENGTH,0,'',0,0,'',''));
 		}
 	}
 	if($ISUSERMOD === true){
@@ -82,7 +105,7 @@
 			$PARENT  = $gotIP->PARENT;
 			$MESSAGE = esc_sql($_REQUEST['admin_reason']);
 			$LENGTH = esc_sql($_REQUEST['admin_length']);
-			$wpdb->query($wpdb->prepare("INSERT INTO $regularboard_users ( ID, DATE, IP, THREAD, PARENT, BOARD, BANNED, MESSAGE, LENGTH, KARMA, PASSWORD, HEAVEN, VIDEO, BOARDS, FOLLOWING ) VALUES ( %d,%s,%d,%d,%d,%s,%d,%s,%d,%d,%d,%s,%s,%s,%s )",'',$current_timestamp,$IP,$ID2SET,$PARENT,$BOARD,1,$MESSAGE,$LENGTH,0,'',0,0,'',''));
+			$wpdb->query($wpdb->prepare("INSERT INTO $regularboard_users ( ID, DATE, IP, NAME, EMAIL, THREAD, PARENT, BOARD, BANNED, MESSAGE, LENGTH, KARMA, PASSWORD, HEAVEN, VIDEO, BOARDS, FOLLOWING ) VALUES ( %d,%s,%d,%s,%s,%d,%d,%s,%d,%s,%d,%d,%d,%s,%s,%s,%s )",'',$current_timestamp,$IP,'','',$ID2SET,$PARENT,$BOARD,1,$MESSAGE,$LENGTH,0,'',0,0,'',''));
 			}
 		}
 	}

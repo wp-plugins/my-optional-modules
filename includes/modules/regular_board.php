@@ -1,7 +1,7 @@
 <?php 
 	if(!defined('MyOptionalModules')){die('You can not call this file directly.');}
 	if(get_option('mommaincontrol_regularboard') == 1){
-		$rb_v = '05492877';
+		$rb_v = '05492883';
 		add_action('wp_enqueue_scripts','rb_style');
 		add_action('wp_head','rb_head');
 		add_shortcode('regularboard','regularboard_shortcode');
@@ -60,16 +60,17 @@
 		);
 		global $wpdb,$wp,$post,$ipaddress,$rand,$randnum1,$randnum2,$rb_v;
 		if($ipaddress !== false){
+		
 			$iexist = $requirelogged = $doesnotexist = 0;
-			$thisimageupload = $SEARCH = $modishere = $THREADIMGS = $profilelink = $boardid = $boardname = $boardshort = $boarddescription = $boardmods = $boardjans = $boardposts = '';
+			$profilename = $profileemail = $thisimageupload = $SEARCH = $modishere = $THREADIMGS = $profilelink = $boardid = $boardname = $boardshort = $boarddescription = $boardmods = $boardjans = $boardposts = '';
 			$wordpressname = get_bloginfo('name');
 			$blog_title = get_bloginfo();
 			$THISPAGE            = get_permalink();
-			myoptionalmodules_checkdnsbl($checkThisIP);
 			$theIP               = esc_sql($ipaddress);
 			$theIP_s32int        = esc_sql(ip2long($ipaddress));
 			$theIP_us32str       = esc_sql(sprintf("%u",$theIP_s32int));
 			$checkThisIP         = esc_sql($theIP);
+			myoptionalmodules_checkdnsbl($checkThisIP);
 			$current_timestamp   = date('Y-m-d H:i:s');
 			$maxreplies          = intval($maxreplies);
 			$maxbody             = intval($maxbody);
@@ -90,13 +91,22 @@
 			$posting             = 1;
 			$postsperpage        = 50;
 			
-			$myinformation = $wpdb->get_results("SELECT * FROM $regularboard_users WHERE IP = '".$theIP_us32str."' AND BANNED = '8' LIMIT 1");
+			$myinformation = $wpdb->get_results("SELECT * FROM $regularboard_users WHERE IP = $theIP_us32str AND BANNED = 8 AND BANNED != 1 LIMIT 1");
+			$getUser     = $wpdb->get_results("SELECT * FROM $regularboard_users WHERE IP = $theIP_us32str AND BANNED = 1");
+			
+			$userIsBanned = 0;
+			if(count($getUser) > 0){
+				$userIsBanned = 1;
+			}
+			
 			if(count($myinformation) > 0){
 				foreach($myinformation as $myinfo){
 					$profilekarma     = intval($myinfo->KARMA);
 					$profileid        = intval($myinfo->ID);
 					$profileheaven    = intval($myinfo->HEAVEN);
 					$profilevideo     = intval($myinfo->VIDEO);
+					$profileemail     = esc_sql($myinfo->EMAIL);
+					$profilename      = esc_sql($myinfo->NAME);
 					if($profilevideo == ''){
 						$profilevideo = 0;
 					}
@@ -152,21 +162,23 @@
 					$boardposts       = intval($currentBoardInformation->BOARDPOSTS);
 					$requirelogged    = intval($currentBoardInformation->LOGGED);
 					$boardsfw         = $currentBoardInformation->SFW;
-					$boardheader      = '<div class="tinythread"><span class="tinysubject"><a href="?b='.$boardshort.'">'.$boardname.'</a></span><span class="tinyreplies">'.$boardsfw.'</span><span class="tinydate">'.$boardshort.'</span></div><div class="tinythread"><span class="tinysubject">'.$boarddescription.'</span></div>';
+					
+					if($boarddescription != '')$boardheader      = '<div class="tinythread"><span class="tinysubject"><a href="?b='.$boardshort.'">'.$boardname.'</a></span><span class="tinyreplies">'.$boardsfw.'</span><span class="tinydate">'.$boardshort.'</span></div><div class="tinythread"><span class="tinysubject">'.$boarddescription.'</span></div>';
+					if($boarddescription == '')$boardheader      = '<div class="tinythread"><span class="tinysubject"><a href="?b='.$boardshort.'">'.$boardname.'</a></span><span class="tinyreplies">'.$boardsfw.'</span><span class="tinydate">'.$boardshort.'</span></div>';
+					
 					echo '<script type="text/javascript">document.title = \''.$boardname.' / '.$boardshort.'\';</script>';
 				}
 			}else{
-				$boardheader = '<div class="tinythread"><span class="tinysubject">'.get_bloginfo('name').'</span></div>';
+				$boardheader = '';
 			}
 				
 			if($BOARD != '' ){
 				$getBoards   = $wpdb->get_results("SELECT * FROM $regularboard_boards WHERE SHORTNAME != '' ORDER BY SHORTNAME ASC");
-				$getUser     = $wpdb->get_results("SELECT * FROM $regularboard_users WHERE IP = '".$theIP_us32str."' AND BANNED = 1 LIMIT 1");
-				$getLastPost = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE IP = '".$theIP_us32str."' ORDER BY ID DESC LIMIT 1");
+				$getLastPost = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE IP = $theIP_us32str ORDER BY ID DESC LIMIT 1 AND PUBLIC = 1");
 			}
 			if($BOARD != '' && $THREAD == ''){
 				$targetpage = '?b='.$BOARD;
-				$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0");
+				$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0 AND PUBLIC = 1");
 				$totalpages = count($countpages);
 				$results = intval($_GET['n']);
 				if($results){
@@ -175,19 +187,19 @@
 					$start = 0;
 				}
 				if($SEARCH == ''){
-					$getposts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0 ORDER BY STICKY DESC, LAST DESC LIMIT $start,$postsperpage");
+					$getposts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = 0 AND PUBLIC = 1 ORDER BY STICKY DESC, LAST DESC LIMIT $start,$postsperpage");
 				}
 				if($SEARCH != ''){
-					$getposts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE ( EMAIL = '".$SEARCH."' OR COMMENT LIKE '%".$SEARCH."%' OR SUBJECT LIKE '%".$SEARCH."%' OR URL LIKE '%".$SEARCH."%' ) AND BOARD = '".$BOARD."' ORDER BY ID");
+					$getposts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE ( EMAIL = '".$SEARCH."' OR COMMENT LIKE '%".$SEARCH."%' OR SUBJECT LIKE '%".$SEARCH."%' OR URL LIKE '%".$SEARCH."%' ) AND BOARD = '".$BOARD."' AND PUBLIC = 1 ORDER BY ID");
 				}
 			}
 			if($BOARD != '' && $THREAD != ''){
-				$getposts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND ID = '".$THREAD."' AND PARENT = 0 LIMIT 1");
-				$countParentReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = '".$THREAD."'");
+				$getposts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND ID = $THREAD AND PARENT = 0 AND PUBLIC = 1 LIMIT 1");
+				$countParentReplies = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = $THREAD AND PUBLIC = 1");
 				$THREADREPLIES = $THREADIMGS = 0;
 				}
 			if($AREA == 'topics' || $BOARD == '' && $AREA == '' && $THREAD == ''){
-				$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE PARENT = 0");
+				$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE PARENT = 0 AND PUBLIC = 1");
 				$totalpages = count($countpages);
 				$results = intval($_GET['n']);
 				if($results){
@@ -195,10 +207,10 @@
 				}else{
 					$start = 0;
 				}
-				$getposts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = 0 ORDER BY DATE DESC LIMIT $start,$postsperpage");
+				$getposts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT = 0 AND PUBLIC = 1 ORDER BY ID DESC LIMIT $start,$postsperpage");
 			}
 			if($BOARD == '' && $AREA == 'replies' && $THREAD == ''){
-				$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE PARENT != 0");
+				$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE PARENT != 0 AND PUBLIC = 1");
 				$totalpages = count($countpages);
 				$results = intval($_GET['n']);
 				if($results){
@@ -206,10 +218,10 @@
 				}else{
 					$start = 0;
 				}
-				$getposts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT != 0 ORDER BY DATE DESC LIMIT $start,$postsperpage");
+				$getposts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PARENT != 0 AND PUBLIC = 1 ORDER BY ID DESC LIMIT $start,$postsperpage");
 			}
 			if($BOARD == '' && $AREA == 'all' && $THREAD == ''){
-				$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts");
+				$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE PUBLIC = 1");
 				$totalpages = count($countpages);
 				$results = intval($_GET['n']);
 				if($results){
@@ -217,7 +229,7 @@
 				}else{
 					$start = 0;
 				}
-				$getposts = $wpdb->get_results("SELECT * FROM $regularboard_posts ORDER BY DATE DESC LIMIT $start,$postsperpage");
+				$getposts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE PUBLIC = 1 ORDER BY ID DESC LIMIT $start,$postsperpage");
 			}
 			if($BOARD == '' && $AREA == 'users' && $THREAD == ''){
 			$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_users WHERE BANNED = 8");
@@ -234,8 +246,8 @@
 			$tlast = 0;
 			if($THREAD != ''){
 				if($AREA != 'newtopic'){
-					$getParentAuthor = $wpdb->get_results("SELECT USERID FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND ID = $THREAD LIMIT 1");
-					$getReplyAuthor  = $wpdb->get_results("SELECT USERID FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = $THREAD ORDER BY ID ASC LIMIT 1");
+					$getParentAuthor = $wpdb->get_results("SELECT USERID FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND ID = $THREAD AND PUBLIC = 1 LIMIT 1");
+					$getReplyAuthor  = $wpdb->get_results("SELECT USERID FROM $regularboard_posts WHERE BOARD = '".$BOARD."' AND PARENT = $THREAD AND PUBLIC = 1 ORDER BY ID ASC LIMIT 1");
 					if(count($getParentAuthor) > 0){
 						foreach($getParentAuthor as $tauthor){
 							if($tauthor->USERID == $profileid){
@@ -254,7 +266,7 @@
 			}
 				
 			if($BOARD == '' && $AREA == 'subscribed' && $THREAD == '' && $boards != ''){
-				$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD IN (".join(',',$boards).")");
+				$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE BOARD IN (".join(',',$boards).") AND PUBLIC = 1");
 				$totalpages = count($countpages);
 				$results = intval($_GET['n']);
 				if($results){
@@ -262,10 +274,10 @@
 				}else{
 					$start = 0;
 				}
-				$getposts= $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD IN (".join(',',$boards).") ORDER BY DATE DESC LIMIT $start,$postsperpage");
+				$getposts= $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE BOARD IN (".join(',',$boards).") AND PUBLIC = 1 ORDER BY ID DESC LIMIT $start,$postsperpage");
 			}
 			if($BOARD == '' && $AREA == 'following' && $THREAD == ''){
-				$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE USERID IN (".join(',',$following).")");
+				$countpages = $wpdb->get_results("SELECT ID FROM $regularboard_posts WHERE USERID IN (".join(',',$following).") AND PUBLIC = 1");
 				$totalpages = count($countpages);
 				$results = intval($_GET['n']);
 				if($results){
@@ -273,10 +285,10 @@
 				}else{
 					$start = 0;
 				}
-				$getposts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE USERID IN (".join(',',$following).") ORDER BY DATE DESC LIMIT $start,$postsperpage");
+				$getposts = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE USERID IN (".join(',',$following).") AND PUBLIC = 1 ORDER BY ID DESC LIMIT $start,$postsperpage");
 			}
 			if($BOARD == '' && $THREAD != ''){
-				$post = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE ID = '".$THREAD."' LIMIT 1");
+				$post = $wpdb->get_results("SELECT * FROM $regularboard_posts WHERE ID = $THREAD AND PUBLIC = 1 LIMIT 1");
 			}
 			if($PROFILE != ''){
 				$reviews_table = $wpdb->prefix.'momreviews';
@@ -363,7 +375,7 @@
 				
 			ob_start();
 				
-			echo '<div class="boardAll">';
+			echo '<div id="regularboard_tooltip"></div><a class="regularboard_homelink" title="'.$wordpressname.'" href="'.get_home_url().'">'.$wordpressname.'</a><div class="boardAll">';
 				
 			if($ISMODERATOR === true && count($getReports) > 0){
 				echo '<div class="tinythread"><span class="tinysubject"><a href="?a=reports">'.count($getReports).' reports need your attention.</a></span></div>';
@@ -400,7 +412,7 @@
 			}
 				
 			echo '<a href="?a=help">help</a><a href="?a=info">info</a>';
-				
+			
 			if($BOARD != '' && $posting == 1 && $iexist == 1 && $AREA == '' || $THISBOARD != ''){
 				echo '<a class="newtopic" href="'.$THISPAGE.'?b='.$BOARD.'&amp;a=newtopic">New topic</a><span class="hidden notopic">Cancel new topic</span>';
 			}
@@ -437,7 +449,6 @@
 					include(plugin_dir_path(__FILE__).'/regular_board_posting_deletepost.php');
 				}else{
 					if(count($getCurrentBoard) > 0){
-						$userIsBanned = 0;
 						if(!is_user_logged_in() && $requirelogged == 1){
 							echo '<div class="tinythread"><span class="tinysubject">You are not logged in.</span></div></div>';
 						}elseif(!is_user_logged_in() && $requirelogged == 0 || is_user_logged_in()){
@@ -447,10 +458,11 @@
 								$boardDescription = rb_format($boardDescription);
 								$boardrules = rb_format($gotCurrentBoard->RULES);
 								if ($DNSBL === true){
-									$wpdb->query("INSERT INTO $regularboard_users (ID, DATE, IP, THREAD, PARENT, BANNED, MESSAGE, LENGTH, KARMA, PASSWORD, HEAVEN, VIDEO, BOARDS, FOLLOWING) VALUES ('','$current_timestamp','$theIP_us32str','0','0','1',' being blacklisted by the DNSBL.','0','0','','0','0','','')");
+									$wpdb->query("INSERT INTO $regularboard_users (ID, DATE, IP, NAME, EMAIL, THREAD, PARENT, BANNED, MESSAGE, LENGTH, KARMA, PASSWORD, HEAVEN, VIDEO, BOARDS, FOLLOWING) VALUES ('','$current_timestamp','$theIP_us32str','','','0','0','1',' being blacklisted by the DNSBL.','0','0','','0','0','','')");
 								}elseif(count($getUser) > 0){
 									include(plugin_dir_path(__FILE__).'/regular_board_posting_userbanned.php');
-								}elseif($userIsBanned == 0){
+								}else{
+									if($userIsBanned == 0){
 									if($THREAD != ''){
 										$currentCountNomber = count($countParentReplies);
 									}
@@ -509,7 +521,7 @@
 											if($ISUSER === true || $ISUSERJANITOR === true){
 												echo '<form name="reporttomods" method="post" action="'.$ACTION.'">';
 												wp_nonce_field('reporttomods');
-												echo '<section class="full"><input type="text" name="report_ids" id="report_ids" value="" placeholder="Post No." /></section><section class="full"><input type="text" name="report_reason" value="" placeholder="Reason (if reporting)" /></section><section class="full"><input type="password" name="DELETEPASSWORD" id="DELETEPASSWORD" /></section><section class="labels"><label class="submit" title="Edit (password required)" for="edit_this">Edit</label><label class="submit" title="Report" for="report_this">Report</label><label class="submit" title="Delete (password required)" for="delete_this">Delete</label></section><input type="submit" name="edit_this" value="edit" id="edit_this" class="hidden" /><input type="submit" name="report_this" value="report" id="report_this" class="hidden" /><input type="submit" name="delete_this" value="delete" id="delete_this" class="hidden" /></form>';
+												echo '<section class="full"><input type="text" name="report_ids" id="report_ids" value="" placeholder="Post No." /></section><section class="full"><input type="text" name="report_reason" value="" placeholder="Reason (if reporting)" /></section><section class="full"><input type="password" placeholder="Password" name="DELETEPASSWORD" id="DELETEPASSWORD" /></section><section class="labels"><input type="submit" name="edit_this" value="edit" id="edit_this" /><input type="submit" name="report_this" value="report" id="report_this" /><input type="submit" name="delete_this" value="delete" id="delete_this" /></section></form>';
 											}
 											if(current_user_can('manage_options') || $ISUSERMOD === true || $ISUSERJANITOR === true){
 												echo '<form name="moderator" method="post" action="'.$ACTION.'">';
@@ -520,13 +532,15 @@
 												}
 												echo '<section class="labels">';
 												if($ISUSERMOD === true || current_user_can('manage_options')){
-													echo '<label class="submit" title="Edit" for="admin_edit">edit</label><label class="submit" title="Move" for="admin_move">move</label><label class="submit" title="Make sticky" for="admin_sticky">sticky</label><label class="submit" title="Lock thread" for="admin_lock">lock</label><label class="submit" title="Unsticky" for="admin_unsticky">unsticky</label><label class="submit" title="Unlock thread" for="admin_unlock">unlock</label><label class="submit" title="Ban" for="admin_ban">ban</label><input type="submit" name="admin_move" value="Move" id="admin_move" class="hidden" /><input type="submit" name="admin_ban" value="Ban" id="admin_ban" class="hidden" /><input type="submit" name="admin_edit" value="Edit" id="admin_edit" class="hidden" /><input type="submit" name="admin_sticky" value="Sticky" id="admin_sticky" class="hidden" /><input type="submit" name="admin_lock" value="Lock" id="admin_lock" class="hidden" /><input type="submit" name="admin_unsticky" value="Unsticky" id="admin_unsticky" class="hidden" /><input type="submit" name="admin_unlock" value="Unlock" id="admin_unlock" class="hidden" />';
+													echo '<input type="submit" name="admin_spam" value="Spam" id="admin_spam" /><input type="submit" name="admin_move" value="Move" id="admin_move" /><input type="submit" name="admin_ban" value="Ban" id="admin_ban" /><input type="submit" name="admin_edit" value="Edit" id="admin_edit" /><input type="submit" name="admin_sticky" value="Sticky" id="admin_sticky" /><input type="submit" name="admin_lock" value="Lock" id="admin_lock" /><input type="submit" name="admin_unsticky" value="Unsticky" id="admin_unsticky" /><input type="submit" name="admin_unlock" value="Unlock" id="admin_unlock" />';
 												}
-												echo '<label class="submit" title="Delete" for="admin_delete"><i class="fa fa-trash-o"></i></label><input type="submit" name="admin_delete" value="Delete" id="admin_delete" class="hidden" /></section></form>';
+												echo '<input type="submit" name="admin_delete" value="Delete" id="admin_delete" />
+												</section></form>';
 											}
 											echo '</div></div>';
 										}
 									}
+								}
 								}
 							}
 						}
