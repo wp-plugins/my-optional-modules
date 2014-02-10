@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: 4chan,gravatar,youtube,DNSBL,akismet,ipv4,ipv6,htmlpurifier,tripcode,sage,chan,capcodes,board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.8
 Tested up to: 3.8
-Stable tag: 5.5
+Stable tag: 5.5.1
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -33,7 +33,6 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 = Regular Board = 
 * Regular Board is beta software.  There is bound to be bugs in it.
-* [Regular Board Support Forum](http://onebillionwords.com) located @ [onebillionwords.com](http://onebillionwords.com)
 * Disclaimer: may not work with all installations as CSS may need to be tweaked on a THEME level.
 * Can set board to private (logged in users only)
 * Supports Youtube/Youtu.be/image embedding (via URL)
@@ -57,8 +56,27 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * noarchive/nofollow on 404/search pages/archives.
 * Disables Jetpack open graph.
 
+= File Hash: =
+(1)1e6b62d4f6beac6bead9baade88c7cc60c3e2397(2)ecc76c5bb343551b0382d8491af0354902af8ce7
+(3)5a07fdd02f5ae017e102dbf515af0ab0683a8c65(4)ce217e9691e49b53ca7fabd5f2c0c04af02ef7c3
+(5)d23ea65d018f943ffb5d002873b2ec019af759a0(6)b1e416058508bdba3ba9bd90ab94e9dc8cee5b64
+(7)f7e6d6169b7f78fd7ed212b67e002cccf52a74c0(8)aa8275d0abe52342dd3d59ea39bb5a5447e31d21
+(9)52c248949b8b44513facc72cc09842a121477cf3(10)36eead780504c9bda3e1e10b5ffcefd5cfb57d79
+(11)5714a8797ce39ad1ff5036d8ca0d587566ec0c1f(12)06477b7f695efdedce1aadc46900112a600b8359
+(13)c5f4afe1b0b5e00f7596a0b5e5ad4f5bee4fd3a4(14)dd013903d1ca5da184f07f9736b1782edfd8069c
+(15)8897275e25d9b1ae071c963f3922c1a03ed2bc4f(16)e43ea6c068ac2fe7a94377ab9ffff10b81620b57
+(17)a03b1479f987971df5402f47f0561d48f402819c(18)6c0dc03be8a007bb2702aac389ab95eea48e38b7
+(19)3303ce2a5de59fac849d4bebeb390eba34ca16b0(20)f15ff0a3d62d7888776197d3322f47d8cdef564b
+(21)62ee7d30ac5dc1aea98d7160b9ceabc691331d70(22)e79912008cea3fff6c732edc25885b1cd11c1c1a
+(23)9b7ed060255c1902502dac7a561b2d19a381d214(24)1df78e30fe27c7494f91f5ddaa2e9c011270cea6
+(25)d42107d59d7ec2b8da0d9ebf56eec944569f6192(26)006d1df6391e6a8d705658b62bb76fea6558dadc
+(27)d0c1f2d6f0a5d256bf0c25bfe1070df7a98ac593(28)d30ac42b913a03daf775d140cb29b0a25acb168a
+(29)dd2fcf854e731dc9f1351e4ff6460b177973aba5(30)18be26aa2f9f104746dba7822e1e7adeab3b2f4e
+(31)4c7d2935842f0e0cb26c45f2b7e5f4947ca23220(32)edbd0385f75a69efe6c0826d8b998113f4d5dae8
+(33)c1c2cf87d45089bb4d96db94953be6fbf3abd660(34)4b2718587dd299b4512d375584165a49d288b6ec
+
 = Tools: =
-* Database cleaner to mass-delete trashed/revisions/drafts, unapproved/trashed/spam comments, or unused tags and categories.
+
 
 == Installation ==
 = 3-step installation =
@@ -77,11 +95,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-* Hotfix to banning system that wasn’t properly being utilized due to the nature of the method of posting.
-* Admin/usermods/janitors have a new Spam button that will render a post non-accessible to the public, but keep its contents in the database to continue working with the automute feature.
-* regularboard.js: change .click to .on so that all jquery dependent features (like voting and image/video expansion) can take place from non-thread sources (like expanding threads and replies from different areas of the board, like all or topics.)
-* Auto-archiving feature to disable commenting on threads that are two-months old.
-* When upgrading the plugin, if any database changes need to take place, these changes will happen during the upgrade process (Force Upgrade button has been removed from the admin page).
+* Information moved to home screen, official support website removed from documentation.
+* File hashes moved to readme (compare against repository version)
 
 = .5 =
 * HTMLPurifier (added)

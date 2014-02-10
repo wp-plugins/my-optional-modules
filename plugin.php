@@ -1,11 +1,11 @@
 <?php 
 /*
 Plugin Name: My Optional Modules
-Plugin URI: http://www.onebillionwords.com
+Plugin URI: http://wordpress.org/plugins/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.5
+Version: 5.5.1
 Author: Matthew Trevino
-Author URI: http://onebillionwords.com/
+Author URI: http://wordpress.org/plugins/my-optional-modules/
 */
 	
 	// LICENSE
@@ -107,7 +107,6 @@ Author URI: http://onebillionwords.com/
 
 
 	// (B) (1) Plugin variables
-		$mommodule_analytics = esc_attr(get_option('mommaincontrol_analytics'));
 		$mommodule_focus = esc_attr(get_option('mommaincontrol_focus'));
 		$mommodule_prettycanon = $mommodule_fixcanon = $mommodule_analytics = $mommodule_count = $mommodule_exclude = $mommodule_focus = $mommodule_fontawesome = 
 		$mommodule_jumparound = $mommodule_lazyload = $mommodule_maintenance = $mommodule_meta = $mommodule_passwords = 
@@ -166,9 +165,7 @@ Author URI: http://onebillionwords.com/
 		if($mommodule_passwords == 1)$mommodule_passwords = true;
 		if($mommodule_passwords === true)add_shortcode('rups','rotating_universal_passwords_shortcode');
 		if($mommodule_passwords === true)add_filter('the_content','do_shortcode','rotating_universal_passwords_shortcode');
-		$mommodule_postasfront = esc_attr(get_option('mommaincontrol_mompaf'));
-		if($mommodule_postasfront == 1)$mommodule_postasfront = true;
-		if($mommodule_postasfront === true)add_action('wp','myoptionalmodules_postasfront');
+		if(get_option('mompaf_post') != 'null')add_action('wp','myoptionalmodules_postasfront');
 		$mommodule_reviews = esc_attr(get_option('mommaincontrol_reviews'));
 		if($mommodule_reviews == 1)$mommodule_reviews = true;
 		if($mommodule_reviews === true)add_shortcode('momreviews','mom_reviews_shortcode');	
@@ -608,6 +605,8 @@ Author URI: http://onebillionwords.com/
 			}
 			update_option('mommaincontrol_focus','');
 			delete_option('momreviews_css');
+			delete_option('mom_postasfront_mode_submit');
+			delete_option('mommaincontrol_analytics');
 			add_option('mommaincontrol_passwords_activated',1);					
 			add_option('mommaincontrol_reviews_activated',1);
 			add_option('mommaincontrol_shorts_activated',1);
@@ -683,7 +682,9 @@ Author URI: http://onebillionwords.com/
 		
 		function myoptionalmodules_postasfront(){	
 			if(is_home()){
-				if(is_numeric(get_option('mompaf_post'))){
+				if(get_option('mompaf_post') == 'null'){
+					// Do nothing
+				}elseif(is_numeric(get_option('mompaf_post'))){
 					$mompaf_front = get_option('mompaf_post');
 				}else{
 					$mompaf_front = '';
@@ -755,7 +756,7 @@ Author URI: http://onebillionwords.com/
 				if(get_option('mommaincontrol_shorts_activated') == 0){$wpdb->query("DROP TABLE ".$verification_table_name."");}
 				$option = array('mommaincontrol_prettycanon','mommaincontrol_fixcanon','mommaincontrol_regularboard_activated','mommaincontrol_regularboard','mommaincontrol_votes_activated','mommaincontrol_protectrss','MOM_themetakeover_extend','MOM_themetakeover_backgroundimage',
 				'MOM_themetakeover_topbar_search','MOM_themetakeover_topbar_share','MOM_themetakeover_topbar_color','mommaincontrol_footerscripts','mommaincontrol_authorarchives','mommaincontrol_datearchives','MOM_themetakeover_wowhead',
-				'mom_passwords_salt','mommaincontrol_obwcountplus','mommaincontrol_momrups','mommaincontrol_momse','mommaincontrol_mompaf','mommaincontrol_momja','mommaincontrol_shorts','mommaincontrol_analytics','mommaincontrol_reviews',
+				'mom_passwords_salt','mommaincontrol_obwcountplus','mommaincontrol_momrups','mommaincontrol_momse','mommaincontrol_mompaf','mommaincontrol_momja','mommaincontrol_shorts','mommaincontrol_reviews',
 				'mommaincontrol_fontawesome','mommaincontrol_versionnumbers','mommaincontrol_lazyload','mommaincontrol_meta','mommaincontrol_focus','mommaincontrol_maintenance','mommaincontrol_themetakeover','mommaincontrol_setfocus',
 				'mommaincontrol','mompaf_post','obwcountplus_1_countdownfrom','obwcountplus_2_remaining','obwcountplus_3_total','obwcountplus_4_custom','rotating_universal_passwords_1','rotating_universal_passwords_2','rotating_universal_passwords_3',
 				'rotating_universal_passwords_4','rotating_universal_passwords_5','rotating_universal_passwords_6','rotating_universal_passwords_7','rotating_universal_passwords_8','MOM_Exclude_VisitorCategories','MOM_Exclude_VisitorTags',
@@ -799,8 +800,6 @@ Author URI: http://onebillionwords.com/
 				if(isset($_POST['mom_versions_submit']))update_option('mommaincontrol_versionnumbers',$_REQUEST['mommaincontrol_versionnumbers']);
 				if(isset($_POST['mom_meta_mode_submit']))update_option('mommaincontrol_meta',$_REQUEST['mommaincontrol_meta']);
 				if(isset($_POST['mom_maintenance_mode_submit']))update_option('mommaincontrol_maintenance',$_REQUEST['maintenanceMode']);
-				if(isset($_POST['mom_analytics_mode_submit']))update_option('mommaincontrol_analytics',$_REQUEST['analytics']);
-				if(isset($_POST['mom_postasfront_mode_submit']))update_option('mommaincontrol_mompaf',$_REQUEST['postasfront']);
 				if(!get_option('mommaincontrol_mompaf'))add_option('mompaf_post',0);
 				if(isset($_POST['mom_maintenance_mode_submit']))add_option('momMaintenance_url','');
 				if(isset($_POST['mom_postasfront_post_submit'])){
@@ -945,9 +944,7 @@ Author URI: http://onebillionwords.com/
 						update_option('mommaincontrol_passwords_activated',0);
 					}
 				}
-				if(isset($_POST['mom_postasfront_mode_submit'])){
-					add_option('mompaf_post',0);
-				}
+				add_option('mompaf_post',0);
 				if(isset($_POST['mom_reviews_mode_submit'])){
 					add_option('mommaincontrol_reviews_activated',1);
 					add_option('momreviews_search','');
@@ -1062,7 +1059,7 @@ Author URI: http://onebillionwords.com/
 			function my_optional_modules_page_content(){
 				echo '
 				<div class="wrap">
-				my optional modules / <a href="http://www.onebillionwords.com/">documentation + support</a> / <a href="http://wordpress.org/support/view/plugin-reviews/my-optional-modules">rate and review</a>
+				my optional modules / <a href="http://wordpress.org/support/view/plugin-reviews/my-optional-modules">rate and review</a>
 				<div class="myoptionalmodules">
 				<section class="switches clear">
 				<form method="post"><section><label class="configurationlabel" for="MOMclear">Home</label><input id="MOMclear" name="MOMclear" class="hidden" type="submit"></section></form>';
@@ -1086,9 +1083,7 @@ Author URI: http://onebillionwords.com/
 				<form method="post" action="" name="regularboard"><label for="mom_regularboard_mode_submit">Regular Board</label>';if(get_option('mommaincontrol_regularboard') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input class="hidden" type="text" value="';if(get_option('mommaincontrol_regularboard') == 1){echo '0';}else{echo '1';}echo '" name="regularboard" /><input type="submit" id="mom_regularboard_mode_submit" name="mom_regularboard_mode_submit" value="Submit" class="hidden" /></form>
 				<form method="post" action="" name="fixcanon"><label for="mom_fixcanon_mode_submit">Fix Canon</label>';if(get_option('mommaincontrol_fixcanon') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input class="hidden" type="text" value="';if(get_option('mommaincontrol_fixcanon') == 1){echo '0';}else{echo '1';}echo '" name="fixcanon" /><input type="submit" id="mom_fixcanon_mode_submit" name="mom_fixcanon_mode_submit" value="Submit" class="hidden" /></form>
 				<form method="post" action="" name="prettycanon"><label for="mom_prettycanon_mode_submit">Pretty Canon</label>';if(get_option('mommaincontrol_prettycanon') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input class="hidden" type="text" value="';if(get_option('mommaincontrol_prettycanon') == 1){echo '0';}else{echo '1';}echo '" name="prettycanon" /><input type="submit" id="mom_prettycanon_mode_submit" name="mom_prettycanon_mode_submit" value="Submit" class="hidden" /></form>
-				<form method="post" action="" name="momAnalytics"><label for="mom_analytics_mode_submit">Analytics</label>';if(get_option('mommaincontrol_analytics') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input type="text" class="hidden" value="';if(get_option('mommaincontrol_analytics') == 1){echo '0';}else{echo '1';}echo '" name="analytics" /><input type="submit" id="mom_analytics_mode_submit" name="mom_analytics_mode_submit" class="hidden" value="Submit" /></form>
 				<form method="post" action="" name="momMaintenance"><label for="mom_maintenance_mode_submit">Maintenance</label>';if(get_option('mommaincontrol_maintenance') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input type="text" class="hidden" value="';if(get_option('mommaincontrol_maintenance') == 1){echo '0';}else{echo '1';}echo '" name="maintenanceMode" class="hidden" /><input type="submit" id="mom_maintenance_mode_submit" name="mom_maintenance_mode_submit" class="hidden" value="Submit" /></form>
-				<form method="post" action="" name="mompaf"><label for="mom_postasfront_mode_submit">Post as Front</label>';if(get_option('mommaincontrol_mompaf') == 1){echo '<i class="fa fa-check-square"></i>';}else{echo '<i class="fa fa-square"></i>';}echo '<input type="text" class="hidden" value="';if(get_option('mommaincontrol_mompaf') == 1){echo '0';}else{echo '1';}echo '" name="postasfront" class="hidden" /><input type="submit" id="mom_postasfront_mode_submit" name="mom_postasfront_mode_submit" class="hidden" value="Submit" /></form>
 				';
 				if(!isset($_POST['mom_delete_step_one'])){
 				echo '
@@ -1111,8 +1106,9 @@ Author URI: http://onebillionwords.com/
 				<form method="post" action="">
 				<section class="single left"><label>Analytics property ID</label><input onClick="this.select();" type="text" value="'.get_option('momanalytics_code').'" name="momanalytics_code" placeholder="UA-XXXXXXXX-X" /></section>
 				<section class="single left"><label>URL for maintenance mode</label><input placeholder="http://url.tld" onClick="this.select();" type="text" value="'.get_option('momMaintenance_url').'" name="momMaintenance_url" /></section>
-				<section class="single left"><label>Post as front</label><select name="mompaf_post" id="mompaf_0"><option value="0" ';$mompaf_post = get_option('mompaf_post');selected( $options['mompaf_post'], 0);echo '/>Latest post</option>';$showmeposts = get_posts(array('posts_per_page' => -1));foreach($showmeposts as $postsshown){echo '<option name="mompaf_post" id="mompaf_'.$postsshown->ID.'" value="'.$postsshown->ID.'"';$postID = $postsshown->ID;$selected = selected( $mompaf_post, $postID);echo '>'.$postsshown->post_title.'</option>';}echo '</select></section>
-				<section class="single left"><label for="mom_postasfront_post_submit" class="save"><i class="fa fa-save"></i></label><input type="submit" id="mom_postasfront_post_submit" name="mom_postasfront_post_submit" value="Submit" class="hidden"></section>
+				<section class="single left"><label>Post as front</label><select name="mompaf_post" id="mompaf_0"><option value="null">Disabled</option><option value="0" ';$mompaf_post = get_option('mompaf_post');selected( $options['mompaf_post'], 0);echo '/>Latest post</option>';$showmeposts = get_posts(array('posts_per_page' => -1));foreach($showmeposts as $postsshown){echo '<option name="mompaf_post" id="mompaf_'.$postsshown->ID.'" value="'.$postsshown->ID.'"';$postID = $postsshown->ID;$selected = selected( $mompaf_post, $postID);echo '>'.$postsshown->post_title.'</option>';}echo '</select></section>
+				<section class="clear"></section>
+				<section class="single left"><input type="submit" id="mom_postasfront_post_submit" name="mom_postasfront_post_submit" value="Save these options" ></section>
 				</form>
 				</section>
 				</div>
@@ -1122,22 +1118,10 @@ Author URI: http://onebillionwords.com/
 				my_optional_modules_cleaner_module();
 				echo '
 				</div>
-				</section>
-				';
-				if(get_option('mommaincontrol_focus') != ''){
-					echo '
-					<div class="panelSection clear plugin">';
-					if(get_option('mommaincontrol_obwcountplus') == 1 && get_option('mommaincontrol_focus') == 'count'){my_optional_modules_count_module();}
-					elseif(get_option('mommaincontrol_momse') == 1 && get_option('mommaincontrol_focus') == 'exclude'){my_optional_modules_exclude_module();}
-					elseif(get_option('mommaincontrol_momja') == 1 && get_option('mommaincontrol_focus') == 'jumparound'){my_optional_modules_jump_around_module();}
-					elseif(get_option('mommaincontrol_momrups') == 1 && get_option('mommaincontrol_focus') == 'passwords'){my_optional_modules_passwords_module();}
-					elseif(get_option('mommaincontrol_reviews') == 1 && get_option('mommaincontrol_focus') == 'reviews'){my_optional_modules_reviews_module();}
-					elseif(get_option('mommaincontrol_shorts') == 1 && get_option('mommaincontrol_focus') == 'shortcodes'){my_optional_modules_shortcodes_module();}
-					elseif(get_option('mommaincontrol_themetakeover') == 1 && get_option('mommaincontrol_focus') == 'themetakeover'){my_optional_modules_theme_takeover_module();}
-					echo '</div>';
-				}else{
-					if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){}else{ '<code>CRYPT_BLOWFISH is not available.  Passwords module disabled.</code><br />';}
-					if(!isset($_POST['generateHash'])){
+				
+				<hr class="clear" />';
+				
+				if(!isset($_POST['generateHash'])){
 						echo '<form action="" method="post" name="generateHash"><input type="submit" name="generateHash" id="generateHash" value="Generate the file hash to check."/></form>';
 					}
 					if(isset($_POST['generateHash'])){
@@ -1170,14 +1154,14 @@ Author URI: http://onebillionwords.com/
 					/*24*/	'includes/modules/regular_board_user_loop.php',
 					/*25*/	'includes/javascript/fitvids.js',
 					/*26*/	'includes/javascript/lazyload.js',
-					/*27*/	'includes/javascript/regularboard05492883.js',
+					/*27*/	'includes/javascript/regularboard05492886.js',
 					/*28*/	'includes/javascript/stucktothebottom.js',
 					/*29*/	'includes/javascript/stucktothetop.js',
 					/*30*/	'includes/javascript/wowheadtooltips.js',
 					/*31*/	'includes/adminstyle/css.css',
 					/*32*/	'includes/css/_404style.css',
 					/*33*/	'includes/css/myoptionalmodules05492702.css',
-					/*34*/	'includes/css/regularboard05492883.css'
+					/*34*/	'includes/css/regularboard05492886.css'
 					);
 					echo '<blockquote>';
 					$line = 0;
@@ -1195,7 +1179,29 @@ Author URI: http://onebillionwords.com/
 					echo '</blockquote>';
 						
 						
-					}
+					}				
+				
+				echo '<hr class="clear" />
+				
+				<div class="faq">';
+				include(plugin_dir_path(__FILE__) . '/includes/modules/plugin_faq.php');
+				echo '</div>
+				
+				</section>
+				';
+				if(get_option('mommaincontrol_focus') != ''){
+					echo '
+					<div class="panelSection clear plugin">';
+					if(get_option('mommaincontrol_obwcountplus') == 1 && get_option('mommaincontrol_focus') == 'count'){my_optional_modules_count_module();}
+					elseif(get_option('mommaincontrol_momse') == 1 && get_option('mommaincontrol_focus') == 'exclude'){my_optional_modules_exclude_module();}
+					elseif(get_option('mommaincontrol_momja') == 1 && get_option('mommaincontrol_focus') == 'jumparound'){my_optional_modules_jump_around_module();}
+					elseif(get_option('mommaincontrol_momrups') == 1 && get_option('mommaincontrol_focus') == 'passwords'){my_optional_modules_passwords_module();}
+					elseif(get_option('mommaincontrol_reviews') == 1 && get_option('mommaincontrol_focus') == 'reviews'){my_optional_modules_reviews_module();}
+					elseif(get_option('mommaincontrol_shorts') == 1 && get_option('mommaincontrol_focus') == 'shortcodes'){my_optional_modules_shortcodes_module();}
+					elseif(get_option('mommaincontrol_themetakeover') == 1 && get_option('mommaincontrol_focus') == 'themetakeover'){my_optional_modules_theme_takeover_module();}
+					echo '</div>';
+				}else{
+					if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){}else{ '<code>CRYPT_BLOWFISH is not available.  Passwords module disabled.</code><br />';}
 				}
 			echo '</div>';
 			}
@@ -3493,7 +3499,7 @@ Author URI: http://onebillionwords.com/
 			}
 			add_action('wp_enqueue_scripts','mom_jquery');
 			function MOMScriptsFooter(){
-				if(get_option('mommaincontrol_analytics') == 1 && get_option('momanalytics_code') != '' || 
+				if(get_option('momanalytics_code') != '' || 
 				get_option('mommaincontrol_momja') == 1 && is_archive() || 
 				get_option('mommaincontrol_momja') == 1 && is_home() || 
 				get_option('mommaincontrol_momja') == 1 && is_search() || 
@@ -3501,7 +3507,7 @@ Author URI: http://onebillionwords.com/
 				get_option('MOM_themetakeover_postdiv') != '' && get_option('MOM_themetakeover_postelement') != ''){
 				echo '
 				<script type=\'text/javascript\'>';
-				if(get_option('mommaincontrol_analytics') == 1 && get_option('momanalytics_code') != ''){
+				if(get_option('momanalytics_code') != ''){
 					echo '
 					(function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){
 					(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
