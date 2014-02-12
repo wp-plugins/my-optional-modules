@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: 4chan,gravatar,youtube,DNSBL,akismet,ipv4,ipv6,htmlpurifier,tripcode,sage,chan,capcodes,board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.8
 Tested up to: 3.8
-Stable tag: 5.5.1
+Stable tag: 5.5.2
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -56,9 +56,6 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * noarchive/nofollow on 404/search pages/archives.
 * Disables Jetpack open graph.
 
-= Tools: =
-
-
 == Installation ==
 = 3-step installation =
 1. Upload /my-optional-modules/ to your plguins folder.
@@ -66,7 +63,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 3. Activate it.
 
 * Filehash
-* (1)1e6b62d4f6beac6bead9baade88c7cc60c3e2397(2)ecc76c5bb343551b0382d8491af0354902af8ce7
+* (1)b437589c00dfecedf7615a80c17c9e33482c3658(2)ecc76c5bb343551b0382d8491af0354902af8ce7
 * (3)5a07fdd02f5ae017e102dbf515af0ab0683a8c65(4)ce217e9691e49b53ca7fabd5f2c0c04af02ef7c3
 * (5)d23ea65d018f943ffb5d002873b2ec019af759a0(6)b1e416058508bdba3ba9bd90ab94e9dc8cee5b64
 * (7)f7e6d6169b7f78fd7ed212b67e002cccf52a74c0(8)aa8275d0abe52342dd3d59ea39bb5a5447e31d21
@@ -96,8 +93,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
-* Information moved to home screen, official support website removed from documentation.
-* File hashes moved to readme (compare against repository version)
+* Post as front fixed to properly display 'latest post' as being the saved option (if saved as such)
 
 = .5 =
 * HTMLPurifier (added)

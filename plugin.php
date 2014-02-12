@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: http://wordpress.org/plugins/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 5.5.1
+Version: 5.5.2
 Author: Matthew Trevino
 Author URI: http://wordpress.org/plugins/my-optional-modules/
 */
@@ -165,7 +165,7 @@ Author URI: http://wordpress.org/plugins/my-optional-modules/
 		if($mommodule_passwords == 1)$mommodule_passwords = true;
 		if($mommodule_passwords === true)add_shortcode('rups','rotating_universal_passwords_shortcode');
 		if($mommodule_passwords === true)add_filter('the_content','do_shortcode','rotating_universal_passwords_shortcode');
-		if(get_option('mompaf_post') != 'null')add_action('wp','myoptionalmodules_postasfront');
+		if(get_option('mompaf_post') != 'off')add_action('wp','myoptionalmodules_postasfront');
 		$mommodule_reviews = esc_attr(get_option('mommaincontrol_reviews'));
 		if($mommodule_reviews == 1)$mommodule_reviews = true;
 		if($mommodule_reviews === true)add_shortcode('momreviews','mom_reviews_shortcode');	
@@ -682,11 +682,11 @@ Author URI: http://wordpress.org/plugins/my-optional-modules/
 		
 		function myoptionalmodules_postasfront(){	
 			if(is_home()){
-				if(get_option('mompaf_post') == 'null'){
+				if(get_option('mompaf_post') == 'off'){
 					// Do nothing
 				}elseif(is_numeric(get_option('mompaf_post'))){
 					$mompaf_front = get_option('mompaf_post');
-				}else{
+				}elseif(get_option('mompaf_post') == 'on'){
 					$mompaf_front = '';
 				}
 				if(have_posts()):the_post();
@@ -944,7 +944,7 @@ Author URI: http://wordpress.org/plugins/my-optional-modules/
 						update_option('mommaincontrol_passwords_activated',0);
 					}
 				}
-				add_option('mompaf_post',0);
+				add_option('mompaf_post','off');
 				if(isset($_POST['mom_reviews_mode_submit'])){
 					add_option('mommaincontrol_reviews_activated',1);
 					add_option('momreviews_search','');
@@ -1106,7 +1106,21 @@ Author URI: http://wordpress.org/plugins/my-optional-modules/
 				<form method="post" action="">
 				<section class="single left"><label>Analytics property ID</label><input onClick="this.select();" type="text" value="'.get_option('momanalytics_code').'" name="momanalytics_code" placeholder="UA-XXXXXXXX-X" /></section>
 				<section class="single left"><label>URL for maintenance mode</label><input placeholder="http://url.tld" onClick="this.select();" type="text" value="'.get_option('momMaintenance_url').'" name="momMaintenance_url" /></section>
-				<section class="single left"><label>Post as front</label><select name="mompaf_post" id="mompaf_0"><option value="null">Disabled</option><option value="0" ';$mompaf_post = get_option('mompaf_post');selected( $options['mompaf_post'], 0);echo '/>Latest post</option>';$showmeposts = get_posts(array('posts_per_page' => -1));foreach($showmeposts as $postsshown){echo '<option name="mompaf_post" id="mompaf_'.$postsshown->ID.'" value="'.$postsshown->ID.'"';$postID = $postsshown->ID;$selected = selected( $mompaf_post, $postID);echo '>'.$postsshown->post_title.'</option>';}echo '</select></section>
+				<section class="single left">
+					<label>Post as front</label>
+					<select name="mompaf_post" id="mompaf_0">
+						<option value="off"'; if ( get_option('mompaf_post') == 'off' ) { echo ' selected="selected" '; } echo '>Disabled</option>
+						<option value="on"'; if ( get_option('mompaf_post') == 'on') { echo ' selected="selected" '; } echo '/>Latest post</option>';
+						$mompaf_post = get_option('mompaf_post');
+						selected( $options['mompaf_post'], 0 );
+						$showmeposts = get_posts(array('posts_per_page' => -1));
+						foreach($showmeposts as $postsshown){
+							echo '<option name="mompaf_post" id="mompaf_'.$postsshown->ID.'" value="'.$postsshown->ID.'"';
+							$postID = $postsshown->ID;
+							$selected = selected( $mompaf_post, $postID);
+							echo '>'.$postsshown->post_title.'</option>';
+						}
+						echo '</select></section>
 				<section class="clear"></section>
 				<section class="single left"><input type="submit" id="mom_postasfront_post_submit" name="mom_postasfront_post_submit" value="Save these options" ></section>
 				</form>
