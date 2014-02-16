@@ -32,15 +32,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Post Voting: Add a vote box to each post via template function. (display top posts with a shortcode).  
 
 = Regular Board = 
-* Regular Board is beta software.  There is bound to be bugs in it.
-* Disclaimer: may not work with all installations as CSS may need to be tweaked on a THEME level.
-* Can set board to private (logged in users only)
-* Supports Youtube/Youtu.be/image embedding (via URL)
-* Supports DNSBL/Akismet/IPv4 and IPv6 validation (autobans DNSBL/Akismet results, disables posting for IP addresses that aren't IPv4/IPv6 valid)
-* Supports Tripcodes and saging
-* Unlike other *chan scripts, the important details that are inserted into the database are handled server-side, not client side with hidden fields.
-* Capcodes for logged in mods
-* Deployed via [shortcode]
+[Regular Board has been branched to its own plugin (and completely re-worked).](https://github.com/onebillion/regular_board)
+It will no longer be maintained on this plugin.
 
 = Tweaks: =
 * Analaytics automatic embedding.
