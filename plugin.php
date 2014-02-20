@@ -1,238 +1,206 @@
 <?php 
-/*
-Plugin Name: My Optional Modules
-Plugin URI: http://wordpress.org/plugins/my-optional-modules/
-Description: Optional modules and additions for Wordpress.
-Version: 5.5.2
-Author: Matthew Trevino
-Author URI: http://wordpress.org/plugins/my-optional-modules/
-*/
-	
-	// LICENSE
-	// This program is free software; you can redistribute it and/or modify
-	// it under the terms of the GNU General Public License, version 2, as
-	// published by the Free Software Foundation.
-	
-	// This program is distributed in the hope that it will be useful,
-	// but WITHOUT ANY WARRANTY; without even the implied warranty of
-	// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	// GNU General Public License for more details.
-	
-	// You should have received a copy of the GNU General Public License
-	// along with this program;if not, write to the Free Software
-	// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-	// (A) Dependencies
-	// (B) Installation
-	// (B) (1) Plugin variables
-	// (B) (2) Plugin functions
-	// (B) (3) Plugin form handling
-	// (C) Plugin settings	
-	// (E) Reviews          (settings page)
-	// (E) (1) Reviews      (shortcode)
-	// (I) Font Awesome     (shortcode)
-	// (J) Count++          (settings page)
-	// (L) Jump Around      (settings page)
-	// (M) Post Voting      (functions)
-	// (W) Database Cleaner (functions)
-	// (X) Plugin javascript
-	// (Y) Quick press
+/**
+ * Plugin Name: My Optional Modules
+ * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
+ * Description: Optional modules and additions for Wordpress.
+ * Version: 5.5.3
+ * Author: Matthew Trevino
+ * Author URI: http://wordpress.org/plugins/my-optional-modules/
+ *	
+ * LICENSE
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License, version 2, as
+ * published by the Free Software Foundation.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with this program;if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+
+/**
+ * Dependencies
+ */
+
+define ( 'MyOptionalModules', true );
+require_once ( ABSPATH . 'wp-includes/pluggable.php' );
+$my_optional_modules_passwords_salt = get_option ( 'mom_passwords_salt' );
+$passwordField                      = 0;
+if ( function_exists ('akismet_admin_init' ) ) {
+	require_once ( 'akismet.class.php' );
+}
 	
-	// 	SECTION D > Passwords
-	// 		(D0) Settings > Settings page
-	// 		(D1) Functions > Functions([shortcode])
-	// 	SECTION F > Shortcodes
-	// 		(F0) Settings > Settings display (informational purposes screen)
-	// 		(F1) Shortcodes > [shortcodes]
-	//	SECTION G > Meta
-	// 		(G0) Functions > Meta functions
-	// 	SECTION H > Theme Takeover
-	// 		(H0) Settings > Settings page
-	// 		(H1) Functions > Theme Takeover functions
-	// 	SECTION J > Count++
-	// 		(J1) Functions > Count++ Theme functions
-	// 	SECTION K > Exclude
-	// 		(K0) Settings > Settings page
-	// 		(K1) Functions > Exclude functions
-	// 	SECTION N > REGULARD BOARD
-	// 		(N0) Functions > Regular Board
-
-
-
-
-
-
-	// (A) Dependencies
-		define('MyOptionalModules',true);
-		require_once(ABSPATH.'wp-includes/pluggable.php');
-		$my_optional_modules_passwords_salt = get_option('mom_passwords_salt');
-		$passwordField                      = 0;
-		if(function_exists('akismet_admin_init')){
-			require_once('akismet.class.php');
-		}
-	//
-	
-	
-	
-	
-	// (B) Installation
-		register_activation_hook(__FILE__,'myoptionalmodules_main_control_install');
-		add_action('wp','myoptionalmodules_enqueuescripts');
-		add_action('admin_enqueue_scripts','mom_styles');
-		add_action('admin_enqueue_scripts','MOMFontAwesomeIncluded');
-		add_action('wp_print_styles','MOMMainCSS');
+/**
+ * Installation
+ */
+ 
+register_activation_hook ( __FILE__, 'myoptionalmodules_main_control_install' );
+add_action ( 'wp', 'myoptionalmodules_enqueuescripts' );
+add_action ( 'admin_enqueue_scripts', 'mom_styles' );
+add_action ( 'admin_enqueue_scripts', 'MOMFontAwesomeIncluded' );
+add_action ( 'wp_print_styles', 'MOMMainCSS' );
 		
-		function mom_styles($hook){
-			if('settings_page_mommaincontrol' != $hook)
-			return;
-			wp_register_style('mom_admin_css',plugins_url().'/'.plugin_basename(dirname(__FILE__)).'/includes/adminstyle/css.css');
-			wp_register_style('font_awesome',plugins_url().'/'.plugin_basename(dirname(__FILE__)).'/includes/fontawesome/css/font-awesome.min.css');
-			wp_enqueue_style('font_awesome');
-			wp_enqueue_style('mom_admin_css');	
-		}
+function mom_styles( $hook ){
+	if ( 'settings_page_mommaincontrol' != $hook )
+	return;
+	wp_register_style ( 'mom_admin_css', plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/adminstyle/css.css' );
+	wp_register_style ( 'font_awesome', plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' );
+	wp_enqueue_style ( 'font_awesome' );
+	wp_enqueue_style ( 'mom_admin_css' );
+}
 		
-		function MOMFontAwesomeIncluded(){
-			wp_register_style('font_awesome',plugins_url().'/'.plugin_basename(dirname(__FILE__)).'/includes/fontawesome/css/font-awesome.min.css');
-			wp_enqueue_style('font_awesome');
-		}
+function MOMFontAwesomeIncluded() {
+	wp_register_style ( 'font_awesome', plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' );
+	wp_enqueue_style ( 'font_awesome' );
+}
 		
-		function MOMMainCSS(){
-			$myStyleFile = WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules05492702.css';
-			wp_register_style('my_optional_modules',$myStyleFile);
-			wp_enqueue_style('my_optional_modules');
-		}
-	// 
+function MOMMainCSS() {
+	$myStyleFile = WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules05492702.css';
+	wp_register_style ( 'my_optional_modules', $myStyleFile );
+	wp_enqueue_style ( 'my_optional_modules' );
+}
 
+/**
+ * Variables
+ */
+$mommodule_focus = esc_attr(get_option('mommaincontrol_focus'));
 
+$mommodule_prettycanon    = false; 
+$mommodule_fixcanon       = false; 
+$mommodule_analytics      = false; 
+$mommodule_count          = false; 
+$mommodule_exclude        = false; 
+$mommodule_focus          = false; 
+$mommodule_fontawesome    = false; 
+$mommodule_jumparound     = false; 
+$mommodule_lazyload       = false; 
+$mommodule_maintenance    = false; 
+$mommodule_meta           = false; 
+$mommodule_passwords      = false; 
+$mommodule_postasfront    = false; 
+$mommodule_reviews        = false; 
+$mommodule_shortcodes     = false; 
+$mommodule_themetakeover  = false; 
+$mommodule_versionnumbers = false;
 
+$mommodule_jumparound     = esc_attr ( get_option ( 'mommaincontrol_momja' ) );
+$mommodule_count          = esc_attr ( get_option ( 'mommaincontrol_obwcountplus' ) );
+$mommodule_exclude        = esc_attr ( get_option ( 'mommaincontrol_momse' ) );
+$mommodule_fontawesome    = esc_attr ( get_option ( 'mommaincontrol_fontawesome' ) );
+$mommodule_authorarchives = esc_attr ( get_option ( 'mommaincontrol_authorarchives' ) );
+$mommodule_datearchives   = esc_attr ( get_option ( 'mommaincontrol_datearchives' ) );
+$mommodule_footerscripts  = esc_attr ( get_option ( 'mommaincontrol_footerscripts' ) );
+$mommodule_protectrss     = esc_attr ( get_option ( 'mommaincontrol_protectrss' ) );
+$mommodule_lazyload       = esc_attr ( get_option ( 'mommaincontrol_lazyload' ) );
+$mommodule_maintenance    = esc_attr ( get_option ( 'mommaincontrol_maintenance' ) );
+$mommodule_meta           = esc_attr ( get_option ( 'mommaincontrol_meta' ) );
+$mommodule_rb             = esc_attr ( get_option ( 'mommaincontrol_regularboard' ) );
+$mommodule_passwords      = esc_attr ( get_option ( 'mommaincontrol_momrups' ) );
+$mommodule_reviews        = esc_attr ( get_option ( 'mommaincontrol_reviews' ) );
+$mommodule_shortcodes     = esc_attr ( get_option ( 'mommaincontrol_shorts' ) );
+$mommodule_themetakeover  = esc_attr ( get_option ( 'mommaincontrol_themetakeover' ) );
+$mommodule_versionnumbers = esc_attr ( get_option ( 'mommaincontrol_versionnumbers' ) );
+$mommodule_fixcanon       = esc_attr ( get_option ( 'mommaincontrol_fixcanon' ) );
+$momthemetakeover_youtube = esc_url ( get_option ( 'MOM_themetakeover_youtubefrontpage' ) );
 
-	// (B) (1) Plugin variables
-		$mommodule_focus = esc_attr(get_option('mommaincontrol_focus'));
-		$mommodule_prettycanon = $mommodule_fixcanon = $mommodule_analytics = $mommodule_count = $mommodule_exclude = $mommodule_focus = $mommodule_fontawesome = 
-		$mommodule_jumparound = $mommodule_lazyload = $mommodule_maintenance = $mommodule_meta = $mommodule_passwords = 
-		$mommodule_postasfront = $mommodule_reviews = $mommodule_shortcodes = $mommodule_themetakeover = $mommodule_versionnumbers = false;
-		if($mommodule_analytics == 1)$mommodule_analytics = true;
-		$mommodule_count = esc_attr(get_option('mommaincontrol_obwcountplus'));
-		if($mommodule_count == 1)$mommodule_count = true;
-		$mommodule_exclude = esc_attr(get_option('mommaincontrol_momse'));
-		if($mommodule_exclude == 1)$mommodule_exclude = true;
-		if($mommodule_exclude === true)add_action('after_setup_theme','myoptionalmodules_postformats');
-		if($mommodule_exclude === true)add_action('pre_get_posts','mom_exclude_filter_posts');
-		if($mommodule_focus == 1)$mommodule_focus = true;
-		$mommodule_fontawesome = esc_attr(get_option('mommaincontrol_fontawesome'));
-		if($mommodule_fontawesome == 1)$mommodule_fontawesome = true;
-		if($mommodule_fontawesome === true)add_action('wp_enqueue_scripts','myoptionalmodules_scripts');
-		if($mommodule_fontawesome === true)add_shortcode('font-fa','font_fa_shortcode');
-		if($mommodule_fontawesome === true)add_filter('the_content','do_shortcode','font_fa_shortcode');
-		$mommodule_jumparound = esc_attr(get_option('mommaincontrol_momja'));
-		if($mommodule_jumparound == 1)$mommodule_jumparound = true;
-		$mommodule_authorarchives = esc_attr(get_option('mommaincontrol_authorarchives'));
-		if($mommodule_authorarchives == 1)$mommodule_authorarchives = true;
-		if($mommodule_authorarchives === true)add_action('template_redirect','myoptionalmodules_disableauthorarchives');
-		$mommodule_datearchives = esc_attr(get_option('mommaincontrol_datearchives'));
-		if($mommodule_datearchives == 1)$mommodule_datearchives = true;
-		if($mommodule_datearchives === true)add_action('wp','myoptionalmodules_disabledatearchives');
-		if($mommodule_datearchives === true)add_action('template_redirect','myoptionalmodules_disabledatearchives');
-		$mommodule_footerscripts = esc_attr(get_option('mommaincontrol_footerscripts'));
-		if($mommodule_footerscripts == 1)$mommodule_footerscripts = true;
-		if($mommodule_footerscripts === true)add_action('wp_enqueue_scripts','myoptionalmodules_footerscripts');
-		if($mommodule_footerscripts === true)add_action('wp_footer','wp_print_scripts',5);
-		if($mommodule_footerscripts === true)add_action('wp_footer','wp_enqueue_scripts',5);
-		if($mommodule_footerscripts === true)add_action('wp_footer','wp_print_head_scripts',5);
-		$mommodule_protectrss = esc_attr(get_option('mommaincontrol_protectrss'));
-		if($mommodule_protectrss == 1)$mommodule_protectrss = true;
-		if($mommodule_protectrss === true)add_filter('the_content_feed','myoptionalmodules_rsslinkback');
-		if($mommodule_protectrss === true)add_filter('the_excerpt_rss','myoptionalmodules_rsslinkback');
-		$mommodule_lazyload = esc_attr(get_option('mommaincontrol_lazyload'));
-		if($mommodule_lazyload == 1)$mommodule_lazyload = true;
-		$mommodule_maintenance = esc_attr(get_option('mommaincontrol_maintenance'));
-		if($mommodule_maintenance == 1)$mommodule_maintenance = true;
-		if($mommodule_maintenance === true)add_action('wp','momMaintenance');
-		
-		$mommodule_meta = esc_attr(get_option('mommaincontrol_meta'));
-		if($mommodule_meta == 1)$mommodule_meta = true;
-		if($mommodule_meta === true)mom_SEO_header();
-		if($mommodule_meta === true)add_filter('admin_init','myoptionalmodules_add_fields_to_general');
-		if($mommodule_meta === true)add_filter('user_contactmethods','myoptionalmodules_add_fields_to_profile');
-		if($mommodule_meta === true)add_filter('jetpack_enable_opengraph','__return_false',99);
-		if($mommodule_meta === true)add_action('wp_head','mom_meta_module');
-		
-		$mommodule_rb = esc_attr(get_option('mommaincontrol_regularboard'));
-		if($mommodule_rb == 1)$mommodule_rb = true;
-		if($mommodule_rb === true)add_filter('jetpack_enable_opengraph','__return_false',99);
-		
-		$mommodule_passwords = esc_attr(get_option('mommaincontrol_momrups'));
-		if($mommodule_passwords == 1)$mommodule_passwords = true;
-		if($mommodule_passwords === true)add_shortcode('rups','rotating_universal_passwords_shortcode');
-		if($mommodule_passwords === true)add_filter('the_content','do_shortcode','rotating_universal_passwords_shortcode');
-		if(get_option('mompaf_post') != 'off')add_action('wp','myoptionalmodules_postasfront');
-		$mommodule_reviews = esc_attr(get_option('mommaincontrol_reviews'));
-		if($mommodule_reviews == 1)$mommodule_reviews = true;
-		if($mommodule_reviews === true)add_shortcode('momreviews','mom_reviews_shortcode');	
-		if($mommodule_reviews === true)add_filter('the_content','do_shortcode','mom_reviews_shortcode');	
-		$mommodule_shortcodes = esc_attr(get_option('mommaincontrol_shorts'));
-		if($mommodule_shortcodes == 1)$mommodule_shortcodes = true;
-		if($mommodule_shortcodes === true)add_shortcode('mom_archives','mom_archives');
-		if($mommodule_shortcodes === true)add_shortcode('mom_onthisday','mom_onthisday');
-		if($mommodule_shortcodes === true)add_shortcode('mom_map','mom_google_map_shortcode');
-		if($mommodule_shortcodes === true)add_shortcode('mom_reddit','mom_reddit_shortcode');
-		if($mommodule_shortcodes === true)add_shortcode('mom_restrict','mom_restrict_shortcode');
-		if($mommodule_shortcodes === true)add_shortcode('mom_progress','mom_progress_shortcode');
-		if($mommodule_shortcodes === true)add_shortcode('mom_verify','mom_verify_shortcode');
-		if($mommodule_shortcodes === true)add_filter('the_content','do_shortcode','mom_onthisday');
-		if($mommodule_shortcodes === true)add_filter('the_content','do_shortcode','mom_archives');
-		if($mommodule_shortcodes === true)add_filter('the_content','do_shortcode','mom_map');
-		if($mommodule_shortcodes === true)add_filter('the_content','do_shortcode','mom_reddit');
-		if($mommodule_shortcodes === true)add_filter('the_content','do_shortcode','mom_restrict');
-		if($mommodule_shortcodes === true)add_filter('the_content','do_shortcode','mom_progress');
-		if($mommodule_shortcodes === true)add_filter('the_content','do_shortcode','mom_verify');
-		$mommodule_themetakeover = esc_attr(get_option('mommaincontrol_themetakeover'));
-		if($mommodule_themetakeover == 1)$mommodule_themetakeover = true;
-		$mommodule_versionnumbers = esc_attr(get_option('mommaincontrol_versionnumbers'));
-		if($mommodule_versionnumbers == 1)$mommodule_versionnumbers = true;
-		if($mommodule_versionnumbers === true)add_filter('style_loader_src','myoptionalmodules_removeversion',0);
-		if($mommodule_versionnumbers === true)add_filter('script_loader_src','myoptionalmodules_removeversion',0);
-		$momthemetakeover_youtube = esc_url(get_option('MOM_themetakeover_youtubefrontpage'));
-		$mommodule_fixcanon = esc_attr(get_option('mommaincontrol_fixcanon'));
-		if($mommodule_fixcanon == 1)$mommodule_fixcanon = true;
-		if($mommodule_fixcanon === true)if( function_exists( 'rel_canonical' ) ){ remove_action( 'wp_head', 'rel_canonical' ); }
-		if($mommodule_fixcanon === true)if( function_exists( 'mom_canonical' ) ){    add_action( 'wp_head', 'mom_canonical' ); }
-		
-	//
+if ( $mommodule_analytics      == 1 ) $mommodule_analytics      = true;
+if ( $mommodule_count          == 1 ) $mommodule_count          = true;
+if ( $mommodule_exclude        == 1 ) $mommodule_exclude        = true;
+if ( $mommodule_focus          == 1 ) $mommodule_focus          = true;
+if ( $mommodule_fontawesome    == 1 ) $mommodule_fontawesome    = true;
+if ( $mommodule_jumparound     == 1 ) $mommodule_jumparound     = true;
+if ( $mommodule_authorarchives == 1 ) $mommodule_authorarchives = true;
+if ( $mommodule_datearchives   == 1 ) $mommodule_datearchives   = true;
+if ( $mommodule_footerscripts  == 1 ) $mommodule_footerscripts  = true;
+if ( $mommodule_protectrss     == 1 ) $mommodule_protectrss     = true;
+if ( $mommodule_lazyload       == 1 ) $mommodule_lazyload       = true;
+if ( $mommodule_maintenance    == 1 ) $mommodule_maintenance    = true;
+if ( $mommodule_meta           == 1 ) $mommodule_meta           = true;
+if ( $mommodule_rb             == 1 ) $mommodule_rb             = true;
+if ( $mommodule_passwords      == 1 ) $mommodule_passwords      = true;
+if ( $mommodule_reviews        == 1 ) $mommodule_reviews        = true;
+if ( $mommodule_shortcodes     == 1 ) $mommodule_shortcodes     = true;
+if ( $mommodule_themetakeover  == 1 ) $mommodule_themetakeover  = true;
+if ( $mommodule_versionnumbers == 1 ) $mommodule_versionnumbers = true;
+if ( $mommodule_fixcanon       == 1 ) $mommodule_fixcanon       = true;
+
+if ( $mommodule_exclude        === true ) add_action ( 'after_setup_theme', 'myoptionalmodules_postformats' );
+if ( $mommodule_exclude        === true ) include(plugin_dir_path(__FILE__) . '/includes/modules/exclude_filter_posts.php');
+if ( $mommodule_exclude        === true ) add_action ( 'pre_get_posts', 'mom_exclude_filter_posts' );
+if ( $mommodule_fontawesome    === true ) add_action ( 'wp_enqueue_scripts', 'myoptionalmodules_scripts' );
+if ( $mommodule_authorarchives === true ) add_action ( 'template_redirect', 'myoptionalmodules_disableauthorarchives' );
+if ( $mommodule_datearchives   === true ) add_action ( 'wp', 'myoptionalmodules_disabledatearchives' );
+if ( $mommodule_datearchives   === true ) add_action ( 'template_redirect', 'myoptionalmodules_disabledatearchives' );
+if ( $mommodule_footerscripts  === true ) add_action ( 'wp_enqueue_scripts', 'myoptionalmodules_footerscripts' );
+if ( $mommodule_footerscripts  === true ) add_action ( 'wp_footer', 'wp_print_scripts', 5 );
+if ( $mommodule_footerscripts  === true ) add_action ( 'wp_footer', 'wp_enqueue_scripts', 5 );
+if ( $mommodule_footerscripts  === true ) add_action ( 'wp_footer', 'wp_print_head_scripts', 5 );
+if ( $mommodule_maintenance    === true ) add_action ( 'wp', 'momMaintenance' );
+if ( $mommodule_meta           === true ) add_action ( 'wp_head', 'mom_meta_module' );
+if ( $mommodule_fontawesome    === true ) add_filter ( 'the_content', 'do_shortcode', 'font_fa_shortcode' );
+if ( $mommodule_protectrss     === true ) add_filter ( 'the_content_feed', 'myoptionalmodules_rsslinkback' );
+if ( $mommodule_protectrss     === true ) add_filter ( 'the_excerpt_rss', 'myoptionalmodules_rsslinkback' );
+if ( $mommodule_meta           === true ) add_filter ( 'admin_init', 'myoptionalmodules_add_fields_to_general' );
+if ( $mommodule_meta           === true ) add_filter ( 'user_contactmethods', 'myoptionalmodules_add_fields_to_profile' );
+if ( $mommodule_meta           === true ) add_filter ( 'jetpack_enable_opengraph', '__return_false', 99 );
+if ( $mommodule_rb             === true ) add_filter ( 'jetpack_enable_opengraph', '__return_false', 99 );
+if ( $mommodule_passwords      === true ) add_filter ( 'the_content', 'do_shortcode', 'rotating_universal_passwords_shortcode' );
+if ( $mommodule_reviews        === true ) add_filter ( 'the_content', 'do_shortcode', 'mom_reviews_shortcode' );
+if ( $mommodule_shortcodes     === true ) add_filter ( 'the_content', 'do_shortcode', 'mom_onthisday' );
+if ( $mommodule_shortcodes     === true ) add_filter ( 'the_content', 'do_shortcode', 'mom_archives' );
+if ( $mommodule_shortcodes     === true ) add_filter ( 'the_content', 'do_shortcode', 'mom_map' );
+if ( $mommodule_shortcodes     === true ) add_filter ( 'the_content', 'do_shortcode', 'mom_reddit' );
+if ( $mommodule_shortcodes     === true ) add_filter ( 'the_content', 'do_shortcode', 'mom_restrict' );
+if ( $mommodule_shortcodes     === true ) add_filter ( 'the_content', 'do_shortcode', 'mom_progress' );
+if ( $mommodule_shortcodes     === true ) add_filter ( 'the_content', 'do_shortcode', 'mom_verify' );
+if ( $mommodule_versionnumbers === true ) add_filter ( 'style_loader_src', 'myoptionalmodules_removeversion', 0 );
+if ( $mommodule_versionnumbers === true ) add_filter ( 'script_loader_src', 'myoptionalmodules_removeversion', 0 );
+if ( $mommodule_fontawesome    === true ) add_shortcode ( 'font-fa',  'font_fa_shortcode' );
+if ( $mommodule_passwords      === true ) add_shortcode ( 'rups', 'rotating_universal_passwords_shortcode' );
+if ( $mommodule_reviews        === true ) add_shortcode ( 'momreviews', 'mom_reviews_shortcode' );
+if ( $mommodule_shortcodes     === true ) add_shortcode ( 'mom_archives', 'mom_archives' );
+if ( $mommodule_shortcodes     === true ) add_shortcode ( 'mom_onthisday', 'mom_onthisday' );
+if ( $mommodule_shortcodes     === true ) add_shortcode ( 'mom_map', 'mom_google_map_shortcode' );
+if ( $mommodule_shortcodes     === true ) add_shortcode ( 'mom_reddit', 'mom_reddit_shortcode' );
+if ( $mommodule_shortcodes     === true ) add_shortcode ( 'mom_restrict', 'mom_restrict_shortcode' );
+if ( $mommodule_shortcodes     === true ) add_shortcode ( 'mom_progress', 'mom_progress_shortcode' );
+if ( $mommodule_shortcodes     === true ) add_shortcode ( 'mom_verify', 'mom_verify_shortcode' );
+if ( $mommodule_fixcanon       === true ) if ( function_exists ( 'rel_canonical' ) ) { remove_action ( 'wp_head', 'rel_canonical' ); }
+if ( $mommodule_fixcanon       === true ) if ( function_exists ( 'mom_canonical' ) ) {    add_action ( 'wp_head', 'mom_canonical' ); }
+if ( $mommodule_meta           === true ) mom_SEO_header();
+
+if ( get_option ( 'mompaf_post' ) != 'off' ) add_action ( 'wp', 'myoptionalmodules_postasfront' );
 	
-	
-	
-	
-	// (B) (2) Plugin functions
-	// http://stackoverflow.com/questions/10912185/how-to-add-apostrophes-around-strings-from-an-imploded-array-in-a-mysql-in-state
+/**
+ * Functions
+ */
 	function rb_apply_quotes($item){
 		return "'" . mysql_real_escape_string($item) . "'";
 	}
 	
 	// Generate a random password 
-	// http://stackoverflow.com/questions/5438760/generate-random-5-characters-string
 	$seed = str_split('abcdefghijklmnopqrstuvwxyz'
 					 .'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-					 .'0123456789!@#$%^&*()'); // and any other characters
-	shuffle($seed); // probably optional since array_is randomized; this may be redundant
+					 .'0123456789!@#$%^&*()');
+	shuffle($seed);
 	$rand = '';
 	foreach (array_rand($seed, 10) as $k) $rand .= $seed[$k];			
 	// Generate a random number
-	// http://stackoverflow.com/questions/5438760/generate-random-5-characters-string
 	$seednum = str_split('1'.
 						 '2'.
 						 '3'.
 						 '4'.
 						 '5'.
-						 '6'); // and any other characters
-	shuffle($seednum); // probably optional since array_is randomized; this may be redundant
+						 '6');
+	shuffle($seednum);
 	$randnum1 = '';
 	$randnum2 = '';
 	foreach (array_rand($seednum, 2) as $rk) $randnum1 .= $seednum[$rk];
 	foreach (array_rand($seednum, 2) as $rk) $randnum2 .= $seednum[$rk];
 
-	
-	//http://www.daniweb.com/web-development/php/code/303115/very-simple-bbcode
 	function rb_format($data){
 	$input = array(
 	'/\\\r/is',
@@ -280,7 +248,6 @@ Author URI: http://wordpress.org/plugins/my-optional-modules/
 	return wpautop($rtrn);
 	}										
 
-	// http://stackoverflow.com/questions/2398725/using-php-substr-and-strip-tags-while-retaining-formatting-and-without-break
 	function regularboard_html_cut($text, $max_length)
 	{
 		$tags   = array();
@@ -378,8 +345,6 @@ Author URI: http://wordpress.org/plugins/my-optional-modules/
 		return $result;
 	}
 	
-	// This is necessary to get Regular Board URLs to play nicely with scrapers and open graph.
-	// Unnecessary if you don't want to use Regular Board.
 	function mom_canonical(){
 		global $wp,$post;
 		$BOARD                 = '';
@@ -449,7 +414,6 @@ Author URI: http://wordpress.org/plugins/my-optional-modules/
 		}
 	}
 
-	//http://snipplr.com/view/64564/
 	function myoptionalmodules_checkdnsbl($ipaddress){
 		$dnsbl_lookup=array(
 			'dnsbl-1.uceprotect.net',
@@ -475,121 +439,114 @@ Author URI: http://wordpress.org/plugins/my-optional-modules/
 		}
 	}
 		
+	function myoptionalmodules_tripcode($name){
+		if(ereg("(#|!)(.*)", $name, $matches)){
+			$cap  = $matches[2];
+			$cap  = strtr($cap,"&amp;", "&");
+			$cap  = strtr($cap,",", ",");
+			$salt = substr($cap."H.",1,2);
+			$salt = ereg_replace("[^\.-z]",".",$salt);
+			$salt = strtr($salt,":;<=>?@[\\]^_`","ABCDEFGabcdef"); 
+			return substr(crypt($cap,$salt),-10)."";
+		}
+	}
 		
+	if(get_option('MOM_themetakeover_backgroundimage') == 1){
+		$backgroundargs = array( 
+			'default-image'          => '',
+			'default-color'          => '',
+			'wp-head-callback'       => '_custom_background_cb',
+			'admin-head-callback'    => '',
+			'admin-preview-callback' => ''
+		);
+		add_theme_support( 'custom-background', array(
+			'default-color' => 'fff',
+		) );
+	}
 		
+	function myoptionalmodules_rsslinkback($content){
+		return $content.'<p><a href="'.esc_url(get_permalink($post->ID)).'">'.htmlentities(get_post_field('post_title',$postid)).'</a> via <a href="'.esc_url(home_url('/')).'">'.get_bloginfo('site_name').'</a></p>';
+	}
 		
+	function myoptionalmodules_footerscripts(){
+		remove_action('wp_head','wp_print_scripts');
+		remove_action('wp_head','wp_print_head_scripts',9);
+		remove_action('wp_head','wp_enqueue_scripts',1);
+	}
 		
-		
-		//http://stackoverflow.com/questions/2422482/how-do-i-create-a-tripcode-system
-		function myoptionalmodules_tripcode($name){
-			if(ereg("(#|!)(.*)", $name, $matches)){
-				$cap  = $matches[2];
-				$cap  = strtr($cap,"&amp;", "&");
-				$cap  = strtr($cap,",", ",");
-				$salt = substr($cap."H.",1,2);
-				$salt = ereg_replace("[^\.-z]",".",$salt);
-				$salt = strtr($salt,":;<=>?@[\\]^_`","ABCDEFGabcdef"); 
-				return substr(crypt($cap,$salt),-10)."";
+	function myoptionalmodules_disableauthorarchives(){
+		global $wp_query;
+		if(is_author()){
+			if(sizeof(get_users('who=authors'))===1)
+				wp_redirect(get_bloginfo('url'));
+		}
+	}
+	
+	function myoptionalmodules_disabledatearchives(){
+		global $wp_query;
+		if(is_date() || is_year() || is_month() || is_day() || is_time() || is_new_day()){
+			$homeURL = esc_url(home_url('/'));
+			if(have_posts()):the_post();
+			header('location:'.$homeURL);
+			exit;
+			endif;
+		}
+	}
+	
+	// Stripping paint with a flame-thrower.
+	function myoptionalmodules_sanistripents($string){
+		return sanitize_text_field(strip_tags(htmlentities($string)));
+	}
+	
+	function myoptionalmodules_numbersnospaces($string){
+		return sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',($string)))))));
+	}
+	
+	function myoptionalmodules_excludecategories(){
+		if($mommodule_exclude == 1){
+			get_currentuserinfo();
+			global $user_level;
+			$nofollowCats = array('0');
+			if(!is_user_logged_in()){
+				$nofollowCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');	
 			}
-		}
-		
-		//http://scottnix.com/thematic-snippets/
-		if(get_option('MOM_themetakeover_backgroundimage') == 1){
-			$backgroundargs = array( 
-				'default-image'          => '',
-				'default-color'          => '',
-				'wp-head-callback'       => '_custom_background_cb',
-				'admin-head-callback'    => '',
-				'admin-preview-callback' => ''
-			);
-			add_theme_support( 'custom-background', array(
-				'default-color' => 'fff',
-			) );
-		}
-		
-		function myoptionalmodules_rsslinkback($content){
-			return $content.'<p><a href="'.esc_url(get_permalink($post->ID)).'">'.htmlentities(get_post_field('post_title',$postid)).'</a> via <a href="'.esc_url(home_url('/')).'">'.get_bloginfo('site_name').'</a></p>';
-		}
-		
-		function myoptionalmodules_footerscripts(){
-			remove_action('wp_head','wp_print_scripts');
-			remove_action('wp_head','wp_print_head_scripts',9);
-			remove_action('wp_head','wp_enqueue_scripts',1);
-		}
-		
-		function myoptionalmodules_disableauthorarchives(){
-			global $wp_query;
-			if(is_author()){
-				if(sizeof(get_users('who=authors'))===1)
-					wp_redirect(get_bloginfo('url'));
+			if(is_user_logged_in()){
+				if($user_level == 0){$nofollowCats = get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
+				if($user_level <= 1){$nofollowCats = get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
+				if($user_level <= 2){$nofollowCats = get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
+				if($user_level <= 7){$nofollowCats = get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
 			}
+			$c1 = explode(',',$nofollowCats);
+			foreach($c1 as &$C1){$C1 = ''.$C1.',';}
+			$c_1 = rtrim(implode($c1),',');
+			$c11 = explode(',',str_replace(' ','',$c_1));
+			$c11array = array($c11);
+			$array = array('0');
+			$nofollowcats = array_filter($c11);
 		}
-		
-		function myoptionalmodules_disabledatearchives(){
-			global $wp_query;
-			if(is_date() || is_year() || is_month() || is_day() || is_time() || is_new_day()){
-				$homeURL = esc_url(home_url('/'));
-				if(have_posts()):the_post();
-				header('location:'.$homeURL);
-				exit;
-				endif;
+		$category_ids = get_all_category_ids();
+		foreach($category_ids as $cat_id){
+			if($nofollowcats != ''){
+				if(in_array($cat_id, $nofollowcats))continue;
 			}
+			$cat = get_category($cat_id);
+			$link = get_category_link($cat_id);
+			echo '<li><a href="'.$link.'" title="link to '.$cat->name.'">'.$cat->name.'</a></li>';
 		}
-		
-		// Stripping paint with a flame-thrower.
-		function myoptionalmodules_sanistripents($string){
-			return sanitize_text_field(strip_tags(htmlentities($string)));
-		}
-		
-		function myoptionalmodules_numbersnospaces($string){
-			return sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',($string)))))));
-		}
-		
-		function myoptionalmodules_excludecategories(){
-			if($mommodule_exclude == 1){
-				get_currentuserinfo();
-				global $user_level;
-				$nofollowCats = array('0');
-				if(!is_user_logged_in()){
-					$nofollowCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');	
-				}
-				if(is_user_logged_in()){
-					if($user_level == 0){$nofollowCats = get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
-					if($user_level <= 1){$nofollowCats = get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
-					if($user_level <= 2){$nofollowCats = get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
-					if($user_level <= 7){$nofollowCats = get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
-				}
-				$c1 = explode(',',$nofollowCats);
-				foreach($c1 as &$C1){$C1 = ''.$C1.',';}
-				$c_1 = rtrim(implode($c1),',');
-				$c11 = explode(',',str_replace(' ','',$c_1));
-				$c11array = array($c11);
-				$array = array('0');
-				$nofollowcats = array_filter($c11);
-			}
-			$category_ids = get_all_category_ids();
-			foreach($category_ids as $cat_id){
-				if($nofollowcats != ''){
-					if(in_array($cat_id, $nofollowcats))continue;
-				}
-				$cat = get_category($cat_id);
-				$link = get_category_link($cat_id);
-				echo '<li><a href="'.$link.'" title="link to '.$cat->name.'">'.$cat->name.'</a></li>';
-			}
-		}
-		
-		function myoptionalmodules_add_fields_to_profile($profile_fields){
-			$profile_fields['twitter_personal'] = 'Twitter Username';
-			return $profile_fields;
-		}
-		function myoptionalmodules_add_fields_to_general(){
-			register_setting('general','site_twitter','esc_attr');
-			add_settings_field('site_twitter','<label for="site_twitter">'.__('Twitter Site username','site_twitter').'</label>' ,'myoptionalmodules_add_twitter_to_general_html','general');
-		}
-		function myoptionalmodules_add_twitter_to_general_html(){
-			$twitter = get_option('site_twitter','');
-			echo '<input id="site_twitter" name="site_twitter" value="'.$twitter.'"/>';
-		}
+	}
+	
+	function myoptionalmodules_add_fields_to_profile($profile_fields){
+		$profile_fields['twitter_personal'] = 'Twitter Username';
+		return $profile_fields;
+	}
+	function myoptionalmodules_add_fields_to_general(){
+		register_setting('general','site_twitter','esc_attr');
+		add_settings_field('site_twitter','<label for="site_twitter">'.__('Twitter Site username','site_twitter').'</label>' ,'myoptionalmodules_add_twitter_to_general_html','general');
+	}
+	function myoptionalmodules_add_twitter_to_general_html(){
+		$twitter = get_option('site_twitter','');
+		echo '<input id="site_twitter" name="site_twitter" value="'.$twitter.'"/>';
+	}
 		
 		function myoptionalmodules_main_control_install(){
 			if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){
@@ -1132,78 +1089,14 @@ Author URI: http://wordpress.org/plugins/my-optional-modules/
 				my_optional_modules_cleaner_module();
 				echo '
 				</div>
+				</section>';
 				
-				<hr class="clear" />';
-				
-				if(!isset($_POST['generateHash'])){
-						echo '<form action="" method="post" name="generateHash"><input type="submit" name="generateHash" id="generateHash" value="Generate the file hash to check."/></form>';
-					}
-					if(isset($_POST['generateHash'])){
-						echo '<hr class="clear" />';
-
-					$file = array( 
-					/*1*/	'plugin.php',
-					/*2*/	'akismet.class.php',
-					/*3*/	'ipblocklist.php',
-					/*4*/	'includes/templates/404.php',
-					/*5*/	'includes/templates/comments.php',
-					/*6*/	'includes/modules/regular_board.php',
-					/*7*/	'includes/modules/regular_board_activity_loops.php',
-					/*8*/	'includes/modules/regular_board_admin_form_action.php',
-					/*9*/	'includes/modules/regular_board_admin_panel.php',
-					/*10*/	'includes/modules/regular_board_board_information.php',
-					/*11*/	'includes/modules/regular_board_board_loop.php',
-					/*12*/	'includes/modules/regular_board_board_stats.php',
-					/*13*/	'includes/modules/regular_board_delete_post_action.php',
-					/*14*/	'includes/modules/regular_board_help.php',
-					/*15*/	'includes/modules/regular_board_meta.php',
-					/*16*/	'includes/modules/regular_board_post_action.php',
-					/*17*/	'includes/modules/regular_board_post_form.php',
-					/*18*/	'includes/modules/regular_board_post_voting.php',
-					/*19*/	'includes/modules/regular_board_posting_checkflood.php',
-					/*20*/	'includes/modules/regular_board_posting_deletepost.php',
-					/*21*/	'includes/modules/regular_board_posting_userbanned.php',
-					/*22*/	'includes/modules/regular_board_profile_loop.php',
-					/*23*/	'includes/modules/regular_board_single.php',
-					/*24*/	'includes/modules/regular_board_user_loop.php',
-					/*25*/	'includes/javascript/fitvids.js',
-					/*26*/	'includes/javascript/lazyload.js',
-					/*27*/	'includes/javascript/regularboard05492886.js',
-					/*28*/	'includes/javascript/stucktothebottom.js',
-					/*29*/	'includes/javascript/stucktothetop.js',
-					/*30*/	'includes/javascript/wowheadtooltips.js',
-					/*31*/	'includes/adminstyle/css.css',
-					/*32*/	'includes/css/_404style.css',
-					/*33*/	'includes/css/myoptionalmodules05492702.css',
-					/*34*/	'includes/css/regularboard05492886.css'
-					);
-					echo '<blockquote>';
-					$line = 0;
-					foreach ($file as $value){
-						$line++;
-						$file = $value;
-						$file_handler = fopen(plugin_dir_path( __FILE__ ).$value,'r'); 
-						$contents = fread($file_handler, filesize(plugin_dir_path( __FILE__ ).$value));
-						fclose($file_handler); 
-						$contents = esc_attr($contents);
-						$contents = str_replace(array("\n","\t","\r"),"",$contents);
-						echo '('.$line.')'.hash('sha1',$contents);
-						if($line % 2 == 0)echo '<br />';
-					}
-					echo '</blockquote>';
-						
-						
-					}				
-				
-				echo '<hr class="clear" />
-				
-				<div class="faq">';
-				include(plugin_dir_path(__FILE__) . '/includes/modules/plugin_faq.php');
-				echo '</div>
-				
-				</section>
-				';
-				if(get_option('mommaincontrol_focus') != ''){
+				if ( !get_option( 'mommaincontrol_focus' ) ) {
+					echo '<section class="clear"><div class="faq">';
+					include(plugin_dir_path(__FILE__) . '/includes/modules/plugin_faq.php');
+					echo '</div></section>';
+				}
+				if ( get_option('mommaincontrol_focus') ) {
 					echo '
 					<div class="panelSection clear plugin">';
 					if(get_option('mommaincontrol_obwcountplus') == 1 && get_option('mommaincontrol_focus') == 'count'){my_optional_modules_count_module();}
@@ -1214,7 +1107,7 @@ Author URI: http://wordpress.org/plugins/my-optional-modules/
 					elseif(get_option('mommaincontrol_shorts') == 1 && get_option('mommaincontrol_focus') == 'shortcodes'){my_optional_modules_shortcodes_module();}
 					elseif(get_option('mommaincontrol_themetakeover') == 1 && get_option('mommaincontrol_focus') == 'themetakeover'){my_optional_modules_theme_takeover_module();}
 					echo '</div>';
-				}else{
+				} else {
 					if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){}else{ '<code>CRYPT_BLOWFISH is not available.  Passwords module disabled.</code><br />';}
 				}
 			echo '</div>';
@@ -2991,305 +2884,175 @@ Author URI: http://wordpress.org/plugins/my-optional-modules/
 	
 	
 	
-/****************************** SECTION K -/- (K1) Settings -/- Exclude */
+/**
+ * (module) Exclude
+ * Exclude categories and tags from anywhere on the WordPress installation.
+ */
+
+get_currentuserinfo();
+global $user_level;
+
+/**
+ * Disable dashboard for non-admin
+ * (1) Hide dash for all but the admin.
+ */
+
+if ( $user_level <=7 && get_option( 'MOM_Exclude_Hide_Dashboard' ) == 1 ) {
+	function remove_the_dashboard(){
+		global $menu, $submenu, $user_ID;
+		$the_user = new WP_User ( $user_ID );
+		reset ( $menu ); $page = key ( $menu );
+		while ( ( __ ( 'Dashboard' ) != $menu[$page][0] ) && next ( $menu ) )
+		$page = key ( $menu );
+		if ( __ ( 'Dashboard' ) == $menu[$page][0] ) unset ( $menu[$page] );
+		reset ( $menu ); $page = key ( $menu );
+		while( !$the_user->has_cap ( $menu[$page][1] ) && next( $menu ) )
+		$page = key ( $menu );
+		if ( preg_match ( '#wp-admin/?(index.php)?$#', $_SERVER['REQUEST_URI'] ) && ( 'index.php' != $menu[$page][2] ) )
+		wp_redirect ( get_option ( 'siteurl' ) . '/wp-admin/profile.php' );
+	}
+	add_action ( 'admin_menu', 'remove_the_dashboard' );
+}
+
+if(!is_user_logged_in() || is_user_logged_in() && $user_level == 0 || is_user_logged_in() && $user_level == 1 || is_user_logged_in() && $user_level == 2 || is_user_logged_in() && $user_level == 7){
+	function exclude_post_by_category($query){
+	$loggedOutCats = '0';
+	if(!is_user_logged_in()){
+		$loggedOutCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');
+	}else{
 		get_currentuserinfo();
-		global $user_level;	
-		if($user_level <=7 && get_option('MOM_Exclude_Hide_Dashboard') == 1){
-			// http://wordpress.org/support/topic/hide-dashboard-for-all-except-admin-without-plugin?replies=5
-			function remove_the_dashboard(){
-				global $menu, $submenu, $user_ID;
-				$the_user = new WP_User($user_ID);
-				reset($menu); $page = key($menu);
-				while((__('Dashboard') != $menu[$page][0]) && next($menu))
-				$page = key($menu);
-				if(__('Dashboard') == $menu[$page][0]) unset($menu[$page]);
-				reset($menu); $page = key($menu);
-				while(!$the_user->has_cap($menu[$page][1]) && next($menu))
-				$page = key($menu);
-				if(preg_match('#wp-admin/?(index.php)?$#',$_SERVER['REQUEST_URI']) && ('index.php' != $menu[$page][2]))
-				wp_redirect(get_option('siteurl') . '/wp-admin/profile.php');
-			}
-			add_action('admin_menu','remove_the_dashboard');
-		}
-		if(!is_user_logged_in() || is_user_logged_in() && $user_level == 0 || is_user_logged_in() && $user_level == 1 || is_user_logged_in() && $user_level == 2 || is_user_logged_in() && $user_level == 7){
-			function exclude_post_by_category($query){
-			$loggedOutCats = '0';
-			if(!is_user_logged_in()){
-				$loggedOutCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');
-			}else{
-				get_currentuserinfo();
-				global $user_level;
-				$loggedOutCats = '0';
-				if($user_level == 0){$loggedOutCats = get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
-				if($user_level <= 1){$loggedOutCats = get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
-				if($user_level <= 2){$loggedOutCats = get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
-				if($user_level <= 7){$loggedOutCats = get_option('MOM_Exclude_level7Categories');}
-			}
-				$c1 = explode(',',$loggedOutCats);
-				foreach($c1 as &$C1){$C1 = ''.$C1.',';}
-				$c_1 = rtrim(implode($c1),',');
-				$c11 = explode(',',str_replace(' ','',$c_1));
-				$c11array = array($c11);
-				$excluded_category_ids = array_filter($c11);
-				if($query->is_main_query()){
-					if($query->is_single()){
-						if(($query->query_vars['p'])){
-							$page= $query->query_vars['p'];
-						}else if(isset($query->query_vars['name'])){
-							$page_slug = $query->query_vars['name'];
-							$post_type = 'post';
-							global $wpdb;
-							$page = $wpdb->get_var($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_name = %s AND post_type= %s AND post_status = 'publish'",$page_slug,$post_type));
-						}
-						if($page){
-							$post_categories = wp_get_post_categories($page);
-							foreach($excluded_category_ids as $category_id){
-								if(in_array($category_id,$post_categories)){
-									$query->set('p',-$category_id);
-									break;
-								}
-							}
-						}	
-					}
+		global $user_level;
+		$loggedOutCats = '0';
+		if($user_level == 0){$loggedOutCats = get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
+		if($user_level <= 1){$loggedOutCats = get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
+		if($user_level <= 2){$loggedOutCats = get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');}
+		if($user_level <= 7){$loggedOutCats = get_option('MOM_Exclude_level7Categories');}
+	}
+		$c1 = explode(',',$loggedOutCats);
+		foreach($c1 as &$C1){$C1 = ''.$C1.',';}
+		$c_1 = rtrim(implode($c1),',');
+		$c11 = explode(',',str_replace(' ','',$c_1));
+		$c11array = array($c11);
+		$excluded_category_ids = array_filter($c11);
+		if($query->is_main_query()){
+			if($query->is_single()){
+				if(($query->query_vars['p'])){
+					$page= $query->query_vars['p'];
+				}else if(isset($query->query_vars['name'])){
+					$page_slug = $query->query_vars['name'];
+					$post_type = 'post';
+					global $wpdb;
+					$page = $wpdb->get_var($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_name = %s AND post_type= %s AND post_status = 'publish'",$page_slug,$post_type));
 				}
-			}
-			function exclude_post_by_tag($query){
-			$loggedOutTags = '0';
-			if(!is_user_logged_in()){
-				$loggedOutTags = get_option('MOM_Exclude_VisitorTags').','.get_option('MOM_Exclude_level0Tags').','.get_option('MOM_Exclude_level1Tags').','.get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');
-			}else{
-				get_currentuserinfo();
-				if($user_level == 0){$loggedOutTags = get_option('MOM_Exclude_level0Tags').','.get_option('MOM_Exclude_level1Tags').','.get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');}
-				if($user_level <= 1){$loggedOutTags = get_option('MOM_Exclude_level1Tags').','.get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');}
-				if($user_level <= 2){$loggedOutTags = get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');}
-				if($user_level <= 7){$loggedOutTags = get_option('MOM_Exclude_level7Tags');}
-			}
-					$t1 = explode(',',$loggedOutTags);
-					foreach($t1 as &$T1){$T1 = ''.$T1.',';}
-					$t_1 = implode($t1);
-					$t11 = explode(',',str_replace(' ','',$t_1));
-				$excluded_tag_ids = array_filter($t11);
-				if($query->is_main_query()){
-					if($query->is_single()){
-						if(($query->query_vars['p'])){
-							$page= $query->query_vars['p'];
-						}else if(isset($query->query_vars['name'])){
-							$page_slug = $query->query_vars['name'];
-							$post_type = 'post';
-							global $wpdb;
-							$page = $wpdb->get_var($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_name = %s AND post_type= %s AND post_status = 'publish'",$page_slug, $post_type));
-						}
-						if($page){
-							$post_tags = wp_get_post_tags($page);
-							foreach($excluded_tag_ids as $tag_id){
-								if(in_array($tag_id,$post_tags)){
-									$query->set('p',-$tag_id);
-									break;
-								}
-							}
+				if($page){
+					$post_categories = wp_get_post_categories($page);
+					foreach($excluded_category_ids as $category_id){
+						if(in_array($category_id,$post_categories)){
+							$query->set('p',-$category_id);
+							break;
 						}
 					}
-				}
+				}	
 			}
-			add_action('pre_get_posts','exclude_post_by_tag');
-			add_action('pre_get_posts','exclude_post_by_category');
 		}
-		if(get_option('MOM_Exclude_NoFollow') != 0){
-			add_filter('wp_list_categories','exclude_nofollow');
-			add_filter('the_category','exclude_nofollow_categories');
-			function exclude_nofollow($text){
-				$text = stripslashes($text);
-				$text = preg_replace_callback('|<a (.+?)>|i','wp_rel_nofollow_callback', $text);
-				return $text;
-			}
-			function exclude_nofollow_categories($text){
-				$text = str_replace('rel="category tag"', "", $text);
-				$text = exclude_nofollow($text);
-				return $text;
-			}
-			function exclude_no_index_cat()
-			{
-				$nofollowCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');	
-				$c1 = explode(',',$nofollowCats);
-				foreach($c1 as &$C1){$C1 = ''.$C1.',';}
-				$c_1 = rtrim(implode($c1),',');
-				$c11 = explode(',',str_replace(' ','',$c_1));
-				$c11array = array($c11);
-				$nofollowcats = $c11;
-				if(is_category($nofollowcats) && !is_feed())
-				{
-						echo '<meta name="robots" content="noindex, nofollow" />';
-				}
-			}
-			add_action('wp_head','exclude_no_index_cat');
-			function nofollow_the_author_posts_link($deprecated = ''){
-				global $authordata;
-				printf(
-					'<a rel="nofollow" href="%1$s" title="%2$s">%3$s</a>',
-					get_author_posts_url($authordata->ID,$authordata->user_nicename),
-					sprintf( __('Posts by %s'), attribute_escape(get_the_author())),
-					get_the_author()
-				);
-			}	
-			function nofollow_cat_posts($text){
-			$loggedOutCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');	
-			$c1 = explode(',',$loggedOutCats);
-			foreach($c1 as &$C1){$C1 = ''.$C1.',';}
-			$c_1 = rtrim(implode($c1),',');
-			$c11 = explode(',',str_replace(' ','',$c_1));
-			$c11array = array($c11);
-			$excluded_category_ids = $c11;
-			global $post;
-					if(in_category($excluded_category_ids)){
-							$text = stripslashes(wp_rel_nofollow($text));
-					}
-					return $text;
-			}
-			add_filter('the_content','nofollow_cat_posts');
-		}
-		function mom_exclude_filter_posts($query){
-			$c1	= array('0');
-			$lt_1 = array('0');
-			$t1	= array('0');
-			$t_1 = array('0');
-			$c_1 = '0';
-			if(get_option('MOM_Exclude_Categories_Front') == ''){$MOM_Exclude_Categories_Front = '0';}else{$MOM_Exclude_Categories_Front = get_option('MOM_Exclude_Categories_Front');}
-			if(get_option('MOM_Exclude_Categories_TagArchives') == ''){$MOM_Exclude_Categories_TagArchives = '0';}else{$MOM_Exclude_Categories_TagArchives = get_option('MOM_Exclude_Categories_TagArchives');}
-			if(get_option('MOM_Exclude_Categories_SearchResults') == ''){$MOM_Exclude_Categories_SearchResults = '0';}else{$MOM_Exclude_Categories_SearchResults = get_option('MOM_Exclude_Categories_SearchResults');}
-			if(get_option('MOM_Exclude_Categories_RSS') == ''){$MOM_Exclude_Categories_RSS = '0';}else{$MOM_Exclude_Categories_RSS = get_option('MOM_Exclude_Categories_RSS');}
-			if(get_option('MOM_Exclude_Tags_RSS') == ''){$MOM_Exclude_Tags_RSS = '0';}else{$MOM_Exclude_Tags_RSS = get_option('MOM_Exclude_Tags_RSS');}
-			if(get_option('MOM_Exclude_Tags_Front') == ''){$MOM_Exclude_Tags_Front = '0';}else{$MOM_Exclude_Tags_Front = get_option('MOM_Exclude_Tags_Front');}
-			if(get_option('MOM_Exclude_Tags_CategoryArchives') == ''){$MOM_Exclude_Tags_CategoryArchives = '0';}else{$MOM_Exclude_Tags_CategoryArchives = get_option('MOM_Exclude_Tags_CategoryArchives');}
-			if(get_option('MOM_Exclude_Tags_SearchResults') == ''){$MOM_Exclude_Tags_SearchResults = '0';}else{$MOM_Exclude_Tags_SearchResults = get_option('MOM_Exclude_Tags_SearchResults');}
-			if(get_option('MOM_Exclude_PostFormats_Front') == ''){$MOM_Exclude_PostFormats_Front = '';}else{$MOM_Exclude_PostFormats_Front = get_option('MOM_Exclude_PostFormats_Front');}
-			if(get_option('MOM_Exclude_PostFormats_CategoryArchives') == ''){$MOM_Exclude_PostFormats_CategoryArchives = '';}else{$MOM_Exclude_PostFormats_CategoryArchives = get_option('MOM_Exclude_PostFormats_CategoryArchives');}
-			if(get_option('MOM_Exclude_PostFormats_TagArchives') == ''){$MOM_Exclude_PostFormats_TagArchives = '';}else{$MOM_Exclude_PostFormats_TagArchives = get_option('MOM_Exclude_PostFormats_TagArchives');}
-			if(get_option('MOM_Exclude_PostFormats_SearchResults') == ''){$MOM_Exclude_PostFormats_SearchResults = '';}else{$MOM_Exclude_PostFormats_SearchResults = get_option('MOM_Exclude_PostFormats_SearchResults');}
-			if(get_option('MOM_Exclude_PostFormats_Visitor') == ''){$MOM_Exclude_PostFormats_Visitor = '';}else{$MOM_Exclude_PostFormats_Visitor = get_option('MOM_Exclude_PostFormats_Visitor');}
-			if(get_option('MOM_Exclude_PostFormats_RSS') == ''){$MOM_Exclude_PostFormats_RSS = '';}else{$MOM_Exclude_PostFormats_RSS = get_option('MOM_Exclude_PostFormats_RSS');}
-			if(get_option('MOM_Exclude_Cats_Day') == ''){$MOM_Exclude_Cats_Day = '0';}
-			if(get_option('MOM_Exclude_Tags_Day') == ''){$MOM_Exclude_Tags_Day = '0';}
-			if(date('D') === 'Sun'){if(get_option('') == 'MOM_Exclude_Tags_Day')$MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsSun');}
-			if(date('D') === 'Mon'){if(get_option('') == 'MOM_Exclude_Tags_Day')$MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsMon');}
-			if(date('D') === 'Tue'){if(get_option('') == 'MOM_Exclude_Tags_Day')$MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsTue');}
-			if(date('D') === 'Wed'){if(get_option('') == 'MOM_Exclude_Tags_Day')$MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsWed');}
-			if(date('D') === 'Thu'){if(get_option('') == 'MOM_Exclude_Tags_Day')$MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsThu');}
-			if(date('D') === 'Fri'){if(get_option('') == 'MOM_Exclude_Tags_Day')$MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsFri');}
-			if(date('D') === 'Sat'){if(get_option('') == 'MOM_Exclude_Tags_Day')$MOM_Exclude_Tags_Day = '0';}else{$MOM_Exclude_Tags_Day = get_option('MOM_Exclude_TagsSun');}
-			if(date('D') === 'Sun'){if(get_option('') == 'MOM_Exclude_Cats_Day')$MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesSun');}
-			if(date('D') === 'Mon'){if(get_option('') == 'MOM_Exclude_Cats_Day')$MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesMon');}
-			if(date('D') === 'Tue'){if(get_option('') == 'MOM_Exclude_Cats_Day')$MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesTue');}
-			if(date('D') === 'Wed'){if(get_option('') == 'MOM_Exclude_Cats_Day')$MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesWed');}
-			if(date('D') === 'Thu'){if(get_option('') == 'MOM_Exclude_Cats_Day')$MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesThu');}
-			if(date('D') === 'Fri'){if(get_option('') == 'MOM_Exclude_Cats_Day')$MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesFri');}
-			if(date('D') === 'Sat'){if(get_option('') == 'MOM_Exclude_Cats_Day')$MOM_Exclude_Cats_Day = '0';}else{$MOM_Exclude_Cats_Day = get_option('MOM_Exclude_CategoriesSat');}
-			$rss_day = explode(',',$MOM_Exclude_Tags_Day);
-			foreach($rss_day as &$rss_day_1){$rss_day_1 = ''.$rss_day_1.',';}
-			$rss_day_1 = implode($rss_day);
-			$rssday = explode(',',str_replace(' ','',$rss_day_1));
-			$rss_day_cat = explode(',',$MOM_Exclude_Cats_Day);
-			if(is_array($rss_day_cat)){foreach($rss_day_cat as &$rss_day_1_cat){$rss_day_1_cat = ''.$rss_day_1_cat.',';}}
-			$rss_day_1_cat = implode($rss_day_cat);
-			$rssday_cat = explode(',', str_replace(' ','',$rss_day_1_cat));		
-			if(!is_user_logged_in()){
-				$loggedOutCats = '0';
-				$loggedOutTags = '0';
-				if(get_option('MOM_Exclude_VisitorCategories') != ''){$MOM_Exclude_VisitorCategories = get_option('MOM_Exclude_VisitorCategories');}else{$MOM_Exclude_VisitorCategories = '0';}
-				if(get_option('MOM_Exclude_level0Categories') != ''){$MOM_Exclude_level0Categories = get_option('MOM_Exclude_level0Categories');}else{$MOM_Exclude_level0Categories = '0';}
-				if(get_option('MOM_Exclude_level1Categories') != ''){$MOM_Exclude_level1Categories = get_option('MOM_Exclude_level1Categories');}else{$MOM_Exclude_level1Categories = '0';}
-				if(get_option('MOM_Exclude_level2Categories') != ''){$MOM_Exclude_level2Categories = get_option('MOM_Exclude_level2Categories');}else{$MOM_Exclude_level2Categories = '0';}
-				if(get_option('MOM_Exclude_level7Categories') != ''){$MOM_Exclude_level7Categories = get_option('MOM_Exclude_level7Categories');}else{$MOM_Exclude_level7Categories = '0';}
-				if(get_option('MOM_Exclude_VisitorTags') != ''){$MOM_Exclude_VisitorTags = get_option('MOM_Exclude_VisitorTags');}else{$MOM_Exclude_VisitorTags = '0';}
-				if(get_option('MOM_Exclude_level0Tags') != ''){$MOM_Exclude_level0Tags = get_option('MOM_Exclude_level0Tags');}else{$MOM_Exclude_level0Tags = '0';}
-				if(get_option('MOM_Exclude_level1Tags') != ''){$MOM_Exclude_level1Tags = get_option('MOM_Exclude_level1Tags');}else{$MOM_Exclude_level1Tags = '0';}
-				if(get_option('MOM_Exclude_level2Tags') != ''){$MOM_Exclude_level2Tags = get_option('MOM_Exclude_level2Tags');}else{$MOM_Exclude_level2Tags = '0';}		
-				$loggedOutCats = $MOM_Exclude_VisitorCategories.','.$MOM_Exclude_level0Categories.','.$MOM_Exclude_level1Categories.','.$MOM_Exclude_level2Categories.','.$MOM_Exclude_level7Categories;
-				$loggedOutTags = $MOM_Exclude_VisitorTags.','.$MOM_Exclude_level0Tags.','.$MOM_Exclude_level1Tags.','.$MOM_Exclude_level2Tags.','.$MOM_Exclude_level7Tags;
-				$lc1 = array_unique(explode(',',$loggedOutCats));
-				foreach($lc1 as &$LC1){$LC1 = ''.$LC1.',';}
-				$lc_1 = rtrim(implode($lc1),',');
-				$hideLoggedOutCats = explode(',',str_replace(' ','',$loggedOutCats));
-				$lt1 = array_unique(explode(',',$loggedOutTags));
-				foreach($lt1 as &$LT1){$LT1 = ''.$LT1.',';}
-				$lt11 = rtrim(implode($lt1),',');
-				$hideLoggedOutTags = explode(',',str_replace(' ','',$lt11));
-				$hidePostFormats = $MOM_Exclude_PostFormats_Visitor;
-			}else{
-				get_currentuserinfo();
-				global $user_level;
-				$loggedOutCats = '0';
-				$loggedOutTags = '0';
-				if(get_option('MOM_Exclude_VisitorCategories') != ''){$MOM_Exclude_VisitorCategories = get_option('MOM_Exclude_VisitorCategories');}else{$MOM_Exclude_VisitorCategories = '0';}
-				if(get_option('MOM_Exclude_level0Categories') != ''){$MOM_Exclude_level0Categories = get_option('MOM_Exclude_level0Categories');}else{$MOM_Exclude_level0Categories = '0';}
-				if(get_option('MOM_Exclude_level1Categories') != ''){$MOM_Exclude_level1Categories = get_option('MOM_Exclude_level1Categories');}else{$MOM_Exclude_level1Categories = '0';}
-				if(get_option('MOM_Exclude_level2Categories') != ''){$MOM_Exclude_level2Categories = get_option('MOM_Exclude_level2Categories');}else{$MOM_Exclude_level2Categories = '0';}
-				if(get_option('MOM_Exclude_level7Categories') != ''){$MOM_Exclude_level7Categories = get_option('MOM_Exclude_level7Categories');}else{$MOM_Exclude_level7Categories = '0';}		
-				if(get_option('MOM_Exclude_VisitorTags') != ''){$MOM_Exclude_VisitorTags = get_option('MOM_Exclude_VisitorTags');}else{$MOM_Exclude_VisitorTags = '0';}
-				if(get_option('MOM_Exclude_level0Tags') != ''){$MOM_Exclude_level0Tags = get_option('MOM_Exclude_level0Tags');}else{$MOM_Exclude_level0Tags = '0';}
-				if(get_option('MOM_Exclude_level1Tags') != ''){$MOM_Exclude_level1Tags = get_option('MOM_Exclude_level1Tags');}else{$MOM_Exclude_level1Tags = '0';}
-				if(get_option('MOM_Exclude_level2Tags') != ''){$MOM_Exclude_level2Tags = get_option('MOM_Exclude_level2Tags');}else{$MOM_Exclude_level2Tags = '0';}
-				if(get_option('MOM_Exclude_level7Categories') != ''){$MOM_Exclude_level7Categories = get_option('MOM_Exclude_level7Categories');}else{$MOM_Exclude_level7Categories = '0';}				
-				if($user_level == 0){$loggedOutCats = $MOM_Exclude_level0Categories.','.$MOM_Exclude_level1Categories.','.$MOM_Exclude_level2Categories.','.$MOM_Exclude_level7Categories;}
-				elseif($user_level == 1){$loggedOutCats = $MOM_Exclude_level1Categories.','.$MOM_Exclude_level2Categories.','.$MOM_Exclude_level7Categories;}
-				elseif($user_level == 2){$loggedOutCats = $MOM_Exclude_level2Categories.','.$MOM_Exclude_level7Categories;}
-				elseif($user_level == 7){$loggedOutCats = $MOM_Exclude_level7Categories;}
-				if($user_level == 0){$loggedOutTags = $MOM_Exclude_level0Tags.','.$MOM_Exclude_level1Tags.','.$MOM_Exclude_level2Tags.','.$MOM_Exclude_level7Tags;}
-				elseif($user_level == 1){$loggedOutTags = $MOM_Exclude_level1Tags.','.$MOM_Exclude_level2Tags.','.$MOM_Exclude_level7Tags;}
-				elseif($user_level == 2){$loggedOutTags = $MOM_Exclude_level2Tags.','.$MOM_Exclude_level7Tags;}
-				elseif($user_level == 7){$loggedOutTags = $MOM_Exclude_level7Tags;}
-				$hideLoggedOutCats = explode(',',str_replace(' ','',$c_1));
-				$hideLoggedOutTags = explode(',',str_replace(' ','',$t11));
-				$lc1 = array_unique(explode(',',$loggedOutCats));
-				foreach($lc1 as &$LC1){$LC1 = ''.$LC1.',';}
-				$lc_1 = rtrim(implode($lc1),',');
-				$hideLoggedOutCats = explode(',',str_replace(' ','',$loggedOutCats));
-				$lt1 = array_unique(explode(',',$loggedOutTags));
-				foreach($lt1 as &$LT1){$LT1 = ''.$LT1.',';}
-				$lt11 = rtrim(implode($lt1),',');
-				$hideLoggedOutTags = explode(',',str_replace(' ','',$lt11));
-			}
-			if($query->is_feed){$c1 = explode(',',$MOM_Exclude_Categories_RSS);$hidePostFormats = $MOM_Exclude_PostFormats_RSS;$t1 = explode(',',$MOM_Exclude_Tags_RSS);}
-			if($query->is_home){$c1 = explode(',',$MOM_Exclude_Categories_Front);$hidePostFormats = $MOM_Exclude_PostFormats_Front;$t1 = explode(',',$MOM_Exclude_Tags_Front);}
-			if($query->is_category){$t1 = explode(',',$MOM_Exclude_Tags_CategoryArchives);$hidePostFormats = $MOM_Exclude_PostFormats_CategoryArchives;}
-			if($query->is_tag){$c1 = explode(',',$MOM_Exclude_Categories_TagArchives);$hidePostFormats = $MOM_Exclude_PostFormats_TagArchives;}
-			if($query->is_search){$c1 = explode(',',$MOM_Exclude_Categories_SearchResults);$hidePostFormats = $MOM_Exclude_PostFormats_SearchResults;$t1 = explode(',',$MOM_Exclude_Tags_SearchResults);}
-			foreach($c1 as &$C1){$C1 = ''.$C1.',';}
-			$c_1 = rtrim(implode($c1),',');
-			$hideUserCats = explode(',',str_replace(' ','',$c_1));
+	}
+	function exclude_post_by_tag($query){
+	$loggedOutTags = '0';
+	if(!is_user_logged_in()){
+		$loggedOutTags = get_option('MOM_Exclude_VisitorTags').','.get_option('MOM_Exclude_level0Tags').','.get_option('MOM_Exclude_level1Tags').','.get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');
+	}else{
+		get_currentuserinfo();
+		if($user_level == 0){$loggedOutTags = get_option('MOM_Exclude_level0Tags').','.get_option('MOM_Exclude_level1Tags').','.get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');}
+		if($user_level <= 1){$loggedOutTags = get_option('MOM_Exclude_level1Tags').','.get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');}
+		if($user_level <= 2){$loggedOutTags = get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');}
+		if($user_level <= 7){$loggedOutTags = get_option('MOM_Exclude_level7Tags');}
+	}
+			$t1 = explode(',',$loggedOutTags);
 			foreach($t1 as &$T1){$T1 = ''.$T1.',';}
-			$t11 = rtrim(implode($t1),',');
-			$hideUserTags = explode(',',str_replace(' ','',$t11));
-			$hideAllCategories = array_merge((array)$hideUserCats,(array)$hideLoggedOutCats,(array)$rssday_cat);
-			$hideAllTags = array_merge((array)$hideUserTags,(array)$hideLoggedOutTags,(array)$rssday);
-			$hideAllCategories = array_filter(array_unique($hideAllCategories));
-			$hideAllTags = array_filter(array_unique($hideAllTags));	
-			if($query->is_feed || $query->is_home || $query->is_search || $query->tag || $query->is_category){
-				$tax_query = array(
-					'ignore_sticky_posts' => true,
-					'post_type' => 'any',
-					array(
-						'taxonomy' => 'category',
-						'terms' => $hideAllCategories,
-						'field' => 'id',
-						'operator' => 'NOT IN'
-					),
-					array(
-						'taxonomy' => 'post_tag',
-						'terms' => $hideAllTags,
-						'field' => 'id',
-						'operator' => 'NOT IN'
-					),
-					array(
-						'taxonomy' => 'post_format',
-						'field' => 'slug',
-						'terms' => array($hidePostFormats),
-						'operator' => 'NOT IN'
-					)
-				);
-				$query->set('tax_query',$tax_query);
+			$t_1 = implode($t1);
+			$t11 = explode(',',str_replace(' ','',$t_1));
+		$excluded_tag_ids = array_filter($t11);
+		if($query->is_main_query()){
+			if($query->is_single()){
+				if(($query->query_vars['p'])){
+					$page= $query->query_vars['p'];
+				}else if(isset($query->query_vars['name'])){
+					$page_slug = $query->query_vars['name'];
+					$post_type = 'post';
+					global $wpdb;
+					$page = $wpdb->get_var($wpdb->prepare("SELECT ID FROM $wpdb->posts WHERE post_name = %s AND post_type= %s AND post_status = 'publish'",$page_slug, $post_type));
+				}
+				if($page){
+					$post_tags = wp_get_post_tags($page);
+					foreach($excluded_tag_ids as $tag_id){
+						if(in_array($tag_id,$post_tags)){
+							$query->set('p',-$tag_id);
+							break;
+						}
+					}
+				}
 			}
 		}
-	//
+	}
+	add_action('pre_get_posts','exclude_post_by_tag');
+	add_action('pre_get_posts','exclude_post_by_category');
+}
+
+if(get_option('MOM_Exclude_NoFollow') != 0){
+	add_filter('wp_list_categories','exclude_nofollow');
+	add_filter('the_category','exclude_nofollow_categories');
+	function exclude_nofollow($text){
+		$text = stripslashes($text);
+		$text = preg_replace_callback('|<a (.+?)>|i','wp_rel_nofollow_callback', $text);
+		return $text;
+	}
+	function exclude_nofollow_categories($text){
+		$text = str_replace('rel="category tag"', "", $text);
+		$text = exclude_nofollow($text);
+		return $text;
+	}
+	function exclude_no_index_cat()
+	{
+		$nofollowCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');	
+		$c1 = explode(',',$nofollowCats);
+		foreach($c1 as &$C1){$C1 = ''.$C1.',';}
+		$c_1 = rtrim(implode($c1),',');
+		$c11 = explode(',',str_replace(' ','',$c_1));
+		$c11array = array($c11);
+		$nofollowcats = $c11;
+		if(is_category($nofollowcats) && !is_feed())
+		{
+				echo '<meta name="robots" content="noindex, nofollow" />';
+		}
+	}
+	add_action('wp_head','exclude_no_index_cat');
+	function nofollow_the_author_posts_link($deprecated = ''){
+		global $authordata;
+		printf(
+			'<a rel="nofollow" href="%1$s" title="%2$s">%3$s</a>',
+			get_author_posts_url($authordata->ID,$authordata->user_nicename),
+			sprintf( __('Posts by %s'), attribute_escape(get_the_author())),
+			get_the_author()
+		);
+	}	
+	function nofollow_cat_posts($text){
+	$loggedOutCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories');	
+	$c1 = explode(',',$loggedOutCats);
+	foreach($c1 as &$C1){$C1 = ''.$C1.',';}
+	$c_1 = rtrim(implode($c1),',');
+	$c11 = explode(',',str_replace(' ','',$c_1));
+	$c11array = array($c11);
+	$excluded_category_ids = $c11;
+	global $post;
+			if(in_category($excluded_category_ids)){
+					$text = stripslashes(wp_rel_nofollow($text));
+			}
+			return $text;
+	}
+	add_filter('the_content','nofollow_cat_posts');
+}
+
+
 
 
 
@@ -3430,361 +3193,141 @@ Author URI: http://wordpress.org/plugins/my-optional-modules/
 	//
 
 
-	/****************************** SECTION N -/- (N0) Functions -/- Regular Board */
-	include(plugin_dir_path(__FILE__) . '/includes/modules/regular_board.php');
+/**
+ * Regular Board
+ */
+include(plugin_dir_path(__FILE__) . '/includes/modules/regular_board.php');
 
-
-
-
-	// (W) Database Cleaner (functions)
-		if(current_user_can('manage_options')){
-			function my_optional_modules_cleaner_module(){
-				global $table_prefix,$wpdb;
-				$revisions_count = 0;
-				$comments_count = 0;
-				$terms_count = 0;
-				$postsTable = $table_prefix.'posts';
-				$commentsTable = $table_prefix.'comments';
-				$termsTable2 = $table_prefix.'terms';
-				$termsTable = $table_prefix.'term_taxonomy';
-				$revisions_total = $wpdb->get_results("SELECT ID FROM `".$postsTable."` WHERE `post_type` = 'revision' OR `post_type` = 'auto_draft' OR `post_status` = 'trash'");
-				$comments_total = $wpdb->get_results("SELECT comment_ID FROM `".$commentsTable."` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'");
-				$terms_total = $wpdb->get_results("SELECT term_taxonomy_id FROM `".$termsTable."` WHERE `count` = '0'");
-				foreach($revisions_total as $retot){$revisions_count++;}
-				foreach($comments_total as $comtot){$comments_count++;}
-				foreach($terms_total as $termstot){$this_term = $termstot->term_id;$terms_count++;}
-				$totalClutter = ($terms_count + $comments_count + $revisions_count);
-				echo '<section class="trash"><label for="deleteAllClutter"><i class="fa fa-trash-o"></i><span>All clutter</span><em>'.esc_attr($totalClutter).'</em></label><form method="post"><input class="hidden" id="deleteAllClutter" type="submit" value="Go" name="deleteAllClutter"></form></section>';
-				echo '<section class="trash"><label for="delete_post_revisions"><i class="fa fa-trash-o"></i><span>Post clutter</span><em>'.esc_attr($revisions_count).'</em></label><form method="post"><input class="hidden" id="delete_post_revisions" type="submit" value="Go" name="delete_post_revisions"></form></section>';
-				echo '<section class="trash"><label for="delete_unapproved_comments"><i class="fa fa-trash-o"></i><span>Comment clutter</span><em>'.esc_attr($comments_count).'</em></label><form method="post"><input class="hidden" id="delete_unapproved_comments" type="submit" value="Go" name="delete_unapproved_comments"></form></section>';
-				echo '<section class="trash"><label for="delete_unused_terms"><i class="fa fa-trash-o"></i><span>Taxonomy clutter</span><em>'.esc_attr($terms_count).'</em></label><form method="post"><input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms"></form></section>';
-			}
+/**
+ * Database cleaner
+ * (1) Revisions ( revision, auto drafts, trash )
+ * (2) Comments ( unapproved, trashed, spam )
+ * (3) Terms ( categories and tags with no associated posts )
+ */
+if ( current_user_can ( 'manage_options' ) ) {
+	function my_optional_modules_cleaner_module() {
+		global $table_prefix, $wpdb;
+		$revisions_count = 0;
+		$comments_count  = 0;
+		$terms_count     = 0;
+		$postsTable      = $table_prefix . 'posts';
+		$commentsTable   = $table_prefix . 'comments';
+		$termsTable2     = $table_prefix . 'terms';
+		$termsTable      = $table_prefix . 'term_taxonomy';
+		$revisions_total = $wpdb->get_results ( "SELECT ID FROM `" . $postsTable . "` WHERE `post_type` = 'revision' OR `post_type` = 'auto_draft' OR `post_status` = 'trash'" );
+		$comments_total  = $wpdb->get_results ( "SELECT comment_ID FROM `" . $commentsTable . "` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'" );
+		$terms_total     = $wpdb->get_results ( "SELECT term_taxonomy_id FROM `" . $termsTable . "` WHERE `count` = '0'" );
+		foreach ( $revisions_total as $retot ) { 
+			$revisions_count++; 
 		}
-	//
+		foreach ( $comments_total as $comtot ) { 
+			$comments_count++; 
+		}
+		foreach ( $terms_total as $termstot  ) {
+			$this_term = $termstot->term_id; $terms_count++; 
+		}
+		$totalClutter    = ( $terms_count + $comments_count + $revisions_count );
+
+		echo '<section class="trash"><label for="deleteAllClutter"><i class="fa fa-trash-o"></i><span>All clutter</span><em>' . esc_attr( $totalClutter ) . '</em></label><form method="post"><input class="hidden" id="deleteAllClutter" type="submit" value="Go" name="deleteAllClutter"></form></section>
+		<section class="trash"><label for="delete_post_revisions"><i class="fa fa-trash-o"></i><span>Post clutter</span><em>' . esc_attr ( $revisions_count ) . '</em></label><form method="post"><input class="hidden" id="delete_post_revisions" type="submit" value="Go" name="delete_post_revisions"></form></section>
+		<section class="trash"><label for="delete_unapproved_comments"><i class="fa fa-trash-o"></i><span>Comment clutter</span><em>' . esc_attr ( $comments_count ) . '</em></label><form method="post"><input class="hidden" id="delete_unapproved_comments" type="submit" value="Go" name="delete_unapproved_comments"></form></section>
+		<section class="trash"><label for="delete_unused_terms"><i class="fa fa-trash-o"></i><span>Taxonomy clutter</span><em>' . esc_attr ( $terms_count ) . '</em></label><form method="post"><input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms"></form></section>';
+	}
+}
+
+include ( plugin_dir_path(__FILE__) . '/includes/modules/mom_footer_scripts.php' );
 
 
-
-
-	// (X) Plugin Javascript
-		function myoptionalmodules_enqueuescripts(){
-			function mom_jquery(){
-				wp_deregister_script('jquery');
-				wp_register_script('jquery', "http".($_SERVER['SERVER_PORT'] == 443 ? "s" : "")."://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js",'','', null, false);
-				wp_enqueue_script('jquery');
-				
-				if(get_option('MOM_themetakeover_fitvids') != ''){
-					$fitvids = plugins_url().'/my-optional-modules/includes/javascript/fitvids.js';
-					wp_deregister_script('fitvids');
-					wp_register_script('fitvids',$fitvids,'','',null,false);
-					wp_enqueue_script('fitvids');
-				}
-				if(get_option('mommaincontrol_lazyload') == 1){
-					$lazyLoad = '//cdn.jsdelivr.net/jquery.lazyload/1.9.0/jquery.lazyload.min.js';
-					$lazyLoadFunctions = plugins_url().'/my-optional-modules/includes/javascript/lazyload.js';
-					wp_deregister_script('lazyload');
-					wp_register_script('lazyload',$lazyLoad,'','',null,false);
-					wp_enqueue_script('lazyload');
-					wp_deregister_script('lazyLoadFunctions');
-					wp_register_script('lazyLoadFunctions',$lazyLoadFunctions,'','',null,false);
-					wp_enqueue_script('lazyLoadFunctions');			
-				}
-				if(get_option('MOM_themetakeover_wowhead') == 1){
-					$wowhead = '//static.wowhead.com/widgets/power.js';
-					$tooltips = plugins_url().'/my-optional-modules/includes/javascript/wowheadtooltips.js';
-					wp_deregister_script('wowhead');
-					wp_register_script('wowhead',$wowhead,'','',null,false);
-					wp_enqueue_script('wowhead');
-					wp_deregister_script('wowheadtooltips');
-					wp_register_script('wowheadtooltips',$wowheadtooltips,'','',null,false);
-					wp_enqueue_script('wowheadtooltips');			
-				}		
-				if(get_option('MOM_themetakeover_topbar') == 1){
-					$stucktothetop = plugins_url().'/my-optional-modules/includes/javascript/stucktothetop.js';
-					wp_deregister_script('stucktothetop');
-					wp_register_script('stucktothetop',$stucktothetop,'','',null,false);
-					wp_enqueue_script('stucktothetop');				
-				}
-				if(get_option('MOM_themetakeover_topbar') == 2){
-					$stucktothebottom = plugins_url().'/my-optional-modules/includes/javascript/stucktothebottom.js';
-					wp_deregister_script('stucktothebottom');
-					wp_register_script('stucktothebottom',$stucktothebottom,'','',null,false);
-					wp_enqueue_script('stucktothebottom');		
-				}
-			}
-			add_action('wp_enqueue_scripts','mom_jquery');
-			function MOMScriptsFooter(){
-				if(get_option('momanalytics_code') != '' || 
-				get_option('mommaincontrol_momja') == 1 && is_archive() || 
-				get_option('mommaincontrol_momja') == 1 && is_home() || 
-				get_option('mommaincontrol_momja') == 1 && is_search() || 
-				get_option('MOM_themetakeover_fitvids') != '' || 
-				get_option('MOM_themetakeover_postdiv') != '' && get_option('MOM_themetakeover_postelement') != ''){
+if(current_user_can('manage_options')){
+	$css = plugins_url().'/'.plugin_basename(dirname(__FILE__)).'/includes/';
+	add_action('wp_enqueue_admin_scripts','myoptionalmodules_scripts');		
+	function momEditorScreen($post_type){
+		$screen = get_current_screen();
+		$edit_post_type = $screen->post_type;
+		if($edit_post_type != 'post')
+		if($edit_post_type != 'page')
+		return;
+			if(get_option('mommaincontrol_fontawesome') == 1){
+			echo '
+			<div class="momEditorScreen postbox">
+				<h3>Font Awesome Icons</h3>
+				<div class="inside">
+					<style>
+						ol#momEditorMenu {width:95%;margin:0 auto;overflow:auto;overflow-x:hidden;overflow-y:auto;height:200px}
+						ol#momEditorMenu li {width:auto; margin:2px; float:left; list-style:none; display:block; padding:5px; line-height:20px; font-size:13px;}
+						ol#momEditorMenu li span:hover {cursor:pointer; background-color:#fff; color:#4b5373;}
+						ol#momEditorMenu li span {margin-right:5px; width:18px; height:19px; display:block; float:left; overflow:hidden; color: #fff; background-color:#4b5373; border-radius:3px; font-size:20px;}
+						ol#momEditorMenu li.clear {clear:both; display:block; width:100%;}
+						ol#momEditorMenu li.icon {width:18px; height:16px; overflow:hidden; font-size:20px; line-height:22px; margin:5px}
+						ol#momEditorMenu li.icon:hover {cursor:pointer; color:#441515; background-color:#ececec; border-radius:3px;}
+					</style>					
+					<ol id="momEditorMenu">
+						<li class="clear"></li>';
+						$icon = array('adjust','anchor','archive','arrows','arrows-h','arrows-v','asterisk',
+						'ban','bar-chart-o','barcode','bars','beer','bell','bell-o','bolt','book',
+						'bookmark','bookmark-o','briefcase','bug','building-o','bullhorn','bullseye',
+						'calendar','calendar-o','camera','camera-retro','caret-square-o-down','caret-square-o-left',
+						'caret-square-o-right','caret-square-o-up','certificate','check','check-circle','check-circle-o',
+						'check-square','check-square-o','circle','circle-o','clock-o','cloud','cloud-download','cloud-upload',
+						'code','code-fork','coffee','cog','cogs','comment','comment-o','comments','comments-o','compass','credit-card',
+						'crop','crosshairs','cutlery','dashboard','edit','ellipsis-h','ellipsis-v','envelope','envelope-o','eraser',
+						'exchange','exclamation','exclamation-circle','exclamation-triangle','external-link','external-link-square',
+						'eye','eye-slash','female','fighter-jet','film','filter','fire','fire-extinguisher','flag','flag-checkered',
+						'flag-o','flash','flask','folder','folder-o','folder-open','folder-open-o','frown-o','gamepad','gavel',
+						'gear','gears','gift','glass','globe','group','hdd-o','headphones','heart','heart-o','home','inbox',
+						'info','info-circle','key','keyboard-o','laptop','leaf','legal','lemon-o','level-down','level-up','lightbulb-o',
+						'location-arrow','lock','magic','magnet','mail-forward','mail-reply','mail-reply-all','male','map-marker',
+						'meh-o','microphone','microphone-slash','minus','minus-circle','minus-square','minus-square-o','mobile',
+						'mobile-phone','money','moon-o','music','pencil','pencil-square','pencil-square-o','phone','phone-square',
+						'picture-o','plane','plus','plus-circle','plus-square','plus-square-o','power-off','print','puzzle-piece',
+						'qrcode','question','question-circle','quote-left','quote-right','random','refresh','reply','reply-all',
+						'retweet','road','rocket','rss','rss-square','search','search-minus','search-plus','share','share-square',
+						'share-square-o','shield','shopping-cart','sign-in','sign-out','signal','sitemap','smile-o','sort',
+						'sort-alpha-asc','sort-alpha-desc','sort-amount-asc','sort-amount-desc','sort-asc','sort-desc','sort-down',
+						'sort-numeric-asc','sort-numeric-desc','sort-up','spinner','square','square-o','star','star-half','star-half-empty',
+						'star-half-full','star-half-o','star-o','subscript','suitcase','sun-o','superscript','tablet','tachometer','tag',
+						'tags','tasks','terminal','thumb-tack','thumbs-down','thumbs-o-down','thumbs-o-up','thumbs-up','ticket','times',
+						'times-circle','times-circle-o','tint','toggle-down','toggle-left','toggle-right','toggle-up','trash-o','trophy',
+						'truck','umbrella','unlock','unlock-alt','unsorted','video-camera','volume-down','volume-off','volume-up',
+						'warning','wheelchair','wrench','check-square','check-square-o','circle','circle-o','dot-circle-o',
+						'minus-square','minus-square-o','plus-square','plus-square-o','square','square-o',
+						'bitcoin','btc','cny','dollar','eur','euro','gbp','inr','jpy','krw','money','rmb','rouble','rub','ruble',
+						'rupee','try','turkish-lira','usd','won','yen','align-center','align-justify','align-left','align-right',
+						'bold','chain','chain-broken','clipboard','columns','copy','cut','dedent','eraser','file','file-o',
+						'file-text','file-text-o','files-o','floppy-o','font','indent','italic','link','list','list-alt','list-ol',
+						'list-ul','outdent','paperclip','paste','repeat','rotate-left','rotate-right','save','scissors','strikethrough',
+						'table','text-height','text-width','th','th-large','th-list','underline','undo','unlink','angle-double-down',
+						'angle-double-left','angle-double-right','angle-double-up','angle-down','angle-left','angle-right','angle-up',
+						'arrow-circle-down','arrow-circle-left','arrow-circle-o-down','arrow-circle-o-left','arrow-circle-o-right',
+						'arrow-circle-o-up','arrow-circle-right','arrow-circle-up','arrow-down','arrow-left','arrow-right','arrow-up',
+						'arrows','arrows-alt','arrows-h','arrows-v','caret-down','caret-left','caret-right','caret-square-o-down',
+						'caret-square-o-left','caret-square-o-right','caret-square-o-up','caret-up','chevron-circle-down',
+						'chevron-circle-left','chevron-circle-right','chevron-circle-up','chevron-down','chevron-left','chevron-right',
+						'chevron-up','hand-o-down','hand-o-left','hand-o-right','hand-o-up','long-arrow-down','long-arrow-left',
+						'long-arrow-right','long-arrow-up','toggle-down','toggle-left','toggle-right','toggle-up','arrows-alt','backward',
+						'compress','eject','expand','fast-backward','fast-forward','forward','pause','play','play-circle','play-circle-o',
+						'step-backward','step-forward','stop','youtube-play','ambulance','h-square','hospital-o','medkit','plus-square',
+						'stethoscope','user-md','wheelchair','adn','android','apple','bitbucket','bitbucket-square','bitcoin','btc','css3',
+						'dribbble','dropbox','facebook','facebook-square','flickr','foursquare','github','github-alt','github-square','gittip',
+						'google-plus','google-plus-square','html5','instagram','linkedin','linkedin-square','linux','maxcdn','pagelines',
+						'pinterest','pinterest-square','renren','skype','stack-exchange','stack-overflow','trello','tumblr','tumblr-square',
+						'twitter','twitter-square','vimeo-square','vk','weibo','windows','xing','xing-square','youtube','youtube-play',
+						'youtube-square');
+					foreach ($icon as &$value){
+						echo '<li onclick="addText(event)" class="fa fa-'.$value.' icon"><span>&#60;i class="fa fa-'.$value.'"&#62;&#60;/i&#62;</span></li>';
+					}
 				echo '
-				<script type=\'text/javascript\'>';
-				if(get_option('momanalytics_code') != ''){
-					echo '
-					(function(i,s,o,g,r,a,m){i[\'GoogleAnalyticsObject\']=r;i[r]=i[r]||function(){
-					(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-					m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-					})(window,document,\'script\',\'//www.google-analytics.com/analytics.js\',\'ga\');
-					ga(\'create\',\''.get_option('momanalytics_code').'\',\''.home_url('/').'\');
-					ga(\'send\',\'pageview\');
-					';
-				}			
-				
-				
-					echo 'jQuery(document).ready(function($){';
-					if(get_option('mommaincontrol_momja') == 1){
-						if(is_archive() || is_home() || is_search()){
-							echo '
-							$(\'input,textarea\').keydown(function(e){
-								e.stopPropagation();
-							});
-							var hash = window.location.hash.substr(1);
-							if(hash != false && hash != \'undefined\'){
-								$(\'#\'+hash+\'\').addClass(\'current\');
-								$(document).keydown(function(e){
-								switch(e.which){
-									case '.get_option('jump_around_4').':
-										var $current = $(\''.get_option('jump_around_0').'.current\'),
-										$prev_embed = $current.prev();
-										$(\'html, body\').animate({scrollTop:$prev_embed.offset().top - 100}, 500);
-										$current.removeClass(\'current\');
-										$prev_embed.addClass(\'current\');
-										window.location.hash = $(\''.get_option('jump_around_0').'.current\').attr(\'id\');
-										e.preventDefault();
-										return;
-									break;
-									case '.get_option('jump_around_6').': 
-										var $current = $(\''.get_option('jump_around_0').'.current\'),
-										$next_embed = $current.next(\''.get_option('jump_around_0').'\');
-										$(\'html, body\').animate({scrollTop:$next_embed.offset().top - 100}, 500);
-										$current.removeClass(\'current\');
-										$next_embed.addClass(\'current\');
-										window.location.hash = $(\''.get_option('jump_around_0').'.current\').attr(\'id\');
-										e.preventDefault();
-										return;
-									break;
-									case '.get_option('jump_around_5').': 
-											if(jQuery(\'.current '.get_option('jump_around_1').'\').attr(\'href\'))
-											document.location.href=jQuery(\'.current '.get_option('jump_around_1').'\').attr(\'href\');
-											e.preventDefault();
-											return;
-											break;
-									default: return; 
-								}
-							});
-							}else{
-							$(\''.get_option('jump_around_0').':eq(0)\').addClass(\'current\');
-							$(document).keydown(function(e){
-								switch(e.which){
-									case '.get_option('jump_around_4').': 
-										var $current = $(\''.get_option('jump_around_0').'.current\'),
-										$prev_embed = $current.prev();
-										$(\'html, body\').animate({scrollTop:$prev_embed.offset().top - 100}, 500);
-										$current.removeClass(\'current\');
-										$prev_embed.addClass(\'current\');
-										window.location.hash = $(\''.get_option('jump_around_0').'.current\').attr(\'id\');
-										e.preventDefault();
-										return;
-									break;
-									case '.get_option('jump_around_6').': 
-										var $current = $(\''.get_option('jump_around_0').'.current\'),
-										$next_embed = $current.next(\''.get_option('jump_around_0').'\');
-										$(\'html, body\').animate({scrollTop:$next_embed.offset().top - 100}, 500);
-										$current.removeClass(\'current\');
-										$next_embed.addClass(\'current\');
-										window.location.hash = $(\''.get_option('jump_around_0').'.current\').attr(\'id\');
-										e.preventDefault();
-										return;
-									break;
-									case '.get_option('jump_around_5').': 
-											if(jQuery(\'.current '.get_option('jump_around_1').'\').attr(\'href\'))
-											document.location.href=jQuery(\'.current '.get_option('jump_around_1').'\').attr(\'href\');
-											e.preventDefault();
-											return;
-											break;
-								}
-								
-							});
-							}
-							if($(\''.get_option('jump_around_2').'\').is(\'*\')){
-							$(document).keydown(function(e){
-								switch(e.which){
-									case '.get_option('jump_around_7').': 
-										document.location.href=jQuery(\''.get_option('jump_around_2').'\').attr(\'href\');
-										e.preventDefault();
-										return;
-										break;
-								}
-								
-							});
-							}
-							if($(\''.get_option('jump_around_3').'\').is(\'*\')){
-							$(document).keydown(function(e){
-								switch(e.which){
-									case '.get_option('jump_around_8').': 
-										document.location.href=jQuery(\''.get_option('jump_around_3').'\').attr(\'href\');
-										e.preventDefault();
-										return;
-										break;
-								}
-							});
-							}
-							';
-						}
-					}
-					// Fitvids
-					if(get_option('MOM_themetakeover_fitvids') != ''){
-						$fitvidContainer = get_option('MOM_themetakeover_fitvids');
-						echo '
-						$(\''.$fitvidContainer.'\').fitVids();';
-					}
-					// Post/page list(s) / scroll-to-top arrow
-					if(get_option('MOM_themetakeover_postdiv') != '' && get_option('MOM_themetakeover_postelement') != ''){
-						if(is_single() || is_page()){
-							$entrydiv = esc_attr(get_option('MOM_themetakeover_postdiv'));
-							$entryele = esc_attr(get_option('MOM_themetakeover_postelement'));
-							$entrytoggle = esc_attr(get_option('MOM_themetakeover_posttoggle'));
-							echo '
-							$("body").append("<div class=\'scrolltotop\'><a href=\'#top\'><i class=\'fa fa-arrow-up\'></i></a></div>"); 
-							if($("'.$entrydiv.' > '.$entryele.'").length){
-								$("'.$entrydiv.'").prepend("<hr /><span id=\'createalisttog\'><i class=\'fa fa-angle-up\'></i> '.$entrytoggle.'</span><span id=\'createalisttogd\' class=\'hidden\'><i class=\'fa fa-angle-down\'></i> '.$entrytoggle.'</span><div class=\'createalist_listitems hidden\'><ol></ol></div><hr />"); 
-								$(function(){
-									var list = $(\'.createalist_listitems ol\');
-									$("'.$entrydiv.' '.$entryele.'").each(function(){
-										$(this).prepend(\'<a name="\' + $(this).text() + \'"></a>\');
-										$(list).append(\'<li><a href="#\' + $(this).text() + \'">\' +  $(this).text() + \'</a></li>\');
-									});
-									$(\'#createalisttog\').click(function(){
-										$(\'.createalist_listitems\').removeClass(\'hidden\');
-										$(\'#createalisttog\').addClass(\'hidden\');
-										$(\'#createalisttogd\').removeClass(\'hidden\');
-									});
-									$(\'#createalisttogd\').click(function(){
-										$(\'.createalist_listitems\').addClass(\'hidden\');
-										$(\'#createalisttogd\').addClass(\'hidden\');
-										$(\'#createalisttog\').removeClass(\'hidden\');
-									});					
-									$(window).scroll(function(){
-										var scroll = $(window).scrollTop();
-											if(scroll >= 500){
-												$(".scrolltotop").addClass("show");
-										}else{
-												$(".scrolltotop").removeClass("show");
-										}
-									});
-								});
-							};';
-						}
-					}
-					echo '});</script>';
+				</ol>
+				<script>
+				function addText(event){
+					var targ = event.target || event.srcElement;
+					document.getElementById("content").value += targ.textContent || targ.innerText;
 				}
+				</script>
+				</div>
+				</div>';
 			}
-			add_action('wp_footer','MOMScriptsFooter',99999);
-		}
-	//
-
-
-
-
-	// (Y) Quick press
-		if(current_user_can('manage_options')){
-			$css = plugins_url().'/'.plugin_basename(dirname(__FILE__)).'/includes/';
-			add_action('wp_enqueue_admin_scripts','myoptionalmodules_scripts');		
-			function momEditorScreen($post_type){
-				$screen = get_current_screen();
-				$edit_post_type = $screen->post_type;
-				if($edit_post_type != 'post')
-				if($edit_post_type != 'page')
-				return;
-					if(get_option('mommaincontrol_fontawesome') == 1){
-					echo '
-					<div class="momEditorScreen postbox">
-						<h3>Font Awesome Icons</h3>
-						<div class="inside">
-							<style>
-								ol#momEditorMenu {width:95%;margin:0 auto;overflow:auto;overflow-x:hidden;overflow-y:auto;height:200px}
-								ol#momEditorMenu li {width:auto; margin:2px; float:left; list-style:none; display:block; padding:5px; line-height:20px; font-size:13px;}
-								ol#momEditorMenu li span:hover {cursor:pointer; background-color:#fff; color:#4b5373;}
-								ol#momEditorMenu li span {margin-right:5px; width:18px; height:19px; display:block; float:left; overflow:hidden; color: #fff; background-color:#4b5373; border-radius:3px; font-size:20px;}
-								ol#momEditorMenu li.clear {clear:both; display:block; width:100%;}
-								ol#momEditorMenu li.icon {width:18px; height:16px; overflow:hidden; font-size:20px; line-height:22px; margin:5px}
-								ol#momEditorMenu li.icon:hover {cursor:pointer; color:#441515; background-color:#ececec; border-radius:3px;}
-							</style>					
-							<ol id="momEditorMenu">
-								<li class="clear"></li>';
-								$icon = array('adjust','anchor','archive','arrows','arrows-h','arrows-v','asterisk',
-								'ban','bar-chart-o','barcode','bars','beer','bell','bell-o','bolt','book',
-								'bookmark','bookmark-o','briefcase','bug','building-o','bullhorn','bullseye',
-								'calendar','calendar-o','camera','camera-retro','caret-square-o-down','caret-square-o-left',
-								'caret-square-o-right','caret-square-o-up','certificate','check','check-circle','check-circle-o',
-								'check-square','check-square-o','circle','circle-o','clock-o','cloud','cloud-download','cloud-upload',
-								'code','code-fork','coffee','cog','cogs','comment','comment-o','comments','comments-o','compass','credit-card',
-								'crop','crosshairs','cutlery','dashboard','edit','ellipsis-h','ellipsis-v','envelope','envelope-o','eraser',
-								'exchange','exclamation','exclamation-circle','exclamation-triangle','external-link','external-link-square',
-								'eye','eye-slash','female','fighter-jet','film','filter','fire','fire-extinguisher','flag','flag-checkered',
-								'flag-o','flash','flask','folder','folder-o','folder-open','folder-open-o','frown-o','gamepad','gavel',
-								'gear','gears','gift','glass','globe','group','hdd-o','headphones','heart','heart-o','home','inbox',
-								'info','info-circle','key','keyboard-o','laptop','leaf','legal','lemon-o','level-down','level-up','lightbulb-o',
-								'location-arrow','lock','magic','magnet','mail-forward','mail-reply','mail-reply-all','male','map-marker',
-								'meh-o','microphone','microphone-slash','minus','minus-circle','minus-square','minus-square-o','mobile',
-								'mobile-phone','money','moon-o','music','pencil','pencil-square','pencil-square-o','phone','phone-square',
-								'picture-o','plane','plus','plus-circle','plus-square','plus-square-o','power-off','print','puzzle-piece',
-								'qrcode','question','question-circle','quote-left','quote-right','random','refresh','reply','reply-all',
-								'retweet','road','rocket','rss','rss-square','search','search-minus','search-plus','share','share-square',
-								'share-square-o','shield','shopping-cart','sign-in','sign-out','signal','sitemap','smile-o','sort',
-								'sort-alpha-asc','sort-alpha-desc','sort-amount-asc','sort-amount-desc','sort-asc','sort-desc','sort-down',
-								'sort-numeric-asc','sort-numeric-desc','sort-up','spinner','square','square-o','star','star-half','star-half-empty',
-								'star-half-full','star-half-o','star-o','subscript','suitcase','sun-o','superscript','tablet','tachometer','tag',
-								'tags','tasks','terminal','thumb-tack','thumbs-down','thumbs-o-down','thumbs-o-up','thumbs-up','ticket','times',
-								'times-circle','times-circle-o','tint','toggle-down','toggle-left','toggle-right','toggle-up','trash-o','trophy',
-								'truck','umbrella','unlock','unlock-alt','unsorted','video-camera','volume-down','volume-off','volume-up',
-								'warning','wheelchair','wrench','check-square','check-square-o','circle','circle-o','dot-circle-o',
-								'minus-square','minus-square-o','plus-square','plus-square-o','square','square-o',
-								'bitcoin','btc','cny','dollar','eur','euro','gbp','inr','jpy','krw','money','rmb','rouble','rub','ruble',
-								'rupee','try','turkish-lira','usd','won','yen','align-center','align-justify','align-left','align-right',
-								'bold','chain','chain-broken','clipboard','columns','copy','cut','dedent','eraser','file','file-o',
-								'file-text','file-text-o','files-o','floppy-o','font','indent','italic','link','list','list-alt','list-ol',
-								'list-ul','outdent','paperclip','paste','repeat','rotate-left','rotate-right','save','scissors','strikethrough',
-								'table','text-height','text-width','th','th-large','th-list','underline','undo','unlink','angle-double-down',
-								'angle-double-left','angle-double-right','angle-double-up','angle-down','angle-left','angle-right','angle-up',
-								'arrow-circle-down','arrow-circle-left','arrow-circle-o-down','arrow-circle-o-left','arrow-circle-o-right',
-								'arrow-circle-o-up','arrow-circle-right','arrow-circle-up','arrow-down','arrow-left','arrow-right','arrow-up',
-								'arrows','arrows-alt','arrows-h','arrows-v','caret-down','caret-left','caret-right','caret-square-o-down',
-								'caret-square-o-left','caret-square-o-right','caret-square-o-up','caret-up','chevron-circle-down',
-								'chevron-circle-left','chevron-circle-right','chevron-circle-up','chevron-down','chevron-left','chevron-right',
-								'chevron-up','hand-o-down','hand-o-left','hand-o-right','hand-o-up','long-arrow-down','long-arrow-left',
-								'long-arrow-right','long-arrow-up','toggle-down','toggle-left','toggle-right','toggle-up','arrows-alt','backward',
-								'compress','eject','expand','fast-backward','fast-forward','forward','pause','play','play-circle','play-circle-o',
-								'step-backward','step-forward','stop','youtube-play','ambulance','h-square','hospital-o','medkit','plus-square',
-								'stethoscope','user-md','wheelchair','adn','android','apple','bitbucket','bitbucket-square','bitcoin','btc','css3',
-								'dribbble','dropbox','facebook','facebook-square','flickr','foursquare','github','github-alt','github-square','gittip',
-								'google-plus','google-plus-square','html5','instagram','linkedin','linkedin-square','linux','maxcdn','pagelines',
-								'pinterest','pinterest-square','renren','skype','stack-exchange','stack-overflow','trello','tumblr','tumblr-square',
-								'twitter','twitter-square','vimeo-square','vk','weibo','windows','xing','xing-square','youtube','youtube-play',
-								'youtube-square');
-							foreach ($icon as &$value){
-								echo '<li onclick="addText(event)" class="fa fa-'.$value.' icon"><span>&#60;i class="fa fa-'.$value.'"&#62;&#60;/i&#62;</span></li>';
-							}
-						echo '
-						</ol>
-						<script>
-						function addText(event){
-							var targ = event.target || event.srcElement;
-							document.getElementById("content").value += targ.textContent || targ.innerText;
-						}
-						</script>
-						</div>
-						</div>';
-					}
-				}	
-			add_action('edit_form_after_editor','momEditorScreen');
-		}
-	//
-
-	
-	
-	
-	
+		}	
+	add_action('edit_form_after_editor','momEditorScreen');
+}
 ?>
