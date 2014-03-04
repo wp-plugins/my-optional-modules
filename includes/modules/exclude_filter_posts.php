@@ -54,6 +54,18 @@ function mom_exclude_filter_posts($query){
 	if ( !is_user_logged_in() ) {
 		$loggedOutCats = '0';
 		$loggedOutTags = '0';
+		
+		$MOM_Exclude_VisitorCategories = '';
+		$MOM_Exclude_level0Categories  = '';
+		$MOM_Exclude_level1Categories  = '';
+		$MOM_Exclude_level2Categories  = '';
+		$MOM_Exclude_level7Categories  = '';
+		$MOM_Exclude_VisitorTags       = '';
+		$MOM_Exclude_level0Tags        = '';
+		$MOM_Exclude_level1Tags        = '';
+		$MOM_Exclude_level2Tags        = '';
+		$MOM_Exclude_level7Tags        = '';
+		
 		if ( get_option ( 'MOM_Exclude_VisitorCategories') ) { $MOM_Exclude_VisitorCategories = get_option ( 'MOM_Exclude_VisitorCategories' ); } else { $MOM_Exclude_VisitorCategories = '0'; }
 		if ( get_option ( 'MOM_Exclude_level0Categories') )  { $MOM_Exclude_level0Categories  = get_option ( 'MOM_Exclude_level0Categories' );  } else { $MOM_Exclude_level0Categories  = '0'; }
 		if ( get_option ( 'MOM_Exclude_level1Categories') )  { $MOM_Exclude_level1Categories  = get_option ( 'MOM_Exclude_level1Categories' );  } else { $MOM_Exclude_level1Categories  = '0'; }
@@ -131,7 +143,7 @@ function mom_exclude_filter_posts($query){
 	$hideAllCategories = array_filter ( array_unique ( $hideAllCategories ) );
 	$hideAllTags       = array_filter ( array_unique ( $hideAllTags ) );	
 	
-	if ( $query->is_feed || $query->is_home || $query->is_search || $query->tag || $query->is_category ) {
+	if ( $query->is_feed || $query->is_home || $query->is_search || $query->is_tag || $query->is_category ) {
 		$tax_query = array (
 			'ignore_sticky_posts' => true,
 			'post_type' => 'any',
