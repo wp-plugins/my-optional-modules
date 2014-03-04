@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.5.3
+ * Version: 5.5.4
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -28,7 +28,7 @@
 define ( 'MyOptionalModules', true );
 require_once ( ABSPATH . 'wp-includes/pluggable.php' );
 $my_optional_modules_passwords_salt = get_option ( 'mom_passwords_salt' );
-$passwordField                      = 0;
+$passwordField = 0;
 if ( function_exists ('akismet_admin_init' ) ) {
 	require_once ( 'akismet.class.php' );
 }
@@ -104,7 +104,7 @@ $mommodule_shortcodes     = esc_attr ( get_option ( 'mommaincontrol_shorts' ) );
 $mommodule_themetakeover  = esc_attr ( get_option ( 'mommaincontrol_themetakeover' ) );
 $mommodule_versionnumbers = esc_attr ( get_option ( 'mommaincontrol_versionnumbers' ) );
 $mommodule_fixcanon       = esc_attr ( get_option ( 'mommaincontrol_fixcanon' ) );
-$momthemetakeover_youtube = esc_url ( get_option ( 'MOM_themetakeover_youtubefrontpage' ) );
+$momthemetakeover_youtube = esc_url  ( get_option ( 'MOM_themetakeover_youtubefrontpage' ) );
 
 if ( $mommodule_analytics      == 1 ) $mommodule_analytics      = true;
 if ( $mommodule_count          == 1 ) $mommodule_count          = true;
@@ -407,13 +407,6 @@ if ( get_option ( 'mompaf_post' ) != 'off' ) add_action ( 'wp', 'myoptionalmodul
 	if(inet_pton($_SERVER['REMOTE_ADDR']) === false)$ipaddress = false;
 	if(inet_pton($_SERVER['REMOTE_ADDR']) !== false)$ipaddress = esc_attr($_SERVER['REMOTE_ADDR']);
 	
-	include(plugin_dir_path(__FILE__).'/ipblocklist.php');
-	foreach($rb_blacklist_ips as $blacklistedip){
-		if(eregi($blacklistedip,$_SERVER['REMOTE_ADDR'])){
-			$ipaddress = false;
-		}
-	}
-
 	function myoptionalmodules_checkdnsbl($ipaddress){
 		$dnsbl_lookup=array(
 			'dnsbl-1.uceprotect.net',
