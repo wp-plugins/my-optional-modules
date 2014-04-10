@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.5.5
+ * Version: 5.5.5.1
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -750,7 +750,7 @@ if ( get_option ( 'mompaf_post' ) != 'off' ) add_action ( 'wp', 'myoptionalmodul
 				if(isset($_POST['mom_versions_submit']))update_option('mommaincontrol_versionnumbers',$_REQUEST['mommaincontrol_versionnumbers']);
 				if(isset($_POST['mom_meta_mode_submit']))update_option('mommaincontrol_meta',$_REQUEST['mommaincontrol_meta']);
 				if(isset($_POST['mom_maintenance_mode_submit']))update_option('mommaincontrol_maintenance',$_REQUEST['maintenanceMode']);
-				if(!get_option('mommaincontrol_mompaf'))add_option('mompaf_post',0);
+				if(!get_option('mommaincontrol_mompaf'))add_option('mompaf_post','off');
 				if(isset($_POST['mom_maintenance_mode_submit']))add_option('momMaintenance_url','');
 				if(isset($_POST['mom_postasfront_post_submit'])){
 					update_option('momMaintenance_url',$_REQUEST['momMaintenance_url']);
