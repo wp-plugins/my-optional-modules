@@ -172,7 +172,9 @@ if ( $mommodule_fixcanon       === true ) if ( function_exists ( 'rel_canonical'
 if ( $mommodule_fixcanon       === true ) if ( function_exists ( 'mom_canonical' ) ) {    add_action ( 'wp_head', 'mom_canonical' ); }
 if ( $mommodule_meta           === true ) mom_SEO_header();
 
-if ( get_option ( 'mompaf_post' ) != 'off' ) add_action ( 'wp', 'myoptionalmodules_postasfront' );
+if ( get_option ( 'mompaf_post' ) ) {
+	if ( get_option ( 'mompaf_post' ) != 'off' ) add_action ( 'wp', 'myoptionalmodules_postasfront' );
+}
 	
 /**
  * Functions
