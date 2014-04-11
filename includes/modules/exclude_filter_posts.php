@@ -4,7 +4,19 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 	die ();
 }
 
+add_action ( 'pre_get_posts', 'mom_exclude_filter_posts' );
 function mom_exclude_filter_posts($query){
+
+	global $wp_query;
+
+	if ( $query->is_feed     ) { $wp_query->is_main_loop = true; }
+	if ( $query->is_home     ) { $wp_query->is_main_loop = true; }
+	if ( $query->is_search   ) { $wp_query->is_main_loop = true; }
+	if ( $query->is_tag      ) { $wp_query->is_main_loop = true; }
+	if ( $query->is_category ) { $wp_query->is_main_loop = true; }
+
+	return $wp;
+
 	$c1	  = array ( '0' );
 	$lt_1 = array ( '0' );
 	$t1	  = array ( '0' );
@@ -143,29 +155,31 @@ function mom_exclude_filter_posts($query){
 	$hideAllCategories = array_filter ( array_unique ( $hideAllCategories ) );
 	$hideAllTags       = array_filter ( array_unique ( $hideAllTags ) );	
 	
-	if ( $query->is_feed || $query->is_home || $query->is_search || $query->is_tag || $query->is_category ) {
-		$tax_query = array (
-			'ignore_sticky_posts' => true,
-			'post_type' => 'any',
-			array (
-				'taxonomy' => 'category',
-				'terms' => $hideAllCategories,
-				'field' => 'id',
-				'operator' => 'NOT IN'
-			),
-			array (
-				'taxonomy' => 'post_tag',
-				'terms' => $hideAllTags,
-				'field' => 'id',
-				'operator' => 'NOT IN'
-			),
-			array (
-				'taxonomy' => 'post_format',
-				'field' => 'slug',
-				'terms' => array($hidePostFormats),
-				'operator' => 'NOT IN'
-			)
-		);
-		$query->set ( 'tax_query', $tax_query );
+	if ( isset ( $wp_query->is_main_loop ) ) {
+		if ( $query->is_feed || $query->is_home || $query->is_search || $query->is_tag || $query->is_category ) {
+			$tax_query = array (
+				'ignore_sticky_posts' => true,
+				'post_type' => 'any',
+				array (
+					'taxonomy' => 'category',
+					'terms' => $hideAllCategories,
+					'field' => 'id',
+					'operator' => 'NOT IN'
+				),
+				array (
+					'taxonomy' => 'post_tag',
+					'terms' => $hideAllTags,
+					'field' => 'id',
+					'operator' => 'NOT IN'
+				),
+				array (
+					'taxonomy' => 'post_format',
+					'field' => 'slug',
+					'terms' => array($hidePostFormats),
+					'operator' => 'NOT IN'
+				)
+			);
+			$query->set ( 'tax_query', $tax_query );
+		}
 	}
 }

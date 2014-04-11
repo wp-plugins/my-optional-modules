@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.5.5.1
+ * Version: 5.5.5.2
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -129,7 +129,6 @@ if ( $mommodule_fixcanon       == 1 ) $mommodule_fixcanon       = true;
 
 if ( $mommodule_exclude        === true ) add_action ( 'after_setup_theme', 'myoptionalmodules_postformats' );
 if ( $mommodule_exclude        === true ) include(plugin_dir_path(__FILE__) . '/includes/modules/exclude_filter_posts.php');
-if ( $mommodule_exclude        === true ) add_action ( 'pre_get_posts', 'mom_exclude_filter_posts' );
 if ( $mommodule_fontawesome    === true ) add_action ( 'wp_enqueue_scripts', 'myoptionalmodules_scripts' );
 if ( $mommodule_authorarchives === true ) add_action ( 'template_redirect', 'myoptionalmodules_disableauthorarchives' );
 if ( $mommodule_datearchives   === true ) add_action ( 'wp', 'myoptionalmodules_disabledatearchives' );
