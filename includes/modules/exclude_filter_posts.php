@@ -7,16 +7,6 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 add_action ( 'pre_get_posts', 'mom_exclude_filter_posts' );
 function mom_exclude_filter_posts($query){
 
-	global $wp_query;
-
-	if ( $query->is_feed     ) { $wp_query->is_main_loop = true; }
-	if ( $query->is_home     ) { $wp_query->is_main_loop = true; }
-	if ( $query->is_search   ) { $wp_query->is_main_loop = true; }
-	if ( $query->is_tag      ) { $wp_query->is_main_loop = true; }
-	if ( $query->is_category ) { $wp_query->is_main_loop = true; }
-
-	return $wp;
-
 	$c1	  = array ( '0' );
 	$lt_1 = array ( '0' );
 	$t1	  = array ( '0' );
@@ -66,7 +56,7 @@ function mom_exclude_filter_posts($query){
 	if ( !is_user_logged_in() ) {
 		$loggedOutCats = '0';
 		$loggedOutTags = '0';
-		
+
 		$MOM_Exclude_VisitorCategories = '';
 		$MOM_Exclude_level0Categories  = '';
 		$MOM_Exclude_level1Categories  = '';
@@ -77,7 +67,7 @@ function mom_exclude_filter_posts($query){
 		$MOM_Exclude_level1Tags        = '';
 		$MOM_Exclude_level2Tags        = '';
 		$MOM_Exclude_level7Tags        = '';
-		
+
 		if ( get_option ( 'MOM_Exclude_VisitorCategories') ) { $MOM_Exclude_VisitorCategories = get_option ( 'MOM_Exclude_VisitorCategories' ); } else { $MOM_Exclude_VisitorCategories = '0'; }
 		if ( get_option ( 'MOM_Exclude_level0Categories') )  { $MOM_Exclude_level0Categories  = get_option ( 'MOM_Exclude_level0Categories' );  } else { $MOM_Exclude_level0Categories  = '0'; }
 		if ( get_option ( 'MOM_Exclude_level1Categories') )  { $MOM_Exclude_level1Categories  = get_option ( 'MOM_Exclude_level1Categories' );  } else { $MOM_Exclude_level1Categories  = '0'; }
@@ -87,7 +77,7 @@ function mom_exclude_filter_posts($query){
 		if ( get_option ( 'MOM_Exclude_level0Tags') )        { $MOM_Exclude_level0Tags        = get_option ( 'MOM_Exclude_level0Tags' );        } else { $MOM_Exclude_level0Tags        = '0'; }
 		if ( get_option ( 'MOM_Exclude_level1Tags') )        { $MOM_Exclude_level1Tags        = get_option ( 'MOM_Exclude_level1Tags' );        } else { $MOM_Exclude_level1Tags        = '0'; }
 		if ( get_option ( 'MOM_Exclude_level2Tags') )        { $MOM_Exclude_level2Tags        = get_option ( 'MOM_Exclude_level2Tags' );        } else { $MOM_Exclude_level2Tags        = '0'; }
-		
+
 		$loggedOutCats     = $MOM_Exclude_VisitorCategories . ',' . $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
 		$loggedOutTags     = $MOM_Exclude_VisitorTags . ',' . $MOM_Exclude_level0Tags . ',' . $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
 		$lc1               = array_unique ( explode ( ',', $loggedOutCats ) );
@@ -99,7 +89,7 @@ function mom_exclude_filter_posts($query){
 		$lt11              = rtrim ( implode ( $lt1 ), ',' );
 		$hideLoggedOutTags = explode ( ',', str_replace ( ' ', '', $lt11 ) );
 		$hidePostFormats   = $MOM_Exclude_PostFormats_Visitor;
-		
+
 	} else {
 		get_currentuserinfo();
 		global $user_level;
@@ -155,7 +145,7 @@ function mom_exclude_filter_posts($query){
 	$hideAllCategories = array_filter ( array_unique ( $hideAllCategories ) );
 	$hideAllTags       = array_filter ( array_unique ( $hideAllTags ) );	
 	
-	if ( isset ( $wp_query->is_main_loop ) ) {
+	
 		if ( $query->is_feed || $query->is_home || $query->is_search || $query->is_tag || $query->is_category ) {
 			$tax_query = array (
 				'ignore_sticky_posts' => true,
@@ -181,5 +171,5 @@ function mom_exclude_filter_posts($query){
 			);
 			$query->set ( 'tax_query', $tax_query );
 		}
-	}
+	
 }

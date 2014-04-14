@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.5.5.2
+ * Version: 5.5.5.3
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
