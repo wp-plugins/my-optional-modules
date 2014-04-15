@@ -387,21 +387,38 @@ if ( !function_exists ( 'myoptionalmodules_add_twitter_to_general_html' ) ) {
 	}
 }
 	
-if(get_option('mommaincontrol_momse') == 1 && get_option('MOM_themetakeover_youtubefrontpage') == ''){
+if ( get_option ( 'mommaincontrol_momse' ) == 1 && !get_option ( 'MOM_themetakeover_youtubefrontpage' ) ) {
 	if ( !function_exists ( 'myoptionalmodules_404Redirection' ) ) {
 		function myoptionalmodules_404Redirection(){
-			
-			if(!is_user_logged_in()){
-				if(get_option('MOM_Exclude_URL') != ''){$RedirectURL = esc_url(get_permalink(get_option('MOM_Exclude_URL')));}else{$RedirectURL = get_bloginfo('wpurl');}
+			if ( is_user_logged_in() ) {
+				if ( get_option ( 'MOM_Exclude_URL' ) == 'NULL' ) {
+					
+				} else { 
+					if ( get_option ( 'MOM_Exclude_URL' ) ) { 
+						$RedirectURL = esc_url ( get_permalink ( get_option ( 'MOM_Exclude_URL' ) ) ); 
+					} else { 
+						$RedirectURL = get_bloginfo ( 'wpurl' );
+					}
+					global $wp_query;
+					if($wp_query->is_404){
+						wp_redirect($RedirectURL,301);exit;
+					}
+				}
 			}else{
-				if(get_option('MOM_Exclude_URL_User') != ''){$RedirectURL = esc_url(get_permalink(get_option('MOM_Exclude_URL_User')));}else{$RedirectURL = get_bloginfo('wpurl');}
+				if ( get_option ( 'MOM_Exclude_URL_User' ) == 'NULL' ) {
+					
+				} else {
+					if ( get_option ( 'MOM_Exclude_URL_User' ) ) { 
+						$RedirectURL = esc_url ( get_permalink ( get_option ( 'MOM_Exclude_URL_User' ) ) ); 
+					} else { 
+						$RedirectURL = get_bloginfo ( 'wpurl' );
+					}
+					global $wp_query;
+					if($wp_query->is_404){
+						wp_redirect($RedirectURL,301);exit;
+					}
+				}
 			}
-			
-			global $wp_query;
-			if($wp_query->is_404){
-				wp_redirect($RedirectURL,301);exit;
-			}
-			
 		}
 		add_action('wp','myoptionalmodules_404Redirection',1);
 	}

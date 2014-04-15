@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.5.5.4
+ * Version: 5.5.5.5
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -1892,6 +1892,7 @@ include   ( plugin_dir_path(__FILE__) . '_my_optional_modules_functions.php' );
 				<section>
 				<label for="MOM_Exclude_URL">Redirect 404s (logged in)</label>
 				<select name="MOM_Exclude_URL" class="allpages" id="MOM_Exclude_URL">
+					<option value="NULL">Off</option>
 					<option value="">Home page</option>';
 					foreach($showmepages as $pagesshown){ echo '<option name="MOM_Exclude_URL" id="mompaf_'.$pagesshown->ID.'" value="'.$pagesshown->ID.'"'; $pagesshownID = $pagesshown->ID; selected($MOM_Exclude_URL, $pagesshownID); echo '> '.$pagesshown->post_title.'</option>'; }
 					echo '
@@ -1900,6 +1901,7 @@ include   ( plugin_dir_path(__FILE__) . '_my_optional_modules_functions.php' );
 				<section>
 				<label for="MOM_Exclude_URL_User">Redirect 404s (logged out)</label>
 				<select name="MOM_Exclude_URL_User" class="allpages" id="MOM_Exclude_URL_User">
+					<option value="NULL">Off</option>
 					<option value=""/>Home page</option>';
 					foreach($showmepages as $pagesshownuser){ echo '<option name="MOM_Exclude_URL_User" id="mompaf_'.$pagesshownuser->ID.'" value="'.$pagesshown->ID.'"'; $pagesshownuserID = $pagesshownuser->ID; selected ($MOM_Exclude_URL_User, $pagesshownuserID); echo '> '.$pagesshownuser->post_title.'</option>';}
 					echo '

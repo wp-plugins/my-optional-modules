@@ -70,7 +70,7 @@ if ( $mommodule_themetakeover  == 1 ) $mommodule_themetakeover  = true;
 if ( $mommodule_versionnumbers == 1 ) $mommodule_versionnumbers = true;
 if ( $mommodule_fixcanon       == 1 ) $mommodule_fixcanon       = true;
 if ( $mommodule_exclude        === true ) add_action ( 'after_setup_theme', 'myoptionalmodules_postformats' );
-if ( $mommodule_exclude        === true ) include( plugin_dir_path(__FILE__) . '/includes/modules/exclude_filter_posts.php');
+if ( $mommodule_exclude        === true ) include( plugin_dir_path(__FILE__) . '/includes/modules/_my_optional_modules_exclude.php');
 if ( $mommodule_fontawesome    === true ) add_action ( 'wp_enqueue_scripts', 'myoptionalmodules_scripts' );
 if ( $mommodule_authorarchives === true ) add_action ( 'template_redirect', 'myoptionalmodules_disableauthorarchives' );
 if ( $mommodule_datearchives   === true ) add_action ( 'wp', 'myoptionalmodules_disabledatearchives' );
