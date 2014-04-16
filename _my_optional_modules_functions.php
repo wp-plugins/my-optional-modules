@@ -14,7 +14,7 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 
 if ( !function_exists ( 'rb_apply_quotes' ) ) {
 	function rb_apply_quotes($item){
-		return "'" . mysql_real_escape_string($item) . "'";
+		return "'" . esc_sql($item) . "'";
 	}
 }
 

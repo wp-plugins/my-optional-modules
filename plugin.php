@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.5.5.5
+ * Version: 5.5.5.6
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -24,10 +24,6 @@
 define ( 'MyOptionalModules', true );
 require_once ( ABSPATH . 'wp-includes/pluggable.php' );
 $passwordField = 0;
-if ( function_exists ('akismet_admin_init' ) ) {
-	require_once ( 'akismet.class.php' );
-}
-
 include   ( plugin_dir_path(__FILE__) . '_my_optional_modules_installation.php' );
 include   ( plugin_dir_path(__FILE__) . '_my_optional_modules_variables.php' );
 include   ( plugin_dir_path(__FILE__) . '_my_optional_modules_functions.php' );
