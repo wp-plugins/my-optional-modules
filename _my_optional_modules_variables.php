@@ -5,7 +5,7 @@
  *
  * (1) Variables used throughout the plugin.
  *
- * @package regular_board
+ * @package my_optional_modules
  */	
 
 if ( !defined ( 'MyOptionalModules' ) ) { 
@@ -41,7 +41,6 @@ $mommodule_protectrss     = intval ( get_option ( 'mommaincontrol_protectrss' ) 
 $mommodule_lazyload       = intval ( get_option ( 'mommaincontrol_lazyload' ) );
 $mommodule_maintenance    = intval ( get_option ( 'mommaincontrol_maintenance' ) );
 $mommodule_meta           = intval ( get_option ( 'mommaincontrol_meta' ) );
-$mommodule_rb             = intval ( get_option ( 'mommaincontrol_regularboard' ) );
 $mommodule_passwords      = intval ( get_option ( 'mommaincontrol_momrups' ) );
 $mommodule_reviews        = intval ( get_option ( 'mommaincontrol_reviews' ) );
 $mommodule_shortcodes     = intval ( get_option ( 'mommaincontrol_shorts' ) );
@@ -62,7 +61,6 @@ if ( $mommodule_protectrss     == 1 ) $mommodule_protectrss     = true;
 if ( $mommodule_lazyload       == 1 ) $mommodule_lazyload       = true;
 if ( $mommodule_maintenance    == 1 ) $mommodule_maintenance    = true;
 if ( $mommodule_meta           == 1 ) $mommodule_meta           = true;
-if ( $mommodule_rb             == 1 ) $mommodule_rb             = true;
 if ( $mommodule_passwords      == 1 ) $mommodule_passwords      = true;
 if ( $mommodule_reviews        == 1 ) $mommodule_reviews        = true;
 if ( $mommodule_shortcodes     == 1 ) $mommodule_shortcodes     = true;
@@ -87,7 +85,6 @@ if ( $mommodule_protectrss     === true ) add_filter ( 'the_excerpt_rss', 'myopt
 if ( $mommodule_meta           === true ) add_filter ( 'admin_init', 'myoptionalmodules_add_fields_to_general' );
 if ( $mommodule_meta           === true ) add_filter ( 'user_contactmethods', 'myoptionalmodules_add_fields_to_profile' );
 if ( $mommodule_meta           === true ) add_filter ( 'jetpack_enable_opengraph', '__return_false', 99 );
-if ( $mommodule_rb             === true ) add_filter ( 'jetpack_enable_opengraph', '__return_false', 99 );
 if ( $mommodule_versionnumbers === true ) add_filter ( 'style_loader_src', 'myoptionalmodules_removeversion', 0 );
 if ( $mommodule_versionnumbers === true ) add_filter ( 'script_loader_src', 'myoptionalmodules_removeversion', 0 );
 

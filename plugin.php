@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.5.5.6
+ * Version: 5.5.5.7
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -37,26 +37,21 @@ include   ( plugin_dir_path(__FILE__) . '_my_optional_modules_functions.php' );
 	// (B) (3) Plugin form handling
 		if(current_user_can('manage_options')){
 			global $wpdb;
-			$regularboard_boards = $wpdb->prefix.'regularboard_boards';
-			$regularboard_posts = $wpdb->prefix.'regularboard_posts';
-			$regularboard_users = $wpdb->prefix.'regularboard_users';
 			$votesPosts = $wpdb->prefix.'momvotes_posts';
 			$votesVotes = $wpdb->prefix.'momvotes_votes';
 			$RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
 			$review_table_name = $wpdb->prefix.'momreviews';
 			$verification_table_name = $wpdb->prefix.'momverification';
 			if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
-				add_option('mommaincontrol_regularboard_activated',1);
 				add_option('mommaincontrol_passwords_activated',1);					
 				add_option('mommaincontrol_reviews_activated',1);
 				add_option('mommaincontrol_shorts_activated',1);
 				add_option('mommaincontrol_votes_activated',1);
-				if(get_option('mommaincontrol_regularboard_activated') == 0){$wpdb->query("DROP TABLE ".$regularboard_boards."");$wpdb->query("DROP TABLE ".$regularboard_posts."");$wpdb->query("DROP TABLE ".$regularboard_users."");}
 				if(get_option('mommaincontrol_votes_activated') == 0){$wpdb->query("DROP TABLE ".$votesPosts."");$wpdb->query("DROP TABLE ".$votesVotes."");}
 				if(get_option('mommaincontrol_passwords_activated') == 0){$wpdb->query("DROP TABLE ".$RUPs_table_name."");}
 				if(get_option('mommaincontrol_reviews_activated') == 0){$wpdb->query("DROP TABLE ".$review_table_name."");}
 				if(get_option('mommaincontrol_shorts_activated') == 0){$wpdb->query("DROP TABLE ".$verification_table_name."");}
-				$option = array('mommaincontrol_prettycanon','mommaincontrol_fixcanon','mommaincontrol_regularboard_activated','mommaincontrol_regularboard','mommaincontrol_votes_activated','mommaincontrol_protectrss','MOM_themetakeover_extend','MOM_themetakeover_backgroundimage',
+				$option = array('mommaincontrol_prettycanon','mommaincontrol_fixcanon','mommaincontrol_votes_activated','mommaincontrol_protectrss','MOM_themetakeover_extend','MOM_themetakeover_backgroundimage',
 				'MOM_themetakeover_topbar_search','MOM_themetakeover_topbar_share','MOM_themetakeover_topbar_color','mommaincontrol_footerscripts','mommaincontrol_authorarchives','mommaincontrol_datearchives','MOM_themetakeover_wowhead',
 				'mom_passwords_salt','mommaincontrol_obwcountplus','mommaincontrol_momrups','mommaincontrol_momse','mommaincontrol_mompaf','mommaincontrol_momja','mommaincontrol_shorts','mommaincontrol_reviews',
 				'mommaincontrol_fontawesome','mommaincontrol_versionnumbers','mommaincontrol_lazyload','mommaincontrol_meta','mommaincontrol_focus','mommaincontrol_maintenance','mommaincontrol_themetakeover','mommaincontrol_setfocus',
@@ -77,7 +72,6 @@ include   ( plugin_dir_path(__FILE__) . '_my_optional_modules_functions.php' );
 				if(isset($_POST['MOMsave'])){}
 				if(isset($_POST['mom_prettycanon_mode_submit']))update_option('mommaincontrol_prettycanon',$_REQUEST['prettycanon']);
 				if(isset($_POST['mom_fixcanon_mode_submit']))update_option('mommaincontrol_fixcanon',$_REQUEST['fixcanon']);
-				if(isset($_POST['mom_regularboard_mode_submit']))update_option('mommaincontrol_regularboard',$_REQUEST['regularboard']);
 				if(isset($_POST['mom_themetakeover_mode_submit']))update_option('mommaincontrol_themetakeover',$_REQUEST['themetakeover']);
 				if(isset($_POST['mom_protectrss_mode_submit']))update_option('mommaincontrol_protectrss',$_REQUEST['protectrss']);
 				if(isset($_POST['mom_footerscripts_mode_submit']))update_option('mommaincontrol_footerscripts',$_REQUEST['footerscripts']);
@@ -126,72 +120,6 @@ include   ( plugin_dir_path(__FILE__) . '_my_optional_modules_functions.php' );
 					add_option('jump_around_6',68);
 					add_option('jump_around_7',90);
 					add_option('jump_around_8',88);
-				}
-				if(isset($_POST['mom_regularboard_mode_submit'])){
-					add_option('mommaincontrol_regularboard_activated',1);
-					if(get_option('mommaincontrol_regularboard_activated') == 1){
-						$regularboardSQLa = "CREATE TABLE $regularboard_boards(
-						ID BIGINT(22) NOT NULL AUTO_INCREMENT , 
-						NAME TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						SHORTNAME TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						DESCRIPTION TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						RULES TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						SFW TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						MODS TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						JANITORS TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						POSTCOUNT BIGINT(22) NOT NULL ,
-						LOCKED BIGINT(22) NOT NULL ,
-						LOGGED BIGINT(22) NOT NULL ,
-						PRIMARY KEY  (ID)
-						);";
-						$regularboardSQLb = "CREATE TABLE $regularboard_posts(
-						ID BIGINT(22) NOT NULL AUTO_INCREMENT , 
-						PARENT BIGINT(22) NOT NULL ,
-						IP BIGINT(22) NOT NULL ,
-						DATE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						EMAIL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						SUBJECT TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						COMMENT LONGTEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						TYPE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						URL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						BOARD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						MODERATOR TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						LAST TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						STICKY TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						LOCKED TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						PASSWORD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						REPLYTO BIGINT(22) NOT NULL ,
-						UP BIGINT(22) NOT NULL ,
-						USERID BIGINT(22) NOT NULL , 
-						PUBLIC BIGINT(22) NOT NULL ,
-						PRIMARY KEY  (ID)
-						);";
-						$regularboardSQLc = "CREATE TABLE $regularboard_users(
-						ID BIGINT(22) NOT NULL AUTO_INCREMENT , 
-						DATE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						IP BIGINT(22) NOT NULL,
-						NAME TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						EMAIL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						THREAD BIGINT(22) NOT NULL  , 
-						PARENT BIGINT(22) NOT NULL ,
-						BOARD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						BANNED INT(11) NOT NULL,
-						MESSAGE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						LENGTH TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						KARMA BIGINT(22) NOT NULL , 
-						PASSWORD TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						HEAVEN TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						VIDEO TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						BOARDS TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						FOLLOW TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-						PRIMARY KEY  (ID)
-						);";
-						require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-						dbDelta($regularboardSQLa);
-						dbDelta($regularboardSQLb);
-						dbDelta($regularboardSQLc);
-						update_option('mommaincontrol_regularboard_activated',0);
-					}
 				}
 				if(isset($_POST['mom_votes_mode_submit'])){
 					add_option('mommaincontrol_votes_activated',1);					
@@ -2220,11 +2148,6 @@ if(get_option('MOM_Exclude_NoFollow') != 0){
 		}
 	//
 
-
-/**
- * Regular Board
- */
-include(plugin_dir_path(__FILE__) . '/includes/modules/regular_board.php');
 
 /**
  * Database cleaner
