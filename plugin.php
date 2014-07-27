@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.5.5.7
+ * Version: 5.5.5.8
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -2168,14 +2168,20 @@ if ( current_user_can ( 'manage_options' ) ) {
 		$revisions_total = $wpdb->get_results ( "SELECT ID FROM `" . $postsTable . "` WHERE `post_type` = 'revision' OR `post_type` = 'auto_draft' OR `post_status` = 'trash'" );
 		$comments_total  = $wpdb->get_results ( "SELECT comment_ID FROM `" . $commentsTable . "` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'" );
 		$terms_total     = $wpdb->get_results ( "SELECT term_taxonomy_id FROM `" . $termsTable . "` WHERE `count` = '0'" );
-		foreach ( $revisions_total as $retot ) { 
-			$revisions_count++; 
+		if( count( $revisions_total ) ) { 
+			foreach ( $revisions_total as $retot ) { 
+				$revisions_count++; 
+			}
 		}
-		foreach ( $comments_total as $comtot ) { 
-			$comments_count++; 
+		if( count( $comments_total ) ) {
+			foreach ( $comments_total as $comtot ) { 
+				$comments_count++; 
+			}
 		}
-		foreach ( $terms_total as $termstot  ) {
-			$this_term = $termstot->term_id; $terms_count++; 
+		if( count( $terms_total ) ) {
+			foreach ( $terms_total as $termstot  ) {
+				$terms_count++; 
+			}
 		}
 		$totalClutter    = ( $terms_count + $comments_count + $revisions_count );
 

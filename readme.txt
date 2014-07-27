@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: 4chan,gravatar,youtube,DNSBL,akismet,ipv4,ipv6,htmlpurifier,tripcode,sage,chan,capcodes,board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.8
 Tested up to: 3.9
-Stable tag: 5.5.5.7
+Stable tag: 5.5.5.8
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -64,40 +64,37 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 == Changelog ==
 * Regular Board has been removed as the Regular Board standalone plugin has been in active development for a while now.
 
-= .5 =
-* HTMLPurifier (added)
-* Regular Board (added)
-* All scripts (.js,script) moved to a single file, enqueued)
-* Minor bug fixes
-* 'Module Breaking' bug squashed
-* Shortcode Verifier (added); Maintenance Mode (added); Plugin compatability check (added); FitVid (added); Page/Post lists from headers (added);
-* (Some files) have had 'unnecessary' whitespace removed
-* Interface overhaul (2)
-* Minor bug fixes
-* Cleanup from 4.x.x
-* Lazy Load (added); Meta (added); Theme Takeover(added)
+* 5.5.5.8  Admin panel error involving database cleaner resolved
 
-= .4 = 
-* Minor bug fixes
-* Shortcode progress bar (added);
-* Interface overhaul
+* 5.5.5.*  HTMLPurifier (added)
+* 5.5.5.*  Regular Board (added)
+* 5.5.5.*  All scripts (.js,script) moved to a single file, enqueued)
+* 5.5.5.*  Minor bug fixes
+* 5.5.5.*  'Module Breaking' bug squashed
+* 5.5.5.*  Shortcode Verifier (added); Maintenance Mode (added); Plugin compatability check (added); FitVid (added); Page/Post lists from headers (added);
+* 5.5.5.*  (Some files) have had 'unnecessary' whitespace removed
+* 5.5.5.*  Interface overhaul (2)
+* 5.5.5.*  Minor bug fixes
+* 5.5.5.*  Cleanup from 4.x.x
+* 5.5.5.*  Lazy Load (added); Meta (added); Theme Takeover(added)
 
-= .3 =
-* Minor bug fixes
-* Code redundancies removed
-* Reviews (added);
+* 4.*.*.*  Minor bug fixes
+* 4.*.*.*  Shortcode progress bar (added);
+* 4.*.*.*  Interface overhaul
 
-= .2 =
-* Exclude now enables all post formats (automatically)
-* Database cleaner (added)
-* Minor bug fixes
+* 3.*.*.*  Minor bug fixes
+* 3.*.*.*  Code redundancies removed
+* 3.*.*.*  Reviews (added);
 
-= .1 =
-* Initial release
-* Official plugin support page created
-* Google Analytics (added); Exclude (added); Count++ (added); Shortcodes (added); Post as Front (added); Jump Around (added); Passwords (added)
-* Settings page 'tidied' up (Passwords/Jump AroundExclude)
-* Bug fixes (Post as Front, shortcodes
-* Simply Exclude module updates - can now hide categories based on what day of the week it is.  (You will need to deactivate/reactive the module to take advantage of this.)
-* Count++ module updates- tidied up settings page, displayed message can be customized.
-* Code cleaned
+* 2.*.*.*  Exclude now enables all post formats (automatically)
+* 2.*.*.*  Database cleaner (added)
+* 2.*.*.*  Minor bug fixes
+
+* 1.*.*.*  Initial release
+* 1.*.*.*  Official plugin support page created
+* 1.*.*.*  Google Analytics (added); Exclude (added); Count++ (added); Shortcodes (added); Post as Front (added); Jump Around (added); Passwords (added)
+* 1.*.*.*  Settings page 'tidied' up (Passwords/Jump AroundExclude)
+* 1.*.*.*  Bug fixes (Post as Front, shortcodes
+* 1.*.*.*  Simply Exclude module updates - can now hide categories based on what day of the week it is.  (You will need to deactivate/reactive the module to take advantage of this.)
+* 1.*.*.*  Count++ module updates- tidied up settings page, displayed message can be customized.
+* 1.*.*.*  Code cleaned
