@@ -1916,6 +1916,7 @@ if(!is_user_logged_in() || is_user_logged_in() && $user_level == 0 || is_user_lo
 		}
 	}
 	function exclude_post_by_tag($query){
+	global $user_level;
 	$loggedOutTags = '0';
 	if(!is_user_logged_in()){
 		$loggedOutTags = get_option('MOM_Exclude_VisitorTags').','.get_option('MOM_Exclude_level0Tags').','.get_option('MOM_Exclude_level1Tags').','.get_option('MOM_Exclude_level2Tags').','.get_option('MOM_Exclude_level7Tags');
