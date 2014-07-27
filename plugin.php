@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.5.5.8
+ * Version: 5.5.5.9
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -28,11 +28,14 @@ include   ( plugin_dir_path(__FILE__) . '_my_optional_modules_installation.php' 
 include   ( plugin_dir_path(__FILE__) . '_my_optional_modules_variables.php' );
 include   ( plugin_dir_path(__FILE__) . '_my_optional_modules_functions.php' );
 
-
-	
-	
-	
-	
+// User levels were deprecated - let's set our levels based on what the user can do (roles)
+if(is_user_logged_in()){
+	if ( current_user_can('edit_dashboard') ) { $user_level = 7; }
+	elseif ( current_user_can('read_private_pages') ) { $user_level = 4; }
+	elseif ( current_user_can('delete_published_posts') ) { $user_level = 2; }
+	elseif ( current_user_can('delete_posts') ) { $user_level = 1; }
+	elseif ( current_user_can('read') ) { $user_level = 0; }
+}
 
 	// (B) (3) Plugin form handling
 		if(current_user_can('manage_options')){

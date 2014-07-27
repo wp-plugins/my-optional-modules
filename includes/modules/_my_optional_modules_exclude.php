@@ -6,7 +6,8 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 
 add_action ( 'pre_get_posts', 'mom_exclude_filter_posts' );
 function mom_exclude_filter_posts ( $query ) {
-
+	
+	$t11  = 0;
 	$c1	  = array ( '0' );
 	$lt_1 = array ( '0' );
 	$t1	  = array ( '0' );
