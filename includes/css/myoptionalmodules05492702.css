@@ -1,3 +1,4 @@
+/* Reviews */
 .momreview .block {background-color:#03090e ; color:#f4f1de}
 .momreview section.reviewed {background-color:#03090e ; color:#f4f1de}
 .momreview ::selection {background:#222; color:#fff}
@@ -14,19 +15,20 @@
 .momreview .block input[type='checkbox']:checked ~ label span:first-of-type {display:none; visibility:hidden; float:right}
 .momreview .block input[type='checkbox']:checked ~ label span:last-of-type {display:block; visibility:visible; float:right}
 
-.clearboth{clear:both}
-.topVotes{width:100%;margin:5px auto 25px}
-.topVotes ol li{clear:both;display:block;margin:5px auto}
+/* Post Voting */
+.topVotes{width:100%;margin:5px auto 25px;list-style:none;padding:10px;}
+.topVotes li{clear:both;display:block;margin:2px auto}
 .votedPost{width:100%;min-height:50px;margin:0 auto;padding:5px}
 .topVotes a{display:block;float:left;margin:10px 0 0}
-.vote_the_post{height:40px;width:40px;text-align:center;font-size:15px;line-height:17px;display:inline-block;position:relative;border:1px solid #6f8095;background-color:#f7fbff;margin:-10px 5px 10px;padding:5px}
-.vote_the_post span{font-size:12px;line-height:18px;background-color:#454545;color:#f1f1f1;display:block;text-shadow:none;border-radius:2px;overflow:hidden;clear:both;margin:2px auto;padding:0 5px}
-.downvote .active,.downvote:hover{color:#3f6dac}
-.upvote .active,.upvote:hover{color:#ac3f3f}
-.upvote{clear:both;width:100%;text-align:center;font-size:15px;z-index:99;margin:0 auto 5px}
+.vote_the_post:after {clear: both; content: "";display: table;}
+.vote_the_post {border: 1px solid rgba(0,0,0,.1);clear: both;display: block; margin: 50px auto;width: 100%;}
+.upvote {background-color:#ffdddd;border-left: 1px solid rgba(0,0,0,.1);float: right; width: 15%;text-align: center;padding: 5px;}
+.voteAmount {float: left; width: 70%;padding: 5px;font-size: 75%;margin:5px 0 0 15px;}
+.downvote:hover,.upvote:hover{background-color:#ac3f3f;color:ffdddd;}
 .vote_the_post label{display:block;cursor:pointer}
-body.custom-background{background:no-repeat center center fixed;-webkit-background-size:cover;-moz-background-size:cover;-o-background-size:cover;background-size:cover}
-input[type=text].password{width:95%;margin:10px auto}
+.vote_the_post input[type=submit],.hidden,.momnavbar #searchform label,.momnavbar #searchform input[type=submit],.mycontrols div .attachedcomment{display:none;visibility:hidden}
+
+/* Navbar */
 .momnavbar{z-index:99999;text-transform:uppercase;width:100%;display:block;text-align:left;line-height:35px}
 .navbardark,.navbardark a{background-color:#f5f5f5;color:#9f9f9f}
 .navbarlight,.navbarlight a{background-color:#9f9f9f;color:#f5f5f5}
@@ -99,16 +101,26 @@ div.momnavbar .item{height:20px;cursor:pointer;margin:0;padding:5px}
 .momnavbar_extended_inner .recentPostListing ul{list-style:none;margin:0;padding:0}
 .momnavbar_extended_inner .recentPostListing ul li{clear:both;width:200px;height:22px;overflow:hidden;display:block;font-size:12px}
 .momnavbar_extended_inner .recentPostListing ul li a{display:block;width:200px;height:28px;text-decoration:none;border:0}
+.momnavbar a:hover{text-decoration:underline}
+.navbartop #navsearchform,.navbarbottom #navsearchform{position:absolute;right:0;top:0;cursor:pointer;margin:0;padding:5px}
+div.momnavbar #navsearchform i{cursor:pointer}
+.momnavbar_pagesup a,.momnavbar_pagesdown a{text-decoration:none;padding:3px}
+div.momlistcategories span,.right{float:right}
+
+/* List categories */
 div.momlistcategories{clear:both;width:95%;margin:25px auto}
 div.momlistcategories h4{margin:55px 0 25px}
 div.momlistcategories div{clear:both;overflow:hidden;width:100%;margin:5px auto;padding:5px}
 div.momlistcategories div:hover{height:auto;overflow-y:auto;overflow-x:hidden;border:1px solid #454343;background-color:#f7f7f7}
 div.momlistcategories section{clear:both;width:100%;font-size:14px;margin:5px auto}
 div.momlistcategories section article{clear:both;width:100%;font-size:15px;line-height:18px;margin:0 auto}
+
 .scrolltotop{position:fixed;right:10px;bottom:10px;z-index:99999;display:none;visibility:hidden}
 .show{visibility:visible;display:block}
 span#createalisttog,span#createalisttogd{cursor:pointer;margin:0 auto}
 div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
+
+/* On this day */
 #mom_onthisday{font-size:12px;border:1px solid #eee;display:block;width:250px;background-color:#fcfcfc;margin:30px auto;padding:5px}
 #mom_onthisday span.onthisday{display:block;clear:both;border:1px solid #eee;background-color:#fff;width:auto;text-transform:lowercase;font-size:20px;text-align:center;margin:-20px auto 0;padding:10px}
 #mom_onthisday section.mom_onthisday{clear:both;width:100%;cursor:pointer;height:40px;overflow:hidden;margin:0 auto 0 -5px;padding:5px}
@@ -117,13 +129,18 @@ div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 #mom_onthisday section.mom_onthisday div.mom_onthisday span.title{float:left;text-align:left;display:block;width:80%}
 #mom_onthisday section.mom_onthisday div.mom_onthisday span.theyear{float:right;text-align:right;display:block;width:10%;margin:5px 0}
 #mom_onthisday section.mom_onthisday div.mom_onthisday section.nothing{text-align:center;color:#bcbcbc}
+
+/* Various */
+.clearboth{clear:both}
+body.custom-background{background:no-repeat center center fixed;-webkit-background-size:cover;-moz-background-size:cover;-o-background-size:cover;background-size:cover}
+input[type=text].password{width:95%;margin:10px auto}
 .off{color:#ac1414;font-weight:500}
 .on{color:#23ac14;font-weight:500}
 .on:hover,.off:hover{font-weight:800;color:#000}
 .hidden{display:none;visibility:hidden;height:0;width:0}
-.vote_the_post input[type=submit],.hidden,.momnavbar #searchform label,.momnavbar #searchform input[type=submit],.mycontrols div .attachedcomment{display:none;visibility:hidden}
-.momnavbar a:hover{text-decoration:underline}
-.navbartop #navsearchform,.navbarbottom #navsearchform{position:absolute;right:0;top:0;cursor:pointer;margin:0;padding:5px}
-div.momnavbar #navsearchform i{cursor:pointer}
-.momnavbar_pagesup a,.momnavbar_pagesdown a{text-decoration:none;padding:3px}
-div.momlistcategories span,.right{float:right}
+
+/* Horizontal Galleries*/
+.horizontalGallery { display: block; height: auto; max-height: 550px; overflow-x: auto; overflow-y: hidden; margin: 10px; max-width: 100%; position: relative; }
+.horizontalGallery .gallery-item .wp-caption-text, .horizontalGallery p { display: none;  height: 0; margin: 0; padding: 0; visibility: hidden; width: 0; }
+.horizontalGallery .gallery-item { clear: none!important; float: left!important; margin: -2px 0!important; max-height: 150px!important; max-width: 150px!important; width: auto!important; }
+.horizontalGallery .gallery-item img { height: auto; width: 100%;  }

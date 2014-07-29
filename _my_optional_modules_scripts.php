@@ -7,47 +7,30 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 if ( !function_exists ( 'my_optional_modules_scripts' ) ) {
 	function my_optional_modules_scripts(){
 		function mom_jquery(){
-			wp_deregister_script('jquery');
-			wp_register_script('jquery', "http".($_SERVER['SERVER_PORT'] == 443 ? "s" : "")."://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js",'','', null, false);
-			wp_enqueue_script('jquery');
 			
 			if(get_option('MOM_themetakeover_fitvids') != ''){
 				$fitvids = plugins_url().'/my-optional-modules/includes/javascript/fitvids.js';
-				wp_deregister_script('fitvids');
-				wp_register_script('fitvids',$fitvids,'','',null,false);
-				wp_enqueue_script('fitvids');
+				wp_register_script( 'fitvids', $fitvids, array( 'jquery' ) );
 			}
 			if(get_option('mommaincontrol_lazyload') == 1){
 				$lazyLoad = '//cdn.jsdelivr.net/jquery.lazyload/1.9.0/jquery.lazyload.min.js';
 				$lazyLoadFunctions = plugins_url().'/my-optional-modules/includes/javascript/lazyload.js';
-				wp_deregister_script('lazyload');
-				wp_register_script('lazyload',$lazyLoad,'','',null,false);
-				wp_enqueue_script('lazyload');
-				wp_deregister_script('lazyLoadFunctions');
-				wp_register_script('lazyLoadFunctions',$lazyLoadFunctions,'','',null,false);
-				wp_enqueue_script('lazyLoadFunctions');			
+				wp_register_script( 'lazyload', $lazyLoad, array( 'jquery' ) );
+				wp_register_script( 'lazyloadFunctions', $lazyLoadFunctions, array( 'jquery' ) );
 			}
 			if(get_option('MOM_themetakeover_wowhead') == 1){
 				$wowhead = '//static.wowhead.com/widgets/power.js';
 				$tooltips = plugins_url().'/my-optional-modules/includes/javascript/wowheadtooltips.js';
-				wp_deregister_script('wowhead');
-				wp_register_script('wowhead',$wowhead,'','',null,false);
-				wp_enqueue_script('wowhead');
-				wp_deregister_script('wowheadtooltips');
-				wp_register_script('wowheadtooltips',$wowheadtooltips,'','',null,false);
-				wp_enqueue_script('wowheadtooltips');			
-			}		
+				wp_register_script( 'wowhead', $wowhead, array( 'jquery' ) );
+				wp_register_script( 'wowheadTooltips', $tooltips, array( 'jquery' ) );
+			}
 			if(get_option('MOM_themetakeover_topbar') == 1){
 				$stucktothetop = plugins_url().'/my-optional-modules/includes/javascript/stucktothetop.js';
-				wp_deregister_script('stucktothetop');
-				wp_register_script('stucktothetop',$stucktothetop,'','',null,false);
-				wp_enqueue_script('stucktothetop');				
+				wp_register_script( 'stuckToTop', $stucktothetop, array( 'jquery' ) );
 			}
 			if(get_option('MOM_themetakeover_topbar') == 2){
 				$stucktothebottom = plugins_url().'/my-optional-modules/includes/javascript/stucktothebottom.js';
-				wp_deregister_script('stucktothebottom');
-				wp_register_script('stucktothebottom',$stucktothebottom,'','',null,false);
-				wp_enqueue_script('stucktothebottom');		
+				wp_register_script( 'stucktothebottom', $stucktothebottom, array( 'jquery' ) );
 			}
 		}
 		add_action('wp_enqueue_scripts','mom_jquery');

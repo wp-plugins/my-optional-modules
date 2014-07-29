@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: 4chan,gravatar,youtube,DNSBL,akismet,ipv4,ipv6,htmlpurifier,tripcode,sage,chan,capcodes,board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.8
 Tested up to: 3.9
-Stable tag: 5.5.5.9
+Stable tag: 5.5.6.0
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -29,7 +29,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Reviews allows you to create custom reviews on anything you want, and display them on a post or a page.
 * Shortcodes!, a module that adds useful shortcodes for posts and pages.
 * Theme Takeover: Youtube 404; navbar that disables the Wordpress Admin Bar and gives you a bar similar to RES (with limited functionality)
-* Post Voting: Add a vote box to each post via template function. (display top posts with a shortcode).  
+* Post Voting: Add a vote box to each post via template function. (display top posts with a shortcode [topvoted]).
 
 = Tweaks: =
 * Analaytics automatic embedding.
@@ -62,19 +62,25 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
+* 5.5.6.0  Post voting automatically adds the vote box to the post
+* 5.5.6.0  Variable:content fixed in Reviews Module
+* 5.5.6.0  Takeover Module now correctly calls functionality only if it is actually activated
+* 5.5.6.0  Horizontal Galleries (Takeover Module) added. Transforms [gallery] into a horizontal, single-column, scrollable container
+* 5.5.6.0  Wowhead tooltips (Takeover Module) fixed to include the correct path
+* 5.5.6.0  (correct) use of wp_register_scripts replaces previous (incorrect) use
 * 5.5.5.9  Replace user_levels with current_user_can (roles)
 * 5.5.5.8  Admin panel error involving database cleaner resolved
-* 5.(.)  HTMLPurifier (added)
-* 5.(.)  Regular Board (added)
-* 5.(.)  All scripts (.js,script) moved to a single file, enqueued)
-* 5.(.)  Minor bug fixes
-* 5.(.)  'Module Breaking' bug squashed
-* 5.(.)  Shortcode Verifier (added); Maintenance Mode (added); Plugin compatability check (added); FitVid (added); Page/Post lists from headers (added);
-* 5.(.)  (Some files) have had 'unnecessary' whitespace removed
-* 5.(.)  Interface overhaul (2)
-* 5.(.)  Minor bug fixes
-* 5.(.)  Cleanup from 4.x.x
-* 5.(.)  Lazy Load (added); Meta (added); Theme Takeover(added)
+* 5.(.)    HTMLPurifier (added)
+* 5.(.)    Regular Board (added)
+* 5.(.)    All scripts (.js,script) moved to a single file, enqueued)
+* 5.(.)    Minor bug fixes
+* 5.(.)    'Module Breaking' bug squashed
+* 5.(.)    Shortcode Verifier (added); Maintenance Mode (added); Plugin compatability check (added); FitVid (added); Page/Post lists from headers (added);
+* 5.(.)    (Some files) have had 'unnecessary' whitespace removed
+* 5.(.)    Interface overhaul (2)
+* 5.(.)    Minor bug fixes
+* 5.(.)    Cleanup from 4.x.x
+* 5.(.)    Lazy Load (added); Meta (added); Theme Takeover(added)
 
 * 4.(.)  Minor bug fixes
 * 4.(.)  Shortcode progress bar (added);

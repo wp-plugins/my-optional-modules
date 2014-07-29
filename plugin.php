@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.5.5.9
+ * Version: 5.5.6.0
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -54,7 +54,7 @@ if(is_user_logged_in()){
 				if(get_option('mommaincontrol_passwords_activated') == 0){$wpdb->query("DROP TABLE ".$RUPs_table_name."");}
 				if(get_option('mommaincontrol_reviews_activated') == 0){$wpdb->query("DROP TABLE ".$review_table_name."");}
 				if(get_option('mommaincontrol_shorts_activated') == 0){$wpdb->query("DROP TABLE ".$verification_table_name."");}
-				$option = array('mommaincontrol_prettycanon','mommaincontrol_fixcanon','mommaincontrol_votes_activated','mommaincontrol_protectrss','MOM_themetakeover_extend','MOM_themetakeover_backgroundimage',
+				$option = array('MOM_themetakeover_horizontal_galleries','MOM_themetakeover_horizontal_galleries','mommaincontrol_prettycanon','mommaincontrol_fixcanon','mommaincontrol_votes_activated','mommaincontrol_protectrss','MOM_themetakeover_extend','MOM_themetakeover_backgroundimage',
 				'MOM_themetakeover_topbar_search','MOM_themetakeover_topbar_share','MOM_themetakeover_topbar_color','mommaincontrol_footerscripts','mommaincontrol_authorarchives','mommaincontrol_datearchives','MOM_themetakeover_wowhead',
 				'mom_passwords_salt','mommaincontrol_obwcountplus','mommaincontrol_momrups','mommaincontrol_momse','mommaincontrol_mompaf','mommaincontrol_momja','mommaincontrol_shorts','mommaincontrol_reviews',
 				'mommaincontrol_fontawesome','mommaincontrol_versionnumbers','mommaincontrol_lazyload','mommaincontrol_meta','mommaincontrol_focus','mommaincontrol_maintenance','mommaincontrol_themetakeover','mommaincontrol_setfocus',
@@ -305,6 +305,7 @@ if(is_user_logged_in()){
 						}
 						if(isset($_POST['reviewsubmit']))update_mom_reviews();
 						function print_mom_reviews_form(){
+							global $content;
 							echo '
 							<div class="settingsInput">
 							<form method="post" class="addForm">
@@ -386,12 +387,10 @@ if(is_user_logged_in()){
 									$edit_type     = stripslashes_deep($edit_type);
 									$edit_title    = stripslashes_deep($edit_title);
 									$wpdb->query("UPDATE $reviews_table_name SET TYPE = '$edit_type', LINK = '$edit_link', TITLE = '$edit_title', REVIEW = '$edit_review', RATING = '$edit_rating' WHERE ID = $this_ID") ;
-									echo '<meta http-equiv="refresh" content="0;url='.$current.'" />';
 								}
 								if(isset($_POST['delete_confirm_'.$this_ID.''])){
 									$current = plugin_basename(__FILE__);
 									$wpdb->query("DELETE FROM $mom_reviews_table_name WHERE ID = '$this_ID'");
-									echo '<meta http-equiv="refresh" content="0;url='.$current.'" />';
 								}
 								if(isset($_POST['cancel'])){}
 								echo '</div>';
@@ -1170,13 +1169,21 @@ if(is_user_logged_in()){
 				$MOM_themetakeover_topbar_share = get_option('MOM_themetakeover_topbar_share');
 				$MOM_themetakeover_backgroundimage = get_option('MOM_themetakeover_backgroundimage');
 				$MOM_themetakeover_wowhead = get_option('MOM_themetakeover_wowhead');
+				$MOM_themetakeover_horizontal_galleries = get_option('MOM_themetakeover_horizontal_galleries');
 				$showmepages = get_pages(); 		
 				echo '
 				<span class="moduletitle">
 				<form method="post" action="" name="momThemTakeover"><label for="mom_themetakeover_mode_submit">Deactivate</label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_themetakeover') == 1){echo '0';}else{echo '1';}echo '" name="themetakeover" /><input type="submit" id="mom_themetakeover_mode_submit" name="mom_themetakeover_mode_submit" value="Submit" class="hidden" /></form>
 				</span><div class="clear"></div><div class="settings"><form method="post">
 				<div class="clear"></div>
+				
 				<div class="exclude">
+					<section><label for="MOM_themetakeover_horizontal_galleries">Enable Horizontal Galleries</label>
+						<select id="MOM_themetakeover_horizontal_galleries" name="MOM_themetakeover_horizontal_galleries">
+							<option value="0"'; selected($MOM_themetakeover_horizontal_galleries, 0); echo '>No</option>
+							<option value="1"'; selected($MOM_themetakeover_horizontal_galleries, 1); echo '>Yes</option>
+						</select>
+					</section>				
 					<section><label for="MOM_themetakeover_youtubefrontpage">Youtube URL for 404s</label><input type="text" id="MOM_themetakeover_youtubefrontpage" name="MOM_themetakeover_youtubefrontpage" value="'.esc_url(get_option('MOM_themetakeover_youtubefrontpage')).'"></section>
 					<section><hr /></section>
 					<section><label for="MOM_themetakeover_fitvids"><a href="http://fitvidsjs.com/">Fitvid</a> .class</label><input type="text" id="MOM_themetakeover_fitvids" name="MOM_themetakeover_fitvids" value="'.esc_attr(get_option('MOM_themetakeover_fitvids')).'"></section>
@@ -1266,6 +1273,7 @@ if(is_user_logged_in()){
 	
 	
 	/****************************** SECTION H -/- (H1) Functions -/- Theme Takeover */
+	if(get_option('mommaincontrol_themetakeover') == 1){
 		if(get_option('MOM_themetakeover_youtubefrontpage') != ''){
 			function mom_youtube404(){
 				global $wp_query;
@@ -1284,6 +1292,233 @@ if(is_user_logged_in()){
 				}
 			}
 			add_action('template_redirect','templateRedirect');
+		}
+		if(get_option('MOM_themetakeover_horizontal_galleries') == 1 ) {
+			remove_shortcode( 'gallery', 'gallery_shortcode' );
+			add_action( 'init', 'mom_gallery_shortcode_add', 99 );
+			function mom_gallery_shortcode_add() {
+				add_shortcode( 'gallery', 'mom_gallery_shortcode' );
+			}
+			add_filter( 'use_default_gallery_style', '__return_false' );
+			/**
+			 * The Gallery shortcode.
+			 *
+			 * This implements the functionality of the Gallery Shortcode for displaying
+			 * WordPress images on a post.
+			 *
+			 * @since 2.5.0
+			 *
+			 * @param array $attr {
+			 *     Attributes of the gallery shortcode.
+			 *
+			 *     @type string $order      Order of the images in the gallery. Default 'ASC'. Accepts 'ASC', 'DESC'.
+			 *     @type string $orderby    The field to use when ordering the images. Default 'menu_order ID'.
+			 *                              Accepts any valid SQL ORDERBY statement.
+			 *     @type int    $id         Post ID.
+			 *     @type string $itemtag    HTML tag to use for each image in the gallery.
+			 *                              Default 'dl', or 'figure' when the theme registers HTML5 gallery support.
+			 *     @type string $icontag    HTML tag to use for each image's icon.
+			 *                              Default 'dt', or 'div' when the theme registers HTML5 gallery support.
+			 *     @type string $captiontag HTML tag to use for each image's caption.
+			 *                              Default 'dd', or 'figcaption' when the theme registers HTML5 gallery support.
+			 *     @type int    $columns    Number of columns of images to display. Default 3.
+			 *     @type string $size       Size of the images to display. Default 'thumbnail'.
+			 *     @type string $ids        A comma-separated list of IDs of attachments to display. Default empty.
+			 *     @type string $include    A comma-separated list of IDs of attachments to include. Default empty.
+			 *     @type string $exclude    A comma-separated list of IDs of attachments to exclude. Default empty.
+			 *     @type string $link       What to link each image to. Default empty (links to the attachment page).
+			 *                              Accepts 'file', 'none'.
+			 * }
+			 * @return string HTML content to display gallery.
+			 */
+			function mom_gallery_shortcode( $attr ) {
+				global $post,$attr,$wp;
+				$post = get_post();
+
+				static $instance = 0;
+				$instance++;
+
+				if ( ! empty( $attr['ids'] ) ) {
+					// 'ids' is explicitly ordered, unless you specify otherwise.
+					if ( empty( $attr['orderby'] ) )
+						$attr['orderby'] = 'post__in';
+					$attr['include'] = $attr['ids'];
+				}
+
+				/**
+				 * Filter the default gallery shortcode output.
+				 *
+				 * If the filtered output isn't empty, it will be used instead of generating
+				 * the default gallery template.
+				 *
+				 * @since 2.5.0
+				 *
+				 * @see gallery_shortcode()
+				 *
+				 * @param string $output The gallery output. Default empty.
+				 * @param array  $attr   Attributes of the gallery shortcode.
+				 */
+				$output = apply_filters( 'post_gallery', '', $attr );
+				if ( $output != '' )
+					return $output;
+
+				// We're trusting author input, so let's at least make sure it looks like a valid orderby statement
+				if ( isset( $attr['orderby'] ) ) {
+					$attr['orderby'] = sanitize_sql_orderby( $attr['orderby'] );
+					if ( !$attr['orderby'] )
+						unset( $attr['orderby'] );
+				}
+
+				$html5 = current_theme_supports( 'html5', 'gallery' );
+				extract(shortcode_atts(array(
+					'order'      => 'ASC',
+					'orderby'    => 'menu_order ID',
+					'id'         => $post ? $post->ID : 0,
+					'itemtag'    => $html5 ? 'figure'     : 'dl',
+					'icontag'    => $html5 ? 'div'        : 'dt',
+					'captiontag' => $html5 ? 'figcaption' : 'dd',
+					'columns'    => 3,
+					'size'       => 'thumbnail',
+					'include'    => '',
+					'exclude'    => '',
+					'link'       => ''
+				), $attr, 'gallery'));
+
+				$id = intval($id);
+				if ( 'RAND' == $order )
+					$orderby = 'none';
+
+				if ( !empty($include) ) {
+					$_attachments = get_posts( array('include' => $include, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
+
+					$attachments = array();
+					foreach ( $_attachments as $key => $val ) {
+						$attachments[$val->ID] = $_attachments[$key];
+					}
+				} elseif ( !empty($exclude) ) {
+					$attachments = get_children( array('post_parent' => $id, 'exclude' => $exclude, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
+				} else {
+					$attachments = get_children( array('post_parent' => $id, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
+				}
+
+				if ( empty($attachments) )
+					return '';
+
+				if ( is_feed() ) {
+					$output = "\n";
+					foreach ( $attachments as $att_id => $attachment )
+						$output .= wp_get_attachment_link($att_id, $size, true) . "\n";
+					return $output;
+				}
+
+				$itemtag = tag_escape($itemtag);
+				$captiontag = tag_escape($captiontag);
+				$icontag = tag_escape($icontag);
+				$valid_tags = wp_kses_allowed_html( 'post' );
+				if ( ! isset( $valid_tags[ $itemtag ] ) )
+					$itemtag = 'dl';
+				if ( ! isset( $valid_tags[ $captiontag ] ) )
+					$captiontag = 'dd';
+				if ( ! isset( $valid_tags[ $icontag ] ) )
+					$icontag = 'dt';
+
+				$columns = intval($columns);
+				$itemwidth = $columns > 0 ? floor(100/$columns) : 100;
+				$float = is_rtl() ? 'right' : 'left';
+
+				$selector = "gallery-{$instance}";
+
+				$gallery_style = $gallery_div = '';
+
+				/**
+				 * Filter whether to print default gallery styles.
+				 *
+				 * @since 3.1.0
+				 *
+				 * @param bool $print Whether to print default gallery styles.
+				 *                    Defaults to false if the theme supports HTML5 galleries.
+				 *                    Otherwise, defaults to true.
+				 */
+				if ( apply_filters( 'use_default_gallery_style', ! $html5 ) ) {
+					$gallery_style = "
+					<style type='text/css'>
+						#{$selector} {
+							margin: auto;
+						}
+						#{$selector} .gallery-item {
+							float: {$float};
+							margin-top: 10px;
+							text-align: center;
+							width: {$itemwidth}%;
+						}
+						#{$selector} img {
+							border: 2px solid #cfcfcf;
+						}
+						#{$selector} .gallery-caption {
+							margin-left: 0;
+						}
+						/* see gallery_shortcode() in wp-includes/media.php */
+					</style>\n\t\t";
+				}
+
+				$items = 0;
+				foreach ( $attachments as $id => $attachment ) {
+					$items++;
+				}
+				$div_length = ( $items * 150 ) . 'px';
+				
+				$size_class = sanitize_html_class( $size );
+				$gallery_div = "<div id='$selector' class='horizontalGallery galleryid-{$id} gallery-columns-{$columns} gallery-size-{$size_class}'>
+					<div style=\"width:" . $div_length . "\" class=\"innerGallery\">";
+
+				/**
+				 * Filter the default gallery shortcode CSS styles.
+				 *
+				 * @since 2.5.0
+				 *
+				 * @param string $gallery_style Default gallery shortcode CSS styles.
+				 * @param string $gallery_div   Opening HTML div container for the gallery shortcode output.
+				 */
+				$output = apply_filters( 'gallery_style', $gallery_style . $gallery_div );
+
+				$i = 0;
+				foreach ( $attachments as $id => $attachment ) {
+					if ( ! empty( $link ) && 'file' === $link )
+						$image_output = wp_get_attachment_link( $id, $size, false, false );
+					elseif ( ! empty( $link ) && 'none' === $link )
+						$image_output = wp_get_attachment_image( $id, $size, false );
+					else
+						$image_output = wp_get_attachment_link( $id, $size, true, false );
+
+					$image_meta  = wp_get_attachment_metadata( $id );
+
+					$orientation = '';
+					if ( isset( $image_meta['height'], $image_meta['width'] ) )
+						$orientation = ( $image_meta['height'] > $image_meta['width'] ) ? 'portrait' : 'landscape';
+
+					$output .= "<{$itemtag} class='gallery-item'>";
+					$output .= "
+						<{$icontag} class='gallery-icon {$orientation}'>
+							$image_output
+						</{$icontag}>";
+					if ( $captiontag && trim($attachment->post_excerpt) ) {
+						$output .= "
+							<{$captiontag} class='wp-caption-text gallery-caption'>
+							" . wptexturize($attachment->post_excerpt) . "
+							</{$captiontag}>";
+					}
+					$output .= "</{$itemtag}>";
+					if ( ! $html5 && $columns > 0 && ++$i % $columns == 0 ) {
+						$output .= '<br style="clear: both" />';
+					}
+				}
+
+				$output .= "
+					</div></div>\n";
+
+				return $output;
+			}
+			
 		}
 		if(get_option('MOM_themetakeover_topbar') == 1 || get_option('MOM_themetakeover_topbar') == 2){
 			function mom_topbar(){
@@ -1454,6 +1689,7 @@ if(is_user_logged_in()){
 			remove_action('wp_ajax_adminbar_render','wp_admin_bar_ajax_render');
 			remove_filter('wp_ajax_adminbar_render','wp_admin_bar_ajax_render');				
 		}
+	}
 	//
 
 
@@ -2089,23 +2325,27 @@ if(get_option('MOM_Exclude_NoFollow') != 0){
 			ob_start();
 			wp_reset_query();
 			$votesPosts = $wpdb->prefix.'momvotes_posts';
-			$query_sql = "SELECT ID,UP from $votesPosts  WHERE UP > 1 ORDER BY UP DESC LIMIT $amount";
-			$query_result = $wpdb->get_col( $wpdb->prepare ($query_sql, OBJECT));
-			if ($query_result) {
-				foreach ($query_result as $post_id) {
-					$post = &get_post( $post_id );
-					setup_postdata($post);
-					echo '<li><a href="';the_permalink();echo'" rel="bookmark" title="Permanent Link to ';the_title_attribute();echo'">';the_title();echo'</a></li>';
+			$query_sql = $wpdb->get_results ( "SELECT ID,UP from $votesPosts  WHERE UP > 1 ORDER BY UP DESC LIMIT $amount" );
+			if ($query_sql) {
+				echo '<ul class="topVotes">
+					<li>Top ' . $amount . ' posts</li>';
+				foreach ($query_sql as $post_id) {
+					$votes = intval($post_id->UP);
+					$id = intval($post_id->ID);
+					$link = get_permalink($id);
+					echo '<li><a href="' . $link . '" rel="bookmark" title="Permanent Link to ' . get_the_title( $id ) . '">' . get_the_title( $id ) . ' &mdash; ( ' . $votes . ' )</a></li>';
 				}
+				echo '</ul>';
 			}else{}
 			wp_reset_query();
 			return ob_get_clean();
 		}
 		
-		if(get_option('mommaincontrol_votes') == 1){	
+		if(get_option('mommaincontrol_votes') == 1){
 			add_shortcode('topvoted','vote_the_posts_top');
 			add_filter('the_content','do_shortcode','vote_the_posts_top');
-			function vote_the_post(){
+			add_filter('the_content','vote_the_post');
+			function vote_the_post($content){
 				global $wpdb,$wp,$post;
 				$votesPosts = $wpdb->prefix.'momvotes_posts';
 				$votesVotes = $wpdb->prefix.'momvotes_votes';
@@ -2127,10 +2367,10 @@ if(get_option('MOM_Exclude_NoFollow') != 0){
 								$wpdb->query("UPDATE $votesPosts SET UP = UP + 1 WHERE ID = $theID");
 								$wpdb->query("INSERT INTO $votesVotes (ID, IP, VOTE) VALUES ($theID,$theIP_us32str,1)");
 							}
-							echo '<div class="vote_the_post" id="'.esc_attr($theID).'">';
-							echo '<form action="" id="'.esc_attr($theID).'-up" method="post"><label for="'.esc_attr($theID).'-up-submit" class="upvote"><i class="fa fa-heart"></i></label><input type="submit" name="'.esc_attr($theID).'-up-submit" id="'.esc_attr($theID).'-up-submit" /></form>';
-							echo '<span>'.esc_attr($votesTOTAL).'</span>';
-							echo '</div>';
+							$vote = '<div class="vote_the_post" id="'.esc_attr($theID).'">
+							<form action="" id="'.esc_attr($theID).'-up" method="post"><label for="'.esc_attr($theID).'-up-submit" class="upvote"><i class="fa fa-heart"></i></label><input type="submit" name="'.esc_attr($theID).'-up-submit" id="'.esc_attr($theID).'-up-submit" /></form>
+							<span class="voteAmount">'.esc_attr($votesTOTAL).' <i class="fa fa-heart">\'s</i></span>
+							</div>';
 						}else{
 							foreach($getIP as $gotIP){
 								$vote = esc_sql(esc_attr($gotIP->VOTE));
@@ -2139,15 +2379,18 @@ if(get_option('MOM_Exclude_NoFollow') != 0){
 									$wpdb->query("DELETE FROM $votesVotes WHERE IP = '$theIP_us32str' AND ID = '$theID'");
 								}
 								if($vote == 1)$CLASS = ' active';
-								echo '<div class="vote_the_post" id="'.esc_attr($theID).'">';
-								echo '<form action="" id="'.esc_attr($theID).'-up" method="post"><label for="'.esc_attr($theID).'-up-submit" class="upvote"><i class="fa fa-heart'.$CLASS.'"></i></label><input type="submit" name="'.esc_attr($theID).'-up-submit" id="'.esc_attr($theID).'-up-submit" /></form>';
-								echo '<span>'.esc_attr($votesTOTAL).'</span>';
-								echo '</div>';
+								$vote = '<div class="vote_the_post" id="'.esc_attr($theID).'">
+								<form action="" id="'.esc_attr($theID).'-up" method="post"><label for="'.esc_attr($theID).'-up-submit" class="upvote"><i class="fa fa-heart'.$CLASS.'"></i></label><input type="submit" name="'.esc_attr($theID).'-up-submit" id="'.esc_attr($theID).'-up-submit" /></form>
+								<span class="voteAmount">'.esc_attr($votesTOTAL).' <i class="fa fa-heart">\'s</i> </span>
+								</div>';
 							}
 						}			
 					}		
 				// Return nothing, the IP address is fake.
 				}else{}
+				
+				echo $content . $vote;
+				
 			}
 		}
 	//
