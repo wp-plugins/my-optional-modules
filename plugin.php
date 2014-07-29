@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.5.6.0
+ * Version: 5.5.6.1
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -211,32 +211,6 @@ if(is_user_logged_in()){
 			if(isset($_POST['reset_rups'])){
 				delete_option('rotating_universal_passwords_1');delete_option('rotating_universal_passwords_2');delete_option('rotating_universal_passwords_3');delete_option('rotating_universal_passwords_4');delete_option('rotating_universal_passwords_5');delete_option('rotating_universal_passwords_6');delete_option('rotating_universal_passwords_7');	
 				add_option('rotating_universal_passwords_1','');add_option('rotating_universal_passwords_2','');add_option('rotating_universal_passwords_3','');add_option('rotating_universal_passwords_4','');add_option('rotating_universal_passwords_5','');add_option('rotating_universal_passwords_6','');add_option('rotating_universal_passwords_7','');	
-			}
-			if(
-			isset($_POST['delete_unused_terms']) || 
-			isset($_POST['delete_post_revisions']) || 
-			isset($_POST['delete_unapproved_comments']) || 
-			isset($_POST['deleteAllClutter'])){
-				$postsTable = $table_prefix.'posts';
-				$commentsTable = $table_prefix.'comments';
-				$termsTable2 = $table_prefix.'terms';
-				$termsTable = $table_prefix.'term_taxonomy';
-				if(isset($_POST['delete_post_revisions'])){
-					$wpdb->query("DELETE FROM `".$postsTable."` WHERE `post_type` = 'revision' OR `post_type` = 'auto-draft' OR `post_status` = 'trash'");
-				}
-				if(isset($_POST['delete_unapproved_comments'])){
-					$wpdb->query("DELETE FROM `".$commentsTable."` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'");
-				}
-				if(isset($_POST['delete_unused_terms'])){
-					$wpdb->query("DELETE FROM `".$termsTable2."` WHERE `term_id` IN (select `term_id` from `".$termsTable."` WHERE `count` = 0)");
-					$wpdb->query("DELETE FROM `".$termsTable."` WHERE `count` = 0");
-				}
-				if(isset($_POST['deleteAllClutter'])){
-					$wpdb->query("DELETE FROM `".$postsTable."` WHERE `post_type` = 'revision' OR `post_type` = 'auto-draft' OR `post_status` = 'trash'");
-					$wpdb->query("DELETE FROM `".$commentsTable."` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'");
-					$wpdb->query("DELETE FROM `".$termsTable2."` WHERE `term_id` IN (select `term_id` from `".$termsTable."` WHERE `count` = 0)");
-					$wpdb->query("DELETE FROM `".$termsTable."` WHERE `count` = 0");
-				}
 			}
 			if(isset($_POST['passwordsSave'])){
 				global $my_optional_modules_passwords_salt;
@@ -473,243 +447,136 @@ if(is_user_logged_in()){
 					echo '
 					<form method="post" action="" name="momShortcodes"><label for="mom_shortcodes_mode_submit">Deactivate</label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_shorts') == 1){echo '0';}else{echo '1';}echo '" name="shortcodes" /><input type="submit" id="mom_shortcodes_mode_submit" name="mom_shortcodes_mode_submit" value="Submit" class="hidden" /></form>
 					';
-					echo "
+					echo '
 					</span>
-					<div class=\"settings\">
-					<table class=\"form-table\" border=\"1\">
-						<tbody>
-							<tr valign=\"top\">
-								<p>[<a href=\"#google_maps\">map</a>] 
-								&mdash; [<a href=\"#reddit_button\">reddit</a>] 
-								&mdash; [<a href=\"#restrict\">restrict content to logged in users</a>] 
-								&mdash; [<a href=\"#progress_bars\">progress bars</a>]
-								&mdash; [<a href=\"#verifier\">verifier</a>]
-								&mdash; [<a href=\"#onthisday\">on this day</a>]</p>
-							</tr>
-							<tr valign=\"top\" id=\"google_maps\">
-								<td valign=\"top\">
-									<strong>Google Maps</strong>
-									<br />Embed a Google map.<br />Based on <a href=\"http://wordpress.org/plugins/very-simple-google-maps/\">Very Simple Google Maps</a> by <a href=\"http://profiles.wordpress.org/masterk/\">Michael Aronoff</a><hr />
-									<u>Parameters</u><br />width<br />height<br />frameborder<br />align<br />address<br />info_window<br />zoom<br />	companycode<hr />
-									<u>Defaults</u><br />Width: 100% <br />Height: 350px <br />Frameborder: 0 <br />Align: center<hr />
-									div class .mom_map
-								</td>
-								<td valign=\"top\">
-									<table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
-									<tbody>
-									<tr><td><code>[mom_map address=\"38.573333,-109.549167\"]</code></td><td><em>GPS</em></td></tr>
-									<tr><td><iframe align=\"center\" width=\"100%\" height=\"350px\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"https://maps.google.com/maps?&q=38.573333%2C-109.549167&amp;cid=&output=embed&z=14&iwloc=A&visual_refresh=true\"></iframe></td></tr>
-									<tr><td><code>[mom_map address=\"1600 Pennsylvania Ave NW, Washington, D.C., DC\"]</code></td><td><em>Street Address</em></td></tr>
-									<tr><td><iframe align=\"center\" width=\"100%\" height=\"350px\" scrolling=\"no\" marginheight=\"0\" marginwidth=\"0\" src=\"https://maps.google.com/maps?&q=1600+Pennsylvania+Ave+NW%2C+Washington%2C+D.C.%2C+DC+&amp;cid=&output=embed&z=14&iwloc=A&visual_refresh=true\"></iframe></td></tr>
-									</tbody>
-									</table>
-								</td>
-							</tr>
-							<tr valign=\"top\" id=\"reddit_button\" style=\"background-color:#f4faff;\">
-								<td valign=\"top\">
-									<strong>Reddit button</strong>
-									<br />Create a customizable submit button for the current post.<hr />
-									<u>Parameters</u><br />target<br />title<br />bgcolor<br />border<hr />
-									<u>Defaults</u> <br />title: post title<br />bgcolor: transparent<br />border (color): transparent<hr />
-									div class .mom_reddit
-								</td>
-								<td valign=\"top\">
-									<table class=\"form-table\" border=\"1\" style=\"margin:5px; background-color:#fff;\">
-										<tbody>
-											<tr>
-												<td>
-													<code>[mom_reddit]</code></td><td><em>Default</em>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<script type=\"text/javascript\">
-													reddit_url = \"http://reddit.com/\";
-													reddit_target = \"\";
-													reddit_title = \"Test\";
-													reddit_bgcolor = \"\";
-													reddit_bordercolor = \"\";
-													</script>
-													<script type=\"text/javascript\" src=\"http://www.reddit.com/static/button/button3.js\"></script>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<code>[mom_reddit target=\"news\"]</code></td><td><em>Targeting <a href=\"http://reddit.com/r/news/\">/r/news</a></em>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<script type=\"text/javascript\">
-													reddit_url = \"http://reddit.com/\";
-													reddit_target = \"news\";
-													reddit_title = \"Reddit\";
-													reddit_bgcolor = \"\";
-													reddit_bordercolor = \"\";
-													</script>
-													<script type=\"text/javascript\" src=\"http://www.reddit.com/static/button/button3.js\"></script>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<code>[mom_reddit bgcolor=\"000\" border=\"000\"]</code></td><td><em>Black background/border</em>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<script type=\"text/javascript\">
-														reddit_url = \"http://test.com/\";
-														reddit_target = \"\";
-														reddit_title = \"Reddit\";
-														reddit_bgcolor = \"000\";
-														reddit_bordercolor = \"000\";
-													</script>
-													<script type=\"text/javascript\" src=\"http://www.reddit.com/static/button/button3.js\"></script>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-							</tr>
-							<tr valign=\"top\" id=\"restrict\">
-								<td valign=\"top\">
-									<strong>Restrict content to logged in users</strong><br />Restrict content to users who are not logged in, including commenting or viewing comments.<hr />
-									<u>Parameters</u><br />message<br />comments<hr />
-									<u>Defaults</u> <br /> message: You must be logged in to view this content.<hr />
-									div class .mom_restrict
-								</td>
-								<td valign=\"top\">
-									<table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
-										<tbody>
-											<tr>
-												<td>
-													<code>[mom_restrict]some content[/mom_restrict]</code></td><td><em>Default</em>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													Logged in users see:<br />some content
-													<p>Users who are not logged in see:<br />You must be logged in to view this content.</p>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<code>[mom_restrict comments=\"1\" message=\"Log in to view this content!\"]some content[/mom_restrict]</code></td><td><em>Comments and form are hidden</em>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													Logged in users see:<br />some content
-													<p>Users who are not logged in see:<br />Log in to view this content!<br />(<em>Comment form and comments are hidden.)</em>)</p>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													<code>[mom_restrict comments=\"2\" message=\"Log in to view this content!\"]some content[/mom_restrict]</code></td><td><em>Comment form is hidden</em>
-												</td>
-											</tr>
-											<tr>
-												<td>
-													Logged in users see:<br />some content
-													<p>Users who are not logged in see:<br />Log in to view this content!<br />(<em>Comment form is hidden</em>)</p>
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</td>
-							</tr>
-							<tr valign=\"top\" id=\"progress_bars\">
-								<td valign=\"top\">
-									<strong>Progress bars</strong>
-									<br />Create bars that fill up, based on your parameters, to show progression towards a goal.<hr />
-									<u>Parameters</u><br />align, fillcolor, maincolor, 
-									height, level, margin, 
-									width<hr />
-									<u>Defaults</u><br />align: none<br />fillcolor: #ccc<br />maincolor: #000<br />height: 15<br />level:<br />margin: 0 auto<br />width: 95%<br /><hr />
-									div class .mom_progress<hr />
-									The <code>level</code> refers to the % of the main bar to be filled.  So a level of 51 would fill it 51%, 29 would fill it 29%, 75 would fill it 75%, and so on.
-								</td>
-								<td valign=\"top\">
-									<table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
-									<tbody>
-									<tr><td><code>[mom_progress level=\"10\"]</code></td><td><em>Default, level 10</em></td></tr>
-									<tr><td>
-										<div id=\"1\" class=\"mom_progress\" style=\"clear: both; height:15px; display: block; width:95%; margin: 0 auto; background-color:#000\"><div style=\"display: block; height:15px; width:10%; background-color: #ccc;\"></div></div>
-									</td></tr>
-									<tr><td><code>[mom_progress level=\"70\" maincolor=\"#ff0000\" fillcolor=\"#009cff\"]</code></td><td><em>Level 70, custom colors</em></td></tr>
-									<tr><td>
-										<div id=\"2\" class=\"mom_progress\" style=\"clear: both; height:15px; display: block; width:95%; margin: 0 auto; background-color:#ff0000\"><div style=\"display: block; height:15px; width:70%; background-color: #009cff;\"></div></div>
-									</td></tr>
-									<tr><td><code>[mom_progress height=\"50\" level=\"70\" maincolor=\"#ff0000\" fillcolor=\"#009cff\"]</code></td><td><em>Level 70, custom colors, height of 50 (translates to 50px)</em></td></tr>
-									<tr><td>
-										<div id=\"3\" class=\"mom_progress\" style=\"clear: both; height:50px; display: block; width:95%; margin: 0 auto; background-color:#ff0000\"><div style=\"display: block; height:50px; width:70%; background-color: #009cff;\"></div></div>
-									</td></tr>									
-									</tbody>
-									</table>
-								</td>
-							</tr>		
-							<tr valign=\"top\" id=\"verifier\">
-								<td valign=\"top\">
-									<strong>Verifier</strong>
-									<br />Gate content with a customizable input prompt with optional tracking of unique right and wrong answers.<hr />
-									<u>Parameters</u><br />age,answer,logged,message,fail,logging,background<hr />
-									<u>Defaults</u><br />cmessage: Correct<br />imessage: Incorrect<br />age:<br />answer:<br />logged:1<br />message: Please verify your age by typing it here<br />fail: You are not able to view this content at this time.<br />logging: 0<br />background: transparent<br />single: 0<br />deactivate: 0<br />
-									<p><u>age</u>: (numeric only) set the age you want to be entered into the form to be considered valid.  (Both age and answer <strong>cannot</strong> be used together.</p>
-									<p><u>answer</u>: (alphanumeric) enter the right answer that needs to be input into the form to show the content.</p>
-									<p><u>logged</u>: (0 or 1) 1 is to show the form to everyone - even people logged in.  0 will hide the verification for people who are logged in.</p>
-									<p><u>message</u>: Message to display in the form to let users know what needs to be input.</p>
-									<p><u>fail</u>: Message that is shown when the wrong answer is given, or the age entered is too young.</p>
-									<p><u>logging</u>: (0 or 1 or 3) If set to 1, each unique answer given to each form will be tracked in the database, allowing access to statistical data.  Only one record per IP address per form will be saved.  3 will show (below the form) a box containing the % of right and wrong answers, and will enable logging.</p>
-									<p><u>background</u>: Hex color code for the background of the form.</p>
-									<p><u>single</u>: (0 or 1) Set to 1 to allow only one attempt.  Right or wrong, once the attempt has been made, the form will no longer show.</p>
-									<p><u>cmessage</u>: (if stats are being displayed) the message for the % of correct votes</p>
-									<p><u>imessage</u>: (if stats are being displayed) the message for the % of incorrect votes</p>
-									<p><u>deactivate</u>: (0 or 1) 1 to deactivate a form.</p>
-									<p>Case does not matter with question and answer - they are both converted to lowercase upon comparing for correct answers.</p>
-									<p>Background <strong>can</strong> be <code>transparent</code>.</p>
-									<p>You could also inner-content blank ([mom_verify]no content here[/mom_verify], and define logging as <code>3</code> to create a poll-type question.</p>
-									<hr />
-									blockquote.momAgeVerification<br />
-									form.momAgeVerification<br />
-									<hr />
-								</td>
-								<td valign=\"top\">
-									<table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
-									<tbody>
-									<tr><td>How to set up a two answer poll:<br />
-									<ul>
-									<li>Let's say you want to set up a poll for \"Was this article helpful?\".  Set your answer to 'yes' - we only need it for stats.</li>
-									<li>Set your correct message to \"Found this useful\" (or whatever wording you want for the people who thought it was useful), and incorrect to \"Didn't find this useful\".</li>
-									<li>All answers that are \"yes\" will be counted as \"Found this useful\".  Any other answers will be counted as not.</li><li>Your message could be something like: \"Did you find this article useful?  Yes or no.\"</li></ul>
-									<hr />Example: <code>[mom_verify message=\"Did you find this article useful?  Yes or no.\" answer=\"yes\" cmessage=\"Found this useful\" imessage=\"Didn't find this useful\" logging=\"3\" single=\"1\"][/mom_verify]</code>
-									</td></tr>
-									<tr><td><code>[mom_verify age=\"18\"]some content[/mom_verify]</code></td><td><em>Default, correct age input 18 or over</em></td></tr>
-									<tr><td><code>[mom_verify answer=\"hank HIlL\" message=\"Who sells propane and propane accessories?\"]some content[/mom_verify]</code></td><td><em>Default, question and answer set.</em></td></tr>
-									<tr><td><code>[mom_verify age=\"18\" background=\"fff\"]some content[/mom_verify]</code></td><td><em>Black background, 18+ age gate</em></td></tr>
-									</tbody>
-									</table>
-								</td>
-							</tr>
-							<tr valign=\"top\" id=\"onthisday\">
-								<td valign=\"top\">
-									<strong>On this day</strong>
-									<br />Embed a small widget that grabs posts for the current day (minus the post that is currently being viewed) for previous years, or if no posts are found, will display 5 posts at random.  Template tag available to display 5 posts from previous years on this day for categories, tags, and front pages (will also display 5 random if none found).<hr />
-									<br />Shortcode: [mom_onthisday]<br />Template tag: mom_onthisday_template();<br />
-									<u>Parameters</u><br />cat<br />amount<br />title<br />
-									<u>Defaults</u><br />amount: -1 <br />cat: <br />title: on this day<br /><hr />
-								</td>
-								<td valign=\"top\">
-									<table class=\"form-table\" border=\"1\" style=\"margin:5px;\">
-									<tbody>
-									<tr><td><code>[mom_onthisday cat=\"current\"]</code></td><td><em>Display past posts from this category only</em></td></tr>
-									<tr><td><code>[mom_onthisday title=\"previous years\" amount=\"2\"]</code></td><td><em>Display 2 past posts in a div with the title <em>previous years</em>.</em></td></tr>
-									</tbody>
-									</table>
-								</td>
-							</tr>					
-						</tbody>
-					</table>
-				</div>";
+					<div class="settings">
+					
+
+					<section id="googlemaps">
+						<h2>Google Maps</h2>
+						<p>
+							Embed a Google map, with optional paramaters.
+						</p>
+						<p>
+							Shortcode: [mom_map]<br />
+							Paramters: width, height, frameborder, align, address, info_window, zoom, companycode
+						</p>
+						<p>
+							<em>Notes on the address attribute</em>:<br />
+							Address can be GPS coords (example: 38.573333, -109.549167) or a physical address (1600 Pennsylvania AVE NW, Washington, D.C., DC)
+						</p>
+						<p>
+							Shortcode default attributes:<br />
+							width (100%), height (350px), frameborder (0), align (center)
+						</p>
+					</section>
+					
+					<section id="reddit">
+						<h2>Reddit Button</h2>
+						<p>
+							Create a customizable submit button for the current post.
+						</p>
+						<p>
+							Examples:<br />
+							Targeting a specific subreddit: [mom_reddit target="news"]<br />
+							Customizing appearance: [mom_reddit bgcolor="000" border="000"]
+						</p>
+						<p>
+							Shortcode: [mom_reddit]<br />
+							Parameters: target, title, bgcolor, border
+						</p>
+						<p>
+							Shortcode default attributes:<br />
+							title (the title of the current post), bgcolor (transparent), border (transparent)<br />
+							container: div.mom_reddit
+						</p>
+					</section>
+					
+					<section id="restrict">
+						<h2>Restrict content to logged in users</h2>
+						<p>
+							Restrict the viewing of content to users who are logged in (including commenting and viewing comments)
+						</p>
+						<p>
+							Shortcode: [mom_restrict] Content to hide [/mom_restrict]<br />
+							Paramters: message, comments
+						</p>
+						<p>
+							Examples:<br />
+							Comments and comment form are hidden: [mom_restrict comments="1"]Some content [/mom_restrict]<br />
+							Comment form is hidden: [mom_restrict comments="2"] Some content [/mom_restrict]
+						</p>
+						<p>
+							Shortcode default attributes:<br />
+							message (You must be logged in to view this content.)
+							container: div.mom_restrict
+						</p>
+					</section>
+					
+					<section id="progress">
+						<h2>Progress Bars</h2>
+						<p>
+							Create bars that fill up, based on specific set parameters.
+						</p>
+						<p>
+							Shortcode: [mom_progress]<br />
+							Parameters: align, fillcolor, maincolor, height, level, margin, width
+						</p>
+						<p>
+							Examples:<br />
+								Fill 10%: [mom_progress level="10"]<br />
+								Fill 70% with custom colors: [mom_progress level="70" maincolor="#ff0000" fillcolor="#009cff"]<br />
+								Fill 70% with custom height: [mom_progress level="70" height="50"]
+						<p>
+							Shortcode default attributes:<br />
+							align (none), fillcolor (#ccc), maincolor (#000), height (15), level (0), margin (0 auto), width (95%)
+							container: div.mom_progress
+						</p>
+					</section>
+					
+					<section id="verifier">
+						<h2>Verifier</h2>
+						<p>
+							Content gate with a customizable input prompt with optional tracking of unique right/wrong answers.
+						</p>
+						<p>
+							[mom_verify]<br />
+							Parameters: age, answer, logged, message, fail, logging, background, cmmessage, imessage
+						</p>
+						
+						<p>
+							Examples:<br />
+							Set up a poll with a yes/no answer: [mom_verify message="Did you find this article useful? Yes or no." answer="yes" cmessage="Found this useful" imessage="Didn\'t find this useful" logging="3" single="1"][/mom_verify]<br />
+							Gate content to ages 18+: [mom_verify age="18"] Content to gate [/mom_verify]<br />
+							Answer the question correctly to see the content: [mom_verify answer="Hank Hill" message="Who sells propane and propane accessories?"] Some content to hide [/mom_verify]<br />
+							Custom background: [mom_verify age="18" background="fff"] some content to hide [/mom_verify]
+						</p>
+						<p>
+							Shortcode default attributes:<br />
+							cmessage (Correct), imessage (Incorrect), age (), logged (1), message (Please verify your age by typing it here), fail (You are not able to view this content at this time), logging (0), background (transparent), single (0), deactivate (0)<br />
+							container: blockquote.momAgeVerification, form.momAgeVerification
+						</p>
+					</section>
+					
+					<section id="onthisday">
+						<h2>On this day</h2>
+						<p>
+							Embed a small post loop that grabs posts for the current day from previous years.
+						</p>
+						<p>
+							Examples:<br />
+							Display past posts from this category only: [mom_onthisday cat="current"]<br />
+							Display 2 past posts in a div with the title "Previous years": [mom_onthisday title="previous years" amount="2"]
+						</p>
+						<p>
+							[mom_onthisday]<br />
+							Paramaters: cat, amount, title<br />
+							Template tag: mom_onthisday_template()
+						</p>
+						
+					</section>
+					
+					</div>';
 			}
 		}
 	//
@@ -2396,47 +2263,16 @@ if(get_option('MOM_Exclude_NoFollow') != 0){
 	//
 
 
-/**
+/*
  * Database cleaner
- * (1) Revisions ( revision, auto drafts, trash )
- * (2) Comments ( unapproved, trashed, spam )
- * (3) Terms ( categories and tags with no associated posts )
+ * Clean the following junk items from the database with a click of the button:
+ *  - (1) Revisions ( revision, auto drafts, trash )
+ *  - (2) Comments ( unapproved, trashed, spam )
+ *  - (3) Terms ( categories and tags with no associated posts )\
+ *  - (4) All at once
  */
-if ( current_user_can ( 'manage_options' ) ) {
-	function my_optional_modules_cleaner_module() {
-		global $table_prefix, $wpdb;
-		$revisions_count = 0;
-		$comments_count  = 0;
-		$terms_count     = 0;
-		$postsTable      = $table_prefix . 'posts';
-		$commentsTable   = $table_prefix . 'comments';
-		$termsTable2     = $table_prefix . 'terms';
-		$termsTable      = $table_prefix . 'term_taxonomy';
-		$revisions_total = $wpdb->get_results ( "SELECT ID FROM `" . $postsTable . "` WHERE `post_type` = 'revision' OR `post_type` = 'auto_draft' OR `post_status` = 'trash'" );
-		$comments_total  = $wpdb->get_results ( "SELECT comment_ID FROM `" . $commentsTable . "` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'" );
-		$terms_total     = $wpdb->get_results ( "SELECT term_taxonomy_id FROM `" . $termsTable . "` WHERE `count` = '0'" );
-		if( count( $revisions_total ) ) { 
-			foreach ( $revisions_total as $retot ) { 
-				$revisions_count++; 
-			}
-		}
-		if( count( $comments_total ) ) {
-			foreach ( $comments_total as $comtot ) { 
-				$comments_count++; 
-			}
-		}
-		if( count( $terms_total ) ) {
-			foreach ( $terms_total as $termstot  ) {
-				$terms_count++; 
-			}
-		}
-		$totalClutter    = ( $terms_count + $comments_count + $revisions_count );
-
-		echo '<section class="trash"><label for="deleteAllClutter"><i class="fa fa-trash-o"></i><span>All clutter</span><em>' . esc_attr( $totalClutter ) . '</em></label><form method="post"><input class="hidden" id="deleteAllClutter" type="submit" value="Go" name="deleteAllClutter"></form></section>
-		<section class="trash"><label for="delete_post_revisions"><i class="fa fa-trash-o"></i><span>Post clutter</span><em>' . esc_attr ( $revisions_count ) . '</em></label><form method="post"><input class="hidden" id="delete_post_revisions" type="submit" value="Go" name="delete_post_revisions"></form></section>
-		<section class="trash"><label for="delete_unapproved_comments"><i class="fa fa-trash-o"></i><span>Comment clutter</span><em>' . esc_attr ( $comments_count ) . '</em></label><form method="post"><input class="hidden" id="delete_unapproved_comments" type="submit" value="Go" name="delete_unapproved_comments"></form></section>
-		<section class="trash"><label for="delete_unused_terms"><i class="fa fa-trash-o"></i><span>Taxonomy clutter</span><em>' . esc_attr ( $terms_count ) . '</em></label><form method="post"><input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms"></form></section>';
-	}
+if( current_user_can( 'manage_options' ) ) {
+	include( plugin_dir_path(__FILE__) . '_my_optional_modules_database_cleaner.php' );
 }
 
 
@@ -2467,7 +2303,20 @@ if(current_user_can('manage_options')){
 					</style>					
 					<ol id="momEditorMenu">
 						<li class="clear"></li>';
-						$icon = array('adjust','anchor','archive','arrows','arrows-h','arrows-v','asterisk',
+						$icon = array(
+						'automobile','bank','behance','behance-square','bomb','building',
+						'cab','car','child','circle-o-notch','circle-thin','codepen',
+						'cube','cubes','database','delicious','deviantart','digg',
+						'drupal','empire','envelope-square','fax','file-archive-o','file-audio-o',
+						'file-code-o','file-excel-o','file-image-o','file-movie-o','file-pdf-o','file-photo-o',
+						'file-picture-o','file-powerpoint-o','file-sound-o','file-video-o','file-word-o','file-zip-o',
+						'ge','git','git-square','google','graduation-cap','hacker-news','header','history','institution',
+						'joomla','jsfiddle','language','life-bouy','life-ring','life-saver','mortar-board','openid','paper-plane',
+						'paper-plane-o','paragraph','paw','pied-piper','pied-piper-alt','pied-piper-square','qq','ra','rebel',
+						'recycle','reddit','reddit-square','send','send-o','share-alt','share-alt-square','slack','sliders',
+						'soundcloud','space-shuttle','spoon','spotify','steam','steam-square','stumbleupon','stumbleupon-circle',
+						'support','taxi','tencent-weibo','tree','university','vine','wechat','weixin','wordpress','yahoo',
+						'adjust','anchor','archive','arrows','arrows-h','arrows-v','asterisk',
 						'ban','bar-chart-o','barcode','bars','beer','bell','bell-o','bolt','book',
 						'bookmark','bookmark-o','briefcase','bug','building-o','bullhorn','bullseye',
 						'calendar','calendar-o','camera','camera-retro','caret-square-o-down','caret-square-o-left',
@@ -2518,7 +2367,7 @@ if(current_user_can('manage_options')){
 						'twitter','twitter-square','vimeo-square','vk','weibo','windows','xing','xing-square','youtube','youtube-play',
 						'youtube-square');
 					foreach ($icon as &$value){
-						echo '<li onclick="addText(event)" class="fa fa-'.$value.' icon"><span>&#60;i class="fa fa-'.$value.'"&#62;&#60;/i&#62;</span></li>';
+						echo '<li onclick="addText(event)" title="<i class=\'fa fa-' . $value . '\'></i>" class="fa fa-'.$value.' icon"><span>&#60;i class="fa fa-'.$value.'"&#62;&#60;/i&#62;</span></li>';
 					}
 				echo '
 				</ol>
