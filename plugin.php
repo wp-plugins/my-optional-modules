@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.5.6.1
+ * Version: 5.5.6.2
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -124,27 +124,30 @@ if(is_user_logged_in()){
 					add_option('jump_around_7',90);
 					add_option('jump_around_8',88);
 				}
+				
+				
 				if(isset($_POST['mom_votes_mode_submit'])){
 					add_option('mommaincontrol_votes_activated',1);					
 					if(get_option('mommaincontrol_votes_activated') == 1){
-					$votesSQLa = "CREATE TABLE $votesVotes(
-					ID INT(11) NOT NULL AUTO_INCREMENT , 
-					IP INT(11) NOT NULL,
-					VOTE INT(11) NOT NULL,
-					PRIMARY KEY  (ID)
-					);";
-					$votesSQLb = "CREATE TABLE $votesPosts(
-					ID INT(11) NOT NULL AUTO_INCREMENT , 
-					UP INT(11) NOT NULL,
-					DOWN INT(11) NOT NULL,
-					PRIMARY KEY  (ID)
-					);";
-					require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-					dbDelta($votesSQLa);	
-					dbDelta($votesSQLb);	
-					update_option('mommaincontrol_votes_activated',0);
+						$votesSQLa = "CREATE TABLE $votesVotes(
+							ID INT(11) NOT NULL AUTO_INCREMENT , 
+							IP INT(11) NOT NULL,
+							VOTE INT(11) NOT NULL,
+							PRIMARY KEY  (ID)
+						);";
+						$votesSQLb = "CREATE TABLE $votesPosts(
+							ID INT(11) NOT NULL AUTO_INCREMENT , 
+							UP INT(11) NOT NULL,
+							DOWN BIGINT(11) NOT NULL,
+							PRIMARY KEY  (ID)
+						);";
+						require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+						dbDelta($votesSQLa);	
+						dbDelta($votesSQLb);	
+						update_option('mommaincontrol_votes_activated',0);
 					}
 				}
+				
 				if(isset($_POST['mom_passwords_mode_submit'])){
 					add_option('rotating_universal_passwords_1','');
 					add_option('rotating_universal_passwords_2','');
@@ -279,75 +282,103 @@ if(is_user_logged_in()){
 						}
 						if(isset($_POST['reviewsubmit']))update_mom_reviews();
 						function print_mom_reviews_form(){
-							global $content;
-							echo '
-							<div class="settingsInput">
-							<form method="post" class="addForm">
-							<section>title<input type="text" name="reviews_title" placeholder="Enter title here"></section>
-							<section>type<input type="text" name="reviews_type" placeholder="Review type"></section>
-							<section>url<input type="text" name="reviews_link" placeholder="Relevant URL" ></section>
-							<section class="editor">';
-							wp_editor($content,$name = 'reviews_review',$id = 'reviews_review',$prev_id = 'title',$media_buttons = true, $tab_index = 2);
-							echo '
-							</section>
-							<section><label>rating</label><input type="text" name="reviews_rating" placeholder="Your rating"></section>
-							<section><input id="reviewsubmit" type="submit" value="Add review" name="reviewsubmit"/></section>
+							global $content;?>
+							<form method="post" class="clear">
+								<section class="clear">
+									<label class="left" for="reviews_title">title</label>
+									<input class="right" type="text" name="reviews_title" placeholder="Enter title here"></section>
+								<section class="clear">
+									<label class="left" for="reviews_type">type</label>
+									<input class="right" type="text" name="reviews_type" placeholder="Review type"></section>
+								<section class="clear">
+									<label class="left" for="reviews_link">url</label>
+									<input class="right" type="text" name="reviews_link" placeholder="Relevant URL" ></section>
+								<section class="clear">
+									<?php wp_editor($content,$name = 'reviews_review',$id = 'reviews_review',$prev_id = 'title',$media_buttons = true, $tab_index = 2);?>
+								</section>
+								<br />
+								<section class="clear">
+									<label class="left" for="reviews_rating">rating</label>
+									<input class="right" type="text" name="reviews_rating" placeholder="Your rating">
+								</section>
+								<br />
+								<section class="clear">
+									<input id="reviewsubmit" type="submit" value="Add review" name="reviewsubmit"/>
+								</section>
 							</form>
-							</div>
-							</div>';
-						}
-						function reviews_page_content(){
-							echo '
-							<span class="moduletitle">
-							<form method="post" action="" name="momReviews"><label for="mom_reviews_mode_submit">Deactivate</label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_reviews') == 1){echo '0';}else{echo '1';}echo '" name="reviews" /><input type="submit" id="mom_reviews_mode_submit" name="mom_reviews_mode_submit" value="Submit" class="hidden" /></form>
-							</span>
-							<div class="settings clear">
-							<div class="settingsInfo taller">
-							<form method="post" class="reviews_item_form">
-							<input type="text" name="filterResults_type" placeholder="Filter by type"';if(get_option('momreviews_search') != "")echo 'value="'.get_option('momreviews_search').'"';echo '>
-							<input type="submit" name="filterResults" value="Accept">
-							</form>';
-							global $wpdb;
-							$mom_reviews_table_name = $wpdb->prefix . "momreviews";
-							$filtered_search = get_option('momreviews_search');
-							if(get_option('momreviews_search') != ""){
-								$reviews = $wpdb->get_results("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE TYPE = '$filtered_search' ORDER BY ID DESC");
-							}else{
-								$reviews = $wpdb->get_results("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name ORDER BY ID DESC");
-							}
-							echo '<div class="momresults">';
-							foreach($reviews as $reviews_results){
-								$this_ID = $reviews_results->ID;
-								echo '
-								<div class="momdata">
-								<div class="reviewitem">
-								<section class="id">id:'.$reviews_results->ID.'</section>
-								<span class="review">'.$reviews_results->TITLE.'</span>';
-								if(!isset($_POST['edit_'.$this_ID.''])){
-									if(!isset($_POST['delete_'.$this_ID.''])){echo '<form action="" method="post"><input class="deleteSubmit" type="submit" name="delete_'.$this_ID.'" value="Delete"></form>';}
-									else{echo '<form class="confirm" action="" method="post"><input type="submit" name="cancel" id"cancel" value="No"/><input class="deleteSubmit" type="submit" name="delete_confirm_'.$this_ID.'" value="Confirm"/></form>';}
-									echo '<form method="post"><input class="editSubmit" type="submit" name="edit_'.$this_ID.'" value="Edit"></form>';
-								}
-								echo '
-								<section class="type">type: '.$reviews_results->TYPE.'</section>
-								</div>';
-								if(isset($_POST['edit_'.$this_ID.''])){
-									echo '
-									<div class="editing">
-									<form method="post" class="addForm">
-									<section>title<input type="text" name="reviews_title_'.$this_ID.'" placeholder="Enter title here" value="'.$reviews_results->TITLE.'"/></section>
-									<section>type<input type="text" name="reviews_type_'.$this_ID.'" placeholder="Review type" value="'.$reviews_results->TYPE.'"/></section>
-									<section>url<input type="text" name="reviews_link_'.$this_ID.'" placeholder="Relevant URL" value="'.$reviews_results->LINK.'"/></section>
-									<section class="editor">';
-									$thisContent = $reviews_results->REVIEW;
-									wp_editor($content = $thisContent,$name = 'edit_review_'.$this_ID.'',$id = 'edit_review_'.$this_ID.'',$prev_id = 'title',$media_buttons = true,$tab_index = 1);
-									echo '
+						<?php }
+						function reviews_page_content(){ ?>
+							<strong class="sectionTitle">Reviews Settings</strong>
+							<form class="clear" method="post" class="reviews_item_form">
+							<section class="clear">
+								<label class="left" for="filterResults_type">Filter by type</label>
+								<input class="right" type="text" name="filterResults_type" placeholder="Filter by type" <?php if(get_option('momreviews_search') != ""){ ?>value="<?php echo get_option('momreviews_search');?><?php }?>">
+							</section>
+							<section class="clear">
+								<input type="submit" name="filterResults" value="Accept">
+							</section>
+							</form>
+							<?php 
+								global $wpdb;
+								$mom_reviews_table_name = $wpdb->prefix . "momreviews";
+								$filtered_search = get_option('momreviews_search');
+								if(get_option('momreviews_search') != ""){
+									$reviews = $wpdb->get_results("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE TYPE = '$filtered_search' ORDER BY ID DESC");
+								}else{
+									$reviews = $wpdb->get_results("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name ORDER BY ID DESC");
+								} ?>
+
+							<div class="momresults">
+							<?php foreach($reviews as $reviews_results){
+								$this_ID = $reviews_results->ID;?>
+								
+								<section class="clear">
+									<br />
+									<strong>Review ID</strong> <?php echo $reviews_results->ID;?> &mdash; Title: <?php echo $reviews_results->TITLE;?> &mdash;  Review type: <?php echo $reviews_results->TYPE; ?>
+									<?php 
+										if(!isset($_POST['edit_'.$this_ID.''])){
+											if(!isset($_POST['delete_'.$this_ID.''])){ ?>
+											<form action="" method="post">
+												<input class="left" type="submit" name="delete_<?php echo $this_ID;?>" value="Delete">
+											</form>
+										<?php } else { ?>
+											<form action="" method="post">
+												<input class="left" type="submit" name="cancel" id="cancel" value="Cancel"/>
+												<input class="left" type="submit" name="delete_confirm_<?php echo $this_ID;?>" value="Confirm"/>
+											</form>
+										<?php } ?>
+										<form method="post">
+											<input class="left" type="submit" name="edit_<?php echo $this_ID;?>" value="Edit">
+										</form>										
+									<?php } ?>
+								</section>
+								<?php if(isset($_POST['edit_'.$this_ID.''])){ ?>
+									<form method="post" class="clear">
+									<section class="clear">
+										<label class="left" for="reviews_title">title</label>
+										<input class="right" type="text" name="reviews_title_<?php echo $this_ID;?>" placeholder="Enter title here" value="<?php echo $reviews_results->TITLE;?>"/></section>
+									<section class="clear">
+										<label class="left" for="reviews_type">type</label>
+										<input class="right" type="text" name="reviews_type_<?php echo $this_ID;?>" placeholder="Review type" value="<?php echo $reviews_results->TYPE;?>"/></section>
+									<section class="clear">
+										<label class="left" for="reviews_link">url</label>
+										<input class="right" type="text" name="reviews_link_<?php echo $this_ID;?>" placeholder="Relevant URL" value="<?php echo $reviews_results->LINK;?>"/></section>
+									<section class="clear">
+									<?php 
+										$thisContent = $reviews_results->REVIEW;
+										wp_editor($content = $thisContent,$name = 'edit_review_'.$this_ID.'',$id = 'edit_review_'.$this_ID.'',$prev_id = 'title',$media_buttons = true,$tab_index = 1); ?>
 									</section>
-									<section>rating<input type="text" name="reviews_rating_'.$this_ID.'" placeholder="Your rating" value="'.$reviews_results->RATING.'"/></section>
-									<section><input id="submit_edit_'.$this_ID.'" type="submit" value="Save these edits" name="submit_edit_'.$this_ID.'"><input type="submit" name="cancel" id"cancel" value="Cancel these edits"/></section>
+									<br />
+									<section class="clear">
+										<label for="reviews_rating">rating</label>
+										<input class="right" type="text" name="reviews_rating_<?php echo $this_ID;?>" placeholder="Your rating" value="<?php echo $reviews_results->RATING;?>"/>
+									</section>
+									<section class="clear">
+										<input id="submit_edit_<?php echo $this_ID;?>" type="submit" value="Save these edits" name="submit_edit_<?php echo $this_ID;?>">
+										<input type="submit" name="cancel" id="cancel" value="Cancel these edits"/>
+									</section>
 									</form>
-									</div>';
-								}
+								<?php }
 								if(isset($_POST['submit_edit_'.$this_ID.''])){
 									global $table_prefix, $wpdb;
 									$reviews_table_name = $table_prefix.'momreviews';                        
@@ -367,13 +398,37 @@ if(is_user_logged_in()){
 									$wpdb->query("DELETE FROM $mom_reviews_table_name WHERE ID = '$this_ID'");
 								}
 								if(isset($_POST['cancel'])){}
-								echo '</div>';
-							}
-							echo '</div></div>';
-							print_mom_reviews_form();
+							} ?>
+							</div>
+							<p></p>
+							<?php 
+							if(!isset($_POST['edit_'.$this_ID.''])){ print_mom_reviews_form(); }							
 						}
-					reviews_page_content();
-				}
+					reviews_page_content();?>
+					<p></p>
+					<form class="clear" method="post" action="" name="momReviews">
+						<label for="mom_reviews_mode_submit"><i class="fa fa-ban"></i> Click to Deactivate Reviews module</label>
+						<input type="text" class="hidden" value="<?php if(get_option('mommaincontrol_reviews') == 1){ ?>0<?php } else { ?>1<?php }?>" name="reviews" />
+						<input type="submit" id="mom_reviews_mode_submit" name="mom_reviews_mode_submit" value="Submit" class="hidden" />
+					</form>
+					<p>
+						<i class="fa fa-info">&mdash;</i> [momreviews] shortcode accepts the following parameters to output a loop of your reviews: type, 
+						orderbye, order, meta, expand, retract, id, and open.
+					</p>
+					<p>
+						<i class="fa fa-code">&mdash;</i> <strong>type</strong> &mdash; Only grab reviews of this type (default: blank)<br />
+						<i class="fa fa-code">&mdash;</i> <strong>orderby</strong> &mdash; order by type, link, title, or rating (default: ID)<br />
+						<i class="fa fa-code">&mdash;</i> <strong>order</strong> &mdash;  ASC or DESC (ascending or descending) (default: ASC)<br />
+						<i class="fa fa-code">&mdash;</i> <strong>meta</strong> &mdash;  1 or 0 (show meta (additional) information or not) (default: 1)<br />
+						<i class="fa fa-code">&mdash;</i> <strong>expand</strong> &mdash;  Text for the expand link (default: + )<br />
+						<i class="fa fa-code">&mdash;</i> <strong>retract</strong> &mdash;  Text for the retract link (default: - )<br />
+						<i class="fa fa-code">&mdash;</i> <strong>id</strong> &mdash; If an ID is specified, the loop will only return that review<br />
+						<i class="fa fa-code">&mdash;</i> <strong>open</strong> &mdash; 1 or 0 (open by default, closed by default) (default: 0)<br />
+					</p>
+					<p>
+						<i class="fa fa-info">&mdash;</i> Reviews that have a numerical value for rating (.5 to 5) will instead display stars ( <i class="fa fa-star-half-o"></i> for .5, <i class="fa fa-star"></i> for whole).  <em>Example</em>: a rating of 3.5 would display as <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i>.
+					</p>
+				<?php }
 		}
 	//
 	
@@ -398,7 +453,11 @@ if(is_user_logged_in()){
 					'open' => 0
 				), $atts)
 			);	
-			$id_fetch_att = esc_sql($id);
+			if( $id ) {
+				$id_fetch_att = esc_sql($id);
+			} else {
+				$id_fetch = $id_fetch_att = '';
+			}
 			if(is_numeric($id_fetch_att)){$id_fetch = $id_fetch_att;}
 			$order_by     = esc_sql($orderby);
 			$order_dir    = esc_sql($order);
@@ -1037,101 +1096,122 @@ if(is_user_logged_in()){
 				$MOM_themetakeover_backgroundimage = get_option('MOM_themetakeover_backgroundimage');
 				$MOM_themetakeover_wowhead = get_option('MOM_themetakeover_wowhead');
 				$MOM_themetakeover_horizontal_galleries = get_option('MOM_themetakeover_horizontal_galleries');
-				$showmepages = get_pages(); 		
-				echo '
-				<span class="moduletitle">
-				<form method="post" action="" name="momThemTakeover"><label for="mom_themetakeover_mode_submit">Deactivate</label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_themetakeover') == 1){echo '0';}else{echo '1';}echo '" name="themetakeover" /><input type="submit" id="mom_themetakeover_mode_submit" name="mom_themetakeover_mode_submit" value="Submit" class="hidden" /></form>
-				</span><div class="clear"></div><div class="settings"><form method="post">
-				<div class="clear"></div>
-				
-				<div class="exclude">
-					<section><label for="MOM_themetakeover_horizontal_galleries">Enable Horizontal Galleries</label>
-						<select id="MOM_themetakeover_horizontal_galleries" name="MOM_themetakeover_horizontal_galleries">
-							<option value="0"'; selected($MOM_themetakeover_horizontal_galleries, 0); echo '>No</option>
-							<option value="1"'; selected($MOM_themetakeover_horizontal_galleries, 1); echo '>Yes</option>
-						</select>
-					</section>				
-					<section><label for="MOM_themetakeover_youtubefrontpage">Youtube URL for 404s</label><input type="text" id="MOM_themetakeover_youtubefrontpage" name="MOM_themetakeover_youtubefrontpage" value="'.esc_url(get_option('MOM_themetakeover_youtubefrontpage')).'"></section>
-					<section><hr /></section>
-					<section><label for="MOM_themetakeover_fitvids"><a href="http://fitvidsjs.com/">Fitvid</a> .class</label><input type="text" id="MOM_themetakeover_fitvids" name="MOM_themetakeover_fitvids" value="'.esc_attr(get_option('MOM_themetakeover_fitvids')).'"></section>
-					<section><hr /></section>
-					<section><label for="MOM_themetakeover_postdiv">Post content .div</label><input type="text" placeholder=".entry" id="MOM_themetakeover_postdiv" name="MOM_themetakeover_postdiv" value="'.esc_attr(get_option('MOM_themetakeover_postdiv')).'"></section>
-					<section><label for="MOM_themetakeover_postelement">Post title .element</label><input type="text" placeholder="h1" id="MOM_themetakeover_postelement" name="MOM_themetakeover_postelement" value="'.esc_attr(get_option('MOM_themetakeover_postelement')).'"></section>
-					<section><label for="MOM_themetakeover_posttoggle">Toggle text</label><input type="text" placeholder="Toggle contents" id="MOM_themetakeover_posttoggle" name="MOM_themetakeover_posttoggle" value="'.esc_attr(get_option('MOM_themetakeover_posttoggle')).'"></section>
-				</div>
-				
-				<div class="exclude">
-					<section><label for="MOM_themetakeover_topbar">Enable navbar</label>
-						<select id="MOM_themetakeover_topbar" name="MOM_themetakeover_topbar">
-							<option value="1"'; selected($MOM_themetakeover_topbar, 1); echo '>Yes (top)</option>
-							<option value="2"'; selected($MOM_themetakeover_topbar, 2); echo '>Yes (bottom)</option>
-							<option value="0"'; selected($MOM_themetakeover_topbar, 0); echo '>No</option>
+				$showmepages = get_pages(); ?>
+				<strong class="sectionTitle">Takeover Settings</strong>
+				<form class="clear" method="post">
+					<section class="clear">
+						<label class="left" for="MOM_themetakeover_horizontal_galleries">Horizontal Galleries</label>
+						<select class="right" id="MOM_themetakeover_horizontal_galleries" name="MOM_themetakeover_horizontal_galleries">
+							<option value="0" <?php selected($MOM_themetakeover_horizontal_galleries, 0);?> >No</option>
+							<option value="1" <?php selected($MOM_themetakeover_horizontal_galleries, 1);?> >Yes</option>
 						</select>
 					</section>
-					<section><label for="MOM_themetakeover_extend">Extend navbar</label>
-						<select id="MOM_themetakeover_extend" name="MOM_themetakeover_extend">
-							<option value="1"'; selected($MOM_themetakeover_extend, 1); echo '>Yes</option>
-							<option value="0"'; selected($MOM_themetakeover_extend, 0); echo '>No</option>
+					<section class="clear">
+						<label class="left" for="MOM_themetakeover_youtubefrontpage">Youtube for 404s</label>
+						<input class="right" type="text" id="MOM_themetakeover_youtubefrontpage" name="MOM_themetakeover_youtubefrontpage" value="<?php esc_url(get_option('MOM_themetakeover_youtubefrontpage'));?>">
+					</section>
+					<section class="clear">
+						<label class="left" for="MOM_themetakeover_fitvids"><a href="http://fitvidsjs.com/">Fitvid</a> .class</label>
+						<input class="right" type="text" id="MOM_themetakeover_fitvids" name="MOM_themetakeover_fitvids" value="<?php esc_attr(get_option('MOM_themetakeover_fitvids'))?>">
+					</section>
+					<section class="clear">
+						<label class="left" for="MOM_themetakeover_postdiv">Post content .div</label>
+						<input class="right" type="text" placeholder=".entry" id="MOM_themetakeover_postdiv" name="MOM_themetakeover_postdiv" value="<?php esc_attr(get_option('MOM_themetakeover_postdiv'));?>">
+					</section>
+					<section class="clear">
+						<label class="left" for="MOM_themetakeover_postelement">Post title .element</label>
+						<input class="right" type="text" placeholder="h1" id="MOM_themetakeover_postelement" name="MOM_themetakeover_postelement" value="<?php esc_attr(get_option('MOM_themetakeover_postelement'));?>">
+					</section>
+					<section class="clear">
+						<label class="left" for="MOM_themetakeover_posttoggle">Toggle text</label>
+						<input class="right" type="text" placeholder="Toggle contents" id="MOM_themetakeover_posttoggle" name="MOM_themetakeover_posttoggle" value="<?php esc_attr(get_option('MOM_themetakeover_posttoggle'));?>">
+					</section>
+					<section class="clear">
+						<label class="left" for="MOM_themetakeover_topbar">Enable navbar</label>
+						<select class="right" id="MOM_themetakeover_topbar" name="MOM_themetakeover_topbar">
+							<option value="1" <?php selected($MOM_themetakeover_topbar, 1);?>>Yes (top)</option>
+							<option value="2" <?php selected($MOM_themetakeover_topbar, 2);?>>Yes (bottom)</option>
+							<option value="0" <?php selected($MOM_themetakeover_topbar, 0);?>>No</option>
+						</select>
+					</section>
+					<section class="clear">
+						<label class="left" for="MOM_themetakeover_extend">Extend navbar</label>
+						<select class="right" id="MOM_themetakeover_extend" name="MOM_themetakeover_extend">
+							<option value="1" <?php selected($MOM_themetakeover_extend, 1);?>>Yes</option>
+							<option value="0" <?php selected($MOM_themetakeover_extend, 0);?>>No</option>
 						</select>
 					</section>			
-					<section><label for="MOM_themetakeover_topbar_color">Navbar scheme</label>
-						<select id="MOM_themetakeover_topbar_color" name="MOM_themetakeover_topbar_color">
-							<option value="1"'; selected($MOM_themetakeover_topbar_color, 1); echo '>Dark</option>
-							<option value="2"'; selected($MOM_themetakeover_topbar_color, 2); echo '>Light</option>
-							<option value="4"'; selected($MOM_themetakeover_topbar_color, 4); echo '>Red</option>
-							<option value="5"'; selected($MOM_themetakeover_topbar_color, 5); echo '>Green</option>
-							<option value="6"'; selected($MOM_themetakeover_topbar_color, 6); echo '>Blue</option>
-							<option value="7"'; selected($MOM_themetakeover_topbar_color, 7); echo '>Yellow</option>
-							<option value="3"'; selected($MOM_themetakeover_topbar_color, 3); echo '>Default</option>
+					<section class="clear">
+						<label class="left" for="MOM_themetakeover_topbar_color">Navbar scheme</label>
+						<select class="right" id="MOM_themetakeover_topbar_color" name="MOM_themetakeover_topbar_color">
+							<option value="1" <?php selected($MOM_themetakeover_topbar_color, 1);?>>Dark</option>
+							<option value="2" <?php selected($MOM_themetakeover_topbar_color, 2);?>>Light</option>
+							<option value="4" <?php selected($MOM_themetakeover_topbar_color, 4);?>>Red</option>
+							<option value="5" <?php selected($MOM_themetakeover_topbar_color, 5);?>>Green</option>
+							<option value="6" <?php selected($MOM_themetakeover_topbar_color, 6);?>>Blue</option>
+							<option value="7" <?php selected($MOM_themetakeover_topbar_color, 7);?>>Yellow</option>
+							<option value="3" <?php selected($MOM_themetakeover_topbar_color, 3);?>>Default</option>
 						</select>
 					</section>			
-					<section><label for="MOM_themetakeover_topbar_search">Enable search bar</label>
-						<select id="MOM_themetakeover_topbar_search" name="MOM_themetakeover_topbar_search">
-							<option value="0"'; selected($MOM_themetakeover_topbar_search, 0); echo '>No</option>
-							<option value="1"'; selected($MOM_themetakeover_topbar_search, 1); echo '>Yes</option>
+					<section class="clear">
+						<label class="left" for="MOM_themetakeover_topbar_search">Enable search bar</label>
+						<select class="right" id="MOM_themetakeover_topbar_search" name="MOM_themetakeover_topbar_search">
+							<option value="0" <?php selected($MOM_themetakeover_topbar_search, 0);?>>No</option>
+							<option value="1" <?php selected($MOM_themetakeover_topbar_search, 1);?>>Yes</option>
 						</select>
 					</section>						
-					<section><label for="MOM_themetakeover_topbar_share">Share icons</label>
-						<select id="MOM_themetakeover_topbar_share" name="MOM_themetakeover_topbar_share">
-							<option value="0"'; selected($MOM_themetakeover_topbar_share, 0); echo '>No</option>
-							<option value="1"'; selected($MOM_themetakeover_topbar_share, 1); echo '>Yes</option>
+					<section class="clear">
+						<label class="left" for="MOM_themetakeover_topbar_share">Share icons</label>
+						<select class="right" id="MOM_themetakeover_topbar_share" name="MOM_themetakeover_topbar_share">
+							<option value="0" <?php selected($MOM_themetakeover_topbar_share, 0);?>>No</option>
+							<option value="1" <?php selected($MOM_themetakeover_topbar_share, 1);?>>Yes</option>
 						</select>
 					</section>						
-					<section>
-					<label for="MOM_themetakeover_archivepage">Archives page</label>
-					<select name="MOM_themetakeover_archivepage" class="allpages" id="MOM_themetakeover_archivepage">
-					<option value="">Home page</option>';
-					
-					foreach($showmepages as $pagesshown){
-						echo '
-						<option name="MOM_themetakeover_archivepage" id="mompaf_'.esc_attr($pagesshown->ID).'" value="'.esc_attr($pagesshown->ID).'"'; 
-						$selectedarchivespage = $pagesshown->ID;
-						$MOM_themetakeover_archivepage = get_option('MOM_themetakeover_archivepage');
-						selected($MOM_themetakeover_archivepage, $selectedarchivespage); echo '>
-						'.$pagesshown->post_title.'</option>';
-					}
-					
-					echo '
-					</select></section>
-					<section><hr /></section>
-					<section><label for="MOM_themetakeover_backgroundimage">Enable Custom BG Image</label>
-						<select id="MOM_themetakeover_backgroundimage" name="MOM_themetakeover_backgroundimage">
-							<option value="0"'; selected($MOM_themetakeover_backgroundimage, 0); echo '>No</option>
-							<option value="1"'; selected($MOM_themetakeover_backgroundimage, 1); echo '>Yes</option>
+					<section class="clear">
+						<label class="left" for="MOM_themetakeover_archivepage">Archives page</label>
+						<select class="right" name="MOM_themetakeover_archivepage" class="allpages" id="MOM_themetakeover_archivepage">
+						<option value="">Home page</option>					
+						<?php foreach($showmepages as $pagesshown){ ?>
+							<option name="MOM_themetakeover_archivepage" id="mompaf_<?php echo esc_attr($pagesshown->ID); ?>" value="<?php echo esc_attr($pagesshown->ID);?>"
+							<?php $selectedarchivespage = $pagesshown->ID;
+							$MOM_themetakeover_archivepage = get_option('MOM_themetakeover_archivepage');
+							selected($MOM_themetakeover_archivepage, $selectedarchivespage);?>
+							><?php echo $pagesshown->post_title; ?></option>
+						<?php } ?>
 						</select>
 					</section>
-					<section><hr /></section>
-					<section><label for="MOM_themetakeover_wowhead">Enable Wowhead Tooltips (<a href="http://www.wowhead.com/tooltips">?</a>)</label>
-						<select id="MOM_themetakeover_wowhead" name="MOM_themetakeover_wowhead">
-							<option value="1"'; selected($MOM_themetakeover_wowhead, 1); echo '>Yes</option>
-							<option value="0"'; selected($MOM_themetakeover_wowhead, 0); echo '>No</option>
+					<section class="clear">
+						<label class="left" for="MOM_themetakeover_backgroundimage">Custom BG Image</label>
+						<select class="right" id="MOM_themetakeover_backgroundimage" name="MOM_themetakeover_backgroundimage">
+							<option value="0" <?php selected($MOM_themetakeover_backgroundimage, 0);?>>No</option>
+							<option value="1" <?php selected($MOM_themetakeover_backgroundimage, 1);?>>Yes</option>
 						</select>
 					</section>
-				</div>
-				<div class="exclude">
-				<input id="momthemetakeoversave" type="submit" value="Save Changes" name="momthemetakeoversave" /></form>
-				</div></div><div class="new"></div>';
-			}
+					<section class="clear">
+						<label class="left" for="MOM_themetakeover_wowhead">Wowhead (<a href="http://www.wowhead.com/tooltips">?</a>)</label>
+						<select class="right" id="MOM_themetakeover_wowhead" name="MOM_themetakeover_wowhead">
+							<option value="1" <?php selected($MOM_themetakeover_wowhead, 1);?>>Yes</option>
+							<option value="0" <?php selected($MOM_themetakeover_wowhead, 0);?>>No</option>
+						</select>
+					</section>
+					<input id="momthemetakeoversave" type="submit" value="Save Changes" name="momthemetakeoversave" />
+				</form>
+				<p></p>
+				<form class="clear" method="post" action="" name="momThemTakeover">
+					<label for="mom_themetakeover_mode_submit"><i class="fa fa-ban"></i> Click to Deactivate the Takeover module</label>
+					<input type="text" class="hidden" value="<?php if(get_option('mommaincontrol_themetakeover') == 1){ ?>0<?php }else{ ?>1 <?php } ?>" name="themetakeover" />
+					<input type="submit" id="mom_themetakeover_mode_submit" name="mom_themetakeover_mode_submit" value="Submit" class="hidden" />
+				</form>
+				<p><i class="fa fa-info">&mdash;</i> This module will attempt take over certain functionalities 
+				of your current them and add additional functionality that wasn't (previously) there.</p>
+				<p><i class="fa fa-youtube">&mdash;</i> Youtube for 404s accepts a Youtube URL, and will set up a 404 
+				page featuring that video.</p>
+				<p><i class="fa fa-info">&mdash;</i> Fitvid .class accepts a container class that your media embeds are wrapped 
+				in to apply the Fitvids JS functionality to.</p>
+				<p><i class="fa fa-info">&mdash;</i>Post content .div, title .element, and Toggle text need to be set in order 
+				to implement automatic lists for pages and posts that are extremely long and have sections denoted by 
+				title elements (like h1).</p>
+			<?php }
 		}
 	//
 	
@@ -1582,13 +1662,57 @@ if(is_user_logged_in()){
 
 	// (J) Count++ (settings page)
 		if(current_user_can('manage_options')){
-			function my_optional_modules_count_module(){
-					echo '<span class="moduletitle">';
-					echo '<form method="post" action="" name="momCount"><label for="mom_count_mode_submit">Deactivate</label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_obwcountplus') == 1){echo '0';}else{echo '1';}echo '" name="countplus" /><input type="submit" id="mom_count_mode_submit" name="mom_count_mode_submit" value="Submit" class="hidden" /></form>';
-					echo '</span><form method="post"><div class="clear"></div><div class="settings">';
-					echo '<div class="countplus"><section><label for="obwcountplus_1_countdownfrom">Goal (<em>0</em> for none)</label><input id="obwcountplus_1_countdownfrom" type="text" value="'.esc_attr(get_option('obwcountplus_1_countdownfrom')).'" name="obwcountplus_1_countdownfrom"></section><section><label for="obwcountplus_2_remaining">Text for remaining</label><input id="obwcountplus_2_remaining" type="text" value="'.esc_attr(get_option('obwcountplus_2_remaining')).'" name="obwcountplus_2_remaining"></section><section><label for="obwcountplus_3_total">Text for published</label><input id="obwcountplus_3_total" type="text" value="'.esc_attr(get_option('obwcountplus_3_total')).'" name="obwcountplus_3_total"></section><section><label for="obwcountplus_4_custom">Custom output</label><input id="obwcountplus_4_custom" type="text" value="'.esc_attr(get_option('obwcountplus_4_custom')).'" name="obwcountplus_4_custom"></section></div>';
-					echo '<input id="obwcountsave" type="submit" value="Save Changes" name="obwcountsave"></form><div class="templatetags"><section>Custom output example: (with goal)<span class="right">%total% words of %remain% published</span></section><section>Custom output example: (without goal) <span class="right">%total% words published</span></section><section>Custom output example: (numbers only)(total on blog) <span class="right">%total%</span></section><section>Custom output example: (numbers only)(total remain of goal) <span class="right">%remain%</span></section><section>Template tag: (single post word count)<span class="right"><code>obwcountplus_total();</code></span></section><section>Custom output:<span class="right"><code>countsplusplus();</code></span></section><section>Total words + remaining:<span class="right"><code>obwcountplus_count();</code></span></section><section>Total words:<span class="right"><code>obwcountplus_total();</code></span></section><section>Remainig:(displays total published if goal reached)<span class="right"><code>obwcountplus_remaining();</code></span></section></div><p class="creditlink">Count++ is adapted from <a href="http://wordpress.org/plugins/post-word-count/">Post Word Count</a> by <a href="http://profiles.wordpress.org/nickmomrik/">Nick Momrik</a>.</p>';
-				}
+			function my_optional_modules_count_module(){ ?>
+					<strong class="sectionTitle">Count++ Settings</strong>
+					<form class="clear" method="post">
+						<section class="clear">
+							<label class="left" for="obwcountplus_1_countdownfrom">Goal (<em>0</em> for none)</label>
+							<input class="right" id="obwcountplus_1_countdownfrom" type="text" value="<?php echo esc_attr(get_option('obwcountplus_1_countdownfrom'));?>" name="obwcountplus_1_countdownfrom">
+						</section>
+						<section class="clear">
+							<label class="left" for="obwcountplus_2_remaining">Text for remaining</label>
+							<input class="right" id="obwcountplus_2_remaining" type="text" value="<?php echo esc_attr(get_option('obwcountplus_2_remaining'));?>" name="obwcountplus_2_remaining">
+						</section>
+						<section class="clear">
+							<label class="left" for="obwcountplus_3_total">Text for published</label>
+							<input class="right" id="obwcountplus_3_total" type="text" value="<?php echo esc_attr(get_option('obwcountplus_3_total'));?>" name="obwcountplus_3_total">
+						</section>
+						<section class="clear">
+							<label class="left" for="obwcountplus_4_custom">Custom output</label>
+							<input class="right" id="obwcountplus_4_custom" type="text" value="<?php echo esc_attr(get_option('obwcountplus_4_custom'));?>" name="obwcountplus_4_custom">
+						</section>
+						<p></p>
+						<input id="obwcountsave" type="submit" value="Save Changes" name="obwcountsave">
+					</form>
+					<p></p>
+					<form method="post" action="" name="momCount" class="clear">
+						<label for="mom_count_mode_submit"><i class="fa fa-ban"></i> Click to Deactivate the Count++ module</label>
+						<input type="text" class="hidden" value="
+							<?php if(get_option('mommaincontrol_obwcountplus') == 1){ ?>
+								0
+							<?php }else{ ?>
+								1
+							<?php } ?>
+							" name="countplus" />
+						<input type="submit" id="mom_count_mode_submit" name="mom_count_mode_submit" value="Submit" class="hidden" />
+					</form>
+					<p>
+						<i class="fa fa-info">&mdash;</i> The <em>custom output</em> field accepts a templated input to customize the 
+						output of the module. <strong>%total%</strong> prints the total words on the blog, 
+						while <strong>%remain%</strong> prints the (goal - total).
+					</p>
+					<p>
+						Template tags (for use in theme files):<br />
+						<i class="fa fa-code">&mdash;</i> <strong>obwcountplus_total()</strong> prints single post word count<br />
+						<i class="fa fa-code">&mdash;</i> <strong>countsplusplus()</strong> prints custom output (set above)<br />
+						<i class="fa fa-code">&mdash;</i> <strong>obwcountplus_count()</strong> prints the total words + remaining (of goal)<br />
+						<i class="fa fa-code">&mdash;</i> <strong>obwcountplus_total()</strong> prints the total words<br />
+						<i class="fa fa-code">&mdash;</i> <strong>obwcountplus_remaining()</strong> prints the remaining (or the total if the goal was reached)<br />
+					</p>
+					<p>
+						<i class="fa fa-heart">&mdash;</i> Count++ was adapted from <a href="http://wordpress.org/plugins/post-word-count/">Post Word Count</a>, a plugin by <a href="http://profiles.wordpress.org/nickmomrik/">Nick Momrik</a>.
+					</p>
+				<?php }
 			}
 	//
 	
@@ -1730,10 +1854,11 @@ if(is_user_logged_in()){
 				$showmepages = get_pages(); 			
 				$showmecats = get_categories('taxonomy=category&hide_empty=0'); 
 				$showmetags = get_categories('taxonomy=post_tag&hide_empty=0');
-				echo '<span class="moduletitle">
-				<form method="post" action="" name="momExclude"><label for="mom_exclude_mode_submit">Deactivate</label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momse') == 1){echo '0';}else{echo '1';}echo '" name="exclude" /><input type="submit" id="mom_exclude_mode_submit" name="mom_exclude_mode_submit" value="Submit" class="hidden" /></form>
-				</span><div class="clear"></div><div class="settings"><form method="post">
-					<div class="listing">
+				echo '
+				<strong class="sectionTitle">Exclude Settings</strong>
+				<form method="post" class="clear">
+					<p><strong class="sectionTitle">Hide Categories from..</strong>
+					<i class="fa fa-info">&mdash;</i> Separate multiple categories with commas</p>
 					<div class="list"><span>Category (<strong>ID</strong>)</span>';
 					foreach($showmecats as $catsshown){
 						echo '
@@ -1741,81 +1866,57 @@ if(is_user_logged_in()){
 					}
 				echo '
 				</div>
+				<br />
+				<section class="clear"><label class="left" for="MOM_Exclude_Categories_RSS">RSS</label><input class="right" type="text" id="MOM_Exclude_Categories_RSS" name="MOM_Exclude_Categories_RSS" value="'.get_option('MOM_Exclude_Categories_RSS').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_Categories_Front">front page</label><input class="right" type="text" id="MOM_Exclude_Categories_Front" name="MOM_Exclude_Categories_Front" value="'.get_option('MOM_Exclude_Categories_Front').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_Categories_TagArchives">tag archives</label><input class="right" type="text" id="MOM_Exclude_Categories_TagArchives" name="MOM_Exclude_Categories_TagArchives" value="'.get_option('MOM_Exclude_Categories_TagArchives').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_Categories_SearchResults">search results</label><input class="right" type="text" id="MOM_Exclude_Categories_SearchResults" name="MOM_Exclude_Categories_SearchResults" value="'.get_option('MOM_Exclude_Categories_SearchResults').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_CategoriesSun">Sunday</label><input class="right" type="text" id="MOM_Exclude_CategoriesSun" name="MOM_Exclude_CategoriesSun" value="'.get_option('MOM_Exclude_CategoriesSun').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_CategoriesMon">Monday</label><input class="right" type="text" id="MOM_Exclude_CategoriesMon" name="MOM_Exclude_CategoriesMon" value="'.get_option('MOM_Exclude_CategoriesMon').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_CategoriesTue">Tuesday</label><input class="right" type="text" id="MOM_Exclude_CategoriesTue" name="MOM_Exclude_CategoriesTue" value="'.get_option('MOM_Exclude_CategoriesTue').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_CategoriesWed">Wednesday</label><input class="right" type="text" id="MOM_Exclude_CategoriesWed" name="MOM_Exclude_CategoriesWed" value="'.get_option('MOM_Exclude_CategoriesWed').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_CategoriesThu">Thursday</label><input class="right" type="text" id="MOM_Exclude_CategoriesThu" name="MOM_Exclude_CategoriesThu" value="'.get_option('MOM_Exclude_CategoriesThu').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_CategoriesFri">Friday</label><input class="right" type="text" id="MOM_Exclude_CategoriesFri" name="MOM_Exclude_CategoriesFri" value="'.get_option('MOM_Exclude_CategoriesFri').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_CategoriesSat">Saturday</label><input class="right" type="text" id="MOM_Exclude_CategoriesSat" name="MOM_Exclude_CategoriesSat" value="'.get_option('MOM_Exclude_CategoriesSat').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_VisitorCategories">logged out</label><input class="right" type="text" id="MOM_Exclude_VisitorCategories" name="MOM_Exclude_VisitorCategories" value="'.get_option('MOM_Exclude_VisitorCategories').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_level0Categories">subscriber</label><input class="right" type="text" id="MOM_Exclude_level0Categories" name="MOM_Exclude_level0Categories" value="'.get_option('MOM_Exclude_level0Categories').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_level1Categories">contributor</label><input class="right" type="text" id="MOM_Exclude_level1Categories" name="MOM_Exclude_level1Categories" value="'.get_option('MOM_Exclude_level1Categories').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_level2Categories">author</label><input class="right" type="text" id="MOM_Exclude_level2Categories" name="MOM_Exclude_level2Categories" value="'.get_option('MOM_Exclude_level2Categories').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_level7Categories">editor</label><input class="right" type="text" id="MOM_Exclude_level7Categories" name="MOM_Exclude_level7Categories" value="'.get_option('MOM_Exclude_level7Categories').'"></section>
+				
+				<hr />
+				
+				<p><strong class="sectionTitle">Hide Tags from..</strong>
+				<i class="fa fa-info">&mdash;</i> Separate multiple tags with commas</p>
 				<div class="list"><span>Tag (<strong>ID</strong>)</span>';
 					foreach($showmetags as $tagsshown){
 						echo '<span>'.$tagsshown->cat_name.'(<strong>'.$tagsshown->cat_ID.'</strong>)</span>';
 					}
-				echo '
-				</div>
-				</div>				
-				<input class="allitems" type="text" onclick="this.select();" value="';
-				foreach($showmecats as $catsall){
-					echo $catsall->cat_ID.',';
-				}
-				echo '"/>
-				<input class="allitems" type="text" onclick="this.select();" value="';
-				foreach($showmetags as $tagsall){
-					echo $tagsall->cat_ID.',';
-				}				
-				echo '"/>
-				<div class="clear"></div>
-				<div class="exclude">
-					<section><span class="left">hide categories</span></section>
-					<section class="break"><span class="right"></span></section>
-					<section><hr/></section>	
-					<section><label for="MOM_Exclude_Categories_RSS">RSS</label><input type="text" id="MOM_Exclude_Categories_RSS" name="MOM_Exclude_Categories_RSS" value="'.get_option('MOM_Exclude_Categories_RSS').'"></section>
-					<section><label for="MOM_Exclude_Categories_Front">front page</label><input type="text" id="MOM_Exclude_Categories_Front" name="MOM_Exclude_Categories_Front" value="'.get_option('MOM_Exclude_Categories_Front').'"></section>
-					<section><label for="MOM_Exclude_Categories_TagArchives">tag archives</label><input type="text" id="MOM_Exclude_Categories_TagArchives" name="MOM_Exclude_Categories_TagArchives" value="'.get_option('MOM_Exclude_Categories_TagArchives').'"></section>
-					<section><label for="MOM_Exclude_Categories_SearchResults">search results</label><input type="text" id="MOM_Exclude_Categories_SearchResults" name="MOM_Exclude_Categories_SearchResults" value="'.get_option('MOM_Exclude_Categories_SearchResults').'"></section>
-					<section class="break"><span class="right"></span></section>					
-					<section><hr/></section>	
-					<section><label for="MOM_Exclude_CategoriesSun">Sunday</label><input type="text" id="MOM_Exclude_CategoriesSun" name="MOM_Exclude_CategoriesSun" value="'.get_option('MOM_Exclude_CategoriesSun').'"></section>
-					<section><label for="MOM_Exclude_CategoriesMon">Monday</label><input type="text" id="MOM_Exclude_CategoriesMon" name="MOM_Exclude_CategoriesMon" value="'.get_option('MOM_Exclude_CategoriesMon').'"></section>
-					<section><label for="MOM_Exclude_CategoriesTue">Tuesday</label><input type="text" id="MOM_Exclude_CategoriesTue" name="MOM_Exclude_CategoriesTue" value="'.get_option('MOM_Exclude_CategoriesTue').'"></section>
-					<section><label for="MOM_Exclude_CategoriesWed">Wednesday</label><input type="text" id="MOM_Exclude_CategoriesWed" name="MOM_Exclude_CategoriesWed" value="'.get_option('MOM_Exclude_CategoriesWed').'"></section>
-					<section><label for="MOM_Exclude_CategoriesThu">Thursday</label><input type="text" id="MOM_Exclude_CategoriesThu" name="MOM_Exclude_CategoriesThu" value="'.get_option('MOM_Exclude_CategoriesThu').'"></section>
-					<section><label for="MOM_Exclude_CategoriesFri">Friday</label><input type="text" id="MOM_Exclude_CategoriesFri" name="MOM_Exclude_CategoriesFri" value="'.get_option('MOM_Exclude_CategoriesFri').'"></section>
-					<section><label for="MOM_Exclude_CategoriesSat">Saturday</label><input type="text" id="MOM_Exclude_CategoriesSat" name="MOM_Exclude_CategoriesSat" value="'.get_option('MOM_Exclude_CategoriesSat').'"></section>
-					<section class="break"><span class="right"></span></section>
-					<section><hr/></section>	
-					<section><label for="MOM_Exclude_VisitorCategories">logged out</label><input type="text" id="MOM_Exclude_VisitorCategories" name="MOM_Exclude_VisitorCategories" value="'.get_option('MOM_Exclude_VisitorCategories').'"></section>
-					<section><label for="MOM_Exclude_level0Categories">subscriber</label><input type="text" id="MOM_Exclude_level0Categories" name="MOM_Exclude_level0Categories" value="'.get_option('MOM_Exclude_level0Categories').'"></section>
-					<section><label for="MOM_Exclude_level1Categories">contributor</label><input type="text" id="MOM_Exclude_level1Categories" name="MOM_Exclude_level1Categories" value="'.get_option('MOM_Exclude_level1Categories').'"></section>
-					<section><label for="MOM_Exclude_level2Categories">author</label><input type="text" id="MOM_Exclude_level2Categories" name="MOM_Exclude_level2Categories" value="'.get_option('MOM_Exclude_level2Categories').'"></section>
-					<section><label for="MOM_Exclude_level7Categories">editor</label><input type="text" id="MOM_Exclude_level7Categories" name="MOM_Exclude_level7Categories" value="'.get_option('MOM_Exclude_level7Categories').'"></section>
-				</div>
-				<div class="exclude">
-					<section><span class="left">hide tags</span></section>
-					<section class="break"><span class="right">from area</span></section>				
-					<section><hr/></section>					
-					<section><label for="MOM_Exclude_Tags_RSS">RSS</label><input type="text" id="MOM_Exclude_Tags_RSS" name="MOM_Exclude_Tags_RSS" value="'.get_option('MOM_Exclude_Tags_RSS').'"></section>
-					<section><label for="MOM_Exclude_Tags_Front">front page</label><input type="text" id="MOM_Exclude_Tags_Front" name="MOM_Exclude_Tags_Front" value="'.get_option('MOM_Exclude_Tags_Front').'"></section>
-					<section><label for="MOM_Exclude_Tags_CategoryArchives">categories</label><input type="text" id="MOM_Exclude_Tags_CategoryArchives" name="MOM_Exclude_Tags_CategoryArchives" value="'.get_option('MOM_Exclude_Tags_CategoryArchives').'"></section>
-					<section><label for="MOM_Exclude_Tags_SearchResults">search results</label><input type="text" id="MOM_Exclude_Tags_SearchResults" name="MOM_Exclude_Tags_SearchResults" value="'.get_option('MOM_Exclude_Tags_SearchResults').'"></section>
-					<section class="break"><span class="right">from day</span></section>					
-					<section><hr/></section>	
-					<section><label for="MOM_Exclude_TagsSun">Sunday</label><input type="text" id="MOM_Exclude_TagsSun" name="MOM_Exclude_TagsSun" value="'.get_option('MOM_Exclude_TagsSun').'"></section>
-					<section><label for="MOM_Exclude_TagsMon">Monday</label><input type="text" id="MOM_Exclude_TagsMon" name="MOM_Exclude_TagsMon" value="'.get_option('MOM_Exclude_TagsMon').'"></section>
-					<section><label for="MOM_Exclude_TagsTue">Tuesday</label><input type="text" id="MOM_Exclude_TagsTue" name="MOM_Exclude_TagsTue" value="'.get_option('MOM_Exclude_TagsTue').'"></section>
-					<section><label for="MOM_Exclude_TagsWed">Wednesday</label><input type="text" id="MOM_Exclude_TagsWed" name="MOM_Exclude_TagsWed" value="'.get_option('MOM_Exclude_TagsWed').'"></section>
-					<section><label for="MOM_Exclude_TagsThu">Thursday</label><input type="text" id="MOM_Exclude_TagsThu" name="MOM_Exclude_TagsThu" value="'.get_option('MOM_Exclude_TagsThu').'"></section>
-					<section><label for="MOM_Exclude_TagsFri">Friday</label><input type="text" id="MOM_Exclude_TagsFri" name="MOM_Exclude_TagsFri" value="'.get_option('MOM_Exclude_TagsFri').'"></section>
-					<section><label for="MOM_Exclude_TagsSat">Saturday</label><input type="text" id="MOM_Exclude_TagsSat" name="MOM_Exclude_TagsSat" value="'.get_option('MOM_Exclude_TagsSat').'"></section>
-					<section class="break"><span class="right">from user level</span></section>
-					<section><hr/></section>	
-					<section><label for="MOM_Exclude_VisitorTags">logged out</label><input type="text" id="MOM_Exclude_VisitorTags" name="MOM_Exclude_VisitorTags" value="'.get_option('MOM_Exclude_VisitorTags').'"></section>				
-					<section><label for="MOM_Exclude_level0Tags">subscriber</label><input type="text" id="MOM_Exclude_level0Tags" name="MOM_Exclude_level0Tags" value="'.get_option('MOM_Exclude_level0Tags').'"></section>
-					<section><label for="MOM_Exclude_level1Tags">contributor</label><input type="text" id="MOM_Exclude_level1Tags" name="MOM_Exclude_level1Tags" value="'.get_option('MOM_Exclude_level1Tags').'"></section>
-					<section><label for="MOM_Exclude_level2Tags">author</label><input type="text" id="MOM_Exclude_level2Tags" name="MOM_Exclude_level2Tags" value="'.get_option('MOM_Exclude_level2Tags').'"></section>
-					<section><label for="MOM_Exclude_level7Tags">editor</label><input type="text" id="MOM_Exclude_level7Tags" name="MOM_Exclude_level7Tags" value="'.get_option('MOM_Exclude_level7Tags').'"></section>
-				</div>
-				<div class="exclude">
-				<section><span class="left">hide post formats</span></section>
-				<section class="break"><span class="right">from area</span></section>
-				<section><hr/></section>
-				<section>
-					<label for="MOM_Exclude_PostFormats_RSS">RSS</label>
-					<select name="MOM_Exclude_PostFormats_RSS" id="MOM_Exclude_PostFormats_RSS">
+				echo '</div>
+				<br />
+				<section class="clear"><label class="left" for="MOM_Exclude_Tags_RSS">RSS</label><input class="right" type="text" id="MOM_Exclude_Tags_RSS" name="MOM_Exclude_Tags_RSS" value="'.get_option('MOM_Exclude_Tags_RSS').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_Tags_Front">front page</label><input class="right" type="text" id="MOM_Exclude_Tags_Front" name="MOM_Exclude_Tags_Front" value="'.get_option('MOM_Exclude_Tags_Front').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_Tags_CategoryArchives">categories</label><input class="right" type="text" id="MOM_Exclude_Tags_CategoryArchives" name="MOM_Exclude_Tags_CategoryArchives" value="'.get_option('MOM_Exclude_Tags_CategoryArchives').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_Tags_SearchResults">search results</label><input class="right" type="text" id="MOM_Exclude_Tags_SearchResults" name="MOM_Exclude_Tags_SearchResults" value="'.get_option('MOM_Exclude_Tags_SearchResults').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_TagsSun">Sunday</label><input class="right" type="text" id="MOM_Exclude_TagsSun" name="MOM_Exclude_TagsSun" value="'.get_option('MOM_Exclude_TagsSun').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_TagsMon">Monday</label><input class="right" type="text" id="MOM_Exclude_TagsMon" name="MOM_Exclude_TagsMon" value="'.get_option('MOM_Exclude_TagsMon').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_TagsTue">Tuesday</label><input class="right" type="text" id="MOM_Exclude_TagsTue" name="MOM_Exclude_TagsTue" value="'.get_option('MOM_Exclude_TagsTue').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_TagsWed">Wednesday</label><input class="right" type="text" id="MOM_Exclude_TagsWed" name="MOM_Exclude_TagsWed" value="'.get_option('MOM_Exclude_TagsWed').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_TagsThu">Thursday</label><input class="right" type="text" id="MOM_Exclude_TagsThu" name="MOM_Exclude_TagsThu" value="'.get_option('MOM_Exclude_TagsThu').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_TagsFri">Friday</label><input class="right" type="text" id="MOM_Exclude_TagsFri" name="MOM_Exclude_TagsFri" value="'.get_option('MOM_Exclude_TagsFri').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_TagsSat">Saturday</label><input class="right" type="text" id="MOM_Exclude_TagsSat" name="MOM_Exclude_TagsSat" value="'.get_option('MOM_Exclude_TagsSat').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_VisitorTags">logged out</label><input class="right" type="text" id="MOM_Exclude_VisitorTags" name="MOM_Exclude_VisitorTags" value="'.get_option('MOM_Exclude_VisitorTags').'"></section>				
+				<section class="clear"><label class="left" for="MOM_Exclude_level0Tags">subscriber</label><input class="right" type="text" id="MOM_Exclude_level0Tags" name="MOM_Exclude_level0Tags" value="'.get_option('MOM_Exclude_level0Tags').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_level1Tags">contributor</label><input class="right" type="text" id="MOM_Exclude_level1Tags" name="MOM_Exclude_level1Tags" value="'.get_option('MOM_Exclude_level1Tags').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_level2Tags">author</label><input class="right" type="text" id="MOM_Exclude_level2Tags" name="MOM_Exclude_level2Tags" value="'.get_option('MOM_Exclude_level2Tags').'"></section>
+				<section class="clear"><label class="left" for="MOM_Exclude_level7Tags">editor</label><input class="right" type="text" id="MOM_Exclude_level7Tags" name="MOM_Exclude_level7Tags" value="'.get_option('MOM_Exclude_level7Tags').'"></section>
+				
+				<hr />
+				
+				<strong class="sectionTitle">Hide Post Formats from..</strong>
+				<section class="clear">
+					<label class="left" for="MOM_Exclude_PostFormats_RSS">RSS</label>
+					<select class="right" name="MOM_Exclude_PostFormats_RSS" id="MOM_Exclude_PostFormats_RSS">
 						<option value="">none</option>
 						<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-aside'); echo '>Aside</option>
 						<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-gallery'); echo '>Gallery</option>
@@ -1828,9 +1929,9 @@ if(is_user_logged_in()){
 						<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-chat'); echo '>Chat</option>
 					</select>
 				</section>
-				<section>
-					<label for="MOM_Exclude_PostFormats_Front">front page</label>
-					<select name="MOM_Exclude_PostFormats_Front" id="MOM_Exclude_PostFormats_Front">
+				<section class="clear">
+					<label class="left" for="MOM_Exclude_PostFormats_Front">front page</label>
+					<select class="right" name="MOM_Exclude_PostFormats_Front" id="MOM_Exclude_PostFormats_Front">
 						<option value="">none</option>
 						<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_Front, 'post-format-aside'); echo '>Aside</option>
 						<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_Front,'post-format-gallery'); echo '>Gallery</option>
@@ -1843,9 +1944,9 @@ if(is_user_logged_in()){
 						<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_Front,'post-format-chat'); echo '>Chat</option>
 					</select>
 				</section>
-				<section>
-					<label for="MOM_Exclude_PostFormats_CategoryArchives">archives</label>
-					<select name="MOM_Exclude_PostFormats_CategoryArchives" id="MOM_Exclude_PostFormats_CategoryArchives">
+				<section class="clear">
+					<label class="left" for="MOM_Exclude_PostFormats_CategoryArchives">archives</label>
+					<select class="right" name="MOM_Exclude_PostFormats_CategoryArchives" id="MOM_Exclude_PostFormats_CategoryArchives">
 						<option value="">none</option>
 						<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_CategoryArchives, 'post-format-aside'); echo '>Aside</option>
 						<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-gallery'); echo '>Gallery</option>
@@ -1858,9 +1959,9 @@ if(is_user_logged_in()){
 						<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-chat'); echo '>Chat</option>
 					</select>
 				</section>
-				<section>
-					<label for="MOM_Exclude_PostFormats_TagArchives">tags</label>
-					<select name="MOM_Exclude_PostFormats_TagArchives" id="MOM_Exclude_PostFormats_TagArchives">
+				<section class="clear">
+					<label class="left" for="MOM_Exclude_PostFormats_TagArchives">tags</label>
+					<select class="right" name="MOM_Exclude_PostFormats_TagArchives" id="MOM_Exclude_PostFormats_TagArchives">
 						<option value="">none</option>
 						<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-aside'); echo '>Aside</option>
 						<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-gallery'); echo '>Gallery</option>
@@ -1873,9 +1974,9 @@ if(is_user_logged_in()){
 						<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-chat'); echo '>Chat</option>
 					</select>
 				</section>
-				<section>
-					<label for="MOM_Exclude_PostFormats_SearchResults">search results</label>
-					<select name="MOM_Exclude_PostFormats_SearchResults" id="MOM_Exclude_PostFormats_SearchResults">
+				<section class="clear">
+					<label class="left" for="MOM_Exclude_PostFormats_SearchResults">search results</label>
+					<select class="right" name="MOM_Exclude_PostFormats_SearchResults" id="MOM_Exclude_PostFormats_SearchResults">
 						<option value="">none</option>
 						<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-aside'); echo '>Aside</option>
 						<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-gallery'); echo '>Gallery</option>
@@ -1888,9 +1989,9 @@ if(is_user_logged_in()){
 						<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-chat'); echo '>Chat</option>
 					</select>
 				</section>
-				<section>
-					<label for="MOM_Exclude_PostFormats_Visitor">logged out</label>
-					<select name="MOM_Exclude_PostFormats_Visitor" id="MOM_Exclude_PostFormats_Visitor">
+				<section class="clear">
+					<label class="left" for="MOM_Exclude_PostFormats_Visitor">logged out</label>
+					<select class="right" name="MOM_Exclude_PostFormats_Visitor" id="MOM_Exclude_PostFormats_Visitor">
 						<option value="">none</option>
 						<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-aside'); echo '>Aside</option>
 						<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-gallery'); echo '>Gallery</option>
@@ -1903,41 +2004,53 @@ if(is_user_logged_in()){
 						<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-chat'); echo '>Chat</option>
 					</select>
 				</section>
-				<section class="break"><span class="right">additional settings</span></section>
-				<section><hr/></section>
-				<section>
-				<label for="MOM_Exclude_Hide_Dashboard">Hide Dash for all but admin</label>
-				<select name="MOM_Exclude_Hide_Dashboard" class="allpages" id="MOM_Exclude_Hide_Dashboard">
-				<option '; selected($MOM_Exclude_Hide_Dashboard, 1); echo 'value="1">Yes</option>
-				<option '; selected($MOM_Exclude_Hide_Dashboard, 0); echo 'value="0">No</option>
-				</select>
+
+				<hr />
+
+				<p><strong class="sectionTitle">Additional settings</strong>
+				<i class="fa fa-info">&mdash;</i> <em>Hide dash</em> hides the dash from all users except 
+				for admin. <em>No follow user</em> no follows categories hidden from nonusers. <em>User 404s</em> 
+				and <em>Visitor 404s</em> will redirect 404 errors for (logged in) and (non-logged in) visitors.</p>
+				<section class="clear">
+					<label class="left" for="MOM_Exclude_Hide_Dashboard">Hide Dash</label>
+					<select class="right" name="MOM_Exclude_Hide_Dashboard" class="allpages" id="MOM_Exclude_Hide_Dashboard">
+						<option '; selected($MOM_Exclude_Hide_Dashboard, 1); echo 'value="1">Yes</option>
+						<option '; selected($MOM_Exclude_Hide_Dashboard, 0); echo 'value="0">No</option>
+					</select>
 				</section>
-				<section>
-				<label for="MOM_Exclude_NoFollow">No Follow User Level Hidden</label>
-				<select name="MOM_Exclude_NoFollow" class="allpages" id="MOM_Exclude_NoFollow">
-				<option '; selected($MOM_Exclude_NoFollow, 1); echo 'value="1">Yes</option>
-				<option '; selected($MOM_Exclude_NoFollow, 0); echo 'value="0">No</option>
-				</select>
+				<section class="clear">
+					<label class="left" for="MOM_Exclude_NoFollow">No Follow User</label>
+					<select class="right" name="MOM_Exclude_NoFollow" class="allpages" id="MOM_Exclude_NoFollow">
+						<option '; selected($MOM_Exclude_NoFollow, 1); echo 'value="1">Yes</option>
+						<option '; selected($MOM_Exclude_NoFollow, 0); echo 'value="0">No</option>
+					</select>
 				</section>
-				<section>
-				<label for="MOM_Exclude_URL">Redirect 404s (logged in)</label>
-				<select name="MOM_Exclude_URL" class="allpages" id="MOM_Exclude_URL">
-					<option value="NULL">Off</option>
-					<option value="">Home page</option>';
-					foreach($showmepages as $pagesshown){ echo '<option name="MOM_Exclude_URL" id="mompaf_'.$pagesshown->ID.'" value="'.$pagesshown->ID.'"'; $pagesshownID = $pagesshown->ID; selected($MOM_Exclude_URL, $pagesshownID); echo '> '.$pagesshown->post_title.'</option>'; }
-					echo '
-				</select>
+				<section class="clear">
+					<label class="left" for="MOM_Exclude_URL">User 404s</label>
+					<select class="right" name="MOM_Exclude_URL" class="allpages" id="MOM_Exclude_URL">
+						<option value="NULL">Off</option>
+						<option value="">Home page</option>';
+						foreach($showmepages as $pagesshown){ echo '<option name="MOM_Exclude_URL" id="mompaf_'.$pagesshown->ID.'" value="'.$pagesshown->ID.'"'; $pagesshownID = $pagesshown->ID; selected($MOM_Exclude_URL, $pagesshownID); echo '> '.$pagesshown->post_title.'</option>'; }
+						echo '
+					</select>
 				</section>
-				<section>
-				<label for="MOM_Exclude_URL_User">Redirect 404s (logged out)</label>
-				<select name="MOM_Exclude_URL_User" class="allpages" id="MOM_Exclude_URL_User">
-					<option value="NULL">Off</option>
-					<option value=""/>Home page</option>';
-					foreach($showmepages as $pagesshownuser){ echo '<option name="MOM_Exclude_URL_User" id="mompaf_'.$pagesshownuser->ID.'" value="'.$pagesshown->ID.'"'; $pagesshownuserID = $pagesshownuser->ID; selected ($MOM_Exclude_URL_User, $pagesshownuserID); echo '> '.$pagesshownuser->post_title.'</option>';}
-					echo '
-				</select>
+				<section class="clear">
+					<label class="left" for="MOM_Exclude_URL_User">Visitor 404s</label>
+					<select class="right" name="MOM_Exclude_URL_User" class="allpages" id="MOM_Exclude_URL_User">
+						<option value="NULL">Off</option>
+						<option value=""/>Home page</option>';
+						foreach($showmepages as $pagesshownuser){ echo '<option name="MOM_Exclude_URL_User" id="mompaf_'.$pagesshownuser->ID.'" value="'.$pagesshown->ID.'"'; $pagesshownuserID = $pagesshownuser->ID; selected ($MOM_Exclude_URL_User, $pagesshownuserID); echo '> '.$pagesshownuser->post_title.'</option>';}
+						echo '
+					</select>
 				</section>
-				<input id="momsesave" type="submit" value="Save Changes" name="momsesave"></form></div></div>';
+				<input id="momsesave" type="submit" value="Save Changes" name="momsesave"></form>
+
+				<form class="clear" method="post" action="" name="momExclude">
+				<label for="mom_exclude_mode_submit"><i class="fa fa-ban"></i> Click to Deactivate Exclude module</label>
+				<input type="text" class="hidden" value="';if(get_option('mommaincontrol_momse') == 1){echo '0';}else{echo '1';}echo '" name="exclude" /><input type="submit" id="mom_exclude_mode_submit" name="mom_exclude_mode_submit" value="Submit" class="hidden" />
+				</form>';
+				
+				
 			}
 		}
 	//
@@ -2138,27 +2251,21 @@ if(get_option('MOM_Exclude_NoFollow') != 0){
 				$k = array(65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,48,49,50,51,52,53,54,55,56,57,37,38,39,40);
 				$b = array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',0,1,2,3,4,5,6,7,8,9,'left arrow','up arrow','right arrow','down arrow');
 				echo '
-				<span class="moduletitle">
-					<form method="post" action="" name="mom_jumparound_mode_submit"><label for="mom_jumparound_mode_submit">Deactivate</label><input type="text" class="hidden" value="';if(get_option('mommaincontrol_momja') == 1){echo '0';}else{echo '1';}echo '" name="jumparound" /><input type="submit" id="mom_jumparound_mode_submit" name="mom_jumparound_mode_submit" value="Submit" class="hidden" /></form>
-				</span>
-				<div class="countplus clear form">
-				<p class="clear">jump around / <em>Thanks to <a href="http://stackoverflow.com/questions/1939041/change-hash-without-reload-in-jquery">jitter</a> &amp; <a href="http://stackoverflow.com/questions/13694277/scroll-to-next-div-using-arrow-keys">mVChr</a> for the help.</em></p>
-				<p class="clear">Keyboard navigation on any area that isn\'t a single post or page view.</p>
-				<p class="clear">Example(s): <em>.div, .div a, .div h1, .div h1 a</em></p>
-				<form method="post">';
+				<strong class="sectionTitle">Jump Around Settings</strong>
+				<form  class="clear" method="post">';
 					foreach ($o as &$value){
 						$text = str_replace($o,$f,$value);
 						$label = 'jump_around_'.$value;
 						if($value <= 3){
 							echo '
-							<section><label for="'.$label.'">'.$text.'</label>
-							<input type="text" id="'.$label.'" name="'.$label.'" value="'.get_option($label).'" /></section>';
+							<section class="clear"><label class="left" for="'.$label.'">'.$text.'</label>
+							<input class="right" type="text" id="'.$label.'" name="'.$label.'" value="'.get_option($label).'" /></section>';
 						}
 						elseif($value == 4 || $value > 4){
 							if($value == 4)echo '';
 							echo '
-							<section><label for="'.$label.'">'.$text.'</label>
-							<select name="'.$label.'">';
+							<section class="clear"><label class="left" for="'.$label.'">'.$text.'</label>
+							<select class="right" name="'.$label.'">';
 								foreach($k as &$key){
 									echo '
 									<option value="'.$key.'"'; selected(get_option($label), ''.$key.''); echo '>'.str_replace($k,$b,$key).'</option>';
@@ -2168,10 +2275,17 @@ if(get_option('MOM_Exclude_NoFollow') != 0){
 						}
 					}
 				echo '	
-				
 				<input id="update_JA" type="submit" value="Save" name="update_JA">
 				</form>
-				</div>';
+				<p></p>
+				<form class="clear" method="post" action="" name="mom_jumparound_mode_submit">
+					<label for="mom_jumparound_mode_submit"><i class="fa fa-ban"></i> Click to Deactivate Jump Around module</label>
+					<input type="text" class="hidden" value="';if(get_option('mommaincontrol_momja') == 1){echo '0';}else{echo '1';}echo '" name="jumparound" /><input type="submit" id="mom_jumparound_mode_submit" name="mom_jumparound_mode_submit" value="Submit" class="hidden" />
+				</form>
+				<p><i class="fa fa-info">&mdash; </i> Keyboard navigation on any area that isn\'t a single post or page view.</p>
+				<p><i class="fa fa-code">&mdash;</i> Example(s): <em>.div, .div a, .div h1, .div h1 a</em></p>
+				<p><i class="fa fa-heart">&mdash;</i> Thanks to <a href="http://stackoverflow.com/questions/1939041/change-hash-without-reload-in-jquery">jitter</a> &amp; <a href="http://stackoverflow.com/questions/13694277/scroll-to-next-div-using-arrow-keys">mVChr</a> for the help.</em></p>
+				';
 			}
 		}
 	//
@@ -2227,6 +2341,7 @@ if(get_option('MOM_Exclude_NoFollow') != 0){
 						$wpdb->query("INSERT INTO $votesPosts (ID, UP, DOWN) VALUES ($theID,1,0)");
 					}
 					foreach($getID as $gotID){
+						$vote = '';
 						$votesTOTAL = intval($gotID->UP);
 						$getIP = $wpdb->get_results("SELECT ID,IP,VOTE FROM $votesVotes WHERE ID = '".$theID."' AND IP = '".$theIP_us32str."' LIMIT 1");
 						if(count($getIP) == 0) {

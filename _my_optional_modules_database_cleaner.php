@@ -61,10 +61,11 @@ function my_optional_modules_cleaner_module() {
 	}
 	$totalClutter    = ( $terms_count + $comments_count + $revisions_count );
 	echo '
+		
 		<section class="trash">
 			<label for="deleteAllClutter">
 				<i class="fa fa-trash-o"></i>
-				<span>All clutter</span>
+				<span>Click to clear All clutter</span>
 				<em>' . esc_attr( $totalClutter ) . '</em>
 			</label>
 			<form method="post">
@@ -74,7 +75,7 @@ function my_optional_modules_cleaner_module() {
 		<section class="trash">
 			<label for="delete_post_revisions">
 				<i class="fa fa-trash-o"></i>
-				<span>Post clutter</span>
+				<span>Click to clear Post clutter</span>
 				<em>' . esc_attr ( $revisions_count ) . '</em>
 			</label>
 			<form method="post">
@@ -84,7 +85,7 @@ function my_optional_modules_cleaner_module() {
 		<section class="trash">
 			<label for="delete_unapproved_comments">
 				<i class="fa fa-trash-o"></i>
-				<span>Comment clutter</span>
+				<span>Click to clear Comment clutter</span>
 				<em>' . esc_attr ( $comments_count ) . '</em>
 			</label>
 			<form method="post">
@@ -94,7 +95,7 @@ function my_optional_modules_cleaner_module() {
 		<section class="trash">
 			<label for="delete_unused_terms">
 				<i class="fa fa-trash-o"></i>
-				<span>Taxonomy clutter</span>
+				<span>Click to clear Taxonomy clutter</span>
 				<em>' . esc_attr ( $terms_count ) . '</em>
 			</label>
 			<form method="post">
