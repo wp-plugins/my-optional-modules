@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.5.6.2
+ * Version: 5.5.6.3
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -24,238 +24,59 @@
 define ( 'MyOptionalModules', true );
 require_once ( ABSPATH . 'wp-includes/pluggable.php' );
 $passwordField = 0;
-include   ( plugin_dir_path(__FILE__) . '_my_optional_modules_installation.php' );
-include   ( plugin_dir_path(__FILE__) . '_my_optional_modules_variables.php' );
-include   ( plugin_dir_path(__FILE__) . '_my_optional_modules_functions.php' );
 
-// User levels were deprecated - let's set our levels based on what the user can do (roles)
-if(is_user_logged_in()){
-	if ( current_user_can('edit_dashboard') ) { $user_level = 7; }
-	elseif ( current_user_can('read_private_pages') ) { $user_level = 4; }
-	elseif ( current_user_can('delete_published_posts') ) { $user_level = 2; }
-	elseif ( current_user_can('delete_posts') ) { $user_level = 1; }
-	elseif ( current_user_can('read') ) { $user_level = 0; }
-}
+	// User Role Checking
+	$user_level = 0;
+	if( is_user_logged_in() && current_user_can('read') ) { $user_level = 0; }
+	if( is_user_logged_in() && current_user_can('delete_posts') ) { $user_level = 1; }
+	if( is_user_logged_in() && current_user_can('delete_published_posts') ) { $user_level = 2; }
+	if( is_user_logged_in() && current_user_can('read_private_pages') ) { $user_level = 4; }
+	if( is_user_logged_in() && current_user_can('edit_dashboard') ) { $user_level = 7; }
 
-	// (B) (3) Plugin form handling
-		if(current_user_can('manage_options')){
-			global $wpdb;
-			$votesPosts = $wpdb->prefix.'momvotes_posts';
-			$votesVotes = $wpdb->prefix.'momvotes_votes';
-			$RUPs_table_name = $wpdb->prefix.'rotating_universal_passwords';
-			$review_table_name = $wpdb->prefix.'momreviews';
-			$verification_table_name = $wpdb->prefix.'momverification';
-			if(isset($_POST['MOM_UNINSTALL_EVERYTHING'])){
-				add_option('mommaincontrol_passwords_activated',1);					
-				add_option('mommaincontrol_reviews_activated',1);
-				add_option('mommaincontrol_shorts_activated',1);
-				add_option('mommaincontrol_votes_activated',1);
-				if(get_option('mommaincontrol_votes_activated') == 0){$wpdb->query("DROP TABLE ".$votesPosts."");$wpdb->query("DROP TABLE ".$votesVotes."");}
-				if(get_option('mommaincontrol_passwords_activated') == 0){$wpdb->query("DROP TABLE ".$RUPs_table_name."");}
-				if(get_option('mommaincontrol_reviews_activated') == 0){$wpdb->query("DROP TABLE ".$review_table_name."");}
-				if(get_option('mommaincontrol_shorts_activated') == 0){$wpdb->query("DROP TABLE ".$verification_table_name."");}
-				$option = array('MOM_themetakeover_horizontal_galleries','MOM_themetakeover_horizontal_galleries','mommaincontrol_prettycanon','mommaincontrol_fixcanon','mommaincontrol_votes_activated','mommaincontrol_protectrss','MOM_themetakeover_extend','MOM_themetakeover_backgroundimage',
-				'MOM_themetakeover_topbar_search','MOM_themetakeover_topbar_share','MOM_themetakeover_topbar_color','mommaincontrol_footerscripts','mommaincontrol_authorarchives','mommaincontrol_datearchives','MOM_themetakeover_wowhead',
-				'mom_passwords_salt','mommaincontrol_obwcountplus','mommaincontrol_momrups','mommaincontrol_momse','mommaincontrol_mompaf','mommaincontrol_momja','mommaincontrol_shorts','mommaincontrol_reviews',
-				'mommaincontrol_fontawesome','mommaincontrol_versionnumbers','mommaincontrol_lazyload','mommaincontrol_meta','mommaincontrol_focus','mommaincontrol_maintenance','mommaincontrol_themetakeover','mommaincontrol_setfocus',
-				'mommaincontrol','mompaf_post','obwcountplus_1_countdownfrom','obwcountplus_2_remaining','obwcountplus_3_total','obwcountplus_4_custom','rotating_universal_passwords_1','rotating_universal_passwords_2','rotating_universal_passwords_3',
-				'rotating_universal_passwords_4','rotating_universal_passwords_5','rotating_universal_passwords_6','rotating_universal_passwords_7','rotating_universal_passwords_8','MOM_Exclude_VisitorCategories','MOM_Exclude_VisitorTags',
-				'MOM_Exclude_Categories_Front','MOM_Exclude_Categories_TagArchives','MOM_Exclude_Categories_SearchResults','MOM_Exclude_Tags_Front','MOM_Exclude_Tags_CategoryArchives','MOM_Exclude_Tags_SearchResults','MOM_Exclude_PostFormats_Front',
-				'MOM_Exclude_PostFormats_CategoryArchives','MOM_Exclude_PostFormats_TagArchives','MOM_Exclude_PostFormats_SearchResults','MOM_Exclude_Categories_RSS','MOM_Exclude_Tags_RSS','MOM_Exclude_PostFormats_RSS','MOM_Exclude_TagsSun',
-				'MOM_Exclude_TagsMon','MOM_Exclude_TagsTue','MOM_Exclude_TagsWed','MOM_Exclude_TagsThu','MOM_Exclude_TagsFri','MOM_Exclude_TagsSat','MOM_Exclude_CategoriesSun','MOM_Exclude_CategoriesMon','MOM_Exclude_CategoriesTue','MOM_Exclude_CategoriesWed',
-				'MOM_Exclude_CategoriesThu','MOM_Exclude_CategoriesFri','MOM_Exclude_CategoriesSat','MOM_Exclude_level0Categories','MOM_Exclude_level1Categories','MOM_Exclude_level2Categories','MOM_Exclude_level7Categories','MOM_Exclude_level0Tags',
-				'MOM_Exclude_level1Tags','MOM_Exclude_level2Tags','MOM_Exclude_level7Tags','MOM_Exclude_URL','MOM_Exclude_URL_User','MOM_Exclude_PostFormats_Visitor','MOM_Exclude_NoFollow','simple_announcement_with_exclusion_cat_visitor',
-				'simple_announcement_with_exclusion_tag_visitor','mommaincontrol_passwords_activated','MOM_themetakeover_youtubefrontpage','MOM_themetakeover_topbar','MOM_themetakeover_archivepage','MOM_themetakeover_fitvids','MOM_themetakeover_postdiv',
-				'MOM_themetakeover_postelement','MOM_themetakeover_posttoggle','mommaincontrol_shorts_activated','jump_around_0','jump_around_1','jump_around_2','jump_around_3','jump_around_4','jump_around_5','jump_around_6','jump_around_7',
-				'jump_around_8','mommaincontrol_reviews_activated','momanalytics_code','momreviews_css','momreviews_search','momMaintenance_url','mommaincontrol_votes');
-				foreach ($option as &$value){
-					delete_option($value);
-				}
-			}else{	
-				if(isset($_POST['MOMsave'])){}
-				if(isset($_POST['mom_prettycanon_mode_submit']))update_option('mommaincontrol_prettycanon',$_REQUEST['prettycanon']);
-				if(isset($_POST['mom_fixcanon_mode_submit']))update_option('mommaincontrol_fixcanon',$_REQUEST['fixcanon']);
-				if(isset($_POST['mom_themetakeover_mode_submit']))update_option('mommaincontrol_themetakeover',$_REQUEST['themetakeover']);
-				if(isset($_POST['mom_protectrss_mode_submit']))update_option('mommaincontrol_protectrss',$_REQUEST['protectrss']);
-				if(isset($_POST['mom_footerscripts_mode_submit']))update_option('mommaincontrol_footerscripts',$_REQUEST['footerscripts']);
-				if(isset($_POST['mom_author_archives_mode_submit']))update_option('mommaincontrol_authorarchives',$_REQUEST['authorarchives']);
-				if(isset($_POST['mom_date_archives_mode_submit']))update_option('mommaincontrol_datearchives',$_REQUEST['datearchives']);
-				if(isset($_POST['mom_votes_mode_submit']))update_option('mommaincontrol_votes',$_REQUEST['votes']);
-				if(isset($_POST['mom_exclude_mode_submit']))update_option('mommaincontrol_momse',$_REQUEST['exclude']);
-				if(isset($_POST['mom_passwords_mode_submit']))update_option('mommaincontrol_momrups',$_REQUEST['passwords']);
-				if(isset($_POST['mom_reviews_mode_submit']))update_option('mommaincontrol_reviews',$_REQUEST['reviews']);
-				if(isset($_POST['mom_shortcodes_mode_submit']))update_option('mommaincontrol_shorts',$_REQUEST['shortcodes']);
-				if(isset($_POST['MOMclear']))update_option('mommaincontrol_focus','');
-				if(isset($_POST['MOMthemetakeover']))update_option('mommaincontrol_focus','themetakeover');
-				if(isset($_POST['MOMexclude']))update_option('mommaincontrol_focus','exclude');
-				if(isset($_POST['MOMfontfa']))update_option('mommaincontrol_focus','fontfa');
-				if(isset($_POST['MOMcount']))update_option('mommaincontrol_focus','count');
-				if(isset($_POST['MOMjumparound']))update_option('mommaincontrol_focus','jumparound');
-				if(isset($_POST['MOMpasswords']))update_option('mommaincontrol_focus','passwords');
-				if(isset($_POST['MOMreviews']))update_option('mommaincontrol_focus','reviews');
-				if(isset($_POST['MOMshortcodes']))update_option('mommaincontrol_focus','shortcodes');
-				if(isset($_POST['mom_fontawesome_mode_submit']))update_option('mommaincontrol_fontawesome',$_REQUEST['mommaincontrol_fontawesome']);
-				if(isset($_POST['mom_lazy_mode_submit']))update_option('mommaincontrol_lazyload',$_REQUEST['mommaincontrol_lazyload']);
-				if(isset($_POST['mom_versions_submit']))update_option('mommaincontrol_versionnumbers',$_REQUEST['mommaincontrol_versionnumbers']);
-				if(isset($_POST['mom_meta_mode_submit']))update_option('mommaincontrol_meta',$_REQUEST['mommaincontrol_meta']);
-				if(isset($_POST['mom_maintenance_mode_submit']))update_option('mommaincontrol_maintenance',$_REQUEST['maintenanceMode']);
-				if(!get_option('mommaincontrol_mompaf'))add_option('mompaf_post','off');
-				if(isset($_POST['mom_maintenance_mode_submit']))add_option('momMaintenance_url','');
-				if(isset($_POST['mom_postasfront_post_submit'])){
-					update_option('momMaintenance_url',$_REQUEST['momMaintenance_url']);
-					update_option('momanalytics_code',$_REQUEST['momanalytics_code']);
-					update_option('mompaf_post',$_REQUEST['mompaf_post']);
-				}
-				if(isset($_POST['mom_count_mode_submit'])){
-					update_option('mommaincontrol_obwcountplus',$_REQUEST['countplus']);
-					add_option('obwcountplus_1_countdownfrom',0);
-					add_option('obwcountplus_2_remaining','remaining');
-					add_option('obwcountplus_3_total','total');
-				}
-				if(isset($_POST['mom_jumparound_mode_submit'])){
-					update_option('mommaincontrol_momja',$_REQUEST['jumparound']);
-					add_option('jump_around_0','.post');
-					add_option('jump_around_1','.entry-title');
-					add_option('jump_around_2','.previous-link');
-					add_option('jump_around_3','.next-link');
-					add_option('jump_around_4',65);
-					add_option('jump_around_5',83);
-					add_option('jump_around_6',68);
-					add_option('jump_around_7',90);
-					add_option('jump_around_8',88);
-				}
-				
-				
-				if(isset($_POST['mom_votes_mode_submit'])){
-					add_option('mommaincontrol_votes_activated',1);					
-					if(get_option('mommaincontrol_votes_activated') == 1){
-						$votesSQLa = "CREATE TABLE $votesVotes(
-							ID INT(11) NOT NULL AUTO_INCREMENT , 
-							IP INT(11) NOT NULL,
-							VOTE INT(11) NOT NULL,
-							PRIMARY KEY  (ID)
-						);";
-						$votesSQLb = "CREATE TABLE $votesPosts(
-							ID INT(11) NOT NULL AUTO_INCREMENT , 
-							UP INT(11) NOT NULL,
-							DOWN BIGINT(11) NOT NULL,
-							PRIMARY KEY  (ID)
-						);";
-						require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-						dbDelta($votesSQLa);	
-						dbDelta($votesSQLb);	
-						update_option('mommaincontrol_votes_activated',0);
-					}
-				}
-				
-				if(isset($_POST['mom_passwords_mode_submit'])){
-					add_option('rotating_universal_passwords_1','');
-					add_option('rotating_universal_passwords_2','');
-					add_option('rotating_universal_passwords_3','');
-					add_option('rotating_universal_passwords_4','');
-					add_option('rotating_universal_passwords_5','');
-					add_option('rotating_universal_passwords_6','');
-					add_option('rotating_universal_passwords_7','');
-					add_option('rotating_universal_passwords_8','7');
-					add_option('mommaincontrol_passwords_activated',1);					
-					if(get_option('mommaincontrol_passwords_activated') == 1){
-						$RUPs_sql = "CREATE TABLE $RUPs_table_name(
-							ID INT(11) NOT NULL AUTO_INCREMENT , 
-							DATE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-							URL TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
-							ATTEMPTS INT(11) NOT NULL, 
-							IP INT(11) NOT NULL,
-							PRIMARY KEY  (ID)
-						);";
-						require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-						dbDelta($RUPs_sql);	
-						update_option('mommaincontrol_passwords_activated',0);
-					}
-				}
-				add_option('mompaf_post','off');
-				if(isset($_POST['mom_reviews_mode_submit'])){
-					add_option('mommaincontrol_reviews_activated',1);
-					add_option('momreviews_search','');
-					if(get_option('mommaincontrol_reviews_activated') == 1){
-						global $wpdb;
-						$review_table_name = $wpdb->prefix.'momreviews';
-						$reviews_sql = "CREATE TABLE $review_table_name (
-							ID INT(11) NOT NULL AUTO_INCREMENT,
-							TYPE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-							LINK TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-							TITLE TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-							REVIEW TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-							RATING TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-							PRIMARY KEY  (ID)
-						);";
-						require_once(ABSPATH.'wp-admin/includes/upgrade.php');
-						dbDelta($reviews_sql);
-						update_option('mommaincontrol_reviews_activated',0);
-					}
-				}
-				if(isset($_POST['mom_shortcodes_mode_submit'])){
-					add_option('mommaincontrol_shorts_activated',1);
-					if(get_option('mommaincontrol_shorts_activated') == 1){
-						global $wpdb;
-						$verification_table_name = $wpdb->prefix.'momverification';
-						$verification_sql = "CREATE TABLE $verification_table_name(
-							ID INT(11) NOT NULL AUTO_INCREMENT,
-							POST INT(11) NOT NULL, 
-							CORRECT INT(11) NOT NULL, 
-							IP INT(11) NOT NULL,
-							PRIMARY KEY  (ID)
-						);";
-						require_once(ABSPATH.'wp-admin/includes/upgrade.php');
-						dbDelta($verification_sql);
-						update_option('mommaincontrol_shorts_activated',0);
+	// IP Validation
+	// Check if the connecting IP address is a valid one
+	if( inet_pton( $_SERVER['REMOTE_ADDR'] ) === false ) {
+		$ipaddress = false;
+	}
+	if( inet_pton( $_SERVER['REMOTE_ADDR'] ) !== false ) {
+		$ipaddress = esc_attr( $_SERVER[ 'REMOTE_ADDR' ] );
+	}
+	// If the IP is valid, check it against the DNSBL
+	if( !function_exists ( 'myoptionalmodules_checkdnsbl' ) ) {
+		function myoptionalmodules_checkdnsbl($ipaddress){
+			$dnsbl_lookup=array(
+				'dnsbl-1.uceprotect.net',
+				'dnsbl-2.uceprotect.net',
+				'dnsbl-3.uceprotect.net',
+				'dnsbl.sorbs.net',
+				'zen.spamhaus.org',
+				'dnsbl-2.uceprotect.net',
+				'dnsbl-3.uceprotect.net'
+				);
+			if( $ipaddress ) {
+				$reverse_ip=implode(".",array_reverse(explode(".",$ipaddress)));
+				foreach($dnsbl_lookup as $host){
+					if(checkdnsrr($reverse_ip.".".$host.".","A")){
+						$listed.=$reverse_ip.'.'.$host;
 					}
 				}
 			}
-			if(isset($_POST['reset_rups'])){
-				delete_option('rotating_universal_passwords_1');delete_option('rotating_universal_passwords_2');delete_option('rotating_universal_passwords_3');delete_option('rotating_universal_passwords_4');delete_option('rotating_universal_passwords_5');delete_option('rotating_universal_passwords_6');delete_option('rotating_universal_passwords_7');	
-				add_option('rotating_universal_passwords_1','');add_option('rotating_universal_passwords_2','');add_option('rotating_universal_passwords_3','');add_option('rotating_universal_passwords_4','');add_option('rotating_universal_passwords_5','');add_option('rotating_universal_passwords_6','');add_option('rotating_universal_passwords_7','');	
-			}
-			if(isset($_POST['passwordsSave'])){
-				global $my_optional_modules_passwords_salt;
-				foreach($_REQUEST as $k => $v){
-					if($v != '')update_option($k,wp_hash($v));
-				}
-				update_option('rotating_universal_passwords_8',$_REQUEST['rotating_universal_passwords_8']);
-			}	
-			if(isset($_POST['momsesave'])){
-				foreach($_REQUEST as $k => $v){
-					update_option($k,$v);
-				}	
-				update_option('MOM_Exclude_PostFormats_Visitor',sanitize_text_field($_REQUEST['MOM_Exclude_PostFormats_Visitor']));
-				update_option('MOM_Exclude_PostFormats_RSS',sanitize_text_field($_REQUEST['MOM_Exclude_PostFormats_RSS']));
-				update_option('MOM_Exclude_PostFormats_Front',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_Front'])));
-				update_option('MOM_Exclude_PostFormats_CategoryArchives',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_CategoryArchives'])));
-				update_option('MOM_Exclude_PostFormats_TagArchives',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_TagArchives'])));
-				update_option('MOM_Exclude_PostFormats_SearchResults',sanitize_text_field(($_REQUEST['MOM_Exclude_PostFormats_SearchResults'])));
-				update_option('MOM_Exclude_URL',$_REQUEST['MOM_Exclude_URL']);
-				update_option('MOM_Exclude_URL_User',$_REQUEST['MOM_Exclude_URL_User']);
-				update_option('MOM_Exclude_NoFollow',$_REQUEST['MOM_Exclude_NoFollow']);
-				update_option('MOM_Exclude_Hide_Dashboard',$_REQUEST['MOM_Exclude_Hide_Dashboard']);
-			}	
-			if(isset($_POST['obwcountsave']) || isset($_POST['momthemetakeoversave']) || isset($_POST['update_JA'])){
-				foreach($_REQUEST as $k => $v){
-					update_option($k,$v);
-				}	
+			if( $listed ) {
+				$DNSBL === true;
+			} else {
+				$DNSBL === false;
 			}
 		}
-	//
-
+	}	
 	
+	include( plugin_dir_path(__FILE__) . '_my_optional_modules_installation.php' );
+	include( plugin_dir_path(__FILE__) . '_my_optional_modules_variables.php' );
+	include( plugin_dir_path(__FILE__) . '_my_optional_modules_functions.php' );
+	include( plugin_dir_path(__FILE__) . '_my_optional_modules_forms.php' );
+	include( plugin_dir_path(__FILE__) . '_my_optional_modules_settings.php' );
+	include( plugin_dir_path(__FILE__) . '_my_optional_modules_shortcodes.php' );
 	
-	
-	
-	include   ( plugin_dir_path(__FILE__) . '_my_optional_modules_settings.php' );
-	include   ( plugin_dir_path(__FILE__) . '/includes/modules/_my_optional_modules_passwords.php' );
-
-
-
-
-
+	include( plugin_dir_path(__FILE__) . '/includes/modules/_my_optional_modules_passwords.php' );
 
 	// (E) Reviews (settings page)
 		if(current_user_can('manage_options')){
@@ -432,72 +253,6 @@ if(is_user_logged_in()){
 		}
 	//
 	
-	
-	
-	
-	// (E) (1) Reviews (shortcode)
-		$mom_review_global = 0;
-		function mom_reviews_shortcode($atts, $content = null){
-			global $mom_review_global;
-			$mom_review_global++;
-			ob_start();
-			extract(
-				shortcode_atts(array(
-					'type'	=> '',
-					'orderby' => 'ID',
-					'order' => 'ASC',
-					'meta' => 1,
-					'expand' => '+',
-					'retract' => '-',
-					'id' => '',
-					'open' => 0
-				), $atts)
-			);	
-			if( $id ) {
-				$id_fetch_att = esc_sql($id);
-			} else {
-				$id_fetch = $id_fetch_att = '';
-			}
-			if(is_numeric($id_fetch_att)){$id_fetch = $id_fetch_att;}
-			$order_by     = esc_sql($orderby);
-			$order_dir    = esc_sql($order);
-			$result_type  = myoptionalmodules_sanistripents($type);
-			$meta_show    = myoptionalmodules_sanistripents($meta);
-			$expand_this  = myoptionalmodules_sanistripents($expand);
-			$retract_this = myoptionalmodules_sanistripents($retract);
-			$is_open      = myoptionalmodules_sanistripents($open);
-			global $wpdb;
-			$mom_reviews_table_name = $wpdb->prefix.'momreviews';
-			if($id_fetch != ''){
-				$reviews = $wpdb->get_results("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE ID IN ($id_fetch) ORDER BY $order_by $order_dir");
-			}else{
-				if($result_type != ''){
-					$reviews = $wpdb->get_results("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name WHERE TYPE IN ($result_type) ORDER BY $order_by $order_dir");
-				}else{
-					$reviews = $wpdb->get_results("SELECT ID,TYPE,LINK,TITLE,REVIEW,RATING FROM $mom_reviews_table_name ORDER BY $order_by $order_dir");
-				}
-			}
-			foreach($reviews as $reviews_results){
-				if($reviews_results->RATING == '.5') $reviews_results->RATING = '<i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
-				if($reviews_results->RATING == '1') $reviews_results->RATING = '<i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
-				if($reviews_results->RATING == '2') $reviews_results->RATING = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
-				if($reviews_results->RATING == '3') $reviews_results->RATING = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
-				if($reviews_results->RATING == '4') $reviews_results->RATING = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i>';
-				if($reviews_results->RATING == '5') $reviews_results->RATING = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i>';
-				if($reviews_results->RATING == '1.5') $reviews_results->RATING = '<i class="fa fa-star"></i><i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
-				if($reviews_results->RATING == '2.5') $reviews_results->RATING = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i>';
-				if($reviews_results->RATING == '3.5') $reviews_results->RATING = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i>';
-				if($reviews_results->RATING == '4.5') $reviews_results->RATING = '<i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i>';
-				if($reviews_results->REVIEW != ''){$this_ID = $reviews_results->ID;echo '<div ';if($result_type != ''){echo 'id="'.esc_attr($result_type).'"';}echo ' class="momreview"><article class="block"><input type="checkbox" name="review" id="'.$this_ID.''.$mom_review_global.'" ';if($is_open == 1){echo ' checked';}echo '/><label for="'.$this_ID.''.$mom_review_global.'">';if($reviews_results->TITLE != ''){echo $reviews_results->TITLE;}echo '<span>'.$expand_this.'</span><span>'.$retract_this.'</span></label><section class="reviewed">';if($meta_show == 1){if($reviews_results->TYPE != ''){echo ' [ <em>'.$reviews_results->TYPE.'</em> ] ';}if($reviews_results->LINK != ''){echo ' [ <a href="'.esc_url($reviews_results->LINK).'">#</a> ] ';}}echo '<hr />'.$reviews_results->REVIEW;if($reviews_results->RATING != ''){echo ' <p>'.$reviews_results->RATING.'</p> ';}echo '</section></article></div>';}
-				elseif($reviews_results->REVIEW == ''){$this_ID = $reviews_results->ID;echo '<div ';if($result_type != ''){echo 'id="'.esc_attr($result_type).'"';}echo ' class="momreview"><article class="block"><input type="checkbox" name="review" id="'.$this_ID.''.$mom_review_global.'" ';if($is_open == 1){echo ' checked';}echo '/><label>';if($reviews_results->TITLE != ''){if($reviews_results->LINK != ''){echo '<a href="'.esc_url($reviews_results->LINK).'">';}echo $reviews_results->TITLE;if($reviews_results->LINK != ''){echo '</a>';}}echo '<span>'.$reviews_results->RATING.'</span><span></span></label></article></div>';}
-			}
-			return ob_get_clean();
-		}
-	//
-
-
-
-
 	/****************************** SECTION F -/- (F0) Settings -/- Shortcodes */
 		if(current_user_can('manage_options')){
 			function my_optional_modules_shortcodes_module(){
@@ -639,360 +394,6 @@ if(is_user_logged_in()){
 			}
 		}
 	//
-
-
-
-
-	/****************************** SECTION F -/- (F1) Functions -/- Shortcodes */
-		function mom_onthisday_template(){
-			$current_day   = date('d');
-			$current_month = date('m');
-			if(is_category()){
-				$category_current = get_the_category();
-				$category = $category_current[0]->cat_ID;	
-			}
-			if(is_tag()){
-				$tagged = get_query_var('tag');
-				$tag = esc_attr($tagged);
-			}	
-			wp_reset_query();
-			if(is_category()){query_posts( "cat=$category&monthnum=$current_month&day=$current_day&posts_per_page=-1" );}
-			elseif(is_tag()){query_posts( "tag=$tag&monthnum=$current_month&day=$current_day&posts_per_page=-1" );}
-			else{query_posts( "monthnum=$current_month&day=$current_day&posts_per_page=-1" );}
-			$posts = 0;
-			while(have_posts()):the_post();
-			$posts++;
-			if($posts == 1){echo '<div id="mom_onthisday"><span class="onthisday">on this day</span>';}
-			if($posts > 0){
-				$postid = get_the_id();
-				echo '<section class="mom_onthisday"><a href="';the_permalink();echo'">';echo '<div class="mom_onthisday">';echo '<span class="title">';the_title();echo '</span><span class="theyear">';the_date('Y'); echo'</span>';echo '</div></a></section>';
-			}
-				endwhile;
-			if($posts == 0){
-				$posts++;
-				if($posts == 1){echo '<div id="mom_onthisday"><span class="onthisday">5 random posts</span>';}
-				query_posts( "orderby=rand&posts_per_page=5&ignore_sticky_posts=1" );
-				while(have_posts()):the_post();
-				$postid = get_the_id();
-				echo '<section class="mom_onthisday"><a href="';the_permalink();echo'">';echo '<div class="mom_onthisday">';echo '<span class="title">';the_title();echo '</span><span class="theyear">';the_date('Y'); echo'</span>';echo '</div></a></section>';
-				endwhile;
-			}
-			echo '</div>';
-			wp_reset_query();
-		}
-		function mom_onthisday($atts,$content = null){
-			extract(
-				shortcode_atts(array(
-					'amount' => '-1',
-					'title' => 'On this day',
-					'cat' => ''
-				), $atts)
-			);
-			global $post;
-			$postid = $post->ID;
-			if($cat == 'current'){
-				$category_current = get_the_category($postid);
-				$category = $category_current[0]->cat_ID;
-			}else{
-				$category = esc_attr($cat);
-			}
-			$onthisday = esc_attr($title);
-			$postid = get_the_ID();
-			$current_day = date('d');
-			$current_month = date('m');
-			$postsperpage = esc_attr($amount);
-			query_posts( "cat=$category&monthnum=$current_month&day=$current_day&post_per_page=$postsperpage" );
-			ob_start();
-			$posts = 0;
-			while(have_posts()):the_post();
-			$posts++;
-			if($posts == 1){echo '<div id="mom_onthisday"><span class="onthisday">on this day</span>';}
-			if($posts > 0){
-				$postid = get_the_id();
-				echo '<section class="mom_onthisday"><a href="';the_permalink();echo'">';echo get_the_post_thumbnail($postid, 'thumbnail', array('class' => 'mom_thumb'));echo '<div class="mom_onthisday">';echo '<span class="title">';the_title();echo '</span><span class="theyear">';the_date('Y'); echo'</span>';echo '</div></a></section>';
-			}
-				endwhile;
-			if($posts == 0){
-				$posts++;
-				if($posts == 1){echo '<div id="mom_onthisday"><span class="onthisday">5 random posts</span>';}
-				query_posts( "orderby=rand&post_per_page=5&ignore_sticky_posts=1" );
-				while(have_posts()):the_post();
-				$postid = get_the_id();
-				echo '<section class="mom_onthisday"><a href="';the_permalink();echo'">';echo get_the_post_thumbnail($postid, 'thumbnail', array('class' => 'mom_thumb'));echo '<div class="mom_onthisday">';echo '<span class="title">';the_title();echo '</span><span class="theyear">';the_date('Y'); echo'</span>';echo '</div></a></section>';
-				endwhile;
-			}
-			echo '</div>';
-			wp_reset_query();
-			return ob_get_clean();
-		}
-		function mom_archives($atts,$content = null){
-			if(!is_user_logged_in()){
-				$nofollowCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');
-			}
-			if(is_user_logged_in()){
-				if($user_level == 0){$loggedOutCats = get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
-				if($user_level <= 1){$loggedOutCats = get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
-				if($user_level <= 2){$loggedOutCats = get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
-				if($user_level <= 7){$loggedOutCats = get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
-			}
-			$c1 = explode(',',$nofollowCats);
-			foreach($c1 as &$C1){$C1 = ''.$C1.',';}
-			$c_1 = rtrim(implode($c1),',');
-			$c11 = explode(',',str_replace(' ','',$c_1));
-			$c11array = array($c11);
-			$nofollowcats = $c11;
-			$category_ids = get_all_category_ids();
-			ob_start();
-			echo '<div class="momlistcategories">';foreach($category_ids as $cat_id){if(in_array($cat_id, $nofollowcats)) continue;$cat = get_category($cat_id);$link = get_category_link($cat_id);echo '<div><a href="'.esc_url($link).'" title="link to '.esc_attr($cat->name).'">'.esc_attr($cat->name).'</a><span>'.esc_attr($cat->count).'</span><section>'.esc_attr($cat->description);$args = array('numberposts'=>'1','category'=>$cat_id);$latestpost = wp_get_recent_posts($args);foreach($latestpost as $latest){echo '<article><em><a href="'.esc_url(get_permalink($latest["ID"])).'" title="'.esc_attr($latest["post_title"]).'" >'.esc_attr($latest["post_title"]).'</a></em></article>';}echo '</section></div>';}echo '</div>';
-			return ob_get_clean();
-		}
-		$momverifier_verification_step = 0;
-		function mom_google_map_shortcode($atts, $content = null){
-			ob_start();
-			extract(
-				shortcode_atts(array(
-					'width' => '100%',
-					'height' => '350px',
-					'frameborder' => '0',
-					'align' => 'center',
-					'address' => '',
-					'info_window' => 'A',
-					'zoom' => '14',
-					'companycode' => ''
-				), $atts)
-			);
-			$mgms_output = 'q='.urlencode($address).'&amp;cid='.urlencode($companycode);
-			echo '
-			<div class="mom_map">
-				<iframe align="'.esc_attr($align).'" width="'.esc_attr($width).'" height="'.esc_attr($height).'" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?&amp;'.htmlentities($mgms_output).'&amp;output=embed&amp;z='.esc_attr($zoom).'&amp;iwloc='.esc_attr($info_window).'&amp;visual_refresh=true"></iframe>
-			</div>
-			';
-			return ob_get_clean();
-		}
-		function mom_reddit_shortcode($atts, $content = null){
-			global $wpdb, $id, $post_title;
-			$query = "SELECT post_title FROM $wpdb->posts WHERE post_status = 'publish' AND ID = '$id'";
-			$reddit = $wpdb->get_results($query);
-			if($reddit){
-				foreach($reddit as $reddit_info){
-					$post_title = strip_tags($reddit_info->post_title);
-				}
-			extract(
-				shortcode_atts(array(
-					'url' => '' . $get_permalink . '',
-					'target' => '',
-					'title' => '' . $post_title . '',
-					'bgcolor' => '',
-					'border' => ''
-				), $atts)
-			);
-			ob_start();
-			echo '
-			<div class="mom_reddit">
-			<script type="text/javascript">
-				reddit_url = "'.esc_url($url).'";
-				reddit_target = "'.esc_attr($target).'";
-				reddit_title = "'.esc_attr($title).'";
-				reddit_bgcolor = "'.esc_attr($bgcolor).'";
-				reddit_bordercolor = "'.esc_attr($border).'";
-			</script>
-			<script type="text/javascript" src="http://www.reddit.com/static/button/button3.js"></script>
-			</div>';
-			return ob_get_clean();
-			}
-		}
-		function mom_restrict_shortcode($atts, $content = null){
-			extract(
-				shortcode_atts(array(
-					'message' => 'You must be logged in to view this content.',
-					'comments' => '',
-					'form' => ''
-				), $atts)
-			);
-			ob_start();
-			if(is_user_logged_in()){return $content;}else{
-				echo '<div class="mom_restrict">'.htmlentities($message).'</div>';
-				if($comments == '1'){
-					add_filter('comments_template','restricted_comments_view');
-					function restricted_comments_view($comment_template){
-						return dirname(__FILE__).'/includes/templates/comments.php';
-					}
-				}
-				if($comments == '2'){
-					add_filter('comments_open','restricted_comments_form',10,2);
-					function restricted_comments_form($open,$post_id){
-						$post = get_post($post_id);
-						$open = false;
-						return $open;
-					}	
-				}
-			}		
-			return ob_get_clean();
-		}
-		function mom_progress_shortcode($atts,$content = null){
-			extract(
-				shortcode_atts(array(
-					'align' => 'none',
-					'fillcolor' => '#ccc',
-					'maincolor' => '#000',
-					'height' => '15',
-					'fontsize' => '15',
-					'level' => '',
-					'margin' => '0 auto',
-					'talign' => 'center',
-					'width' => '95'
-				), $atts)
-			);
-			$align_fetch = sanitize_text_field($align);
-			$fillcolor_fetch = sanitize_text_field($fillcolor);
-			$height_fetch = sanitize_text_field($height);
-			$level_fetch = sanitize_text_field($level);
-			$maincolor_fetch = sanitize_text_field($maincolor);
-			$margin_fetch = sanitize_text_field($margin);
-			$width_fetch = sanitize_text_field($width);
-			ob_start();
-			if($align_fetch == 'left'){$align_fetch_final = 'float: left';}
-			elseif($align_fetch == 'right'){$align_fetch_final = 'float: right';}
-			else {$align_fetch_final = 'clear: both';}
-			echo '<div class="mom_progress" style="'.$align_fetch_final.';height:'.$height_fetch.'px;display:block;width:'.$width_fetch.'%;margin:'.$margin_fetch.';background-color:'.$maincolor_fetch.'"><div style="display:block;height:'.$height_fetch.'px;width:'.$level_fetch.'%;background-color:'.$fillcolor_fetch.';"></div></div>';
-			return ob_get_clean();
-		}
-		function mom_verify_shortcode($atts,$content = null){
-			global $post;
-				global $ipaddress;
-				if($ipaddress !== false){
-				$ipaddress = ip2long($ipaddress);
-				if(is_numeric($ipaddress)){
-					$theIP = $ipaddress;}else{
-					$theIP = 0;
-				}
-				ob_start();
-				extract(
-					shortcode_atts(array(
-						"age" => '',
-						"answer" => '',
-						"logged" => 1,
-						"message" => 'Please verify your age by typing it here',
-						"fail" => 'You are not able to view this content at this time.',
-						"logging" => 0,
-						"background" => 'transparent',
-						"stats" => '',
-						"single" => 0,
-						"cmessage" => 'Correct',
-						"imessage" => 'Incorrect',
-						"deactivate" => 0
-					), $atts)
-				);
-				global $momverifier_verification_step;
-				$momverifier_verification_step++;
-				$thePostId = $post->ID;
-				$theBackground = esc_sql(myoptionalmodules_sanistripents($background));
-				$theAge = esc_sql(myoptionalmodules_sanistripents($age));
-				$isLogged = esc_sql(myoptionalmodules_sanistripents($logged));
-				$theMessage = esc_sql(myoptionalmodules_sanistripents($message));
-				$theAnswer = esc_sql(myoptionalmodules_sanistripents($answer));
-				$failMessage = $fail;
-				$isLogged = esc_sql(myoptionalmodules_sanistripents($logged));
-				$isLogging = esc_sql(myoptionalmodules_sanistripents($logging));
-				$attempts = esc_sql(myoptionalmodules_sanistripents($single));
-				$correctResultMessage = esc_sql(myoptionalmodules_sanistripents($cmessage));
-				$incorrectResultMessage = esc_sql(myoptionalmodules_sanistripents($imessage));
-				$isDeactivated = esc_sql(myoptionalmodules_sanistripents($deactivate));
-				$verificationID = $momverifier_verification_step.''.$thePostId;
-				$statsMessage = esc_sql(myoptionalmodules_sanistripents($stats));
-				$alreadyAttempted = 0;
-				if(is_numeric($attempts) && $attempts == 1){
-					global $wpdb;
-					$verification_table_name = $wpdb->prefix.'momverification';
-					$getNumberofAttempts = $wpdb->get_results("SELECT IP,POST,CORRECT FROM $verification_table_name WHERE IP = '".$theIP."' AND POST = '" . $verificationID . "'");	
-					$alreadyAttempted = count($getNumberofAttempts);
-					foreach($getNumberofAttempts as $numberofattempts){
-						$isCorrect = $numberofattempts->CORRECT;
-					}
-				}
-				if(is_numeric($isLogged) && $isLogged == 0 && is_user_logged_in()){
-					$isCorrect = 1;
-				} elseif(is_numeric($isLogged) && $isLogged == 1){		
-					if($alreadyAttempted != 1){
-						if(!$_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.''] != '' && $isDeactivated != 1){
-						return '
-						<blockquote style="display:block;clear:both;margin:5px auto 5px auto;padding:5px;font-size:25px;">
-						<p>'.$theMessage.'</p>
-						<form style="clear:both;display:block;padding:5px;margin:0 auto 5px auto;width:98%;overflow:hidden;border-radius:3px;background-color:#'.$theBackground.';" class="momAgeVerification" method="post" action="'.esc_url(get_permalink()).'">
-							<input style="clear:both;font-size:25px;width:99%;margin:0 auto;" type="text" name="ageVerification'.esc_attr($momverifier_verification_step).esc_attr($thePostId).'">
-							<input style="clear:both;font-size:20px;width:100%;margin:0 auto;" type="submit" name="submit" class="submit clear" value="Submit">
-						</form>
-						</blockquote>
-						';
-						}
-					}
-					if($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.''] != ''){
-						if($theAge != '' && is_numeric($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']) && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
-							$ageEntered = ($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']);
-							if($ageEntered >= $theAge){
-								$isCorrect = 1;
-							}else{
-								$isCorrect = 0;
-							}
-						} elseif($theAnswer != '' && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
-							$answerGiven = ($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']);
-							$correctAnswer = strtolower($theAnswer);
-							$answered = strtolower($answerGiven);					
-							if($answered === $correctAnswer){
-								$isCorrect = 1;
-							}else{
-								$isCorrect = 0;
-							}
-						}		
-					}			
-				}
-				if(is_numeric($isLogging) && $isLogging == 1 || is_numeric($isLogging) && $isLogging == 3 || is_numeric($attempts) && $attempts == 1){
-					global $wpdb;
-					$verification_table_name = $wpdb->prefix.'momverification';
-					$getIPforCurrentTransaction = $wpdb->get_results("SELECT IP,POST FROM $verification_table_name WHERE IP = '".$theIP."' AND POST = '".$verificationID."'");
-					if(count($getIPforCurrentTransaction) <= 0 && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
-						if($theAge != '' && is_numeric($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']) && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
-							$ageEntered	= ($_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']);
-							if($ageEntered >= $theAge){		
-							$wpdb->query("INSERT INTO $verification_table_name (ID, POST, CORRECT, IP) VALUES ('','$verificationID','1','$theIP')");
-							}else{
-							$wpdb->query("INSERT INTO $verification_table_name (ID, POST, CORRECT, IP) VALUES ('','$verificationID','0','$theIP')");
-							}
-						}
-						elseif($theAnswer != '' && $_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']){
-							$answerGiven = ($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']);
-							$correctAnswer = strtolower($theAnswer);
-							$answered = strtolower($answerGiven);				
-							if($answered === $correctAnswer){				
-							$wpdb->query("INSERT INTO $verification_table_name (ID, POST, CORRECT, IP) VALUES ('','$verificationID','1','$theIP')");
-							}else{
-							$wpdb->query("INSERT INTO $verification_table_name (ID, POST, CORRECT, IP) VALUES ('','$verificationID','0','$theIP')");
-							}
-						}
-					}
-					if($isLogging != 1){
-						$incorrect = $wpdb->get_results("SELECT CORRECT FROM $verification_table_name WHERE POST = '".$verificationID."' AND CORRECT = '0'");
-						$correct = $wpdb->get_results("SELECT CORRECT FROM $verification_table_name WHERE POST = '".$verificationID."' AND CORRECT = '1'");
-						$incorrectCount = count($incorrect);
-						$correctCount = count($correct);
-						if(count($correct) > 0 && count($incorrect) > 0){$totalCount = ($incorrectCount + $correctCount);}else{$totalCount = 1;}					
-						$percentCorrect = ($correctCount/$totalCount * 100);
-						$percentIncorrect = ($incorrectCount/$totalCount * 100);
-						if($statsMessage == ''){$statsMessage = $theMessage;}
-						return '<div style="clear:both;display:block;width:99%;margin:10px auto 10px auto;overflow:auto;background-color:#f6fbff;border:1px solid #4a5863;border-radius:3px;padding:5px;"><p>'.$statsMessage.'</p><div class="mom_progress" style="clear:both;height:20px;display:block;width:95%; margin:5px auto 5px auto;background-color:#ff0000"><div title="'.$correctCount.'" style="display:block;height:20px;width:'.$percentCorrect.'%;background-color:#1eff00;"></div></div><div style="font-size:15px;margin:-5px auto;width:95%;"><span style="float:left;text-align:left;">'.$correctResultMessage.' ('.$percentCorrect.'%)</span><span style="float:right;text-align:right;">'.$incorrectResultMessage.' ('.$percentIncorrect.'%)</span></div></div>';
-					}
-				}
-				if($isCorrect == 1){return $content;}elseif($isCorrect == 0 && $deactivate != 1){return $failMessage;}
-				return ob_get_clean();
-			}else{
-				// Return nothing, the IP address is fake.
-			}
-		}	
-	//
-
-
-
-
 
 	/****************************** SECTION G -/- (G0) Functions -/- Meta */
 		function mom_SEO_header(){
@@ -1639,27 +1040,6 @@ if(is_user_logged_in()){
 	}
 	//
 
-
-
-
-	// (I) Font Awesome (shortcode)
-		function font_fa_shortcode($atts, $content = null){
-			extract(
-				shortcode_atts(array(
-					"i" => ''
-				), $atts)
-			);
-			$icon = esc_attr($i);
-			if($icon != ''){$iconfinal = $icon;}
-			ob_start();
-			echo '<i class="fa fa-'.$iconfinal.'"></i>';
-			return ob_get_clean();
-		}
-	//
-
-
-
-
 	// (J) Count++ (settings page)
 		if(current_user_can('manage_options')){
 			function my_optional_modules_count_module(){ ?>
@@ -1864,54 +1244,28 @@ if(is_user_logged_in()){
 						echo '
 						<span>'.$catsshown->cat_name.'(<strong>'.$catsshown->cat_ID.'</strong>)</span>';
 					}
-				echo '
-				</div>
-				<br />
-				<section class="clear"><label class="left" for="MOM_Exclude_Categories_RSS">RSS</label><input class="right" type="text" id="MOM_Exclude_Categories_RSS" name="MOM_Exclude_Categories_RSS" value="'.get_option('MOM_Exclude_Categories_RSS').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_Categories_Front">front page</label><input class="right" type="text" id="MOM_Exclude_Categories_Front" name="MOM_Exclude_Categories_Front" value="'.get_option('MOM_Exclude_Categories_Front').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_Categories_TagArchives">tag archives</label><input class="right" type="text" id="MOM_Exclude_Categories_TagArchives" name="MOM_Exclude_Categories_TagArchives" value="'.get_option('MOM_Exclude_Categories_TagArchives').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_Categories_SearchResults">search results</label><input class="right" type="text" id="MOM_Exclude_Categories_SearchResults" name="MOM_Exclude_Categories_SearchResults" value="'.get_option('MOM_Exclude_Categories_SearchResults').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_CategoriesSun">Sunday</label><input class="right" type="text" id="MOM_Exclude_CategoriesSun" name="MOM_Exclude_CategoriesSun" value="'.get_option('MOM_Exclude_CategoriesSun').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_CategoriesMon">Monday</label><input class="right" type="text" id="MOM_Exclude_CategoriesMon" name="MOM_Exclude_CategoriesMon" value="'.get_option('MOM_Exclude_CategoriesMon').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_CategoriesTue">Tuesday</label><input class="right" type="text" id="MOM_Exclude_CategoriesTue" name="MOM_Exclude_CategoriesTue" value="'.get_option('MOM_Exclude_CategoriesTue').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_CategoriesWed">Wednesday</label><input class="right" type="text" id="MOM_Exclude_CategoriesWed" name="MOM_Exclude_CategoriesWed" value="'.get_option('MOM_Exclude_CategoriesWed').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_CategoriesThu">Thursday</label><input class="right" type="text" id="MOM_Exclude_CategoriesThu" name="MOM_Exclude_CategoriesThu" value="'.get_option('MOM_Exclude_CategoriesThu').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_CategoriesFri">Friday</label><input class="right" type="text" id="MOM_Exclude_CategoriesFri" name="MOM_Exclude_CategoriesFri" value="'.get_option('MOM_Exclude_CategoriesFri').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_CategoriesSat">Saturday</label><input class="right" type="text" id="MOM_Exclude_CategoriesSat" name="MOM_Exclude_CategoriesSat" value="'.get_option('MOM_Exclude_CategoriesSat').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_VisitorCategories">logged out</label><input class="right" type="text" id="MOM_Exclude_VisitorCategories" name="MOM_Exclude_VisitorCategories" value="'.get_option('MOM_Exclude_VisitorCategories').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_level0Categories">subscriber</label><input class="right" type="text" id="MOM_Exclude_level0Categories" name="MOM_Exclude_level0Categories" value="'.get_option('MOM_Exclude_level0Categories').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_level1Categories">contributor</label><input class="right" type="text" id="MOM_Exclude_level1Categories" name="MOM_Exclude_level1Categories" value="'.get_option('MOM_Exclude_level1Categories').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_level2Categories">author</label><input class="right" type="text" id="MOM_Exclude_level2Categories" name="MOM_Exclude_level2Categories" value="'.get_option('MOM_Exclude_level2Categories').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_level7Categories">editor</label><input class="right" type="text" id="MOM_Exclude_level7Categories" name="MOM_Exclude_level7Categories" value="'.get_option('MOM_Exclude_level7Categories').'"></section>
-				
-				<hr />
-				
+				echo '</div><br />';
+				$exclude = array('MOM_Exclude_Categories_RSS','MOM_Exclude_Categories_Front','MOM_Exclude_Categories_TagArchives','MOM_Exclude_Categories_SearchResults','MOM_Exclude_Categories_CategoriesSun','MOM_Exclude_Categories_CategoriesMon','MOM_Exclude_Categories_CategoriesTue','MOM_Exclude_Categories_CategoriesWed','MOM_Exclude_Categories_CategoriesThu','MOM_Exclude_Categories_CategoriesFri','MOM_Exclude_Categories_CategoriesSat','MOM_Exclude_Categories_level0Categories','MOM_Exclude_Categories_level1Categories','MOM_Exclude_Categories_level2Categories','MOM_Exclude_Categories_level7Categories');
+				$section = array( 'RSS','Front page','Tag archives','Search results','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Logged out','Subscriber','Contributor','Author','Editor');
+				foreach($exclude as $exc ) {
+						$title = str_replace($exclude,$section,$exc);
+						echo '<section class="clear"><label class="left" for="'.$exc.'">'.$title.'</label><input class="right" type="text" id="'.$exc.'" name="'.$exc.'" value="'.get_option($exc).'"></section>';
+				}				
+				echo '<hr />
 				<p><strong class="sectionTitle">Hide Tags from..</strong>
 				<i class="fa fa-info">&mdash;</i> Separate multiple tags with commas</p>
 				<div class="list"><span>Tag (<strong>ID</strong>)</span>';
 					foreach($showmetags as $tagsshown){
 						echo '<span>'.$tagsshown->cat_name.'(<strong>'.$tagsshown->cat_ID.'</strong>)</span>';
 					}
-				echo '</div>
-				<br />
-				<section class="clear"><label class="left" for="MOM_Exclude_Tags_RSS">RSS</label><input class="right" type="text" id="MOM_Exclude_Tags_RSS" name="MOM_Exclude_Tags_RSS" value="'.get_option('MOM_Exclude_Tags_RSS').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_Tags_Front">front page</label><input class="right" type="text" id="MOM_Exclude_Tags_Front" name="MOM_Exclude_Tags_Front" value="'.get_option('MOM_Exclude_Tags_Front').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_Tags_CategoryArchives">categories</label><input class="right" type="text" id="MOM_Exclude_Tags_CategoryArchives" name="MOM_Exclude_Tags_CategoryArchives" value="'.get_option('MOM_Exclude_Tags_CategoryArchives').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_Tags_SearchResults">search results</label><input class="right" type="text" id="MOM_Exclude_Tags_SearchResults" name="MOM_Exclude_Tags_SearchResults" value="'.get_option('MOM_Exclude_Tags_SearchResults').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_TagsSun">Sunday</label><input class="right" type="text" id="MOM_Exclude_TagsSun" name="MOM_Exclude_TagsSun" value="'.get_option('MOM_Exclude_TagsSun').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_TagsMon">Monday</label><input class="right" type="text" id="MOM_Exclude_TagsMon" name="MOM_Exclude_TagsMon" value="'.get_option('MOM_Exclude_TagsMon').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_TagsTue">Tuesday</label><input class="right" type="text" id="MOM_Exclude_TagsTue" name="MOM_Exclude_TagsTue" value="'.get_option('MOM_Exclude_TagsTue').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_TagsWed">Wednesday</label><input class="right" type="text" id="MOM_Exclude_TagsWed" name="MOM_Exclude_TagsWed" value="'.get_option('MOM_Exclude_TagsWed').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_TagsThu">Thursday</label><input class="right" type="text" id="MOM_Exclude_TagsThu" name="MOM_Exclude_TagsThu" value="'.get_option('MOM_Exclude_TagsThu').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_TagsFri">Friday</label><input class="right" type="text" id="MOM_Exclude_TagsFri" name="MOM_Exclude_TagsFri" value="'.get_option('MOM_Exclude_TagsFri').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_TagsSat">Saturday</label><input class="right" type="text" id="MOM_Exclude_TagsSat" name="MOM_Exclude_TagsSat" value="'.get_option('MOM_Exclude_TagsSat').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_VisitorTags">logged out</label><input class="right" type="text" id="MOM_Exclude_VisitorTags" name="MOM_Exclude_VisitorTags" value="'.get_option('MOM_Exclude_VisitorTags').'"></section>				
-				<section class="clear"><label class="left" for="MOM_Exclude_level0Tags">subscriber</label><input class="right" type="text" id="MOM_Exclude_level0Tags" name="MOM_Exclude_level0Tags" value="'.get_option('MOM_Exclude_level0Tags').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_level1Tags">contributor</label><input class="right" type="text" id="MOM_Exclude_level1Tags" name="MOM_Exclude_level1Tags" value="'.get_option('MOM_Exclude_level1Tags').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_level2Tags">author</label><input class="right" type="text" id="MOM_Exclude_level2Tags" name="MOM_Exclude_level2Tags" value="'.get_option('MOM_Exclude_level2Tags').'"></section>
-				<section class="clear"><label class="left" for="MOM_Exclude_level7Tags">editor</label><input class="right" type="text" id="MOM_Exclude_level7Tags" name="MOM_Exclude_level7Tags" value="'.get_option('MOM_Exclude_level7Tags').'"></section>
-				
-				<hr />
+				echo '</div><br />';
+				$exclude = array('MOM_Exclude_Tags_RSS','MOM_Exclude_Tags_Front','MOM_Exclude_Tags_CategoryArchives','MOM_Exclude_Tags_SearchResults','MOM_Exclude_Tags_TagsSun','MOM_Exclude_Tags_TagsMon','MOM_Exclude_Tags_TagsTue','MOM_Exclude_Tags_TagsWed','MOM_Exclude_Tags_TagsThu','MOM_Exclude_Tags_TagsFri','MOM_Exclude_Tags_TagsSat','MOM_Exclude_Tags_level0Tags','MOM_Exclude_Tags_level1Tags','MOM_Exclude_Tags_level2Tags','MOM_Exclude_Tags_level7Tags');
+				$section = array( 'RSS','Front page','Tag archives','Search results','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Logged out','Subscriber','Contributor','Author','Editor');
+				foreach($exclude as $exc ) {
+						$title = str_replace($exclude,$section,$exc);
+						echo '<section class="clear"><label class="left" for="'.$exc.'">'.$title.'</label><input class="right" type="text" id="'.$exc.'" name="'.$exc.'" value="'.get_option($exc).'"></section>';
+				}				
+				echo '<hr />
 				
 				<strong class="sectionTitle">Hide Post Formats from..</strong>
 				<section class="clear">
@@ -2072,22 +1426,7 @@ global $user_level;
  * (1) Hide dash for all but the admin.
  */
 
-if ( $user_level <=7 && get_option( 'MOM_Exclude_Hide_Dashboard' ) == 1 ) {
-	function remove_the_dashboard(){
-		global $menu, $submenu, $user_ID;
-		$the_user = new WP_User ( $user_ID );
-		reset ( $menu ); $page = key ( $menu );
-		while ( ( __ ( 'Dashboard' ) != $menu[$page][0] ) && next ( $menu ) )
-		$page = key ( $menu );
-		if ( __ ( 'Dashboard' ) == $menu[$page][0] ) unset ( $menu[$page] );
-		reset ( $menu ); $page = key ( $menu );
-		while( !$the_user->has_cap ( $menu[$page][1] ) && next( $menu ) )
-		$page = key ( $menu );
-		if ( preg_match ( '#wp-admin/?(index.php)?$#', $_SERVER['REQUEST_URI'] ) && ( 'index.php' != $menu[$page][2] ) )
-		wp_redirect ( get_option ( 'siteurl' ) . '/wp-admin/profile.php' );
-	}
-	add_action ( 'admin_menu', 'remove_the_dashboard' );
-}
+
 
 if(!is_user_logged_in() || is_user_logged_in() && $user_level == 0 || is_user_logged_in() && $user_level == 1 || is_user_logged_in() && $user_level == 2 || is_user_logged_in() && $user_level == 7){
 	function exclude_post_by_category($query){

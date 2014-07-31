@@ -12,249 +12,97 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 	die ();
 }
 
-if ( !function_exists ( 'rb_apply_quotes' ) ) {
-	function rb_apply_quotes($item){
-		return "'" . esc_sql($item) . "'";
-	}
-}
-
-// Generate a random password 
-$seed = str_split('abcdefghijklmnopqrstuvwxyz'
-				 .'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-				 .'0123456789!@#$%^&*()');
-shuffle($seed);
-$rand = '';
-foreach (array_rand($seed, 10) as $k) $rand .= $seed[$k];			
-// Generate a random number
-$seednum = str_split('1'.
-					 '2'.
-					 '3'.
-					 '4'.
-					 '5'.
-					 '6');
-shuffle($seednum);
-$randnum1 = '';
-$randnum2 = '';
-foreach (array_rand($seednum, 2) as $rk) $randnum1 .= $seednum[$rk];
-foreach (array_rand($seednum, 2) as $rk) $randnum2 .= $seednum[$rk];
-
-if ( !function_exists ( 'rb_format' ) ) {
-	function rb_format($data){
-		$input = array(
-			'/\\\r/is',
-			'/\\\n/is',
-			'/\    (.*?)    /is',
-			'/\>\>(.*?)\>\>/is',
-			'/\*\*\*(.*?)\*\*\*/is',
-			'/\*\*(.*?)\*\*/is',
-			'/\*(.*?)\*/is',
-			'/\~\~(.*?)\~\~/is',
-			'/\{\{(.*?)\}\}/is',
-			'/-\-\-\-/is',
-			'/—\-/is',
-			'/\|/is',
-			'/\`(.*?)\`/is',
-			'/\[spoiler](.*?)\[\/spoiler]/is',
-			'/\[http:\/\/i.imgur.com\/(.*?)]/is',
-			'/\[http:\/\/imgur.com\/a\/(.*?)]/is',
-			'/\[/is',
-			'/\]/is',
-			'/\\\/is',
-		);
-		$output = array(
-			'<br />',
-			'',
-			'<span class="quotes"> &#62; $1 </span><br />',
-			'<a href="#$1"> &#62;&#62; $1 </a><br />',
-			'<strong><em>$1</em></strong>',
-			'<strong>$1</strong>',
-			'<em>$1</em>',
-			'<span class="strike">$1</span>',
-			'<blockquote>$1</blockquote>',
-			'<hr />',
-			'<hr />',
-			'<br />',
-			'<code>$1</code>',
-			'<span class="spoiler">$1</span>',
-			' <a href="http://i.imgur.com/$1"/><img src="http://i.imgur.com/$1" class="imageOP" /></a> ',
-			'<iframe class="imgur-album" width="100%" height="550" frameborder="0" src="http://imgur.com/a/$1/embed"></iframe>',
-			'&#91;',
-			'&#93;',
-			'',
-		);
-		$rtrn = preg_replace ($input, $output, $data);
-		return wpautop($rtrn);
-	}
-}	
-
-if ( !function_exists ( 'mom_canonical' ) ) {
-	function mom_canonical(){
-		global $wp,$post;
-		$BOARD                 = '';
-		$THREAD                = '';
-		$pretty = esc_attr(get_option('mommaincontrol_prettycanon'));
-		if($prettycanon != 1 && is_page() && $_GET['board'] != '' || $prettycanon != 1 && is_single() && $_GET['board'] != ''){
-			$THISPAGE          = home_url('/');
-			if($_GET['board'] != ''                    )$BOARD  = esc_sql(strtolower(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['board']))));
-			if($_GET['board'] == ''                    )$BOARD  = esc_sql(strtolower(myoptionalmodules_sanistripents($post->post_name)));
-			if($BOARD         != ''                    )$THREAD = esc_sql(intval($_GET['thread']));	
-			if($BOARD         != '' && $THREAD != 0    ){$canonical = $THISPAGE.'?b='.$BOARD.'&amp;t='.$THREAD;}
-			elseif($BOARD     != '' && $THREAD == 0    ){$canonical = $THISPAGE.'?b='.$BOARD;}
-		}
-		elseif($prettycanon == 1 && is_page() && $_GET['board'] != '' || $prettycanon == 1 && is_single() && $_GET['board'] != ''){
-			$THISPAGE          = home_url('/');
-			if($_GET['board'] != ''                    )$BOARD  = esc_sql(strtolower(myoptionalmodules_sanistripents(preg_replace("/[^A-Za-z0-9 ]/", '', $_GET['board']))));
-			if($_GET['board'] == ''                    )$BOARD  = esc_sql(strtolower(myoptionalmodules_sanistripents($post->post_name)));
-			if($BOARD         != ''                    )$THREAD = esc_sql(intval($_GET['thread']));	
-			if($BOARD         != '' && $THREAD != 0    ){$canonical = $THISPAGE.'?t='.$THREAD;}
-			elseif($BOARD     != '' && $THREAD == 0    ){$canonical = $THISPAGE;}
-		}		
-		elseif(is_home()){
-			$canonical         = $THISPAGE;
-		}
-		else{
-			$THISPAGE          = 'http://'.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-			$canonical         = $THISPAGE;
-		}
-		echo "\n";
-		echo '<link rel=\'canonical\' href=\''.htmlentities($canonical).'\' />';echo "\n";
-	}
-}
-
-if ( !function_exists ( 'timesincethis' ) ) {
-	function timesincethis($date,$granularity=2) {
-		$retval = '';
-		$date = strtotime($date);
-		$difference = time() - $date;
-		$periods = array('decade' => 315360000,
-		'year' => 31536000,
-		'month' => 2628000,
-		'week' => 604800, 
-		'day' => 86400,
-		'hour' => 3600,
-		'minute' => 60,
-		'second' => 1);
-		foreach ($periods as $key => $value) {
-			if ($difference >= $value) {
-				$time = floor($difference/$value);
-				$difference %= $value;
-				$retval .= ($retval ? ' ' : '').$time.' ';
-				$retval .= (($time > 1) ? $key.'s' : $key);
-				$granularity--;
+	// Exclude -> Hide Dash (from user levels below 7)
+	if( !function_exists( 'mom_remove_the_dashboard' ) ) {
+		if( $user_level < 7 && get_option( 'MOM_Exclude_Hide_Dashboard' ) ) {
+			function mom_remove_the_dashboard(){
+				global $menu, $submenu, $user_ID;
+				$the_user = new WP_User ( $user_ID );
+				reset ( $menu ); $page = key ( $menu );
+				while ( ( __ ( 'Dashboard' ) != $menu[$page][0] ) && next ( $menu ) )
+				$page = key ( $menu );
+				if ( __ ( 'Dashboard' ) == $menu[$page][0] ) unset ( $menu[$page] );
+				reset ( $menu ); $page = key ( $menu );
+				while( !$the_user->has_cap ( $menu[$page][1] ) && next( $menu ) )
+				$page = key ( $menu );
+				if ( preg_match ( '#wp-admin/?(index.php)?$#', $_SERVER['REQUEST_URI'] ) && ( 'index.php' != $menu[$page][2] ) )
+				wp_redirect ( get_option ( 'siteurl' ) . '/wp-admin/profile.php' );
 			}
-			if ($granularity == '0') { break; }
+			add_action ( 'admin_menu', 'mom_remove_the_dashboard' );
 		}
-		return $retval.' ago';      
 	}
-}
 
-if(inet_pton($_SERVER['REMOTE_ADDR']) === false)$ipaddress = false;
-if(inet_pton($_SERVER['REMOTE_ADDR']) !== false)$ipaddress = esc_attr($_SERVER['REMOTE_ADDR']);
-if ( !function_exists ( 'myoptionalmodules_checkdnsbl' ) ) {
-	function myoptionalmodules_checkdnsbl($ipaddress){
-		$dnsbl_lookup=array(
-			'dnsbl-1.uceprotect.net',
-			'dnsbl-2.uceprotect.net',
-			'dnsbl-3.uceprotect.net',
-			'dnsbl.sorbs.net',
-			'zen.spamhaus.org',
-			'dnsbl-2.uceprotect.net',
-			'dnsbl-3.uceprotect.net'
+	// Takeover -> Custom BG Image
+	if( !function_exists( 'MOM_themetakeover_backgroundimage' ) ) {
+		if( get_option( 'MOM_themetakeover_backgroundimage' ) ) {
+			$backgroundargs = array( 
+				'default-image'          => '',
+				'default-color'          => '',
+				'wp-head-callback'       => '_custom_background_cb',
+				'admin-head-callback'    => '',
+				'admin-preview-callback' => ''
 			);
-		if($ipaddress){
-			$reverse_ip=implode(".",array_reverse(explode(".",$ipaddress)));
-			foreach($dnsbl_lookup as $host){
-				if(checkdnsrr($reverse_ip.".".$host.".","A")){
-					$listed.=$reverse_ip.'.'.$host;
-				}
+			add_theme_support( 'custom-background', array(
+				'default-color' => 'fff',
+			) );
+		}
+	}
+	
+	// RSS feed (link back)
+	if( !function_exists( 'myoptionalmodules_rsslinkback' ) ) { 
+		function myoptionalmodules_rsslinkback($content){
+			return $content.'<p><a href="'.esc_url(get_permalink($post->ID)).'">'.htmlentities(get_post_field('post_title',$postid)).'</a> via <a href="'.esc_url(home_url('/')).'">'.get_bloginfo('site_name').'</a></p>';
+		}
+	}
+
+	// JS to Footer (moves javascript to footer)
+	if( !function_exists( 'myoptionalmodules_footerscripts' ) ) {
+		function myoptionalmodules_footerscripts(){
+			remove_action( 'wp_head','wp_print_scripts' );
+			remove_action( 'wp_head','wp_print_head_scripts',9 );
+			remove_action( 'wp_head','wp_enqueue_scripts',1 );
+		}
+	}
+	
+	// Disable Authors (archives)(if there is only 1 author on the blog)
+	if( !function_exists( 'myoptionalmodules_disableauthorarchives' ) ) {
+		function myoptionalmodules_disableauthorarchives(){
+			global $wp_query;
+			if( is_author() ) {
+				if( sizeof( get_users( 'who=authors' ) ) ===1 )
+				wp_redirect( get_bloginfo( 'url' ) );
 			}
 		}
-		if($listed){
-			$DNSBL === true;
-		}else{
-			$DNSBL === false;
+	}
+	
+	// Disable Date (based archives)
+	if( !function_exists( 'myoptionalmodules_disabledatearchives' ) ) {
+		function myoptionalmodules_disabledatearchives(){
+			global $wp_query;
+			if( is_date() || is_year() || is_month() || is_day() || is_time() || is_new_day() ) {
+				$homeURL = esc_url(home_url('/'));
+				if( have_posts() ):the_post();
+				header('location:'.$homeURL);
+				exit;
+				endif;
+			}
 		}
 	}
-}
 
-if ( !function_exists ( 'myoptionalmodules_tripcode' ) ) {
-	function myoptionalmodules_tripcode($name){
-		if(ereg("(#|!)(.*)", $name, $matches)){
-			$cap  = $matches[2];
-			$cap  = strtr($cap,"&amp;", "&");
-			$cap  = strtr($cap,",", ",");
-			$salt = substr($cap."H.",1,2);
-			$salt = ereg_replace("[^\.-z]",".",$salt);
-			$salt = strtr($salt,":;<=>?@[\\]^_`","ABCDEFGabcdef"); 
-			return substr(crypt($cap,$salt),-10)."";
+	// Stripping paint with a flamethrower.
+	// Sanitize_text_field->strip_tags->htmlentities->string
+	if( !function_exists( 'myoptionalmodules_sanistripents' ) ) {
+		function myoptionalmodules_sanistripents($string){
+			return sanitize_text_field( strip_tags( htmlentities( $string ) ) );
 		}
 	}
-}
 
-if ( !function_exists ( 'MOM_themetakeover_backgroundimage' ) ) {
-	if(get_option('MOM_themetakeover_backgroundimage') == 1){
-		$backgroundargs = array( 
-			'default-image'          => '',
-			'default-color'          => '',
-			'wp-head-callback'       => '_custom_background_cb',
-			'admin-head-callback'    => '',
-			'admin-preview-callback' => ''
-		);
-		add_theme_support( 'custom-background', array(
-			'default-color' => 'fff',
-		) );
-	}
-}
-
-if ( !function_exists ( 'myoptionalmodules_rsslinkback' ) ) { 
-	function myoptionalmodules_rsslinkback($content){
-		return $content.'<p><a href="'.esc_url(get_permalink($post->ID)).'">'.htmlentities(get_post_field('post_title',$postid)).'</a> via <a href="'.esc_url(home_url('/')).'">'.get_bloginfo('site_name').'</a></p>';
-	}
-}
-
-if ( !function_exists ( 'myoptionalmodules_footerscripts' ) ) {
-	function myoptionalmodules_footerscripts(){
-		remove_action('wp_head','wp_print_scripts');
-		remove_action('wp_head','wp_print_head_scripts',9);
-		remove_action('wp_head','wp_enqueue_scripts',1);
-	}
-}
-
-if ( !function_exists ( 'myoptionalmodules_disableauthorarchives' ) ) {
-	function myoptionalmodules_disableauthorarchives(){
-		global $wp_query;
-		if(is_author()){
-			if(sizeof(get_users('who=authors'))===1)
-			wp_redirect(get_bloginfo('url'));
+	// Take an alphanumeric string, return only numbers, take out any spaces.
+	if( !function_exists( 'myoptionalmodules_numbersnospaces' ) ) {
+		function myoptionalmodules_numbersnospaces($string){
+			return sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',($string)))))));
 		}
 	}
-}
-
-if ( !function_exists ( 'myoptionalmodules_disabledatearchives' ) ) {
-	function myoptionalmodules_disabledatearchives(){
-		global $wp_query;
-		if(is_date() || is_year() || is_month() || is_day() || is_time() || is_new_day()){
-			$homeURL = esc_url(home_url('/'));
-			if(have_posts()):the_post();
-			header('location:'.$homeURL);
-			exit;
-			endif;
-		}
-	}
-}
-
-if ( !function_exists ( 'myoptionalmodules_sanistripents' ) ) {
-	function myoptionalmodules_sanistripents($string){
-		// Stripping paint with a flame-thrower.
-		return sanitize_text_field(strip_tags(htmlentities($string)));
-	}
-}
-
-if ( !function_exists ( 'myoptionalmodules_numbersnospaces' ) ) {
-	function myoptionalmodules_numbersnospaces($string){
-		return sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',($string)))))));
-	}
-}
 
 if ( !function_exists ( 'myoptionalmodules_excludecategories' ) ) {
 	function myoptionalmodules_excludecategories(){

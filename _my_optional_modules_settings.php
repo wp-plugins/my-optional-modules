@@ -50,13 +50,13 @@ if(current_user_can('manage_options')){
 				}else{
 					echo '
 					<form class="config" method="post" action="" name="momReviews">
-						<label for="mom_reviews_mode_submit">Reviews</label>';
+						<label for="mom_reviews_mode_submit">Reviews</label><i class="fa fa-';
 						if(get_option('mommaincontrol_reviews') == 1){
-							echo '<i class="fa fa-check-square"></i>';
+							echo 'check-square';
 						}else{
-							echo '<i class="fa fa-square"></i>';
+							echo 'square';
 						}
-						echo '<input type="text" class="hidden" value="';
+						echo '"></i><input type="text" class="hidden" value="';
 						if(get_option('mommaincontrol_reviews') == 1){
 							echo '0';
 						}else{
@@ -78,13 +78,13 @@ if(current_user_can('manage_options')){
 				}else{
 					echo '
 					<form class="config" method="post" action="" name="momCount">
-						<label for="mom_count_mode_submit">Count++</label>';
+						<label for="mom_count_mode_submit">Count++</label><i class="fa fa-';
 						if(get_option('mommaincontrol_obwcountplus') == 1){
-							echo '<i class="fa fa-check-square"></i>';
+							echo 'check-square';
 						}else{
-							echo '<i class="fa fa-square"></i>';
+							echo 'square';
 						}
-						echo '<input type="text" class="hidden" value="';
+						echo '"></i><input type="text" class="hidden" value="';
 						if(get_option('mommaincontrol_obwcountplus') == 1){
 							echo '0';
 						}else{
@@ -127,7 +127,7 @@ if(current_user_can('manage_options')){
 					</form>';
 				}
 				
-				if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH && get_option('mommaincontrol_momrups') == 1){
+				if(get_option('mommaincontrol_momrups') == 1){
 					echo '
 					<form class="config" method="post">
 						<section>
@@ -136,7 +136,6 @@ if(current_user_can('manage_options')){
 						</section>
 					</form>';
 				}else{
-					if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){
 						echo '
 						<form class="config"  method="post" action="" name="momPasswords">
 							<label for="mom_passwords_mode_submit">Passwords</label>';
@@ -153,7 +152,6 @@ if(current_user_can('manage_options')){
 							}
 							echo '" name="passwords" /><input type="submit" id="mom_passwords_mode_submit" name="mom_passwords_mode_submit" value="Submit" class="hidden" />
 						</form>';
-					}
 				}
 				
 				echo '
@@ -303,38 +301,6 @@ if(current_user_can('manage_options')){
 					echo '" name="datearchives" /><input type="submit" id="mom_date_archives_mode_submit" name="mom_date_archives_mode_submit" value="Submit" class="hidden" />
 				</form>
 				
-				<form class="config" method="post" action="" name="fixcanon">
-					<label for="mom_fixcanon_mode_submit">Fix Canon</label>';
-					if(get_option('mommaincontrol_fixcanon') == 1){
-						echo '<i class="fa fa-check-square"></i>';
-					}else{
-						echo '<i class="fa fa-square"></i>';
-					}
-					echo '<input class="hidden" type="text" value="';
-					if(get_option('mommaincontrol_fixcanon') == 1){
-						echo '0';
-					}else{
-						echo '1';
-					}
-					echo '" name="fixcanon" /><input type="submit" id="mom_fixcanon_mode_submit" name="mom_fixcanon_mode_submit" value="Submit" class="hidden" />
-				</form>
-				
-				<form class="config" method="post" action="" name="prettycanon">
-					<label for="mom_prettycanon_mode_submit">Pretty Canon</label>';
-					if(get_option('mommaincontrol_prettycanon') == 1){
-						echo '<i class="fa fa-check-square"></i>';
-					}else{
-						echo '<i class="fa fa-square"></i>';
-					}
-					echo '<input class="hidden" type="text" value="';
-					if(get_option('mommaincontrol_prettycanon') == 1){
-						echo '0';
-					}else{
-						echo '1';
-					}
-					echo '" name="prettycanon" /><input type="submit" id="mom_prettycanon_mode_submit" name="mom_prettycanon_mode_submit" value="Submit" class="hidden" />
-				</form>
-				
 				<form class="config" method="post" action="" name="momMaintenance">
 					<label for="mom_maintenance_mode_submit">Maintenance</label>';
 					if(get_option('mommaincontrol_maintenance') == 1){
@@ -400,16 +366,8 @@ if(current_user_can('manage_options')){
 					<section class="clear">
 						<label class="left">Post as front</label>
 						<select class="right" name="mompaf_post" id="mompaf_0">
-							<option value="off"
-								<?php if ( get_option('mompaf_post') == 'off' ) { ?> 
-									selected="selected" 
-								<?php } ?>
-								>Disabled</option>
-							<option value="on"
-								<?php if ( get_option('mompaf_post') == 'on') { ?> 
-									selected="selected"
-								<?php } ?>
-								/>Latest post</option>
+							<option value="off"<?php if ( get_option('mompaf_post') == 'off' ) { ?> selected="selected"<?php } ?>>Disabled</option>
+							<option value="on"<?php if ( get_option('mompaf_post') == 'on') { ?> selected="selected"<?php } ?>/>Latest post</option>
 								<?php $mompaf_post = get_option('mompaf_post');
 								selected( $options['mompaf_post'], 0 );
 								$showmeposts = get_posts(array('posts_per_page' => -1));
@@ -425,13 +383,30 @@ if(current_user_can('manage_options')){
 					</form>
 					<p></p>
 					<?php my_optional_modules_cleaner_module(); ?>
-					
+					<p>
+						<i class="fa fa-heart">&mdash;</i> <em>Post Votes</em> adds a voting system to your blog, allowing 
+						users to <i class="fa fa-heart"></i> posts that they like, with an adjoining counter to show the total 
+						amount of votes on each post. You may also use the shortcode [top_voted] (with optional <strong>amount</strong> 
+						paramter) on a post or a page to show the top voted posts.<br /><br />
+						<i class="fa fa-rss">&mdash;</i> <em>&copy; RSS feed</em> adds a link back to your blog/post on each RSS 
+						item to help combat scraper bots that don't attribute you as the source of their stolen content.<br /><br />
+						<i class="fa fa-flag">&mdash;</i> <em>Font Awesome</em> enables the use of the <a href="http://fortawesome.github.io/Font-Awesome/icons/">Font Awesome</a> 
+						icons on your pages and posts.<br /><br />
+						<i class="fa fa-jsfiddle">&mdash;</i> <em>JS to footer</em> will move all scripts to the footer.<br /><br />
+						<i class="fa fa-info">&mdash;</i> <em>Lazy Load</em> will enable <a href="http://www.appelsiini.net/projects/lazyload">Lazy Load</a> on images in your pages and posts.<br /><br />
+						<i class="fa fa-wordpress">&mdash;</i> <em>Hide WP Version</em> stips WordPress version numbers out of 
+						your blogs source code.<br /><br />
+						<i class="fa fa-info">&mdash;</i> <em>Meta</em> will replace the meta generator functionality of plugins like Jetpack, automatically embedding 
+						opengraph elements in the header source.<br /><br />
+						<i class="fa fa-user">&mdash;</i> <em>Disable Authors</em> disables author archives if there is only one author on 
+						the blog.<br /><br />
+						<i class="fa fa-calendar">&mdash;</i> <em>Disable Dates</em> disables all date based archives.<br /><br />
+						<i class="fa fa-warning">&mdash;</i> <em>Maintenance</em> will (1) redirect all non-logged in users to a specified <em>Maintenance URL</em> (set above) while 
+						active or (2) will simply display a message letting the user know that maintenance mode is active and prevent loading of 
+						any blog resources directly.<br /><br />
+					</p>					
 					<p>
 						<i class="fa fa-warning">&mdash;</i> Any warnings will display here:<br /><br />
-						<?php if(defined('CRYPT_BLOWFISH') && CRYPT_BLOWFISH){
-						}else{ ?>
-							<i class="fa fa-info">&mdash;</i> CRYPT_BLOWFISH is not available.  Passwords module disabled.<br />
-						<?php } ?>
 					</p>
 			<?php } ?>			
 		</div>

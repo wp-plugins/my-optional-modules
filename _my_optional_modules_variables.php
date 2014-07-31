@@ -13,8 +13,6 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 }
 
 $mommodule_focus = esc_attr(get_option('mommaincontrol_focus'));
-$mommodule_prettycanon    = false; 
-$mommodule_fixcanon       = false; 
 $mommodule_analytics      = false; 
 $mommodule_count          = false; 
 $mommodule_exclude        = false; 
@@ -46,7 +44,6 @@ $mommodule_reviews        = intval ( get_option ( 'mommaincontrol_reviews' ) );
 $mommodule_shortcodes     = intval ( get_option ( 'mommaincontrol_shorts' ) );
 $mommodule_themetakeover  = intval ( get_option ( 'mommaincontrol_themetakeover' ) );
 $mommodule_versionnumbers = intval ( get_option ( 'mommaincontrol_versionnumbers' ) );
-$mommodule_fixcanon       = intval ( get_option ( 'mommaincontrol_fixcanon' ) );
 $momthemetakeover_youtube = esc_url  ( get_option ( 'MOM_themetakeover_youtubefrontpage' ) );
 if ( $mommodule_analytics      == 1 ) $mommodule_analytics      = true;
 if ( $mommodule_count          == 1 ) $mommodule_count          = true;
@@ -66,7 +63,6 @@ if ( $mommodule_reviews        == 1 ) $mommodule_reviews        = true;
 if ( $mommodule_shortcodes     == 1 ) $mommodule_shortcodes     = true;
 if ( $mommodule_themetakeover  == 1 ) $mommodule_themetakeover  = true;
 if ( $mommodule_versionnumbers == 1 ) $mommodule_versionnumbers = true;
-if ( $mommodule_fixcanon       == 1 ) $mommodule_fixcanon       = true;
 if ( $mommodule_exclude        === true ) add_action ( 'after_setup_theme', 'myoptionalmodules_postformats' );
 if ( $mommodule_exclude        === true ) include( plugin_dir_path(__FILE__) . '/includes/modules/_my_optional_modules_exclude.php');
 if ( $mommodule_fontawesome    === true ) add_action ( 'wp_enqueue_scripts', 'myoptionalmodules_scripts' );
@@ -114,8 +110,6 @@ if ( !function_exists ( 'my_optional_modules_add_my_shortcodes' ) ) {
 	}
 }
 
-if ( $mommodule_fixcanon       === true ) if ( function_exists ( 'rel_canonical' ) ) { remove_action ( 'wp_head', 'rel_canonical' ); }
-if ( $mommodule_fixcanon       === true ) if ( function_exists ( 'mom_canonical' ) ) {    add_action ( 'wp_head', 'mom_canonical' ); }
 if ( $mommodule_meta           === true ) mom_SEO_header();
 if ( get_option ( 'mompaf_post' ) ) {
 	if ( get_option ( 'mompaf_post' ) != 'off' ) add_action ( 'wp', 'myoptionalmodules_postasfront' );

@@ -59,34 +59,41 @@ function my_optional_modules_cleaner_module() {
 			$terms_count++; 
 		}
 	}
-	$totalClutter    = ( $terms_count + $comments_count + $revisions_count );
-	echo '
-		
+	$totalClutter    = ( $terms_count + $comments_count + $revisions_count ); ?>
+	
 		<section class="trash">
+			<?php if( $totalClutter ) { ?>
 			<label for="deleteAllClutter">
 				<i class="fa fa-trash-o"></i>
 				<span>Click to clear All clutter</span>
-				<em>' . esc_attr( $totalClutter ) . '</em>
+				<em>&mdash; <?php echo esc_attr( $totalClutter );?></em>
+				<?php } else { ?>
+				<i class="fa fa-trash-o">&mdash;</i> No database clutter to clear
+				<?php }?>				
 			</label>
 			<form method="post">
 				<input class="hidden" id="deleteAllClutter" type="submit" value="Go" name="deleteAllClutter">
 			</form>
 		</section>
 		<section class="trash">
+			<?php if( $revisions_count ) { ?>
 			<label for="delete_post_revisions">
 				<i class="fa fa-trash-o"></i>
 				<span>Click to clear Post clutter</span>
-				<em>' . esc_attr ( $revisions_count ) . '</em>
+				<em>&mdash; <?php echo esc_attr ( $revisions_count );?></em>
+				<?php }?>
 			</label>
 			<form method="post">
 				<input class="hidden" id="delete_post_revisions" type="submit" value="Go" name="delete_post_revisions">
 			</form>
 		</section>
 		<section class="trash">
+			<?php if( $comments_count ) { ?>
 			<label for="delete_unapproved_comments">
 				<i class="fa fa-trash-o"></i>
 				<span>Click to clear Comment clutter</span>
-				<em>' . esc_attr ( $comments_count ) . '</em>
+				<em>&mdash; <?php echo esc_attr ( $comments_count );?></em>
+				<?php }?>				
 			</label>
 			<form method="post">
 				<input class="hidden" id="delete_unapproved_comments" type="submit" value="Go" name="delete_unapproved_comments">
@@ -94,13 +101,15 @@ function my_optional_modules_cleaner_module() {
 		</section>
 		<section class="trash">
 			<label for="delete_unused_terms">
+				<?php if( $terms_count ) { ?>
 				<i class="fa fa-trash-o"></i>
 				<span>Click to clear Taxonomy clutter</span>
-				<em>' . esc_attr ( $terms_count ) . '</em>
+				<em>&mdash; <?php echo esc_attr ( $terms_count );?></em>
+				<?php }?>
 			</label>
 			<form method="post">
 				<input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms">
 			</form>
 		</section>
-	';
+	<?php 
 }

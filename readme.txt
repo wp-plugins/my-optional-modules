@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: 4chan,gravatar,youtube,DNSBL,akismet,ipv4,ipv6,htmlpurifier,tripcode,sage,chan,capcodes,board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
 Requires at least: 3.8
 Tested up to: 3.9
-Stable tag: 5.5.6.2
+Stable tag: 5.5.6.3
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -25,7 +25,7 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 * Jump Around, a module that allows users to navigate posts by pressing keys on the keyboard.
 * Maintenance, a module that allows you to specify a URL to redirect to for all non-logged in users while Maintenance Mode is active.
 * Post as Front, a module that allows you to select a specific post to be your home page, or make your home page your most recent post.
-* Passwords, a module for storing 7 unique (SHA512 salted) passwords, and then hiding content with a shortcode (and IP based lockout) that is unlockable using the current days password.
+* Passwords, a module for storing 7 unique passwords, and then hiding content with a shortcode (and IP based lockout) that is unlockable using the current days password.
 * Reviews allows you to create custom reviews on anything you want, and display them on a post or a page.
 * Shortcodes!, a module that adds useful shortcodes for posts and pages.
 * Theme Takeover: Youtube 404; navbar that disables the Wordpress Admin Bar and gives you a bar similar to RES (with limited functionality)
@@ -62,6 +62,8 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
+* 5.5.6.3  Hide Admin Menu was hiding from the wrong people. (fixed)
+* 5.5.6.3  Fix Canon and Pretty Canon (left overs from the previous version of Regular Board) were removed (no longer used)
 * 5.5.6.2  Admin interface reworked.
 * 5.5.6.1  71 new icons added to Font Awesome (Font Awesome updated to current version)
 * 5.5.6.1  Shortcodes page rewrite
