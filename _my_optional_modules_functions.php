@@ -12,6 +12,39 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 	die ();
 }
 
+
+
+	// http://davidwalsh.name/wordpress-ajax-comments
+	function mom_ajaxComment($comment_ID, $comment_status) {
+		if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
+			$comment = get_comment($comment_ID);
+			wp_notify_postauthor($comment_ID, $comment->comment_type);
+			$commentContent = getCommentHTML($comment);
+			die($commentContent);
+		}
+	}	
+	function mom_limit_comment($comment) {
+		$limit = intval(get_option('MOM_themetakeover_commentlength'));
+		if($limit && $limit > 0 ) {
+			$comment = strip_tags( htmlentities( substr( $comment,0,$limit ) ) );
+			return $comment;
+		}
+	}
+	function mom_limit_comment_field($comment_field) {
+		$limit = intval(get_option('MOM_themetakeover_commentlength'));
+		if( $limit > 0 ) {
+			$limit = ' maxlength="' . intval(get_option('MOM_themetakeover_commentlength')) . '"';
+		} else {
+			$limit = '';
+		}
+		$comment_field =
+			'<p class="comment-form-comment">
+				<textarea required' . $limit . 'id="comment" name="comment" cols="45" rows="8" aria-required="true"></textarea>
+			</p>';
+		return $comment_field;
+	}
+	add_filter('comment_form_field_comment','mom_limit_comment_field');
+
 	// Exclude -> Hide Dash (from user levels below 7)
 	if( !function_exists( 'mom_remove_the_dashboard' ) ) {
 		if( $user_level < 7 && get_option( 'MOM_Exclude_Hide_Dashboard' ) ) {
@@ -139,26 +172,7 @@ if ( !function_exists ( 'myoptionalmodules_excludecategories' ) ) {
 	}
 }
 
-if ( !function_exists ( 'myoptionalmodules_add_fields_to_profile' ) ) {
-	function myoptionalmodules_add_fields_to_profile($profile_fields){
-		$profile_fields['twitter_personal'] = 'Twitter Username';
-		return $profile_fields;
-	}
-}
 
-if ( !function_exists ( 'myoptionalmodules_add_fields_to_general' ) ) {
-	function myoptionalmodules_add_fields_to_general(){
-		register_setting('general','site_twitter','esc_attr');
-		add_settings_field('site_twitter','<label for="site_twitter">'.__('Twitter Site username','site_twitter').'</label>' ,'myoptionalmodules_add_twitter_to_general_html','general');
-	}
-}
-
-if ( !function_exists ( 'myoptionalmodules_add_twitter_to_general_html' ) ) {
-	function myoptionalmodules_add_twitter_to_general_html(){
-		$twitter = get_option('site_twitter','');
-		echo '<input id="site_twitter" name="site_twitter" value="'.$twitter.'"/>';
-	}
-}
 	
 if ( get_option ( 'mommaincontrol_momse' ) == 1 && !get_option ( 'MOM_themetakeover_youtubefrontpage' ) ) {
 	if ( !function_exists ( 'myoptionalmodules_404Redirection' ) ) {

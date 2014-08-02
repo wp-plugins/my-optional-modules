@@ -314,12 +314,15 @@ if(current_user_can('manage_options')){
 						echo '1';
 					}
 					echo '" name="maintenanceMode" class="hidden" /><input type="submit" id="mom_maintenance_mode_submit" name="mom_maintenance_mode_submit" class="hidden" value="Submit" />
-				</form>';
+				</form>
+				<hr />
+				<p>Uninstall plugin</p>
+				';
 				
 				if(!isset($_POST['mom_delete_step_one'])){
 					echo '
 					<form class="config" method="post" action="" name="mom_delete_step_one">
-					<label for="mom_delete_step_one" class="onoff0">Uninstall</label>
+					<label for="mom_delete_step_one" class="onoff0">Step 1: Click to Initiate uninstall</label>
 					<input type="submit" id="mom_delete_step_one" name="mom_delete_step_one" class="hidden" value="Submit" />
 					</form>
 					';
@@ -327,7 +330,7 @@ if(current_user_can('manage_options')){
 				if(isset($_POST['mom_delete_step_one'])){
 					echo '
 					<form class="config" method="post" action="" name="MOM_UNINSTALL_EVERYTHING">
-					<label for="MOM_UNINSTALL_EVERYTHING" class="onoff1">Confirm this</label>
+					<label for="MOM_UNINSTALL_EVERYTHING" class="onoff1">Step 2: Click to Confirm uninstall</label>
 					<input type="submit" id="MOM_UNINSTALL_EVERYTHING" name="MOM_UNINSTALL_EVERYTHING" class="hidden" value="Submit" />
 					</form>';
 				}
