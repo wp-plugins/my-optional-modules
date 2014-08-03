@@ -1,3 +1,9 @@
+.vote_the_post *:before,.vote_the_post *:after,.vote_the_post *,.topVotes *:before, .topVotes *:after, .topVotes *,.mom_postrotation *:before, .mom_postrotation *:after, .mom_postrotation * {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
 /* Reviews */
 .momreview .block {background-color:#03090e ; color:#f4f1de}
 .momreview section.reviewed {background-color:#03090e ; color:#f4f1de}
@@ -15,18 +21,32 @@
 .momreview .block input[type='checkbox']:checked ~ label span:first-of-type {display:none; visibility:hidden; float:right}
 .momreview .block input[type='checkbox']:checked ~ label span:last-of-type {display:block; visibility:visible; float:right}
 
+/* Tiled */
+.mom_recentPostRotationFull_tiled {-webkit-box-shadow:inset 0 0 5px 1px rgba(18,39,71,.5);box-shadow:inset 0 0 5px 1px rgba(18,39,71,.5);display: block; max-width: 100%;margin: 0 auto;padding:0;}
+.mom_recentPostRotationFull_tiled .mediaEmbed {border-bottom: none!important;clear: both;display: block;position: absolute; top: 0;bottom: 0;left: 0;width: 100%;height: 100%;padding: 0 0 5px;overflow: hidden;}
+.mom_recentPostRotationFull_tiled .thumbnailFull {-webkit-box-shadow:inset 0 0 5px 1px rgba(0,0,0,.2);box-shadow:inset 0 0 5px 1px rgba(0,0,0,.2); background: no-repeat center center fixed; -webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;		display: block;height: 100%;margin: 0;overflow: hidden;position: relative;width: 100%; }
+.mom_recentPostRotationFull_tiled .feature {width: 100%; height: 400px;margin: 0 0 -15px 0;}
+.mom_recentPostRotationFull_tiled .second {width: 100%;height: 300px;}
+.mom_recentPostRotationFull_tiled .second .thumbnailFull:nth-child(1) {width: 55%; float: left;height: 100%:}
+.mom_recentPostRotationFull_tiled .second .leftSmall a {padding: 25%!important;}
+.mom_recentPostRotationFull_tiled .secondThird {width: 45%; float: right; height: 100%:}
+.mom_recentPostRotationFull_tiled .secondThird a {padding: 5%!important;}
+.mom_recentPostRotationFull_tiled .secondThird .thumbnailFull {height: 150px!important;clear: both;width: 100%!important;}
+.mom_recentPostRotationFull_tiled .thumbnailFull a.mediaNotPresent {clear: both; display: block;font-size: 150%;font-weight: 900;height: 100%; left: 0;opacity: .3;position: absolute; padding: 15%;text-align: center;text-decoration: none;text-shadow: none;top: 0;width: 100%;}
+.mom_recentPostRotationFull_tiled .thumbnailFull a:hover {opacity: 1;text-shadow:  0 0 1px rgba(0,0,0,.9);}
+
 /* Post Voting */
 .topVotes{width:100%;margin:5px auto 25px;list-style:none;padding:10px;}
 .topVotes li{clear:both;display:block;margin:2px auto}
 .votedPost{width:100%;min-height:50px;margin:0 auto;padding:5px}
 .topVotes a{display:block;float:left;margin:10px 0 0}
 .vote_the_post:after {clear: both; content: "";display: table;}
-.vote_the_post {border: 1px solid rgba(0,0,0,.1);clear: both;display: block; margin: 50px auto;width: 100%;}
+.vote_the_post {border: 1px solid rgba(0,0,0,.1);clear: both;display: block; margin: 50px auto;width: 100%;overflow:hidden;height:23px;}
 .upvote {background-color:#ffdddd;border-left: 1px solid rgba(0,0,0,.1);float: right; width: 15%;text-align: center;padding: 5px;}
-.voteAmount {float: left; width: 70%;padding: 5px;font-size: 75%;margin:5px 0 0 15px;}
+.voteAmount {float: left; width: 70%;padding: 5px;font-size: 75%;margin:0;}
 .upvote .active {color:#fff;}
 .downvote:hover,.upvote:hover{background-color:#ac3f3f;color:ffdddd;}
-.vote_the_post label{display:block;cursor:pointer}
+.vote_the_post label{display:block;cursor:pointer;padding:0}
 .vote_the_post input[type=submit],.hidden,.momnavbar #searchform label,.momnavbar #searchform input[type=submit],.mycontrols div .attachedcomment{display:none;visibility:hidden}
 
 /* Navbar */

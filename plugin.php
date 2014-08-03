@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.5.6.5
+ * Version: 5.5.6.6
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -898,5 +898,101 @@ if(current_user_can('manage_options')){
 			}
 		}	
 	add_action('edit_form_after_editor','momEditorScreen');
-}
-?>
+	}
+	
+
+	/**
+	 * Tiled Front Page
+	 */
+	if( get_option( 'MOM_themetakeover_tiledfrontpage' ) == 1 ) {
+		add_filter ( 'the_content', 'do_shortcode', 'mom_tiled' );
+		add_shortcode ( 'mom_tiled', 'mom_tiled_frontpage' );
+	}
+	function mom_tiled_frontpage($atts, $content = null){
+
+		$maxposts = get_option( 'posts_per_page' );
+		$recent_count = 0;
+		
+		extract(
+			shortcode_atts(array(
+				'downsize' => 1,
+				'style' => 'tiled',
+				'offset' => 0,
+				'category' => '',
+				'orderby' => 'post_date',
+				'order' => 'DESC',
+				'post_status' => 'publish'
+			), $atts)
+		);
+		
+		echo '<div class="mom_postrotation mom_recentPostRotationFull_' . $style .'">';
+		
+		$args = array(
+			'posts_per_page'   => 4,
+			'offset'           => $offset,
+			'category'         => $category,
+			'orderby'          => $orderby,
+			'order'            => $order,
+			'include'          => '',
+			'exclude'          => '',
+			'meta_key'         => '',
+			'meta_value'       => '',
+			'post_type'        => 'post',
+			'post_mime_type'   => '',
+			'post_parent'      => '',
+			'post_status'      => $post_status,
+			'suppress_filters' => true
+		);
+		$myposts = get_posts( $args );
+		foreach( $myposts as $post ) : setup_postdata( $post ); 
+		$id    = $post->ID;
+		$link  = esc_url ( get_permalink( $id ) );
+		$title = get_the_title( $id );
+				
+		$recent_count++;
+		$media = get_post_meta($id, 'media', true);
+		if( $recent_count == 1 ) {
+			$container = 'feature';
+			echo '<div class="' . $container . '">';					
+		}
+		if( $recent_count == 2 ) {
+			$container = 'second';
+			echo '<div class="' . $container . '">';
+		}
+		if( $recent_count == 3 ) {
+			$container = 'secondThird';
+			echo '<div class="' . $container . '">';
+		}
+		echo '<div class="thumbnailFull';
+		if( $recent_count == 2 ) {				
+			echo ' leftSmall';
+		}
+		echo '"';
+		if( '' != wp_get_attachment_url( get_post_thumbnail_id($id) ) ) {
+			$post_thumbnail_id = get_post_thumbnail_id( $id );
+			if( $downsize == 1 ) {
+				$thumb_array = image_downsize( $post_thumbnail_id, 'thumbnail' );
+				$thumb_path = $thumb_array[0];	
+			} else {
+				$thumb_path = wp_get_attachment_url( get_post_thumbnail_id($id) );
+			}
+
+			echo 'style="background-image:url(\'' . $thumb_path . '\');"';
+		}
+		echo '>';
+		
+		
+			echo '<a class="mediaNotPresent" href="' . get_permalink($id) . '">' . get_the_title($id). '</a>';
+		
+		
+		echo '</div>';
+		if( $recent_count == 4 ) {
+			echo '</div></div></div>';
+		}				
+			
+		endforeach;
+		wp_reset_postdata();
+		
+		echo '</div>';
+		
+	}

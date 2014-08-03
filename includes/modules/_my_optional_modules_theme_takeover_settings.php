@@ -13,10 +13,22 @@ if(current_user_can('manage_options')){
 		$MOM_themetakeover_wowhead = get_option('MOM_themetakeover_wowhead');
 		$MOM_themetakeover_horizontal_galleries = get_option('MOM_themetakeover_horizontal_galleries');
 		$MOM_themetakeover_ajaxcomments = get_option('MOM_themetakeover_ajaxcomments');
+		$MOM_themetakeover_tiledfrontpage = get_option('MOM_themetakeover_tiledfrontpage');
 		$MOM_themetakeover_commentlength = get_option('MOM_themetakeover_commentlength');
 		$showmepages = get_pages(); ?>
 		<strong class="sectionTitle">Takeover Settings</strong>
 		<form class="clear" method="post">
+		
+			<section class="clear">
+				<label class="left" for="MOM_themetakeover_tiledfrontpage">Tiled Front Page</label>
+				<select class="right" id="MOM_themetakeover_tiledfrontpage" name="MOM_themetakeover_tiledfrontpage">
+					<option value="0" <?php selected($MOM_themetakeover_tiledfrontpage, 0);?> >No</option>
+					<option value="1" <?php selected($MOM_themetakeover_tiledfrontpage, 1);?> >Yes</option>
+				</select>				
+			</section>
+		
+			<p></p>
+		
 			<section class="clear">
 				<label class="left" for="MOM_themetakeover_ajaxcomments">Ajaxify Comments</label>
 				<select class="right" id="MOM_themetakeover_ajaxcomments" name="MOM_themetakeover_ajaxcomments">
