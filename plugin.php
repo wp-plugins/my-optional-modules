@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.5.6.6
+ * Version: 5.5.6.7
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -902,53 +902,117 @@ if(current_user_can('manage_options')){
 	
 
 	/**
-	 * Tiled Front Page
+	 * Mini Loops
 	 */
 	if( get_option( 'MOM_themetakeover_tiledfrontpage' ) == 1 ) {
-		add_filter ( 'the_content', 'do_shortcode', 'mom_tiled' );
-		add_shortcode ( 'mom_tiled', 'mom_tiled_frontpage' );
+		add_filter ( 'the_content', 'do_shortcode', 'mom_miniloop' );
+		add_shortcode ( 'mom_miniloop', 'mom_tiled_frontpage' );
 	}
 	function mom_tiled_frontpage($atts, $content = null){
-
+		ob_start();
+		global $user_level;
 		$maxposts = get_option( 'posts_per_page' );
-		$recent_count = 0;
-		
+		$alt = $recent_count = 0;
 		extract(
 			shortcode_atts(array(
+				'amount' => 4,
+				'exclude_user' => 0,
 				'downsize' => 1,
 				'style' => 'tiled',
 				'offset' => 0,
 				'category' => '',
 				'orderby' => 'post_date',
 				'order' => 'DESC',
-				'post_status' => 'publish'
+				'post_status' => 'publish',
+				'cache_results' => false,
+				'year' => '',
+				'month' => '',
+				'day' => ''
 			), $atts)
 		);
-		
+		$exclude_cats  = '';
+		if ( get_option ( 'MOM_Exclude_Categories_level7Categories') && $user_level == 7 ) { 
+			$exclude_cats  = get_option ( 'MOM_Exclude_Categories_level7Categories' ); 
+		} elseif ( get_option ( 'MOM_Exclude_Categories_level2Categories') && $user_level == 2 ) { 
+			$exclude_cats  = get_option ( 'MOM_Exclude_Categories_level2Categories' ); 
+		} elseif ( get_option ( 'MOM_Exclude_Categories_level1Categories') && $user_level == 1 ) { 
+			$exclude_cats  = get_option ( 'MOM_Exclude_Categories_level1Categories' ); 
+		} elseif ( get_option ( 'MOM_Exclude_Categories_level0Categories') && $user_level == 0 ) { 
+			$exclude_cats  = get_option ( 'MOM_Exclude_lCategories_evel0Categories' ); 
+		}
 		echo '<div class="mom_postrotation mom_recentPostRotationFull_' . $style .'">';
-		
-		$args = array(
-			'posts_per_page'   => 4,
-			'offset'           => $offset,
-			'category'         => $category,
-			'orderby'          => $orderby,
-			'order'            => $order,
-			'include'          => '',
-			'exclude'          => '',
-			'meta_key'         => '',
-			'meta_value'       => '',
-			'post_type'        => 'post',
-			'post_mime_type'   => '',
-			'post_parent'      => '',
-			'post_status'      => $post_status,
-			'suppress_filters' => true
-		);
+		if( intval( $category ) ) {
+			if( $exclude_user == 1 ) {
+				$args = array(
+					'posts_per_page'   => $amount,
+					'offset'           => $offset,
+					'category'         => $category,
+					'orderby'          => $orderby,
+					'order'            => $order,
+					'post_type'        => 'post',
+					'post_status'      => $post_status,
+					'suppress_filters' => true,
+					'cache_results'    => $cache_results,
+					'year'             => $year,
+					'monthnum'         => $month,
+					'day'              => $day,
+					'category__not_in' => $exclude_cats
+				);
+			} else {
+				$args = array(
+					'posts_per_page'   => $amount,
+					'offset'           => $offset,
+					'category'         => $category,
+					'orderby'          => $orderby,
+					'order'            => $order,
+					'post_type'        => 'post',
+					'post_status'      => $post_status,
+					'suppress_filters' => true,
+					'cache_results'    => $cache_results,
+					'year'             => $year,
+					'monthnum'         => $month,
+					'day'              => $day
+				);
+			}
+		} else {
+			if( $exclude_user == 1 ) {
+				$args = array(
+					'posts_per_page'   => $amount,
+					'offset'           => $offset,
+					'category_name'    => $category,
+					'orderby'          => $orderby,
+					'order'            => $order,
+					'post_type'        => 'post',
+					'post_status'      => $post_status,
+					'suppress_filters' => true,
+					'cache_results'    => $cache_results,
+					'year'             => $year,
+					'monthnum'         => $month,
+					'day'              => $day,	
+					'category__not_in' => array($exclude_cats)
+				);
+			} else {
+				$args = array(
+					'posts_per_page'   => $amount,
+					'offset'           => $offset,
+					'category_name'    => $category,
+					'orderby'          => $orderby,
+					'order'            => $order,
+					'post_type'        => 'post',
+					'post_status'      => $post_status,
+					'suppress_filters' => true,
+					'cache_results'    => $cache_results,
+					'year'             => $year,
+					'monthnum'         => $month,
+					'day'              => $day				
+				);			
+			}
+		}
 		$myposts = get_posts( $args );
 		foreach( $myposts as $post ) : setup_postdata( $post ); 
 		$id    = $post->ID;
 		$link  = esc_url ( get_permalink( $id ) );
 		$title = get_the_title( $id );
-				
 		$recent_count++;
 		$media = get_post_meta($id, 'media', true);
 		if( $recent_count == 1 ) {
@@ -963,36 +1027,56 @@ if(current_user_can('manage_options')){
 			$container = 'secondThird';
 			echo '<div class="' . $container . '">';
 		}
-		echo '<div class="thumbnailFull';
+		if( $recent_count <= 4 ) {
+			echo '<div class="thumbnailFull';
+		}
 		if( $recent_count == 2 ) {				
 			echo ' leftSmall';
 		}
-		echo '"';
-		if( '' != wp_get_attachment_url( get_post_thumbnail_id($id) ) ) {
+		if( $recent_count <= 4 ) {
+			echo '"';
+			if( '' != wp_get_attachment_url( get_post_thumbnail_id($id) ) ) {
 			$post_thumbnail_id = get_post_thumbnail_id( $id );
-			if( $downsize == 1 ) {
-				$thumb_array = image_downsize( $post_thumbnail_id, 'thumbnail' );
-				$thumb_path = $thumb_array[0];	
-			} else {
-				$thumb_path = wp_get_attachment_url( get_post_thumbnail_id($id) );
+					if( $downsize == 1 ) {
+					$thumb_array = image_downsize( $post_thumbnail_id, 'thumbnail' );
+					$thumb_path = $thumb_array[0];	
+				} else {
+					$thumb_path = wp_get_attachment_url( get_post_thumbnail_id($id) );
+				}
+	
+				echo 'style="background-image:url(\'' . $thumb_path . '\');"';
 			}
-
-			echo 'style="background-image:url(\'' . $thumb_path . '\');"';
-		}
-		echo '>';
-		
-		
+			echo '>';
 			echo '<a class="mediaNotPresent" href="' . get_permalink($id) . '">' . get_the_title($id). '</a>';
-		
-		
+		}
 		echo '</div>';
-		if( $recent_count == 4 ) {
-			echo '</div></div></div>';
-		}				
+		if( $recent_count > 4 ) {
 			
+			if( $recent_count % 3 == 0 ) {
+				$container = 'second leftSmall';
+			} else {
+				$container = 'secondThird';
+			}
+			echo '<div class="' . $container . '"><div class="thumbnailFull"';
+			if( '' != wp_get_attachment_url( get_post_thumbnail_id($id) ) ) {
+			$post_thumbnail_id = get_post_thumbnail_id( $id );
+					if( $downsize == 1 ) {
+					$thumb_array = image_downsize( $post_thumbnail_id, 'thumbnail' );
+					$thumb_path = $thumb_array[0];	
+				} else {
+					$thumb_path = wp_get_attachment_url( get_post_thumbnail_id($id) );
+				}
+				echo ' style="background-image:url(\'' . $thumb_path . '\');"';
+			}
+			echo '>';
+			echo '
+			<a class="mediaNotPresent" href="' . get_permalink($id) . '">' . get_the_title($id). '</a></div>';
+		}
+		if( $recent_count == 4 ) {
+			echo '</div></div>';
+		}
 		endforeach;
 		wp_reset_postdata();
-		
-		echo '</div>';
-		
+		echo '</div></div>';
+		return ob_get_clean();	
 	}

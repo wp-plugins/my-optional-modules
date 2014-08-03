@@ -20,13 +20,34 @@ if(current_user_can('manage_options')){
 		<form class="clear" method="post">
 		
 			<section class="clear">
-				<label class="left" for="MOM_themetakeover_tiledfrontpage">Tiled Front Page</label>
+				<label class="left" for="MOM_themetakeover_tiledfrontpage">Mini Loops</label>
 				<select class="right" id="MOM_themetakeover_tiledfrontpage" name="MOM_themetakeover_tiledfrontpage">
 					<option value="0" <?php selected($MOM_themetakeover_tiledfrontpage, 0);?> >No</option>
 					<option value="1" <?php selected($MOM_themetakeover_tiledfrontpage, 1);?> >Yes</option>
 				</select>				
 			</section>
-		
+			
+			<br />
+			<blockquote>
+				<i class="fa fa-info">&mdash;</i> <em>[mom_miniloop]</em> will output a mini loop posts based on:<br />
+				<blockquote>
+					Parameters you set: <br />
+					&mdash; <strong>amount</strong> (how many posts to show (default: 4))<br />
+					&mdash; <strong>downsize</strong> (<em>1</em>:downsize to thumbnail size, <em>0</em>:use original size image (default:1)) <br />
+					&mdash; <strong>style</strong> (<em>tiled</em> for a tiled gallery layout (default: tiled))<br />
+					&mdash; <strong>offset</strong> (how many posts to skip ahead in the loop (default: 0))<br />
+					&mdash; <strong>category</strong> (a numerical category id or name (or comma separated list)(default: none))<br />
+					&mdash; <strong>orderby</strong> (order your posts by <a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters">a  particular value</a> (default: post_date))<br />
+					&mdash; <strong>order</strong> (order the posts in <em>ASC</em> (ascending) or <em>DESC</em> (descending) order (default: DESC))<br />
+					&mdash; <strong>post_status</strong> (show posts associated with certain <a href="http://codex.wordpress.org/Class_Reference/WP_Query#Status_Parameters">statuses</a> (default: publish))<br />
+					&mdash; Date Based Parameters:<br />
+					&mdash;&mdash; <strong>year</strong> (a 4-digit year (default: none))<br />
+					&mdash;&mdash; <strong>month</strong> (a single-double digit month (1-12)(default: none))<br />
+					&mdash;&mdash; <strong>day</strong> (a single-double digit day (1-31)(default:none:))<br />
+					&mdash; <strong>cache</strong> (whether or not to add loop to cache (true or false) (default:false))<br />
+					&mdash; <strong>exclude_user</strong> (1 to use user exclusion rules set in Exclude module (default:0))
+				</blockquote>
+			</blockquote>
 			<p></p>
 		
 			<section class="clear">

@@ -198,32 +198,32 @@ function mom_exclude_filter_posts ( $query ) {
 		$loggedOutCats = $loggedOutTags = $MOM_Exclude_VisitorCategories = $MOM_Exclude_level0Categories = $MOM_Exclude_level1Categories = $MOM_Exclude_level2Categories = 
 		$MOM_Exclude_level7Categories = $MOM_Exclude_VisitorTags = $MOM_Exclude_level0Tags = $MOM_Exclude_level1Tags = $MOM_Exclude_level2Tags = $MOM_Exclude_level7Tags = 0;
 		
-		if ( get_option ( 'MOM_Exclude_VisitorCategories') ) { 
-			$MOM_Exclude_VisitorCategories = get_option ( 'MOM_Exclude_VisitorCategories' ); 
+		if ( get_option ( 'MOM_Exclude_Categories_VisitorCategories') ) { 
+			$MOM_Exclude_VisitorCategories = get_option ( 'MOM_Exclude_Categories_VisitorCategories' ); 
 		}
-		if ( get_option ( 'MOM_Exclude_level0Categories') ) { 
-			$MOM_Exclude_level0Categories  = get_option ( 'MOM_Exclude_level0Categories' ); 
+		if ( get_option ( 'MOM_Exclude_Categories_level0Categories') ) { 
+			$MOM_Exclude_level0Categories  = get_option ( 'MOM_Exclude_Categories_level0Categories' ); 
 		}
-		if ( get_option ( 'MOM_Exclude_level1Categories') ) { 
-			$MOM_Exclude_level1Categories  = get_option ( 'MOM_Exclude_level1Categories' ); 
+		if ( get_option ( 'MOM_Exclude_Categories_level1Categories') ) { 
+			$MOM_Exclude_level1Categories  = get_option ( 'MOM_Exclude_Categories_level1Categories' ); 
 		}
-		if ( get_option ( 'MOM_Exclude_level2Categories') ) { 
-			$MOM_Exclude_level2Categories  = get_option ( 'MOM_Exclude_level2Categories' ); 
+		if ( get_option ( 'MOM_Exclude_Categories_level2Categories') ) { 
+			$MOM_Exclude_level2Categories  = get_option ( 'MOM_Exclude_Categories_level2Categories' ); 
 		}
-		if ( get_option ( 'MOM_Exclude_level7Categories') ) { 
-			$MOM_Exclude_level7Categories  = get_option ( 'MOM_Exclude_level7Categories' ); 
+		if ( get_option ( 'MOM_Exclude_Categories_level7Categories') ) { 
+			$MOM_Exclude_level7Categories  = get_option ( 'MOM_Exclude_Categories_level7Categories' ); 
 		}
-		if ( get_option ( 'MOM_Exclude_VisitorTags') ) { 
-			$MOM_Exclude_VisitorTags = get_option ( 'MOM_Exclude_VisitorTags' ); 
+		if ( get_option ( 'MOM_Exclude_Tags_VisitorTags') ) { 
+			$MOM_Exclude_VisitorTags = get_option ( 'MOM_Exclude_Tags_VisitorTags' ); 
 		}
-		if ( get_option ( 'MOM_Exclude_level0Tags') ) { 
-			$MOM_Exclude_level0Tags = get_option ( 'MOM_Exclude_level0Tags' ); 
+		if ( get_option ( 'MOM_Exclude_Tags_level0Tags') ) { 
+			$MOM_Exclude_level0Tags = get_option ( 'MOM_Exclude_Tags_level0Tags' ); 
 		}
-		if ( get_option ( 'MOM_Exclude_level1Tags') ) { 
-			$MOM_Exclude_level1Tags = get_option ( 'MOM_Exclude_level1Tags' ); 
+		if ( get_option ( 'MOM_Exclude_Tags_level1Tags') ) { 
+			$MOM_Exclude_level1Tags = get_option ( 'MOM_Exclude_Tags_level1Tags' ); 
 		}
-		if ( get_option ( 'MOM_Exclude_level2Tags') ) { 
-			$MOM_Exclude_level2Tags = get_option ( 'MOM_Exclude_level2Tags' ); 
+		if ( get_option ( 'MOM_Exclude_Tags_level2Tags') ) { 
+			$MOM_Exclude_level2Tags = get_option ( 'MOM_Exclude_Tags_level2Tags' ); 
 		}
 		if ( get_option ( 'MOM_Exclude_level7Categories') ) { 
 			$MOM_Exclude_level7Categories = get_option( 'MOM_Exclude_level7Categories' ); 

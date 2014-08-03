@@ -22,14 +22,17 @@
 .momreview .block input[type='checkbox']:checked ~ label span:last-of-type {display:block; visibility:visible; float:right}
 
 /* Tiled */
-.mom_recentPostRotationFull_tiled {-webkit-box-shadow:inset 0 0 5px 1px rgba(18,39,71,.5);box-shadow:inset 0 0 5px 1px rgba(18,39,71,.5);display: block; max-width: 100%;margin: 0 auto;padding:0;}
+.mom_postrotation:after {display:block;clear:both;content:"";}
+.mom_postrotation {display:block;clear:both;margin:0;}
+.mom_recentPostRotationFull_tiled {display: block; max-width: 100%;margin: 0 auto;padding:0;}
 .mom_recentPostRotationFull_tiled .mediaEmbed {border-bottom: none!important;clear: both;display: block;position: absolute; top: 0;bottom: 0;left: 0;width: 100%;height: 100%;padding: 0 0 5px;overflow: hidden;}
-.mom_recentPostRotationFull_tiled .thumbnailFull {-webkit-box-shadow:inset 0 0 5px 1px rgba(0,0,0,.2);box-shadow:inset 0 0 5px 1px rgba(0,0,0,.2); background: no-repeat center center fixed; -webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;		display: block;height: 100%;margin: 0;overflow: hidden;position: relative;width: 100%; }
-.mom_recentPostRotationFull_tiled .feature {width: 100%; height: 400px;margin: 0 0 -15px 0;}
+.mom_recentPostRotationFull_tiled .thumbnailFull {background: no-repeat center center fixed; -webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover; display: block;height: 100%;margin: 0;overflow: hidden;position: relative;width: 100%; border: 1px solid rgba(0,0,0,.1);}
+.mom_recentPostRotationFull_tiled .thumbnailFull:hover {-webkit-box-shadow:inset 0 0 5px 1px rgba(0,0,0,.2);box-shadow:inset 0 0 5px 1px rgba(0,0,0,.2); }
+.mom_recentPostRotationFull_tiled .feature {width: 100%; height: 400px;margin: 0; clear: both;}
 .mom_recentPostRotationFull_tiled .second {width: 100%;height: 300px;}
-.mom_recentPostRotationFull_tiled .second .thumbnailFull:nth-child(1) {width: 55%; float: left;height: 100%:}
+.mom_recentPostRotationFull_tiled .second .thumbnailFull:nth-child(1) {width: 50%; float: left;height: 100%:}
 .mom_recentPostRotationFull_tiled .second .leftSmall a {padding: 25%!important;}
-.mom_recentPostRotationFull_tiled .secondThird {width: 45%; float: right; height: 100%:}
+.mom_recentPostRotationFull_tiled .secondThird {width: 50%; float: right; height: 100%:}
 .mom_recentPostRotationFull_tiled .secondThird a {padding: 5%!important;}
 .mom_recentPostRotationFull_tiled .secondThird .thumbnailFull {height: 150px!important;clear: both;width: 100%!important;}
 .mom_recentPostRotationFull_tiled .thumbnailFull a.mediaNotPresent {clear: both; display: block;font-size: 150%;font-weight: 900;height: 100%; left: 0;opacity: .3;position: absolute; padding: 15%;text-align: center;text-decoration: none;text-shadow: none;top: 0;width: 100%;}
