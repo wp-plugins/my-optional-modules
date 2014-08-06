@@ -13,6 +13,59 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 }
 
 
+/**
+ *
+ * Admin Stylesheet
+ * Only enqueue it if we're browsing the admin page for My Optional Modules
+ *
+ */
+if ( !function_exists ( 'my_optional_modules_stylesheets' ) ) {
+
+	function my_optional_modules_stylesheets( $hook ){
+
+		if( 'settings_page_mommaincontrol' != $hook )
+		return;
+		wp_register_style ( 'mom_admin_css', plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/adminstyle/css.css' );
+		wp_register_style ( 'font_awesome', plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' );
+		wp_enqueue_style  ( 'font_awesome' );
+		wp_enqueue_style  ( 'mom_admin_css' );
+
+	}
+
+}
+
+/**
+ *
+ * Font Awesome CSS enqueue
+ *
+ */
+if ( !function_exists ( 'my_optional_modules_font_awesome' ) ) {
+
+	function my_optional_modules_font_awesome() {
+
+		wp_register_style ( 'font_awesome', plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' );
+		wp_enqueue_style ( 'font_awesome' );
+
+	}
+
+}
+
+/**
+ *
+ * My Optional Modules stylesheet used throughout for the different modules
+ *
+ */
+if ( !function_exists ( 'my_optional_modules_main_stylesheet' ) ) {
+
+	function my_optional_modules_main_stylesheet() {
+
+		$myStyleFile = WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules05568.css';
+		wp_register_style ( 'my_optional_modules', $myStyleFile );
+		wp_enqueue_style ( 'my_optional_modules' );
+
+	}
+
+}
 
 	// http://davidwalsh.name/wordpress-ajax-comments
 	function mom_ajaxComment($comment_ID, $comment_status) {

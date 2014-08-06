@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.5.6.7
+ * Version: 5.5.6.8
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -20,84 +20,51 @@
  * along with this program;if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
- 
-	define( 'MyOptionalModules', true );
-	require_once( ABSPATH . 'wp-includes/pluggable.php' );
-	
-	$passwordField = 0;
 
-	// User Role Checking
-	if( is_user_logged_in() ) {
-		if( current_user_can('read') ) { $user_level = 0; }
-		if( current_user_can('delete_posts') ) { $user_level = 1; }
-		if( current_user_can('delete_published_posts') ) { $user_level = 2; }
-		if( current_user_can('read_private_pages') ) { $user_level = 4; }
-		if( current_user_can('edit_dashboard') ) { $user_level = 7; }
-	} else {
-		$user_level = 0;
-	}
+define( 'MyOptionalModules', true );
+require_once( ABSPATH . 'wp-includes/pluggable.php' );
 
-	// IP Validation
-	// Check if the connecting IP address is a valid one
-	if( inet_pton( $_SERVER['REMOTE_ADDR'] ) === false ) {
-		$ipaddress = false;
-	} else {
-		$ipaddress = esc_attr( $_SERVER[ 'REMOTE_ADDR' ] );
-	}
-	// If the IP is valid, check it against the DNSBL
-	if( !function_exists ( 'myoptionalmodules_checkdnsbl' ) ) {
-		function myoptionalmodules_checkdnsbl($ipaddress){
-			$dnsbl_lookup=array(
-				'dnsbl-1.uceprotect.net',
-				'dnsbl-2.uceprotect.net',
-				'dnsbl-3.uceprotect.net',
-				'dnsbl.sorbs.net',
-				'zen.spamhaus.org',
-				'dnsbl-2.uceprotect.net',
-				'dnsbl-3.uceprotect.net'
-				);
-			if( $ipaddress ) {
-				$reverse_ip=implode(".",array_reverse(explode(".",$ipaddress)));
-				foreach($dnsbl_lookup as $host){
-					if(checkdnsrr($reverse_ip.".".$host.".","A")){
-						$listed.=$reverse_ip.'.'.$host;
-					}
-				}
-			}
-			if( $listed ) {
-				$DNSBL === true;
-			} else {
-				$DNSBL === false;
-			}
-		}
-	}	
-	
-	include( plugin_dir_path(__FILE__) . '_my_optional_modules_installation.php' );
-	include( plugin_dir_path(__FILE__) . '_my_optional_modules_variables.php' );
-	include( plugin_dir_path(__FILE__) . '_my_optional_modules_functions.php' );
-	include( plugin_dir_path(__FILE__) . '_my_optional_modules_forms.php' );
-	include( plugin_dir_path(__FILE__) . '_my_optional_modules_settings.php' );
-	include( plugin_dir_path(__FILE__) . '_my_optional_modules_shortcodes.php' );
-	include( plugin_dir_path(__FILE__) . '/includes/modules/_my_optional_modules_passwords.php' );
-	
-	include( plugin_dir_path(__FILE__) . '/includes/modules/_my_optional_modules_reviews_settings.php' );
+$passwordField = 0;
 
-	include( plugin_dir_path(__FILE__) . '/includes/modules/_my_optional_modules_shortcodes_information.php' );
+/**
+ *
+ * Include all of our necessary files for this plugin to function properly 
+ * These files are included in the order they are needed. Rearranging them 
+ * may break functionality.
+ *
+ */
+include( plugin_dir_path(__FILE__) . '_my_optional_modules_user_roles.php' );									// Determine the connecting users role (or lack of)
+include( plugin_dir_path(__FILE__) . '_my_optional_modules_IP_validation.php' );								// Validate connecting IP and check it against the DNSBL
+include( plugin_dir_path(__FILE__) . '_my_optional_modules_installation.php' );									// Installation
+include( plugin_dir_path(__FILE__) . '_my_optional_modules_scripts.php' );										// Plugin scripts
+include( plugin_dir_path(__FILE__) . '_my_optional_modules_variables.php' );									// Plugin variables
+include( plugin_dir_path(__FILE__) . '_my_optional_modules_functions.php' );									// Plugin functions
+include( plugin_dir_path(__FILE__) . '_my_optional_modules_forms.php' );										// Form handling
+include( plugin_dir_path(__FILE__) . '_my_optional_modules_settings.php' );										// Settings
+include( plugin_dir_path(__FILE__) . '_my_optional_modules_shortcodes.php' );									// Shortcodes
+include( plugin_dir_path(__FILE__) . '/includes/modules/_my_optional_modules_passwords.php' );					// Module->Passwords
+include( plugin_dir_path(__FILE__) . '/includes/modules/_my_optional_modules_reviews_settings.php' );			// Module->Reviews(settings)
+include( plugin_dir_path(__FILE__) . '/includes/modules/_my_optional_modules_shortcodes_information.php' );		// Module->Shortcodes (information page)
+include( plugin_dir_path(__FILE__) . '/includes/modules/_my_optional_modules_miniloop.php' );					// Module->Miniloops
 
-	/**
-	 * Initiate Takeover module functionality if the module is active
-	 */
-	if( get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
-		include( plugin_dir_path(__FILE__) . '/includes/modules/_my_optional_modules_theme_takeover_settings.php' );
-		include( plugin_dir_path(__FILE__) . '/includes/modules/_my_optional_modules_theme_takeover_functions.php' );
-	}
+/**
+ * Initiate Takeover module functionality if the module is active
+ */
+if( get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
+
+	include( plugin_dir_path(__FILE__) . '/includes/modules/_my_optional_modules_theme_takeover_settings.php' );
+	include( plugin_dir_path(__FILE__) . '/includes/modules/_my_optional_modules_theme_takeover_functions.php' );
+
+}
 	
-	/**
-	 * Append meta information if Meta module is active
-	 */
-	if( get_option( 'mommaincontrol_meta' ) == 1 ) {
-		include( plugin_dir_path( __FILE__ ) . 'includes/modules/_my_optional_modules_meta_module.php' );
-	}
+/**
+ * Append meta information if Meta module is active
+ */
+if( get_option( 'mommaincontrol_meta' ) == 1 ) {
+
+	include( plugin_dir_path( __FILE__ ) . 'includes/modules/_my_optional_modules_meta_module.php' );
+
+}
 
 	
 	//
@@ -692,6 +659,18 @@ if(get_option('MOM_Exclude_NoFollow') != 0){
 	//
 	
 
+	if( get_option('mommaincontrol_comments') == 1){
+		add_filter('comments_template','mom_disablecomments');
+		function mom_disablecomments($comment_template){
+			return dirname(__FILE__).'/includes/templates/comments.php';
+		}
+		add_filter('comments_open','mom_disablecommentsform',10,2);
+		function mom_disablecommentsform($open,$post_id){
+			$post = get_post($post_id);
+			$open = false;
+			return $open;
+		}
+	}
 
 
 
@@ -739,6 +718,7 @@ if(get_option('MOM_Exclude_NoFollow') != 0){
 					$theID         = esc_sql(intval($post->ID));
 					$getID         = $wpdb->get_results("SELECT ID,UP,DOWN FROM $votesPosts WHERE ID = '".$theID."' LIMIT 1");
 					if(count($getID) == 0){
+						$vote = '';
 						$wpdb->query("INSERT INTO $votesPosts (ID, UP, DOWN) VALUES ($theID,1,0)");
 					}
 					foreach($getID as $gotID){
@@ -771,9 +751,8 @@ if(get_option('MOM_Exclude_NoFollow') != 0){
 					}		
 				// Return nothing, the IP address is fake.
 				}else{}
-				
 				echo $content . $vote;
-				
+
 			}
 		}
 	//
@@ -820,10 +799,8 @@ if(current_user_can('manage_options')){
 					<ol id="momEditorMenu">
 						<li class="clear"></li>';
 						$icon = array(
-						'automobile','bank','behance','behance-square','bomb','building',
-						'cab','car','child','circle-o-notch','circle-thin','codepen',
-						'cube','cubes','database','delicious','deviantart','digg',
-						'drupal','empire','envelope-square','fax','file-archive-o','file-audio-o',
+						'automobile','bank','behance','behance-square','bomb','building','cab','car','child','circle-o-notch','circle-thin','codepen',
+						'cube','cubes','database','delicious','deviantart','digg','drupal','empire','envelope-square','fax','file-archive-o','file-audio-o',
 						'file-code-o','file-excel-o','file-image-o','file-movie-o','file-pdf-o','file-photo-o',
 						'file-picture-o','file-powerpoint-o','file-sound-o','file-video-o','file-word-o','file-zip-o',
 						'ge','git','git-square','google','graduation-cap','hacker-news','header','history','institution',
@@ -897,186 +874,5 @@ if(current_user_can('manage_options')){
 				</div>';
 			}
 		}	
-	add_action('edit_form_after_editor','momEditorScreen');
-	}
-	
-
-	/**
-	 * Mini Loops
-	 */
-	if( get_option( 'MOM_themetakeover_tiledfrontpage' ) == 1 ) {
-		add_filter ( 'the_content', 'do_shortcode', 'mom_miniloop' );
-		add_shortcode ( 'mom_miniloop', 'mom_tiled_frontpage' );
-	}
-	function mom_tiled_frontpage($atts, $content = null){
-		ob_start();
-		global $user_level;
-		$maxposts = get_option( 'posts_per_page' );
-		$alt = $recent_count = 0;
-		extract(
-			shortcode_atts(array(
-				'amount' => 4,
-				'exclude_user' => 0,
-				'downsize' => 1,
-				'style' => 'tiled',
-				'offset' => 0,
-				'category' => '',
-				'orderby' => 'post_date',
-				'order' => 'DESC',
-				'post_status' => 'publish',
-				'cache_results' => false,
-				'year' => '',
-				'month' => '',
-				'day' => ''
-			), $atts)
-		);
-		$exclude_cats  = '';
-		if ( get_option ( 'MOM_Exclude_Categories_level7Categories') && $user_level == 7 ) { 
-			$exclude_cats  = get_option ( 'MOM_Exclude_Categories_level7Categories' ); 
-		} elseif ( get_option ( 'MOM_Exclude_Categories_level2Categories') && $user_level == 2 ) { 
-			$exclude_cats  = get_option ( 'MOM_Exclude_Categories_level2Categories' ); 
-		} elseif ( get_option ( 'MOM_Exclude_Categories_level1Categories') && $user_level == 1 ) { 
-			$exclude_cats  = get_option ( 'MOM_Exclude_Categories_level1Categories' ); 
-		} elseif ( get_option ( 'MOM_Exclude_Categories_level0Categories') && $user_level == 0 ) { 
-			$exclude_cats  = get_option ( 'MOM_Exclude_lCategories_evel0Categories' ); 
-		}
-		echo '<div class="mom_postrotation mom_recentPostRotationFull_' . $style .'">';
-		if( intval( $category ) ) {
-			if( $exclude_user == 1 ) {
-				$args = array(
-					'posts_per_page'   => $amount,
-					'offset'           => $offset,
-					'category'         => $category,
-					'orderby'          => $orderby,
-					'order'            => $order,
-					'post_type'        => 'post',
-					'post_status'      => $post_status,
-					'suppress_filters' => true,
-					'cache_results'    => $cache_results,
-					'year'             => $year,
-					'monthnum'         => $month,
-					'day'              => $day,
-					'category__not_in' => $exclude_cats
-				);
-			} else {
-				$args = array(
-					'posts_per_page'   => $amount,
-					'offset'           => $offset,
-					'category'         => $category,
-					'orderby'          => $orderby,
-					'order'            => $order,
-					'post_type'        => 'post',
-					'post_status'      => $post_status,
-					'suppress_filters' => true,
-					'cache_results'    => $cache_results,
-					'year'             => $year,
-					'monthnum'         => $month,
-					'day'              => $day
-				);
-			}
-		} else {
-			if( $exclude_user == 1 ) {
-				$args = array(
-					'posts_per_page'   => $amount,
-					'offset'           => $offset,
-					'category_name'    => $category,
-					'orderby'          => $orderby,
-					'order'            => $order,
-					'post_type'        => 'post',
-					'post_status'      => $post_status,
-					'suppress_filters' => true,
-					'cache_results'    => $cache_results,
-					'year'             => $year,
-					'monthnum'         => $month,
-					'day'              => $day,	
-					'category__not_in' => array($exclude_cats)
-				);
-			} else {
-				$args = array(
-					'posts_per_page'   => $amount,
-					'offset'           => $offset,
-					'category_name'    => $category,
-					'orderby'          => $orderby,
-					'order'            => $order,
-					'post_type'        => 'post',
-					'post_status'      => $post_status,
-					'suppress_filters' => true,
-					'cache_results'    => $cache_results,
-					'year'             => $year,
-					'monthnum'         => $month,
-					'day'              => $day				
-				);			
-			}
-		}
-		$myposts = get_posts( $args );
-		foreach( $myposts as $post ) : setup_postdata( $post ); 
-		$id    = $post->ID;
-		$link  = esc_url ( get_permalink( $id ) );
-		$title = get_the_title( $id );
-		$recent_count++;
-		$media = get_post_meta($id, 'media', true);
-		if( $recent_count == 1 ) {
-			$container = 'feature';
-			echo '<div class="' . $container . '">';					
-		}
-		if( $recent_count == 2 ) {
-			$container = 'second';
-			echo '<div class="' . $container . '">';
-		}
-		if( $recent_count == 3 ) {
-			$container = 'secondThird';
-			echo '<div class="' . $container . '">';
-		}
-		if( $recent_count <= 4 ) {
-			echo '<div class="thumbnailFull';
-		}
-		if( $recent_count == 2 ) {				
-			echo ' leftSmall';
-		}
-		if( $recent_count <= 4 ) {
-			echo '"';
-			if( '' != wp_get_attachment_url( get_post_thumbnail_id($id) ) ) {
-			$post_thumbnail_id = get_post_thumbnail_id( $id );
-					if( $downsize == 1 ) {
-					$thumb_array = image_downsize( $post_thumbnail_id, 'thumbnail' );
-					$thumb_path = $thumb_array[0];	
-				} else {
-					$thumb_path = wp_get_attachment_url( get_post_thumbnail_id($id) );
-				}
-	
-				echo 'style="background-image:url(\'' . $thumb_path . '\');"';
-			}
-			echo '>';
-			echo '<a class="mediaNotPresent" href="' . get_permalink($id) . '">' . get_the_title($id). '</a>';
-		}
-		echo '</div>';
-		if( $recent_count > 4 ) {
-			
-			if( $recent_count % 3 == 0 ) {
-				$container = 'second leftSmall';
-			} else {
-				$container = 'secondThird';
-			}
-			echo '<div class="' . $container . '"><div class="thumbnailFull"';
-			if( '' != wp_get_attachment_url( get_post_thumbnail_id($id) ) ) {
-			$post_thumbnail_id = get_post_thumbnail_id( $id );
-					if( $downsize == 1 ) {
-					$thumb_array = image_downsize( $post_thumbnail_id, 'thumbnail' );
-					$thumb_path = $thumb_array[0];	
-				} else {
-					$thumb_path = wp_get_attachment_url( get_post_thumbnail_id($id) );
-				}
-				echo ' style="background-image:url(\'' . $thumb_path . '\');"';
-			}
-			echo '>';
-			echo '
-			<a class="mediaNotPresent" href="' . get_permalink($id) . '">' . get_the_title($id). '</a></div>';
-		}
-		if( $recent_count == 4 ) {
-			echo '</div></div>';
-		}
-		endforeach;
-		wp_reset_postdata();
-		echo '</div></div>';
-		return ob_get_clean();	
+		add_action('edit_form_after_editor','momEditorScreen');
 	}

@@ -175,7 +175,7 @@ if ( !function_exists ( 'my_optional_modules_scripts' ) ) {
 					$(\''.$fitvidContainer.'\').fitVids();';
 				}
 				if( get_option( 'MOM_themetakeover_tiledfrontpage' ) == 1 ) {
-					echo 'jQuery(".recentPostRotationFull .thumbnailFull a.mediaNotPresent ").fitText();';
+					echo 'jQuery(".recentPostRotationFull .thumbnailFull a.mediaNotPresent").fitText();';
 				}
 				// Post/page list(s) / scroll-to-top arrow
 				if(get_option('MOM_themetakeover_postdiv') != '' && get_option('MOM_themetakeover_postelement') != ''){

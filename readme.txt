@@ -1,9 +1,9 @@
 === My Optional Modules ===
 Contributors: boyevul
 Tags: 4chan,gravatar,youtube,DNSBL,akismet,ipv4,ipv6,htmlpurifier,tripcode,sage,chan,capcodes,board,bbs,forum,anonymous,post,posting,user,submission,submitted,voting,votes,vote,rate,rating,post rating,post-rating,post-voting,year,day,month,archive,recycle,previous,fitvid,navbar,navigation,custom,youtube,video,redirect,404,redirect,maintenance,members,action,maintenance,simple,poll,polling,age,restrict,verify,gate,questions,verifier,verification,answers,quiz,scripts,javascript,footer,lazy,lazyload,twitter,google+,opengraph,meta,keywords,jquery,dynamic,no-js,collapse,expand,css-only,css,reviews,review,custom,tinymce,loggedin,hidecomments,hide,comments,restrict,commentform,commenttemplate,reddit,googlemaps,google,submit,button,share,gps,coords,embed,keyboardnavigation,post,homepage,frontpage,home,navigate,wordcount,wordgoal,countdown,total,rups,rotatinguniversalpasswords,sha512,encyrption,salt,exclusion,exclude,tags,categories,archives,postformats,post-formats,formats,hide
-Requires at least: 3.8
-Tested up to: 3.9
-Stable tag: 5.5.6.7
+Requires at least: 3.9.1
+Tested up to: 4.0
+Stable tag: 5.5.6.8
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -62,6 +62,10 @@ MOM only loads what you want it to load - so no matter how many modules come pac
 
 
 == Changelog ==
+* 5.5.6.8  addition: no comments (disables comments site-wide at the click of a button)
+* 5.5.6.8  unregistered variable: vote fix (Post votes module)
+* 5.5.6.8  Mini Loops addition: style: dropdown - list of post items with thumbnail, excerpt, and category links
+* 5.5.6.8  Mini Loops addition: style: slider - show_link (1/0: whether or not to show link text by default) - link_content (text content of the link (default is the post title)
 * 5.5.6.7  Takeover->Mini Loops (added) (shortcode: [mom_miniloop] - output a mini-loop of posts based on several configurable parameters
 * 5.5.6.6  Fixed minor glitch in script enqueueing
 * 5.5.6.5  Youtube for 404s removed (Takeover module)

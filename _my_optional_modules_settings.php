@@ -157,6 +157,21 @@ if(current_user_can('manage_options')){
 				echo '
 				<hr />
 				<p>Has <em>no</em> options</p>
+				<form class="config" method="post" action="" name="momComments">
+					<label for="mom_comments_mode_submit">No Comments</label>';
+					if(get_option('mommaincontrol_comments') == 1){
+						echo '<i class="fa fa-check-square"></i>';
+					}else{
+						echo '<i class="fa fa-square"></i>';
+					}
+					echo '<input type="text" class="hidden" value="';
+					if(get_option('mommaincontrol_comments') == 1){
+						echo '0';
+					}else{
+						echo '1';
+					}
+					echo '" name="comments" /><input type="submit" id="mom_comments_mode_submit" name="mom_comments_mode_submit" value="Submit" class="hidden" />
+					</form>
 				<form class="config" method="post" action="" name="momVotes">
 					<label for="mom_votes_mode_submit">Post votes</label>';
 					if(get_option('mommaincontrol_votes') == 1){
