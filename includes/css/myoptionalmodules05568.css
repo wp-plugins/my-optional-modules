@@ -72,18 +72,22 @@
 .mom_minicolumns .column span a{text-decoration:none; color:rgba(255,255,255,.8);font-size:75%;}
 
 /* Post Voting */
+.vote_the_post:after {clear: both; content: "";display: table;}
+.vote_the_post {border: 1px solid rgba(0,0,0,.1);clear: both;display: block; margin: 50px auto;width: 100%;overflow:hidden;height:23px;}
+.vote_the_post form label {background-color:#ffdddd;border-left: 1px solid rgba(0,0,0,.1);float: right; width: 15%;text-align: center;padding: 5px;margin:-5px 0;}
+.vote_the_post .voteAmount {float: left; width: 70%;padding: 5px;font-size: 75%;margin:-2px 0;cursor:default;}
+.vote_the_post .active {color:#fff;text-shadow: 0 0 1px rgba(0,0,0,.9);}
+.vote_the_post .inactive{color:rgba(255,255,255,.7);text-shadow: 0 0 1px rgba(0,0,0,.1);}
+.vote_the_post .downvote,.vote_the_post .upvote{color:rgba(255,255,255,.9);text-shadow: 0 0 1px rgba(0,0,0,.3);}
+.vote_the_post .downvote:hover,.vote_the_post .upvote:hover{background-color:#ac3f3f;color:ffdddd;}
+
+.vote_the_post label{display:block;cursor:pointer;padding:0}
+.vote_the_post input[type=submit],.hidden,.momnavbar #searchform label,.momnavbar #searchform input[type=submit],.mycontrols div .attachedcomment{display:none;visibility:hidden}
+
 .topVotes{width:100%;margin:5px auto 25px;list-style:none;padding:10px;}
 .topVotes li{clear:both;display:block;margin:2px auto}
 .votedPost{width:100%;min-height:50px;margin:0 auto;padding:5px}
 .topVotes a{display:block;float:left;margin:10px 0 0}
-.vote_the_post:after {clear: both; content: "";display: table;}
-.vote_the_post {border: 1px solid rgba(0,0,0,.1);clear: both;display: block; margin: 50px auto;width: 100%;overflow:hidden;height:23px;}
-.upvote {background-color:#ffdddd;border-left: 1px solid rgba(0,0,0,.1);float: right; width: 15%;text-align: center;padding: 5px;}
-.voteAmount {float: left; width: 70%;padding: 5px;font-size: 75%;margin:0;}
-.upvote .active {color:#fff;}
-.downvote:hover,.upvote:hover{background-color:#ac3f3f;color:ffdddd;}
-.vote_the_post label{display:block;cursor:pointer;padding:0}
-.vote_the_post input[type=submit],.hidden,.momnavbar #searchform label,.momnavbar #searchform input[type=submit],.mycontrols div .attachedcomment{display:none;visibility:hidden}
 
 /* Navbar */
 .momnavbar{z-index:99999;text-transform:uppercase;width:100%;display:block;text-align:left;line-height:35px}

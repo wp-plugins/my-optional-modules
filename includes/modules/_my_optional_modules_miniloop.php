@@ -342,6 +342,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 *
 	 */
 	$media = get_post_meta( $id, 'media', true );
+	$thumb_path = '';
 	if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
 
 		$post_thumbnail_id = get_post_thumbnail_id( $id );

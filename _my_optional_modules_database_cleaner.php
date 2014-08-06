@@ -13,6 +13,7 @@ if( !defined( 'MyOptionalModules' ) ) {
 }
 
 function my_optional_modules_cleaner_module() {
+	if( current_user_can( 'manage_options' ) ) {
 	global $table_prefix, $wpdb;
 	if( isset($_POST[ 'delete_unused_terms' ] ) || isset( $_POST[ 'delete_post_revisions' ] ) || isset( $_POST[ 'delete_unapproved_comments' ] ) || isset( $_POST[ 'deleteAllClutter' ] ) ) {
 		$postsTable = $table_prefix.'posts';
@@ -112,4 +113,5 @@ function my_optional_modules_cleaner_module() {
 			</form>
 		</section>
 	<?php 
+	}
 }

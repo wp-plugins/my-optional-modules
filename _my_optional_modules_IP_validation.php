@@ -103,7 +103,8 @@ if( !function_exists ( 'myoptionalmodules_checkdnsbl' ) ) {
 			 * If the IP is listed on one of the blacklists, treat it as a hostile
 			 *
 			 */
-			$DNSBL === true;
+			$DNSBL     === true;
+			$ipaddress === false;
 
 		} else {
 

@@ -15,6 +15,424 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 
 /**
  *
+ * Count++ Functionality
+ * Template functions
+ *
+ * obwcountplus_total()     :: prints single post word count
+ * countsplusplus()         :: prints custom output (set above)
+ * obwcountplus_count()     :: prints the total words + remaining (of goal)
+ * obwcountplus_total()     :: prints the total words
+ * obwcountplus_remaining() :: prints the remaining (or the total if the goal was reached)
+ *
+ */
+if( $mommodule_count == 1 ) {
+
+	if( !function_exists( 'countsplusplus' ) ) {
+
+		function countsplusplus() {
+
+			$oldcount = 0;
+			
+			global $wpdb;
+			
+			$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post'";
+			$words = $wpdb->get_results( $query );
+
+			if( $words ) {
+
+				foreach( $words as $word ) {
+
+					$post       = strip_tags( $word->post_content );
+					$post       = explode( ' ',$post );
+					$count      = count( $post );
+					$totalcount = $count + $oldcount;
+					$oldcount   = $totalcount;
+
+				}
+
+			} else {
+
+				$totalcount=0;
+
+			}
+
+			$remain	   = number_format( get_option( 'obwcountplus_1_countdownfrom' ) - $totalcount );
+			$c_custom  = sanitize_text_field( htmlentities( get_option( 'obwcountplus_4_custom' ) ) );
+			$c_search  = array( '%total%', '%remain%' );
+			$c_replace = array( $totalcount, $remain );
+			
+			echo str_replace( $c_search, $c_replace, $c_custom );
+
+		}
+
+	}
+
+	if( !function_exists( 'obwcountplus_single' ) ) {
+
+		function obwcountplus_single() {
+
+			$oldcount = 0;
+
+			global $wpdb, $post;
+
+			$postid	= $post->ID;
+
+			$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post' AND ID = '$postid'";
+			$words = $wpdb->get_results( $query );
+
+			if( $words ) {
+
+				foreach( $words as $word ) {
+					$post       = strip_tags( $word->post_content );
+					$post       = explode( ' ', $post );
+					$count      = count( $post );
+					$totalcount = $count + $oldcount;
+					$oldcount   = $totalcount;
+
+				}
+
+			} else {
+
+				$totalcount = 0;
+
+			}
+
+			if( is_single() ) {
+				echo esc_attr( number_format( $totalcount ) );
+
+			}
+
+		}
+
+	}
+	
+	if( !function_exists( 'obwcountplus_remaining' ) ) {
+
+		function obwcountplus_remaining() {
+
+			$oldcount = 0;
+
+			global $wpdb;
+
+			$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post'";
+			$words = $wpdb->get_results( $query );
+
+			if( $words ) {
+
+				foreach( $words as $word ) {
+
+					$post       = strip_tags( $word->post_content );
+					$post       = explode( ' ', $post );
+					$count      = count( $post );
+					$totalcount = $count + $oldcount;
+					$oldcount   = $totalcount;
+
+				}
+
+			}else{
+
+				$totalcount=0;
+
+			}
+
+			if(
+				$totalcount >= get_option( 'obwcountplus_1_countdownfrom' ) ||
+				get_option( 'obwcountplus_1_countdownfrom' ) == 0
+			 ){
+
+				echo esc_attr(number_format($totalcount));
+
+			} else {
+
+				echo esc_attr( number_format( get_option( 'obwcountplus_1_countdownfrom' ) - $totalcount ) );
+
+			}
+
+		}
+
+	}
+
+	if( !function_exists( 'obwcountplus_total' ) ) {
+
+		function obwcountplus_total() {
+
+			$oldcount = 0;
+			
+			global $wpdb;
+			
+			$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post'";
+			$words = $wpdb->get_results( $query );
+
+			if( $words ){
+
+				foreach( $words as $word ) {
+
+					$post       = strip_tags( $word->post_content );
+					$post       = explode( ' ', $post );
+					$count      = count($post);
+					$totalcount = $count + $oldcount;
+					$oldcount   = $totalcount;
+
+				}
+
+			} else {
+
+				$totalcount = 0;
+
+			}
+
+			echo esc_attr( number_format( $totalcount ) );
+
+		}
+
+	}
+
+	if( !function_exists( 'obwcountplus_count' ) ) {
+
+		function obwcountplus_count() {
+
+			$oldcount   = 0;
+			$totalcount = 0;
+
+			global $wpdb;
+			$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post'";
+			$words = $wpdb->get_results($query);
+			
+			if($words){
+
+				foreach( $words as $word ) {
+
+					$post       = strip_tags( $word->post_content );
+					$post       = explode( ' ',$post );
+					$count      = count( $post );
+					$totalcount = $count + $oldcount;
+					$oldcount   = $totalcount;
+
+				}
+
+			}
+			
+			if(
+				$totalcount >= get_option('obwcountplus_1_countdownfrom') ||
+				get_option('obwcountplus_1_countdownfrom') == 0
+			){
+
+				echo esc_attr( number_format( $totalcount ) . " " . get_option( 'obwcountplus_3_total' ) );
+
+			} else {
+
+				echo esc_attr( number_format( get_option( 'obwcountplus_1_countdownfrom' ) - $totalcount ) . ' ' . get_option( 'obwcountplus_2_remaining' ) . ' (' . number_format( $totalcount ) . ' ' . get_option( 'obwcountplus_3_total' ) . ')' );
+
+			}
+
+		}
+
+	}
+
+}
+
+/**
+ *
+ * No Comments
+ * Disable comments display and form
+ *
+ */
+if( get_option('mommaincontrol_comments') == 1){
+
+	add_filter( 'comments_template','mom_disablecomments' );
+	add_filter( 'comments_open','mom_disablecommentsform',10,2 );
+
+	if( !function_exists( 'mom_disablecomments' ) ) {
+
+		function mom_disablecomments( $comment_template ) {
+
+			return dirname( __FILE__ ) . '/includes/templates/comments.php';
+
+		}
+
+	}
+	
+	if( !function_exists( 'mom_disablecommentsform' ) ) {
+
+		function mom_disablecommentsform( $open,$post_id ) {
+
+			$post = get_post( $post_id );
+			$open = false;
+			return $open;
+
+		}
+
+	}
+
+}
+
+/**
+ *
+ * Post Voting 
+ * Automatically add the vote bar to the bottom of each post
+ *
+ */
+add_filter( 'the_content', 'mom_vote_the_post' );
+
+if( $mom_votes == 1 ) {
+
+	if( !function_exists( 'mom_vote_the_post' ) ) {
+
+		function mom_vote_the_post( $content ) {
+
+			global $wpdb, $wp, $post, $ipaddress;
+
+			$votesPosts = $wpdb->prefix . 'momvotes_posts';
+			$votesVotes = $wpdb->prefix . 'momvotes_votes';
+
+			if( $ipaddress !== false ) {
+
+				$theIP         = esc_sql( esc_attr( $ipaddress ) );
+				$theIP_s32int  = esc_sql( esc_attr( ip2long( $ipaddress ) ) );
+				$theIP_us32str = esc_sql( esc_attr( sprintf( "%u", $theIP_s32int ) ) );
+				$theID         = esc_sql( intval( $post->ID ) );
+				$getID         = $wpdb->get_results( "SELECT ID, UP, DOWN FROM $votesPosts WHERE ID = $theID LIMIT 1" );
+
+				if( count( $getID ) == 0 ) {
+
+					$vote = '';
+					$wpdb->query( "INSERT INTO $votesPosts ( ID, UP, DOWN ) VALUES ( $theID, 1, 0 ) " );
+
+				}
+
+				foreach( $getID as $gotID ) {
+
+					$vote       = '';
+					$votesTOTAL = intval( $gotID->UP + $gotID->DOWN );
+					$getIP      = $wpdb->get_results( "SELECT ID, IP, VOTE FROM $votesVotes WHERE ID = '$theID' AND IP = '$theIP_us32str' LIMIT 1" );
+					$up         = intval( $gotID->UP );
+					$down       = intval( $gotID->DOWN );
+					
+					if( count( $getIP ) == 0 ) {
+
+						if( isset( $_POST[$theID.'-up-submit'] ) ) {
+
+							$wpdb->query( "UPDATE $votesPosts SET UP = UP + 1 WHERE ID = $theID" );
+							$wpdb->query( "INSERT INTO $votesVotes ( ID, IP, VOTE ) VALUES ( $theID, $theIP_us32str, 1 )" );
+
+						}
+						
+						if( isset( $_POST[$theID.'-down-submit'] ) ) {
+
+							$wpdb->query( "UPDATE $votesPosts SET DOWN = DOWN + 1 WHERE ID = $theID" );
+							$wpdb->query( "INSERT INTO $votesVotes ( ID, IP, VOTE ) VALUES ( $theID, $theIP_us32str, 2 )" );
+
+						}						
+
+						$vote = '
+						<div class="vote_the_post" id="' . $theID . '">
+							<form action="" id="' . $theID . '-down" method="post">
+								<label for="' . $theID . '-down-submit" class="upvote">
+									<i class="fa fa-arrow-down"></i>
+								</label>
+								<input type="submit" name="' . $theID . '-down-submit" id="' . $theID . '-down-submit" />
+							</form>						
+							<form action="" id="' . $theID . '-up" method="post">
+								<label for="' . $theID . '-up-submit" class="upvote">
+									<i class="fa fa-arrow-up"></i>
+								</label>
+								<input type="submit" name="' . $theID . '-up-submit" id="' . $theID . '-up-submit" />
+							</form>
+							<span class="voteAmount">' . $up . ' &mdash; <small>' . $votesTOTAL . ' votes</small></span>
+						</div>';
+
+					} else {
+
+						foreach( $getIP as $gotIP ) {
+
+							$class_up   = '';
+							$class_down = '';
+							$voted       = esc_sql( esc_attr( $gotIP->VOTE ) );
+							
+							if( $voted == 1 ) {
+							
+								$class_up   = ' active';
+								$class_down = ' inactive';
+							
+							}
+							
+							if( $voted == 2 ) {
+							
+								$class_down = ' active';
+								$class_up   = ' inactive';
+							
+							}
+							
+							if( $voted == 1 && isset( $_POST[$theID.'-up-submit'] ) ) {
+
+								$wpdb->query( "UPDATE $votesPosts SET UP = UP - 1 WHERE ID = $theID" );
+								$wpdb->query( "DELETE FROM $votesVotes WHERE IP = '$theIP_us32str' AND ID = $theID" );
+
+							}
+
+							if( $voted == 1 && isset( $_POST[$theID.'-down-submit'] ) ) {
+
+								$wpdb->query( "UPDATE $votesPosts SET UP = UP - 1 WHERE ID = $theID" );
+								$wpdb->query( "DELETE FROM $votesVotes WHERE IP = '$theIP_us32str' AND ID = $theID" );
+								$wpdb->query( "UPDATE $votesPosts SET DOWN = DOWN + 1 WHERE ID = $theID" );
+								$wpdb->query( "INSERT INTO $votesVotes ( ID, IP, VOTE ) VALUES ( $theID, $theIP_us32str, 2 )" );
+
+							}							
+							
+							if( $voted == 2 && isset( $_POST[$theID.'-down-submit'] ) ) {
+
+								$wpdb->query( "UPDATE $votesPosts SET DOWN = DOWN - 1 WHERE ID = $theID" );
+								$wpdb->query( "DELETE FROM $votesVotes WHERE IP = '$theIP_us32str' AND ID = $theID" );
+
+							}
+							
+							if( $voted == 2 && isset( $_POST[$theID.'-up-submit'] ) ) {
+
+								$wpdb->query( "UPDATE $votesPosts SET DOWN = DOWN - 1 WHERE ID = $theID" );
+								$wpdb->query( "DELETE FROM $votesVotes WHERE IP = '$theIP_us32str' AND ID = $theID" );
+								$wpdb->query( "UPDATE $votesPosts SET UP = UP + 1 WHERE ID = $theID" );
+								$wpdb->query( "INSERT INTO $votesVotes ( ID, IP, VOTE ) VALUES ( $theID, $theIP_us32str, 1 )" );
+
+							}							
+
+							$vote = '
+							<div class="vote_the_post" id="' . $theID . '">
+								<form action="" id="' . $theID . '-down" method="post">
+									<label for="' . $theID . '-down-submit" class="upvote">
+										<i class="fa fa-arrow-down' . $class_down . '"></i>
+									</label>
+									<input type="submit" name="' . $theID . '-down-submit" id="' . $theID . '-down-submit" />
+								</form>						
+								<form action="" id="' . $theID . '-up" method="post">
+									<label for="' . $theID . '-up-submit" class="upvote">
+										<i class="fa fa-arrow-up' . $class_up . '"></i>
+									</label>
+									<input type="submit" name="' . $theID . '-up-submit" id="' . $theID . '-up-submit" />
+								</form>
+								<span class="voteAmount">' . $up . ' &mdash; <small>' . $votesTOTAL . ' votes</small></span>
+							</div>';
+						
+						}
+						
+					}
+
+				}
+
+			} else { 
+
+				$vote = '';
+
+			}
+
+			echo $content . $vote;
+		}
+
+	}
+
+}
+
+/**
+ *
  * Admin Stylesheet
  * Only enqueue it if we're browsing the admin page for My Optional Modules
  *

@@ -4,6 +4,35 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 	die ();
 }
 
+add_shortcode( 'topvoted', 'vote_the_posts_top' );
+add_filter( 'the_content', 'do_shortcode','vote_the_posts_top' );
+function vote_the_posts_top($atts,$content = null){
+	extract(
+		shortcode_atts(array(
+			'amount' => 10
+		), $atts)
+	);	
+	$amount = esc_sql(intval($amount));
+	global $wpdb,$wp,$post;
+	ob_start();
+	wp_reset_query();
+	$votesPosts = $wpdb->prefix.'momvotes_posts';
+	$query_sql = $wpdb->get_results ( "SELECT ID,UP from $votesPosts  WHERE UP > 1 ORDER BY UP DESC LIMIT $amount" );
+	if ($query_sql) {
+		echo '<ul class="topVotes">
+			<li>Top ' . $amount . ' posts</li>';
+		foreach ($query_sql as $post_id) {
+			$votes = intval($post_id->UP);
+			$id = intval($post_id->ID);
+			$link = get_permalink($id);
+			echo '<li><a href="' . $link . '" rel="bookmark" title="Permanent Link to ' . get_the_title( $id ) . '">' . get_the_title( $id ) . ' &mdash; ( ' . $votes . ' )</a></li>';
+		}
+		echo '</ul>';
+	}else{}
+	wp_reset_query();
+	return ob_get_clean();
+}
+
 
 	$mom_review_global = 0;
 	function mom_reviews_shortcode($atts, $content = null){
