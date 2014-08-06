@@ -86,7 +86,7 @@ if( !function_exists ( 'myoptionalmodules_checkdnsbl' ) ) {
 
 			foreach($dnsbl_lookup as $host){
 
-				if(checkdnsrr($reverse_ip.".".$host.".","A")){
+				if( checkdnsrr( $reverse_ip.".".$host.".","A" ) ) {
 
 					$listed.=$reverse_ip.'.'.$host;
 

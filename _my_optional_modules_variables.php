@@ -12,6 +12,8 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 	die ();
 }
 
+$date_day = date( 'D' );
+
 $mommodule_focus = esc_attr(get_option('mommaincontrol_focus'));
 $mommodule_analytics      = false; 
 $mommodule_count          = false; 

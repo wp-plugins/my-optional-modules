@@ -402,6 +402,7 @@ if(current_user_can('manage_options')){
 					<p></p>
 					<?php my_optional_modules_cleaner_module(); ?>
 					<p>
+						<i class="fa fa-comment">&mdash;</i> <em>No Comments</em> disables commenting site-wide, removing the <strong>display</strong> of comments and the comment form.<br /><br />
 						<i class="fa fa-heart">&mdash;</i> <em>Post Votes</em> adds a voting system to your blog, allowing 
 						users to <i class="fa fa-heart"></i> posts that they like, with an adjoining counter to show the total 
 						amount of votes on each post. You may also use the shortcode [top_voted] (with optional <strong>amount</strong> 

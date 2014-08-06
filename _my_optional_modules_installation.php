@@ -4,7 +4,7 @@
  *
  * Installation
  *
- * Handles everything thatt needs to occur upon activation of the plugin
+ * Handles everything that needs to occur upon activation of the plugin
  *
  * Since 1
  * @my_optional_modules
