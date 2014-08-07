@@ -272,10 +272,11 @@ if( get_option('mommaincontrol_comments') == 1){
  * Automatically add the vote bar to the bottom of each post
  *
  */
-add_filter( 'the_content', 'mom_vote_the_post' );
 
 if( $mom_votes == 1 ) {
 
+	add_filter( 'the_content', 'mom_vote_the_post' );
+	
 	if( !function_exists( 'mom_vote_the_post' ) ) {
 
 		function mom_vote_the_post( $content ) {
@@ -307,6 +308,7 @@ if( $mom_votes == 1 ) {
 					$getIP      = $wpdb->get_results( "SELECT ID, IP, VOTE FROM $votesVotes WHERE ID = '$theID' AND IP = '$theIP_us32str' LIMIT 1" );
 					$up         = intval( $gotID->UP );
 					$down       = intval( $gotID->DOWN );
+					
 					
 					if( count( $getIP ) == 0 ) {
 
@@ -424,7 +426,7 @@ if( $mom_votes == 1 ) {
 
 			}
 
-			echo $content . $vote;
+			return $content . $vote;
 		}
 
 	}
@@ -437,16 +439,16 @@ if( $mom_votes == 1 ) {
  * Only enqueue it if we're browsing the admin page for My Optional Modules
  *
  */
-if ( !function_exists ( 'my_optional_modules_stylesheets' ) ) {
+if( !function_exists( 'my_optional_modules_stylesheets' ) ) {
 
 	function my_optional_modules_stylesheets( $hook ){
 
 		if( 'settings_page_mommaincontrol' != $hook )
 		return;
-		wp_register_style ( 'mom_admin_css', plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/adminstyle/css.css' );
-		wp_register_style ( 'font_awesome', plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' );
-		wp_enqueue_style  ( 'font_awesome' );
-		wp_enqueue_style  ( 'mom_admin_css' );
+		wp_register_style( 'mom_admin_css', plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/adminstyle/css.css' );
+		wp_register_style( 'font_awesome', plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' );
+		wp_enqueue_style( 'font_awesome' );
+		wp_enqueue_style( 'mom_admin_css' );
 
 	}
 
@@ -457,12 +459,12 @@ if ( !function_exists ( 'my_optional_modules_stylesheets' ) ) {
  * Font Awesome CSS enqueue
  *
  */
-if ( !function_exists ( 'my_optional_modules_font_awesome' ) ) {
+if( !function_exists( 'my_optional_modules_font_awesome' ) ) {
 
 	function my_optional_modules_font_awesome() {
 
-		wp_register_style ( 'font_awesome', plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' );
-		wp_enqueue_style ( 'font_awesome' );
+		wp_register_style( 'font_awesome', plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' );
+		wp_enqueue_style( 'font_awesome' );
 
 	}
 
@@ -473,13 +475,13 @@ if ( !function_exists ( 'my_optional_modules_font_awesome' ) ) {
  * My Optional Modules stylesheet used throughout for the different modules
  *
  */
-if ( !function_exists ( 'my_optional_modules_main_stylesheet' ) ) {
+if( !function_exists( 'my_optional_modules_main_stylesheet' ) ) {
 
 	function my_optional_modules_main_stylesheet() {
 
 		$myStyleFile = WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules05568.css';
-		wp_register_style ( 'my_optional_modules', $myStyleFile );
-		wp_enqueue_style ( 'my_optional_modules' );
+		wp_register_style( 'my_optional_modules', $myStyleFile );
+		wp_enqueue_style( 'my_optional_modules' );
 
 	}
 

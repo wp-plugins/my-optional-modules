@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.5.7.0
+ * Version: 5.5.7.1
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -40,16 +40,9 @@ include( plugin_dir_path(__FILE__) . '_my_optional_modules_scripts.php' );      
 include( plugin_dir_path(__FILE__) . '_my_optional_modules_variables.php' );                                    // Plugin variables
 include( plugin_dir_path(__FILE__) . '_my_optional_modules_functions.php' );                                    // Plugin functions
 include( plugin_dir_path(__FILE__) . '_my_optional_modules_forms.php' );                                        // Form handling
-
-/**
- *
- * Settings pages
- *
- */
 include( plugin_dir_path(__FILE__) . '_my_optional_modules_settings.php' );                                     // Settings
 include( plugin_dir_path(__FILE__) . '/includes/modules/_my_optional_modules_reviews_settings.php' );           // Module->Reviews(settings)
 include( plugin_dir_path(__FILE__) . '/includes/modules/_my_optional_modules_count_settings.php' );             // Module->Count++(settings)
-
 include( plugin_dir_path(__FILE__) . '_my_optional_modules_database_cleaner.php' );                             // Database cleaner
 include( plugin_dir_path(__FILE__) . '_my_optional_modules_shortcodes.php' );                                   // Shortcodes
 include( plugin_dir_path(__FILE__) . '/includes/modules/_my_optional_modules_passwords.php' );                  // Module->Passwords

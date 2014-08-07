@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: reviews,count,exclude,jump,shortcode,takeover,password,comments,vote,feed,font awesome,hide,version,footer,lazy load,meta,disable,authors,dates,maintenance,analytics,gallery,google maps,reddit,restrict,progress,verifier,loop,mini,ajax,fitvid,navbar,share,bg,wowhead,jquery,tag,category,format,hide,sunday,monday,tuesday,wednesday,thursday,friday,saturday,front page,tag archives,search results,logged out,subscriber,contributor,author,category archive
 Requires at least: 3.9.1
 Tested up to: 4.0
-Stable tag: 5.5.7.0
+Stable tag: 5.5.7.1
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -49,6 +49,8 @@ They are designed to be lightweight and easilly implemented by even the most nov
 2. 'dropdown' style mini-loop (Takeover->Mini Loops) (Theme: Twenty Fourteen)
 
 == Changelog ==
+* 5.5.7.1  If Font Awesome is not turned on, but Post Voting is, it will enqueue the Font Awesome CSS (because the vote buttons rely on it)
+* 5.5.7.1  Changed how Post Voting is initiated to work better with other plugins that utilize content filtering.
 * 5.5.7.0  Fixed wording on 'Hide Tags from.." portion of exclude (Tag archives was supposed to be Category archives)
 * 5.5.7.0  Post voting (downvotes added) (functionality slightly changed to work better and to accommodate downvoting)
 * 5.5.6.9  Exclude (code cleanup)

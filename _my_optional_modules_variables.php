@@ -54,7 +54,7 @@ if( $mommodule_meta               == 1 ) include( plugin_dir_path( __FILE__ ) . 
 
 
 if( $mommodule_exclude            == 1 ) add_action( 'after_setup_theme', 'myoptionalmodules_postformats' );
-if( $mommodule_fontawesome        == 1 ) add_action( 'wp_enqueue_scripts', 'myoptionalmodules_scripts' );
+if( $mommodule_fontawesome        == 1 || $mom_votes == 1 ) add_action( 'wp_enqueue_scripts', 'myoptionalmodules_scripts' );
 if( $mommodule_authorarchives     == 1 ) add_action( 'template_redirect', 'myoptionalmodules_disableauthorarchives' );
 if( $mommodule_datearchives       == 1 ) add_action( 'wp', 'myoptionalmodules_disabledatearchives' );
 if( $mommodule_datearchives       == 1 ) add_action( 'template_redirect', 'myoptionalmodules_disabledatearchives' );
