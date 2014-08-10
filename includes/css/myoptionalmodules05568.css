@@ -1,4 +1,4 @@
-.vote_the_post *:before,.vote_the_post *:after,.vote_the_post *,.topVotes *:before, .topVotes *:after, .topVotes *,.mom_postrotation *:before, .mom_postrotation *:after, .mom_postrotation * {
+#mom_onthisday *:before,#mom_onthisday *:after, #mom_onthisday *,.vote_the_post *:before,.vote_the_post *:after,.vote_the_post *,.topVotes *:before, .topVotes *:after, .topVotes *,.mom_postrotation *:before, .mom_postrotation *:after, .mom_postrotation * {
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
@@ -185,13 +185,14 @@ span#createalisttog,span#createalisttogd{cursor:pointer;margin:0 auto}
 div.createalist_listitems{text-indent:15px;margin:15px auto 10px 15px}
 
 /* On this day */
-#mom_onthisday{font-size:12px;border:1px solid #eee;display:block;width:250px;background-color:#fcfcfc;margin:30px auto;padding:5px}
+#mom_onthisday{font-size:12px;border:1px solid #eee;display:block;width:100%;background-color:#fcfcfc;margin:30px auto;padding:5px}
 #mom_onthisday span.onthisday{display:block;clear:both;border:1px solid #eee;background-color:#fff;width:auto;text-transform:lowercase;font-size:20px;text-align:center;margin:-20px auto 0;padding:10px}
 #mom_onthisday section.mom_onthisday{clear:both;width:100%;cursor:pointer;height:40px;overflow:hidden;margin:0 auto 0 -5px;padding:5px}
 #mom_onthisday section.mom_onthisday a{display:block;width:100%;height:100%}
-#mom_onthisday section.mom_onthisday div.mom_onthisday{width:95%;clear:both;display:block;overflow:hidden;margin:0 auto 0 -5px;padding:5px}
+#mom_onthisday section.mom_onthisday a:hover{border-bottom:1px solid rgba(0,0,0,.1);}
+#mom_onthisday section.mom_onthisday div.mom_onthisday{width:100%;clear:both;display:block;overflow:hidden;margin:0 auto;padding:5px}
 #mom_onthisday section.mom_onthisday div.mom_onthisday span.title{float:left;text-align:left;display:block;width:80%}
-#mom_onthisday section.mom_onthisday div.mom_onthisday span.theyear{float:right;text-align:right;display:block;width:10%;margin:5px 0}
+#mom_onthisday section.mom_onthisday div.mom_onthisday span.theyear{float:right;text-align:right;display:block;width:20%;margin:0}
 #mom_onthisday section.mom_onthisday div.mom_onthisday section.nothing{text-align:center;color:#bcbcbc}
 
 /* Various */

@@ -78,8 +78,10 @@ if ( !function_exists ( 'my_optional_modules_add_my_shortcodes' ) ) {
 
 	function my_optional_modules_add_my_shortcodes() {
 
-		global $mommaincontrol_themetakeover,$horizontal_galleries,$mommodule_passwords,$mommodule_reviews,$mommodule_shortcodes,$mommodule_fontawesome,$mommodule_passwords,$mommodule_reviews;
-
+		global $mom_votes,$mommaincontrol_themetakeover,$horizontal_galleries,$mommodule_passwords,$mommodule_reviews,$mommodule_shortcodes,$mommodule_fontawesome,$mommodule_passwords,$mommodule_reviews;
+		if( $mom_votes                  == 1 ) add_shortcode( 'topvoted', 'vote_the_posts_top' );
+		if( $mom_votes                  == 1 ) add_filter( 'the_content', 'do_shortcode','vote_the_posts_top' );
+		
 		if( $mommodule_reviews          == 1 ) add_filter( 'the_content', 'do_shortcode', 'mom_reviews_shortcode' );
 		if( $mommodule_reviews          == 1 ) add_shortcode( 'momreviews', 'mom_reviews_shortcode' );
 
