@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.5.7.2
+ * Version: 5.5.7.3
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -21,10 +21,25 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+ /**
+  *
+  * This is free software. You don't pay anything for it.
+  * This is a hobby. This is not my job. I don't get paid for it.
+  *
+  * Please be kind to me. I spend a lot of my free time doing this.
+  * There are bound to be bugs in it sometimes. 
+  * And I'll have them fixed as soon as I spot them.
+  * I do my best to ensure that there aren't, but I'm only human;
+  * things sometimes slip by.  
+  *
+  */
+ 
 define( 'MyOptionalModules', true );
 require_once( ABSPATH . 'wp-includes/pluggable.php' );
 
-$passwordField = 0;
+$passwordField                 = 0;
+$mom_review_global             = 0;
+$momverifier_verification_step = 0;
 
 /**
  *

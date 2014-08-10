@@ -83,7 +83,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 			'amount'        => 4,					// numerical value of how many posts to return in the loop
 			'exclude_user'  => 0,					// 1(yes) 0(no) (use exclude user category settings from Exclude module)
 			'downsize'      => 1,					// 1(yes) 0(no) (downsize thumbnails image quality and size)
-			'style'         => 'tiled',				// tiled,slider,dropdown
+			'style'         => 'tiled',				// columns,dropdown,slider,tiled
 			'offset'        => 0,					// how many posts to offset 
 			'category'      => '',					// numerical ID(s) or category name(s) (multiple separated by commas) (do not mix the two)
 			'orderby'       => 'post_date',			// none,ID,author,title,name,type,date,modified,parent,rand
@@ -106,19 +106,19 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 * based on the user's user level (or lack thereof)
 	 *
 	 */
-	if ( get_option ( 'MOM_Exclude_Categories_level7Categories') && $user_level == 7 ) {
+	if( get_option ( 'MOM_Exclude_Categories_level7Categories') && $user_level == 7 ) {
 
 		$exclude_cats  = get_option ( 'MOM_Exclude_Categories_level7Categories' );
 
-	} elseif ( get_option ( 'MOM_Exclude_Categories_level2Categories') && $user_level == 2 ) {
+	} elseif( get_option ( 'MOM_Exclude_Categories_level2Categories') && $user_level == 2 ) {
 
 		$exclude_cats  = get_option ( 'MOM_Exclude_Categories_level2Categories' );
 
-	} elseif ( get_option ( 'MOM_Exclude_Categories_level1Categories') && $user_level == 1 ) {
+	} elseif( get_option ( 'MOM_Exclude_Categories_level1Categories') && $user_level == 1 ) {
 
 		$exclude_cats  = get_option ( 'MOM_Exclude_Categories_level1Categories' );
 
-	} elseif ( get_option ( 'MOM_Exclude_Categories_level0Categories') && $user_level == 0 ) {
+	} elseif( get_option ( 'MOM_Exclude_Categories_level0Categories') && $user_level == 0 ) {
 
 		$exclude_cats  = get_option ( 'MOM_Exclude_lCategories_evel0Categories' );
 

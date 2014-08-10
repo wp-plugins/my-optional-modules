@@ -24,13 +24,12 @@ if( !defined ( 'MyOptionalModules' ) ) {
 
 /**
  *
- * Set various variables beforehand that we may need to step through later 
- * with certain functions
+ * Output a list of posts with more than 1 upvote
+ *
+ * [topvoted]
+ * amount : number of posts to output
  *
  */
-$mom_review_global             = 0;
-$momverifier_verification_step = 0;
-
 if( !function_exists( 'vote_the_posts_top' ) ) {
 
 	function vote_the_posts_top( $atts, $content = null ) {
@@ -47,7 +46,7 @@ if( !function_exists( 'vote_the_posts_top' ) ) {
 
 		);
 
-		$amount = esc_sql(intval($amount));
+		$amount = intval( $amount );
 
 		ob_start();
 		wp_reset_query();
@@ -55,27 +54,27 @@ if( !function_exists( 'vote_the_posts_top' ) ) {
 		$votesPosts = $wpdb->prefix . 'momvotes_posts';
 		$query_sql  = $wpdb->get_results( "SELECT ID,UP from $votesPosts  WHERE UP > 1 ORDER BY UP DESC LIMIT $amount" );
 
-		if( $query_sql ) {
+		if( count( $query_sql ) ) {
 
-			echo '<ul class="topVotes">
-				<li>Top ' . $amount . ' posts</li>';
-			foreach ($query_sql as $post_id) {
+			echo '<ul class="topVotes">';
+				
+			foreach ( $query_sql as $post_id ) {
 
 				$votes = intval( $post_id->UP );
 				$id    = intval( $post_id->ID );
 				$link  = get_permalink( $id );
+				$title = get_the_title( $id );
 				
-				echo '<li><a href="' . $link . '" rel="bookmark" title="Permanent Link to ' . get_the_title( $id ) . '">' . get_the_title( $id ) . ' &mdash; ( ' . $votes . ' )</a></li>';
+				echo '<li><a href="' . $link . '" rel="bookmark" title="Permanent Link to ' . $title . '">' . $title . ' &mdash; ( ' . $votes . ' )</a></li>';
 
 			}
 
 			echo '</ul>';
 
-		} else {
-
 		}
-
+		
 		wp_reset_query();
+		
 		return ob_get_clean();
 
 	}
@@ -212,7 +211,7 @@ if( !function_exists( 'font_fa_shortcode' ) ) {
 
 		$icon = esc_attr( $i );
 
-		if( '' != $icon ){
+		if( '' != $icon ) {
 
 			$iconfinal = $icon;
 
@@ -258,12 +257,12 @@ if( !function_exists( 'mom_onthisday' ) ) {
 
 		if( $cat == 'current' ) {
 
-			$category_current = get_the_category($postid);
-			$category = $category_current[0]->cat_ID;
+			$category_current = get_the_category( $postid );
+			$category         = $category_current[0]->cat_ID;
 
 		} else {
 
-			$category = esc_attr($cat);
+			$category = esc_attr( $cat );
 
 		}
 
@@ -271,7 +270,7 @@ if( !function_exists( 'mom_onthisday' ) ) {
 		$postid        = get_the_ID();
 		$current_day   = date( 'd' );
 		$current_month = date( 'm' );
-		$postsperpage  = esc_attr( $amount );
+		$postsperpage  = intval( $amount );
 
 		query_posts( "cat=$category&monthnum=$current_month&day=$current_day&post_per_page=$postsperpage" );
 
@@ -319,7 +318,7 @@ if( !function_exists( 'mom_onthisday' ) ) {
 			$postid = get_the_id();
 			$link   = get_the_permalink( $postid );
 			$title  = get_the_title( $postid );
-			$year   = get_the_date('Y');
+			$year   = get_the_date( 'Y' );
 
 			echo '<section class="mom_onthisday"><a href="' . $link . '"><div class="mom_onthisday"><span class="title">' . $title . '</span><span class="theyear">' . $year . '</span></div></a></section>';
 			endwhile;
@@ -339,7 +338,7 @@ if( !function_exists( 'mom_onthisday' ) ) {
  *
  * Google Map embedding
  * [mom_map] 
- * address     : can be GPS coordinates or a physical street address
+ * address : can be GPS coordinates or a physical street address
  *
  */
 if( !function_exists( 'mom_google_map_shortcode' ) ) {
@@ -457,192 +456,141 @@ if( !function_exists( 'mom_reddit_shortcode' ) ) {
 	
 }
 
-function mom_restrict_shortcode($atts, $content = null){
-	extract(
-		shortcode_atts(array(
-			'message' => 'You must be logged in to view this content.',
-			'comments' => '',
-			'form' => ''
-		), $atts)
-	);
-	ob_start();
-	if(is_user_logged_in()){return $content;}else{
-		echo '<div class="mom_restrict">'.htmlentities($message).'</div>';
-		if($comments == '1'){
-			add_filter('comments_template','restricted_comments_view');
-			function restricted_comments_view($comment_template){
-				return dirname(__FILE__).'/includes/templates/comments.php';
-			}
-		}
-		if($comments == '2'){
-			add_filter('comments_open','restricted_comments_form',10,2);
-			function restricted_comments_form($open,$post_id){
-				$post = get_post($post_id);
-				$open = false;
-				return $open;
-			}	
-		}
-	}		
-	return ob_get_clean();
-}
+/**
+ *
+ * Restrict content inside of shortcode to users who are logged in or 
+ * restrict commenting to users who are logged in
+ *
+ * [mom_restrict] at the top of a post
+ * comments / 1 or 2 ( 1 for comments form, 2 for both comments and form off )
+ *
+ */
+if( !function_exists( 'mom_restrict_shortcode' ) ) {
 
-function mom_progress_shortcode($atts,$content = null){
-	extract(
-		shortcode_atts(array(
-			'align' => 'none',
-			'fillcolor' => '#ccc',
-			'maincolor' => '#000',
-			'height' => '15',
-			'fontsize' => '15',
-			'level' => '',
-			'margin' => '0 auto',
-			'talign' => 'center',
-			'width' => '95'
-		), $atts)
-	);
-	$align_fetch = sanitize_text_field($align);
-	$fillcolor_fetch = sanitize_text_field($fillcolor);
-	$height_fetch = sanitize_text_field($height);
-	$level_fetch = sanitize_text_field($level);
-	$maincolor_fetch = sanitize_text_field($maincolor);
-	$margin_fetch = sanitize_text_field($margin);
-	$width_fetch = sanitize_text_field($width);
-	ob_start();
-	if($align_fetch == 'left'){$align_fetch_final = 'float: left';}
-	elseif($align_fetch == 'right'){$align_fetch_final = 'float: right';}
-	else {$align_fetch_final = 'clear: both';}
-	echo '<div class="mom_progress" style="'.$align_fetch_final.';height:'.$height_fetch.'px;display:block;width:'.$width_fetch.'%;margin:'.$margin_fetch.';background-color:'.$maincolor_fetch.'"><div style="display:block;height:'.$height_fetch.'px;width:'.$level_fetch.'%;background-color:'.$fillcolor_fetch.';"></div></div>';
-	return ob_get_clean();
-}
+	function mom_restrict_shortcode( $atts, $content = null ) {
 
-function mom_verify_shortcode($atts,$content = null){
-	global $post;
-		global $ipaddress;
-		if($ipaddress !== false){
-		$ipaddress = ip2long($ipaddress);
-		if(is_numeric($ipaddress)){
-			$theIP = $ipaddress;}else{
-			$theIP = 0;
-		}
-		ob_start();
 		extract(
-			shortcode_atts(array(
-				"age" => '',
-				"answer" => '',
-				"logged" => 1,
-				"message" => 'Please verify your age by typing it here',
-				"fail" => 'You are not able to view this content at this time.',
-				"logging" => 0,
-				"background" => 'transparent',
-				"stats" => '',
-				"single" => 0,
-				"cmessage" => 'Correct',
-				"imessage" => 'Incorrect',
-				"deactivate" => 0
-			), $atts)
+
+			shortcode_atts( array (
+
+				'message'  => 'You must be logged in to view this content.',
+				'comments' => '',
+				'form'     => ''
+
+			), $atts )
+
 		);
-		global $momverifier_verification_step;
-		$momverifier_verification_step++;
-		$thePostId = $post->ID;
-		$theBackground = esc_sql(myoptionalmodules_sanistripents($background));
-		$theAge = esc_sql(myoptionalmodules_sanistripents($age));
-		$isLogged = esc_sql(myoptionalmodules_sanistripents($logged));
-		$theMessage = esc_sql(myoptionalmodules_sanistripents($message));
-		$theAnswer = esc_sql(myoptionalmodules_sanistripents($answer));
-		$failMessage = $fail;
-		$isLogged = esc_sql(myoptionalmodules_sanistripents($logged));
-		$isLogging = esc_sql(myoptionalmodules_sanistripents($logging));
-		$attempts = esc_sql(myoptionalmodules_sanistripents($single));
-		$correctResultMessage = esc_sql(myoptionalmodules_sanistripents($cmessage));
-		$incorrectResultMessage = esc_sql(myoptionalmodules_sanistripents($imessage));
-		$isDeactivated = esc_sql(myoptionalmodules_sanistripents($deactivate));
-		$verificationID = $momverifier_verification_step.''.$thePostId;
-		$statsMessage = esc_sql(myoptionalmodules_sanistripents($stats));
-		$alreadyAttempted = 0;
-		if(is_numeric($attempts) && $attempts == 1){
-			global $wpdb;
-			$verification_table_name = $wpdb->prefix.'momverification';
-			$getNumberofAttempts = $wpdb->get_results("SELECT IP,POST,CORRECT FROM $verification_table_name WHERE IP = '".$theIP."' AND POST = '" . $verificationID . "'");	
-			$alreadyAttempted = count($getNumberofAttempts);
-			foreach($getNumberofAttempts as $numberofattempts){
-				$isCorrect = $numberofattempts->CORRECT;
-			}
-		}
-		if(is_numeric($isLogged) && $isLogged == 0 && is_user_logged_in()){
-			$isCorrect = 1;
-		} elseif(is_numeric($isLogged) && $isLogged == 1){		
-			if($alreadyAttempted != 1){
-				if(!$_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.''] != '' && $isDeactivated != 1){
-				return '
-				<blockquote style="display:block;clear:both;margin:5px auto 5px auto;padding:5px;font-size:25px;">
-				<p>'.$theMessage.'</p>
-				<form style="clear:both;display:block;padding:5px;margin:0 auto 5px auto;width:98%;overflow:hidden;border-radius:3px;background-color:#'.$theBackground.';" class="momAgeVerification" method="post" action="'.esc_url(get_permalink()).'">
-					<input style="clear:both;font-size:25px;width:99%;margin:0 auto;" type="text" name="ageVerification'.esc_attr($momverifier_verification_step).esc_attr($thePostId).'">
-					<input style="clear:both;font-size:20px;width:100%;margin:0 auto;" type="submit" name="submit" class="submit clear" value="Submit">
-				</form>
-				</blockquote>
-				';
+
+		$message = htmlentities( $message );
+		
+		ob_start();
+		
+		if( is_user_logged_in() ) {
+
+			return $content;
+			
+		} else {
+
+			echo '<div class="mom_restrict">' . $message . '</div>';
+
+			if( 1 == $comments ) {
+
+				add_filter( 'comments_template', 'restricted_comments_view' );
+				function restricted_comments_view( $comment_template ) {
+
+					return dirname( __FILE__ ) . '/includes/templates/comments.php';
+
 				}
+
 			}
-			if($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.''] != ''){
-				if($theAge != '' && is_numeric($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']) && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
-					$ageEntered = ($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']);
-					if($ageEntered >= $theAge){
-						$isCorrect = 1;
-					}else{
-						$isCorrect = 0;
-					}
-				} elseif($theAnswer != '' && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
-					$answerGiven = ($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']);
-					$correctAnswer = strtolower($theAnswer);
-					$answered = strtolower($answerGiven);					
-					if($answered === $correctAnswer){
-						$isCorrect = 1;
-					}else{
-						$isCorrect = 0;
-					}
-				}		
-			}			
-		}
-		if(is_numeric($isLogging) && $isLogging == 1 || is_numeric($isLogging) && $isLogging == 3 || is_numeric($attempts) && $attempts == 1){
-			global $wpdb;
-			$verification_table_name = $wpdb->prefix.'momverification';
-			$getIPforCurrentTransaction = $wpdb->get_results("SELECT IP,POST FROM $verification_table_name WHERE IP = '".$theIP."' AND POST = '".$verificationID."'");
-			if(count($getIPforCurrentTransaction) <= 0 && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
-				if($theAge != '' && is_numeric($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']) && $_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']){
-					$ageEntered	= ($_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']);
-					if($ageEntered >= $theAge){		
-					$wpdb->query("INSERT INTO $verification_table_name (ID, POST, CORRECT, IP) VALUES ('','$verificationID','1','$theIP')");
-					}else{
-					$wpdb->query("INSERT INTO $verification_table_name (ID, POST, CORRECT, IP) VALUES ('','$verificationID','0','$theIP')");
-					}
+
+			if( 2 == $comments ){
+
+				add_filter( 'comments_open', 'restricted_comments_form', 10, 2 );
+				function restricted_comments_form( $open, $post_id ) {
+
+					$post = get_post($post_id);
+					$open = false;
+					return $open;
+
 				}
-				elseif($theAnswer != '' && $_REQUEST['ageVerification' . $momverifier_verification_step . $thePostId . '']){
-					$answerGiven = ($_REQUEST['ageVerification'.$momverifier_verification_step.$thePostId.'']);
-					$correctAnswer = strtolower($theAnswer);
-					$answered = strtolower($answerGiven);				
-					if($answered === $correctAnswer){				
-					$wpdb->query("INSERT INTO $verification_table_name (ID, POST, CORRECT, IP) VALUES ('','$verificationID','1','$theIP')");
-					}else{
-					$wpdb->query("INSERT INTO $verification_table_name (ID, POST, CORRECT, IP) VALUES ('','$verificationID','0','$theIP')");
-					}
-				}
+
 			}
-			if($isLogging != 1){
-				$incorrect = $wpdb->get_results("SELECT CORRECT FROM $verification_table_name WHERE POST = '".$verificationID."' AND CORRECT = '0'");
-				$correct = $wpdb->get_results("SELECT CORRECT FROM $verification_table_name WHERE POST = '".$verificationID."' AND CORRECT = '1'");
-				$incorrectCount = count($incorrect);
-				$correctCount = count($correct);
-				if(count($correct) > 0 && count($incorrect) > 0){$totalCount = ($incorrectCount + $correctCount);}else{$totalCount = 1;}					
-				$percentCorrect = ($correctCount/$totalCount * 100);
-				$percentIncorrect = ($incorrectCount/$totalCount * 100);
-				if($statsMessage == ''){$statsMessage = $theMessage;}
-				return '<div style="clear:both;display:block;width:99%;margin:10px auto 10px auto;overflow:auto;background-color:#f6fbff;border:1px solid #4a5863;border-radius:3px;padding:5px;"><p>'.$statsMessage.'</p><div class="mom_progress" style="clear:both;height:20px;display:block;width:95%; margin:5px auto 5px auto;background-color:#ff0000"><div title="'.$correctCount.'" style="display:block;height:20px;width:'.$percentCorrect.'%;background-color:#1eff00;"></div></div><div style="font-size:15px;margin:-5px auto;width:95%;"><span style="float:left;text-align:left;">'.$correctResultMessage.' ('.$percentCorrect.'%)</span><span style="float:right;text-align:right;">'.$incorrectResultMessage.' ('.$percentIncorrect.'%)</span></div></div>';
-			}
+
 		}
-		if($isCorrect == 1){return $content;}elseif($isCorrect == 0 && $deactivate != 1){return $failMessage;}
+
 		return ob_get_clean();
-	}else{
-		// Return nothing, the IP address is fake.
+
 	}
+
+}
+
+/**
+ *
+ * Progress bars
+ * [mom_progressbar]
+ * 
+ * align     : left,right,none
+ * fillcolor : #COLOR
+ * maincolor : #COLOR
+ * height    : number of pixels high
+ * fontsize  : number
+ * level     : fill amount ( 10 = 10%, 20 = 20%, 30 = 30%, .. )
+ * margin    : margin for container ( default: 0 auto )
+ * talign    : talign ( default: center )
+ * width     : number (default: 95 (translates to 95% ) )
+ * 
+ */
+if( !function_exists( 'mom_progress_shortcode' ) ) {
+
+	function mom_progress_shortcode($atts,$content = null){
+
+		extract(
+
+			shortcode_atts( array(
+
+				'align'     => 'none',
+				'fillcolor' => '#ccc',
+				'maincolor' => '#000',
+				'height'    => 15,
+				'fontsize'  => 15,
+				'level'     => '',
+				'margin'    => '0 auto',
+				'talign'    => 'center',
+				'width'     => 95
+
+			), $atts )
+
+		);
+
+		$align_fetch     = sanitize_text_field( $align );
+		$fillcolor_fetch = sanitize_text_field( $fillcolor );
+		$height_fetch    = sanitize_text_field( $height );
+		$level_fetch     = sanitize_text_field( $level );
+		$maincolor_fetch = sanitize_text_field( $maincolor );
+		$margin_fetch    = sanitize_text_field( $margin );
+		$width_fetch     = sanitize_text_field( $width );
+
+		ob_start();
+
+		if( 'left' == $align_fetch ) { 
+
+			$align_fetch_final = 'float: left';
+
+		} elseif ( 'right' == $align_fetch ) { 
+
+			$align_fetch_final = 'float: right';
+
+		} else {
+
+			$align_fetch_final = 'clear: both';
+
+		}
+
+		$bar = '<div class="mom_progress" style="' . $align_fetch_final . ';height:' . $height_fetch . 'px;display:block;width:' . $width_fetch . '%;margin:' . $margin_fetch . ';background-color:' . $maincolor_fetch . '"><div style="display:block;height:' . $height_fetch . 'px;width:' . $level_fetch . '%;background-color:' . $fillcolor_fetch . ';"></div></div>';
+
+		return $bar . ob_get_clean();
+
+	}
+
 }

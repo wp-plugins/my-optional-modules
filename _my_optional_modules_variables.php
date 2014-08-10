@@ -79,6 +79,7 @@ if ( !function_exists ( 'my_optional_modules_add_my_shortcodes' ) ) {
 	function my_optional_modules_add_my_shortcodes() {
 
 		global $mom_votes,$mommaincontrol_themetakeover,$horizontal_galleries,$mommodule_passwords,$mommodule_reviews,$mommodule_shortcodes,$mommodule_fontawesome,$mommodule_passwords,$mommodule_reviews;
+		
 		if( $mom_votes                  == 1 ) add_shortcode( 'topvoted', 'vote_the_posts_top' );
 		if( $mom_votes                  == 1 ) add_filter( 'the_content', 'do_shortcode','vote_the_posts_top' );
 		
@@ -96,15 +97,13 @@ if ( !function_exists ( 'my_optional_modules_add_my_shortcodes' ) ) {
 		if( $mommodule_shortcodes       == 1 ) add_filter( 'the_content', 'do_shortcode', 'mom_reddit' );
 		if( $mommodule_shortcodes       == 1 ) add_filter( 'the_content', 'do_shortcode', 'mom_restrict' );
 		if( $mommodule_shortcodes       == 1 ) add_filter( 'the_content', 'do_shortcode', 'mom_progress' );
-		if( $mommodule_shortcodes       == 1 ) add_filter( 'the_content', 'do_shortcode', 'mom_verify' );
 		if( $mommodule_shortcodes       == 1 ) add_shortcode( 'mom_archives', 'mom_archives' );
 		if( $mommodule_shortcodes       == 1 ) add_shortcode( 'mom_onthisday', 'mom_onthisday' );
 		if( $mommodule_shortcodes       == 1 ) add_shortcode( 'mom_map', 'mom_google_map_shortcode' );
 		if( $mommodule_shortcodes       == 1 ) add_shortcode( 'mom_reddit', 'mom_reddit_shortcode' );
 		if( $mommodule_shortcodes       == 1 ) add_shortcode( 'mom_restrict', 'mom_restrict_shortcode' );
 		if( $mommodule_shortcodes       == 1 ) add_shortcode( 'mom_progress', 'mom_progress_shortcode' );
-		if( $mommodule_shortcodes       == 1 ) add_shortcode( 'mom_verify', 'mom_verify_shortcode' );
-
+		
 	}
 
 }

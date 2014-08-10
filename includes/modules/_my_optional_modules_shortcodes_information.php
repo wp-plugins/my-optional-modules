@@ -53,22 +53,6 @@ if(current_user_can('manage_options')){
 					&mdash; container: div.mom_progress
 				</p>
 				<p>
-					<strong class="sectionTitle">Verifier</strong>
-					<em>Content gate with a customizable input prompt with optional tracking of unique right/wrong answers.</em><br />
-					&mdash; Shortcode: [mom_verify]<br />
-					&mdash; Parameters: age, answer, logged, message, fail, logging, background, cmmessage, imessage<br />
-					&mdash; Set up a poll with a yes/no answer:<br />
-					&mdash;&mdash; [mom_verify message="Did you find this article useful? Yes or no." answer="yes" cmessage="Found this useful" imessage="Didn\'t find this useful" logging="3" single="1"][/mom_verify]<br />
-					&mdash; Gate content to ages 18+:<br />
-					&mdash;&mdash; [mom_verify age="18"] Content to gate [/mom_verify]<br />
-					&mdash; Answer the question correctly to see the content:<br />
-					&mdash;&mdash;[mom_verify answer="Hank Hill" message="Who sells propane and propane accessories?"] Some content to hide [/mom_verify]<br />
-					&mdash; Custom background: [mom_verify age="18" background="fff"] some content to hide [/mom_verify]<br />
-					&mdash; Shortcode default attributes:<br />
-					&mdash; cmessage (Correct), imessage (Incorrect), age (), logged (1), message (Please verify your age by typing it here), fail (You are not able to view this content at this time), logging (0), background (transparent), single (0), deactivate (0)<br />
-					&mdash; container: blockquote.momAgeVerification, form.momAgeVerification
-				</p>
-				<p>
 					<strong class="sectionTitle">On this day</strong>
 					<em>Embed a small post loop that grabs posts for the current day from previous years.</em><br />
 					&mdash; Shortcode: [mom_onthisday]<br />
