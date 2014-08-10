@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: reviews,count,exclude,jump,shortcode,takeover,password,comments,vote,feed,font awesome,hide,version,footer,lazy load,meta,disable,authors,dates,maintenance,analytics,gallery,google maps,reddit,restrict,progress,verifier,loop,mini,ajax,fitvid,navbar,share,bg,wowhead,jquery,tag,category,format,hide,sunday,monday,tuesday,wednesday,thursday,friday,saturday,front page,tag archives,search results,logged out,subscriber,contributor,author,category archive
 Requires at least: 3.9.1
 Tested up to: 4.0
-Stable tag: 5.5.7.3
+Stable tag: 5.5.7.4
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -49,6 +49,8 @@ They are designed to be lightweight and easilly implemented by even the most nov
 2. 'dropdown' style mini-loop (Takeover->Mini Loops) (Theme: Twenty Fourteen)
 
 == Changelog ==
+* 5.5.7.4  [mom_miniloop] vote paramters added (0 (off) 1 (on) (default: 0)) display upvote count for posts in the loop
+* 5.5.7.4  [mom_miniloop] style added: list for an ordered list of posts
 * 5.5.7.3  removed: shortcode [mom_verify]
 * 5.5.7.3  removed: 'top x posts' from [topvoted] shortcode (Post votes module)
 * 5.5.7.2  removed: function: mom_onthisday_template (for use in templates) (use do_shortcode mom_onthisday to replace functionality previously provided by mom_onthisday_template

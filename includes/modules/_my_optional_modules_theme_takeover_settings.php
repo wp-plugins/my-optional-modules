@@ -32,6 +32,7 @@ if(current_user_can('manage_options')){
 				<i class="fa fa-info">&mdash;</i> <em>[mom_miniloop]</em> will output a mini loop posts based on:<br />
 				<blockquote>
 					Parameters you set: <br />
+					&mdash; <strong>votes</strong> (<em>1</em> to display <i class="fa fa-arrow-up"></i>s, 0 to disable (default: 0))<br />
 					&mdash; <strong>show_link</strong> (show links by default (default:1))<br />
 					&mdash; <strong>link_content</strong> (text of the link (default: none (defaults to post title)))<br />
 					&mdash; <strong>amount</strong> (how many posts to show (default: 4))<br />
@@ -39,6 +40,7 @@ if(current_user_can('manage_options')){
 					&mdash; <strong>style</strong><br />
 					&mdash;&mdash;(<em>columns</em> for a 2-column setup w/ thumbnails and post excerpts)<br />
 					&mdash;&mdash;(<em>dropdown</em> for a list of post items with thumbnail, excerpt, and category links)<br />
+					&mdash;&mdash;(<em>list</em> for an ordered list of posts.)<br />
 					&mdash;&mdash;(<em>slider</em> for a horizontal layout inside of a scrollable div)<br />
 					&mdash;&mdash;(<em>tiled</em> for a tiled gallery layout)<br />
 					&mdash;&mdash;(default: <em>tiled</em>)<br />

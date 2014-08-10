@@ -12,6 +12,52 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 	die ();
 }
 
+// (1) Calculate time between (date) and (date)
+if( !function_exists( 'mom_timesince' ) ) {
+
+	function mom_timesince( $date, $granularity=2 ) {
+
+		$retval     = '';
+		$date       = strtotime( $date );
+		$difference = time() - $date;
+		
+		$periods = array(
+
+			' decades' => 315360000, 
+			' years' => 31536000, 
+			' months' => 2628000, 
+			' weeks' => 604800,  
+			' days' => 86400, 
+			' hours' => 3600, 
+			' minutes' => 60, 
+			' seconds' => 1 
+
+		);
+
+		foreach( $periods as $key => $value ) {
+
+			if( $difference >= $value ) {
+
+				$time = floor ( $difference/$value );
+				$difference %= $value;
+				$retval .= ( $retval ? ' ' : '' ) . $time . '';
+				$retval .= ( ( $time > 1 ) ? $key : $key );
+				$granularity--;
+
+			}
+
+			if( $granularity == '0' ) {
+
+				break; 
+
+			}
+
+		}
+
+		return $retval . ' ago';
+
+	}	
+}
 
 /**
  *
@@ -276,6 +322,24 @@ if( get_option('mommaincontrol_comments') == 1){
 if( $mom_votes == 1 ) {
 
 	add_filter( 'the_content', 'mom_vote_the_post' );
+	
+	if( !function_exists( 'mom_grab_vote_count' ) ) {
+
+		function mom_grab_vote_count( $id ) {
+
+			global $wpdb;
+			
+			$id         = intval( $id );
+			$votesPosts = $wpdb->prefix . 'momvotes_posts';
+			$up         = $wpdb->get_var( "SELECT UP FROM $votesPosts WHERE ID = $id" );
+
+			if( $up ) {
+				return '<i class="fa fa-arrow-up"> ' . $up . '</i>';
+			}
+
+		}
+
+	}
 	
 	if( !function_exists( 'mom_vote_the_post' ) ) {
 

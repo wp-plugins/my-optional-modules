@@ -18,9 +18,9 @@
  * Don't call this file directly
  *
  */
-if( !defined ( 'MyOptionalModules' ) ) {
+if( !defined( 'MyOptionalModules' ) ) {
 
-	die ();
+	die();
 
 }
 
@@ -34,8 +34,8 @@ if( !defined ( 'MyOptionalModules' ) ) {
  */
 if( get_option( 'MOM_themetakeover_tiledfrontpage' ) == 1 ) {
 
-	add_filter ( 'the_content', 'do_shortcode', 'mom_miniloop' );
-	add_shortcode ( 'mom_miniloop', 'mom_tiled_frontpage' );
+	add_filter( 'the_content', 'do_shortcode', 'mom_miniloop' );
+	add_shortcode( 'mom_miniloop', 'mom_tiled_frontpage' );
 
 }
 
@@ -49,7 +49,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	/**
 	 *
 	 * Grab the current user's level set previously in the main plugin 
-	 * for use in this shortcode (where necessary and called for)
+	 * for use in this shortcode(where necessary and called for)
 	 *
 	 */
 	global $user_level;
@@ -68,7 +68,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 
 	/**
 	 *
-	 * Shortcode attributes (to be set inside of the shortcode)
+	 * Shortcode attributes(to be set inside of the shortcode)
 	 * [mom_miniloop thumbs="1" show_link="1" amount="4" exclude_user="0" downsize="1"...]
 	 * These attributes will be used as the default settings, which can be overridden by 
 	 * attributes set inside of the shortcode.
@@ -76,14 +76,15 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 */
 	extract(
 
-		shortcode_atts(array(
+		shortcode_atts( array(
+
 			'thumbs'        => 1,					// 1(yes) 0(no)	
 			'show_link'     => 1,					// 1(yes) 0(no)
 			'link_content'  => '',					// alpha-numeric value for post content (defaults to post title) (ex: "Click me")
 			'amount'        => 4,					// numerical value of how many posts to return in the loop
 			'exclude_user'  => 0,					// 1(yes) 0(no) (use exclude user category settings from Exclude module)
 			'downsize'      => 1,					// 1(yes) 0(no) (downsize thumbnails image quality and size)
-			'style'         => 'tiled',				// columns,dropdown,slider,tiled
+			'style'         => 'tiled',				// columns,dropdown,slider,tiled,list
 			'offset'        => 0,					// how many posts to offset 
 			'category'      => '',					// numerical ID(s) or category name(s) (multiple separated by commas) (do not mix the two)
 			'orderby'       => 'post_date',			// none,ID,author,title,name,type,date,modified,parent,rand
@@ -92,8 +93,10 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 			'cache_results' => false,				// true or false
 			'year'          => '',					// numerical date (year) (ex: 2014,2013,2012,2011..)
 			'month'         => '',					// numerical date (month) (ex: 1,2,3,4,5,6,7,8,9,10,11,12)
-			'day'           => ''					// numerical date (day) (ex: 1,2,3,4,5,6,7,8,9,10,11,...)
-		), $atts)
+			'day'           => '',					// numerical date (day) (ex: 1,2,3,4,5,6,7,8,9,10,11,...)
+			'votes'         => 0                    // display votes associated with each post (if voting module is on) (default: 0 / off)
+
+		), $atts )
 
 	);
 
@@ -106,21 +109,21 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 * based on the user's user level (or lack thereof)
 	 *
 	 */
-	if( get_option ( 'MOM_Exclude_Categories_level7Categories') && $user_level == 7 ) {
+	if( get_option( 'MOM_Exclude_Categories_level7Categories') && $user_level == 7 ) {
 
-		$exclude_cats  = get_option ( 'MOM_Exclude_Categories_level7Categories' );
+		$exclude_cats  = get_option( 'MOM_Exclude_Categories_level7Categories' );
 
-	} elseif( get_option ( 'MOM_Exclude_Categories_level2Categories') && $user_level == 2 ) {
+	} elseif( get_option( 'MOM_Exclude_Categories_level2Categories') && $user_level == 2 ) {
 
-		$exclude_cats  = get_option ( 'MOM_Exclude_Categories_level2Categories' );
+		$exclude_cats  = get_option( 'MOM_Exclude_Categories_level2Categories' );
 
-	} elseif( get_option ( 'MOM_Exclude_Categories_level1Categories') && $user_level == 1 ) {
+	} elseif( get_option( 'MOM_Exclude_Categories_level1Categories') && $user_level == 1 ) {
 
-		$exclude_cats  = get_option ( 'MOM_Exclude_Categories_level1Categories' );
+		$exclude_cats  = get_option( 'MOM_Exclude_Categories_level1Categories' );
 
-	} elseif( get_option ( 'MOM_Exclude_Categories_level0Categories') && $user_level == 0 ) {
+	} elseif( get_option( 'MOM_Exclude_Categories_level0Categories') && $user_level == 0 ) {
 
-		$exclude_cats  = get_option ( 'MOM_Exclude_lCategories_evel0Categories' );
+		$exclude_cats  = get_option( 'MOM_Exclude_lCategories_evel0Categories' );
 
 	}
 
@@ -146,6 +149,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 		if( $exclude_user == 1 ) {
 
 			$args = array(
+
 				'posts_per_page'   => $amount,
 				'offset'           => $offset,
 				'category'         => $category,
@@ -159,11 +163,13 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 				'monthnum'         => $month,
 				'day'              => $day,
 				'category__not_in' => $exclude_cats
+
 			);
 
 		} else {
 
 			$args = array(
+
 				'posts_per_page'   => $amount,
 				'offset'           => $offset,
 				'category'         => $category,
@@ -176,6 +182,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 				'year'             => $year,
 				'monthnum'         => $month,
 				'day'              => $day
+
 			);
 
 		}
@@ -185,6 +192,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 		if( $exclude_user == 1 ) {
 
 			$args = array(
+
 				'posts_per_page'   => $amount,
 				'offset'           => $offset,
 				'category_name'    => $category,
@@ -198,11 +206,13 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 				'monthnum'         => $month,
 				'day'              => $day,
 				'category__not_in' => array( $exclude_cats )
+
 			);
 
 		} else {
 
 			$args = array(
+
 				'posts_per_page'   => $amount,
 				'offset'           => $offset,
 				'category_name'    => $category,
@@ -215,6 +225,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 				'year'             => $year,
 				'monthnum'         => $month,
 				'day'              => $day
+
 			);
 
 		}
@@ -259,7 +270,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 * [mom_miniloop style="dropdown"]
 	 *
 	 */
-	if ( $style == strtolower( 'dropdown' ) ) {
+	if( $style == strtolower( 'dropdown' ) ) {
 
 		echo '<div class="mom_minidropdown">';
 
@@ -267,15 +278,26 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 
 	/**
 	 *
-	 * [mom_miniloop style="dropdown"]
+	 * [mom_miniloop style="columns"]
 	 *
 	 */
-	if ( $style == strtolower( 'columns' ) ) {
+	if( $style == strtolower( 'columns' ) ) {
 
 		echo '<div class="mom_minicolumns">';
 
-	}	
+	}
 	
+	/**
+	 *
+	 * [mom_miniloop style="list"]
+	 *
+	 */
+	if( $style == strtolower( 'list' ) ) {
+
+		echo '<div class="mom_minilist">';
+
+	}
+
 	/**
 	 *
 	 * Start the loop
@@ -288,10 +310,23 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 * Set up any post information that can only be gathered while inside of the loop
 	 *
 	 */
-	$id = $post->ID;
-	$link_text = '';
-	$link  = esc_url( get_permalink( $id ) );
-	$title = get_the_title( $id );
+	$id            = $post->ID;
+	$link_text     = '';
+	$link          = esc_url( get_permalink( $id ) );
+	$title         = get_the_title( $id );
+	$date          = $post->post_date;
+	$comment_count = intval( $post->comment_count );
+	$since         = mom_timesince( $date );
+	$author        = get_the_author();
+
+	/**
+	 *
+	 * Grab the category(s) associated with the post
+	 *
+	 */
+	$categories = get_the_category( $id );
+	$separator = ' ';
+	$output = '';
 
 	/**
 	 *
@@ -333,6 +368,13 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	$the_excerpt = get_the_content( $id );
 	$the_excerpt = sanitize_text_field( $the_excerpt );
 	$the_excerpt = substr( $the_excerpt, 0, 100 );
+	$vote_count  = '';
+	
+	if( function_exists( 'mom_grab_vote_count' ) && 1 == $votes ) {
+
+		$vote_count = mom_grab_vote_count( $id );
+
+	}
 	
 	/**
 	 *
@@ -359,6 +401,51 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 		}
 
 	}
+
+	/**
+	 *
+	 * [mom_miniloop style="list"]
+	 *
+	 */
+	if( $style == strtolower( 'list' ) ) {
+
+	echo '
+	<section class="post">';
+		
+		echo '<div class="counter">' . $recent_count . '</div>';
+		
+		if( $thumb_path ) {
+
+			echo '<div class="thumb">
+				<img src="' . $thumb_path . '" />
+			</div>';
+
+		}
+			
+		echo '<div class="text">
+			<span class="title"><a href="' . $link . '">' . $title . '</a></span>
+			<span class="author">posted <date title="' . $date . '">' . $since . '</date> by ' . $author . ' to ';
+
+			if( $categories ) {
+
+				foreach( array_slice( $categories, 0, 1 ) as $category ) {
+
+					$output .= '<a href="'.get_category_link( $category->term_id ).'" title="' . esc_attr( sprintf( __( "View all posts in %s" ), $category->name ) ) . '">'.$category->cat_name.'</a>'.$separator;
+
+				}
+
+			echo trim( $output, $separator );
+
+			}
+			
+			echo '</span>
+			<span class="meta"><a href="' . $link . '">' . $comment_count . ' comments</a> ' . $vote_count . '</span>
+		</div>
+	</section>';
+
+
+
+	}
 	
 	/**
 	 *
@@ -367,7 +454,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 */
 	if( $style == strtolower( 'columns' ) ) {
 
-		echo '<div class="column"><div class="inner" ';
+		echo '<div class="column">' . $vote_count . '<div class="inner" ';
 
 		if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
 
@@ -386,15 +473,6 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 *
 	 */
 	if( $style == strtolower( 'dropdown' ) ) {
-
-			/**
-			 *
-			 * Grab the category(s) associated with the post
-			 *
-			 */
-			$categories = get_the_category( $id );
-			$separator = ' ';
-			$output = '';
 
 			echo '<span>';
 			if( $thumb_path && $thumbs == 1 ) {
@@ -426,11 +504,11 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 
 			}
 
-			echo '<em class="categories">';
+			echo $vote_count . '<em class="categories">';
 
 			if( $categories ) {
 
-				foreach( $categories as $category ) {
+				foreach(  array_slice( $categories, 0, 1 ) as $category ) {
 
 					$output .= '<a href="'.get_category_link( $category->term_id ).'" title="' . esc_attr( sprintf( __( "View all posts in %s" ), $category->name ) ) . '">'.$category->cat_name.'</a>'.$separator;
 
@@ -448,8 +526,8 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 * [mom_miniloop style="slider"] 
 	 *
 	 */
-	if ( $style == strtolower( 'slider' ) ) {
-			echo '<div class="slide"><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"><img class="slide" src="' . $thumb_path . '" /><span class="title">'. $link_text_text . '</span></a></div>';
+	if( $style == strtolower( 'slider' ) ) {
+			echo '<div class="slide"><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"><img class="slide" src="' . $thumb_path . '" /><span class="title">'. $link_text_text . $vote_count . '</span></a></div>';
 	}
 
 	/**
@@ -503,7 +581,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 			}
 			
 			echo '>';
-			echo $link_text;
+			echo $vote_count . $link_text;
 
 		}
 		
@@ -541,7 +619,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 			}
 
 			echo '>';
-			echo $link_text . '</div>';
+			echo $vote_count . $link_text . '</div>';
 		}
 		
 		if( $recent_count == 4 ) {
@@ -565,25 +643,27 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 * Close all open containers associated with this miniloop
 	 *
 	 */
-	if ( $style == strtolower( 'dropdown' ) ) {
+	if( $style == strtolower( 'dropdown' ) ) {
 
 		echo '</div>';
 
-	}
-
-	if ( $style == strtolower( 'slider' ) ) {
+	} elseif( $style == strtolower( 'slider' ) ) {
 
 		echo '</div></div></div>';
 
-	}
-	
-	if ( $style == strtolower( 'tiled' ) ) {
+	} elseif( $style == strtolower( 'tiled' ) ) {
 
 		echo '</div></div>';
 
-	}
+	} elseif( $style == strtolower( 'columns' ) ) {
 
-	if ( $style == strtolower( 'columns' ) ) {
+		echo '</div>';
+
+	} elseif( $style == strtolower( 'list' ) ) {
+
+		echo '</div></div>';
+
+	} else {
 
 		echo '</div>';
 
@@ -595,4 +675,6 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 *
 	 */
 	wp_reset_postdata();
+	$style = '';
+
 }
