@@ -47,6 +47,7 @@ They are designed to be lightweight and easilly implemented by even the most nov
 == Screenshots ==
 1. Horizontal gallery (Takeover->Horizontal Galleries)(Theme: Twenty Fourteen)
 2. 'dropdown' style mini-loop (Takeover->Mini Loops) (Theme: Twenty Fourteen)
+3. 'list' style mini-loop w/ post vote display (Post Votes module enabled) (Theme: Twenty Fourteen)
 
 == Changelog ==
 * 5.5.7.4  [mom_miniloop] vote paramters added (0 (off) 1 (on) (default: 0)) display upvote count for posts in the loop
