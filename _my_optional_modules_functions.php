@@ -326,7 +326,7 @@ if( get_option('mommaincontrol_comments') == 1){
 
 			function mom_related_posts() {
 				// Instantiate the parent object
-				parent::__construct( false, 'Mom Related Posts' );
+				parent::__construct( false, 'Mom Series' );
 			}
 
 			function widget( $args, $instance ) {
