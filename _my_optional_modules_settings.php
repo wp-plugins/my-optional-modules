@@ -356,19 +356,34 @@ if(current_user_can('manage_options')){
 			<?php 
 			if ( get_option('mommaincontrol_focus') ) {
 				if(get_option('mommaincontrol_obwcountplus') == 1 && get_option('mommaincontrol_focus') == 'count'){
-					my_optional_modules_count_module();
+					if( function_exists( 'my_optional_modules_count_module' ) ) {
+						my_optional_modules_count_module();
+					}					
 				}elseif(get_option('mommaincontrol_momse') == 1 && get_option('mommaincontrol_focus') == 'exclude'){
-					my_optional_modules_exclude_module();
+					if( function_exists( 'my_optional_modules_exclude_module' ) ) {
+						my_optional_modules_exclude_module();
+					}					
 				}elseif(get_option('mommaincontrol_momja') == 1 && get_option('mommaincontrol_focus') == 'jumparound'){
-					my_optional_modules_jump_around_module();
+					if( function_exists( 'my_optional_modules_jump_around_module' ) ) {
+						my_optional_modules_jump_around_module();
+					}
 				}elseif(get_option('mommaincontrol_momrups') == 1 && get_option('mommaincontrol_focus') == 'passwords'){
-					my_optional_modules_passwords_module();
+					if( function_exists( 'my_optional_modules_passwords_module' ) ) {
+						my_optional_modules_passwords_module();
+					}
 				}elseif(get_option('mommaincontrol_reviews') == 1 && get_option('mommaincontrol_focus') == 'reviews'){
-					my_optional_modules_reviews_module();
+					if( function_exists( 'my_optional_modules_reviews_module' ) ) {
+						my_optional_modules_reviews_module();
+					}
 				}elseif(get_option('mommaincontrol_shorts') == 1 && get_option('mommaincontrol_focus') == 'shortcodes'){
-					my_optional_modules_shortcodes_module();
+					if( function_exists( 'my_optional_modules_shortcodes_module' ) ) {
+						my_optional_modules_shortcodes_module();
+					}
 				}elseif(get_option('mommaincontrol_themetakeover') == 1 && get_option('mommaincontrol_focus') == 'themetakeover'){
-					my_optional_modules_theme_takeover_module();
+					if( function_exists( 'my_optional_modules_theme_takeover_module' ) ) {
+						my_optional_modules_theme_takeover_module();
+					}
+					
 				}
 			} else { ?>
 				<strong class="sectionTitle">Misc. Settings (that don't have a proper home)</strong>
