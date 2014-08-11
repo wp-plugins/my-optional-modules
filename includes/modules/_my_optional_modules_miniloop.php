@@ -138,6 +138,13 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 
 	}
 	
+	if( $related == 1 ) {
+
+		$amount  = -1;
+		$exclude = $post->ID;
+
+	}
+	
 	/**
 	 *
 	 * Module->Exclude( Categories->(Logged out, Subscriber, Contributor, Author)
