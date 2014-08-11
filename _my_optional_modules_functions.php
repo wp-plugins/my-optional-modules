@@ -328,20 +328,13 @@ if( get_option('mommaincontrol_comments') == 1){
 		function mom_related_posts( $content ) {
 
 			global $post;
-
-			$key    = sanitize_text_field ( get_option( 'MOM_themetakeover_series_key' ) );
-			$style  = sanitize_text_field ( get_option( 'MOM_themetakeover_series_style' ) );
-			$title  = sanitize_text_field ( get_option( 'MOM_themetakeover_series_title' ) );
-			$series = sanitize_text_field ( get_post_meta($post->ID, $key, true) );
+			$key     = sanitize_text_field ( get_option( 'MOM_themetakeover_series_key' ) );
+			$style   = sanitize_text_field ( get_option( 'MOM_themetakeover_series_style' ) );
+			$series  = sanitize_text_field ( get_post_meta($post->ID, $key, true) );
 			
 			if( $key && $style && '' != $series ) {
 				
-				if( $title ) {
-					$title = '<h2 class="mom_related_title">' . $title . '</h2>';
-				} else {
-					$title = '';
-				}
-				$related = do_shortcode('[mom_miniloop meta="' . $key . '" style="' . $style . '"]');
+				$related = do_shortcode('[mom_miniloop meta="' . $key . '" style="' . $style . '" related="1"]');
 
 			} else {
 
@@ -349,7 +342,7 @@ if( get_option('mommaincontrol_comments') == 1){
 
 			}
 
-			return $content . $title . $related;
+			return $content . $related;
 
 		}
 

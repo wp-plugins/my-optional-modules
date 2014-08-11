@@ -45,7 +45,7 @@ if( get_option( 'MOM_themetakeover_tiledfrontpage' ) == 1 && get_option( 'mommai
  *
  */
 function mom_tiled_frontpage( $atts, $content = null ) {
-	ob_start();
+
 	/**
 	 *
 	 * Grab the current user's level set previously in the main plugin 
@@ -53,7 +53,6 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 *
 	 */
 	global $user_level,$paged,$post;
-
 
 	/**
 	 *
@@ -67,8 +66,16 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	$recent_count   = 0;
 	$exclude_cats   = '';
 
+	$check_key      = sanitize_text_field ( get_option( 'MOM_themetakeover_series_key' ) );
+	if( $check_key ) {
 	
-	$series = get_post_meta($post->ID, 'series', true);
+		$series = get_post_meta($post->ID, $check_key, true);
+	
+	} else {
+		
+		$series = get_post_meta($post->ID, 'series', true);
+		
+	}
 	
 	/**
 	 *
@@ -102,11 +109,26 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 			'votes'         => 0,                   // display votes associated with each post (if voting module is on) (default: 0 / off)
 			'paging'        => 0,					// Whether or not to page the results
 			'meta'          => '',                  // Posts with THIS meta key
-			'key'           => ''                   // Post with THIS meta key VALUE                    
+			'key'           => '',                  // Post with THIS meta key VALUE                    
+			'related'       => 0
+			
 
 		), $atts )
 
 	);
+	
+	if( $related == 1 ) {
+	
+		$title = sanitize_text_field ( get_option( 'MOM_themetakeover_series_title' ) );
+		
+		if( $title ) {
+
+			echo '<h2 class="mom_related_title">' . $title . '</h2>';
+
+		}
+
+	}
+
 
 	if( $meta == strtolower( 'series' ) ) {
 
@@ -1081,5 +1103,5 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 */
 	wp_reset_query();
 	$style = '';
-	return ob_get_clean();
+
 }
