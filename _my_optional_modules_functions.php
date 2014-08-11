@@ -820,6 +820,7 @@ if ( !function_exists ( 'myoptionalmodules_postasfront' ) ) {
 
 if ( !function_exists ( 'momMaintenance' ) ) {
 	function momMaintenance(){
+		global $post;
 		if(!function_exists('is_login_page')){
 			function is_login_page() {
 				return in_array($GLOBALS['pagenow'], array('wp-login.php', 'wp-register.php'));
@@ -828,10 +829,28 @@ if ( !function_exists ( 'momMaintenance' ) ) {
 		if(!is_login_page()){
 			if(!is_user_logged_in() && get_option('mommaincontrol_maintenance') == 1){
 				$maintenanceURL = esc_url(get_option('momMaintenance_url'));
-				if($maintenanceURL == ''){
-					die('Maintenance mode currently active.  Please try again later.');
-				}else{
-					header('location:'.$maintenanceURL);exit;
+				$ids = get_option('momMaintenance_url_ids');
+				$ids = explode(',', $ids);
+				
+				if( '' == get_option('momMaintenance_url_ids') ) {
+					if($maintenanceURL == ''){
+						die('Maintenance mode currently active.  Please try again later.');
+					}else{
+						header('location:'.$maintenanceURL);exit;
+					}
+				} else {
+					if( is_single() || is_page() ) {
+						$id = $post->ID;
+						if( $id ) {
+							if( in_array($id, $ids) ) {
+								if( '' == $maintenanceURL ){
+									die('Maintenance mode currently active.  Please try again later.');
+								}else{
+									header('location:'.$maintenanceURL);exit;
+								}
+							}
+						}
+					}
 				}
 			}
 		}

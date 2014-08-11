@@ -392,9 +392,31 @@ if(current_user_can('manage_options')){
 						<label class="left">Analytics ID</label>
 						<input class="right" onClick="this.select();" type="text" value="<?php echo get_option('momanalytics_code');?>" name="momanalytics_code" placeholder="UA-XXXXXXXX-X" />
 					</section>
+					<hr />
+					<strong><em>Maintenance</em></strong><br /><br />
 					<section class="clear">
 						<label class="left">Maintenance URL</label>
 						<input class="right" placeholder="http://url.tld" onClick="this.select();" type="text" value="<?php echo get_option('momMaintenance_url');?>" name="momMaintenance_url" />
+					</section>
+					<br />
+					<div class="list"><span><strong>Title &mdash; ID</strong></span>
+					<?php 
+						$showmeposts = get_posts(array('posts_per_page' => -1));
+						$showmepages = get_pages(array('posts_per_page' => -1));
+						foreach($showmeposts as $postsshown){ ?>
+							<span><?php echo $postsshown->post_title; ?> &mdash; <?php echo $postsshown->ID; ?></span>
+					<?php } foreach($showmepages as $pagesshown){ ?>
+							<span><?php echo $pagesshown->post_title; ?> &mdash; <?php echo $pagesshown->ID; ?></span>
+					<?php } ?>
+					</div><br />
+					<section class="clear">
+						<label class="left">Maintenance URL IDs</label>
+						<input class="right" type="text" value="<?php echo get_option('momMaintenance_url_ids');?>" name="momMaintenance_url_ids" /><br /><br />
+						<p>Comma-separated list of page and post IDs to redirect to maintenance URL. If this is blank, and maintenance is enabled (with a maintenance URL present), 
+						then all areas of the blog will redirect to that URL (except for login pages and if the user visiting is logged in).</p>
+					</section>
+					<hr />
+					<section class="clear">
 					</section>
 					<section class="clear">
 						<label class="left">Post as front</label>
@@ -403,7 +425,6 @@ if(current_user_can('manage_options')){
 							<option value="on"<?php if ( get_option('mompaf_post') == 'on') { ?> selected="selected"<?php } ?>/>Latest post</option>
 								<?php $mompaf_post = get_option('mompaf_post');
 								selected( $options['mompaf_post'], 0 );
-								$showmeposts = get_posts(array('posts_per_page' => -1));
 								foreach($showmeposts as $postsshown){ ?>
 									<option name="mompaf_post" id="mompaf_'<?php echo $postsshown->ID; ?>" value="<?php echo $postsshown->ID; ?>"
 									<?php $postID = $postsshown->ID;

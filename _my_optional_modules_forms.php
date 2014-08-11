@@ -33,7 +33,7 @@ if(current_user_can('manage_options')){
 		'MOM_Exclude_level1Tags','MOM_Exclude_level2Tags','MOM_Exclude_level7Tags','MOM_Exclude_URL','MOM_Exclude_URL_User','MOM_Exclude_PostFormats_Visitor','MOM_Exclude_NoFollow','simple_announcement_with_exclusion_cat_visitor',
 		'simple_announcement_with_exclusion_tag_visitor','mommaincontrol_passwords_activated','MOM_themetakeover_youtubefrontpage','MOM_themetakeover_topbar','MOM_themetakeover_archivepage','MOM_themetakeover_fitvids','MOM_themetakeover_postdiv',
 		'MOM_themetakeover_postelement','MOM_themetakeover_posttoggle','mommaincontrol_shorts_activated','jump_around_0','jump_around_1','jump_around_2','jump_around_3','jump_around_4','jump_around_5','jump_around_6','jump_around_7',
-		'jump_around_8','mommaincontrol_reviews_activated','momanalytics_code','momreviews_css','momreviews_search','momMaintenance_url','mommaincontrol_votes');
+		'jump_around_8','mommaincontrol_reviews_activated','momanalytics_code','momreviews_css','momreviews_search','momMaintenance_url','momMaintenance_url_ids','mommaincontrol_votes');
 		foreach ($option as &$value){
 			delete_option($value);
 		}
@@ -66,9 +66,11 @@ if(current_user_can('manage_options')){
 		if(isset($_POST['mom_maintenance_mode_submit']))update_option('mommaincontrol_maintenance',$_REQUEST['maintenanceMode']);
 		if(!get_option('mommaincontrol_mompaf'))add_option('mompaf_post','off');
 		if(isset($_POST['mom_maintenance_mode_submit']))add_option('momMaintenance_url','');
+		if(isset($_POST['mom_maintenance_mode_submit']))add_option('momMaintenance_url_ids','');
 		
 		if(isset($_POST['mom_postasfront_post_submit'])){
 			update_option('momMaintenance_url',$_REQUEST['momMaintenance_url']);
+			update_option('momMaintenance_url_ids',$_REQUEST['momMaintenance_url_ids']);
 			update_option('momanalytics_code',$_REQUEST['momanalytics_code']);
 			update_option('mompaf_post',$_REQUEST['mompaf_post']);
 		}
