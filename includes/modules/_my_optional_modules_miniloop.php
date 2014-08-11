@@ -1079,7 +1079,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 */
 	if( $style == strtolower( 'dropdown' ) ) {
 
-		echo '</div>';
+		echo '</div></div>';
 
 	} elseif( $style == strtolower( 'slider' ) ) {
 
@@ -1091,7 +1091,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 
 	} elseif( $style == strtolower( 'columns' ) ) {
 
-		echo '</div>';
+		echo '</div></div>';
 
 	} elseif( $style == strtolower( 'list' ) ) {
 

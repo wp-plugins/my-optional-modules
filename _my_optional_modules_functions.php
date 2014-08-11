@@ -320,33 +320,50 @@ if( get_option('mommaincontrol_comments') == 1){
  */
 
 	if( get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
-		add_filter( 'the_content', 'mom_related_posts' );
-	}
 
-	if( !function_exists( 'mom_related_posts' ) ) {
 
-		function mom_related_posts( $content ) {
+		class mom_related_posts extends WP_Widget {
 
-			global $post;
-			$key     = sanitize_text_field ( get_option( 'MOM_themetakeover_series_key' ) );
-			$style   = sanitize_text_field ( get_option( 'MOM_themetakeover_series_style' ) );
-			$series  = sanitize_text_field ( get_post_meta($post->ID, $key, true) );
-			
-			if( $key && $style && '' != $series ) {
-				
-				$related = do_shortcode('[mom_miniloop meta="' . $key . '" style="' . $style . '" related="1"]');
-
-			} else {
-
-				$related = '';
-
+			function mom_related_posts() {
+				// Instantiate the parent object
+				parent::__construct( false, 'Mom Related Posts' );
 			}
 
-			return $content . $related;
+			function widget( $args, $instance ) {
+				global $post;
+				
+				$key     = sanitize_text_field ( get_option( 'MOM_themetakeover_series_key' ) );
+				$style   = sanitize_text_field ( get_option( 'MOM_themetakeover_series_style' ) );
+				$series  = sanitize_text_field ( get_post_meta($post->ID, $key, true) );
+				
+				if( $key && $style && '' != $series ) {
+					
+					$related = do_shortcode('[mom_miniloop meta="' . $key . '" style="' . $style . '" related="1"]');
 
+				} else {
+
+					$related = '';
+
+				}
+				return $related;				
+			}
+
+			function update( $new_instance, $old_instance ) {
+				// Save widget options
+			}
+
+			function form( $instance ) {
+				// Output admin widget options form
+			}
 		}
+		
+		function mom_related_posts_widget() {
+			register_widget( 'mom_related_posts' );
+		}
+		add_action( 'widgets_init', 'mom_related_posts_widget' );
 
 	}
+
 
 
 
