@@ -130,7 +130,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	}
 
 
-	if( $meta == strtolower( 'series' ) ) {
+	if( $meta == strtolower( 'series' ) && $related != 1 ) {
 
 		$key     = $series;
 		$amount  = -1;
