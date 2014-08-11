@@ -35,16 +35,6 @@ if(current_user_can('manage_options')){
 				<label class="left" for="MOM_themetakeover_series_key">Series key</label>
 				<input class="right" id="MOM_themetakeover_series_key" name="MOM_themetakeover_series_key" value="<?php echo get_option( 'MOM_themetakeover_series_key' ); ?>" />
 			</section>
-			<section class="clear">
-				<label class="left" for="MOM_themetakeover_series_style">Series style</label>
-				<select class="right" id="MOM_themetakeover_series_style" name="MOM_themetakeover_series_style">
-					<option value="columns" <?php selected($MOM_themetakeover_series_style, 'columns');?> >Columns</option>
-					<option value="dropdown" <?php selected($MOM_themetakeover_series_style, 'dropdown');?> >Dropdown</option>
-					<option value="list" <?php selected($MOM_themetakeover_series_style, 'list');?> >List</option>
-					<option value="slider" <?php selected($MOM_themetakeover_series_style, 'slider');?> >Slider</option>
-					<option value="tiled" <?php selected($MOM_themetakeover_series_style, 'tiled');?> >Tiled</option>
-				</select>				
-			</section>			
 			<br />
 			<blockquote>
 				<i class="fa fa-info">&mdash;</i> <em>[mom_miniloop]</em> will output a mini loop posts based on:<br />

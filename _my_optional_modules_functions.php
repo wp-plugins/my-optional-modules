@@ -333,12 +333,11 @@ if( get_option('mommaincontrol_comments') == 1){
 				global $post;
 				
 				$key     = sanitize_text_field ( get_option( 'MOM_themetakeover_series_key' ) );
-				$style   = sanitize_text_field ( get_option( 'MOM_themetakeover_series_style' ) );
 				$series  = sanitize_text_field ( get_post_meta($post->ID, $key, true) );
 				
-				if( $key && $style && '' != $series ) {
+				if( $key && '' != $series ) {
 					
-					$related = do_shortcode('[mom_miniloop meta="' . $key . '" style="' . $style . '" related="1"]');
+					$related = do_shortcode('[mom_miniloop meta="' . $key . '" style="list" related="1"]');
 
 				} else {
 

@@ -65,6 +65,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	$alt            = 0;
 	$recent_count   = 0;
 	$exclude_cats   = '';
+	$related_class  = ' element';
 
 	$check_key      = sanitize_text_field ( get_option( 'MOM_themetakeover_series_key' ) );
 	if( $check_key ) {
@@ -117,16 +118,11 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 
 	);
 	
-	if( $related == 1 ) {
-	
-		$title = sanitize_text_field ( get_option( 'MOM_themetakeover_series_title' ) );
+	if( $related ) {
 		
-		if( $title ) {
-
-			echo '<h2 class="mom_related_title">' . $title . '</h2>';
-
-		}
-
+		$related_class = ' sidebar';
+		$title         = sanitize_text_field ( get_option( 'MOM_themetakeover_series_title' ) );
+		
 	}
 
 
@@ -138,10 +134,12 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 
 	}
 	
-	if( $related == 1 ) {
+	if( $related ) {
 
 		$amount  = -1;
 		$exclude = $post->ID;
+		$meta    = sanitize_text_field ( get_option( 'MOM_themetakeover_series_key' ) );
+		$key     = sanitize_text_field ( get_post_meta($post->ID, $meta, true) );
 
 	}
 	
@@ -657,6 +655,18 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	}
 	$myposts = get_posts( $args );
 	
+	if( $related ) {
+		$post_counter = 0;
+		foreach( $myposts as $post ) {
+			$post_counter++;
+		}
+		if( $title && $post_counter ) {
+
+			echo '<h2 class="mom_related_title">' . $title . '</h2>';
+
+		}
+	}
+	
 	/**
 	 *
 	 * [mom_miniloop style="slider"]
@@ -794,6 +804,12 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	$the_excerpt = sanitize_text_field( htmlentities( $the_excerpt ) );
 	$the_excerpt = substr( $the_excerpt, 0, 100 );
 	$vote_count  = '';
+
+	if( $related ) {
+
+	$the_excerpt = '';
+
+	}
 	
 	if( function_exists( 'mom_grab_vote_count' ) && 1 == $votes ) {
 
@@ -835,7 +851,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	if( $style == strtolower( 'list' ) ) {
 
 	echo '
-	<section class="post">';
+	<section class="post' . $related_class . '">';
 		
 		echo '<div class="counter">' . $recent_count . '</div>';
 		
@@ -879,7 +895,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 */
 	if( $style == strtolower( 'columns' ) ) {
 
-		echo '<div class="column">' . $vote_count . '<div class="inner" ';
+		echo '<div class="column' . $related_class . '">' . $vote_count . '<div class="inner" ';
 
 		if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
 
@@ -899,7 +915,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 */
 	if( $style == strtolower( 'dropdown' ) ) {
 
-			echo '<span>';
+			echo '<span class="span' . $related_class . '">';
 			if( $thumb_path && $thumbs == 1 ) {
 
 				echo '<a class="image" href="' . get_permalink( $id ) . '"><img class="slide" src="' . $thumb_path . '" /></a>';

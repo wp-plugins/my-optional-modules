@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: series,related,loops,feature,reviews,count,exclude,jump,shortcode,takeover,password,comments,vote,feed,font awesome,hide,version,footer,lazy load,meta,disable,authors,dates,maintenance,analytics,gallery,google maps,reddit,restrict,progress,verifier,loop,mini,ajax,fitvid,navbar,share,bg,wowhead,jquery,tag,category,format,hide,sunday,monday,tuesday,wednesday,thursday,friday,saturday,front page,tag archives,search results,logged out,subscriber,contributor,author,category archive
 Requires at least: 3.9.1
 Tested up to: 4.0
-Stable tag: 5.5.7.6
+Stable tag: 5.5.7.7
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -52,7 +52,9 @@ They are designed to be lightweight and easilly implemented by even the most nov
 3. 'list' style mini-loop w/ post vote display (Post Votes module enabled) (Theme: Twenty Fourteen)
 
 == Changelog ==
-* 5.5.7.6  Series changed to widget.
+* 5.5.7.7  Series styles removed as only list was translating properly to widget
+* 5.5.7.7  Series posts working correctly, as wrong values were being grabbed previously
+* 5.5.7.6  Series changed to widget
 * 5.5.7.5  Series: append a miniloop to the bottom of posts based on a meta key (for instance, all posts with a metakey "series" have a loop of those posts attached to them, excluding the currently viewed post)
 * 5.5.7.5  [mom_miniloop] meta parameters added ( the NAME of a meta key that you wish to pull posts associated with)
 * 5.5.7.5  [mom_miniloop] key parameters added ( the VALUE of a meta key that you wish to pull posts associated with)
