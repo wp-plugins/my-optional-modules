@@ -37,6 +37,10 @@ if(current_user_can('manage_options')){
 			</section>
 			<br />
 			<blockquote>
+				<i class="fa fa-info">&mdash;</i> <em>MOM Series Widget</em> will group posts together sharing the same custom key values<br />
+				&mdash; To group posts together, give each post the same custom key as defined in the above <em>Series Key</em><br />
+				&mdash; You can separate them by then giving each unique values<br />
+				&mdash;&mdash; A series on videos about cars? Give some posts a custom key of <em>videos</em> with the value <em>cars</em>.<br /><br />
 				<i class="fa fa-info">&mdash;</i> <em>[mom_miniloop]</em> will output a mini loop posts based on:<br />
 				<blockquote>
 					Parameters you set: <br />
