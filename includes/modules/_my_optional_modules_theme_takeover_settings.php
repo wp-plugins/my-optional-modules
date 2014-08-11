@@ -38,7 +38,6 @@ if(current_user_can('manage_options')){
 			<section class="clear">
 				<label class="left" for="MOM_themetakeover_series_style">Series style</label>
 				<select class="right" id="MOM_themetakeover_series_style" name="MOM_themetakeover_series_style">
-					<option value="0" <?php selected($MOM_themetakeover_series_style, 0);?> >Turn off</option>
 					<option value="columns" <?php selected($MOM_themetakeover_series_style, 'columns');?> >Columns</option>
 					<option value="dropdown" <?php selected($MOM_themetakeover_series_style, 'dropdown');?> >Dropdown</option>
 					<option value="list" <?php selected($MOM_themetakeover_series_style, 'list');?> >List</option>
