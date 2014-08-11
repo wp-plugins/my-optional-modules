@@ -32,7 +32,7 @@ if( !defined( 'MyOptionalModules' ) ) {
  * If they aren't, the shortcode will not function properly
  *
  */
-if( get_option( 'MOM_themetakeover_tiledfrontpage' ) == 1 ) {
+if( get_option( 'MOM_themetakeover_tiledfrontpage' ) == 1 && get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
 
 	add_filter( 'the_content', 'do_shortcode', 'mom_miniloop' );
 	add_shortcode( 'mom_miniloop', 'mom_tiled_frontpage' );
@@ -45,14 +45,15 @@ if( get_option( 'MOM_themetakeover_tiledfrontpage' ) == 1 ) {
  *
  */
 function mom_tiled_frontpage( $atts, $content = null ) {
-
+	ob_start();
 	/**
 	 *
 	 * Grab the current user's level set previously in the main plugin 
 	 * for use in this shortcode(where necessary and called for)
 	 *
 	 */
-	global $user_level;
+	global $user_level,$paged,$post;
+
 
 	/**
 	 *
@@ -66,6 +67,9 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	$recent_count   = 0;
 	$exclude_cats   = '';
 
+	
+	$series = get_post_meta($post->ID, 'series', true);
+	
 	/**
 	 *
 	 * Shortcode attributes(to be set inside of the shortcode)
@@ -77,7 +81,8 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	extract(
 
 		shortcode_atts( array(
-
+			
+			'exclude'       => '',                  // post IDs to exclude
 			'thumbs'        => 1,					// 1(yes) 0(no)	
 			'show_link'     => 1,					// 1(yes) 0(no)
 			'link_content'  => '',					// alpha-numeric value for post content (defaults to post title) (ex: "Click me")
@@ -94,12 +99,23 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 			'year'          => '',					// numerical date (year) (ex: 2014,2013,2012,2011..)
 			'month'         => '',					// numerical date (month) (ex: 1,2,3,4,5,6,7,8,9,10,11,12)
 			'day'           => '',					// numerical date (day) (ex: 1,2,3,4,5,6,7,8,9,10,11,...)
-			'votes'         => 0                    // display votes associated with each post (if voting module is on) (default: 0 / off)
+			'votes'         => 0,                   // display votes associated with each post (if voting module is on) (default: 0 / off)
+			'paging'        => 0,					// Whether or not to page the results
+			'meta'          => '',                  // Posts with THIS meta key
+			'key'           => ''                   // Post with THIS meta key VALUE                    
 
 		), $atts )
 
 	);
 
+	if( $meta == strtolower( 'series' ) ) {
+
+		$key     = $series;
+		$amount  = -1;
+		$exclude = $post->ID;
+
+	}
+	
 	/**
 	 *
 	 * Module->Exclude( Categories->(Logged out, Subscriber, Contributor, Author)
@@ -144,46 +160,240 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 * also excluding categories based on user levels.
 	 *
 	 */
+
+	if( 1 == $paging ) {
+
+		if( is_single() ) {
+			
+		}
+	
+		$paged = (get_query_var('page')) ? get_query_var('page') : 1;
+
+	}
+
 	if( intval( $category ) ) {
 
 		if( $exclude_user == 1 ) {
 
-			$args = array(
+			if( 1 == $paging ) {
+			
+				if( $key ) {
 
-				'posts_per_page'   => $amount,
-				'offset'           => $offset,
-				'category'         => $category,
-				'orderby'          => $orderby,
-				'order'            => $order,
-				'post_type'        => 'post',
-				'post_status'      => $post_status,
-				'suppress_filters' => true,
-				'cache_results'    => $cache_results,
-				'year'             => $year,
-				'monthnum'         => $month,
-				'day'              => $day,
-				'category__not_in' => $exclude_cats
+					$args = array(
+						
+						'post__not_in'     => array( $exclude ),
+						'posts_per_page'   => $amount,
+						'offset'           => $offset,
+						'category'         => $category,
+						'orderby'          => $orderby,
+						'order'            => $order,
+						'post_type'        => 'post',
+						'post_status'      => $post_status,
+						'suppress_filters' => true,
+						'cache_results'    => $cache_results,
+						'year'             => $year,
+						'monthnum'         => $month,
+						'day'              => $day,
+						'category__not_in' => $exclude_cats,
+						'paged'            => $paged,
+						'meta_query'       => array(
+							array( 
+								'key'     => $meta,
+								'value'   => array( $key ),
+								'compare' => 'IN',
+							)
+						)
+					);
+					
+				} else {
 
-			);
+					$args = array(
+
+						'post__not_in'     => array( $exclude ),
+						'posts_per_page'   => $amount,
+						'offset'           => $offset,
+						'category'         => $category,
+						'orderby'          => $orderby,
+						'order'            => $order,
+						'post_type'        => 'post',
+						'post_status'      => $post_status,
+						'suppress_filters' => true,
+						'cache_results'    => $cache_results,
+						'year'             => $year,
+						'monthnum'         => $month,
+						'day'              => $day,
+						'category__not_in' => $exclude_cats,
+						'paged'            => $paged,
+						'meta_key'         => $meta
+
+					);
+
+				}
+
+			} else {
+
+				if( $key ) {
+
+					$args = array(
+
+						'post__not_in'     => array( $exclude ),
+						'posts_per_page'   => $amount,
+						'offset'           => $offset,
+						'category'         => $category,
+						'orderby'          => $orderby,
+						'order'            => $order,
+						'post_type'        => 'post',
+						'post_status'      => $post_status,
+						'suppress_filters' => true,
+						'cache_results'    => $cache_results,
+						'year'             => $year,
+						'monthnum'         => $month,
+						'day'              => $day,
+						'category__not_in' => $exclude_cats,
+						'meta_query'       => array(
+							array( 
+								'key'     => $meta,
+								'value'   => array( $key ),
+								'compare' => 'IN',
+							)
+						)
+
+					);	
+
+				} else {
+				
+					$args = array(
+
+						'post__not_in'     => array( $exclude ),
+						'posts_per_page'   => $amount,
+						'offset'           => $offset,
+						'category'         => $category,
+						'orderby'          => $orderby,
+						'order'            => $order,
+						'post_type'        => 'post',
+						'post_status'      => $post_status,
+						'suppress_filters' => true,
+						'cache_results'    => $cache_results,
+						'year'             => $year,
+						'monthnum'         => $month,
+						'day'              => $day,
+						'category__not_in' => $exclude_cats,
+						'meta_key'         => $meta
+
+					);
+				}
+			}
 
 		} else {
 
-			$args = array(
+			if( 1 == $paging ) {
+			
+				if( $key ) {
 
-				'posts_per_page'   => $amount,
-				'offset'           => $offset,
-				'category'         => $category,
-				'orderby'          => $orderby,
-				'order'            => $order,
-				'post_type'        => 'post',
-				'post_status'      => $post_status,
-				'suppress_filters' => true,
-				'cache_results'    => $cache_results,
-				'year'             => $year,
-				'monthnum'         => $month,
-				'day'              => $day
+					$args = array(
 
-			);
+						'post__not_in'     => array( $exclude ),
+						'posts_per_page'   => $amount,
+						'offset'           => $offset,
+						'category'         => $category,
+						'orderby'          => $orderby,
+						'order'            => $order,
+						'post_type'        => 'post',
+						'post_status'      => $post_status,
+						'suppress_filters' => true,
+						'cache_results'    => $cache_results,
+						'year'             => $year,
+						'monthnum'         => $month,
+						'day'              => $day,
+						'paged'            => $paged,
+						'meta_query'       => array(
+							array( 
+								'key'     => $meta,
+								'value'   => array( $key ),
+								'compare' => 'IN',
+							)
+						)
+
+					);
+				
+
+				} else {
+
+					$args = array(
+
+						'post__not_in'     => array( $exclude ),
+						'posts_per_page'   => $amount,
+						'offset'           => $offset,
+						'category'         => $category,
+						'orderby'          => $orderby,
+						'order'            => $order,
+						'post_type'        => 'post',
+						'post_status'      => $post_status,
+						'suppress_filters' => true,
+						'cache_results'    => $cache_results,
+						'year'             => $year,
+						'monthnum'         => $month,
+						'day'              => $day,
+						'paged'            => $paged,
+						'meta_key'         => $meta
+
+					);
+
+				}
+
+			} else {
+			
+				if( $key ) {
+
+					$args = array(
+
+						'post__not_in'     => array( $exclude ),
+						'posts_per_page'   => $amount,
+						'offset'           => $offset,
+						'category'         => $category,
+						'orderby'          => $orderby,
+						'order'            => $order,
+						'post_type'        => 'post',
+						'post_status'      => $post_status,
+						'suppress_filters' => true,
+						'cache_results'    => $cache_results,
+						'year'             => $year,
+						'monthnum'         => $month,
+						'day'              => $day,
+						'meta_query'       => array(
+							array( 
+								'key'     => $meta,
+								'value'   => array( $key ),
+								'compare' => 'IN',
+							)
+						)
+
+					);
+
+				} else {
+				
+					$args = array(
+
+						'post__not_in'     => array( $exclude ),
+						'posts_per_page'   => $amount,
+						'offset'           => $offset,
+						'category'         => $category,
+						'orderby'          => $orderby,
+						'order'            => $order,
+						'post_type'        => 'post',
+						'post_status'      => $post_status,
+						'suppress_filters' => true,
+						'cache_results'    => $cache_results,
+						'year'             => $year,
+						'monthnum'         => $month,
+						'day'              => $day,
+						'meta_key'         => $meta
+
+					);
+					
+				}
+
+			}
 
 		}
 
@@ -191,42 +401,227 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 
 		if( $exclude_user == 1 ) {
 
-			$args = array(
+			if( 1 == $paging ) {
 
-				'posts_per_page'   => $amount,
-				'offset'           => $offset,
-				'category_name'    => $category,
-				'orderby'          => $orderby,
-				'order'            => $order,
-				'post_type'        => 'post',
-				'post_status'      => $post_status,
-				'suppress_filters' => true,
-				'cache_results'    => $cache_results,
-				'year'             => $year,
-				'monthnum'         => $month,
-				'day'              => $day,
-				'category__not_in' => array( $exclude_cats )
+				if( $key ) {
 
-			);
+					$args = array(
+
+						'post__not_in'     => array( $exclude ),
+						'posts_per_page'   => $amount,
+						'offset'           => $offset,
+						'category_name'    => $category,
+						'orderby'          => $orderby,
+						'order'            => $order,
+						'post_type'        => 'post',
+						'post_status'      => $post_status,
+						'suppress_filters' => true,
+						'cache_results'    => $cache_results,
+						'year'             => $year,
+						'monthnum'         => $month,
+						'day'              => $day,
+						'category__not_in' => array( $exclude_cats ),
+						'paged'            => $paged,
+						'meta_query'       => array(
+							array( 
+								'key'     => $meta,
+								'value'   => array( $key ),
+								'compare' => 'IN',
+							)
+						)
+
+					);
+				
+				} else {
+
+					$args = array(
+
+						'post__not_in'     => array( $exclude ),
+						'posts_per_page'   => $amount,
+						'offset'           => $offset,
+						'category_name'    => $category,
+						'orderby'          => $orderby,
+						'order'            => $order,
+						'post_type'        => 'post',
+						'post_status'      => $post_status,
+						'suppress_filters' => true,
+						'cache_results'    => $cache_results,
+						'year'             => $year,
+						'monthnum'         => $month,
+						'day'              => $day,
+						'category__not_in' => array( $exclude_cats ),
+						'paged'            => $paged,
+						'meta_key'         => $meta
+
+					);
+
+				}
+
+			} else {
+
+				if( $key ) {
+				
+					$args = array(
+
+						'post__not_in'     => array( $exclude ),
+						'posts_per_page'   => $amount,
+						'offset'           => $offset,
+						'category_name'    => $category,
+						'orderby'          => $orderby,
+						'order'            => $order,
+						'post_type'        => 'post',
+						'post_status'      => $post_status,
+						'suppress_filters' => true,
+						'cache_results'    => $cache_results,
+						'year'             => $year,
+						'monthnum'         => $month,
+						'day'              => $day,
+						'category__not_in' => array( $exclude_cats ),
+						'meta_query'       => array(
+							array( 
+								'key'     => $meta,
+								'value'   => array( $key ),
+								'compare' => 'IN',
+							)
+						)
+
+					);
+				
+				} else {
+
+					$args = array(
+
+						'post__not_in'     => array( $exclude ),
+						'posts_per_page'   => $amount,
+						'offset'           => $offset,
+						'category_name'    => $category,
+						'orderby'          => $orderby,
+						'order'            => $order,
+						'post_type'        => 'post',
+						'post_status'      => $post_status,
+						'suppress_filters' => true,
+						'cache_results'    => $cache_results,
+						'year'             => $year,
+						'monthnum'         => $month,
+						'day'              => $day,
+						'category__not_in' => array( $exclude_cats ),
+						'meta_key'         => $meta
+
+					);
+					
+				}
+
+			}
+					
 
 		} else {
 
-			$args = array(
+			if( 1 == $paging ) {
+				
+				if( $key ) {
+				
+					$args = array(
 
-				'posts_per_page'   => $amount,
-				'offset'           => $offset,
-				'category_name'    => $category,
-				'orderby'          => $orderby,
-				'order'            => $order,
-				'post_type'        => 'post',
-				'post_status'      => $post_status,
-				'suppress_filters' => true,
-				'cache_results'    => $cache_results,
-				'year'             => $year,
-				'monthnum'         => $month,
-				'day'              => $day
+						'post__not_in'     => array( $exclude ),
+						'posts_per_page'   => $amount,
+						'offset'           => $offset,
+						'category_name'    => $category,
+						'orderby'          => $orderby,
+						'order'            => $order,
+						'post_type'        => 'post',
+						'post_status'      => $post_status,
+						'suppress_filters' => true,
+						'cache_results'    => $cache_results,
+						'year'             => $year,
+						'monthnum'         => $month,
+						'day'              => $day,
+						'paged'            => $paged,
+						'meta_query'       => array(
+							array( 
+								'key'     => $meta,
+								'value'   => array( $key ),
+								'compare' => 'IN',
+							)
+						)
 
-			);
+					);				
+				
+				} else {
+				
+					$args = array(
+
+						'post__not_in'     => array( $exclude ),
+						'posts_per_page'   => $amount,
+						'offset'           => $offset,
+						'category_name'    => $category,
+						'orderby'          => $orderby,
+						'order'            => $order,
+						'post_type'        => 'post',
+						'post_status'      => $post_status,
+						'suppress_filters' => true,
+						'cache_results'    => $cache_results,
+						'year'             => $year,
+						'monthnum'         => $month,
+						'day'              => $day,
+						'paged'            => $paged,
+						'meta_key'         => $meta
+
+					);
+
+				}
+			} else {
+				
+				if( $key ) {
+
+					$args = array(
+
+						'post__not_in'     => array( $exclude ),
+						'posts_per_page'   => $amount,
+						'offset'           => $offset,
+						'category_name'    => $category,
+						'orderby'          => $orderby,
+						'order'            => $order,
+						'post_type'        => 'post',
+						'post_status'      => $post_status,
+						'suppress_filters' => true,
+						'cache_results'    => $cache_results,
+						'year'             => $year,
+						'monthnum'         => $month,
+						'day'              => $day,
+						'meta_query'       => array(
+							array( 
+								'key'     => $meta,
+								'value'   => array( $key ),
+								'compare' => 'IN',
+							)
+						)
+
+					);				
+				
+				} else {
+
+					$args = array(
+
+						'post__not_in'     => array( $exclude ),
+						'posts_per_page'   => $amount,
+						'offset'           => $offset,
+						'category_name'    => $category,
+						'orderby'          => $orderby,
+						'order'            => $order,
+						'post_type'        => 'post',
+						'post_status'      => $post_status,
+						'suppress_filters' => true,
+						'cache_results'    => $cache_results,
+						'year'             => $year,
+						'monthnum'         => $month,
+						'day'              => $day,
+						'meta_key'         => $meta
+
+					);
+
+				}
+			
+			}
 
 		}
 
@@ -303,19 +698,20 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 * Start the loop
 	 *
 	 */
-	foreach( $myposts as $post ) : setup_postdata( $post );
+	query_posts( $args );
+	if( have_posts() ): while( have_posts()) : the_post();
 
 	/**
 	 *
 	 * Set up any post information that can only be gathered while inside of the loop
 	 *
 	 */
-	$id            = $post->ID;
+	$id            = get_the_ID();
 	$link_text     = '';
 	$link          = esc_url( get_permalink( $id ) );
 	$title         = get_the_title( $id );
-	$date          = $post->post_date;
-	$comment_count = intval( $post->comment_count );
+	$date          = get_the_date();
+	$comment_count = get_comments_number();
 	$since         = mom_timesince( $date );
 	$author        = get_the_author();
 
@@ -366,7 +762,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 *
 	 */
 	$the_excerpt = get_the_content( $id );
-	$the_excerpt = sanitize_text_field( $the_excerpt );
+	$the_excerpt = sanitize_text_field( htmlentities( $the_excerpt ) );
 	$the_excerpt = substr( $the_excerpt, 0, 100 );
 	$vote_count  = '';
 	
@@ -636,7 +1032,16 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 * End the loop
 	 *
 	 */
-	endforeach;
+	endwhile;
+
+	if( 1 == $paging ) {
+
+		echo '<div class="mom_miniloop_navigation">'; posts_nav_link('&#8734;','Previous','Next'); echo '</div>';
+
+	}
+
+	else;
+	endif;
 
 	/**
 	 *
@@ -674,7 +1079,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 * Reset all post data from previous loop
 	 *
 	 */
-	wp_reset_postdata();
+	wp_reset_query();
 	$style = '';
-
+	return ob_get_clean();
 }

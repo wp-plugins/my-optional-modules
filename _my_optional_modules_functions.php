@@ -314,6 +314,51 @@ if( get_option('mommaincontrol_comments') == 1){
 
 /**
  *
+ * Related posts
+ * Append a list of related posts to the bottom of the post
+ *
+ */
+
+	if( get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
+		add_filter( 'the_content', 'mom_related_posts' );
+	}
+
+	if( !function_exists( 'mom_related_posts' ) ) {
+
+		function mom_related_posts( $content ) {
+
+			global $post;
+
+			$key    = sanitize_text_field ( get_option( 'MOM_themetakeover_series_key' ) );
+			$style  = sanitize_text_field ( get_option( 'MOM_themetakeover_series_style' ) );
+			$title  = sanitize_text_field ( get_option( 'MOM_themetakeover_series_title' ) );
+			$series = sanitize_text_field ( get_post_meta($post->ID, $key, true) );
+			
+			if( $key && $style && '' != $series ) {
+				
+				if( $title ) {
+					$title = '<h2 class="mom_related_title">' . $title . '</h2>';
+				} else {
+					$title = '';
+				}
+				$related = do_shortcode('[mom_miniloop meta="' . $key . '" style="' . $style . '"]');
+
+			} else {
+
+				$related = '';
+
+			}
+
+			return $content . $title . $related;
+
+		}
+
+	}
+
+
+
+/**
+ *
  * Post Voting 
  * Automatically add the vote bar to the bottom of each post
  *

@@ -1,9 +1,9 @@
 === My Optional Modules ===
 Contributors: boyevul
-Tags: reviews,count,exclude,jump,shortcode,takeover,password,comments,vote,feed,font awesome,hide,version,footer,lazy load,meta,disable,authors,dates,maintenance,analytics,gallery,google maps,reddit,restrict,progress,verifier,loop,mini,ajax,fitvid,navbar,share,bg,wowhead,jquery,tag,category,format,hide,sunday,monday,tuesday,wednesday,thursday,friday,saturday,front page,tag archives,search results,logged out,subscriber,contributor,author,category archive
+Tags: series,related,loops,feature,reviews,count,exclude,jump,shortcode,takeover,password,comments,vote,feed,font awesome,hide,version,footer,lazy load,meta,disable,authors,dates,maintenance,analytics,gallery,google maps,reddit,restrict,progress,verifier,loop,mini,ajax,fitvid,navbar,share,bg,wowhead,jquery,tag,category,format,hide,sunday,monday,tuesday,wednesday,thursday,friday,saturday,front page,tag archives,search results,logged out,subscriber,contributor,author,category archive
 Requires at least: 3.9.1
 Tested up to: 4.0
-Stable tag: 5.5.7.4
+Stable tag: 5.5.7.5
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -23,6 +23,8 @@ They are designed to be lightweight and easilly implemented by even the most nov
 * 'Jump Around': Enables post navigation using the keyboard.
 * 'Shortcodes': A variety of different shortcodes that provide different functionality.
 * 'Takeover': Different additions that add functionality to your theme.
+* 'Mini loops': ('Takeover' module) display a variety of posts based on different parameters
+* 'Series': ('Takeover' module) append a loop of posts to the bottom of posts based on a meta key 
 * 'Passwords': Passwords that rotate on a daily basis to hide content with a shortcode.
 * 'Analytics': Automatic Google analytics installation via UA-ID.
 * 'No Comments': Disable comments site-wide at the click of a button.
@@ -50,7 +52,11 @@ They are designed to be lightweight and easilly implemented by even the most nov
 3. 'list' style mini-loop w/ post vote display (Post Votes module enabled) (Theme: Twenty Fourteen)
 
 == Changelog ==
-* 5.5.7.4  [mom_miniloop] vote paramters added (0 (off) 1 (on) (default: 0)) display upvote count for posts in the loop
+* 5.5.7.5  Series: append a miniloop to the bottom of posts based on a meta key (for instance, all posts with a metakey "series" have a loop of those posts attached to them, excluding the currently viewed post)
+* 5.5.7.5  [mom_miniloop] meta paramters added ( the NAME of a meta key that you wish to pull posts associated with)
+* 5.5.7.5  [mom_miniloop] key paramters added ( the VALUE of a meta key that you wish to pull posts asscoaited with)
+* 5.5.7.5  key and meta may be combined to pull posts that meet BOTH values (like, for example, a series of posts sharing the same meta keys/values)
+* 5.5.7.4  [mom_miniloop] vote parameters added (0 (off) 1 (on) (default: 0)) display upvote count for posts in the loop
 * 5.5.7.4  [mom_miniloop] style added: list for an ordered list of posts
 * 5.5.7.3  removed: shortcode [mom_verify]
 * 5.5.7.3  removed: 'top x posts' from [topvoted] shortcode (Post votes module)

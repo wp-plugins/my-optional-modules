@@ -15,6 +15,7 @@ if(current_user_can('manage_options')){
 		$MOM_themetakeover_ajaxcomments = get_option('MOM_themetakeover_ajaxcomments');
 		$MOM_themetakeover_tiledfrontpage = get_option('MOM_themetakeover_tiledfrontpage');
 		$MOM_themetakeover_commentlength = get_option('MOM_themetakeover_commentlength');
+		$MOM_themetakeover_series_style = get_option('MOM_themetakeover_series_style');
 		$showmepages = get_pages(); ?>
 		<strong class="sectionTitle">Takeover Settings</strong>
 		<form class="clear" method="post">
@@ -26,12 +27,39 @@ if(current_user_can('manage_options')){
 					<option value="1" <?php selected($MOM_themetakeover_tiledfrontpage, 1);?> >Yes</option>
 				</select>				
 			</section>
-			
+			<section class="clear">
+				<label class="left" for="MOM_themetakeover_series_title">Series key</label>
+				<input class="right" id="MOM_themetakeover_series_title" name="MOM_themetakeover_series_title" value="<?php echo get_option( 'MOM_themetakeover_series_title' ); ?>" />
+			</section>
+			<section class="clear">
+				<label class="left" for="MOM_themetakeover_series_key">Series key</label>
+				<input class="right" id="MOM_themetakeover_series_key" name="MOM_themetakeover_series_key" value="<?php echo get_option( 'MOM_themetakeover_series_key' ); ?>" />
+			</section>
+			<section class="clear">
+				<label class="left" for="MOM_themetakeover_series_style">Series style</label>
+				<select class="right" id="MOM_themetakeover_series_style" name="MOM_themetakeover_series_style">
+					<option value="0" <?php selected($MOM_themetakeover_series_style, 0);?> >Turn off</option>
+					<option value="columns" <?php selected($MOM_themetakeover_series_style, 'columns');?> >Columns</option>
+					<option value="dropdown" <?php selected($MOM_themetakeover_series_style, 'dropdown');?> >Dropdown</option>
+					<option value="list" <?php selected($MOM_themetakeover_series_style, 'list');?> >List</option>
+					<option value="slider" <?php selected($MOM_themetakeover_series_style, 'slider');?> >Slider</option>
+					<option value="tiled" <?php selected($MOM_themetakeover_series_style, 'tiled');?> >Tiled</option>
+				</select>				
+			</section>			
 			<br />
 			<blockquote>
 				<i class="fa fa-info">&mdash;</i> <em>[mom_miniloop]</em> will output a mini loop posts based on:<br />
 				<blockquote>
 					Parameters you set: <br />
+					&mdash; <strong>meta</strong> (grab posts with a particular meta key (NOT VALUE))<br />
+					&mdash; <strong>key</strong> (grab posts with a particular meta key VALUE (not tied directly to any particular meta KEY)<br />
+					&mdash;&mdash; combine <strong>meta</strong> and <strong>key</strong> to further specify particular post sets<br />
+					&mdash;&mdash;&mdash; example: Grab all posts that are part of a series (meta key: series) called videos (meta key value: videos):<br />
+					&mdash;&mdash;&mdash; [mom_miniloop meta="series" key="videos"]<br /><br />
+					&mdash; <strong>paging</strong> (<em>1</em> to page results, <em>0</em> not to (default: 0) )<br />
+					&mdash;&mdash; if paging is turned on, amount becomes how many posts to display per page<br />
+					&mdash;&mdash;&mdash; <strong>paging does not currently work properly on single posts</strong><br />
+					&mdash;&mdash;&mdash; <strong>advised usage of paging is for blog pages set as the front page</strong><br />
 					&mdash; <strong>votes</strong> (<em>1</em> to display <i class="fa fa-arrow-up"></i>s, 0 to disable (default: 0))<br />
 					&mdash; <strong>show_link</strong> (show links by default (default:1))<br />
 					&mdash; <strong>link_content</strong> (text of the link (default: none (defaults to post title)))<br />
