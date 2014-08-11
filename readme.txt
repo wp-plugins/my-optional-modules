@@ -53,8 +53,8 @@ They are designed to be lightweight and easilly implemented by even the most nov
 
 == Changelog ==
 * 5.5.7.5  Series: append a miniloop to the bottom of posts based on a meta key (for instance, all posts with a metakey "series" have a loop of those posts attached to them, excluding the currently viewed post)
-* 5.5.7.5  [mom_miniloop] meta paramters added ( the NAME of a meta key that you wish to pull posts associated with)
-* 5.5.7.5  [mom_miniloop] key paramters added ( the VALUE of a meta key that you wish to pull posts asscoaited with)
+* 5.5.7.5  [mom_miniloop] meta parameters added ( the NAME of a meta key that you wish to pull posts associated with)
+* 5.5.7.5  [mom_miniloop] key parameters added ( the VALUE of a meta key that you wish to pull posts asscoaited with)
 * 5.5.7.5  key and meta may be combined to pull posts that meet BOTH values (like, for example, a series of posts sharing the same meta keys/values)
 * 5.5.7.4  [mom_miniloop] vote parameters added (0 (off) 1 (on) (default: 0)) display upvote count for posts in the loop
 * 5.5.7.4  [mom_miniloop] style added: list for an ordered list of posts
