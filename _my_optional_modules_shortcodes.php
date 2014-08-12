@@ -608,32 +608,24 @@ if( !function_exists( 'mom_archives' ) ) {
 	function mom_archives($atts,$content = null){
 
 		global $user_level;
-		$nofollowCats = '';
+
+		$MOM_Exclude_level0Categories  = get_option( 'MOM_Exclude_Categories_level0Categories' ); 
+		$MOM_Exclude_level1Categories  = get_option( 'MOM_Exclude_Categories_level1Categories' ); 
+		$MOM_Exclude_level2Categories  = get_option( 'MOM_Exclude_Categories_level2Categories' ); 
+		$MOM_Exclude_level7Categories  = get_option( 'MOM_Exclude_Categories_level7Categories' ); 
+		$loggedOutCats                 = 0;
 		
-		if(!is_user_logged_in()){
+		if( '' == $MOM_Exclude_level0Categories ) $MOM_Exclude_level0Categories = 0;
+		if( '' == $MOM_Exclude_level1Categories ) $MOM_Exclude_level1Categories = 0;
+		if( '' == $MOM_Exclude_level2Categories ) $MOM_Exclude_level2Categories = 0;
+		if( '' == $MOM_Exclude_level7Categories ) $MOM_Exclude_level7Categories = 0;
 
-			$nofollowCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');
-
-		}
-
-		if(is_user_logged_in()){
-
-			if( $user_level == 0 ) {
-				$loggedOutCats = get_option( 'MOM_Exclude_level0Categories' ) . ',' . get_option( 'MOM_Exclude_level1Categories' ) . ',' . get_option( 'MOM_Exclude_level2Categories' ) . ',' . get_option( 'MOM_Exclude_level7Categories' ) . ',' . get_option( 'MOM_Exclude_Categories_Front' ) . ',' . get_option( 'MOM_Exclude_Categories_TagArchives' ) . ',' . get_option( 'MOM_Exclude_Categories_SearchResults' );
-			}
-			if( $user_level <= 1 ) {
-				$loggedOutCats = get_option( 'MOM_Exclude_level1Categories' ) . ',' . get_option( 'MOM_Exclude_level2Categories' ) . ',' . get_option( 'MOM_Exclude_level7Categories' ) . ',' . get_option( 'MOM_Exclude_Categories_Front' ) . ',' . get_option( 'MOM_Exclude_Categories_TagArchives' ) . ',' . get_option( 'MOM_Exclude_Categories_SearchResults' );
-			}
-			if( $user_level <= 2 ) {
-				$loggedOutCats = get_option( 'MOM_Exclude_level2Categories' ) . ',' . get_option( 'MOM_Exclude_level7Categories' ) . ',' . get_option( 'MOM_Exclude_Categories_Front' ) . ',' . get_option( 'MOM_Exclude_Categories_TagArchives' ) . ',' . get_option( 'MOM_Exclude_Categories_SearchResults' );
-			}
-			if( $user_level <= 7 ) {
-				$loggedOutCats = get_option( 'MOM_Exclude_level7Categories' ) . ',' . get_option( 'MOM_Exclude_Categories_Front' ) . ',' . get_option( 'MOM_Exclude_Categories_TagArchives' ) . ',' . get_option( 'MOM_Exclude_Categories_SearchResults' );
-			}
-
-		}
-
-		$c1 = explode( ',', $nofollowCats );
+		if( $user_level == 0 ) $loggedOutCats = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+		if( $user_level == 1 ) $loggedOutCats = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+		if( $user_level == 2 ) $loggedOutCats = $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+		if( $user_level == 7 ) $loggedOutCats = $MOM_Exclude_level7Categories;
+		
+		$c1 = explode( ',', $loggedOutCats );
 		
 		foreach( $c1 as &$C1 ){
 
@@ -644,7 +636,7 @@ if( !function_exists( 'mom_archives' ) ) {
 		$c_1 = rtrim( implode( $c1 ), ',' );
 		$c11 = explode( ',', str_replace( ' ', '', $c_1 ) );
 		$c11array = array( $c11 );
-		$nofollowcats = $c11;
+		$loggedOutCats = $c11;
 		$args = array( 'fields' => 'category' );
 		$category_ids = mom_get_all_category_ids();
 
@@ -654,7 +646,7 @@ if( !function_exists( 'mom_archives' ) ) {
 
 		foreach( $category_ids as $cat_id ) {
 
-			if( in_array( $cat_id, $nofollowcats ) ) continue;
+			if( in_array( $cat_id, $loggedOutCats ) ) continue;
 			
 			$cat  = get_category( $cat_id );
 			$link = get_category_link( $cat_id );

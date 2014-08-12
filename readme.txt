@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: archives,series,related,loops,feature,reviews,count,exclude,jump,shortcode,takeover,password,comments,vote,feed,font awesome,hide,version,footer,lazy load,meta,disable,authors,dates,maintenance,analytics,gallery,google maps,reddit,restrict,progress,verifier,loop,mini,ajax,fitvid,navbar,share,bg,wowhead,jquery,tag,category,format,hide,sunday,monday,tuesday,wednesday,thursday,friday,saturday,front page,tag archives,search results,logged out,subscriber,contributor,author,category archive
 Requires at least: 3.9.1
 Tested up to: 4.0
-Stable tag: 5.5.7.9
+Stable tag: 5.5.8.0
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -52,6 +52,8 @@ They are designed to be lightweight and easilly implemented by even the most nov
 3. 'list' style mini-loop w/ post vote display (Post Votes module enabled) (Theme: Twenty Fourteen)
 
 == Changelog ==
+* 5.5.8.0  unclosed em element closed in Module->Takeover->Miniloops.
+* 5.5.8.0  deprecated function replaced in Module->Takeover->Navbar
 * 5.5.7.9  [mom_miniloops]:: style 'dropdown' (REMOVED) / 'columns' (excerpt removed from output) / code updated to allow proper positioning in content 
 * 5.5.7.9  [mom_archives] shortcode information added to module->Shortcodes (with minor CSS tweaks to the output)
 * 5.5.7.8  Comma separated list of pages and posts can now be specified for maintenance URL (instead of just site-wide maintenance)

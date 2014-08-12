@@ -12,6 +12,14 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 	die ();
 }
 
+function mom_get_all_category_ids() {
+	if ( ! $cat_ids = wp_cache_get( 'all_category_ids', 'category' ) ) {
+		$cat_ids = get_terms( 'category', array('fields' => 'ids', 'get' => 'all') );
+		wp_cache_add( 'all_category_ids', $cat_ids, 'category' );
+	}
+	return $cat_ids;
+}
+
 // (1) Calculate time between (date) and (date)
 if( !function_exists( 'mom_timesince' ) ) {
 
@@ -89,7 +97,7 @@ if( $mommodule_count == 1 ) {
 				foreach( $words as $word ) {
 
 					$post       = strip_tags( $word->post_content );
-					$post       = explode( ' ',$post );
+					$post       = explode( ' ', $post );
 					$count      = count( $post );
 					$totalcount = $count + $oldcount;
 					$oldcount   = $totalcount;
@@ -315,7 +323,7 @@ if( get_option('mommaincontrol_comments') == 1){
 /**
  *
  * Related posts
- * Append a list of related posts to the bottom of the post
+ * Create a widget for posts in a series
  *
  */
 
@@ -715,8 +723,8 @@ if( !function_exists( 'my_optional_modules_main_stylesheet' ) ) {
 
 	// Stripping paint with a flamethrower.
 	// Sanitize_text_field->strip_tags->htmlentities->string
-	if( !function_exists( 'myoptionalmodules_sanistripents' ) ) {
-		function myoptionalmodules_sanistripents($string){
+	if( !function_exists( 'mom_clean' ) ) {
+		function mom_clean($string){
 			return sanitize_text_field( strip_tags( htmlentities( $string ) ) );
 		}
 	}
@@ -724,37 +732,42 @@ if( !function_exists( 'my_optional_modules_main_stylesheet' ) ) {
 	// Take an alphanumeric string, return only numbers, take out any spaces.
 	if( !function_exists( 'myoptionalmodules_numbersnospaces' ) ) {
 		function myoptionalmodules_numbersnospaces($string){
-			return sanitize_text_field(implode(',',array_unique(explode(',',(preg_replace('/[^0-9,.]/','',($string)))))));
+			return sanitize_text_field( implode( ',', array_unique( explode(', ', ( preg_replace( '/[^0-9,.]/', '', ( $string ) ) ) ) ) ) );
 		}
 	}
 
 if ( !function_exists ( 'myoptionalmodules_excludecategories' ) ) {
 	function myoptionalmodules_excludecategories(){
+		global $user_level,$mommodule_exclude;
 		if($mommodule_exclude == 1){
-			get_currentuserinfo();
-			global $user_level;
-			$nofollowCats = array('0');
-			if(!is_user_logged_in()){
-				$nofollowCats = get_option('MOM_Exclude_VisitorCategories').','.get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');	
-			}
-			if(is_user_logged_in()){
-				if($user_level == 0){$nofollowCats = get_option('MOM_Exclude_level0Categories').','.get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
-				if($user_level <= 1){$nofollowCats = get_option('MOM_Exclude_level1Categories').','.get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
-				if($user_level <= 2){$nofollowCats = get_option('MOM_Exclude_level2Categories').','.get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
-				if($user_level <= 7){$nofollowCats = get_option('MOM_Exclude_level7Categories').','.get_option('MOM_Exclude_Categories_Front').','.get_option('MOM_Exclude_Categories_TagArchives').','.get_option('MOM_Exclude_Categories_SearchResults');}
-			}
-			$c1 = explode(',',$nofollowCats);
+			
+			$MOM_Exclude_level0Categories  = get_option( 'MOM_Exclude_Categories_level0Categories' ); 
+			$MOM_Exclude_level1Categories  = get_option( 'MOM_Exclude_Categories_level1Categories' ); 
+			$MOM_Exclude_level2Categories  = get_option( 'MOM_Exclude_Categories_level2Categories' ); 
+			$MOM_Exclude_level7Categories  = get_option( 'MOM_Exclude_Categories_level7Categories' ); 
+			$loggedOutCats                 = 0;
+			
+			if( '' == $MOM_Exclude_level0Categories ) $MOM_Exclude_level0Categories = 0;
+			if( '' == $MOM_Exclude_level1Categories ) $MOM_Exclude_level1Categories = 0;
+			if( '' == $MOM_Exclude_level2Categories ) $MOM_Exclude_level2Categories = 0;
+			if( '' == $MOM_Exclude_level7Categories ) $MOM_Exclude_level7Categories = 0;
+
+			if( $user_level == 0 ) $loggedOutCats = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+			if( $user_level == 1 ) $loggedOutCats = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+			if( $user_level == 2 ) $loggedOutCats = $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+			if( $user_level == 7 ) $loggedOutCats = $MOM_Exclude_level7Categories;
+			
+			$c1 = explode(',',$loggedOutCats);
 			foreach($c1 as &$C1){$C1 = ''.$C1.',';}
 			$c_1 = rtrim(implode($c1),',');
 			$c11 = explode(',',str_replace(' ','',$c_1));
 			$c11array = array($c11);
-			$array = array('0');
-			$nofollowcats = array_filter($c11);
+			$loggedOutCats = array_filter($c11);
 		}
-		$category_ids = get_all_category_ids();
+		$category_ids = mom_get_all_category_ids();
 		foreach($category_ids as $cat_id){
-			if($nofollowcats != ''){
-				if(in_array($cat_id, $nofollowcats))continue;
+			if($loggedOutCats){
+				if(in_array($cat_id, $loggedOutCats))continue;
 			}
 			$cat = get_category($cat_id);
 			$link = get_category_link($cat_id);
@@ -763,45 +776,6 @@ if ( !function_exists ( 'myoptionalmodules_excludecategories' ) ) {
 	}
 }
 
-
-	
-if ( get_option ( 'mommaincontrol_momse' ) == 1 && !get_option ( 'MOM_themetakeover_youtubefrontpage' ) ) {
-	if ( !function_exists ( 'myoptionalmodules_404Redirection' ) ) {
-		function myoptionalmodules_404Redirection(){
-			if ( is_user_logged_in() ) {
-				if ( get_option ( 'MOM_Exclude_URL' ) == 'NULL' ) {
-					
-				} else { 
-					if ( get_option ( 'MOM_Exclude_URL' ) ) { 
-						$RedirectURL = esc_url ( get_permalink ( get_option ( 'MOM_Exclude_URL' ) ) ); 
-					} else { 
-						$RedirectURL = get_bloginfo ( 'wpurl' );
-					}
-					global $wp_query;
-					if($wp_query->is_404){
-						wp_redirect($RedirectURL,301);exit;
-					}
-				}
-			}else{
-				if ( get_option ( 'MOM_Exclude_URL_User' ) == 'NULL' ) {
-					
-				} else {
-					if ( get_option ( 'MOM_Exclude_URL_User' ) ) { 
-						$RedirectURL = esc_url ( get_permalink ( get_option ( 'MOM_Exclude_URL_User' ) ) ); 
-					} else { 
-						$RedirectURL = get_bloginfo ( 'wpurl' );
-					}
-					global $wp_query;
-					if($wp_query->is_404){
-						wp_redirect($RedirectURL,301);exit;
-					}
-				}
-			}
-		}
-		add_action('wp','myoptionalmodules_404Redirection',1);
-	}
-}
-	
 if ( !function_exists ( 'myoptionalmodules_postasfront' ) ) {
 	function myoptionalmodules_postasfront(){	
 		if(is_home()){
@@ -878,10 +852,3 @@ if ( !function_exists ( 'myoptionalmodules_postformats' ) ) {
 	}
 }
 
-function mom_get_all_category_ids() {
-	if ( ! $cat_ids = wp_cache_get( 'all_category_ids', 'category' ) ) {
-		$cat_ids = get_terms( 'category', array('fields' => 'ids', 'get' => 'all') );
-		wp_cache_add( 'all_category_ids', $cat_ids, 'category' );
-	}
-	return $cat_ids;
-}

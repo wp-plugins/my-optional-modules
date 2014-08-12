@@ -861,21 +861,8 @@ function mom_tiled_frontpage( $atts ) {
 	 */
 	$recent_count++;
 
-	/**
-	 *
-	 * Grab the content of the post, strip all tags, and then cut its length 
-	 * to 100 characters so that it will display properly in the container 
-	 *
-	 */
-	$the_excerpt = sanitize_text_field( htmlentities( substr( get_the_content( $id ), 0, 100 ) ) );
 	$vote_count  = '';
 
-	if( $related ) {
-
-	$the_excerpt = '';
-
-	}
-	
 	if( function_exists( 'mom_grab_vote_count' ) && 1 == $votes ) {
 
 		$vote_count = mom_grab_vote_count( $id );
@@ -957,7 +944,7 @@ function mom_tiled_frontpage( $atts ) {
 
 		}
 
-		echo '><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"></a><span class="link">' . $link_text . '<em><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"></a></span></div>';
+		echo '><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"></a><span class="link">' . $link_text . '<em><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"></a></em></span></div>';
 		echo '</div>';
 
 	}

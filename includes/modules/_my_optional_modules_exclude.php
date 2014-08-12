@@ -155,7 +155,7 @@ if( !function_exists( 'mom_exclude_filter_posts' ) ) {
 			$MOM_Exclude_level7Tags        = get_option( 'MOM_Exclude_Tags_level7Tags' );
 			$loggedOutCats                 = 0;
 			$loggedOutTags                 = 0;
-
+			
 			if( '' == $MOM_Exclude_level0Categories ) $MOM_Exclude_level0Categories = 0;
 			if( '' == $MOM_Exclude_level1Categories ) $MOM_Exclude_level1Categories = 0;
 			if( '' == $MOM_Exclude_level2Categories ) $MOM_Exclude_level2Categories = 0;
@@ -173,7 +173,7 @@ if( !function_exists( 'mom_exclude_filter_posts' ) ) {
 			if( $user_level == 0 ) $loggedOutTags = $MOM_Exclude_level0Tags . ',' . $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
 			if( $user_level == 1 ) $loggedOutTags = $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
 			if( $user_level == 2 ) $loggedOutTags = $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
-			if( $user_level == 7 ) $loggedOutTags = $MOM_Exclude_level7Tags;
+			if( $user_level == 7 ) $loggedOutTags = $MOM_Exclude_level7Tags;	
 
 			$hideLoggedOutCats = explode ( ',', str_replace (' ', '', $c_1 ) );
 			$hideLoggedOutTags = explode ( ',', str_replace (' ', '', $t11 ) );
