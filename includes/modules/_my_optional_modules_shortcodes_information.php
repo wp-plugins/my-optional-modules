@@ -8,6 +8,13 @@ if(current_user_can('manage_options')){
 	function my_optional_modules_shortcodes_module(){
 			echo '
 				<p>
+					<strong class="sectionTitle">Archives</strong>
+					<em>Output a column list of categories, with post count and link to latest post in each.</em><br />
+					&mdash; Shortcode: [mom_archives]<br />
+					&mdash; there are no paramaters
+					&mdash; will follow all rules set by the exclude module
+				</p>
+				<p>
 					<strong class="sectionTitle">Google Maps</strong>
 					<em>Embed a Google map, with optional paramaters.</em><br />
 					&mdash; Shortcode: [mom_map]<br />

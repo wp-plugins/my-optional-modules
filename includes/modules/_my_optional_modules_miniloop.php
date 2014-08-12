@@ -44,8 +44,8 @@ if( get_option( 'MOM_themetakeover_tiledfrontpage' ) == 1 && get_option( 'mommai
  * [mom_miniloop] shortcode functionality
  *
  */
-function mom_tiled_frontpage( $atts, $content = null ) {
-
+function mom_tiled_frontpage( $atts ) {
+	
 	/**
 	 *
 	 * Grab the current user's level set previously in the main plugin 
@@ -97,7 +97,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 			'amount'        => 4,					// numerical value of how many posts to return in the loop
 			'exclude_user'  => 0,					// 1(yes) 0(no) (use exclude user category settings from Exclude module)
 			'downsize'      => 1,					// 1(yes) 0(no) (downsize thumbnails image quality and size)
-			'style'         => 'tiled',				// columns,dropdown,slider,tiled,list
+			'style'         => 'tiled',				// columns,slider,tiled,list
 			'offset'        => 0,					// how many posts to offset 
 			'category'      => '',					// numerical ID(s) or category name(s) (multiple separated by commas) (do not mix the two)
 			'orderby'       => 'post_date',			// none,ID,author,title,name,type,date,modified,parent,rand
@@ -175,7 +175,15 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 * Set up our initial container for the miniloop
 	 *
 	 */
-	echo '<div class="mom_postrotation mom_recentPostRotationFull_' . $style .'">';
+	if( 1 != $related ) {
+
+		$open = '<div class="mom_postrotation mom_recentPostRotationFull_' . $style .'">';
+
+	} else {
+
+		echo '<div class="mom_postrotation mom_recentPostRotationFull_' . $style .'">';
+
+	}
 
 	/**
 	 *
@@ -674,7 +682,34 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 */
 	if( $style == strtolower('slider') ) {
 
-		echo '<div class="mom_slide_container"><div class="slide_container_inner">';
+	if( 1 != $related ) {
+
+		$open .= '<div class="mom_slide_container slide_container_inner"><div class="slide_container_inner">';
+
+		/**
+		 *
+		 * Count the number of posts returned from the loop.
+		 * Since each thumbnail will be 500px in width, we can 
+		 * safely assume that posts * 500px will give us a container 
+		 * that is the right width to house all of the returned items
+		 * for our inner container.
+		 *
+		 */
+		$post_counter = 0;
+
+		$open .= '<style>';
+
+		foreach( $myposts as $post ) {
+
+			$post_counter++;
+
+		}
+
+		$open .= '.mom_postrotation .slide_container_inner { width:' . $post_counter * 500 . 'px; }</style>';
+
+	} else {
+
+		echo '<div class="mom_slide_container slide_container_inner"><div class="slide_container_inner">';
 
 		/**
 		 *
@@ -696,17 +731,8 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 		}
 
 		echo '.mom_postrotation .slide_container_inner { width:' . $post_counter * 500 . 'px; }</style>';
-
+	
 	}
-
-	/**
-	 *
-	 * [mom_miniloop style="dropdown"]
-	 *
-	 */
-	if( $style == strtolower( 'dropdown' ) ) {
-
-		echo '<div class="mom_minidropdown">';
 
 	}
 
@@ -717,7 +743,15 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 */
 	if( $style == strtolower( 'columns' ) ) {
 
-		echo '<div class="mom_minicolumns">';
+		if( 1 != $related ) {
+
+			$open .= '<div class="mom_minicolumns"><div>';
+
+		} else {
+
+			echo '<div class="mom_minicolumns"><div>';
+
+		}
 
 	}
 	
@@ -727,17 +761,50 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 *
 	 */
 	if( $style == strtolower( 'list' ) ) {
+	
+		if( 1 != $related ) {
 
-		echo '<div class="mom_minilist">';
+			$open .= '<div class="mom_minilist"><div>';
+
+		} else {
+
+			echo '<div class="mom_minilist"><div>';
+
+		}
 
 	}
 
+	/**
+	 *
+	 * [mom_miniloop style="tiled"]
+	 *
+	 */
+	if( $style == strtolower( 'tiled' ) ) {
+	
+	if( 1 != $related ) {
+
+		$open .= '<div>';
+	
+	} else {
+
+		echo '<div>';
+
+	}
+
+	}
+	
+	
 	/**
 	 *
 	 * Start the loop
 	 *
 	 */
 	query_posts( $args );
+	
+	if( 1 != $related ) {
+		ob_start();
+	}
+	
 	if( have_posts() ): while( have_posts()) : the_post();
 
 	/**
@@ -800,9 +867,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 * to 100 characters so that it will display properly in the container 
 	 *
 	 */
-	$the_excerpt = get_the_content( $id );
-	$the_excerpt = sanitize_text_field( htmlentities( $the_excerpt ) );
-	$the_excerpt = substr( $the_excerpt, 0, 100 );
+	$the_excerpt = sanitize_text_field( htmlentities( substr( get_the_content( $id ), 0, 100 ) ) );
 	$vote_count  = '';
 
 	if( $related ) {
@@ -850,41 +915,30 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 */
 	if( $style == strtolower( 'list' ) ) {
 
-	echo '
-	<section class="post' . $related_class . '">';
-		
-		echo '<div class="counter">' . $recent_count . '</div>';
-		
-		if( $thumb_path ) {
+		echo '<section class="post' . $related_class . '"><div class="counter">' . $recent_count . '</div>';
 
-			echo '<div class="thumb">
-				<img src="' . $thumb_path . '" />
-			</div>';
+			if( $thumb_path ) {
 
-		}
-			
-		echo '<div class="text">
-			<span class="title"><a href="' . $link . '">' . $title . '</a></span>
-			<span class="author">posted <date title="' . $date . '">' . $since . '</date> by ' . $author . ' to ';
+				echo '<div class="thumb"><img src="' . $thumb_path . '" /></div>';
 
-			if( $categories ) {
+			}
 
-				foreach( array_slice( $categories, 0, 1 ) as $category ) {
+			echo '<div class="text"><span class="title"><a href="' . $link . '">' . $title . '</a></span><span class="author">posted <date title="' . $date . '">' . $since . '</date> by ' . $author . ' to ';
 
-					$output .= '<a href="'.get_category_link( $category->term_id ).'" title="' . esc_attr( sprintf( __( "View all posts in %s" ), $category->name ) ) . '">'.$category->cat_name.'</a>'.$separator;
+				if( $categories ) {
+
+					foreach( array_slice( $categories, 0, 1 ) as $category ) {
+
+						$output .= '<a href="'.get_category_link( $category->term_id ).'" title="' . esc_attr( sprintf( __( "View all posts in %s" ), $category->name ) ) . '">'.$category->cat_name.'</a>'.$separator;
+
+					}
+
+				echo trim( $output, $separator );
 
 				}
 
-			echo trim( $output, $separator );
-
-			}
-			
-			echo '</span>
-			<span class="meta"><a href="' . $link . '">' . $comment_count . ' comments</a> ' . $vote_count . '</span>
-		</div>
-	</section>';
-
-
+				echo '</span><span class="meta"><a href="' . $link . '">' . $comment_count . ' comments</a> ' . $vote_count . '</span></div>
+		</section>';
 
 	}
 	
@@ -903,63 +957,9 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 
 		}
 
-		echo '><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"></a><span class="link">' . $link_text . '<em><a class="mediaNotPresent" href="' . get_permalink( $id ) . '">' . $the_excerpt . '</a></span></div>';
+		echo '><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"></a><span class="link">' . $link_text . '<em><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"></a></span></div>';
 		echo '</div>';
 
-	}
-
-	/**
-	 *
-	 * [mom_miniloop style="dropdown"] 
-	 *
-	 */
-	if( $style == strtolower( 'dropdown' ) ) {
-
-			echo '<span class="span' . $related_class . '">';
-			if( $thumb_path && $thumbs == 1 ) {
-
-				echo '<a class="image" href="' . get_permalink( $id ) . '"><img class="slide" src="' . $thumb_path . '" /></a>';
-
-			}
-			
-			echo '<strong class="post_link">';
-			echo $link_text;
-			echo '</strong>';
-			echo '<p>';
-			
-			if( $the_excerpt ) {
-
-				echo $the_excerpt;
-
-			} else {
-
-				if( $link_text_text ) {
-
-					echo $link_text_text;
-
-				} else {
-
-					echo '[View this post...]';
-
-				}
-
-			}
-
-			echo $vote_count . '<em class="categories">';
-
-			if( $categories ) {
-
-				foreach(  array_slice( $categories, 0, 1 ) as $category ) {
-
-					$output .= '<a href="'.get_category_link( $category->term_id ).'" title="' . esc_attr( sprintf( __( "View all posts in %s" ), $category->name ) ) . '">'.$category->cat_name.'</a>'.$separator;
-
-				}
-
-			echo trim( $output, $separator );
-
-			}
-
-			echo '</em></p></span>';
 	}
 
 	/**
@@ -968,7 +968,9 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 *
 	 */
 	if( $style == strtolower( 'slider' ) ) {
+	
 			echo '<div class="slide"><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"><img class="slide" src="' . $thumb_path . '" /><span class="title">'. $link_text_text . $vote_count . '</span></a></div>';
+
 	}
 
 	/**
@@ -977,11 +979,11 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 *
 	 */
 	if( $style == strtolower('tiled') ) {
-	
+
 		if( $recent_count == 1 ) {
 
 			$container = 'feature';
-			echo '<div class="' . $container . '">';
+			echo '<div class="feature">';
 
 		}
 		
@@ -1068,6 +1070,7 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 			echo '</div></div>';
 
 		}
+		
 
 	}
 
@@ -1093,29 +1096,13 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 * Close all open containers associated with this miniloop
 	 *
 	 */
-	if( $style == strtolower( 'dropdown' ) ) {
+	if( 1 != $related ) {
 
-		echo '</div></div>';
+		$close = '</div></div></div>';
 
-	} elseif( $style == strtolower( 'slider' ) ) {
+	} else { 
 
 		echo '</div></div></div>';
-
-	} elseif( $style == strtolower( 'tiled' ) ) {
-
-		echo '</div></div>';
-
-	} elseif( $style == strtolower( 'columns' ) ) {
-
-		echo '</div></div>';
-
-	} elseif( $style == strtolower( 'list' ) ) {
-
-		echo '</div></div>';
-
-	} else {
-
-		echo '</div>';
 
 	}
 
@@ -1125,6 +1112,9 @@ function mom_tiled_frontpage( $atts, $content = null ) {
 	 *
 	 */
 	wp_reset_query();
-	$style = '';
-
+	
+	if( 1 != $related ) {
+		return $open . ob_get_clean() . $close;
+	} else { }
+	
 }

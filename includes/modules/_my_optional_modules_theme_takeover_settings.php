@@ -35,6 +35,7 @@ if(current_user_can('manage_options')){
 				<label class="left" for="MOM_themetakeover_series_key">Series key</label>
 				<input class="right" id="MOM_themetakeover_series_key" name="MOM_themetakeover_series_key" value="<?php echo get_option( 'MOM_themetakeover_series_key' ); ?>" />
 			</section>
+			
 			<br />
 			<blockquote>
 				<i class="fa fa-info">&mdash;</i> <em>MOM Series Widget</em> will group posts together sharing the same custom key values<br />
@@ -60,7 +61,6 @@ if(current_user_can('manage_options')){
 					&mdash; <strong>downsize</strong> (<em>1</em>:downsize to thumbnail size, <em>0</em>:use original size image (default:1)) <br />
 					&mdash; <strong>style</strong><br />
 					&mdash;&mdash;(<em>columns</em> for a 2-column setup w/ thumbnails and post excerpts)<br />
-					&mdash;&mdash;(<em>dropdown</em> for a list of post items with thumbnail, excerpt, and category links)<br />
 					&mdash;&mdash;(<em>list</em> for an ordered list of posts.)<br />
 					&mdash;&mdash;(<em>slider</em> for a horizontal layout inside of a scrollable div)<br />
 					&mdash;&mdash;(<em>tiled</em> for a tiled gallery layout)<br />
