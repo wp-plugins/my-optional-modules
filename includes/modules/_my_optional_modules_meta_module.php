@@ -3,19 +3,22 @@
 if(!defined('MyOptionalModules')){die();}
 function myoptionalmodules_metainformation(){
 	global $wp,$post;
-	$postid = $post->ID;
+	if( $post  ) $postid = $post->ID;
+	if( !$post ) $postid = 0;
 	$theExcerpt = '';
 	$theFeaturedImage = '';
 	$Twitter_start = '';
 	$Twitter_site = '';
 	$Twitter_author = '';
-	$authorID = $post->post_author;
+	if( $post  ) $authorID = $post->post_author;
+	if( !$post ) $authorID = 0;
 	$excerpt_from = get_post($postid);
 	$post_title = get_post_field('post_title',$postid);
 	$post_content = get_post_field('post_content',$postid);
 	$publishedTime = get_post_field('post_date',$postid);
 	$modifiedTime = get_post_field('post_modified',$postid);
-	$post_link = get_permalink($post->ID);
+	if( $post  ) $post_link = get_permalink($post->ID);
+	if( !$post ) $post_link = 0;
 	$sitename_content = get_bloginfo('site_name');
 	$description_content = get_bloginfo('description');
 	$theAuthor_first = get_the_author_meta('user_firstname',$authorID);
@@ -24,7 +27,8 @@ function myoptionalmodules_metainformation(){
 	$twitter_personal_content = get_the_author_meta('twitter_personal',$authorID);
 	$twitter_site_content = get_option('site_twitter');
 	$locale_content = get_locale();
-	$featured_image = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID),'single-post-thumbnail');
+	if( $post  ) $featured_image = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID),'single-post-thumbnail');
+	if( !$post ) $featured_image = 0;
 	$featuredImage = $featured_image[0];
 	$currentURL = add_query_arg($wp->query_string,'',home_url($wp->request));
 	$excerpt = get_post_field('post_content', $postid);

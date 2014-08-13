@@ -551,6 +551,12 @@ if( $mom_votes == 1 ) {
 				$vote = '';
 
 			}
+			
+			if( is_feed() ) {
+
+				$vote = '';
+
+			}
 
 			return $content . $vote;
 		}
@@ -683,7 +689,8 @@ if( !function_exists( 'my_optional_modules_main_stylesheet' ) ) {
 	// RSS feed (link back)
 	if( !function_exists( 'myoptionalmodules_rsslinkback' ) ) { 
 		function myoptionalmodules_rsslinkback($content){
-			return $content.'<p><a href="'.esc_url(get_permalink($post->ID)).'">'.htmlentities(get_post_field('post_title',$postid)).'</a> via <a href="'.esc_url(home_url('/')).'">'.get_bloginfo('site_name').'</a></p>';
+			global $post;
+				return $content.'<p><a href="'.esc_url(get_permalink($post->ID)).'">'.htmlentities(get_post_field('post_title',$post->ID)).'</a> via <a href="'.esc_url(home_url('/')).'">'.get_bloginfo('site_name').'</a></p>';
 		}
 	}
 

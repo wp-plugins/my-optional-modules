@@ -956,7 +956,13 @@ function mom_tiled_frontpage( $atts ) {
 	 */
 	if( $style == strtolower( 'slider' ) ) {
 	
-			echo '<div class="slide"><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"><img class="slide" src="' . $thumb_path . '" /><span class="title">'. $link_text_text . $vote_count . '</span></a></div>';
+			echo '<div class="slide"';
+			if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
+
+				echo 'style="background-image:url(\'' . $thumb_path . '\');"';
+
+			}			
+			echo '><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"><span class="title">'. $link_text_text . $vote_count . '</span></a></div>';
 
 	}
 

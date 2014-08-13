@@ -44,6 +44,7 @@ h2.mom_related_title{ clear: both; font-size: 95%; margin: 25px auto 0; padding:
 .mom_recentPostRotationFull_tiled .thumbnailFull a.mediaNotPresent {clear: both; display: block;font-size: 150%;font-weight: 900;height: 100%; left: 0;opacity: .3;position: absolute; padding: 15%;text-align: center;text-decoration: none;text-shadow: none;top: 0;width: 100%;}
 .mom_recentPostRotationFull_tiled .thumbnailFull a:hover {opacity: 1;text-shadow:  0 0 1px rgba(0,0,0,.9);}
 .mom_slide_container{-webkit-box-shadow:inset 0 0 5px 1px rgba(0,0,0,.2);box-shadow:inset 0 0 5px 1px rgba(0,0,0,.2);margin:0 auto;max-width:500px;height:300px;overflow-y:hidden;overflow-x:auto;border:1px solid rgba(0,0,0,.9);position:relative;}
+.mom_slide_container .slide {background: no-repeat center center fixed; -webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;}
 .mom_slide_container .slide_container_inner .slide {width:500px;float:left;height:300px;position:relative;display:block;}
 .mom_slide_container .slide_container_inner .slide img {height:100%;}
 .mom_slide_container .slide_container_inner .slide span {position:absolute;top:0;left:0;padding:20%;width:100%;text-align:center;font-size:200%;font-weight:900;}
