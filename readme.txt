@@ -52,7 +52,7 @@ They are designed to be lightweight and easilly implemented by even the most nov
 3. 'list' style mini-loop w/ post vote display (Post Votes module enabled) (Theme: Twenty Fourteen)
 
 == Changelog ==
-* 5.5.8.2  [mom_miniloops]/series widget should only be attempting to output if its on a single post and the key is properly defined
+* 5.5.8.2  [mom_miniloops]/series widget should only be attempting to output if in post and the key is properly defined
 * 5.5.8.1  Module->Meta better handling for information when 404
 * 5.5.8.1  Module->Takeover->Miniloop [style: slider] post thumbs changed to scale more appropriately
 * 5.5.8.0  unclosed em element closed in Module->Takeover->Miniloops.
