@@ -28,7 +28,7 @@ if(current_user_can('manage_options')){
 				</select>				
 			</section>
 			<section class="clear">
-				<label class="left" for="MOM_themetakeover_series_title">Series key</label>
+				<label class="left" for="MOM_themetakeover_series_title">Series title</label>
 				<input class="right" id="MOM_themetakeover_series_title" name="MOM_themetakeover_series_title" value="<?php echo get_option( 'MOM_themetakeover_series_title' ); ?>" />
 			</section>
 			<section class="clear">

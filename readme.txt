@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: archives,series,related,loops,feature,reviews,count,exclude,jump,shortcode,takeover,password,comments,vote,feed,font awesome,hide,version,footer,lazy load,meta,disable,authors,dates,maintenance,analytics,gallery,google maps,reddit,restrict,progress,verifier,loop,mini,ajax,fitvid,navbar,share,bg,wowhead,jquery,tag,category,format,hide,sunday,monday,tuesday,wednesday,thursday,friday,saturday,front page,tag archives,search results,logged out,subscriber,contributor,author,category archive
 Requires at least: 3.9.1
 Tested up to: 4.0
-Stable tag: 5.5.8.1
+Stable tag: 5.5.8.2
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -52,6 +52,7 @@ They are designed to be lightweight and easilly implemented by even the most nov
 3. 'list' style mini-loop w/ post vote display (Post Votes module enabled) (Theme: Twenty Fourteen)
 
 == Changelog ==
+* 5.5.8.2  [mom_miniloops]/series widget should only be attempting to output if its on a single post and the key is properly defined
 * 5.5.8.1  Module->Meta better handling for information when 404
 * 5.5.8.1  Module->Takeover->Miniloop [style: slider] post thumbs changed to scale more appropriately
 * 5.5.8.0  unclosed em element closed in Module->Takeover->Miniloops.
