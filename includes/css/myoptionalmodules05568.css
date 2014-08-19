@@ -122,85 +122,318 @@ h2.mom_related_title{ clear: both; font-size: 95%; margin: 25px auto 0; padding:
 .topVotes a{display:block;float:left;margin:10px 0 0}
 
 /* Navbar */
-.momnavbar{z-index:99999;text-transform:uppercase;width:100%;display:block;text-align:left;line-height:35px}
-.navbardefault{background-color:#fff;color:#000;}
-.navbardark,.navbardark a{background-color:#f5f5f5;color:#9f9f9f}
-.navbarlight,.navbarlight a{background-color:#9f9f9f;color:#f5f5f5}
-.navbarred,.navbarred a{background-color:#f25e5e;color:#fff6f6}
-.navbarblue,.navbarblue a{background-color:#5ea0f2;color:#f0f7ff}
-.navbargreen,.navbargreen a{background-color:#5ef26c;color:#072406}
-.navbaryellow,.navbaryellow a{background-color:#e2f25e;color:#1d1e02}
-.navbartop{height:46px;position:relative;border-bottom:1px solid #000}
-.navbarbottom{height:46px;position:relative;border-top:1px solid #000}
-div.momnavbar .item{height:20px;cursor:pointer;margin:0;padding:5px}
-.momnavbarcategories{width:calc(100% - 50px);height:100%;overflow:hidden;display:block;clear:both;line-height:53px;font-size:15px;margin:-5px 0;padding:0}
+.momnavbar *:after, .momnavbar *:before {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+.momnavbar {
+	border-bottom: 1px solid #000;
+	display: block;
+	line-height: 35px;
+	text-align: left;
+	text-transform: uppercase;
+	width: 100%;
+	z-index: 99999;
+}
+	.momnavbar_extended_inner .siteInformation {
+		border-top: 1px solid rgba(0,0,0,.1);
+		float: left;
+		height: 295px;
+		width: 33.3%;
+	}
+		.momnavbar_extended_inner .siteInformation:hover {
+			overflow-y: auto;
+		}
+	.momnavbar .facebook:hover {
+		color: #3e5a93;
+	}
+	.momnavbar .twitter:hover {
+		color: #55acee;
+	}
+	.momnavbar .google:hover {
+		color: #d54334;
+	}
+	.momnavbar .email:hover {
+		color: #0a2a45;
+	}
+	.momnavbar_tab {
+		position: absolute;
+		width: 25px;
+		height: 25px;
+		background-color: rgba(255,255,255,.5)!important;
+		z-index: 99999;
+	}
+	.momnavbar_pages:after {
+		clear: both; 
+		content: "";
+		display: table;
+	}
+	.momnavbar_pages {
+		background-color: rgba(255,255,255,.9);
+		clear: both;
+		display: block;
+		font-size: 12px;
+		line-height: 5px;
+		margin: 5px 0 15px;
+		position: relative;
+		padding: 0;
+		text-align: left;
+		width: 100%;
+	}
+	.momnavbar_pages li {
+		border: 0;
+		float: left;
+		list-style: none;
+		margin: 5px;
+	}
+	.momnavbar_pages li:hover {
+		border: none; 
+		margin: 5px;
+	}
+	.momnavbar_pages li a {
+		text-decoration: none;
+	}
+	
+	.momnavbar ul li,
+	.momnavbar ul li:hover,
+	.momnavbar a {
+		margin: 0;
+		padding: 0 5px;
+		text-decoration: none;
+	}
+	.momnavbar_extended_inner {
+		visibility: hidden;
+		display: none;
+	}
+	.momnavbar_extended_inner .recentPostListingThumbnails img {
+		border: 0;
+		clear: both; 
+		display: block; 
+		margin: 0;
+		width: 100%;
+	}
+	.momnavbar_extended_inner p{
+		display: block;
+		font-size: 95%;
+		margin: 0;
+		padding: 5px;
+		width: 100%;
+	}
+	.momnavbar_extended_inner .listalltags {
+		display: block;
+		font-size: 12px;
+		width: 100%;
+	}
+	.momnavbar_extended_inner .listalltags a {
+		background-color: #000;
+		border-radius: 3px;
+		color: #ccd7ff;
+		float: left;
+		font-size: 10px;
+		margin: 2px;
+		padding: 3px;
+		text-decoration: none;
+	}
+	.momnavbar_extended_inner .recentPostListing ul{
+		background-color: rgba(255,255,255,.5);
+		display: block;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		width: 100%;
+	}
+	.momnavbar_extended_inner .recentPostListing ul li{
+		clear: both;
+		display: block;
+		font-size: 75%;
+		margin: 0;
+	}
+	.momnavbar_extended_inner .recentPostListing ul li:hover {
+		margin: 0; 
+	}
+	.momnavbar_extended_inner .recentPostListing ul li a{
+		border: 0;
+		display: block;
+		height: auto;
+		text-decoration: none;
+		width: 100%;
+	}
+.momnavbar_extendeddown { 
+	display: block; 
+	left: 0;
+	position: fixed;
+	top: 46px;
+	width: 100%;
+	z-index: 99999;
+}
+	.momnavbar_extendeddown .momnavbar_tab {
+		cursor: pointer;
+		text-align: center;
+	}
+	#momnavbarextended:checked ~ .momnavbar_extended_inner {
+		background-color: #fff;
+		display: block;
+		margin: 0;
+		overflow: hidden;
+		visibility: visible;
+		width: 100%;
+	}
+	.momnavbar_extended_inner .recentPostListing {
+		border-top: 1px solid rgba(0,0,0,.1);
+		border-left: 1px solid rgba(0,0,0,.1);
+		border-right: 1px solid rgba(0,0,0,.1);
+		height: 295px;
+		float: left;
+		overflow: hidden;
+		padding: 5px;
+		position: relative;
+		width: 33.3%;
+	}
+		.momnavbar_extended_inner .recentPostListing:hover {
+			overflow-y: auto; 
+			overflow-x: hidden;
+		}
+.momnavbar_extendedup { 
+	bottom: 73px;
+	display: block; 
+	left: 0;
+	position: fixed;
+	width: 100%;
+	z-index: 99999;
+}
+	.momnavbar_extendedup #momnavbarextended:checked ~ .momnavbar_extended_inner{
+		background-color: #fff;
+		display: block;
+		height: 300px;
+		margin: 25px 0 -27px;
+		overflow: hidden;
+		padding: 5px 0;
+		position: relative;
+		visibility: visible;
+		width: 100%;
+	}
+	.momnavbar_extendedup .momnavbar_tab { 
+		cursor: pointer;
+		text-align: center;
+	}
+	.momnavbar_extended_inner .recentPostListingThumbnails {
+		border-top: 1px solid rgba(0,0,0,.1);
+		float: right;
+		height: 295px;
+		overflow-y: auto;
+		position: relative;
+		width: 33.3%;
+	}
+.momnavbar{
+	background-color: #fff;
+	color: #000;
+}
+.navbartop{
+	height: 46px;
+	position: relative;
+	border-bottom: 1px solid rgba(0,0,0,.5);
+}
+.navbarbottom{
+	height: 46px;
+	position: relative;
+	border-top: 1px solid rgba(0,0,0,.5);
+}
+
+.momnavbarcategories{width:auto;height:100%;overflow:hidden;display:block;float:left;line-height:53px;font-size:15px;margin:-5px 0;padding:0}
 .momnavbarcategories li{float:left;list-style:none;margin:0 5px}
-.momnavbar label.momsearchthis{position:absolute;right:5px;top:15px;cursor:pointer;background-color:transparent !important;color:#000 !important}
-.momnavbar .search-form,.momnavbar #searchform{position:absolute;right:25px;top:5px}
-.momnavbar #searchform input[type=text]{height:25px!important;font-size:20px!important;width:35px!important;border:0!important;cursor:pointer!important;float:right!important;display:block!important;padding:0!important}
-.momnavbar #searchform input[type=text]:focus{width:150px !important}
-.navbartop,.stucktothetop{position:fixed!important;top:0!important;left:0!important;z-index:99999!important}
-.navbarbottom,.stucktothebottom{position:fixed!important;bottom:0!important;left:0!important;z-index:99999!important}
-.momnavbar_pagesup{width:799px;height:25px;overflow:hidden;clear:both;position:absolute;text-align:right;line-height:15px;background-color:#fff;border-top:1px solid #000;border-right:1px solid #000;margin:0 0 0 10px;border-bottom:1px solid #000;}
-.momnavbar_pagesup li{float:right;list-style:none;border:0;text-decoration:none;margin:5px}
-.momnavbar_pagesdown{width:784px;height:25px;overflow:hidden;clear:both;position:absolute;text-align:left;line-height:15px;background-color:#fff;border-bottom:1px solid #000;border-right:1px solid #000;margin:0 0 0 26px}
-.momnavbar_pagesdown li{float:left;list-style:none;border:0;text-decoration:none;margin:5px}
-.momnavbar_extendeddown{position:fixed;top:43px;left:0;z-index:99999}
-.momnavbar_extendedup{position:fixed;bottom:73px;left:0;z-index:99999}
-.momnavbar_tab{position:absolute;width:25px;height:25px;background-color:#fff;z-index:99999}
-.momnavbar_tab:hover{background-color:#000;color:#fff}
-.momnavbar_extendeddown .momnavbar_tab{border-left:1px solid #000;border-right:1px solid #000;border-bottom:1px solid #000;text-align:center;cursor:pointer}
-.momnavbar_extendedup .momnavbar_tab{border-left:1px solid #000;border-right:1px solid #000;border-top:1px solid #000;text-align:center;cursor:pointer}
-.momnavbar_extended_inner{visibility:hidden;display:none;width:500px;height:0;-webkit-transition:all .6s ease-in-out;-moz-transition:all .6s ease-in-out;-o-transition:all .6s ease-in-out;transition:all .6s ease-in-out}
-.momnavbar_extendedup #momnavbarextended:checked ~ .momnavbar_extended_inner{height:300px;width:500px;border:1px solid #000;visibility:visible;display:block;overflow:hidden;box-shadow:1px #000;background-color:#fff;z-index:9999999;margin:25px 0 -27px;padding:5px}
-.momnavbar_extendeddown #momnavbarextended:checked ~ .momnavbar_extended_inner{height:300px;width:500px;border:1px solid #000;visibility:visible;display:block;overflow:hidden;box-shadow:1px #000;background-color:#fff;z-index:9999999;margin:3px 0 -2px;padding:5px}
-.momnavbar_extendedup .recentPostListingThumbnails{position:absolute;bottom:-27px;left:499px;width:310px;height:310px;overflow-x:hidden;overflow-y:auto;z-index:1;border-top:1px solid #000;border-right:1px solid #000}
-.momnavbar_extendeddown .recentPostListingThumbnails{position:absolute;bottom:-2px;left:500px;width:310px;height:311px;overflow-x:hidden;overflow-y:auto;z-index:1;border-top:1px solid #000;border-right:1px solid #000}
-.greyscale{filter:gray;-webkit-filter:grayscale(100%)}
-.greyscale:hover{filter:url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 1 0\'/></filter></svg>#grayscale");-webkit-filter:grayscale(0%)}
-.momnavbar_extended_inner .recentPostListingThumbnails .thumbnail img{float:left;width:310px;border:0}
-.momnavbar_extended_inner h3{font-size:25px;height:35px;line-height:35px;width:100%;clear:both;display:block;border-bottom:1px solid #8f8d8d;text-indent:5px;overflow:hidden;margin:0 0 0 -5px}
-.momnavbar_extended_inner p{display:block;width:285px;font-size:12px;line-height:14px;margin:5px 0;padding:5px}
-.momnavbar_extended_inner .listalltags{width:285px;display:block;font-size:12px}
-.momnavbar_extended_inner span{float:left;background-color:#fff;border-radius:3px;color:#000;font-size:10px;margin:2px;padding:3px}
-.momnavbar_extended_inner .listalltags a{float:left;background-color:#000;border-radius:3px;color:#ccd7ff;font-size:10px;margin:2px;padding:3px}
-.momschemedefault{background-color:#fff;color:#000;}
-.momschemedark{background-color:#9b9b9b;color:#000}
-.momschemelight{background-color:#f8f8f8;color:#9b9b9b}
-.momschemered{background-color:#ffebeb;color:#431919}
-.momschemeblue{background-color:#ebf4ff;color:#192d43}
-.momschemegreen{background-color:#ebffef;color:#19431d}
-.momschemeyellow{background-color:#fdffe9;color:#404319}
-.momschemedefault .recentPostListing{background-color:#fff;color:#000;}
-.momschemedefault .recentPostListing a{color:#2b2d2b}
-.momschemedark .recentPostListing a{color:#a4a4a3}
-.momschemelight .recentPostListing a{color:#2c2c28}
-.momschemered .recentPostListing a{color:#ffeded}
-.momschemeblue .recentPostListing a{color:#edf9ff}
-.momschemegreen .recentPostListing a{color:#edfff1}
-.momschemeyellow .recentPostListing a{color:#ffffed}
-.momschemedefault .recentPostListing a:hover{color:#4a4b4a}
-.momschemedark .recentPostListing a:hover{color:#5c5c5c}
-.momschemelight .recentPostListing a:hover{color:#161612}
-.momschemered .recentPostListing a:hover{color:#9f5a5a}
-.momschemeblue .recentPostListing a:hover{color:#5a7c9f}
-.momschemegreen .recentPostListing a:hover{color:#659f5a}
-.momschemeyellow .recentPostListing a:hover{color:#949f5a}
-.momschemedark .recentPostListing{background-color:#2c2c28}
-.momschemelight .recentPostListing{background-color:#a4a4a3}
-.momschemered .recentPostListing{background-color:#ff6868}
-.momschemeblue .recentPostListing{background-color:#689aff}
-.momschemegreen .recentPostListing{background-color:#68ff7a}
-.momschemeyellow .recentPostListing{background-color:#f5ff88}
-.momnavbar_extendedup .momnavbar_extended_inner .recentPostListing{position:absolute;right:5px;top:26px;width:200px;border:1px solid #000;height:299px;z-index:99999;overflow:hidden;padding:5px}
-.momnavbar_extendeddown .momnavbar_extended_inner .recentPostListing{position:absolute;right:0;top:3px;width:200px;border:1px solid #000;height:300px;z-index:99999;overflow:hidden;padding:5px}
-.momnavbar_extended_inner .recentPostListing ul{list-style:none;margin:0;padding:0}
-.momnavbar_extended_inner .recentPostListing ul li{clear:both;width:200px;height:22px;overflow:hidden;display:block;font-size:12px}
-.momnavbar_extended_inner .recentPostListing ul li a{display:block;width:200px;height:28px;text-decoration:none;border:0}
-.momnavbar a:hover{text-decoration:underline}
-.navbartop #navsearchform,.navbarbottom #navsearchform{position:absolute;right:0;top:0;cursor:pointer;margin:5px;padding:5px}
+div.momnavbar .item{height:20px;cursor:pointer;margin:0;padding:5px}
+
+.momnavbar #searchform {
+	border: 0;
+	cursor: pointer;
+	clear: none;
+	display: block;
+	float: right;
+	height: 20px;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	right: 55px;
+	top: 2px;
+	width: 100px;
+}
+	.momnavbar #searchform input[type="text"] {
+		padding: 5px;
+	}
+.navbartop,.stucktothetop{
+	left: 0;
+	position: fixed;
+	top: 0;
+	z-index: 99999;
+}
+.navbarbottom,.stucktothebottom{
+	bottom: 0;
+	left: 0;
+	position: fixed;
+	z-index: 99999;
+}
+.momschemedefault {
+	background-color:#fff;color:#000; 
+}
+.momschemedefault .recentPostListing,
+.momschemedefault .momnavbar_extendedup,
+.momschemedefault .momnavbar_extendeddown {
+	background-color:#fff;
+}
+.momschemelight .recentPostListing {
+	background-color:#fff; 
+}
+.momschemelight,
+.navbarlight {
+	background-color:#fff; 
+}
+.momschemedark .recentPostListing {
+	background-color:#2c2c28; 
+}
+.momschemedark,
+.navbardark {
+	background-color:#9b9b9b; 
+}
+.momschemeblue .recentPostListing {
+	background-color:#e3e6ff; 
+}
+.momschemeblue,
+.navbarblue {
+	background-color:#0003ff; 
+}
+.momschemered .recentPostListing {
+	background-color:#ff3400; 
+}
+.momschemered,
+.navbarred {
+	background-color:#ffe6e3; 
+}
+.navbardark .recentPostListing {
+	background-color:#e2e2e2; 
+}
+.navbarlight .recentPostListing {
+	background-color:#fff 
+}
+.navbarlight {
+	background-color:#fff; 
+}
+.momschemegreen .recentPostListing {
+	background-color:#32ff00 
+ }
+.momschemegreen,
+.navbargreen {
+	background-color:#ebffe3; 
+}
+.momschemeyellow .recentPostListing {
+	background-color:#fffc00; 
+}
+.momschemeyellow,
+.navbaryellow {
+	background-color:#fffce3; 
+}
+
 div.momnavbar #navsearchform i{cursor:pointer}
-.momnavbar_pagesup a,.momnavbar_pagesdown a{text-decoration:none;padding:3px}
 div.momlistcategories span,.right{float:right}
 
 /* List categories */

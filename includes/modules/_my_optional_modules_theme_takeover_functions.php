@@ -1,18 +1,41 @@
-<?php
+<?php 
 
-if( !defined( 'MyOptionalModules' ) ) { 
+/**
+ *
+ * Module->Takeover->Functionality
+ *
+ * Different functions utilized by the Takeover module
+ *
+ * Since ?
+ * @my_optional_modules
+ *
+ */
+
+/**
+ *
+ * Don't call this file directly
+ *
+ */
+if( !defined( 'MyOptionalModules' ) ) {
+
 	die();
+
 }
 
-if( get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
+if( 1 == get_option( 'mommaincontrol_themetakeover' ) ) {
 
-	if(get_option('MOM_themetakeover_horizontal_galleries') == 1 ) {
+	if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ) {
+
 		remove_shortcode( 'gallery', 'gallery_shortcode' );
 		add_action( 'init', 'mom_gallery_shortcode_add', 99 );
+
 		function mom_gallery_shortcode_add() {
+
 			add_shortcode( 'gallery', 'mom_gallery_shortcode' );
+
 		}
 		add_filter( 'use_default_gallery_style', '__return_false' );
+
 		/**
 		 * The Gallery shortcode.
 		 *
@@ -45,6 +68,7 @@ if( get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
 		 * @return string HTML content to display gallery.
 		 */
 		function mom_gallery_shortcode( $attr ) {
+
 			global $post,$attr,$wp;
 			$post = get_post();
 
@@ -52,10 +76,12 @@ if( get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
 			$instance++;
 
 			if ( ! empty( $attr['ids'] ) ) {
+
 				// 'ids' is explicitly ordered, unless you specify otherwise.
 				if ( empty( $attr['orderby'] ) )
 					$attr['orderby'] = 'post__in';
 				$attr['include'] = $attr['ids'];
+
 			}
 
 			/**
@@ -77,13 +103,16 @@ if( get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
 
 			// We're trusting author input, so let's at least make sure it looks like a valid orderby statement
 			if ( isset( $attr['orderby'] ) ) {
+
 				$attr['orderby'] = sanitize_sql_orderby( $attr['orderby'] );
 				if ( !$attr['orderby'] )
 					unset( $attr['orderby'] );
+
 			}
 
 			$html5 = current_theme_supports( 'html5', 'gallery' );
 			extract(shortcode_atts(array(
+
 				'order'      => 'ASC',
 				'orderby'    => 'menu_order ID',
 				'id'         => $post ? $post->ID : 0,
@@ -95,9 +124,10 @@ if( get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
 				'include'    => '',
 				'exclude'    => '',
 				'link'       => ''
+
 			), $attr, 'gallery'));
 
-			$id = intval($id);
+			$id = intval( $id );
 			if ( 'RAND' == $order )
 				$orderby = 'none';
 
@@ -105,34 +135,49 @@ if( get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
 				$_attachments = get_posts( array('include' => $include, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
 
 				$attachments = array();
+
 				foreach ( $_attachments as $key => $val ) {
+
 					$attachments[$val->ID] = $_attachments[$key];
 				}
+
 			} elseif ( !empty($exclude) ) {
+
 				$attachments = get_children( array('post_parent' => $id, 'exclude' => $exclude, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
+
 			} else {
+
 				$attachments = get_children( array('post_parent' => $id, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
+
 			}
 
 			if ( empty($attachments) )
 				return '';
 
 			if ( is_feed() ) {
+
 				$output = "\n";
 				foreach ( $attachments as $att_id => $attachment )
 					$output .= wp_get_attachment_link($att_id, $size, true) . "\n";
 				return $output;
+
 			}
 
 			$itemtag = tag_escape($itemtag);
 			$captiontag = tag_escape($captiontag);
 			$icontag = tag_escape($icontag);
 			$valid_tags = wp_kses_allowed_html( 'post' );
+
 			if ( ! isset( $valid_tags[ $itemtag ] ) )
+
 				$itemtag = 'dl';
+
 			if ( ! isset( $valid_tags[ $captiontag ] ) )
+
 				$captiontag = 'dd';
+
 			if ( ! isset( $valid_tags[ $icontag ] ) )
+
 				$icontag = 'dt';
 
 			$columns = intval($columns);
@@ -153,6 +198,7 @@ if( get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
 			 *                    Otherwise, defaults to true.
 			 */
 			if ( apply_filters( 'use_default_gallery_style', ! $html5 ) ) {
+
 				$gallery_style = "
 				<style type='text/css'>
 					#{$selector} {
@@ -172,11 +218,14 @@ if( get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
 					}
 					/* see gallery_shortcode() in wp-includes/media.php */
 				</style>\n\t\t";
+
 			}
 
 			$items = 0;
 			foreach ( $attachments as $id => $attachment ) {
+
 				$items++;
+
 			}
 			$div_length = ( $items * 150 ) . 'px';
 			
@@ -196,17 +245,24 @@ if( get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
 
 			$i = 0;
 			foreach ( $attachments as $id => $attachment ) {
+
 				if ( ! empty( $link ) && 'file' === $link )
+
 					$image_output = wp_get_attachment_link( $id, $size, false, false );
+
 				elseif ( ! empty( $link ) && 'none' === $link )
+
 					$image_output = wp_get_attachment_image( $id, $size, false );
+
 				else
+
 					$image_output = wp_get_attachment_link( $id, $size, true, false );
 
 				$image_meta  = wp_get_attachment_metadata( $id );
 
 				$orientation = '';
 				if ( isset( $image_meta['height'], $image_meta['width'] ) )
+			
 					$orientation = ( $image_meta['height'] > $image_meta['width'] ) ? 'portrait' : 'landscape';
 
 				$output .= "<{$itemtag} class='gallery-item'>";
@@ -214,51 +270,99 @@ if( get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
 					<{$icontag} class='gallery-icon {$orientation}'>
 						$image_output
 					</{$icontag}>";
+
 				if ( $captiontag && trim($attachment->post_excerpt) ) {
+
 					$output .= "
 						<{$captiontag} class='wp-caption-text gallery-caption'>
 						" . wptexturize($attachment->post_excerpt) . "
 						</{$captiontag}>";
+
 				}
+
 				$output .= "</{$itemtag}>";
+
 				if ( ! $html5 && $columns > 0 && ++$i % $columns == 0 ) {
+
 					$output .= '<br style="clear: both" />';
+
 				}
+
 			}
 
 			$output .= "
 				</div></div>\n";
 
 			return $output;
+
 		}
 		
 	}
-	if(get_option('MOM_themetakeover_topbar') == 1 || get_option('MOM_themetakeover_topbar') == 2){
-		function mom_topbar(){
-			global $wp,$post;
+	
+	if( 1 == get_option( 'MOM_themetakeover_topbar' ) || 2 == get_option( 'MOM_themetakeover_topbar' ) ) {
+
+		function mom_topbar() {
+
+			global $wp, $post;
+
 			ob_start();
+
 			the_title_attribute();
-			$title = ob_get_clean();		
-			if(is_single() || is_page()){
-				$postid = $post->ID;
-				$the_title = get_post_field('post_title',$postid);
-				$post_link = get_permalink($post->ID);
-			}else{
+			$title = ob_get_clean();
+
+			if( is_single() || is_page() ) {
+
+				$postid    = intval( $post->ID );
+				$the_title = sanitize_text_field( get_post_field( 'post_title',$postid ) );
+				$post_link = esc_url( get_permalink( $post->ID ) );
+
+			} else {
+
 				$the_title = get_bloginfo('site_name');
 				$post_link = esc_url(home_url('/'));
+
 			}
+
 			echo '<div class="momnavbar ';
-			if(get_option('MOM_themetakeover_topbar_color') == 1){$scheme = 'momschemelight'; echo 'navbarlight ';}
-			elseif(get_option('MOM_themetakeover_topbar_color') == 2){$scheme = 'momschemedark'; echo 'navbardark ';}
-			elseif(get_option('MOM_themetakeover_topbar_color') == 4){$scheme = 'momschemered'; echo 'navbarred ';}
-			elseif(get_option('MOM_themetakeover_topbar_color') == 5){$scheme = 'momschemegreen'; echo 'navbargreen ';}
-			elseif(get_option('MOM_themetakeover_topbar_color') == 6){$scheme = 'momschemeblue'; echo 'navbarblue ';}
-			elseif(get_option('MOM_themetakeover_topbar_color') == 7){$scheme = 'momschemeyellow'; echo 'navbaryellow ';}
-			else{$scheme = 'momschemedefault'; echo 'navbardefault ';}
-			if(get_option('MOM_themetakeover_topbar') == 1){ $isTop = 'down'; echo 'navbartop';}elseif(get_option('MOM_themetakeover_topbar') == 2){ $isTop = 'up'; echo 'navbarbottom';} echo'">';
-			if(get_option('MOM_themetakeover_topbar_search') == 1){
-				echo '<label for="s" class="momsearchthis fa fa-search"></label>';get_search_form();
+
+			if( 1 == get_option( 'MOM_themetakeover_topbar_color') ) {
+
+				$scheme = 'momschemedark'; 
+				echo 'navbardark ';
+
+			} elseif( 2 == get_option( 'MOM_themetakeover_topbar_color') ) {
+
+				$scheme = 'momschemelight'; 
+				echo 'navbarlight ';
+
+			} elseif( 4 == get_option( 'MOM_themetakeover_topbar_color') ) {
+
+				$scheme = 'momschemered'; 
+				echo 'navbarred ';
+
+			} elseif( 5 == get_option( 'MOM_themetakeover_topbar_color') ) {
+
+				$scheme = 'momschemegreen'; 
+				echo 'navbargreen ';
+
+			} elseif( 6 == get_option( 'MOM_themetakeover_topbar_color') ) {
+
+				$scheme = 'momschemeblue'; 
+				echo 'navbarblue ';
+
+			} elseif( 7 == get_option( 'MOM_themetakeover_topbar_color') ) {
+
+				$scheme = 'momschemeyellow'; 
+				echo 'navbaryellow ';
+
+			} else {
+
+				$scheme = 'momschemedefault'; 
+				echo 'navbardefault ';
+
 			}
+
+			if(get_option('MOM_themetakeover_topbar') == 1){ $isTop = 'down'; echo 'navbartop';}elseif(get_option('MOM_themetakeover_topbar') == 2){ $isTop = 'up'; echo 'navbarbottom';} echo'">';
 			echo '<ul class="momnavbarcategories">
 			<li><a href="'.esc_url(home_url('/')).'">Front</a></li>';
 			$args = array('numberposts'=>'1');
@@ -268,9 +372,12 @@ if( get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
 			}		
 			if(get_option('MOM_themetakeover_topbar_share') == 1){
 				//http://www.webdesignerforum.co.uk/topic/70328-easy-social-sharing-buttons-for-wordpress-without-a-plugin/
-				echo '<li><a href="http://twitter.com/home?status=Reading:'.esc_url($post_link).'" title="Share this post on Twitter!" target="_blank"><i class="fa fa-twitter"></i></a></li>
-				<li><a href="http://www.facebook.com/sharer.php?u='.esc_url($post_link).'&amp;t='.esc_attr(urlencode($the_title)).'" title="Share this post on Facebook!" onclick="window.open(this.href); return false;"><i class="fa fa-facebook"></i></a></li>
-				<li><a target="_blank" href="https://plus.google.com/share?url='.esc_url($post_link).'"><i class="fa fa-google-plus"></i></a></li>
+				$excerpt = htmlentities( str_replace( ' ', '%20', get_the_excerpt() ) ); 
+				$title   = str_replace( ' ', '%20', get_the_title() );				
+				echo '<li><a class="twitter" href="http://twitter.com/home?status=Reading:' . esc_url( $post_link ) . '" title="Share this post on Twitter!"><i class="fa fa-twitter"></i></a></li>
+				<li><a class="facebook" href="http://www.facebook.com/sharer.php?u=' . esc_url( $post_link ) . '&amp;t=' . $title . '" title="Share this post on Facebook!" onclick="window.open(this.href); return false;"><i class="fa fa-facebook"></i></a></li>
+				<li><a class="google" href="https://plus.google.com/share?url=' . esc_url( $post_link ) . '"><i class="fa fa-google-plus"></i></a></li>
+				<li><a class="email fa fa-envelope" href="mailto:?subject=' . $title . '&amp;body=' . $excerpt. '%20[' . get_the_permalink() . ']"></a>
 				';
 			}
 			if(get_option('MOM_themetakeover_archivepage') != ''){ echo '<li><a href="'.esc_url(get_permalink(get_option('MOM_themetakeover_archivepage'))).'">All</a></li>'; }
@@ -292,37 +399,23 @@ if( get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
 			if(get_option('MOM_themetakeover_extend') == 1){
 				echo '<div class="momnavbar_extended'.esc_attr($isTop).'">';
 				if($isTop == 'up'){echo '<label for="momnavbarextended"><span class="momnavbar_tab '.esc_attr($scheme).'"><i class="fa fa-chevron-'.esc_attr($isTop).'"></i></span></label>';
-				echo '<ul class="momnavbar_pagesup">';wp_list_pages('title_li&depth=1');echo'</ul>';
 				}
 				echo '<input id="momnavbarextended" type="checkbox" class="hidden" />
 				<div class="momnavbar_extended_inner  '.esc_attr($scheme).'">
-				<h3 class="clear">'.esc_attr(get_bloginfo('name')).'</h3>
-				<p class="siteinfo">'.esc_attr(get_bloginfo('description')).'</p>';
-				if(is_single()){if(function_exists('obwcountplus_single')){echo '<span>'; obwcountplus_single();echo' words</span>';}}
-				if(function_exists('obwcountplus_total')){echo '<span>';obwcountplus_total();echo ' total</span>';}
-				$tags = get_tags('number=10&orderby=count');
-				$html = '<div class="listalltags">';
-				foreach ( $tags as $tag ) {
-					$tag_link = get_tag_link( $tag->term_id );
-					$html .= "<a href='{$tag_link}' title='{$tag->name} Tag' class='{$tag->slug}'>";
-					$html .= "{$tag->name}</a>";
-				}
-				$html .= '</div>';
-				echo $html;		
-				echo '<div class="recentPostListingThumbnails '.esc_attr($scheme).'">';
-					$args=array(
-						'numberposts'=>25,
-						'post_type'=>'post',
-						'post_status'=>'publish',
-						'meta_key'=>'_thumbnail_id',
-					);		
-					$recent_posts = wp_get_recent_posts($args);
-					foreach( $recent_posts as $recentthumbs ){
-						$url = wp_get_attachment_url( get_post_thumbnail_id($recentthumbs["ID"]) );
-						echo '<a class="thumbnail" href="' . get_permalink($recentthumbs["ID"]) . '" title="'.esc_attr($recentthumbs["post_title"]).'" ><img class="skipLazy greyscale" src="'.$url.'" /></a>';
+				<div class="siteInformation">
+					<ul class="momnavbar_pages">';wp_list_pages('title_li&depth=1');echo'</ul>';
+					if(is_single()){if(function_exists('obwcountplus_single')){echo '<span>'; obwcountplus_single();echo' words</span>';}}
+					if(function_exists('obwcountplus_total')){echo '<span>';obwcountplus_total();echo ' total</span>';}
+					$tags = get_tags('number=10&orderby=count');
+					$html = '<div class="listalltags">';
+					foreach ( $tags as $tag ) {
+						$tag_link = get_tag_link( $tag->term_id );
+						$html .= "<a href='{$tag_link}' title='{$tag->name} Tag' class='{$tag->slug}'>";
+						$html .= "{$tag->name}</a>";
 					}
-				echo '</div>';
-				echo '<div class="recentPostListing">
+					$html .= '</div>';
+					echo $html;
+				echo '</div><div class="recentPostListing">
 				<ul>';
 					$argsb=array(
 						'numberposts'=>12,
@@ -334,10 +427,23 @@ if( get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
 						echo '<li><a href="' . get_permalink($recent["ID"]) . '" title="'.esc_attr($recent["post_title"]).'" >' .   $recent["post_title"].'</a> </li> ';
 					}
 				echo '</ul>
-				</div>
 				</div>';
-				if($isTop == 'down'){echo '<label for="momnavbarextended"><span class="momnavbar_tab '.esc_attr($scheme).'"><i class="fa fa-chevron-'.esc_attr($isTop).'"></i></span></label>
-							<ul class="momnavbar_pagesdown">';wp_list_pages('title_li&depth=1');echo'</ul>';}
+				echo '<div class="recentPostListingThumbnails '.esc_attr($scheme).'">';
+					$args=array(
+						'numberposts'=>25,
+						'post_type'=>'post',
+						'post_status'=>'publish',
+						'meta_key'=>'_thumbnail_id',
+					);		
+					$recent_posts = wp_get_recent_posts($args);
+					foreach( $recent_posts as $recentthumbs ){
+						$url = wp_get_attachment_url( get_post_thumbnail_id($recentthumbs["ID"]) );
+						echo '<a class="thumbnail" href="' . get_permalink($recentthumbs["ID"]) . '" title="'.esc_attr($recentthumbs["post_title"]).'" ><img class="skipLazy" src="'.$url.'" /></a>';
+					}
+				echo '</div>
+				
+				</div>';
+				if($isTop == 'down'){echo '<label for="momnavbarextended"><span class="momnavbar_tab '.esc_attr($scheme).'"><i class="fa fa-chevron-'.esc_attr($isTop).'"></i></span></label>';}
 				echo '</div>';
 			}
 		}

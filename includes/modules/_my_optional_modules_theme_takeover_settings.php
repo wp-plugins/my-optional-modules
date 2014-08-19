@@ -1,25 +1,46 @@
-<?php
-if( !defined( 'MyOptionalModules' ) ) { 
+<?php 
+
+/**
+ *
+ * Module->Takeover->Settings Page
+ *
+ * Settings page for the Takeover module
+ *
+ * Since ?
+ * @my_optional_modules
+ *
+ */
+
+/**
+ *
+ * Don't call this file directly
+ *
+ */
+if( !defined( 'MyOptionalModules' ) ) {
+
 	die();
+
 }
-if(current_user_can('manage_options')){
-	function my_optional_modules_theme_takeover_module(){
-		$MOM_themetakeover_topbar = get_option('MOM_themetakeover_topbar');
-		$MOM_themetakeover_extend = get_option('MOM_themetakeover_extend');
-		$MOM_themetakeover_topbar_color = get_option('MOM_themetakeover_topbar_color');
-		$MOM_themetakeover_topbar_search = get_option('MOM_themetakeover_topbar_search');
-		$MOM_themetakeover_topbar_share = get_option('MOM_themetakeover_topbar_share');
-		$MOM_themetakeover_backgroundimage = get_option('MOM_themetakeover_backgroundimage');
-		$MOM_themetakeover_wowhead = get_option('MOM_themetakeover_wowhead');
-		$MOM_themetakeover_horizontal_galleries = get_option('MOM_themetakeover_horizontal_galleries');
-		$MOM_themetakeover_ajaxcomments = get_option('MOM_themetakeover_ajaxcomments');
-		$MOM_themetakeover_tiledfrontpage = get_option('MOM_themetakeover_tiledfrontpage');
-		$MOM_themetakeover_commentlength = get_option('MOM_themetakeover_commentlength');
-		$MOM_themetakeover_series_style = get_option('MOM_themetakeover_series_style');
-		$showmepages = get_pages(); ?>
+
+if( current_user_can( 'manage_options' ) ) {
+
+	function my_optional_modules_theme_takeover_module() {
+
+		$MOM_themetakeover_topbar               = get_option( 'MOM_themetakeover_topbar' );
+		$MOM_themetakeover_extend               = get_option( 'MOM_themetakeover_extend' );
+		$MOM_themetakeover_topbar_color         = get_option( 'MOM_themetakeover_topbar_color' );
+		$MOM_themetakeover_topbar_share         = get_option( 'MOM_themetakeover_topbar_share' );
+		$MOM_themetakeover_backgroundimage      = get_option( 'MOM_themetakeover_backgroundimage' );
+		$MOM_themetakeover_wowhead              = get_option( 'MOM_themetakeover_wowhead' );
+		$MOM_themetakeover_horizontal_galleries = get_option( 'MOM_themetakeover_horizontal_galleries' );
+		$MOM_themetakeover_ajaxcomments         = get_option( 'MOM_themetakeover_ajaxcomments' );
+		$MOM_themetakeover_tiledfrontpage       = get_option( 'MOM_themetakeover_tiledfrontpage' );
+		$MOM_themetakeover_commentlength        = get_option( 'MOM_themetakeover_commentlength' );
+		$MOM_themetakeover_series_style         = get_option( 'MOM_themetakeover_series_style' );
+		$showmepages                            = get_pages(); ?>
+		
 		<strong class="sectionTitle">Takeover Settings</strong>
 		<form class="clear" method="post">
-		
 			<section class="clear">
 				<label class="left" for="MOM_themetakeover_tiledfrontpage">Mini Loops</label>
 				<select class="right" id="MOM_themetakeover_tiledfrontpage" name="MOM_themetakeover_tiledfrontpage">
@@ -35,7 +56,6 @@ if(current_user_can('manage_options')){
 				<label class="left" for="MOM_themetakeover_series_key">Series key</label>
 				<input class="right" id="MOM_themetakeover_series_key" name="MOM_themetakeover_series_key" value="<?php echo get_option( 'MOM_themetakeover_series_key' ); ?>" />
 			</section>
-			
 			<br />
 			<blockquote>
 				<i class="fa fa-info">&mdash;</i> <em>MOM Series Widget</em> will group posts together sharing the same custom key values<br />
@@ -79,7 +99,6 @@ if(current_user_can('manage_options')){
 				</blockquote>
 			</blockquote>
 			<p></p>
-		
 			<section class="clear">
 				<label class="left" for="MOM_themetakeover_ajaxcomments">Ajaxify Comments</label>
 				<select class="right" id="MOM_themetakeover_ajaxcomments" name="MOM_themetakeover_ajaxcomments">
@@ -141,13 +160,6 @@ if(current_user_can('manage_options')){
 					<option value="3" <?php selected($MOM_themetakeover_topbar_color, 3);?>>Default</option>
 				</select>
 			</section>			
-			<section class="clear">
-				<label class="left" for="MOM_themetakeover_topbar_search">Enable search bar</label>
-				<select class="right" id="MOM_themetakeover_topbar_search" name="MOM_themetakeover_topbar_search">
-					<option value="0" <?php selected($MOM_themetakeover_topbar_search, 0);?>>No</option>
-					<option value="1" <?php selected($MOM_themetakeover_topbar_search, 1);?>>Yes</option>
-				</select>
-			</section>						
 			<section class="clear">
 				<label class="left" for="MOM_themetakeover_topbar_share">Share icons</label>
 				<select class="right" id="MOM_themetakeover_topbar_share" name="MOM_themetakeover_topbar_share">

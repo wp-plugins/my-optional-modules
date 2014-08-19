@@ -31,7 +31,7 @@ function myoptionalmodules_metainformation(){
 	if( !$post ) $featured_image = 0;
 	$featuredImage = $featured_image[0];
 	$currentURL = add_query_arg($wp->query_string,'',home_url($wp->request));
-	$excerpt = get_post_field('post_content', $postid);
+	$excerpt = get_post_field('post_excerpt', $postid);
 	$excerpt = strip_tags($excerpt);
 	$excerpt = esc_html($excerpt);
 	$excerpt = preg_replace('/\s\s+/i','',$excerpt);

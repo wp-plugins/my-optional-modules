@@ -90,33 +90,60 @@ function mom_tiled_frontpage( $atts ) {
 
 		shortcode_atts( array(
 			
-			'exclude'       => '',                  // post IDs to exclude
 			'thumbs'        => 1,					// 1(yes) 0(no)	
 			'show_link'     => 1,					// 1(yes) 0(no)
-			'link_content'  => '',					// alpha-numeric value for post content (defaults to post title) (ex: "Click me")
 			'amount'        => 4,					// numerical value of how many posts to return in the loop
 			'exclude_user'  => 0,					// 1(yes) 0(no) (use exclude user category settings from Exclude module)
 			'downsize'      => 1,					// 1(yes) 0(no) (downsize thumbnails image quality and size)
-			'style'         => 'tiled',				// columns,slider,tiled,list
 			'offset'        => 0,					// how many posts to offset 
+			'votes'         => 0,                   // display votes associated with each post (if voting module is on) (default: 0 / off)
+			'paging'        => 0,					// Whether or not to page the results
+			'related'       => 0,
+			'year'          => '',					// numerical date (year) (ex: 2014,2013,2012,2011..)
+			'month'         => '',					// numerical date (month) (ex: 1,2,3,4,5,6,7,8,9,10,11,12)
+			'day'           => '',					// numerical date (day) (ex: 1,2,3,4,5,6,7,8,9,10,11,...)
+			'exclude'       => '',                  // post IDs to exclude
+			'link_content'  => '',					// alpha-numeric value for post content (defaults to post title) (ex: "Click me")
+			'style'         => 'tiled',				// columns,slider,tiled,list
 			'category'      => '',					// numerical ID(s) or category name(s) (multiple separated by commas) (do not mix the two)
 			'orderby'       => 'post_date',			// none,ID,author,title,name,type,date,modified,parent,rand
 			'order'         => 'DESC',				// DESC(descending) or ASC(ascending)
 			'post_status'   => 'publish',			// publish,pending,draft,auto-draft,future,private,inherit,trash,any
 			'cache_results' => false,				// true or false
-			'year'          => '',					// numerical date (year) (ex: 2014,2013,2012,2011..)
-			'month'         => '',					// numerical date (month) (ex: 1,2,3,4,5,6,7,8,9,10,11,12)
-			'day'           => '',					// numerical date (day) (ex: 1,2,3,4,5,6,7,8,9,10,11,...)
-			'votes'         => 0,                   // display votes associated with each post (if voting module is on) (default: 0 / off)
-			'paging'        => 0,					// Whether or not to page the results
 			'meta'          => '',                  // Posts with THIS meta key
-			'key'           => '',                  // Post with THIS meta key VALUE                    
-			'related'       => 0
+			'key'           => ''                   // Post with THIS meta key VALUE                    
 			
 
 		), $atts )
 
 	);
+	
+	/**
+	 *
+	 * Escape shortcode attributes before passing them to the script
+	 *
+	 */
+	$thumbs        = intval( $thumbs );
+	$show_link     = intval( $show_link );
+	$amount        = intval( $amount );
+	$exclude_user  = intval( $exclude_user );
+	$downsize      = intval( $downsize );
+	$offset        = intval( $offset );
+	$votes         = intval( $votes );
+	$paging        = intval( $paging );
+	$related       = intval( $related );
+	$year          = intval( $year );
+	$month         = intval( $month );
+	$day           = intval( $day );
+	$link_content  = sanitize_text_field( $link_content );
+	$style         = sanitize_text_field( $style );
+	$category      = sanitize_text_field( $category );
+	$orderby       = sanitize_text_field( $orderby );
+	$order         = sanitize_text_field( $order );
+	$post_status   = sanitize_text_field( $post_status );
+	$cache_results = sanitize_text_field( $cache_results );
+	$meta          = sanitize_text_field( $meta );
+	$key           = sanitize_text_field( $key );
 	
 	if( $related ) {
 		
@@ -936,11 +963,11 @@ function mom_tiled_frontpage( $atts ) {
 	 */
 	if( $style == strtolower( 'columns' ) ) {
 
-		echo '<div class="column' . $related_class . '">' . $vote_count . '<div class="inner" ';
+		echo '<div class="column' . $related_class . '">' . $vote_count . '<div class="inner"';
 
 		if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
 
-			echo 'style="background-image:url(\'' . $thumb_path . '\');"';
+			echo ' style="background-image:url(\'' . $thumb_path . '\');"';
 
 		}
 
@@ -959,7 +986,7 @@ function mom_tiled_frontpage( $atts ) {
 			echo '<div class="slide"';
 			if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
 
-				echo 'style="background-image:url(\'' . $thumb_path . '\');"';
+				echo ' style="background-image:url(\'' . $thumb_path . '\');"';
 
 			}			
 			echo '><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"><span class="title">'. $link_text_text . $vote_count . '</span></a></div>';
@@ -1012,7 +1039,7 @@ function mom_tiled_frontpage( $atts ) {
 
 			if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
 
-				echo 'style="background-image:url(\'' . $thumb_path . '\');"';
+				echo ' style="background-image:url(\'' . $thumb_path . '\');"';
 
 			}
 			
