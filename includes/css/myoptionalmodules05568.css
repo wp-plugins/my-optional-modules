@@ -223,6 +223,7 @@ h2.mom_related_title{ clear: both; font-size: 95%; margin: 25px auto 0; padding:
 	.momnavbar_extended_inner .listalltags {
 		display: block;
 		font-size: 12px;
+		padding: 5px;
 		width: 100%;
 	}
 	.momnavbar_extended_inner .listalltags a {
