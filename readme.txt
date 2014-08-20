@@ -1,15 +1,14 @@
 === My Optional Modules ===
 Contributors: boyevul
-Tags: archives,series,related,loops,feature,count,exclude,shortcode,takeover,password,comments,vote,feed,font awesome,hide,version,footer,lazy load,meta,disable,authors,dates,maintenance,analytics,gallery,google maps,reddit,restrict,progress,verifier,loop,mini,ajax,fitvid,navbar,share,bg,wowhead,jquery,tag,category,format,hide,sunday,monday,tuesday,wednesday,thursday,friday,saturday,front page,tag archives,search results,logged out,subscriber,contributor,author,category archive
+Tags: front, home, database, cleaner, disable, comments, RSS, javascript, footer, archives, author, ajax, font awesome, lazy load, horizontal, gallery, hide, version, mini, loop, exclude, category, tag, post format
 Requires at least: 3.9.1
 Tested up to: 4.0
 Stable tag: 5.6
 
-A bundle of optional Wordpress modules to enhance functionality.
+An assortment of functions to enhance WordPress.
 
 == Description ==
-My Optional Modules (or MOM) is a bundle of optional modules for Wordpress which give extra functionality not currently available in a fresh installation. 
-They are designed to be lightweight and easilly implemented by even the most novice of Wordpress users.
+MOM features an assortment of functions designed to add (or extend) functionality within WordPress.
 
 = 5.5.X -> 5.6 =
 I felt that MOM was drastically out of whack with what I had originally intended for this plugin. The need 
@@ -18,17 +17,13 @@ functionality (the functionality that I felt was not only done well, but embodie
 this project in the first place) was kept. 5.6 marks a new direction for MOM.
 
 = Modules: =
-* 'Exclude': Exclude post categories, tags, and types from different areas based on different parameters.
-* 'Mini loops': ('Takeover' module) display a variety of posts based on different parameters
-* 'No Comments': Disable comments site-wide at the click of a button.
-* 'Post votes': Enable voting on posts, like Reddit.
-* '&copy; RSS feed': Add a link back to your blog on all of your RSS feed items.
-* 'Font Awesome': Enable the of Font Awesome for your posts.
-* 'Hide WP Version': Strips the WordPress version out of your viewable source.
-* 'JS to footer': Move all javascript in your theme to the footer.
-* 'Lazy Load': Enable lazy load for images.
-* 'Disable Authors': Disable author archives if there is only one author.
-* 'Disable Dates': Disable date based archives.
+* Ability to set a blog post as your front page
+* Clear database clutter at the push of a button
+* Disable comments sitewide 
+* Append a link back to your RSS items
+* Disable author and date-based archives
+* Hide categories, tags, and post formats from almost anywhere on your blog
+* ..and more
 
 == Installation ==
 = 3-step installation =
