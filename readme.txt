@@ -1,9 +1,9 @@
 === My Optional Modules ===
 Contributors: boyevul
-Tags: archives,series,related,loops,feature,reviews,count,exclude,jump,shortcode,takeover,password,comments,vote,feed,font awesome,hide,version,footer,lazy load,meta,disable,authors,dates,maintenance,analytics,gallery,google maps,reddit,restrict,progress,verifier,loop,mini,ajax,fitvid,navbar,share,bg,wowhead,jquery,tag,category,format,hide,sunday,monday,tuesday,wednesday,thursday,friday,saturday,front page,tag archives,search results,logged out,subscriber,contributor,author,category archive
+Tags: archives,series,related,loops,feature,count,exclude,shortcode,takeover,password,comments,vote,feed,font awesome,hide,version,footer,lazy load,meta,disable,authors,dates,maintenance,analytics,gallery,google maps,reddit,restrict,progress,verifier,loop,mini,ajax,fitvid,navbar,share,bg,wowhead,jquery,tag,category,format,hide,sunday,monday,tuesday,wednesday,thursday,friday,saturday,front page,tag archives,search results,logged out,subscriber,contributor,author,category archive
 Requires at least: 3.9.1
 Tested up to: 4.0
-Stable tag: 5.5.8.3
+Stable tag: 5.6
 
 A bundle of optional Wordpress modules to enhance functionality.
 
@@ -11,22 +11,15 @@ A bundle of optional Wordpress modules to enhance functionality.
 My Optional Modules (or MOM) is a bundle of optional modules for Wordpress which give extra functionality not currently available in a fresh installation. 
 They are designed to be lightweight and easilly implemented by even the most novice of Wordpress users.
 
-= Adaptations =
-* The following modules could not have existed without the work from previous plugins and authors:
-* 'Count++': adapted from [Post Word Count](http://wordpress.org/plugins/post-word-count/) by [Nick Momrik](http://profiles.wordpress.org/nickmomrik/).
-* 'Google Maps' [shortcodes]: adapted from [Very Simple Google Maps](http://wordpress.org/plugins/very-simple-google-maps/) by [Michael Araonoff](http://profiles.wordpress.org/masterk/).
+= 5.5.X -> 5.6 =
+I felt that MOM was drastically out of whack with what I had originally intended for this plugin. The need 
+for course correction was immediate; a hefty amount of internal code was slashed entirely. Only the core 
+functionality (the functionality that I felt was not only done well, but embodied the spirit of why I began 
+this project in the first place) was kept. 5.6 marks a new direction for MOM.
 
 = Modules: =
-* 'Reviews': Create small reviews and display them in their own configurable loops.
-* 'Count': Template tag for outputting blog and post word counts.
 * 'Exclude': Exclude post categories, tags, and types from different areas based on different parameters.
-* 'Jump Around': Enables post navigation using the keyboard.
-* 'Shortcodes': A variety of different shortcodes that provide different functionality.
-* 'Takeover': Different additions that add functionality to your theme.
 * 'Mini loops': ('Takeover' module) display a variety of posts based on different parameters
-* 'Series': ('Takeover' module) append a loop of posts to the bottom of posts based on a meta key 
-* 'Passwords': Passwords that rotate on a daily basis to hide content with a shortcode.
-* 'Analytics': Automatic Google analytics installation via UA-ID.
 * 'No Comments': Disable comments site-wide at the click of a button.
 * 'Post votes': Enable voting on posts, like Reddit.
 * '&copy; RSS feed': Add a link back to your blog on all of your RSS feed items.
@@ -34,10 +27,8 @@ They are designed to be lightweight and easilly implemented by even the most nov
 * 'Hide WP Version': Strips the WordPress version out of your viewable source.
 * 'JS to footer': Move all javascript in your theme to the footer.
 * 'Lazy Load': Enable lazy load for images.
-* 'Meta': Enable automatic open graph integration for posts.
 * 'Disable Authors': Disable author archives if there is only one author.
 * 'Disable Dates': Disable date based archives.
-* 'Maintenace': Redirect non-logged in users to a specified URL while admin can still view the blog.
 
 == Installation ==
 = 3-step installation =
@@ -52,6 +43,7 @@ They are designed to be lightweight and easilly implemented by even the most nov
 3. 'list' style mini-loop w/ post vote display (Post Votes module enabled) (Theme: Twenty Fourteen)
 
 == Changelog ==
+* 5.6      Removed: (1) count++ (2) Shortcodes (3) Navbar (4) Post Votes (5) Meta (6) Maintenance Mode (7) Wowhead (8) Fitvids (9) Analytics (10) Passwords (11) Reviews (12) Jump Around (13) Takeover
 * 5.5.8.3  Navbar CSS changes.
 * 5.5.8.2  [mom_miniloops]/series widget should only be attempting to output if in post and the key is properly defined
 * 5.5.8.1  Module->Meta better handling for information when 404

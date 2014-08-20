@@ -12,6 +12,8 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 	die ();
 }
 
+
+
 function mom_get_all_category_ids() {
 	if ( ! $cat_ids = wp_cache_get( 'all_category_ids', 'category' ) ) {
 		$cat_ids = get_terms( 'category', array('fields' => 'ids', 'get' => 'all') );
@@ -67,223 +69,7 @@ if( !function_exists( 'mom_timesince' ) ) {
 	}	
 }
 
-/**
- *
- * Count++ Functionality
- * Template functions
- *
- * obwcountplus_total()     :: prints single post word count
- * countsplusplus()         :: prints custom output (set above)
- * obwcountplus_count()     :: prints the total words + remaining (of goal)
- * obwcountplus_total()     :: prints the total words
- * obwcountplus_remaining() :: prints the remaining (or the total if the goal was reached)
- *
- */
-if( $mommodule_count == 1 ) {
 
-	if( !function_exists( 'countsplusplus' ) ) {
-
-		function countsplusplus() {
-
-			$oldcount = 0;
-			
-			global $wpdb;
-			
-			$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post'";
-			$words = $wpdb->get_results( $query );
-
-			if( $words ) {
-
-				foreach( $words as $word ) {
-
-					$post       = strip_tags( $word->post_content );
-					$post       = explode( ' ', $post );
-					$count      = count( $post );
-					$totalcount = $count + $oldcount;
-					$oldcount   = $totalcount;
-
-				}
-
-			} else {
-
-				$totalcount=0;
-
-			}
-
-			$remain	   = number_format( get_option( 'obwcountplus_1_countdownfrom' ) - $totalcount );
-			$c_custom  = sanitize_text_field( htmlentities( get_option( 'obwcountplus_4_custom' ) ) );
-			$c_search  = array( '%total%', '%remain%' );
-			$c_replace = array( $totalcount, $remain );
-			
-			echo str_replace( $c_search, $c_replace, $c_custom );
-
-		}
-
-	}
-
-if( !function_exists( 'obwcountplus_single' ) ) {
-
-	function obwcountplus_single() {
-
-		$oldcount = 0;
-
-		global $wpdb, $post;
-
-		$postid	= $post->ID;
-
-		$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post' AND ID = '$postid'";
-		$words = $wpdb->get_results( $query );
-
-		if( $words ) {
-
-			foreach( $words as $word ) {
-				$post       = strip_tags( $word->post_content );
-				$post       = explode( ' ', $post );
-				$count      = count( $post );
-				$totalcount = $count + $oldcount;
-				$oldcount   = $totalcount;
-
-			}
-
-		} else {
-
-			$totalcount = 0;
-
-		}
-
-		if( is_single() ) {
-			echo esc_attr( number_format( $totalcount ) );
-
-		}
-
-	}
-
-}
-
-if( !function_exists( 'obwcountplus_remaining' ) ) {
-
-	function obwcountplus_remaining() {
-
-		$oldcount = 0;
-
-		global $wpdb;
-
-		$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post'";
-		$words = $wpdb->get_results( $query );
-
-		if( $words ) {
-
-			foreach( $words as $word ) {
-
-				$post       = strip_tags( $word->post_content );
-				$post       = explode( ' ', $post );
-				$count      = count( $post );
-				$totalcount = $count + $oldcount;
-				$oldcount   = $totalcount;
-
-			}
-
-		}else{
-
-			$totalcount=0;
-
-		}
-
-		if(
-			$totalcount >= get_option( 'obwcountplus_1_countdownfrom' ) ||
-			get_option( 'obwcountplus_1_countdownfrom' ) == 0
-		 ){
-
-			echo esc_attr(number_format($totalcount));
-
-		} else {
-
-			echo esc_attr( number_format( get_option( 'obwcountplus_1_countdownfrom' ) - $totalcount ) );
-
-		}
-
-	}
-
-}
-
-if( !function_exists( 'obwcountplus_total' ) ) {
-
-	function obwcountplus_total() {
-
-		$oldcount = 0;
-		
-		global $wpdb;
-		
-		$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post'";
-		$words = $wpdb->get_results( $query );
-
-		if( $words ){
-
-			foreach( $words as $word ) {
-
-				$post       = strip_tags( $word->post_content );
-				$post       = explode( ' ', $post );
-				$count      = count($post);
-				$totalcount = $count + $oldcount;
-				$oldcount   = $totalcount;
-
-			}
-
-		} else {
-
-			$totalcount = 0;
-
-		}
-
-		echo esc_attr( number_format( $totalcount ) );
-
-	}
-
-}
-
-if( !function_exists( 'obwcountplus_count' ) ) {
-
-	function obwcountplus_count() {
-
-		$oldcount   = 0;
-		$totalcount = 0;
-
-		global $wpdb;
-		$query = "SELECT post_content FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'post'";
-		$words = $wpdb->get_results($query);
-		
-		if($words){
-
-			foreach( $words as $word ) {
-
-				$post       = strip_tags( $word->post_content );
-				$post       = explode( ' ',$post );
-				$count      = count( $post );
-				$totalcount = $count + $oldcount;
-				$oldcount   = $totalcount;
-
-			}
-
-		}
-		
-		if(
-			$totalcount >= get_option('obwcountplus_1_countdownfrom') ||
-			get_option('obwcountplus_1_countdownfrom') == 0
-		){
-
-			echo esc_attr( number_format( $totalcount ) . " " . get_option( 'obwcountplus_3_total' ) );
-
-		} else {
-
-			echo esc_attr( number_format( get_option( 'obwcountplus_1_countdownfrom' ) - $totalcount ) . ' ' . get_option( 'obwcountplus_2_remaining' ) . ' (' . number_format( $totalcount ) . ' ' . get_option( 'obwcountplus_3_total' ) . ')' );
-
-		}
-
-	}
-
-}
-
-}
 
 /**
 *
@@ -320,255 +106,283 @@ if( !function_exists( 'mom_disablecommentsform' ) ) {
 
 }
 
-/**
-*
-* Related posts
-* Create a widget for posts in a series
-*
-*/
+if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ) {
 
-if( get_option( 'mommaincontrol_themetakeover' ) == 1 ) {
+	remove_shortcode( 'gallery', 'gallery_shortcode' );
+	add_action( 'init', 'mom_gallery_shortcode_add', 99 );
 
+	function mom_gallery_shortcode_add() {
 
-	class mom_related_posts extends WP_Widget {
+		add_shortcode( 'gallery', 'mom_gallery_shortcode' );
 
-		function mom_related_posts() {
-			// Instantiate the parent object
-			parent::__construct( false, 'Mom Series' );
+	}
+	add_filter( 'use_default_gallery_style', '__return_false' );
+
+	/**
+	 * The Gallery shortcode.
+	 *
+	 * This implements the functionality of the Gallery Shortcode for displaying
+	 * WordPress images on a post.
+	 *
+	 * @since 2.5.0
+	 *
+	 * @param array $attr {
+	 *     Attributes of the gallery shortcode.
+	 *
+	 *     @type string $order      Order of the images in the gallery. Default 'ASC'. Accepts 'ASC', 'DESC'.
+	 *     @type string $orderby    The field to use when ordering the images. Default 'menu_order ID'.
+	 *                              Accepts any valid SQL ORDERBY statement.
+	 *     @type int    $id         Post ID.
+	 *     @type string $itemtag    HTML tag to use for each image in the gallery.
+	 *                              Default 'dl', or 'figure' when the theme registers HTML5 gallery support.
+	 *     @type string $icontag    HTML tag to use for each image's icon.
+	 *                              Default 'dt', or 'div' when the theme registers HTML5 gallery support.
+	 *     @type string $captiontag HTML tag to use for each image's caption.
+	 *                              Default 'dd', or 'figcaption' when the theme registers HTML5 gallery support.
+	 *     @type int    $columns    Number of columns of images to display. Default 3.
+	 *     @type string $size       Size of the images to display. Default 'thumbnail'.
+	 *     @type string $ids        A comma-separated list of IDs of attachments to display. Default empty.
+	 *     @type string $include    A comma-separated list of IDs of attachments to include. Default empty.
+	 *     @type string $exclude    A comma-separated list of IDs of attachments to exclude. Default empty.
+	 *     @type string $link       What to link each image to. Default empty (links to the attachment page).
+	 *                              Accepts 'file', 'none'.
+	 * }
+	 * @return string HTML content to display gallery.
+	 */
+	function mom_gallery_shortcode( $attr ) {
+
+		global $post,$attr,$wp;
+		$post = get_post();
+
+		static $instance = 0;
+		$instance++;
+
+		if ( ! empty( $attr['ids'] ) ) {
+
+			// 'ids' is explicitly ordered, unless you specify otherwise.
+			if ( empty( $attr['orderby'] ) )
+				$attr['orderby'] = 'post__in';
+			$attr['include'] = $attr['ids'];
+
 		}
 
-		function widget( $args, $instance ) {
-			global $post;
-			
-			$key = sanitize_text_field ( get_option( 'MOM_themetakeover_series_key' ) );
+		/**
+		 * Filter the default gallery shortcode output.
+		 *
+		 * If the filtered output isn't empty, it will be used instead of generating
+		 * the default gallery template.
+		 *
+		 * @since 2.5.0
+		 *
+		 * @see gallery_shortcode()
+		 *
+		 * @param string $output The gallery output. Default empty.
+		 * @param array  $attr   Attributes of the gallery shortcode.
+		 */
+		$output = apply_filters( 'post_gallery', '', $attr );
+		if ( $output != '' )
+			return $output;
 
-			if( $post && $key ) {
+		// We're trusting author input, so let's at least make sure it looks like a valid orderby statement
+		if ( isset( $attr['orderby'] ) ) {
 
-				$series  = sanitize_text_field ( get_post_meta($post->ID, $key, true) );
+			$attr['orderby'] = sanitize_sql_orderby( $attr['orderby'] );
+			if ( !$attr['orderby'] )
+				unset( $attr['orderby'] );
+
+		}
+
+		$html5 = current_theme_supports( 'html5', 'gallery' );
+		extract(shortcode_atts(array(
+
+			'order'      => 'ASC',
+			'orderby'    => 'menu_order ID',
+			'id'         => $post ? $post->ID : 0,
+			'itemtag'    => $html5 ? 'figure'     : 'dl',
+			'icontag'    => $html5 ? 'div'        : 'dt',
+			'captiontag' => $html5 ? 'figcaption' : 'dd',
+			'columns'    => 3,
+			'size'       => 'thumbnail',
+			'include'    => '',
+			'exclude'    => '',
+			'link'       => ''
+
+		), $attr, 'gallery'));
+
+		$id = intval( $id );
+		if ( 'RAND' == $order )
+			$orderby = 'none';
+
+		if ( !empty($include) ) {
+			$_attachments = get_posts( array('include' => $include, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
+
+			$attachments = array();
+
+			foreach ( $_attachments as $key => $val ) {
+
+				$attachments[$val->ID] = $_attachments[$key];
+			}
+
+		} elseif ( !empty($exclude) ) {
+
+			$attachments = get_children( array('post_parent' => $id, 'exclude' => $exclude, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
+
+		} else {
+
+			$attachments = get_children( array('post_parent' => $id, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
+
+		}
+
+		if ( empty($attachments) )
+			return '';
+
+		if ( is_feed() ) {
+
+			$output = "\n";
+			foreach ( $attachments as $att_id => $attachment )
+				$output .= wp_get_attachment_link($att_id, $size, true) . "\n";
+			return $output;
+
+		}
+
+		$itemtag = tag_escape($itemtag);
+		$captiontag = tag_escape($captiontag);
+		$icontag = tag_escape($icontag);
+		$valid_tags = wp_kses_allowed_html( 'post' );
+
+		if ( ! isset( $valid_tags[ $itemtag ] ) )
+
+			$itemtag = 'dl';
+
+		if ( ! isset( $valid_tags[ $captiontag ] ) )
+
+			$captiontag = 'dd';
+
+		if ( ! isset( $valid_tags[ $icontag ] ) )
+
+			$icontag = 'dt';
+
+		$columns = intval($columns);
+		$itemwidth = $columns > 0 ? floor(100/$columns) : 100;
+		$float = is_rtl() ? 'right' : 'left';
+
+		$selector = "gallery-{$instance}";
+
+		$gallery_style = $gallery_div = '';
+
+		/**
+		 * Filter whether to print default gallery styles.
+		 *
+		 * @since 3.1.0
+		 *
+		 * @param bool $print Whether to print default gallery styles.
+		 *                    Defaults to false if the theme supports HTML5 galleries.
+		 *                    Otherwise, defaults to true.
+		 */
+		if ( apply_filters( 'use_default_gallery_style', ! $html5 ) ) {
+
+			$gallery_style = "
+			<style type='text/css'>
+				#{$selector} {
+					margin: auto;
+				}
+				#{$selector} .gallery-item {
+					float: {$float};
+					margin-top: 10px;
+					text-align: center;
+					width: {$itemwidth}%;
+				}
+				#{$selector} img {
+					border: 2px solid #cfcfcf;
+				}
+				#{$selector} .gallery-caption {
+					margin-left: 0;
+				}
+				/* see gallery_shortcode() in wp-includes/media.php */
+			</style>\n\t\t";
+
+		}
+
+		$items = 0;
+		foreach ( $attachments as $id => $attachment ) {
+
+			$items++;
+
+		}
+		$div_length = ( $items * 150 ) . 'px';
+		
+		$size_class = sanitize_html_class( $size );
+		$gallery_div = "<div id='$selector' class='horizontalGallery galleryid-{$id} gallery-columns-{$columns} gallery-size-{$size_class}'>
+			<div style=\"width:" . $div_length . "\" class=\"innerGallery\">";
+
+		/**
+		 * Filter the default gallery shortcode CSS styles.
+		 *
+		 * @since 2.5.0
+		 *
+		 * @param string $gallery_style Default gallery shortcode CSS styles.
+		 * @param string $gallery_div   Opening HTML div container for the gallery shortcode output.
+		 */
+		$output = apply_filters( 'gallery_style', $gallery_style . $gallery_div );
+
+		$i = 0;
+		foreach ( $attachments as $id => $attachment ) {
+
+			if ( ! empty( $link ) && 'file' === $link )
+
+				$image_output = wp_get_attachment_link( $id, $size, false, false );
+
+			elseif ( ! empty( $link ) && 'none' === $link )
+
+				$image_output = wp_get_attachment_image( $id, $size, false );
+
+			else
+
+				$image_output = wp_get_attachment_link( $id, $size, true, false );
+
+			$image_meta  = wp_get_attachment_metadata( $id );
+
+			$orientation = '';
+			if ( isset( $image_meta['height'], $image_meta['width'] ) )
+		
+				$orientation = ( $image_meta['height'] > $image_meta['width'] ) ? 'portrait' : 'landscape';
+
+			$output .= "<{$itemtag} class='gallery-item'>";
+			$output .= "
+				<{$icontag} class='gallery-icon {$orientation}'>
+					$image_output
+				</{$icontag}>";
+
+			if ( $captiontag && trim($attachment->post_excerpt) ) {
+
+				$output .= "
+					<{$captiontag} class='wp-caption-text gallery-caption'>
+					" . wptexturize($attachment->post_excerpt) . "
+					</{$captiontag}>";
 
 			}
-			
-			if( $key && '' != $series ) {
-				
-				$related = do_shortcode('[mom_miniloop meta="' . $key . '" style="list" related="1"]');
 
-			} else {
+			$output .= "</{$itemtag}>";
 
-				$related = '';
+			if ( ! $html5 && $columns > 0 && ++$i % $columns == 0 ) {
+
+				$output .= '<br style="clear: both" />';
 
 			}
-			return $related;
+
 		}
 
-		function update( $new_instance, $old_instance ) {
-			// Save widget options
-		}
+		$output .= "
+			</div></div>\n";
 
-		function form( $instance ) {
-			// Output admin widget options form
-		}
+		return $output;
+
 	}
 	
-	function mom_related_posts_widget() {
-		register_widget( 'mom_related_posts' );
-	}
-	add_action( 'widgets_init', 'mom_related_posts_widget' );
-
 }
 
 
 
-
-/**
-*
-* Post Voting 
-* Automatically add the vote bar to the bottom of each post
-*
-*/
-
-if( $mom_votes == 1 ) {
-
-add_filter( 'the_content', 'mom_vote_the_post' );
-
-if( !function_exists( 'mom_grab_vote_count' ) ) {
-
-	function mom_grab_vote_count( $id ) {
-
-		global $wpdb;
-		
-		$id         = intval( $id );
-		$votesPosts = $wpdb->prefix . 'momvotes_posts';
-		$up         = $wpdb->get_var( "SELECT UP FROM $votesPosts WHERE ID = $id" );
-
-		if( $up ) {
-			return '<i class="fa fa-arrow-up"> ' . $up . '</i>';
-		}
-
-	}
-
-}
-
-if( !function_exists( 'mom_vote_the_post' ) ) {
-
-	function mom_vote_the_post( $content ) {
-
-		global $wpdb, $wp, $post, $ipaddress;
-
-		$votesPosts = $wpdb->prefix . 'momvotes_posts';
-		$votesVotes = $wpdb->prefix . 'momvotes_votes';
-
-		if( $ipaddress !== false ) {
-
-			$theIP         = esc_sql( esc_attr( $ipaddress ) );
-			$theIP_s32int  = esc_sql( esc_attr( ip2long( $ipaddress ) ) );
-			$theIP_us32str = esc_sql( esc_attr( sprintf( "%u", $theIP_s32int ) ) );
-			$theID         = esc_sql( intval( $post->ID ) );
-			$getID         = $wpdb->get_results( "SELECT ID, UP, DOWN FROM $votesPosts WHERE ID = $theID LIMIT 1" );
-
-			if( count( $getID ) == 0 ) {
-
-				$vote = '';
-				$wpdb->query( "INSERT INTO $votesPosts ( ID, UP, DOWN ) VALUES ( $theID, 1, 0 ) " );
-
-			}
-
-			foreach( $getID as $gotID ) {
-
-				$vote       = '';
-				$votesTOTAL = intval( $gotID->UP + $gotID->DOWN );
-				$getIP      = $wpdb->get_results( "SELECT ID, IP, VOTE FROM $votesVotes WHERE ID = '$theID' AND IP = '$theIP_us32str' LIMIT 1" );
-				$up         = intval( $gotID->UP );
-				$down       = intval( $gotID->DOWN );
-				
-				
-				if( count( $getIP ) == 0 ) {
-
-					if( isset( $_POST[$theID.'-up-submit'] ) ) {
-
-						$wpdb->query( "UPDATE $votesPosts SET UP = UP + 1 WHERE ID = $theID" );
-						$wpdb->query( "INSERT INTO $votesVotes ( ID, IP, VOTE ) VALUES ( $theID, $theIP_us32str, 1 )" );
-
-					}
-					
-					if( isset( $_POST[$theID.'-down-submit'] ) ) {
-
-						$wpdb->query( "UPDATE $votesPosts SET DOWN = DOWN + 1 WHERE ID = $theID" );
-						$wpdb->query( "INSERT INTO $votesVotes ( ID, IP, VOTE ) VALUES ( $theID, $theIP_us32str, 2 )" );
-
-					}						
-
-					$vote = '
-					<div class="vote_the_post" id="' . $theID . '">
-						<form action="" id="' . $theID . '-down" method="post">
-							<label for="' . $theID . '-down-submit" class="upvote">
-								<i class="fa fa-arrow-down"></i>
-							</label>
-							<input type="submit" name="' . $theID . '-down-submit" id="' . $theID . '-down-submit" />
-						</form>						
-						<form action="" id="' . $theID . '-up" method="post">
-							<label for="' . $theID . '-up-submit" class="upvote">
-								<i class="fa fa-arrow-up"></i>
-							</label>
-							<input type="submit" name="' . $theID . '-up-submit" id="' . $theID . '-up-submit" />
-						</form>
-						<span class="voteAmount">' . $up . ' &mdash; <small>' . $votesTOTAL . ' votes</small></span>
-					</div>';
-
-				} else {
-
-					foreach( $getIP as $gotIP ) {
-
-						$class_up   = '';
-						$class_down = '';
-						$voted       = esc_sql( esc_attr( $gotIP->VOTE ) );
-						
-						if( $voted == 1 ) {
-						
-							$class_up   = ' active';
-							$class_down = ' inactive';
-						
-						}
-						
-						if( $voted == 2 ) {
-						
-							$class_down = ' active';
-							$class_up   = ' inactive';
-						
-						}
-						
-						if( $voted == 1 && isset( $_POST[$theID.'-up-submit'] ) ) {
-
-							$wpdb->query( "UPDATE $votesPosts SET UP = UP - 1 WHERE ID = $theID" );
-							$wpdb->query( "DELETE FROM $votesVotes WHERE IP = '$theIP_us32str' AND ID = $theID" );
-
-						}
-
-						if( $voted == 1 && isset( $_POST[$theID.'-down-submit'] ) ) {
-
-							$wpdb->query( "UPDATE $votesPosts SET UP = UP - 1 WHERE ID = $theID" );
-							$wpdb->query( "DELETE FROM $votesVotes WHERE IP = '$theIP_us32str' AND ID = $theID" );
-							$wpdb->query( "UPDATE $votesPosts SET DOWN = DOWN + 1 WHERE ID = $theID" );
-							$wpdb->query( "INSERT INTO $votesVotes ( ID, IP, VOTE ) VALUES ( $theID, $theIP_us32str, 2 )" );
-
-						}							
-						
-						if( $voted == 2 && isset( $_POST[$theID.'-down-submit'] ) ) {
-
-							$wpdb->query( "UPDATE $votesPosts SET DOWN = DOWN - 1 WHERE ID = $theID" );
-							$wpdb->query( "DELETE FROM $votesVotes WHERE IP = '$theIP_us32str' AND ID = $theID" );
-
-						}
-						
-						if( $voted == 2 && isset( $_POST[$theID.'-up-submit'] ) ) {
-
-							$wpdb->query( "UPDATE $votesPosts SET DOWN = DOWN - 1 WHERE ID = $theID" );
-							$wpdb->query( "DELETE FROM $votesVotes WHERE IP = '$theIP_us32str' AND ID = $theID" );
-							$wpdb->query( "UPDATE $votesPosts SET UP = UP + 1 WHERE ID = $theID" );
-							$wpdb->query( "INSERT INTO $votesVotes ( ID, IP, VOTE ) VALUES ( $theID, $theIP_us32str, 1 )" );
-
-						}							
-
-						$vote = '
-						<div class="vote_the_post" id="' . $theID . '">
-							<form action="" id="' . $theID . '-down" method="post">
-								<label for="' . $theID . '-down-submit" class="upvote">
-									<i class="fa fa-arrow-down' . $class_down . '"></i>
-								</label>
-								<input type="submit" name="' . $theID . '-down-submit" id="' . $theID . '-down-submit" />
-							</form>						
-							<form action="" id="' . $theID . '-up" method="post">
-								<label for="' . $theID . '-up-submit" class="upvote">
-									<i class="fa fa-arrow-up' . $class_up . '"></i>
-								</label>
-								<input type="submit" name="' . $theID . '-up-submit" id="' . $theID . '-up-submit" />
-							</form>
-							<span class="voteAmount">' . $up . ' &mdash; <small>' . $votesTOTAL . ' votes</small></span>
-						</div>';
-					
-					}
-					
-				}
-
-			}
-
-		} else { 
-
-			$vote = '';
-
-		}
-		
-		if( is_feed() ) {
-
-			$vote = '';
-
-		}
-
-		return $content . $vote;
-	}
-
-}
-
-}
 
 /**
 *
@@ -633,63 +447,6 @@ function mom_ajaxComment($comment_ID, $comment_status) {
 		die($commentContent);
 	}
 }	
-function mom_limit_comment($comment) {
-	$limit = intval(get_option('MOM_themetakeover_commentlength'));
-	if($limit && $limit > 0 ) {
-		$comment = strip_tags( htmlentities( substr( $comment,0,$limit ) ) );
-		return $comment;
-	}
-}
-function mom_limit_comment_field($comment_field) {
-	$limit = intval(get_option('MOM_themetakeover_commentlength'));
-	if( $limit > 0 ) {
-		$limit = ' maxlength="' . intval(get_option('MOM_themetakeover_commentlength')) . '"';
-	} else {
-		$limit = '';
-	}
-	$comment_field =
-		'<p class="comment-form-comment">
-			<textarea required' . $limit . ' id="comment" name="comment" cols="45" rows="8" aria-required="true"></textarea>
-		</p>';
-	return $comment_field;
-}
-add_filter('comment_form_field_comment','mom_limit_comment_field');
-
-// Exclude -> Hide Dash (from user levels below 7)
-if( !function_exists( 'mom_remove_the_dashboard' ) ) {
-	if( $user_level < 7 && get_option( 'MOM_Exclude_Hide_Dashboard' ) ) {
-		function mom_remove_the_dashboard(){
-			global $menu, $submenu, $user_ID;
-			$the_user = new WP_User ( $user_ID );
-			reset ( $menu ); $page = key ( $menu );
-			while ( ( __ ( 'Dashboard' ) != $menu[$page][0] ) && next ( $menu ) )
-			$page = key ( $menu );
-			if ( __ ( 'Dashboard' ) == $menu[$page][0] ) unset ( $menu[$page] );
-			reset ( $menu ); $page = key ( $menu );
-			while( !$the_user->has_cap ( $menu[$page][1] ) && next( $menu ) )
-			$page = key ( $menu );
-			if ( preg_match ( '#wp-admin/?(index.php)?$#', $_SERVER['REQUEST_URI'] ) && ( 'index.php' != $menu[$page][2] ) )
-			wp_redirect ( get_option ( 'siteurl' ) . '/wp-admin/profile.php' );
-		}
-		add_action ( 'admin_menu', 'mom_remove_the_dashboard' );
-	}
-}
-
-// Takeover -> Custom BG Image
-if( !function_exists( 'MOM_themetakeover_backgroundimage' ) ) {
-	if( get_option( 'MOM_themetakeover_backgroundimage' ) ) {
-		$backgroundargs = array( 
-			'default-image'          => '',
-			'default-color'          => '',
-			'wp-head-callback'       => '_custom_background_cb',
-			'admin-head-callback'    => '',
-			'admin-preview-callback' => ''
-		);
-		add_theme_support( 'custom-background', array(
-			'default-color' => 'fff',
-		) );
-	}
-}
 
 // RSS feed (link back)
 if( !function_exists( 'myoptionalmodules_rsslinkback' ) ) { 
@@ -730,21 +487,6 @@ if( !function_exists( 'myoptionalmodules_disabledatearchives' ) ) {
 			exit;
 			endif;
 		}
-	}
-}
-
-// Stripping paint with a flamethrower.
-// Sanitize_text_field->strip_tags->htmlentities->string
-if( !function_exists( 'mom_clean' ) ) {
-	function mom_clean( $string ) {
-		return sanitize_text_field( strip_tags( htmlentities( $string ) ) );
-	}
-}
-
-// Take an alphanumeric string, return only numbers, take out any spaces.
-if( !function_exists( 'myoptionalmodules_numbersnospaces' ) ) {
-	function myoptionalmodules_numbersnospaces( $string ) {
-		return sanitize_text_field( implode( ',', array_unique( explode(', ', ( preg_replace( '/[^0-9,.]/', '', ( $string ) ) ) ) ) ) );
 	}
 }
 
@@ -800,45 +542,6 @@ if( !function_exists( 'myoptionalmodules_postasfront' ) ) {
 			}
 			if( have_posts() ):the_post();
 			header('location:' . esc_url( get_permalink( $mompaf_front) ) ); exit; endif;
-		}
-	}
-}
-
-if( !function_exists( 'momMaintenance' ) ) {
-	function momMaintenance(){
-		global $post;
-		if(!function_exists('is_login_page')){
-			function is_login_page() {
-				return in_array($GLOBALS['pagenow'], array('wp-login.php', 'wp-register.php'));
-			}		
-		}
-		if(!is_login_page()){
-			if(!is_user_logged_in() && get_option('mommaincontrol_maintenance') == 1){
-				$maintenanceURL = esc_url(get_option('momMaintenance_url'));
-				$ids = get_option('momMaintenance_url_ids');
-				$ids = explode(',', $ids);
-				
-				if( '' == get_option('momMaintenance_url_ids') ) {
-					if($maintenanceURL == ''){
-						die('Maintenance mode currently active.  Please try again later.');
-					}else{
-						header('location:'.$maintenanceURL);exit;
-					}
-				} else {
-					if( is_single() || is_page() ) {
-						$id = $post->ID;
-						if( $id ) {
-							if( in_array($id, $ids) ) {
-								if( '' == $maintenanceURL ){
-									die('Maintenance mode currently active.  Please try again later.');
-								}else{
-									header('location:'.$maintenanceURL);exit;
-								}
-							}
-						}
-					}
-				}
-			}
 		}
 	}
 }
