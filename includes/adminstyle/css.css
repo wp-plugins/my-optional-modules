@@ -257,3 +257,21 @@
 			display: none;
 			visibility: hidden; 
 		}
+
+@media only screen and (max-width: 950px) {
+	.MOMSettings .setting span,
+	.MOMSettings .setting .clear select,
+	.MOMSettings .setting form {
+		width: 45%;
+	}
+	.MOMSettings form.clear {
+		width: 100%;
+	}
+}
+@media only screen and (max-width: 782px) {
+	.MOMSettings .setting span,
+	.MOMSettings .setting .clear select,
+	.MOMSettings .setting form {
+		width: 100%;
+	}
+}

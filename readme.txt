@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: front, home, database, cleaner, disable, comments, RSS, javascript, footer, archives, author, ajax, font awesome, lazy load, horizontal, gallery, hide, version, mini, loop, exclude, category, tag, post format
 Requires at least: 3.9.1
 Tested up to: 4.0
-Stable tag: 5.6.1
+Stable tag: 5.6.1.1
 
 An assortment of functions to enhance WordPress.
 
@@ -38,6 +38,7 @@ this project in the first place) was kept. 5.6 marks a new direction for MOM.
 3. 'list' style mini-loop w/ post vote display (Post Votes module enabled) (Theme: Twenty Fourteen)
 
 == Changelog ==
+* 5.6.1.1  Admin page CSS @media queries for better display
 * 5.6.1    All unused code from 5.5.X has been removed
 * 5.6.1    All uninstallation functionality that has been outdated for quite some time now has been removed
 * 5.6      Removed: (1) count++ (2) Shortcodes (3) Navbar (4) Post Votes (5) Meta (6) Maintenance Mode (7) Wowhead (8) Fitvids (9) Analytics (10) Passwords (11) Reviews (12) Jump Around (13) Takeover
