@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.6.1.1
+ * Version: 5.6.1.2
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -239,12 +239,8 @@ if( !function_exists( 'my_optional_modules_scripts' ) ) {
 
 		function mom_jquery(){
 
-			if( 1 == get_option( 'MOM_themetakeover_tiledfrontpage' ) ) {
-
-				$fittext = plugins_url().'/my-optional-modules/includes/javascript/fittext.js';
-				wp_enqueue_script( 'fittext', $fittext, array( 'jquery' ) );
-
-			}
+			$fittext = plugins_url().'/my-optional-modules/includes/javascript/fittext.js';
+			wp_enqueue_script( 'fittext', $fittext, array( 'jquery' ) );
 
 			if( 1 == get_option( 'mommaincontrol_lazyload' ) ) {
 
@@ -261,21 +257,18 @@ if( !function_exists( 'my_optional_modules_scripts' ) ) {
 
 		function MOMScriptsFooter(){
 
-			if( 1 == get_option( 'MOM_themetakeover_tiledfrontpage' ) ) {
+			
 
 			echo '
 			<script type=\'text/javascript\'>';
 				echo 'jQuery(document).ready(function($){';
 
-				if( 1 == get_option( 'MOM_themetakeover_tiledfrontpage' ) ) {
-
 					echo 'jQuery(".recentPostRotationFull .thumbnailFull a.mediaNotPresent").fitText();';
-
-				}
+					
 
 				echo '});</script>';
 
-			}
+			
 
 		}
 
@@ -1912,14 +1905,6 @@ if( !function_exists( 'font_fa_shortcode' ) ) {
  */
 
 /**
- * Display a miniloop of posts from the blog based on shortcode parameters in
- * a variety of different styles. Can be used multiple times on the same page.
- */
-
-add_filter( 'the_content', 'do_shortcode', 'mom_miniloop' );
-add_shortcode( 'mom_miniloop', 'mom_miniloop_shortcode' );
-
-/**
  *
  * shortcode functionality
  *
@@ -2547,21 +2532,29 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 
 				}
 
-				echo '<div class="text"><span class="title"><a href="' . $link . '">' . $title . '</a></span><span class="author">posted <date title="' . $date . '">' . $since . '</date> by ' . $author . ' to ';
+				echo '<div class="text"><span class="title"><a href="' . $link . '">' . $title . '</a></span>';
+				
+				if( 1 != $related ) {
 
-					if( $categories ) {
+					echo '<span class="author">posted <date title="' . $date . '">' . $since . '</date> by ' . $author . ' to ';
 
-						foreach( array_slice( $categories, 0, 1 ) as $category ) {
+						if( $categories ) {
 
-							$output .= '<a href="'.get_category_link( $category->term_id ).'" title="' . esc_attr( sprintf( __( "View all posts in %s" ), $category->name ) ) . '">'.$category->cat_name.'</a>'.$separator;
+							foreach( array_slice( $categories, 0, 1 ) as $category ) {
+
+								$output .= '<a href="'.get_category_link( $category->term_id ).'" title="' . esc_attr( sprintf( __( "View all posts in %s" ), $category->name ) ) . '">'.$category->cat_name.'</a>'.$separator;
+
+							}
+
+						echo trim( $output, $separator );
 
 						}
 
-					echo trim( $output, $separator );
+						echo '</span><span class="meta"><a href="' . $link . '">' . $comment_count . ' comments</a></span>';
 
-					}
-
-					echo '</span><span class="meta"><a href="' . $link . '">' . $comment_count . ' comments</a></span></div>
+				}
+				
+				echo '</div>
 			</section>';
 
 		}
@@ -2738,6 +2731,15 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 	}
 
 }
+
+/**
+ * Display a miniloop of posts from the blog based on shortcode parameters in
+ * a variety of different styles. Can be used multiple times on the same page.
+ */
+
+add_filter( 'the_content', 'do_shortcode', 'mom_miniloop' );
+add_shortcode( 'mom_miniloop', 'mom_miniloop_shortcode' );
+
 
 /**
  *

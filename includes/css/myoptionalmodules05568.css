@@ -326,6 +326,10 @@ h2.mom_related_title{ clear: both; font-size: 95%; margin: 25px auto 0; padding:
 	display: block;
 	content: ""; 
 }
+.loopdeloopList .sidebar {
+	border-bottom: 1px solid rgba(0,0,0,.1);
+	padding: 5px;
+}
 .loopdeloopList .sidebar section {
 	clear: both;
 	margin: 5px auto 10px;
@@ -335,35 +339,39 @@ h2.mom_related_title{ clear: both; font-size: 95%; margin: 25px auto 0; padding:
 .loopdeloopList .sidebar section div {
 	cursor: default; 
 }
-.loopdeloopList .sidebar div.thumb,
-.loopdeloopList .sidebar img,
+.loopdeloopList .sidebar img {
+	height: auto; 
+	width: 100%; 
+}
+.loopdeloopList .sidebar div.thumb {
+	float: right;
+	margin: 0;
+	padding: 1%;
+	width: 40%;
+}
 .loopdeloopList .sidebar div.counter {
-	display: none;
-	visibility: hidden; 
+	color: rgba(0,0,0,.3);
+	float: left; 
+	font-size: 200%;
+	font-weight: 900;
+	margin: 0;
+	width: 10%;
 }
 .loopdeloopList .sidebar div.text {
 	float: left;
-	width: 100%;
-	margin: 0; 
+	margin: 0 2%; 
+	padding: 0 10px 0 20px;
+	width: 40%;
 }
 .loopdeloopList .sidebar span {
 	clear: both;
 	display: block;
 	margin: 0 auto;
 	padding: 0;
-	width: 100%; 
+	width: 98%; 
 }
 .loopdeloopList .sidebar span a {
 	text-decoration: none; 
-}
-.loopdeloopList .sidebar span.title {
-	font-size: 90%; 
-}
-.loopdeloopList .sidebar span.author {
-	font-size: 65%; 
-}
-.loopdeloopList .sidebar span.meta {
-	font-size: 70%; 
 }
 
 /* Various */
