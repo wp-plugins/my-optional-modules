@@ -3,18 +3,12 @@ Contributors: boyevul
 Tags: front, home, database, cleaner, disable, comments, RSS, javascript, footer, archives, author, ajax, font awesome, lazy load, horizontal, gallery, hide, version, mini, loop, exclude, category, tag, post format
 Requires at least: 3.9.1
 Tested up to: 4.0
-Stable tag: 5.6.1.2
+Stable tag: 5.6.1.3
 
 An assortment of functions to enhance WordPress.
 
 == Description ==
 MOM features an assortment of functions designed to add (or extend) functionality within WordPress.
-
-= 5.5.X -> 5.6 =
-I felt that MOM was drastically out of whack with what I had originally intended for this plugin. The need 
-for course correction was immediate; a hefty amount of internal code was slashed entirely. Only the core 
-functionality (the functionality that I felt was not only done well, but embodied the spirit of why I began 
-this project in the first place) was kept. 5.6 marks a new direction for MOM.
 
 = Modules: =
 * Ability to set a blog post as your front page
@@ -38,6 +32,7 @@ this project in the first place) was kept. 5.6 marks a new direction for MOM.
 3. 'list' style mini-loop w/ post vote display (Post Votes module enabled) (Theme: Twenty Fourteen)
 
 == Changelog ==
+* 5.6.1.3  Font Awesome updated to current version of 4.2 (40 new icons added)
 * 5.6.1.2  miniloop shortcode functionality call to action misplaced
 * 5.6.1.1  Admin page CSS @media queries for better display
 * 5.6.1    All unused code from 5.5.X has been removed

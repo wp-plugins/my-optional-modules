@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.6.1.2
+ * Version: 5.6.1.3
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -2779,13 +2779,19 @@ if( current_user_can( 'manage_options' ) ) {
 					<ol id="momEditorMenu">
 						<li class="clear"></li>
 						<?php $icon = array(
+							'angellist','area-chart','at','bell-slash','bell-slash-o','bicycle','binoculars',
+							'birthday-cake','bus','calculator','cc','cc-amex','cc-discover','cc-mastercard',
+							'cc-paypal','cc-stripe','cc-visa','copyright','eyedropper','futbol-o','google-wallet',
+							'ils','ioxhost','lastfm','lastfm-square','line-chart','meanpath','newspaper-o','paint-brush',
+							'paypal','pie-chart','plug','shekel','sheqel','slideshare','soccer-ball-o','toggle-off',
+							'toggle-on','trash','tty','twitch','wifi','yelp',
 							'automobile','bank','behance','behance-square','bomb','building','cab','car','child','circle-o-notch','circle-thin','codepen',
 							'cube','cubes','database','delicious','deviantart','digg','drupal','empire','envelope-square','fax','file-archive-o','file-audio-o',
 							'file-code-o','file-excel-o','file-image-o','file-movie-o','file-pdf-o','file-photo-o',
 							'file-picture-o','file-powerpoint-o','file-sound-o','file-video-o','file-word-o','file-zip-o',
 							'ge','git','git-square','google','graduation-cap','hacker-news','header','history','institution',
 							'joomla','jsfiddle','language','life-bouy','life-ring','life-saver','mortar-board','openid','paper-plane',
-							'paper-plane-o','paragraph','paw','pied-piper','pied-piper-alt','pied-piper-square','qq','ra','rebel',
+							'paper-plane-o','paragraph','paw','pied-piper','pied-piper-alt','qq','ra','rebel',
 							'recycle','reddit','reddit-square','send','send-o','share-alt','share-alt-square','slack','sliders',
 							'soundcloud','space-shuttle','spoon','spotify','steam','steam-square','stumbleupon','stumbleupon-circle',
 							'support','taxi','tencent-weibo','tree','university','vine','wechat','weixin','wordpress','yahoo',
