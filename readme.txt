@@ -26,11 +26,6 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 3. Activate it.
 4. You'll find settings under Dashboard->Settings->My Optional Modules
 
-== Screenshots ==
-1. Horizontal gallery (Takeover->Horizontal Galleries)(Theme: Twenty Fourteen)
-2. 'dropdown' style mini-loop (Takeover->Mini Loops) (Theme: Twenty Fourteen)
-3. 'list' style mini-loop w/ post vote display (Post Votes module enabled) (Theme: Twenty Fourteen)
-
 == Changelog ==
 * 5.6.1.3  Font Awesome updated to current version of 4.2 (40 new icons added)
 * 5.6.1.2  miniloop shortcode functionality call to action misplaced
