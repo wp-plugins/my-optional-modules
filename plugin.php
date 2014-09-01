@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: http://wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.6.1.3
+ * Version: 5.6.1.4
  * Author: Matthew Trevino
  * Author URI: http://wordpress.org/plugins/my-optional-modules/
  *	
@@ -200,12 +200,17 @@ if( !function_exists ( 'myoptionalmodules_checkdnsbl' ) ) {
  *
  * Don't check the DNSBL if the user is logged in and 
  * level 7 (likely an admin account).
- *
+ */
 if( 7 != $user_level ) {
 
-	myoptionalmodules_checkdnsbl( $ipaddress );
+	$ipaddress = myoptionalmodules_checkdnsbl( $ipaddress );
 
-} */
+	
+} else {
+
+	$DNSBL = false;
+
+}
 
 /**
  *
@@ -255,9 +260,7 @@ if( !function_exists( 'my_optional_modules_scripts' ) ) {
 
 		add_action( 'wp_enqueue_scripts', 'mom_jquery' );
 
-		function MOMScriptsFooter(){
-
-			
+		function MOMScriptsFooter(){			
 
 			echo '
 			<script type=\'text/javascript\'>';
@@ -725,32 +728,33 @@ if( !function_exists( 'mom_timesince' ) ) {
 * Disable comments display and form
 *
 */
-if( 1 == get_option('mommaincontrol_comments') ){
 
-add_filter( 'comments_template','mom_disablecomments' );
-add_filter( 'comments_open','mom_disablecommentsform',10,2 );
+if( 1 == get_option( 'mommaincontrol_comments' ) || 1 == get_option( 'mommaincontrol_dnsbl' ) && true === $DNSBL ){
 
-if( !function_exists( 'mom_disablecomments' ) ) {
+	add_filter( 'comments_template','mom_disablecomments' );
+	add_filter( 'comments_open','mom_disablecommentsform',10,2 );
 
-	function mom_disablecomments( $comment_template ) {
+	if( !function_exists( 'mom_disablecomments' ) ) {
 
-		return dirname( __FILE__ ) . '/includes/templates/comments.php';
+		function mom_disablecomments( $comment_template ) {
 
-	}
+			return dirname( __FILE__ ) . '/includes/templates/comments.php';
 
-}
-
-if( !function_exists( 'mom_disablecommentsform' ) ) {
-
-	function mom_disablecommentsform( $open,$post_id ) {
-
-		$post = get_post( $post_id );
-		$open = false;
-		return $open;
+		}
 
 	}
 
-}
+	if( !function_exists( 'mom_disablecommentsform' ) ) {
+
+		function mom_disablecommentsform( $open,$post_id ) {
+
+			$post = get_post( $post_id );
+			$open = false;
+			return $open;
+
+		}
+
+	}
 
 }
 
@@ -1302,6 +1306,7 @@ if( current_user_can( 'manage_options' ) ) {
 			'mommaincontrol_authorarchives',
 			'mommaincontrol_datearchives',
 			'mommaincontrol_comments',
+			'mommaincontrol_dnsbl',
 			'MOM_themetakeover_ajaxcomments',
 			'MOM_themetakeover_horizontal_galleries',
 			'mommaincontrol_momse',
@@ -1377,6 +1382,12 @@ if( current_user_can( 'manage_options' ) ) {
 		if( isset( $_POST[ 'mom_comments_mode_submit' ] ) ) { 
 
 			update_option('mommaincontrol_comments',$_REQUEST['comments']);
+
+		}
+
+		if( isset( $_POST[ 'mom_dnsbl_mode_submit' ] ) ) {
+
+			update_option('mommaincontrol_dnsbl',$_REQUEST['dnsbl']);
 
 		}
 
@@ -1467,7 +1478,8 @@ if(current_user_can('manage_options')){
 	<div class="MOMSettings">
 		<div class="setting">
 		<h2>My Optional Modules</h2>
-		[<a href="http://wordpress.org/support/view/plugin-reviews/my-optional-modules">rate/review</a>]
+		[<a href="//wordpress.org/support/view/plugin-reviews/my-optional-modules">rate/review</a>] 
+		[<a href="//wordpress.org/support/plugin/my-optional-modules">support</a>]
 		</div>
 		<hr />
 		<div class="setting">
@@ -1583,23 +1595,39 @@ if(current_user_can('manage_options')){
 		</div>
 		<hr />
 		<div class="setting">
+			<p>
+				<em>Simple Modules</em> &mdash; enable or disable individual modules<br />
+				<em>key</em> &mdash; <i class="fa fa-toggle-off"> off</i> &mdash; <i class="fa fa-toggle-on"> on</i>
+			</p>
+			<hr />
 			<form method="post" action="" name="momComments">
 				<label for="mom_comments_mode_submit">Disable comments site-wide
 				<?php if( 1 == get_option( 'mommaincontrol_comments' ) ) { ?>
-					<i class="fa fa-check-circle"></i>
+					<i class="fa fa-toggle-on"></i>
 				<?php } else { ?>
-					<i class="fa fa-circle"></i>
+					<i class="fa fa-toggle-off"></i>
 				<?php }?></label>
 				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_comments' ) ){ echo 0; } else { echo 1; }?>" name="comments" />
 				<input type="submit" id="mom_comments_mode_submit" name="mom_comments_mode_submit" value="Submit" class="hidden" />
 				</form>
-				
+
+			<form method="post" action="" name="momDNSBL">
+				<label for="mom_dnsbl_mode_submit">DNSBL Comment Blocking
+				<?php if( 1 == get_option( 'mommaincontrol_dnsbl' ) ) { ?>
+					<i class="fa fa-toggle-on"></i>
+				<?php } else { ?>
+					<i class="fa fa-toggle-off"></i>
+				<?php }?></label>
+				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_dnsbl' ) ){ echo 0; } else { echo 1; }?>" name="dnsbl" />
+				<input type="submit" id="mom_dnsbl_mode_submit" name="mom_dnsbl_mode_submit" value="Submit" class="hidden" />
+				</form>
+
 			<form method="post" action="" name="momAjaxComments">
 				<label for="mom_ajax_comments_mode_submit">Ajaxify Comments 
 				<?php if( 1 == get_option( 'MOM_themetakeover_ajaxcomments' ) ) { ?>
-					<i class="fa fa-check-circle"></i>
+					<i class="fa fa-toggle-on"></i>
 				<?php } else { ?>
-					<i class="fa fa-circle"></i>
+					<i class="fa fa-toggle-off"></i>
 				<?php }?></label>
 				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_themetakeover_ajaxcomments' ) ){ echo 0; } else { echo 1; }?>" name="ajaxify" />
 				<input type="submit" id="mom_ajax_comments_mode_submit" name="mom_ajax_comments_mode_submit" value="Submit" class="hidden" />
@@ -1608,9 +1636,9 @@ if(current_user_can('manage_options')){
 			<form method="post" action="" name="momHorizontalGalleries">
 				<label for="mom_horizontal_galleries_mode_submit">Horizontal Galleries
 				<?php if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ) { ?>
-					<i class="fa fa-check-circle"></i>
+					<i class="fa fa-toggle-on"></i>
 				<?php } else { ?>
-					<i class="fa fa-circle"></i>
+					<i class="fa fa-toggle-off"></i>
 				<?php }?></label>
 				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ){ echo 0; } else { echo 1; }?>" name="hgalleries" />
 				<input type="submit" id="mom_horizontal_galleries_mode_submit" name="mom_horizontal_galleries_mode_submit" value="Submit" class="hidden" />
@@ -1619,9 +1647,9 @@ if(current_user_can('manage_options')){
 				<form method="post" action="" name="protectrss">
 					<label for="mom_protectrss_mode_submit">Append link-back on RSS items
 					<?php if( 1 == get_option( 'mommaincontrol_protectrss' ) ) { ?>
-						<i class="fa fa-check-circle"></i>
+						<i class="fa fa-toggle-on"></i>
 					<?php } else { ?>
-						<i class="fa fa-circle"></i>
+						<i class="fa fa-toggle-off"></i>
 					<?php }?></label>
 					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_protectrss' ) ) { echo 0; } else { echo 1; } ?>" name="protectrss" />
 					<input type="submit" id="mom_protectrss_mode_submit" name="mom_protectrss_mode_submit" value="Submit" class="hidden" />
@@ -1629,9 +1657,9 @@ if(current_user_can('manage_options')){
 				<form method="post" action="" name="fontawesome">
 					<label for="mom_fontawesome_mode_submit">Enable Font Awesome
 					<?php if( 1 == get_option( 'mommaincontrol_fontawesome' ) ) { ?>
-						<i class="fa fa-check-circle"></i>
+						<i class="fa fa-toggle-on"></i>
 					<?php } else { ?>
-						<i class="fa fa-circle"></i>
+						<i class="fa fa-toggle-off"></i>
 					<?php } ?></label>
 					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_fontawesome' ) ) { echo 0; } else { echo 1; } ?>" name="mommaincontrol_fontawesome" />
 					<input type="submit" id="mom_fontawesome_mode_submit" name="mom_fontawesome_mode_submit" value="Submit" class="hidden" />
@@ -1639,9 +1667,9 @@ if(current_user_can('manage_options')){
 				<form method="post" action="" name="hidewpversions">
 					<label for="mom_versions_submit">Hide WordPress version from source-code
 					<?php if( 1 == get_option( 'mommaincontrol_versionnumbers' ) ) { ?>
-						<i class="fa fa-check-circle"></i>
+						<i class="fa fa-toggle-on"></i>
 					<?php } else { ?>
-						<i class="fa fa-circle"></i>
+						<i class="fa fa-toggle-off"></i>
 					<?php }?></label>
 					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_versionnumbers' ) ) { echo 0; } else { echo 1; } ?>" name="mommaincontrol_versionnumbers" />
 					<input type="submit" id="mom_versions_submit" name="mom_versions_submit" value="Submit" class="hidden" />
@@ -1649,9 +1677,9 @@ if(current_user_can('manage_options')){
 				<form method="post" action="" name="footerscripts">
 					<label for="mom_footerscripts_mode_submit">Move .js to footer
 					<?php if( 1== get_option( 'mommaincontrol_footerscripts' ) ){ ?>
-						<i class="fa fa-check-circle"></i>
+						<i class="fa fa-toggle-on"></i>
 					<?php }else{ ?>
-						<i class="fa fa-circle"></i>
+						<i class="fa fa-toggle-off"></i>
 					<?php } ?></label>
 					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_footerscripts' ) ) { echo 0; } else { echo 1; } ?>" name="footerscripts" />
 					<input type="submit" id="mom_footerscripts_mode_submit" name="mom_footerscripts_mode_submit" value="Submit" class="hidden" />
@@ -1659,9 +1687,9 @@ if(current_user_can('manage_options')){
 				<form method="post" action="" name="lazyload">
 					<label for="mom_lazy_mode_submit">Lazy Load for post images
 					<?php if( 1 == get_option( 'mommaincontrol_lazyload' ) ) { ?>
-						<i class="fa fa-check-circle"></i>
+						<i class="fa fa-toggle-on"></i>
 					<?php } else { ?>
-						<i class="fa fa-circle"></i>
+						<i class="fa fa-toggle-off"></i>
 					<?php } ?></label>
 					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_lazyload' ) ) { echo 0; } else { echo 1; } ?>" name="mommaincontrol_lazyload" />
 					<input type="submit" id="mom_lazy_mode_submit" name="mom_lazy_mode_submit" value="Submit" class="hidden" />
@@ -1669,9 +1697,9 @@ if(current_user_can('manage_options')){
 				<form method="post" action="" name="authorarchives">
 					<label for="mom_author_archives_mode_submit">Disable Author-based archives
 					<?php if( 1 == get_option( 'mommaincontrol_authorarchives' ) ) { ?>
-						<i class="fa fa-check-circle"></i>
+						<i class="fa fa-toggle-on"></i>
 					<?php } else { ?>
-						<i class="fa fa-circle"></i>
+						<i class="fa fa-toggle-off"></i>
 					<?php } ?></label>
 					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_authorarchives' ) ) { echo 0; } else { echo 1; } ?>" name="authorarchives" />
 					<input type="submit" id="mom_author_archives_mode_submit" name="mom_author_archives_mode_submit" value="Submit" class="hidden" />
@@ -1679,9 +1707,9 @@ if(current_user_can('manage_options')){
 				<form method="post" action="" name="datearchives">
 					<label for="mom_date_archives_mode_submit">Disable Date-based archives
 					<?php if( 1 == get_option( 'mommaincontrol_datearchives' ) ) { ?>
-						<i class="fa fa-check-circle"></i>
+						<i class="fa fa-toggle-on"></i>
 					<?php } else { ?>
-						<i class="fa fa-circle"></i>
+						<i class="fa fa-toggle-off"></i>
 					<?php } ?></label>
 					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_datearchives' ) ) { echo 0; } else { echo 1; } ?>" name="datearchives" />
 					<input type="submit" id="mom_date_archives_mode_submit" name="mom_date_archives_mode_submit" value="Submit" class="hidden" />
@@ -1710,12 +1738,17 @@ if(current_user_can('manage_options')){
 		</div>
 		<hr />
 		<div class="setting">
+			<p>
+				<em>Advanced Modules</em> &mdash; these modules may have additional options to set<br />
+				<em>key</em> &mdash; <i class="fa fa-toggle-off"> off</i> &mdash; <i class="fa fa-toggle-on"> on</i>
+			</p>
+			<hr />		
 			<form method="post" action="" name="momExclude">
 				<label for="mom_exclude_mode_submit">Enable Post Exclusion
 				<?php if( 1 == get_option( 'mommaincontrol_momse' ) ) { ?>
-					<i class="fa fa-check-circle"></i>
+					<i class="fa fa-toggle-on"></i>
 				<?php } else { ?>
-					<i class="fa fa-circle"></i>
+					<i class="fa fa-toggle-off"></i>
 				<?php }?></label>
 				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_momse' ) ){ echo 0; } else { echo 1; }?>" name="exclude" />
 				<input type="submit" id="mom_exclude_mode_submit" name="mom_exclude_mode_submit" value="Submit" class="hidden" />

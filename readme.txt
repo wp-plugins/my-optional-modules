@@ -1,23 +1,29 @@
 === My Optional Modules ===
 Contributors: boyevul
-Tags: front, home, database, cleaner, disable, comments, RSS, javascript, footer, archives, author, ajax, font awesome, lazy load, horizontal, gallery, hide, version, mini, loop, exclude, category, tag, post format
+Tags: DNSBL, front, home, database, cleaner, disable, comments, RSS, javascript, footer, archives, author, ajax, font awesome, lazy load, horizontal, gallery, hide, version, mini, loop, exclude, category, tag, post format
 Requires at least: 3.9.1
 Tested up to: 4.0
-Stable tag: 5.6.1.3
+Stable tag: 5.6.1.4
 
 An assortment of functions to enhance WordPress.
 
 == Description ==
 MOM features an assortment of functions designed to add (or extend) functionality within WordPress.
 
-= Modules: =
-* Ability to set a blog post as your front page
-* Clear database clutter at the push of a button
-* Disable comments sitewide 
-* Append a link back to your RSS items
-* Disable author and date-based archives
-* Hide categories, tags, and post formats from almost anywhere on your blog
-* ..and more
+= (Optional) Modules: =
+* Set the front page of the blog as an individual post (or your latest post)
+* Clear database trash with a single button
+* Disable comments site-wide (or disable comments if user is listed on 1 of 7 DNSBL lists)
+* Ajaxify the comments form
+* Turn WordPress default galleries into horizontal sliders
+* Append links back to your blog on all of your RSS items
+* Enable the use of Font Awesome
+* Hide the WordPress version from your source code
+* Move all Javascripts to the footer
+* Enable Lazy Load for images in posts
+* Disable Author and Date-based archives
+* Attach miniature loops anywhere, allowing the display of any post based on multiple parameters
+* Exclude posts from almost anywhere on your blog, based on many different parameters
 
 == Installation ==
 = 3-step installation =
@@ -27,6 +33,7 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 4. You'll find settings under Dashboard->Settings->My Optional Modules
 
 == Changelog ==
+* 5.6.1.4  Disable comments if the user is listed on (any) 1 of 7 DNSBL
 * 5.6.1.3  Font Awesome updated to current version of 4.2 (40 new icons added)
 * 5.6.1.2  miniloop shortcode functionality call to action misplaced
 * 5.6.1.1  Admin page CSS @media queries for better display
