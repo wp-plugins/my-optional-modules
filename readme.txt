@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: DNSBL, front, home, database, cleaner, disable, comments, RSS, javascript, footer, archives, author, ajax, font awesome, lazy load, horizontal, gallery, hide, version, mini, loop, exclude, category, tag, post format
 Requires at least: 3.9.1
 Tested up to: 4.0
-Stable tag: 5.6.1.4
+Stable tag: 5.7
 
 An assortment of functions to enhance WordPress.
 
@@ -33,6 +33,13 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 4. You'll find settings under Dashboard->Settings->My Optional Modules
 
 == Changelog ==
+* 5.7      Added default values for reference for [mom_miniloop] on control panel.
+* 5.7      Outdated uninstallation for options no longer used removed.
+* 5.7      protocol-relative css inclusion for plugin stylesheet.
+* 5.7      nonces added to adminstrative menus. (Make sure your install is correct, and has SALTs and KEYS defined in wp-config)!!!
+* 5.7      the settings page will alert you to the presence (or lack thereof) of SALTS and KEYS in the wp-config file.
+* 5.7      scriptless share buttons added: google-plus, facebook, reddit, twitter, and email shares.
+* 
 * 5.6.1.4  Disable comments if the user is listed on (any) 1 of 7 DNSBL
 * 5.6.1.3  Font Awesome updated to current version of 4.2 (40 new icons added)
 * 5.6.1.2  miniloop shortcode functionality call to action misplaced

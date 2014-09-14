@@ -7,6 +7,41 @@
 
 h2.mom_related_title{ clear: both; font-size: 95%; margin: 25px auto 0; padding:15px 0 0; border-top: 1px solid rgba(0,0,0,.1);}
 
+.mom_shareLinks {
+	display: block;
+	float: right;
+	margin: 0;
+	padding: 25px 5px;
+	text-align: right;
+	width: 100%;
+	z-index: 99;
+}
+.mom_shareLinks a{
+	background-color: #fff;
+	border: 1px solid rgba(0,0,0,.1);
+	color: #000;
+	margin: 5px -5px 5px 0;
+	padding: 15px 25px;
+	text-align: center;
+	text-decoration: none; 
+	width: auto;
+}
+.mom_shareLinks .facebook:hover {
+	color: #3e5a93;
+}
+.mom_shareLinks .twitter:hover {
+	color: #55acee;
+}
+.mom_shareLinks .google:hover {
+	color: #d54334;
+}
+.mom_shareLinks .email:hover {
+	color: #0a2a45;
+}
+.mom_shareLinks .reddit:hover {
+	color: #cee3f8;
+}
+
 /* Tiled */
 /**
  * Proper sizing for all elements of this plugin.

@@ -220,6 +220,14 @@
 				float: right; 
 				margin: -16px 2px 0 0;
 			}
+			i.fa-reddit,
+			i.fa-google-plus,
+			i.fa-twitter,
+			i.fa-facebook,
+			i.fa-envelope,
+			i.fa-arrow-up {
+				float: left!important;
+			}
 			.config label {
 				width: 100%;
 				float: left;
