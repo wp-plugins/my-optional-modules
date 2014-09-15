@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.7
+ * Version: 5.7.1
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -21,18 +21,18 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
- /**
-  *
-  * This is free software. You don't pay anything for it.
-  * This is a hobby. This is not my job. I don't get paid for it.
-  *
-  * Please be kind to me. I spend a lot of my free time doing this.
-  * There are bound to be bugs in it sometimes. 
-  * And I'll have them fixed as soon as I spot them.
-  * I do my best to ensure that there aren't, but I'm only human;
-  * things sometimes slip by.  
-  *
-  */
+/**
+ *
+ * This is free software. You don't pay anything for it.
+ * This is a hobby. This is not my job. I don't get paid for it.
+ *
+ * Please be kind to me. I spend a lot of my free time doing this.
+ * There are bound to be bugs in it sometimes. 
+ * And I'll have them fixed as soon as I spot them.
+ * I do my best to ensure that there aren't, but I'm only human;
+ * things sometimes slip by.  
+ *
+ */
 
 /**
  *
@@ -210,6 +210,159 @@ if( !function_exists ( 'myoptionalmodules_checkdnsbl' ) ) {
 	$DNSBL === false;
 
 }
+
+
+
+
+
+
+
+
+
+/**
+ *
+ * ---------------------------------------------------------------------------------------
+ *
+ */
+/**
+ * custom Media Embed with oembed fallback
+ * usage: new mom_mediaEmbed(url);
+ */
+class mom_mediaEmbed {
+	var $url;
+	function mom_mediaEmbed ( $url ) {
+		$url  = esc_url ( $url );
+		$chck = strtolower( $url );
+		$chck = sanitize_text_field( $url );
+		$url  = sanitize_text_field( $url );
+		if( preg_match( '/\/\/(.*imgur\.com\/.*)/i', $url ) ) {
+			if( strpos( $chck, 'imgur.com/a/' ) !== false ) {
+				$url = substr ( $url, 19 );
+				echo '<iframe class="imgur-album" width="100%" height="550" frameborder="0" src="//imgur.com/a/' . $url . '/embed"></iframe>'; 
+			} else {
+				$url = esc_url ( $url );
+				echo '<a href="' . $url . '"><img class="image" alt="image" src="' . $url . '"/></a>';
+			}
+		}
+		elseif( preg_match( '/\/\/(.*youtube\.com\/.*)/i', $url ) ) {
+			// Probably a much better way of doing this..
+			$timeStamp = '';
+			if( strpos( $chck, 't=' ) !== false && strpos( $chck, 'list=' ) === false ) {
+				$url_parse = parse_url( $chck );
+				$timeStamp = sanitize_text_field( str_replace( '038;t=', '', $url_parse['fragment']));
+				$minutes   = 0;
+				$seconds   = 0;
+				if( strpos( $timeStamp, 'm' ) !== false && strpos( $timeStamp, 's' ) !== false ){
+					$parts     = str_replace( array( 'm','s' ), '', $timeStamp );
+					list( $minutes, $seconds ) = $parts = str_split( $parts );
+					$minutes   = $minutes * 60;
+					$seconds   = $seconds * 1;
+				} elseif( strpos( $timeStamp, 'm' ) !== true && strpos( $timeStamp, 's' ) !== false ) {
+					$seconds   = str_replace( 's', '', $timeStamp ) * 1;
+				} elseif( strpos( $timeStamp, 'm' ) !== false && strpos( $timeStamp, 's' ) !== true ) {
+					$minutes   = str_replace( 'm', '', $timeStamp ) * 60;
+				} else {
+					$minutes = 0;
+					$seconds = 0;
+				}
+				
+				$timeStamp = $minutes + $seconds;
+
+			}
+			if ( preg_match ('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match ) ) {
+				$match[1] = sanitize_text_field ( $match[1] );
+				$video_id = $match[1];
+				$url      = $video_id;
+			}
+			echo '
+			<object width="640" height="390" data="https://www.youtube.com/v/' . $url . '?version=3&amp;start=' . $timeStamp . '">
+				<param name="movie" value="https://www.youtube.com/v/' . $url . '?version=3&amp;start=' . $timeStamp . '" />
+				<param name="allowScriptAccess" value="always" />
+				<embed src="https://www.youtube.com/v/' . $url . '?version=3&amp;start=' . $timeStamp . '"
+					type="application/x-shockwave-flash"
+					allowscriptaccess="always"
+					width="640" 
+					height="390" />
+				
+			</object>
+			';
+		}
+		elseif( preg_match( '/\/\/(.*liveleak\.com\/.*)/i', $url ) ) {
+			$url      = parse_url( $url );
+			$video_id = str_replace( 'i=', '', $url[ 'query' ] );
+			echo '
+				<object width="640" height="390" data="http://www.liveleak.com/e/' . $video_id . '">
+					<param name="movie" value="http://www.liveleak.com/e/' . $video_id . '" />
+					<param name="wmode" value="transparent" />
+					<embed src="http://www.liveleak.com/e/' . $video_id . '" 
+						type="application/x-shockwave-flash" 
+						wmode="transparent" 
+						width="640" 
+						height="390" />
+				</object>
+			';              
+		}			
+		elseif( preg_match( '/\/\/(.*youtu\.be\/.*)/i', $url ) ) {
+			$url = explode( '/', $url );
+			$url = $url[sizeof($url)-1];
+			echo '
+			<object width="640" height="390" data="https://www.youtube.com/v/' . $url . '?version=3">
+				<param name="movie" value="https://www.youtube.com/v/' . $url . '?version=3" />
+				<param name="allowScriptAccess" value="always" />
+				<embed src="https://www.youtube.com/v/' . $url . '?version=3"
+					type="application/x-shockwave-flash"
+					allowscriptaccess="always"
+					width="640" 
+					height="390" />
+			</object>
+			';              
+		}           
+		elseif( preg_match( '/\/\/(.*soundcloud\.com\/.*)/i', $url ) ) {
+			echo '<iframe width="100%" height="166" scrolling="no" frameborder="no" src="http://w.soundcloud.com/player/?url=' . $url . '&auto_play=false&color=915f33&theme_color=00FF00"></iframe>'; 
+		}
+		elseif( preg_match( '/\/\/(.*vimeo\.com\/.*)/i', $url ) ) {
+			$url = explode( '/', $url );
+			$url = $url[sizeof($url)-1];
+			echo '<iframe src="//player.vimeo.com/video/' . $url . '?title=0&amp;byline=0&amp;portrait=0&amp;color=d6cece" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'; 
+		}
+		elseif( preg_match( '/\/\/(.*gfycat\.com\/.*)/i', $url ) ) {
+			$url = str_replace ( '//gfycat.com/', '', $url );
+			echo '<iframe src="//gfycat.com/iframe/' . $url . '" frameborder="0" scrolling="no" width="592" height="320" ></iframe>';
+		}
+		elseif( preg_match( '/\/\/(.*funnyordie\.com\/.*)/i', $url ) ) {
+			$url = explode( '/', $url );
+			$url = $url[sizeof($url)-2];
+			echo '
+			<object width="640" height="400" id="ordie_player_' . $url . '" data="http://player.ordienetworks.com/flash/fodplayer.swf">
+				<param name="movie" value="http://player.ordienetworks.com/flash/fodplayer.swf" />
+				<param name="flashvars" value="key=' . $url . '" />
+				<param name="allowfullscreen" value="true" />
+				<param name="allowscriptaccess" value="always">
+				<embed width="640" height="400" flashvars="key=' . $url . '" allowfullscreen="true" allowscriptaccess="always" quality="high" src="http://player.ordienetworks.com/flash/fodplayer.swf" name="ordie_player_5325b03b52" type="application/x-shockwave-flash"></embed>
+			</object>
+			';
+		}
+		elseif( preg_match( '/\/\/(.*vine\.co\/.*)/i', $url ) ) {
+			$url = $url . '/embed/postcard';
+			echo '<iframe class="vine-embed" src="' . $url . '" width="600" height="600" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>';
+		} else {
+			/**
+			 * Fall back to WordPress provided oEmbed if none of the above
+			 * conditions were met.
+			 */			
+			echo wp_oembed_get( $url );
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
 
 /**
  *
@@ -785,11 +938,11 @@ if( !function_exists( 'mom_timesince' ) ) {
 
 
 /**
-*
-* No Comments
-* Disable comments display and form
-*
-*/
+ *
+ * No Comments
+ * Disable comments display and form
+ *
+ */
 
 if( 1 == get_option( 'mommaincontrol_comments' ) || 1 == get_option( 'mommaincontrol_dnsbl' ) && true === $DNSBL ){
 
@@ -1099,11 +1252,11 @@ if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ) {
 
 
 /**
-*
-* Admin Stylesheet
-* Only enqueue it if we're browsing the admin page for My Optional Modules
-*
-*/
+ *
+ * Admin Stylesheet
+ * Only enqueue it if we're browsing the admin page for My Optional Modules
+ *
+ */
 if( !function_exists( 'my_optional_modules_stylesheets' ) ) {
 
 	function my_optional_modules_stylesheets( $hook ){
@@ -1123,10 +1276,10 @@ if( !function_exists( 'my_optional_modules_stylesheets' ) ) {
 }
 
 /**
-*
-* Font Awesome CSS enqueue
-*
-*/
+ *
+ * Font Awesome CSS enqueue
+ *
+ */
 if( !function_exists( 'my_optional_modules_font_awesome' ) ) {
 
 	function my_optional_modules_font_awesome() {
@@ -1140,10 +1293,10 @@ if( !function_exists( 'my_optional_modules_font_awesome' ) ) {
 }
 
 /**
-*
-* My Optional Modules stylesheet used throughout for the different modules
-*
-*/
+ *
+ * My Optional Modules stylesheet used throughout for the different modules
+ *
+ */
 if( !function_exists( 'my_optional_modules_main_stylesheet' ) ) {
 
 	function my_optional_modules_main_stylesheet() {
@@ -1855,26 +2008,6 @@ if(current_user_can('manage_options')){
 				</form>
 		</div>
 		<hr />
-		<div class="setting">
-				<div class="clear"><i class="fa fa-code"></i> <code>[mom_miniloop]</code>  inserts a loop of posts via shortcode.</div>
-				<span><code>meta=""</code>: a meta-key name. (Default: series)<br /></span>
-				<span><code>key=""</code>: a meta-key value. (Default: none)<br /></span>
-				<span><code>paging=""</code>: <em>1</em> to turn on, <em>0</em> to turn off. (Default: 0)<br /></span>
-				<span><code>show_link=""</code>: <em>1</em> to turn on, <em>0</em> to turn off. (Default: 1)<br /></span>
-				<span><code>link_content=""</code>: Text of the permalink to the post. (Default: none)<br /></span>
-				<span><code>amount=""</code>: How many posts to show in the loop. (Default: 4)<br /></span>
-				<span><code>style=""</code>: <em>columns, list, slider, tiled (Default: tiled)</em><br /></span>
-				<span><code>offset=""</code>: How many posts to skip ahead in the loop. (Default: 0)<br /></span>
-				<span><code>category=""</code>: Category ID(s) or names (comma-separated if multiple values). (Default: none)<br /></span>
-				<span><code>orderby=""</code>: Order posts in the loop by a <a href="//codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters">particular value</a>. (Default: post_date)<br /></span>
-				<span><code>order=""</code>: <em>ASC</em> (ascending) or <em>DESC</em> (descending) (Default: DESC)<br /></span>
-				<span><code>post_status=""</code>: Display posts based on their <a href="//codex.wordpress.org/Class_Reference/WP_Query#Status_Parameters">status</a>. (Default: publish)<br /></span>
-				<span><code>year=""</code>: A 4-digit year to pull posts from. (<em>123</em> for current year) (Default: none)<br /></span>
-				<span><code>month=""</code>: A 1-2 digit month to pull posts from. (1-12). (<em>123</em> for current month) (Default: none)<br /></span>
-				<span><code>day=""</code>: A 1-2 digit day to pull posts from. (1-31). (<em>123</em> for current day) (Default: none)<br /></span>
-				<span><code>cache=""</code>: Cache the results of this loop. <em>true</em> or <em>false</em>. (Default: false)<br /></span>
-		
-		</div>
 		<hr />
 		<div class="setting">
 			<p>
@@ -2106,7 +2239,33 @@ if(current_user_can('manage_options')){
 			</section>
 			<input id="momsesave" type="submit" value="Exclude them!" name="momsesave"></form>';?>		
 			</div>
-		<?php }?>
+		<?php }?>		
+		<hr />
+		<div class="setting">
+				<div class="clear"><i class="fa fa-code"></i> <code>[mom_attachments]</code> inserts a loop of recent images that link to their respective posts.</div>
+				<span><code>amount=""</code>: How many images to show. (Default: 1)<br /></span>
+				<span><code>class=""</code>: The .class of the links, for CSS purposes. (Default: none)<br /></span>
+		</div>
+		<div class="setting">
+				<div class="clear"><i class="fa fa-code"></i> <code>[mom_miniloop]</code>  inserts a loop of posts via shortcode.</div>
+				<span><code>meta=""</code>: a meta-key name. (Default: series)<br /></span>
+				<span><code>key=""</code>: a meta-key value. (Default: none)<br /></span>
+				<span><code>paging=""</code>: <em>1</em> to turn on, <em>0</em> to turn off. (Default: 0)<br /></span>
+				<span><code>show_link=""</code>: <em>1</em> to turn on, <em>0</em> to turn off. (Default: 1)<br /></span>
+				<span><code>link_content=""</code>: Text of the permalink to the post. (Default: none)<br /></span>
+				<span><code>amount=""</code>: How many posts to show in the loop. (Default: 4)<br /></span>
+				<span><code>style=""</code>: <em>columns, list, slider, tiled (Default: tiled)</em><br /></span>
+				<span><code>offset=""</code>: How many posts to skip ahead in the loop. (Default: 0)<br /></span>
+				<span><code>category=""</code>: Category ID(s) or names (comma-separated if multiple values). (Default: none)<br /></span>
+				<span><code>orderby=""</code>: Order posts in the loop by a <a href="//codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters">particular value</a>. (Default: post_date)<br /></span>
+				<span><code>order=""</code>: <em>ASC</em> (ascending) or <em>DESC</em> (descending) (Default: DESC)<br /></span>
+				<span><code>post_status=""</code>: Display posts based on their <a href="//codex.wordpress.org/Class_Reference/WP_Query#Status_Parameters">status</a>. (Default: publish)<br /></span>
+				<span><code>year=""</code>: A 4-digit year to pull posts from. (<em>123</em> for current year) (Default: none)<br /></span>
+				<span><code>month=""</code>: A 1-2 digit month to pull posts from. (1-12). (<em>123</em> for current month) (Default: none)<br /></span>
+				<span><code>day=""</code>: A 1-2 digit day to pull posts from. (1-31). (<em>123</em> for current day) (Default: none)<br /></span>
+				<span><code>cache=""</code>: Cache the results of this loop. <em>true</em> or <em>false</em>. (Default: false)<br /></span>
+		
+		</div>
 	</div>
 	<?php 
 	}
@@ -2171,6 +2330,65 @@ if( !function_exists( 'font_fa_shortcode' ) ) {
  * shortcode functionality
  *
  */
+if( !function_exists( 'mom_attachments_shortcode' ) ) {
+
+	function mom_attachments_shortcode( $atts ) {
+
+		global $post,$wp;
+		
+		/**
+		 * Shortcode attributes(to be set inside of the shortcode)
+		 * These attributes will be used as the default settings, which can be overridden by 
+		 * attributes set inside of the shortcode.
+		 */
+		extract(
+
+			shortcode_atts( array(
+
+				'amount' => 1,                // numerical value of how many attachments to return			
+				'class'  => 'mom_attachment'  // default class for the linked attachments
+
+			), $atts )
+
+		);
+
+		if( $amount ) $amount = intval( $amount );
+		if( $class  ) $class  = sanitize_text_field( $class );
+		
+		// Get all image attachments
+		$all_images = get_posts(
+
+			array(
+
+				'post_type' => 'attachment',
+				'numberposts' => $amount,
+				'post_mime_type ' => 'image',
+
+			)
+		);
+
+		$output = '';
+
+		foreach ( $all_images as $image ) {
+
+			$id               = $image->ID;
+			$parent_id        = $image->post_parent;
+			$parent_title     = get_the_title( $parent_id );
+			$parent_permalink = get_the_permalink( $parent_id );
+			$mime_type        = get_post_mime_type( $id );
+			$attachment       = wp_get_attachment_url($id, 'full');
+			if( 'image/jpeg' == $mime_type || 'image/png' == $mime_type || 'image/gif' == $mime_type ) {
+				$output .= '<a class="' . $class . '" href="' . $parent_permalink . '"><img src="' . $attachment . '" /></a>';
+			}
+
+		}
+
+		return $output;
+
+	}
+
+}
+
 if( !function_exists( 'mom_miniloop_shortcode' ) ) { 
 
 	function mom_miniloop_shortcode( $atts ) {
@@ -2254,25 +2472,25 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 		/**
 		 * Escape shortcode attributes before passing them to the script
 		 */
-		$thumbs        = intval( $thumbs );
-		$show_link     = intval( $show_link );
-		$amount        = intval( $amount );
-		$downsize      = intval( $downsize );
-		$offset        = intval( $offset );
-		$paging        = intval( $paging );
-		$related       = intval( $related );
-		$year          = intval( $year );
-		$month         = intval( $month );
-		$day           = intval( $day );
-		$link_content  = sanitize_text_field( $link_content );
-		$style         = sanitize_text_field( $style );
-		$category      = sanitize_text_field( $category );
-		$orderby       = sanitize_text_field( $orderby );
-		$order         = sanitize_text_field( $order );
-		$post_status   = sanitize_text_field( $post_status );
-		$cache_results = sanitize_text_field( $cache_results );
-		$meta          = sanitize_text_field( $meta );
-		$key           = sanitize_text_field( $key );
+		if( $thumbs )        $thumbs        = sanitize_text_field( $thumbs );
+		if( $show_link )     $show_link     = sanitize_text_field( $show_link );
+		if( $amount )        $amount        = sanitize_text_field( $amount );
+		if( $downsize )      $downsize      = sanitize_text_field( $downsize );
+		if( $offset )        $offset        = sanitize_text_field( $offset );
+		if( $paging )        $paging        = sanitize_text_field( $paging );
+		if( $related )       $related       = sanitize_text_field( $related );
+		if( $year )          $year          = sanitize_text_field( $year );
+		if( $month )         $month         = sanitize_text_field( $month );
+		if( $day )           $day           = sanitize_text_field( $day );
+		if( $link_content )  $link_content  = sanitize_text_field( $link_content );
+		if( $style )         $style         = sanitize_text_field( $style );
+		if( $category )      $category      = sanitize_text_field( $category );
+		if( $orderby )       $orderby       = sanitize_text_field( $orderby );
+		if( $order )         $order         = sanitize_text_field( $order );
+		if( $post_status )   $post_status   = sanitize_text_field( $post_status );
+		if( $cache_results ) $cache_results = sanitize_text_field( $cache_results );
+		if( $meta )          $meta          = sanitize_text_field( $meta );
+		if( $key )           $key           = sanitize_text_field( $key );
 		
 		if( 123 == $year ) { 
 
@@ -2484,7 +2702,6 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 						'paged'            => $paged,
 						'meta_query'       => array(
 								array(
-
 									'key'     => $meta,
 									'value'   => array( $key ),
 									'compare' => 'IN',
@@ -2573,423 +2790,424 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 
 		}
 		$myposts = get_posts( $args );
-		
-		if( $related ) {
+		$post_counter = 0;
+		foreach( $myposts as $post ) {
 
-			$post_counter = 0;
-
-			foreach( $myposts as $post ) {
-
-				$post_counter++;
-
-			}
-
-			if( $title && $post_counter ) {
-
-				echo '<h2 class="loopdeloopTitle">' . $title . '</h2>';
-
-			}
+			$post_counter++;
 
 		}
 
-		/**
-		 * [style="slider"]
-		 */
-		if( $style == strtolower('slider') ) {
-
-		if( 1 != $related ) {
-
-			$open .= '<div class="loopdeloopSlideContainer inner"><div class="inner">';
-
-			/**
-			 * Count the number of posts returned from the loop.
-			 * Since each thumbnail will be 500px in width, we can 
-			 * safely assume that posts * 500px will give us a container 
-			 * that is the right width to house all of the returned items
-			 * for our inner container.
-			 */
-			$post_counter = 0;
-
-			$open .= '<style>';
-
-			foreach( $myposts as $post ) {
-
-				$post_counter++;
-
-			}
-
-			$open .= '.loopdeloopRotation .inner { width:' . $post_counter * 500 . 'px; }</style>';
-
-		} else {
-
-			echo '<div class="loopdeloopSlideContainer inner"><div class="inner">';
-
-			/**
-			 * Count the number of posts returned from the loop.
-			 * Since each thumbnail will be 500px in width, we can 
-			 * safely assume that posts * 500px will give us a container 
-			 * that is the right width to house all of the returned items
-			 * for our inner container.
-			 */
-			$post_counter = 0;
-
-			echo '<style>';
-
-			foreach( $myposts as $post ) {
-
-				$post_counter++;
-
-			}
-
-			echo '.loopdeloopRotation .inner { width:' . $post_counter * 500 . 'px; }</style>';
+		if( 0 < $post_counter ) {
 		
-		}
+			if( $related ) {
 
-		}
+				if( $title && $post_counter ) {
 
-		/**
-		 * [style="columns"]
-		 */
-		if( $style == strtolower( 'columns' ) ) {
-
-			if( 1 != $related ) {
-
-				$open .= '<div class="loopdeloopColumns"><div>';
-
-			} else {
-
-				echo '<div class="loopdeloopColumns"><div>';
-
-			}
-
-		}
-		
-		/**
-		 * [style="list"]
-		 */
-		if( $style == strtolower( 'list' ) ) {
-		
-			if( 1 != $related ) {
-
-				$open .= '<div class="loopdeloopList"><div>';
-
-			} else {
-
-				echo '<div class="loopdeloopList"><div>';
-
-			}
-
-		}
-
-		/**
-		 * [style="tiled"]
-		 */
-		if( $style == strtolower( 'tiled' ) ) {
-		
-		if( 1 != $related ) {
-
-			$open .= '<div>';
-		
-		} else {
-
-			echo '<div>';
-
-		}
-
-		}
-		
-		
-		/**
-		 * Start the loop
-		 */
-		query_posts( $args );
-		
-		if( 1 != $related ) {
-			ob_start();
-		}
-		
-		if( have_posts() ): while( have_posts()) : the_post();
-
-		/**
-		 * Set up any post information that can only be gathered while inside of the loop
-		 */
-		$id            = get_the_ID();
-		$link_text     = '';
-		$link          = esc_url( get_permalink( $id ) );
-		$title         = get_the_title( $id );
-		$date          = get_the_date();
-		$comment_count = get_comments_number();
-		$since         = mom_timesince( $date );
-		$author        = get_the_author();
-
-		/**
-		 * Grab the category(s) associated with the post
-		 */
-		$categories = get_the_category( $id );
-		$separator = ' ';
-		$output = '';
-
-		/**
-		 * Set up link text, and determine whether or not to use custom link text
-		 * [link_content="Click me!"] would result in links that say "Click me!"
-		 * while the default is to just use the title of the post as the link text
-		 */
-		if( '' == $link_content ) {
-
-			$link_text_text = get_the_title( $id );
-
-		} else {
-		
-			$link_text_text = $link_content;
-
-		}
-		
-		if( $show_link == 1 ) {
-
-			$link_text = '<a class="mediaNotPresent" href="' . get_permalink( $id ) . '">' . $link_text_text . '</a>';
-
-		}
-
-		/**
-		 * Determine what post number we're currently on relative to the amount of posts 
-		 * in the loop; has nothing to do with the post's ID
-		 */
-		$recent_count++;
-
-		
-		/**
-		 * Grab the thumbnail associated with the post, and then fetch an appropriate URL 
-		 * based on whether we want the full image or a "downsized" image (thumbnail quality)
-		 * [downsize="1"] for thumbnail quality, while default is full
-		 */
-		$media = get_post_meta( $id, 'media', true );
-		$thumb_path = '';
-		if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
-
-			$post_thumbnail_id = get_post_thumbnail_id( $id );
-			
-			if( $downsize == 1 ) {
-
-				$thumb_array = image_downsize( $post_thumbnail_id, 'thumbnail' );
-				$thumb_path = $thumb_array[0];	
-
-			} else {
-
-				$thumb_path = wp_get_attachment_url( get_post_thumbnail_id( $id ) );
-
-			}
-
-		}
-
-		/**
-		 * [style="list"]
-		 */
-		if( $style == strtolower( 'list' ) ) {
-
-			echo '<section class="post' . $related_class . '"><div class="counter">' . $recent_count . '</div>';
-
-				if( $thumb_path ) {
-
-					echo '<div class="thumb"><img src="' . $thumb_path . '" /></div>';
+					echo '<h2 class="loopdeloopTitle">' . $title . '</h2>';
 
 				}
 
-				echo '<div class="text"><span class="title"><a href="' . $link . '">' . $title . '</a></span>';
-				
+			}
+
+			/**
+			 * [style="slider"]
+			 */
+			if( $style == strtolower('slider') ) {
+
+			if( 1 != $related ) {
+
+				$open .= '<div class="loopdeloopSlideContainer inner"><div class="inner">';
+
+				/**
+				 * Count the number of posts returned from the loop.
+				 * Since each thumbnail will be 500px in width, we can 
+				 * safely assume that posts * 500px will give us a container 
+				 * that is the right width to house all of the returned items
+				 * for our inner container.
+				 */
+				$post_counter = 0;
+
+				$open .= '<style>';
+
+				foreach( $myposts as $post ) {
+
+					$post_counter++;
+
+				}
+
+				$open .= '.loopdeloopRotation .inner { width:' . $post_counter * 500 . 'px; }</style>';
+
+			} else {
+
+				echo '<div class="loopdeloopSlideContainer inner"><div class="inner">';
+
+				/**
+				 * Count the number of posts returned from the loop.
+				 * Since each thumbnail will be 500px in width, we can 
+				 * safely assume that posts * 500px will give us a container 
+				 * that is the right width to house all of the returned items
+				 * for our inner container.
+				 */
+				$post_counter = 0;
+
+				echo '<style>';
+
+				foreach( $myposts as $post ) {
+
+					$post_counter++;
+
+				}
+
+				echo '.loopdeloopRotation .inner { width:' . $post_counter * 500 . 'px; }</style>';
+			
+			}
+
+			}
+
+			/**
+			 * [style="columns"]
+			 */
+			if( $style == strtolower( 'columns' ) ) {
+
 				if( 1 != $related ) {
 
-					echo '<span class="author">posted <date title="' . $date . '">' . $since . '</date> by ' . $author . ' to ';
-
-						if( $categories ) {
-
-							foreach( array_slice( $categories, 0, 1 ) as $category ) {
-
-								$output .= '<a href="'.get_category_link( $category->term_id ).'" title="' . esc_attr( sprintf( __( "View all posts in %s" ), $category->name ) ) . '">'.$category->cat_name.'</a>'.$separator;
-
-							}
-
-						echo trim( $output, $separator );
-
-						}
-
-						echo '</span><span class="meta"><a href="' . $link . '">' . $comment_count . ' comments</a></span>';
-
-				}
-				
-				echo '</div>
-			</section>';
-
-		}
-		
-		/**
-		 * [style="columns"]
-		 */
-		if( $style == strtolower( 'columns' ) ) {
-
-			echo '<div class="column' . $related_class . '"><div class="inner"';
-
-			if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
-
-				echo ' style="background-image:url(\'' . $thumb_path . '\');"';
-
-			}
-
-			echo '><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"></a><span class="link">' . $link_text . '<em><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"></a></em></span></div>';
-			echo '</div>';
-
-		}
-
-		/**
-		 * [style="slider"] 
-		 */
-		if( $style == strtolower( 'slider' ) ) {
-		
-				echo '<div class="slide"';
-				if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
-
-					echo ' style="background-image:url(\'' . $thumb_path . '\');"';
-
-				}			
-				echo '><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"><span class="title">'. $link_text_text . '</span></a></div>';
-
-		}
-
-		/**
-		 * [style="tiled"] 
-		 */
-		if( $style == strtolower('tiled') ) {
-
-			if( $recent_count == 1 ) {
-
-				$container = 'feature';
-				echo '<div class="feature">';
-
-			}
-			
-			if( $recent_count == 2 ) {
-
-				$container = 'second';
-				echo '<div class="' . $container . '">';
-
-			}
-			
-			if( $recent_count == 3 ) {
-
-				$container = 'secondThird';
-				echo '<div class="' . $container . '">';
-
-			}
-			
-			if( $recent_count <= 4 ) {
-
-				echo '<div class="thumbnailFull';
-
-			}
-			
-			if( $recent_count == 2 ) {
-
-				echo ' leftSmall';
-
-			}
-
-			if( $recent_count <= 4 ) {
-
-				echo '"';
-
-				if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
-
-					echo ' style="background-image:url(\'' . $thumb_path . '\');"';
-
-				}
-				
-				echo '>';
-				echo $link_text;
-
-			}
-			
-			echo '</div>';
-			if( $recent_count > 4 ) {
-
-				if( $recent_count % 3 == 0 ) {
-
-					$container = 'second leftSmall';
+					$open .= '<div class="loopdeloopColumns"><div>';
 
 				} else {
 
-					$container = 'secondThird';
+					echo '<div class="loopdeloopColumns"><div>';
 
 				}
 
-				echo '<div class="' . $container . '"><div class="thumbnailFull"';
+			}
+			
+			/**
+			 * [style="list"]
+			 */
+			if( $style == strtolower( 'list' ) ) {
+			
+				if( 1 != $related ) {
 
-				if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
+					$open .= '<div class="loopdeloopList"><div>';
+
+				} else {
+
+					echo '<div class="loopdeloopList"><div>';
+
+				}
+
+			}
+
+			/**
+			 * [style="tiled"]
+			 */
+			if( $style == strtolower( 'tiled' ) ) {
+			
+			if( 1 != $related ) {
+
+				$open .= '<div>';
+			
+			} else {
+
+				echo '<div>';
+
+			}
+
+			}
+			
+			
+			/**
+			 * Start the loop
+			 */
+			query_posts( $args );
+			
+			if( 1 != $related ) {
+				ob_start();
+			}
+			
+			if( have_posts() ): while( have_posts()) : the_post();
+
+			/**
+			 * Set up any post information that can only be gathered while inside of the loop
+			 */
+			$id            = get_the_ID();
+			$link_text     = '';
+			$link          = esc_url( get_permalink( $id ) );
+			$title         = get_the_title( $id );
+			$date          = get_the_date();
+			$comment_count = get_comments_number();
+			$since         = mom_timesince( $date );
+			$author        = get_the_author();
+
+			/**
+			 * Grab the category(s) associated with the post
+			 */
+			$categories = get_the_category( $id );
+			$separator = ' ';
+			$output = '';
+
+			/**
+			 * Set up link text, and determine whether or not to use custom link text
+			 * [link_content="Click me!"] would result in links that say "Click me!"
+			 * while the default is to just use the title of the post as the link text
+			 */
+			if( '' == $link_content ) {
+
+				$link_text_text = get_the_title( $id );
+
+			} else {
+			
+				$link_text_text = $link_content;
+
+			}
+			
+			if( $show_link == 1 ) {
+
+				$link_text = '<a class="mediaNotPresent" href="' . get_permalink( $id ) . '">' . $link_text_text . '</a>';
+
+			}
+
+			/**
+			 * Determine what post number we're currently on relative to the amount of posts 
+			 * in the loop; has nothing to do with the post's ID
+			 */
+			$recent_count++;
+
+			
+			/**
+			 * Grab the thumbnail associated with the post, and then fetch an appropriate URL 
+			 * based on whether we want the full image or a "downsized" image (thumbnail quality)
+			 * [downsize="1"] for thumbnail quality, while default is full
+			 */
+			$media = get_post_meta( $id, 'media', true );
+			$thumb_path = '';
+			if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
+
+				$post_thumbnail_id = get_post_thumbnail_id( $id );
 				
-					$post_thumbnail_id = get_post_thumbnail_id( $id );
+				if( $downsize == 1 ) {
+
+					$thumb_array = image_downsize( $post_thumbnail_id, 'thumbnail' );
+					$thumb_path = $thumb_array[0];	
+
+				} else {
+
+					$thumb_path = wp_get_attachment_url( get_post_thumbnail_id( $id ) );
+
+				}
+
+			}
+
+			/**
+			 * [style="list"]
+			 */
+			if( $style == strtolower( 'list' ) ) {
+
+				echo '<section class="post' . $related_class . '"><div class="counter">' . $recent_count . '</div>';
+
+					if( $thumb_path ) {
+
+						echo '<div class="thumb"><img src="' . $thumb_path . '" /></div>';
+
+					}
+
+					echo '<div class="text"><span class="title"><a href="' . $link . '">' . $title . '</a></span>';
 					
-					if( $downsize == 1 ) {
+					if( 1 != $related ) {
 
-						$thumb_array = image_downsize( $post_thumbnail_id, 'thumbnail' );
-						$thumb_path = $thumb_array[0];	
+						echo '<span class="author">posted <date title="' . $date . '">' . $since . '</date> by ' . $author . ' to ';
 
-					} else {
+							if( $categories ) {
 
-						$thumb_path = wp_get_attachment_url( get_post_thumbnail_id( $id ) );
+								foreach( array_slice( $categories, 0, 1 ) as $category ) {
+
+									$output .= '<a href="'.get_category_link( $category->term_id ).'" title="' . esc_attr( sprintf( __( "View all posts in %s" ), $category->name ) ) . '">'.$category->cat_name.'</a>'.$separator;
+
+								}
+
+							echo trim( $output, $separator );
+
+							}
+
+							echo '</span><span class="meta"><a href="' . $link . '">' . $comment_count . ' comments</a></span>';
 
 					}
 					
+					echo '</div>
+				</section>';
+
+			}
+			
+			/**
+			 * [style="columns"]
+			 */
+			if( $style == strtolower( 'columns' ) ) {
+
+				echo '<div class="column' . $related_class . '"><div class="inner"';
+
+				if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
+
 					echo ' style="background-image:url(\'' . $thumb_path . '\');"';
+
 				}
 
-				echo '>';
-				echo $link_text . '</div>';
-			}
-			
-			if( $recent_count == 4 ) {
-
-				echo '</div></div>';
+				echo '><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"></a><span class="link">' . $link_text . '<em><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"></a></em></span></div>';
+				echo '</div>';
 
 			}
+
+			/**
+			 * [style="slider"] 
+			 */
+			if( $style == strtolower( 'slider' ) ) {
 			
+					echo '<div class="slide"';
+					if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
 
+						echo ' style="background-image:url(\'' . $thumb_path . '\');"';
+
+					}			
+					echo '><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"><span class="title">'. $link_text_text . '</span></a></div>';
+
+			}
+
+			/**
+			 * [style="tiled"] 
+			 */
+			if( $style == strtolower('tiled') ) {
+
+				if( $recent_count == 1 ) {
+
+					$container = 'feature';
+					echo '<div class="feature">';
+
+				}
+				
+				if( $recent_count == 2 ) {
+
+					$container = 'second';
+					echo '<div class="' . $container . '">';
+
+				}
+				
+				if( $recent_count == 3 ) {
+
+					$container = 'secondThird';
+					echo '<div class="' . $container . '">';
+
+				}
+				
+				if( $recent_count <= 4 ) {
+
+					echo '<div class="thumbnailFull';
+
+				}
+				
+				if( $recent_count == 2 ) {
+
+					echo ' leftSmall';
+
+				}
+
+				if( $recent_count <= 4 ) {
+
+					echo '"';
+
+					if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
+
+						echo ' style="background-image:url(\'' . $thumb_path . '\');"';
+
+					}
+					
+					echo '>';
+					echo $link_text;
+
+				}
+				
+				echo '</div>';
+				if( $recent_count > 4 ) {
+
+					if( $recent_count % 3 == 0 ) {
+
+						$container = 'second leftSmall';
+
+					} else {
+
+						$container = 'secondThird';
+
+					}
+
+					echo '<div class="' . $container . '"><div class="thumbnailFull"';
+
+					if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
+					
+						$post_thumbnail_id = get_post_thumbnail_id( $id );
+						
+						if( $downsize == 1 ) {
+
+							$thumb_array = image_downsize( $post_thumbnail_id, 'thumbnail' );
+							$thumb_path = $thumb_array[0];	
+
+						} else {
+
+							$thumb_path = wp_get_attachment_url( get_post_thumbnail_id( $id ) );
+
+						}
+						
+						echo ' style="background-image:url(\'' . $thumb_path . '\');"';
+					}
+
+					echo '>';
+					echo $link_text . '</div>';
+				}
+				
+				if( $recent_count == 4 ) {
+
+					echo '</div></div>';
+
+				}
+				
+
+			}
+
+
+			/**
+			 * End the loop
+			 */
+			endwhile;
+
+			if( 1 == $paging ) {
+
+				echo '<div class="loopdeloopNavigation">'; posts_nav_link('&#8734;','Previous','Next'); echo '</div>';
+
+			}
+
+			else;
+			endif;
+
+			/**
+			 * Close all open containers associated with this miniloop
+			 */
+			if( 1 != $related ) {
+
+				$close = '</div></div>';
+
+			} else { 
+
+				echo '</div></div></div>';
+
+			}
+
+			/**
+			 * Reset all post data from previous loop
+			 */
+			wp_reset_query();
+			
+			if( 1 != $related ) {
+				return $open . ob_get_clean() . $close;
+			} else { }
+			
 		}
-
-
-		/**
-		 * End the loop
-		 */
-		endwhile;
-
-		if( 1 == $paging ) {
-
-			echo '<div class="loopdeloopNavigation">'; posts_nav_link('&#8734;','Previous','Next'); echo '</div>';
-
-		}
-
-		else;
-		endif;
-
-		/**
-		 * Close all open containers associated with this miniloop
-		 */
-		if( 1 != $related ) {
-
-			$close = '</div></div></div>';
-
-		} else { 
-
-			echo '</div></div></div>';
-
-		}
-
-		/**
-		 * Reset all post data from previous loop
-		 */
-		wp_reset_query();
-		
-		if( 1 != $related ) {
-			return $open . ob_get_clean() . $close;
-		} else { }
-		
 	}
 
 }
@@ -3001,6 +3219,9 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 
 add_filter( 'the_content', 'do_shortcode', 'mom_miniloop' );
 add_shortcode( 'mom_miniloop', 'mom_miniloop_shortcode' );
+
+add_filter( 'the_content', 'do_shortcode', 'mom_attachments' );
+add_shortcode( 'mom_attachments', 'mom_attachments_shortcode' );
 
 
 /**
