@@ -94,8 +94,10 @@
 			padding: 5px; 
 			width: 30%; 
 		}
+		select#mompaf_0,
 		.MOMSettings .setting form select {
 			clear: both; 
+			display: block;
 			margin: 5px 0 -10px;
 			width: 100%;
 		}

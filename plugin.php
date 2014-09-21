@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.7.1
+ * Version: 5.7.2
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -34,12 +34,6 @@
  *
  */
 
-/**
- *
- * ---------------------------------------------------------------------------------------
- *
- */
-
 define( 'MyOptionalModules', true );
 require_once( ABSPATH . 'wp-includes/pluggable.php' );
 add_action( 'wp', 'my_optional_modules_scripts' );
@@ -48,25 +42,13 @@ add_action( 'admin_enqueue_scripts', 'my_optional_modules_font_awesome' );
 add_action( 'wp_print_styles', 'my_optional_modules_main_stylesheet' );
 add_action( 'after_setup_theme', 'myoptionalmodules_postformats' );
 
-/**
- *
- * ---------------------------------------------------------------------------------------
- *
- */
 
-/**
- *
- * Currently, the plugin treats users who are not logged in and subscribers as the 
- * level (which may or may not be changed sometime in the future)
- *
- */
 if( is_user_logged_in() ) {
 
-	if( current_user_can( 'read' ) )                   $user_level = 0;	// Subscriber
-	if( current_user_can( 'delete_posts' ) )           $user_level = 1;	// 
-	if( current_user_can( 'delete_published_posts' ) ) $user_level = 2;	// 
-	if( current_user_can( 'read_private_pages' ) )     $user_level = 4;	// 
-	if( current_user_can( 'edit_dashboard' ) )         $user_level = 7;	// Admin
+	if( current_user_can( 'read' ) )                   $user_level = 1;	// Subscriber
+	if( current_user_can( 'delete_posts' ) )           $user_level = 2;	// 
+	if( current_user_can( 'delete_published_posts' ) ) $user_level = 3;	// 
+	if( current_user_can( 'edit_dashboard' ) )         $user_level = 4;	// Admin
 	
 } else {
 
@@ -74,11 +56,6 @@ if( is_user_logged_in() ) {
 	
 }
 
-/**
- *
- * ---------------------------------------------------------------------------------------
- *
- */
 
 /**
  *
@@ -89,7 +66,7 @@ if( is_user_logged_in() ) {
  * Read more at: //php.net/manual/en/function.inet-pton.php
  *
  */
-if( inet_pton( $_SERVER['REMOTE_ADDR'] ) === false ) {
+if( inet_pton( $_SERVER[ 'REMOTE_ADDR' ] ) === false ) {
 
 	$ipaddress = false;
 	
@@ -143,7 +120,7 @@ if( !function_exists ( 'myoptionalmodules_checkdnsbl' ) ) {
 
 		if( $ipaddress ) {
 
-			$reverse_ip=implode(".",array_reverse(explode(".",$ipaddress)));
+			$reverse_ip=implode(".",array_reverse(explode(".",$ipaddress) ) );
 
 			foreach($dnsbl_lookup as $host){
 
@@ -186,7 +163,7 @@ if( !function_exists ( 'myoptionalmodules_checkdnsbl' ) ) {
 	 * level 7 (likely an admin account).
 	 *
 	 */
-	if( 7 != $user_level ) {
+	if( 4 != $user_level ) {
 
 		$ipaddress = myoptionalmodules_checkdnsbl( $ipaddress );
 
@@ -220,11 +197,6 @@ if( !function_exists ( 'myoptionalmodules_checkdnsbl' ) ) {
 
 
 /**
- *
- * ---------------------------------------------------------------------------------------
- *
- */
-/**
  * custom Media Embed with oembed fallback
  * usage: new mom_mediaEmbed(url);
  */
@@ -249,7 +221,7 @@ class mom_mediaEmbed {
 			$timeStamp = '';
 			if( strpos( $chck, 't=' ) !== false && strpos( $chck, 'list=' ) === false ) {
 				$url_parse = parse_url( $chck );
-				$timeStamp = sanitize_text_field( str_replace( '038;t=', '', $url_parse['fragment']));
+				$timeStamp = sanitize_text_field( str_replace( '038;t=', '', $url_parse[ 'fragment' ] ) );
 				$minutes   = 0;
 				$seconds   = 0;
 				if( strpos( $timeStamp, 'm' ) !== false && strpos( $timeStamp, 's' ) !== false ){
@@ -269,7 +241,7 @@ class mom_mediaEmbed {
 				$timeStamp = $minutes + $seconds;
 
 			}
-			if ( preg_match ('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match ) ) {
+			if ( preg_match ( '%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match ) ) {
 				$match[1] = sanitize_text_field ( $match[1] );
 				$video_id = $match[1];
 				$url      = $video_id;
@@ -364,11 +336,6 @@ class mom_mediaEmbed {
 
 
 
-/**
- *
- * ---------------------------------------------------------------------------------------
- *
- */
 if( !function_exists( 'my_optional_modules_share_icons' ) ) { 
 
 	function my_optional_modules_share_icons( $content ) { 
@@ -403,7 +370,7 @@ if( !function_exists( 'my_optional_modules_share_icons' ) ) {
 					$output .='<a class="facebook fa fa-facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '"></a>';
 				}
 				if( 1 == get_option( 'MOM_enable_share_email' ) ) {
-					$output .='<a class="email fa fa-envelope" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[' . get_the_permalink() . ']"></a>';
+					$output .='<a class="email fa fa-envelope" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]"></a>';
 				}
 			$output .='</span>';
 			
@@ -423,19 +390,14 @@ if( !function_exists( 'my_optional_modules_share_icons' ) ) {
 
 	}
 	
-
 }
+
 if( 1 == get_option( 'mommaincontrol_momshare' ) ) {
 
 	add_filter( 'the_content', 'my_optional_modules_share_icons' );
 
 }
 
-/**
- *
- * ---------------------------------------------------------------------------------------
- *
- */
 if( !function_exists( 'my_optional_modules_protocol' ) ) {
 
 	function my_optional_modules_protocol( $url ) {
@@ -471,32 +433,9 @@ if( !function_exists( 'my_optional_modules_scripts' ) ) {
 
 		add_action( 'wp_enqueue_scripts', 'mom_jquery' );
 
-		function MOMScriptsFooter(){			
-
-			echo '
-			<script type=\'text/javascript\'>';
-				echo 'jQuery(document).ready(function($){';
-
-					echo 'jQuery(".recentPostRotationFull .thumbnailFull a.mediaNotPresent").fitText();';
-					
-
-				echo '});</script>';
-
-			
-
-		}
-
-		add_action( 'wp_footer', 'MOMScriptsFooter', 99999 );
-
 	}
 
 }
-
-/**
- *
- * ---------------------------------------------------------------------------------------
- *
- */
 
 $date_day                          = date( 'D' );
 $date_y                            = date( 'Y' );
@@ -514,12 +453,6 @@ $mommodule_lazyload                = intval( get_option( 'mommaincontrol_lazyloa
 $mommodule_versionnumbers          = intval( get_option( 'mommaincontrol_versionnumbers' ) );
 $horizontal_galleries              = intval( get_option( 'MOM_themetakeover_horizontal_galleries' ) );
 $momthemetakeover_ajaxcomments     = intval( get_option( 'MOM_themetakeover_ajaxifycomments' ) );
-
-/**
- *
- * ---------------------------------------------------------------------------------------
- *
- */
 
 if( 1 == $mommodule_exclude ) {
 
@@ -583,7 +516,7 @@ if( 1 == $mommodule_exclude ) {
 			}
 
 			$rss_day_1     = implode( $rss_day );
-			$rssday        = explode( ',', str_replace (' ', '', $rss_day_1 ) );
+			$rssday        = explode( ',', str_replace ( ' ', '', $rss_day_1 ) );
 			$rss_day_cat   = explode( ',', $MOM_Exclude_Cats_Day );
 
 			if( is_array( $rss_day_cat ) ) {
@@ -668,24 +601,26 @@ if( 1 == $mommodule_exclude ) {
 
 				if( $user_level == 0 ) $loggedOutCats = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
 				if( $user_level == 1 ) $loggedOutCats = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-				if( $user_level == 2 ) $loggedOutCats = $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-				if( $user_level == 7 ) $loggedOutCats = $MOM_Exclude_level7Categories;
+				if( $user_level == 2 ) $loggedOutCats = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+				if( $user_level == 3 ) $loggedOutCats = $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+				if( $user_level == 4 ) $loggedOutCats = $MOM_Exclude_level7Categories;
 
 				if( $user_level == 0 ) $loggedOutTags = $MOM_Exclude_level0Tags . ',' . $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
 				if( $user_level == 1 ) $loggedOutTags = $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
-				if( $user_level == 2 ) $loggedOutTags = $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
-				if( $user_level == 7 ) $loggedOutTags = $MOM_Exclude_level7Tags;	
+				if( $user_level == 2 ) $loggedOutTags = $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
+				if( $user_level == 3 ) $loggedOutTags = $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
+				if( $user_level == 4 ) $loggedOutTags = $MOM_Exclude_level7Tags;	
 
-				$hideLoggedOutCats = explode ( ',', str_replace (' ', '', $c_1 ) );
-				$hideLoggedOutTags = explode ( ',', str_replace (' ', '', $t11 ) );
+				$hideLoggedOutCats = explode ( ',', str_replace ( ' ', '', $c_1 ) );
+				$hideLoggedOutTags = explode ( ',', str_replace ( ' ', '', $t11 ) );
 				$lc1               = array_unique ( explode ( ',', $loggedOutCats ) );
 				foreach( $lc1 as &$LC1 ) { $LC1 = $LC1 . ','; }
 				$lc_1              = rtrim ( implode ( $lc1 ), ',' );
-				$hideLoggedOutCats = explode (',', str_replace ( ' ', '', $loggedOutCats ) );
-				$lt1               = array_unique ( explode (',', $loggedOutTags ) );
+				$hideLoggedOutCats = explode ( ',', str_replace ( ' ', '', $loggedOutCats ) );
+				$lt1               = array_unique ( explode ( ',', $loggedOutTags ) );
 				foreach( $lt1 as &$LT1 ) { $LT1 = $LT1 .','; }
 				$lt11              = rtrim ( implode ( $lt1 ), ',' );
-				$hideLoggedOutTags = explode ( ',', str_replace (' ', '', $lt11 ) );
+				$hideLoggedOutTags = explode ( ',', str_replace ( ' ', '', $lt11 ) );
 
 			}
 
@@ -734,7 +669,7 @@ if( 1 == $mommodule_exclude ) {
 			}
 			
 			$c_1               = rtrim ( implode ( $c1 ), ',' );
-			$hideUserCats      = explode (',', str_replace (' ', '', $c_1 ) );
+			$hideUserCats      = explode ( ',', str_replace ( ' ', '', $c_1 ) );
 
 			foreach( $t1 as &$T1 ) { 
 
@@ -788,11 +723,6 @@ if( 1 == $mommodule_exclude ) {
 
 }
 
-/**
- *
- * ---------------------------------------------------------------------------------------
- *
- */
 if( 1 == $mommodule_fontawesome ) {
 
 	add_action( 'wp_enqueue_scripts', 'myoptionalmodules_scripts' );
@@ -871,16 +801,11 @@ if( get_option( 'mompaf_post' ) ) {
 
 }
 
-/**
- *
- * ---------------------------------------------------------------------------------------
- *
- */
 if( !function_exists( 'mom_get_all_category_ids' ) ) { 
 
 	function mom_get_all_category_ids() {
 		if ( ! $cat_ids = wp_cache_get( 'all_category_ids', 'category' ) ) {
-			$cat_ids = get_terms( 'category', array('fields' => 'ids', 'get' => 'all') );
+			$cat_ids = get_terms( 'category', array( 'fields' => 'ids', 'get' => 'all' ) );
 			wp_cache_add( 'all_category_ids', $cat_ids, 'category' );
 		}
 		return $cat_ids;
@@ -1024,12 +949,12 @@ if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ) {
 		static $instance = 0;
 		$instance++;
 
-		if ( ! empty( $attr['ids'] ) ) {
+		if ( ! empty( $attr[ 'ids' ] ) ) {
 
 			// 'ids' is explicitly ordered, unless you specify otherwise.
-			if ( empty( $attr['orderby'] ) )
-				$attr['orderby'] = 'post__in';
-			$attr['include'] = $attr['ids'];
+			if ( empty( $attr[ 'orderby' ] ) )
+				$attr[ 'orderby' ] = 'post__in';
+			$attr[ 'include' ] = $attr[ 'ids' ];
 
 		}
 
@@ -1051,11 +976,11 @@ if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ) {
 			return $output;
 
 		// We're trusting author input, so let's at least make sure it looks like a valid orderby statement
-		if ( isset( $attr['orderby'] ) ) {
+		if ( isset( $attr[ 'orderby' ] ) ) {
 
-			$attr['orderby'] = sanitize_sql_orderby( $attr['orderby'] );
-			if ( !$attr['orderby'] )
-				unset( $attr['orderby'] );
+			$attr[ 'orderby' ] = sanitize_sql_orderby( $attr[ 'orderby' ] );
+			if ( !$attr[ 'orderby' ] )
+				unset( $attr[ 'orderby' ] );
 
 		}
 
@@ -1074,14 +999,14 @@ if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ) {
 			'exclude'    => '',
 			'link'       => ''
 
-		), $attr, 'gallery'));
+		), $attr, 'gallery' ) );
 
 		$id = intval( $id );
 		if ( 'RAND' == $order )
 			$orderby = 'none';
 
 		if ( !empty($include) ) {
-			$_attachments = get_posts( array('include' => $include, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
+			$_attachments = get_posts( array( 'include' => $include, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
 
 			$attachments = array();
 
@@ -1092,11 +1017,11 @@ if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ) {
 
 		} elseif ( !empty($exclude) ) {
 
-			$attachments = get_children( array('post_parent' => $id, 'exclude' => $exclude, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
+			$attachments = get_children( array( 'post_parent' => $id, 'exclude' => $exclude, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
 
 		} else {
 
-			$attachments = get_children( array('post_parent' => $id, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
+			$attachments = get_children( array( 'post_parent' => $id, 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
 
 		}
 
@@ -1210,9 +1135,9 @@ if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ) {
 			$image_meta  = wp_get_attachment_metadata( $id );
 
 			$orientation = '';
-			if ( isset( $image_meta['height'], $image_meta['width'] ) )
+			if ( isset( $image_meta[ 'height' ], $image_meta[ 'width' ] ) )
 		
-				$orientation = ( $image_meta['height'] > $image_meta['width'] ) ? 'portrait' : 'landscape';
+				$orientation = ( $image_meta[ 'height' ] > $image_meta[ 'width' ] ) ? 'portrait' : 'landscape';
 
 			$output .= "<{$itemtag} class='gallery-item'>";
 			$output .= "
@@ -1301,7 +1226,7 @@ if( !function_exists( 'my_optional_modules_main_stylesheet' ) ) {
 
 	function my_optional_modules_main_stylesheet() {
 	
-		$myStyleFile = WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules05568.css';
+		$myStyleFile = WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules.css';
 		$myStyleFile = my_optional_modules_protocol( $myStyleFile );
 		wp_register_style( 'my_optional_modules', $myStyleFile );
 		wp_enqueue_style( 'my_optional_modules' );
@@ -1390,6 +1315,58 @@ if( !function_exists( 'myoptionalmodules_disabledatearchives' ) ) {
 
 }
 
+/**
+ * Navigation link classes
+ *
+ */
+if( '' != get_option( 'mom_previous_link_class' ) ) {
+	if( !function_exists( 'mom_previous_link_class' ) ) {
+		add_filter( 'previous_posts_link_attributes', 'mom_previous_link_class' );
+		function mom_previous_link_class() {
+			return 'class="' . get_option( 'mom_previous_link_class' ) . '"';
+		}
+	}
+	if( !function_exists( 'mom_previous_link' ) ) {
+		add_filter( 'previous_post_link', 'mom_previous_link' );
+		function mom_previous_link( $output ) {
+			$class = 'class="' . get_option( 'mom_previous_link_class' ) . '"';
+			return str_replace( '<a href=', '<a '.$class.' href=', $output);
+		}
+	}
+}
+if( '' != get_option( 'mom_next_link_class' ) ) {
+	if( !function_exists( 'mom_next_link_class' ) ) {
+		add_filter( 'next_posts_link_attributes', 'mom_next_link_class' );
+		function mom_next_link_class() {
+			return 'class="' . get_option( 'mom_next_link_class' ) . '"';
+		}
+	}
+	if( !function_exists( 'mom_next_link' ) ) {
+		add_filter( 'next_post_link', 'mom_next_link' );
+		function mom_next_link( $output ) {
+			$class = 'class="' . get_option( 'mom_next_link_class' ) . '"';
+			return str_replace( '<a href=', '<a '.$class.' href=', $output);	
+		}
+	}
+}
+
+/**
+ * Read More... link content
+ *
+ */
+if( '' != get_option( 'mom_readmore_content' ) ) {
+	if( !function_exists( 'mom_excerpt_more' ) ) {
+		add_filter( 'the_content_more_link', 'mom_excerpt_more' );
+		function mom_excerpt_more( $more ) {
+			if( '%blank%' == get_option( 'mom_readmore_content' ) ) {
+				return '';
+			} else {
+				return '<a href="' . get_permalink() . '">' . sanitize_text_field( get_option( 'mom_readmore_content' ) ) . '</a>';
+			}
+		}
+	}
+}
+
 if( !function_exists( 'myoptionalmodules_excludecategories' ) ) {
 
 	function myoptionalmodules_excludecategories(){
@@ -1411,8 +1388,9 @@ if( !function_exists( 'myoptionalmodules_excludecategories' ) ) {
 
 			if( 0 == $user_level ) $loggedOutCats = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
 			if( 1 == $user_level ) $loggedOutCats = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-			if( 2 == $user_level ) $loggedOutCats = $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-			if( 7 == $user_level ) $loggedOutCats = $MOM_Exclude_level7Categories;
+			if( 2 == $user_level ) $loggedOutCats = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+			if( 3 == $user_level ) $loggedOutCats = $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+			if( 4 == $user_level ) $loggedOutCats = $MOM_Exclude_level7Categories;
 			
 			$c1 = explode( ',', $loggedOutCats );
 			foreach( $c1 as &$C1 ){ $C1 = $C1 . ','; }
@@ -1448,7 +1426,7 @@ if( !function_exists( 'myoptionalmodules_postasfront' ) ) {
 
 	function myoptionalmodules_postasfront(){
 
-		if( is_home() && 'off' != get_option('mompaf_post' ) ) {
+		if( is_home() && 'off' != get_option( 'mompaf_post' ) ) {
 
 			if( is_numeric( get_option( 'mompaf_post' ) ) ) {
 
@@ -1461,7 +1439,7 @@ if( !function_exists( 'myoptionalmodules_postasfront' ) ) {
 			}
 
 			if( have_posts() ):the_post();
-			header('location:' . esc_url( get_permalink( $mompaf_front) ) ); 
+			header( 'location:' . esc_url( get_permalink( $mompaf_front) ) ); 
 			exit; 
 			endif;
 
@@ -1509,11 +1487,22 @@ if( !function_exists( 'myoptionalmodules_postformats' ) ) {
 
 }
 
-/**
- *
- * ---------------------------------------------------------------------------------------
- *
- */
+if( !function_exists( 'myoptionalmodules_randomget' ) ) {
+	if( '' != get_option( 'mom_random_get' ) ) {
+		function myoptionalmodules_randomget() {
+			$random = sanitize_text_field( get_option( 'mom_random_get' ) );
+			if( isset( $_GET[ $random ] ) ) {
+				$args = array( 'numberposts' => 1, 'post_type' => 'post', 'post_status' => 'publish', 'orderby' => 'rand' );
+				$get_all = get_posts( $args );
+				foreach ($get_all as $all_posts) {
+					$random_post=$all_posts->ID;
+				}
+				header('location:'.esc_url(get_permalink($random_post)));exit;
+			}
+		}
+		add_action( 'wp', 'myoptionalmodules_randomget' );
+	}
+}
 
 if( current_user_can( 'manage_options' ) ) {
 
@@ -1570,7 +1559,11 @@ if( current_user_can( 'manage_options' ) ) {
 			'MOM_enable_share_google',
 			'MOM_enable_share_twitter',
 			'MOM_enable_share_facebook',
-			'MOM_enable_share_email'
+			'MOM_enable_share_email',
+			'mom_next_link_class',
+			'mom_previous_link_class',
+			'mom_readmore_content',
+			'mom_random_get'
 
 		);
 
@@ -1582,57 +1575,73 @@ if( current_user_can( 'manage_options' ) ) {
 
 	} else {
 
+		if( isset( $_POST[ 'mom_random_get_submit' ] ) && check_admin_referer( 'mom_random_get_form' ) ) {
+		
+			$_REQUEST[ 'randomget' ] = sanitize_text_field( $_REQUEST[ 'randomget' ] );
+			update_option( 'mom_random_get', $_REQUEST[ 'randomget' ] );
+		
+		}
+	
 		if( isset( $_POST[ 'mom_protectrss_mode_submit' ] ) && check_admin_referer( 'protectrss' ) ) {
 
-			update_option('mommaincontrol_protectrss', $_REQUEST['protectrss']);
+			$_REQUEST[ 'protectrss' ] = sanitize_text_field( $_REQUEST[ 'protectrss' ] );
+			update_option( 'mommaincontrol_protectrss', $_REQUEST[ 'protectrss' ] );
 
 		}
 
 		if( isset( $_POST[ 'mom_footerscripts_mode_submit' ] ) && check_admin_referer( 'footerscripts' ) ) {
 		
-			update_option('mommaincontrol_footerscripts', $_REQUEST['footerscripts']);
+			$_REQUEST[ 'footerscripts' ] = sanitize_text_field( $_REQUEST[ 'footerscripts' ] );
+			update_option( 'mommaincontrol_footerscripts', $_REQUEST[ 'footerscripts' ] );
 
 		}
 
 		if( isset( $_POST[ 'mom_author_archives_mode_submit' ] ) && check_admin_referer( 'authorarchives' ) ) { 
 
-			update_option('mommaincontrol_authorarchives', $_REQUEST['authorarchives']);
+			$_REQUEST[ 'authorarchives' ] = sanitize_text_field( $_REQUEST[ 'authorarchives' ] );
+			update_option( 'mommaincontrol_authorarchives', $_REQUEST[ 'authorarchives' ] );
 
 		}
 
 		if( isset( $_POST[ 'mom_date_archives_mode_submit' ] ) && check_admin_referer( 'datearchives' ) ) { 
 
-			update_option('mommaincontrol_datearchives', $_REQUEST['datearchives']);
+			$_REQUEST[ 'datearchives' ] = sanitize_text_field( $_REQUEST[ 'datearchives' ] );
+			update_option( 'mommaincontrol_datearchives', $_REQUEST[ 'datearchives' ] );
 
 		}
 
 		if( isset( $_POST[ 'mom_comments_mode_submit' ] ) && check_admin_referer( 'momComments' ) ) { 
 
-			update_option('mommaincontrol_comments', $_REQUEST['comments']);
+			$_REQUEST[ 'comments' ] = sanitize_text_field( $_REQUEST[ 'comments' ] );		
+			update_option( 'mommaincontrol_comments', $_REQUEST[ 'comments' ] );
 
 		}
 
 		if( isset( $_POST[ 'mom_dnsbl_mode_submit' ] ) && check_admin_referer( 'momDNSBL' ) ) {
 
-			update_option('mommaincontrol_dnsbl', $_REQUEST['dnsbl']);
+			$_REQUEST[ 'dnsbl' ] = sanitize_text_field( $_REQUEST[ 'dnsbl' ] );
+			update_option( 'mommaincontrol_dnsbl', $_REQUEST[ 'dnsbl' ] );
 
 		}
 
 		if( isset( $_POST[ 'mom_ajax_comments_mode_submit' ] ) && check_admin_referer( 'momAjaxComments' ) ) { 
 
-			update_option('MOM_themetakeover_ajaxcomments', $_REQUEST['ajaxify']);
+			$_REQUEST[ 'ajaxify' ] = sanitize_text_field( $_REQUEST[ 'ajaxify' ] );
+			update_option( 'MOM_themetakeover_ajaxcomments', $_REQUEST[ 'ajaxify' ] );
 
 		}
 
 		if( isset( $_POST[ 'mom_exclude_mode_submit' ] ) && check_admin_referer( 'momExclude' ) ) { 
 
-			update_option('mommaincontrol_momse', $_REQUEST['exclude']);
+			$_REQUEST[ 'exclude' ] = sanitize_text_field( $_REQUEST[ 'exclude' ] );
+			update_option( 'mommaincontrol_momse', $_REQUEST[ 'exclude' ] );
 
 		}
 
 		if( isset( $_POST[ 'mom_share_mode_submit' ] ) && check_admin_referer( 'momShare' ) ) { 
 
-			update_option('mommaincontrol_momshare', $_REQUEST['share']);
+			$_REQUEST[ 'share' ] = sanitize_text_field( $_REQUEST[ 'share' ] );
+			update_option( 'mommaincontrol_momshare', $_REQUEST[ 'share' ] );
 
 		}
 
@@ -1640,32 +1649,38 @@ if( current_user_can( 'manage_options' ) ) {
 
 			if( isset( $_POST[ 'MOM_enable_share_top' ] ) && check_admin_referer( 'momShareTop' ) ) { 
 
-				update_option('MOM_enable_share_top', $_REQUEST['top']);
+				$_REQUEST[ 'top' ] = sanitize_text_field( $_REQUEST[ 'top' ] );
+				update_option( 'MOM_enable_share_top', $_REQUEST[ 'top' ] );
 
 			}
 			if( isset( $_POST[ 'MOM_enable_share_reddit' ] ) && check_admin_referer( 'momShareReddit' ) ) { 
 
-				update_option('MOM_enable_share_reddit', $_REQUEST['reddit']);
+				$_REQUEST[ 'reddit' ] = sanitize_text_field( $_REQUEST[ 'reddit' ] );
+				update_option( 'MOM_enable_share_reddit', $_REQUEST[ 'reddit' ] );
 
 			}
 			if( isset( $_POST[ 'MOM_enable_share_twitter' ] ) && check_admin_referer( 'momShareTwitter' ) ) { 
 
-				update_option('MOM_enable_share_twitter', $_REQUEST['twitter']);
+				$_REQUEST[ 'twitter' ] = sanitize_text_field( $_REQUEST[ 'twitter' ] );
+				update_option( 'MOM_enable_share_twitter', $_REQUEST[ 'twitter' ] );
 
 			}
 			if( isset( $_POST[ 'MOM_enable_share_email' ] ) && check_admin_referer( 'momShareEmail' ) ) { 
 
-				update_option('MOM_enable_share_email', $_REQUEST['email']);
+				$_REQUEST[ 'email' ] = sanitize_text_field( $_REQUEST[ 'email' ] );
+				update_option( 'MOM_enable_share_email', $_REQUEST[ 'email' ] );
 
 			}
 			if( isset( $_POST[ 'MOM_enable_share_google' ] ) && check_admin_referer( 'momShareGoogle' ) ) { 
 
-				update_option('MOM_enable_share_google', $_REQUEST['google']);
+				$_REQUEST[ 'google' ] = sanitize_text_field( $_REQUEST[ 'google' ] );
+				update_option( 'MOM_enable_share_google', $_REQUEST[ 'google' ] );
 
 			}
 			if( isset( $_POST[ 'MOM_enable_share_facebook' ] ) && check_admin_referer( 'momShareFacebook' ) ) { 
 
-				update_option('MOM_enable_share_facebook', $_REQUEST['facebook']);
+				$_REQUEST[ 'facebook' ] = sanitize_text_field( $_REQUEST[ 'facebook' ] );
+				update_option( 'MOM_enable_share_facebook', $_REQUEST[ 'facebook' ] );
 
 			}
 
@@ -1673,25 +1688,29 @@ if( current_user_can( 'manage_options' ) ) {
 
 		if( isset( $_POST[ 'mom_horizontal_galleries_mode_submit' ] ) && check_admin_referer( 'momHorizontalGalleries' ) ) { 
 
-			update_option('MOM_themetakeover_horizontal_galleries', $_REQUEST['hgalleries']);
+			$_REQUEST[ 'hgalleries' ] = sanitize_text_field( $_REQUEST[ 'hgalleries' ] );
+			update_option( 'MOM_themetakeover_horizontal_galleries', $_REQUEST[ 'hgalleries' ] );
 
 		}
 
 		if( isset( $_POST[ 'mom_fontawesome_mode_submit' ] ) && check_admin_referer( 'fontawesome' ) ) { 
 
-			update_option('mommaincontrol_fontawesome', $_REQUEST['mommaincontrol_fontawesome']);
+			$_REQUEST[ 'mommaincontrol_fontawesome' ] = sanitize_text_field( $_REQUEST[ 'mommaincontrol_fontawesome' ] );
+			update_option( 'mommaincontrol_fontawesome', $_REQUEST[ 'mommaincontrol_fontawesome' ] );
 
 		}
 		
 		if( isset( $_POST[ 'mom_lazy_mode_submit' ] ) && check_admin_referer( 'lazyload' ) ) { 
 
-			update_option('mommaincontrol_lazyload', $_REQUEST['mommaincontrol_lazyload']);
+			$_REQUEST[ 'mommaincontrol_lazyload' ] = sanitize_text_field( $_REQUEST[ 'mommaincontrol_lazyload' ] );
+			update_option( 'mommaincontrol_lazyload', $_REQUEST[ 'mommaincontrol_lazyload' ] );
 
 		}
 		
 		if( isset( $_POST[ 'mom_versions_submit' ] ) && check_admin_referer( 'hidewpversions' ) ) { 
 
-			update_option('mommaincontrol_versionnumbers', $_REQUEST['mommaincontrol_versionnumbers']);
+			$_REQUEST[ 'mommaincontrol_versionnumbers' ] = sanitize_text_field( $_REQUEST[ 'mommaincontrol_versionnumbers' ] );
+			update_option( 'mommaincontrol_versionnumbers', $_REQUEST[ 'mommaincontrol_versionnumbers' ] );
 
 		}
 
@@ -1701,11 +1720,28 @@ if( current_user_can( 'manage_options' ) ) {
 
 		}
 
-		if( isset( $_POST[ 'mom_postasfront_post_submit' ] ) && check_admin_referer( 'mompaf_post_form' ) ) {
+		if( isset( $_POST[ 'mom_navlink_classes_submit' ] ) && check_admin_referer( 'mom_navlink_classes_form' ) ) {
 
-			update_option( 'mompaf_post', $_REQUEST[ 'mompaf_post' ] );
+			$_REQUEST[ 'previous_link_class' ] = sanitize_text_field( str_replace( '.', '', $_REQUEST[ 'previous_link_class' ] ) );
+			$_REQUEST[ 'next_link_class' ] = sanitize_text_field( str_replace( '.', '', $_REQUEST[ 'next_link_class' ] ) );
+			update_option( 'mom_previous_link_class', $_REQUEST[ 'previous_link_class' ] );
+			update_option( 'mom_next_link_class', $_REQUEST[ 'next_link_class' ] );
 
 		}
+
+		if( isset( $_POST[ 'mom_readmore_link_submit' ] ) && check_admin_referer( 'mom_readmore_link_form' ) ) {
+
+			$_REQUEST[ 'read_more' ] = sanitize_text_field( $_REQUEST[ 'read_more' ] );
+			update_option( 'mom_readmore_content', $_REQUEST[ 'read_more' ] );
+
+		}		
+
+		if( isset( $_POST[ 'mom_postasfront_post_submit' ] ) && check_admin_referer( 'mompaf_post_form' ) ) {
+
+			$_REQUEST[ 'mompaf_post' ] = sanitize_text_field( $_REQUEST[ 'mompaf_post' ] );
+			update_option( 'mompaf_post', $_REQUEST[ 'mompaf_post' ] );
+
+		}		
 
 		add_option( 'mompaf_post', 'off' );
 
@@ -1717,6 +1753,12 @@ if( current_user_can( 'manage_options' ) ) {
 			update_option( $k, $v );
 		}
 
+		$_REQUEST[ 'MOM_Exclude_PostFormats_Visitor' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_Visitor' ] );
+		$_REQUEST[ 'MOM_Exclude_PostFormats_RSS' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_RSS' ] );
+		$_REQUEST[ 'MOM_Exclude_PostFormats_Front' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_Front' ] );
+		$_REQUEST[ 'MOM_Exclude_PostFormats_CategoryArchives' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_CategoryArchives' ] );
+		$_REQUEST[ 'MOM_Exclude_PostFormats_TagArchives' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_TagArchives' ] );
+		$_REQUEST[ 'MOM_Exclude_PostFormats_SearchResults' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_SearchResults' ] );
 		update_option( 'MOM_Exclude_PostFormats_Visitor', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_Visitor' ] ) );
 		update_option( 'MOM_Exclude_PostFormats_RSS', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_RSS' ] ) );
 		update_option( 'MOM_Exclude_PostFormats_Front', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_Front' ] ) );
@@ -1727,17 +1769,11 @@ if( current_user_can( 'manage_options' ) ) {
 	}	
 }
 
-/**
- *
- * ---------------------------------------------------------------------------------------
- *
- */
-
-if(current_user_can('manage_options')){
+if(current_user_can( 'manage_options' ) ){
 	// Add options page for plugin to Wordpress backend
-	add_action('admin_menu','my_optional_modules_add_options_page');
+	add_action( 'admin_menu','my_optional_modules_add_options_page' );
 	function my_optional_modules_add_options_page(){
-		add_options_page('My Optional Modules','My Optional Modules','manage_options','mommaincontrol','my_optional_modules_page_content'); 
+		add_options_page( 'My Optional Modules','My Optional Modules','manage_options','mommaincontrol','my_optional_modules_page_content' ); 
 	}
 
 	// Content to display on the options page
@@ -1779,11 +1815,11 @@ if(current_user_can('manage_options')){
 				<section class="clear">
 					<label>Set a blog post as your front page</label>
 					<select name="mompaf_post" id="mompaf_0">
-						<option value="off"<?php if ( get_option('mompaf_post') == 'off' ) { ?> selected="selected"<?php } ?>>Disabled</option>
-						<option value="on"<?php if ( get_option('mompaf_post') == 'on') { ?> selected="selected"<?php } ?>/>Latest post</option>
-							<?php $mompaf_post = get_option('mompaf_post');
+						<option value="off"<?php if ( get_option( 'mompaf_post' ) == 'off' ) { ?> selected="selected"<?php } ?>>Disabled</option>
+						<option value="on"<?php if ( get_option( 'mompaf_post' ) == 'on' ) { ?> selected="selected"<?php } ?>/>Latest post</option>
+							<?php $mompaf_post = get_option( 'mompaf_post' );
 							selected( get_option( 'mompaf_post' ), 0 );
-							$showmeposts = get_posts(array('posts_per_page' => -1));
+							$showmeposts = get_posts(array( 'posts_per_page' => -1) );
 							foreach($showmeposts as $postsshown){ ?>
 								<option name="mompaf_post" id="mompaf_'<?php echo $postsshown->ID; ?>" value="<?php echo $postsshown->ID; ?>"
 								<?php $postID = $postsshown->ID;
@@ -1794,84 +1830,129 @@ if(current_user_can('manage_options')){
 				</section>
 				<input type="submit" id="mom_postasfront_post_submit" name="mom_postasfront_post_submit" value="Set it!" class="clear">
 			</form>
+			<form name="mom_navlink_classes_form" method="post" action="">
+				<?php wp_nonce_field( 'mom_navlink_classes_form' ); ?>
+				<section class="clear">
+					<label>Previous link class</label>
+					<input type="text" id="previous_link_class" name="previous_link_class" value="<?php if( get_option( 'mom_previous_link_class' ) ) { echo get_option( 'mom_previous_link_class' ); } ?>" />
+				</section>
+				<section class="clear">
+					<label>Next link class</label>
+					<input type="text" id="next_link_class" name="next_link_class" value="<?php if( get_option( 'mom_next_link_class' ) ) { echo get_option( 'mom_next_link_class' ); } ?>" />
+				</section>
+				<input type="submit" id="mom_navlink_classes_submit" name="mom_navlink_classes_submit" value="Set classes" class="clear">
+			</form>
+			<form name="mom_readmore_link_form" method="post" action="">
+				<?php wp_nonce_field( 'mom_readmore_link_form' ); ?>
+				<section class="clear">
+					<label>Read more... content (<em>%blank%</em> to remove it)</label>
+					<input type="text" id="read_more" name="read_more" value="<?php if( get_option( 'mom_readmore_content' ) ) { echo get_option( 'mom_readmore_content' ); } ?>" />
+				</section>
+				<input type="submit" id="mom_readmore_link_submit" name="mom_readmore_link_submit" value="Read more..." class="clear">
+			</form>
+			<form name="mom_random_get_form" method="post" action="">
+				<?php wp_nonce_field( 'mom_random_get_form' ); ?>
+				<section class="clear">
+					<label>Affix the following to the end of a URL for a random post (example: random means that test.com/?random will take you to a random post)</label>
+					<input type="text" id="randomget" name="randomget" value="<?php if( get_option( 'mom_random_get' ) ) { echo get_option( 'mom_random_get' ); } ?>" />
+				</section>
+				<input type="submit" id="mom_random_get_submit" name="mom_random_get_submit" value="Random set" class="clear">
+			</form>			
 		</div>
 		<hr />
 		<div class="setting">
 		<?php global $table_prefix, $wpdb;
-		if( isset($_POST[ 'delete_unused_terms' ] ) || isset( $_POST[ 'delete_post_revisions' ] ) || isset( $_POST[ 'delete_unapproved_comments' ] ) || isset( $_POST[ 'deleteAllClutter' ] ) ) {
+		if( isset( $_POST[ 'delete_drafts' ] ) || isset( $_POST[ 'delete_unused_terms' ] ) || isset( $_POST[ 'delete_post_revisions' ] ) || isset( $_POST[ 'delete_unapproved_comments' ] ) || isset( $_POST[ 'deleteAllClutter' ] ) ) {
 			$postsTable = $table_prefix.'posts';
 			$commentsTable = $table_prefix.'comments';
 			$termsTable2 = $table_prefix.'terms';
 			$termsTable = $table_prefix.'term_taxonomy';
 			if( isset( $_POST[ 'delete_post_revisions' ] ) && check_admin_referer( 'deletePostRevisionsForm' ) ) {
-				$wpdb->query("DELETE FROM `$postsTable` WHERE `post_type` = 'revision' OR `post_type` = 'auto-draft' OR `post_status` = 'trash'");
+				$wpdb->query( "DELETE FROM `$postsTable` WHERE `post_type` = 'revision' OR `post_status` = 'auto-draft' OR `post_status` = 'trash'" );
 			}
 			if( isset ($_POST[ 'delete_unapproved_comments' ] ) && check_admin_referer( 'deleteUnapprovedCommentsForm' ) ) {
-				$wpdb->query("DELETE FROM `$commentsTable` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'");
+				$wpdb->query( "DELETE FROM `$commentsTable` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'" );
 			}
 			if( isset( $_POST[ 'delete_unused_terms' ] ) && check_admin_referer( 'deleteUnusedTermsForm' ) ) {
-				$wpdb->query("DELETE FROM `$termsTable2` WHERE `term_id` IN (select `term_id` from `$termsTable` WHERE `count` = 0)");
-				$wpdb->query("DELETE FROM `$termsTable` WHERE `count` = 0");
+				$wpdb->query( "DELETE FROM `$termsTable2` WHERE `term_id` IN ( select `term_id` from `$termsTable` WHERE `count` = 0 )" );
+				$wpdb->query( "DELETE FROM `$termsTable` WHERE `count` = 0");
+			}
+			if( isset( $_POST[ 'delete_drafts' ] ) && check_admin_referer( 'deleteDraftsForm' ) ) {
+				$wpdb->query( "DELETE FROM `$postsTable` WHERE `post_status` = 'draft'" );
 			}
 			if( isset( $_POST[ 'deleteAllClutter' ] ) && check_admin_referer( 'deleteAllClutterForm' ) ) {
-				$wpdb->query("DELETE FROM `$postsTable` WHERE `post_type` = 'revision' OR `post_type` = 'auto-draft' OR `post_status` = 'trash'");
-				$wpdb->query("DELETE FROM `$commentsTable` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'");
-				$wpdb->query("DELETE FROM `$termsTable2` WHERE `term_id` IN (select `term_id` from `$termsTable` WHERE `count` = 0)");
-				$wpdb->query("DELETE FROM `$termsTable` WHERE `count` = 0");
+				$wpdb->query( "DELETE FROM `$postsTable` WHERE `post_type` = 'revision' OR `post_status` = 'auto-draft' OR `post_status` = 'trash'" );
+				$wpdb->query( "DELETE FROM `$commentsTable` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'" );
+				$wpdb->query( "DELETE FROM `$termsTable2` WHERE `term_id` IN ( select `term_id` from `$termsTable` WHERE `count` = 0 )" );
+				$wpdb->query( "DELETE FROM `$termsTable` WHERE `count` = 0" );
 			}
 		}		
-		$revisions_count = $comments_count = $terms_count = 0;
+		$drafts_count = $revisions_count = $comments_count = $terms_count = 0;
 		$postsTable      = $table_prefix . 'posts';
 		$commentsTable   = $table_prefix . 'comments';
 		$termsTable2     = $table_prefix . 'terms';
 		$termsTable      = $table_prefix . 'term_taxonomy';
 		$revisions_total = $wpdb->get_results ( "SELECT ID FROM `$postsTable` WHERE `post_type` = 'revision' OR `post_type` = 'auto_draft' OR `post_status` = 'trash'" );
+		$drafts_total    = $wpdb->get_results ( "SELECT ID FROM `$postsTable` WHERE `post_status` = 'draft'" );
 		$comments_total  = $wpdb->get_results ( "SELECT comment_ID FROM `$commentsTable` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'" );
 		$terms_total     = $wpdb->get_results ( "SELECT term_taxonomy_id FROM `$termsTable` WHERE `count` = '0'" );
+		if( count( $drafts_total ) ) {
+			foreach( $drafts_total as $drafts ) {
+				$drafts_count++;
+			}			
+		}
 		if( count( $revisions_total ) ) { 
-			foreach ( $revisions_total as $retot ) { 
+			foreach( $revisions_total as $retot ) { 
 				$revisions_count++; 
 			}
 		}
 		if( count( $comments_total ) ) {
-			foreach ( $comments_total as $comtot ) { 
+			foreach( $comments_total as $comtot ) { 
 				$comments_count++; 
 			}
 		}
 		if( count( $terms_total ) ) {
-			foreach ( $terms_total as $termstot  ) {
+			foreach( $terms_total as $termstot  ) {
 				$terms_count++; 
 			}
 		}
 		$totalClutter    = ( $terms_count + $comments_count + $revisions_count ); ?>
 			<form method="post" name="deleteAllClutterForm">
-			<?php wp_nonce_field( 'deleteAllClutterForm' ); ?>
-			<label for="deleteAllClutter">Clear <u>all</u> database clutter<i class="fa fa-trash-o"> <?php echo esc_attr( $totalClutter );?></i></label>
-			<input class="hidden" id="deleteAllClutter" type="submit" value="Go" name="deleteAllClutter">
+				<?php wp_nonce_field( 'deleteAllClutterForm' ); ?>
+				<label for="deleteAllClutter">Clear <u>all</u> database clutter<i class="fa fa-trash-o"> <?php echo esc_attr( $totalClutter );?></i></label>
+				<input class="hidden" id="deleteAllClutter" type="submit" value="Go" name="deleteAllClutter">
 			</form>
 			<form method="post" name="deletePostRevisionsForm">
-			<?php wp_nonce_field( 'deletePostRevisionsForm' ); ?>
-			<label for="delete_post_revisions">
-				Clear <u>post</u> clutter
-				<i class="fa fa-trash-o"> <?php echo esc_attr ( $revisions_count );?></i>
-			</label>
-			<input class="hidden" id="delete_post_revisions" type="submit" value="Go" name="delete_post_revisions">
+				<?php wp_nonce_field( 'deletePostRevisionsForm' ); ?>
+				<label for="delete_post_revisions">
+					Clear <u>post</u> clutter
+					<i class="fa fa-trash-o"> <?php echo esc_attr( $revisions_count ); ?></i>
+				</label>
+				<input class="hidden" id="delete_post_revisions" type="submit" value="Go" name="delete_post_revisions">
 			</form>
 			<form method="post" name="deleteUnapprovedCommentsForm">
-			<?php wp_nonce_field( 'deleteUnapprovedCommentsForm' ); ?>
-			<label for="delete_unapproved_comments">
-				Clear <u>comment</u> clutter
-				<i class="fa fa-trash-o"> <?php echo esc_attr ( $comments_count );?></i>
-			</label>
-			<input class="hidden" id="delete_unapproved_comments" type="submit" value="Go" name="delete_unapproved_comments">
+				<?php wp_nonce_field( 'deleteUnapprovedCommentsForm' ); ?>
+				<label for="delete_unapproved_comments">
+					Clear <u>comment</u> clutter
+					<i class="fa fa-trash-o"> <?php echo esc_attr( $comments_count ); ?></i>
+				</label>
+				<input class="hidden" id="delete_unapproved_comments" type="submit" value="Go" name="delete_unapproved_comments">
 			</form>
 			<form method="post" name="deleteUnusedTermsForm">
-			<?php wp_nonce_field( 'deleteUnusedTermsForm' ); ?>
-			<label for="delete_unused_terms">
-				Clear <u>taxonomy</u> clutter
-				<i class="fa fa-trash-o"> <?php echo esc_attr ( $terms_count );?></i>
-			</label>
-			<input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms">
+				<?php wp_nonce_field( 'deleteUnusedTermsForm' ); ?>
+				<label for="delete_unused_terms">
+					Clear <u>taxonomy</u> clutter
+					<i class="fa fa-trash-o"> <?php echo esc_attr( $terms_count ); ?></i>
+				</label>
+				<input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms">
+			</form>
+			<form method="post" name="deleteDraftsForm">
+				<?php wp_nonce_field( 'deleteDraftsForm' ); ?>
+				<label for="delete_drafts">
+					Clear <u>drafts</u> clutter
+					<i class="fa fa-trash-o"> <?php echo esc_attr( $drafts_count ); ?></i>
+				</label>
+				<input class="hidden" id="delete_drafts" type="submit" value="Go" name="delete_drafts">
 			</form>
 		</div>
 		<hr />
@@ -1939,7 +2020,7 @@ if(current_user_can('manage_options')){
 					<?php }?></label>
 					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_protectrss' ) ) { echo 0; } else { echo 1; } ?>" name="protectrss" />
 					<input type="submit" id="mom_protectrss_mode_submit" name="mom_protectrss_mode_submit" value="Submit" class="hidden" />
-				</form>				
+				</form>	
 				<form method="post" action="" name="fontawesome">
 					<?php wp_nonce_field( 'fontawesome' ); ?>
 					<label id="font_awesome" for="mom_fontawesome_mode_submit">Enable Font Awesome
@@ -2119,15 +2200,15 @@ if(current_user_can('manage_options')){
 			<div class="setting">
 			<p><em>Post Exclusion</em></p>
 			<?php 
-			$MOM_Exclude_PostFormats_RSS = get_option('MOM_Exclude_PostFormats_RSS');
-			$MOM_Exclude_PostFormats_Front = get_option('MOM_Exclude_PostFormats_Front');
-			$MOM_Exclude_PostFormats_CategoryArchives = get_option('MOM_Exclude_PostFormats_CategoryArchives');
-			$MOM_Exclude_PostFormats_TagArchives = get_option('MOM_Exclude_PostFormats_TagArchives');
-			$MOM_Exclude_PostFormats_SearchResults = get_option('MOM_Exclude_PostFormats_SearchResults');
-			$MOM_Exclude_PostFormats_Visitor = get_option('MOM_Exclude_PostFormats_Visitor');
+			$MOM_Exclude_PostFormats_RSS = get_option( 'MOM_Exclude_PostFormats_RSS' );
+			$MOM_Exclude_PostFormats_Front = get_option( 'MOM_Exclude_PostFormats_Front' );
+			$MOM_Exclude_PostFormats_CategoryArchives = get_option( 'MOM_Exclude_PostFormats_CategoryArchives' );
+			$MOM_Exclude_PostFormats_TagArchives = get_option( 'MOM_Exclude_PostFormats_TagArchives' );
+			$MOM_Exclude_PostFormats_SearchResults = get_option( 'MOM_Exclude_PostFormats_SearchResults' );
+			$MOM_Exclude_PostFormats_Visitor = get_option( 'MOM_Exclude_PostFormats_Visitor' );
 			$showmepages = get_pages(); 			
-			$showmecats = get_categories('taxonomy=category&hide_empty=0'); 
-			$showmetags = get_categories('taxonomy=post_tag&hide_empty=0');
+			$showmecats = get_categories( 'taxonomy=category&hide_empty=0' ); 
+			$showmetags = get_categories( 'taxonomy=post_tag&hide_empty=0' );
 			echo '
 			<form method="post" name="hidecategoriesfrom" class="clear">' . 
 				wp_nonce_field( 'hidecategoriesfrom' ) . '
@@ -2139,8 +2220,8 @@ if(current_user_can('manage_options')){
 					<span>'.$catsshown->cat_name.'<em>'.$catsshown->cat_ID.'</em></span>';
 				}
 			echo '</div><div class="rightContainer">';
-			$exclude = array('MOM_Exclude_Categories_RSS','MOM_Exclude_Categories_Front','MOM_Exclude_Categories_TagArchives','MOM_Exclude_Categories_SearchResults','MOM_Exclude_Categories_CategoriesSun','MOM_Exclude_Categories_CategoriesMon','MOM_Exclude_Categories_CategoriesTue','MOM_Exclude_Categories_CategoriesWed','MOM_Exclude_Categories_CategoriesThu','MOM_Exclude_Categories_CategoriesFri','MOM_Exclude_Categories_CategoriesSat','MOM_Exclude_Categories_level0Categories','MOM_Exclude_Categories_level1Categories','MOM_Exclude_Categories_level2Categories','MOM_Exclude_Categories_level7Categories');
-			$section = array( 'RSS','Front page','Tag archives','Search results','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Logged out','Subscriber','Contributor','Author','Editor');
+			$exclude = array( 'MOM_Exclude_Categories_RSS','MOM_Exclude_Categories_Front','MOM_Exclude_Categories_TagArchives','MOM_Exclude_Categories_SearchResults','MOM_Exclude_Categories_CategoriesSun','MOM_Exclude_Categories_CategoriesMon','MOM_Exclude_Categories_CategoriesTue','MOM_Exclude_Categories_CategoriesWed','MOM_Exclude_Categories_CategoriesThu','MOM_Exclude_Categories_CategoriesFri','MOM_Exclude_Categories_CategoriesSat','MOM_Exclude_Categories_level0Categories','MOM_Exclude_Categories_level1Categories','MOM_Exclude_Categories_level2Categories','MOM_Exclude_Categories_level7Categories' );
+			$section = array( 'RSS','Front page','Tag archives','Search results','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Logged out','Subscriber','Contributor','Author','Editor' );
 			foreach($exclude as $exc ) {
 					$title = str_replace($exclude, $section, $exc);
 					echo '<section><label class="left" for="'.$exc.'">'.$title.'</label><input class="right" type="text" id="'.$exc.'" name="'.$exc.'" value="'.get_option($exc).'"></section>';
@@ -2154,8 +2235,8 @@ if(current_user_can('manage_options')){
 					echo '<span>'.$tagsshown->cat_name.'<em>'.$tagsshown->cat_ID.'</em></span>';
 				}
 			echo '</div><div class="rightContainer">';
-			$exclude = array('MOM_Exclude_Tags_RSS','MOM_Exclude_Tags_Front','MOM_Exclude_Tags_CategoryArchives','MOM_Exclude_Tags_SearchResults','MOM_Exclude_Tags_TagsSun','MOM_Exclude_Tags_TagsMon','MOM_Exclude_Tags_TagsTue','MOM_Exclude_Tags_TagsWed','MOM_Exclude_Tags_TagsThu','MOM_Exclude_Tags_TagsFri','MOM_Exclude_Tags_TagsSat','MOM_Exclude_Tags_level0Tags','MOM_Exclude_Tags_level1Tags','MOM_Exclude_Tags_level2Tags','MOM_Exclude_Tags_level7Tags');
-			$section = array( 'RSS','Front page','Category archives','Search results','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Logged out','Subscriber','Contributor','Author','Editor');
+			$exclude = array( 'MOM_Exclude_Tags_RSS','MOM_Exclude_Tags_Front','MOM_Exclude_Tags_CategoryArchives','MOM_Exclude_Tags_SearchResults','MOM_Exclude_Tags_TagsSun','MOM_Exclude_Tags_TagsMon','MOM_Exclude_Tags_TagsTue','MOM_Exclude_Tags_TagsWed','MOM_Exclude_Tags_TagsThu','MOM_Exclude_Tags_TagsFri','MOM_Exclude_Tags_TagsSat','MOM_Exclude_Tags_level0Tags','MOM_Exclude_Tags_level1Tags','MOM_Exclude_Tags_level2Tags','MOM_Exclude_Tags_level7Tags' );
+			$section = array( 'RSS','Front page','Category archives','Search results','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Logged out','Subscriber','Contributor','Author','Editor' );
 			foreach($exclude as $exc ) {
 					$title = str_replace($exclude, $section, $exc);
 					echo '<section><label class="left" for="'.$exc.'">'.$title.'</label><input class="right" type="text" id="'.$exc.'" name="'.$exc.'" value="'.get_option($exc).'"></section>';
@@ -2166,75 +2247,75 @@ if(current_user_can('manage_options')){
 				<p><strong class="sectionTitle">Hide Post Formats from..</strong></p>
 				<select name="MOM_Exclude_PostFormats_RSS" id="MOM_Exclude_PostFormats_RSS">
 					<option value="">RSS -> none</option>
-					<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-aside'); echo '>RSS -> Aside</option>
-					<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-gallery'); echo '>RSS -> Gallery</option>
-					<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-link'); echo '>RSS -> Link</option>
-					<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-image'); echo '>RSS -> Image</option>
-					<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-quote'); echo '>RSS -> Quote</option>
-					<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-status'); echo '>RSS -> Status</option>
-					<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-video'); echo '>RSS -> Video</option>
-					<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-audio'); echo '>RSS -> Audio</option>
-					<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-chat'); echo '>RSS -> Chat</option>
+					<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-aside' ); echo '>RSS -> Aside</option>
+					<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-gallery' ); echo '>RSS -> Gallery</option>
+					<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-link' ); echo '>RSS -> Link</option>
+					<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-image' ); echo '>RSS -> Image</option>
+					<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-quote' ); echo '>RSS -> Quote</option>
+					<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-status' ); echo '>RSS -> Status</option>
+					<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-video' ); echo '>RSS -> Video</option>
+					<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-audio' ); echo '>RSS -> Audio</option>
+					<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-chat' ); echo '>RSS -> Chat</option>
 				</select>
 				<select name="MOM_Exclude_PostFormats_Front" id="MOM_Exclude_PostFormats_Front">
 					<option value="">Front Page -> none</option>
-					<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_Front, 'post-format-aside'); echo '>Front Page -> Aside</option>
-					<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_Front,'post-format-gallery'); echo '>Front Page -> Gallery</option>
-					<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_Front,'post-format-link'); echo '>Front Page -> Link</option>
-					<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_Front,'post-format-image'); echo '>Front Page -> Image</option>
-					<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_Front,'post-format-quote'); echo '>Front Page -> Quote</option>
-					<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_Front,'post-format-status'); echo '>Front Page -> Status</option>
-					<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_Front,'post-format-video'); echo '>Front Page -> Video</option>
-					<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_Front,'post-format-audio'); echo '>Front Page -> Audio</option>
-					<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_Front,'post-format-chat'); echo '>Front Page -> Chat</option>
+					<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_Front, 'post-format-aside' ); echo '>Front Page -> Aside</option>
+					<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_Front,'post-format-gallery' ); echo '>Front Page -> Gallery</option>
+					<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_Front,'post-format-link' ); echo '>Front Page -> Link</option>
+					<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_Front,'post-format-image' ); echo '>Front Page -> Image</option>
+					<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_Front,'post-format-quote' ); echo '>Front Page -> Quote</option>
+					<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_Front,'post-format-status' ); echo '>Front Page -> Status</option>
+					<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_Front,'post-format-video' ); echo '>Front Page -> Video</option>
+					<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_Front,'post-format-audio' ); echo '>Front Page -> Audio</option>
+					<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_Front,'post-format-chat' ); echo '>Front Page -> Chat</option>
 				</select>
 				<select name="MOM_Exclude_PostFormats_CategoryArchives" id="MOM_Exclude_PostFormats_CategoryArchives">
 					<option value="">Archives -> none</option>
-					<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_CategoryArchives, 'post-format-aside'); echo '>Archives -> Aside</option>
-					<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-gallery'); echo '>Archives -> Gallery</option>
-					<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-link'); echo '>Archives -> Link</option>
-					<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-image'); echo '>Archives -> Image</option>
-					<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-quote'); echo '>Archives -> Quote</option>
-					<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-status'); echo '>Archives -> Status</option>
-					<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-video'); echo '>Archives -> Video</option>
-					<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-audio'); echo '>Archives -> Audio</option>
-					<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-chat'); echo '>Archives -> Chat</option>
+					<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_CategoryArchives, 'post-format-aside' ); echo '>Archives -> Aside</option>
+					<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-gallery' ); echo '>Archives -> Gallery</option>
+					<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-link' ); echo '>Archives -> Link</option>
+					<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-image' ); echo '>Archives -> Image</option>
+					<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-quote' ); echo '>Archives -> Quote</option>
+					<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-status' ); echo '>Archives -> Status</option>
+					<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-video' ); echo '>Archives -> Video</option>
+					<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-audio' ); echo '>Archives -> Audio</option>
+					<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-chat' ); echo '>Archives -> Chat</option>
 				</select>
 				<select name="MOM_Exclude_PostFormats_TagArchives" id="MOM_Exclude_PostFormats_TagArchives">
 					<option value="">Tags -> none</option>
-					<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-aside'); echo '>Tags -> Aside</option>
-					<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-gallery'); echo '>Tags -> Gallery</option>
-					<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-link'); echo '>Tags -> Link</option>
-					<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-image'); echo '>Tags -> Image</option>
-					<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-quote'); echo '>Tags -> Quote</option>
-					<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-status'); echo '>Tags -> Status</option>
-					<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-video'); echo '>Tags -> Video</option>
-					<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-audio'); echo '>Tags -> Audio</option>
-					<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-chat'); echo '>Tags -> Chat</option>
+					<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-aside' ); echo '>Tags -> Aside</option>
+					<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-gallery' ); echo '>Tags -> Gallery</option>
+					<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-link' ); echo '>Tags -> Link</option>
+					<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-image' ); echo '>Tags -> Image</option>
+					<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-quote' ); echo '>Tags -> Quote</option>
+					<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-status' ); echo '>Tags -> Status</option>
+					<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-video' ); echo '>Tags -> Video</option>
+					<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-audio' ); echo '>Tags -> Audio</option>
+					<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-chat' ); echo '>Tags -> Chat</option>
 				</select>
 				<select name="MOM_Exclude_PostFormats_SearchResults" id="MOM_Exclude_PostFormats_SearchResults">
 					<option value="">Search -> none</option>
-					<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-aside'); echo '>Search -> Aside</option>
-					<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-gallery'); echo '>Search -> Gallery</option>
-					<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-link'); echo '>Search -> Link</option>
-					<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-image'); echo '>Search -> Image</option>
-					<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-quote'); echo '>Search -> Quote</option>
-					<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-status'); echo '>Search -> Status</option>
-					<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-video'); echo '>Search -> Video</option>
-					<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-audio'); echo '>Search -> Audio</option>
-					<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-chat'); echo '>Search -> Chat</option>
+					<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-aside' ); echo '>Search -> Aside</option>
+					<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-gallery' ); echo '>Search -> Gallery</option>
+					<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-link' ); echo '>Search -> Link</option>
+					<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-image' ); echo '>Search -> Image</option>
+					<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-quote' ); echo '>Search -> Quote</option>
+					<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-status' ); echo '>Search -> Status</option>
+					<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-video' ); echo '>Search -> Video</option>
+					<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-audio' ); echo '>Search -> Audio</option>
+					<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-chat' ); echo '>Search -> Chat</option>
 				</select>
 				<select name="MOM_Exclude_PostFormats_Visitor" id="MOM_Exclude_PostFormats_Visitor">
 					<option value="">Logged out -> none</option>
-					<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-aside'); echo '>Logged out -> Aside</option>
-					<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-gallery'); echo '>Logged out -> Gallery</option>
-					<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-link'); echo '>Logged out -> Link</option>
-					<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-image'); echo '>Logged out -> Image</option>
-					<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-quote'); echo '>Logged out -> Quote</option>
-					<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-status'); echo '>Logged out -> Status</option>
-					<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-video'); echo '>Logged out -> Video</option>
-					<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-audio'); echo '>Logged out -> Audio</option>
-					<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-chat'); echo '>Logged out -> Chat</option>
+					<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-aside' ); echo '>Logged out -> Aside</option>
+					<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-gallery' ); echo '>Logged out -> Gallery</option>
+					<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-link' ); echo '>Logged out -> Link</option>
+					<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-image' ); echo '>Logged out -> Image</option>
+					<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-quote' ); echo '>Logged out -> Quote</option>
+					<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-status' ); echo '>Logged out -> Status</option>
+					<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-video' ); echo '>Logged out -> Video</option>
+					<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-audio' ); echo '>Logged out -> Audio</option>
+					<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-chat' ); echo '>Logged out -> Chat</option>
 				</select>
 			</section>
 			<input id="momsesave" type="submit" value="Exclude them!" name="momsesave"></form>';?>		
@@ -2270,12 +2351,6 @@ if(current_user_can('manage_options')){
 	<?php 
 	}
 }
-
-/**
- *
- * ---------------------------------------------------------------------------------------
- *
- */
 
 /**
  *
@@ -2318,12 +2393,6 @@ if( !function_exists( 'font_fa_shortcode' ) ) {
 	}
 
 }
-
-/**
- *
- * ---------------------------------------------------------------------------------------
- *
- */
 
 /**
  *
@@ -2376,7 +2445,7 @@ if( !function_exists( 'mom_attachments_shortcode' ) ) {
 			$parent_title     = get_the_title( $parent_id );
 			$parent_permalink = get_the_permalink( $parent_id );
 			$mime_type        = get_post_mime_type( $id );
-			$attachment       = wp_get_attachment_url($id, 'full');
+			$attachment       = wp_get_attachment_url($id, 'full' );
 			if( 'image/jpeg' == $mime_type || 'image/png' == $mime_type || 'image/gif' == $mime_type ) {
 				$output .= '<a class="' . $class . '" href="' . $parent_permalink . '"><img src="' . $attachment . '" /></a>';
 			}
@@ -2560,7 +2629,7 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 				
 			}
 		
-			$paged = (get_query_var('page')) ? get_query_var('page') : 1;
+			$paged = (get_query_var( 'page' ) ) ? get_query_var( 'page' ) : 1;
 
 		}
 
@@ -2812,7 +2881,7 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 			/**
 			 * [style="slider"]
 			 */
-			if( $style == strtolower('slider') ) {
+			if( $style == strtolower( 'slider' ) ) {
 
 			if( 1 != $related ) {
 
@@ -2925,7 +2994,7 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 				ob_start();
 			}
 			
-			if( have_posts() ): while( have_posts()) : the_post();
+			if( have_posts() ): while( have_posts() ) : the_post();
 
 			/**
 			 * Set up any post information that can only be gathered while inside of the loop
@@ -3047,7 +3116,7 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 
 				if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
 
-					echo ' style="background-image:url(\'' . $thumb_path . '\');"';
+					echo ' style="background-image:url(\'' . $thumb_path . '\' );"';
 
 				}
 
@@ -3064,7 +3133,7 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 					echo '<div class="slide"';
 					if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
 
-						echo ' style="background-image:url(\'' . $thumb_path . '\');"';
+						echo ' style="background-image:url(\'' . $thumb_path . '\' );"';
 
 					}			
 					echo '><a class="mediaNotPresent" href="' . get_permalink( $id ) . '"><span class="title">'. $link_text_text . '</span></a></div>';
@@ -3074,7 +3143,7 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 			/**
 			 * [style="tiled"] 
 			 */
-			if( $style == strtolower('tiled') ) {
+			if( $style == strtolower( 'tiled' ) ) {
 
 				if( $recent_count == 1 ) {
 
@@ -3115,7 +3184,7 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 
 					if( '' != wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ) {
 
-						echo ' style="background-image:url(\'' . $thumb_path . '\');"';
+						echo ' style="background-image:url(\'' . $thumb_path . '\' );"';
 
 					}
 					
@@ -3154,7 +3223,7 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 
 						}
 						
-						echo ' style="background-image:url(\'' . $thumb_path . '\');"';
+						echo ' style="background-image:url(\'' . $thumb_path . '\' );"';
 					}
 
 					echo '>';
@@ -3178,7 +3247,7 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 
 			if( 1 == $paging ) {
 
-				echo '<div class="loopdeloopNavigation">'; posts_nav_link('&#8734;','Previous','Next'); echo '</div>';
+				echo '<div class="loopdeloopNavigation">'; posts_nav_link( '&#8734;','Previous','Next' ); echo '</div>';
 
 			}
 
@@ -3223,12 +3292,6 @@ add_shortcode( 'mom_miniloop', 'mom_miniloop_shortcode' );
 add_filter( 'the_content', 'do_shortcode', 'mom_attachments' );
 add_shortcode( 'mom_attachments', 'mom_attachments_shortcode' );
 
-
-/**
- *
- * ---------------------------------------------------------------------------------------
- *
- */
 
 if( current_user_can( 'manage_options' ) ) {
 
@@ -3353,9 +3416,3 @@ if( current_user_can( 'manage_options' ) ) {
 	}	
 	add_action( 'edit_form_after_editor','momEditorScreen' );
 }
-
-/**
- *
- * ---------------------------------------------------------------------------------------
- *
- */

@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: DNSBL, front, home, database, cleaner, disable, comments, RSS, javascript, footer, archives, author, ajax, font awesome, lazy load, horizontal, gallery, hide, version, mini, loop, exclude, category, tag, post format
 Requires at least: 3.9.1
 Tested up to: 4.0
-Stable tag: 5.7.1
+Stable tag: 5.7.2
 
 An assortment of functions to enhance WordPress.
 
@@ -34,6 +34,12 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 4. You'll find settings under Dashboard->Settings->My Optional Modules
 
 == Changelog ==
+* 5.7.2    create a random link query (like ?random or ?goto) to allow visitors to pull a random post from your blog
+* 5.7.2    fittext footer script moved to fittext.js
+* 5.7.2    edit the text of the 'read more...' link
+* 5.7.2    apply custom link classes to 'next' and 'previous' post/posts links (single and archive navigation links)
+* 5.7.2    user_level(s) altered so that 'logged out' does not mean the same as 'subscriber'.
+* 5.7.2    draft deletion added to database cleaner; not tied to "clear all database clutter" button
 * 5.7.1    miniloops should only attempt to output content if there are actually posts in the loop to output
 * 5.7.1    [mom_attachments] returns a specified number of recently uploaded images (unformated) that link to the post they were added to
 * 5.7      Added default values for reference for [mom_miniloop] on control panel

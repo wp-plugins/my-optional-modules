@@ -40,3 +40,7 @@
   };
 
 })( jQuery );
+
+jQuery(document).ready(function($){
+	jQuery(".recentPostRotationFull .thumbnailFull a.mediaNotPresent").fitText();
+});
