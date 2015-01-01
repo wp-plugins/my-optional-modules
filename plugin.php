@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.7.2
+ * Version: 5.7.3
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -2199,6 +2199,8 @@ if(current_user_can( 'manage_options' ) ){
 			<hr />
 			<div class="setting">
 			<p><em>Post Exclusion</em></p>
+				<p><blockquote>Place comma-separated (if multiple) values (from left) 
+				in areas that you wish to hide them from (on right).</blockquote></p>			
 			<?php 
 			$MOM_Exclude_PostFormats_RSS = get_option( 'MOM_Exclude_PostFormats_RSS' );
 			$MOM_Exclude_PostFormats_Front = get_option( 'MOM_Exclude_PostFormats_Front' );
