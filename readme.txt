@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: DNSBL, front, home, database, cleaner, disable, comments, RSS, javascript, footer, archives, author, ajax, font awesome, lazy load, horizontal, gallery, hide, version, mini, loop, exclude, category, tag, post format
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 5.7.3
+Stable tag: 5.7.4
 
 An assortment of functions to enhance WordPress.
 
@@ -34,6 +34,7 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 4. You'll find settings under Dashboard->Settings->My Optional Modules
 
 == Changelog ==
+* 5.7.4    Fix for horizontal galleries to properly display the appropriate images for each individual gallery.
 * 5.7.3    Tested up to/requires at least tag updated
 * 5.7.2    create a random link query (like ?random or ?goto) to allow visitors to pull a random post from your blog
 * 5.7.2    fittext footer script moved to fittext.js
