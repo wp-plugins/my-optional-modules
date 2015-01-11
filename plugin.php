@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.7.4
+ * Version: 5.7.5
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -766,6 +766,7 @@ if( 1 == $mommodule_protectrss ) {
 
 if( 1 == $mommodule_versionnumbers ) {
 
+	remove_action('wp_head', 'wp_generator');
 	add_filter( 'style_loader_src', 'myoptionalmodules_removeversion', 0 );
 	add_filter( 'script_loader_src', 'myoptionalmodules_removeversion', 0 );
 
