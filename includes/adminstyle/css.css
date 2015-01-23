@@ -267,6 +267,79 @@
 			display: none;
 			visibility: hidden; 
 		}
+		
+		
+		.simple {
+			clear: both; 
+			display: block; 
+			border-bottom:  1px solid rgba(0,0,0,.1);
+			overflow: auto;
+			padding: 15px 0;
+			margin: 15px auto;
+		}
+		.simple form {
+			border-radius: 3px;
+			width: 24.5%;
+			margin: 1px;
+			height: 150px;
+			float: left;
+			border: 1px solid rgba(0,0,0,.1);
+			position: relative;
+			font-weight: 900;
+			padding: 15px 5px 5px;
+		}
+		.simple form label,
+		.simple form label .fa-twitter,
+		.simple form label .fa-reddit,
+		.simple form label .fa-envelope,
+		.simple form label .fa-facebook,
+		.simple form label .fa-arrow-up,
+		.simple form label .fa-google-plus {
+			display: block; 
+			height: 100%;
+			width: 100%;
+			text-align: center;
+			position: relative; 
+			z-index: 2;
+		}
+		.simple form label .fa-twitter,
+		.simple form label .fa-reddit,
+		.simple form label .fa-envelope,
+		.simple form label .fa-facebook,
+		.simple form label .fa-arrow-up,
+		.simple form label .fa-google-plus {
+			font-size: 150%;
+		}		
+		.simple form label:hover ~ span.info {
+			opacity: 1;
+		}
+		.simple form .fa-toggle-on,
+		.simple form .fa-toggle-off {
+			position: absolute; 
+			bottom: 10px; 
+			left: 0;
+			width: 100%;
+			text-align: center;
+		}
+		.simple form span.info {
+			opacity: .7;
+			line-height: 97%;
+			position: absolute; 
+			top: 50px; 
+			left: 0;
+			z-index: 1; 
+			width: 100%; 
+			font-size: 95%;
+			text-align: center;
+			padding: 10px;
+		}
+		.fa-toggle-on {
+			color: #1c5c00;
+		}
+		.fa-toggle-off {
+			color: #5c0000;
+		}
+		
 
 @media only screen and (max-width: 950px) {
 	.MOMSettings .setting span,
@@ -277,11 +350,17 @@
 	.MOMSettings form.clear {
 		width: 100%;
 	}
+	.simple form {
+		width: 49.5%;
+	}
 }
 @media only screen and (max-width: 782px) {
 	.MOMSettings .setting span,
 	.MOMSettings .setting .clear select,
 	.MOMSettings .setting form {
 		width: 100%;
+	}
+	.simple form {
+		width: 99.5%;
 	}
 }

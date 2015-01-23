@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.7.5
+ * Version: 5.7.6
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -1261,9 +1261,9 @@ function mom_ajaxComment( $comment_ID, $comment_status ) {
 if( !function_exists( 'myoptionalmodules_rsslinkback' ) ) { 
 
 	function myoptionalmodules_rsslinkback($content){
-
 		global $post;
-		return $content . '<p><a href="' . esc_url( get_permalink( $post->ID ) ) . '">'.htmlentities( get_post_field( 'post_title', $post->ID ) ) . '</a> via <a href="' . esc_url( home_url( '/' ) ) . '">' . get_bloginfo( 'site_name' ) . '</a></p>';
+		return $content . '<p><a href="' . esc_url( get_permalink( $post->ID ) ) . '">' . htmlentities( get_post_field( 'post_title', $post->ID ) ) . '</a> via <a href="' . esc_url( home_url( '/' ) ) . '">' . get_bloginfo( 'site_name' ) . '</a></p>';
+
 	}
 
 }
@@ -1360,8 +1360,13 @@ if( '' != get_option( 'mom_next_link_class' ) ) {
  *
  */
 if( '' != get_option( 'mom_readmore_content' ) ) {
+	
+	// Overwrite twentyfifteen_excerpt_more so that MOM's function works properly.
+	function twentyfifteen_excerpt_more( $more ) {}
+	
 	if( !function_exists( 'mom_excerpt_more' ) ) {
 		add_filter( 'the_content_more_link', 'mom_excerpt_more' );
+		add_filter( 'excerpt_more', 'mom_excerpt_more' );
 		function mom_excerpt_more( $more ) {
 			if( '%blank%' == get_option( 'mom_readmore_content' ) ) {
 				return '';
@@ -1960,16 +1965,12 @@ if(current_user_can( 'manage_options' ) ){
 				<input class="hidden" id="delete_drafts" type="submit" value="Go" name="delete_drafts">
 			</form>
 		</div>
-		<hr />
-		<div class="setting">
-			<p>
-				<em>Simple Modules</em> &mdash; enable or disable individual modules<br />
-				<em>key</em> &mdash; <i class="fa fa-toggle-off"> off</i> &mdash; <i class="fa fa-toggle-on"> on</i>
-			</p>
-			<hr />
+		
+		<div class="simple">
+
 			<form method="post" action="" name="momComments">
 				<?php wp_nonce_field( 'momComments' ); ?>
-				<label for="mom_comments_mode_submit">Disable comments site-wide
+				<label for="mom_comments_mode_submit">Disable <strong>all</strong> comments
 				<?php if( 1 == get_option( 'mommaincontrol_comments' ) ) { ?>
 					<i class="fa fa-toggle-on"></i>
 				<?php } else { ?>
@@ -1977,11 +1978,12 @@ if(current_user_can( 'manage_options' ) ){
 				<?php }?></label>
 				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_comments' ) ){ echo 0; } else { echo 1; }?>" name="comments" />
 				<input type="submit" id="mom_comments_mode_submit" name="mom_comments_mode_submit" value="Submit" class="hidden" />
-				</form>
+				<span class="info">Remove the comment form from all pages and posts. Overrides options.</span>
+			</form>
 
 			<form method="post" action="" name="momDNSBL">
 				<?php wp_nonce_field( 'momDNSBL' ); ?>
-				<label for="mom_dnsbl_mode_submit">DNSBL Comment Blocking
+				<label for="mom_dnsbl_mode_submit">DNSBL Blocking
 				<?php if( 1 == get_option( 'mommaincontrol_dnsbl' ) ) { ?>
 					<i class="fa fa-toggle-on"></i>
 				<?php } else { ?>
@@ -1989,11 +1991,12 @@ if(current_user_can( 'manage_options' ) ){
 				<?php }?></label>
 				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_dnsbl' ) ){ echo 0; } else { echo 1; }?>" name="dnsbl" />
 				<input type="submit" id="mom_dnsbl_mode_submit" name="mom_dnsbl_mode_submit" value="Submit" class="hidden" />
-				</form>
+				<span class="info">IPs listed on DNS Black Lists will not be able to comment.</span>
+			</form>
 
 			<form method="post" action="" name="momAjaxComments">
 				<?php wp_nonce_field( 'momAjaxComments' ); ?>
-				<label for="mom_ajax_comments_mode_submit">Ajaxify Comments 
+				<label for="mom_ajax_comments_mode_submit">Ajax Comments 
 				<?php if( 1 == get_option( 'MOM_themetakeover_ajaxcomments' ) ) { ?>
 					<i class="fa fa-toggle-on"></i>
 				<?php } else { ?>
@@ -2001,7 +2004,8 @@ if(current_user_can( 'manage_options' ) ){
 				<?php }?></label>
 				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_themetakeover_ajaxcomments' ) ){ echo 0; } else { echo 1; }?>" name="ajaxify" />
 				<input type="submit" id="mom_ajax_comments_mode_submit" name="mom_ajax_comments_mode_submit" value="Submit" class="hidden" />
-				</form>
+				<span class="info">Comment form submits without refreshing the page.</span>
+			</form>
 
 			<form method="post" action="" name="momHorizontalGalleries">
 				<?php wp_nonce_field( 'momHorizontalGalleries' ); ?>
@@ -2013,95 +2017,105 @@ if(current_user_can( 'manage_options' ) ){
 				<?php }?></label>
 				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ){ echo 0; } else { echo 1; }?>" name="hgalleries" />
 				<input type="submit" id="mom_horizontal_galleries_mode_submit" name="mom_horizontal_galleries_mode_submit" value="Submit" class="hidden" />
-				</form>				
+				<span class="info">Image galleries in posts are now sideways and scrollable.</span>
+			</form>				
 				
-				<form method="post" action="" name="protectrss">
-					<?php wp_nonce_field( 'protectrss' ); ?>
-					<label for="mom_protectrss_mode_submit">Append link-back on RSS items
-					<?php if( 1 == get_option( 'mommaincontrol_protectrss' ) ) { ?>
-						<i class="fa fa-toggle-on"></i>
-					<?php } else { ?>
-						<i class="fa fa-toggle-off"></i>
-					<?php }?></label>
-					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_protectrss' ) ) { echo 0; } else { echo 1; } ?>" name="protectrss" />
-					<input type="submit" id="mom_protectrss_mode_submit" name="mom_protectrss_mode_submit" value="Submit" class="hidden" />
-				</form>	
-				<form method="post" action="" name="fontawesome">
-					<?php wp_nonce_field( 'fontawesome' ); ?>
-					<label id="font_awesome" for="mom_fontawesome_mode_submit">Enable Font Awesome
-					<?php if( 1 == get_option( 'mommaincontrol_fontawesome' ) ) { ?>
-						<i class="fa fa-toggle-on"></i>
-					<?php } else { ?>
-						<i class="fa fa-toggle-off"></i>
-					<?php } ?></label>
-					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_fontawesome' ) ) { echo 0; } else { echo 1; } ?>" name="mommaincontrol_fontawesome" />
-					<input type="submit" id="mom_fontawesome_mode_submit" name="mom_fontawesome_mode_submit" value="Submit" class="hidden" />
-				</form>				
-				<form method="post" action="" name="hidewpversions">
-					<?php wp_nonce_field( 'hidewpversions' ); ?>
-					<label for="mom_versions_submit">Hide WordPress version from source-code
-					<?php if( 1 == get_option( 'mommaincontrol_versionnumbers' ) ) { ?>
-						<i class="fa fa-toggle-on"></i>
-					<?php } else { ?>
-						<i class="fa fa-toggle-off"></i>
-					<?php }?></label>
-					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_versionnumbers' ) ) { echo 0; } else { echo 1; } ?>" name="mommaincontrol_versionnumbers" />
-					<input type="submit" id="mom_versions_submit" name="mom_versions_submit" value="Submit" class="hidden" />
-				</form>				
-				<form method="post" action="" name="footerscripts">
-					<?php wp_nonce_field( 'footerscripts' ); ?>
-					<label for="mom_footerscripts_mode_submit">Move .js to footer
-					<?php if( 1== get_option( 'mommaincontrol_footerscripts' ) ){ ?>
-						<i class="fa fa-toggle-on"></i>
-					<?php }else{ ?>
-						<i class="fa fa-toggle-off"></i>
-					<?php } ?></label>
-					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_footerscripts' ) ) { echo 0; } else { echo 1; } ?>" name="footerscripts" />
-					<input type="submit" id="mom_footerscripts_mode_submit" name="mom_footerscripts_mode_submit" value="Submit" class="hidden" />
-				</form>
-				<form method="post" action="" name="lazyload">
-					<?php wp_nonce_field( 'lazyload' ); ?>
-					<label for="mom_lazy_mode_submit">Lazy Load for post images
-					<?php if( 1 == get_option( 'mommaincontrol_lazyload' ) ) { ?>
-						<i class="fa fa-toggle-on"></i>
-					<?php } else { ?>
-						<i class="fa fa-toggle-off"></i>
-					<?php } ?></label>
-					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_lazyload' ) ) { echo 0; } else { echo 1; } ?>" name="mommaincontrol_lazyload" />
-					<input type="submit" id="mom_lazy_mode_submit" name="mom_lazy_mode_submit" value="Submit" class="hidden" />
-				</form>
-				<form method="post" action="" name="authorarchives">
-					<?php wp_nonce_field( 'authorarchives' ); ?>
-					<label for="mom_author_archives_mode_submit">Disable Author-based archives
-					<?php if( 1 == get_option( 'mommaincontrol_authorarchives' ) ) { ?>
-						<i class="fa fa-toggle-on"></i>
-					<?php } else { ?>
-						<i class="fa fa-toggle-off"></i>
-					<?php } ?></label>
-					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_authorarchives' ) ) { echo 0; } else { echo 1; } ?>" name="authorarchives" />
-					<input type="submit" id="mom_author_archives_mode_submit" name="mom_author_archives_mode_submit" value="Submit" class="hidden" />
-				</form>
-				<form method="post" action="" name="datearchives">
-					<?php wp_nonce_field( 'datearchives' ); ?>
-					<label for="mom_date_archives_mode_submit">Disable Date-based archives
-					<?php if( 1 == get_option( 'mommaincontrol_datearchives' ) ) { ?>
-						<i class="fa fa-toggle-on"></i>
-					<?php } else { ?>
-						<i class="fa fa-toggle-off"></i>
-					<?php } ?></label>
-					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_datearchives' ) ) { echo 0; } else { echo 1; } ?>" name="datearchives" />
-					<input type="submit" id="mom_date_archives_mode_submit" name="mom_date_archives_mode_submit" value="Submit" class="hidden" />
-				</form>
-		</div>
-		<hr />
-		<hr />
-		<div class="setting">
-			<p>
-				<em>Advanced Modules</em> &mdash; these modules may have additional options to set<br />
-				<em>key</em> &mdash; <i class="fa fa-toggle-off"> off</i> &mdash; <i class="fa fa-toggle-on"> on</i>
-			</p>
-			<hr />		
-			<form method="post" action="" name="momShare">
+			<form method="post" action="" name="protectrss">
+				<?php wp_nonce_field( 'protectrss' ); ?>
+				<label for="mom_protectrss_mode_submit">RSS Link Back
+				<?php if( 1 == get_option( 'mommaincontrol_protectrss' ) ) { ?>
+					<i class="fa fa-toggle-on"></i>
+				<?php } else { ?>
+					<i class="fa fa-toggle-off"></i>
+				<?php }?></label>
+				<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_protectrss' ) ) { echo 0; } else { echo 1; } ?>" name="protectrss" />
+				<input type="submit" id="mom_protectrss_mode_submit" name="mom_protectrss_mode_submit" value="Submit" class="hidden" />
+				<span class="info">Add a link back to your site on all RSS items in feeds.</span>
+			</form>	
+			
+			<form method="post" action="" name="fontawesome">
+				<?php wp_nonce_field( 'fontawesome' ); ?>
+				<label id="font_awesome" for="mom_fontawesome_mode_submit">Font Awesome
+				<?php if( 1 == get_option( 'mommaincontrol_fontawesome' ) ) { ?>
+					<i class="fa fa-toggle-on"></i>
+				<?php } else { ?>
+					<i class="fa fa-toggle-off"></i>
+				<?php } ?></label>
+				<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_fontawesome' ) ) { echo 0; } else { echo 1; } ?>" name="mommaincontrol_fontawesome" />
+				<input type="submit" id="mom_fontawesome_mode_submit" name="mom_fontawesome_mode_submit" value="Submit" class="hidden" />
+				<span class="info">Enable Font Awesome for use in your themes and posts.
+				<?php if( 1 == get_option( 'mommaincontrol_momshare') && 1 != get_option( 'mommaincontrol_fontawesome' ) ) { ?>
+					<em><strong>Share Icons needs Font Awesome enabled.</strong></em>
+				<?php }?>
+				</span>
+			</form>
+			
+			<form method="post" action="" name="hidewpversions">
+				<?php wp_nonce_field( 'hidewpversions' ); ?>
+				<label for="mom_versions_submit">Hide WordPress Version
+				<?php if( 1 == get_option( 'mommaincontrol_versionnumbers' ) ) { ?>
+					<i class="fa fa-toggle-on"></i>
+				<?php } else { ?>
+					<i class="fa fa-toggle-off"></i>
+				<?php }?></label>
+				<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_versionnumbers' ) ) { echo 0; } else { echo 1; } ?>" name="mommaincontrol_versionnumbers" />
+				<input type="submit" id="mom_versions_submit" name="mom_versions_submit" value="Submit" class="hidden" />
+				<span class="info">Remove the WordPress version from your source code.</span>
+			</form>		
+			
+			<form method="post" action="" name="footerscripts">
+				<?php wp_nonce_field( 'footerscripts' ); ?>
+				<label for="mom_footerscripts_mode_submit">Javascript to footer
+				<?php if( 1== get_option( 'mommaincontrol_footerscripts' ) ){ ?>
+					<i class="fa fa-toggle-on"></i>
+				<?php }else{ ?>
+					<i class="fa fa-toggle-off"></i>
+				<?php } ?></label>
+				<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_footerscripts' ) ) { echo 0; } else { echo 1; } ?>" name="footerscripts" />
+				<input type="submit" id="mom_footerscripts_mode_submit" name="mom_footerscripts_mode_submit" value="Submit" class="hidden" />
+				<span class="info">Move all scripts to the footer of your site.</span>
+			</form>
+			
+			<form method="post" action="" name="lazyload">
+				<?php wp_nonce_field( 'lazyload' ); ?>
+				<label for="mom_lazy_mode_submit">Lazy Load
+				<?php if( 1 == get_option( 'mommaincontrol_lazyload' ) ) { ?>
+					<i class="fa fa-toggle-on"></i>
+				<?php } else { ?>
+					<i class="fa fa-toggle-off"></i>
+				<?php } ?></label>
+				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_lazyload' ) ) { echo 0; } else { echo 1; } ?>" name="mommaincontrol_lazyload" />
+				<input type="submit" id="mom_lazy_mode_submit" name="mom_lazy_mode_submit" value="Submit" class="hidden" />
+				<span class="info">Lazy Load images in posts (images load when the visitor scrolls to them).</span>
+			</form>
+				
+			<form method="post" action="" name="authorarchives">
+				<?php wp_nonce_field( 'authorarchives' ); ?>
+				<label for="mom_author_archives_mode_submit">Disable Author archives
+				<?php if( 1 == get_option( 'mommaincontrol_authorarchives' ) ) { ?>
+					<i class="fa fa-toggle-on"></i>
+				<?php } else { ?>
+					<i class="fa fa-toggle-off"></i>
+				<?php } ?></label>
+				<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_authorarchives' ) ) { echo 0; } else { echo 1; } ?>" name="authorarchives" />
+				<input type="submit" id="mom_author_archives_mode_submit" name="mom_author_archives_mode_submit" value="Submit" class="hidden" />
+				<span class="info">Author-based archives are disabled, redirecting the visitor to the front page.</span>
+			</form>
+			
+			<form method="post" action="" name="datearchives">
+				<?php wp_nonce_field( 'datearchives' ); ?>
+				<label for="mom_date_archives_mode_submit">Disable Date archives
+				<?php if( 1 == get_option( 'mommaincontrol_datearchives' ) ) { ?>
+					<i class="fa fa-toggle-on"></i>
+				<?php } else { ?>
+					<i class="fa fa-toggle-off"></i>
+				<?php } ?></label>
+				<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_datearchives' ) ) { echo 0; } else { echo 1; } ?>" name="datearchives" />
+				<input type="submit" id="mom_date_archives_mode_submit" name="mom_date_archives_mode_submit" value="Submit" class="hidden" />
+				<span class="info">Date-based archives are disabled, redirecting the visitor to the front page.</span>
+			</form>
+			
+			<form method="post" action="#shareicons" name="momShare">
 				<?php wp_nonce_field( 'momShare' ); ?>
 				<label for="mom_share_mode_submit">Enable Share Icons
 				<?php if( 1 == get_option( 'mommaincontrol_momshare' ) ) { ?>
@@ -2111,8 +2125,10 @@ if(current_user_can( 'manage_options' ) ){
 				<?php }?></label>
 				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_momshare' ) ){ echo 0; } else { echo 1; }?>" name="share" />
 				<input type="submit" id="mom_share_mode_submit" name="mom_share_mode_submit" value="Submit" class="hidden" />
+				<span class="info">CSS/icon based share buttons with no script. (Further configuration required)</span>
 			</form>
-			<form method="post" action="" name="momExclude">
+
+			<form method="post" action="#postexclusion" name="momExclude">
 				<?php wp_nonce_field( 'momExclude' ); ?>
 				<label for="mom_exclude_mode_submit">Enable Post Exclusion
 				<?php if( 1 == get_option( 'mommaincontrol_momse' ) ) { ?>
@@ -2122,87 +2138,92 @@ if(current_user_can( 'manage_options' ) ){
 				<?php }?></label>
 				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_momse' ) ){ echo 0; } else { echo 1; }?>" name="exclude" />
 				<input type="submit" id="mom_exclude_mode_submit" name="mom_exclude_mode_submit" value="Submit" class="hidden" />
+				<span class="info">Exclude posts from different areas of the site. (Further configuration required)</span>
 			</form>
+			
 		</div>
 		<?php if( 1 == get_option( 'mommaincontrol_momshare' ) ) { ?>
-			<hr />
-			<div class="setting">
-			<p><em>Share Icons</em><br />
-			<?php if( 1 != get_option( 'mommaincontrol_fontawesome' ) ) { ?>
-				<em><i class="fa fa-warning"></i> <i class="fa fa-flag"></i> <a href="#font_awesome">Please enable Font Awesome above.</a></em>
-			<?php }?>
-			</p>			
-			<form method="post" action="" name="momShareTop">
-				<?php wp_nonce_field( 'momShareTop' ); ?>
-				<label for="MOM_enable_share_top"><i class="fa fa-arrow-up"> place before post content</i>
-				<?php if( 1 == get_option( 'MOM_enable_share_top' ) ) { ?>
-					<i class="fa fa-toggle-on"></i>
-				<?php } else { ?>
-					<i class="fa fa-toggle-off"></i>
-				<?php }?></label>
-				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_top' ) ){ echo 0; } else { echo 1; }?>" name="top" />
-				<input type="submit" id="MOM_enable_share_top" name="MOM_enable_share_top" value="Submit" class="hidden" />
-			</form>			
-			<form method="post" action="" name="momShareReddit">
-				<?php wp_nonce_field( 'momShareReddit' ); ?>
-				<label for="MOM_enable_share_reddit"><i class="fa fa-reddit"> reddit</i>
-				<?php if( 1 == get_option( 'MOM_enable_share_reddit' ) ) { ?>
-					<i class="fa fa-toggle-on"></i>
-				<?php } else { ?>
-					<i class="fa fa-toggle-off"></i>
-				<?php }?></label>
-				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_reddit' ) ){ echo 0; } else { echo 1; }?>" name="reddit" />
-				<input type="submit" id="MOM_enable_share_reddit" name="MOM_enable_share_reddit" value="Submit" class="hidden" />
-			</form>
-			<form method="post" action="" name="momShareGoogle">
-				<?php wp_nonce_field( 'momShareGoogle' ); ?>
-				<label for="MOM_enable_share_google"><i class="fa fa-google-plus"> google-plus</i>
-				<?php if( 1 == get_option( 'MOM_enable_share_google' ) ) { ?>
-					<i class="fa fa-toggle-on"></i>
-				<?php } else { ?>
-					<i class="fa fa-toggle-off"></i>
-				<?php }?></label>
-				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_google' ) ){ echo 0; } else { echo 1; }?>" name="google" />
-				<input type="submit" id="MOM_enable_share_google" name="MOM_enable_share_google" value="Submit" class="hidden" />
-			</form>
-			<form method="post" action="" name="momShareTwitter">
-				<?php wp_nonce_field( 'momShareTwitter' ); ?>
-				<label for="MOM_enable_share_twitter"><i class="fa fa-twitter"> twitter</i>
-				<?php if( 1 == get_option( 'MOM_enable_share_twitter' ) ) { ?>
-					<i class="fa fa-toggle-on"></i>
-				<?php } else { ?>
-					<i class="fa fa-toggle-off"></i>
-				<?php }?></label>
-				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_twitter' ) ){ echo 0; } else { echo 1; }?>" name="twitter" />
-				<input type="submit" id="MOM_enable_share_twitter" name="MOM_enable_share_twitter" value="Submit" class="hidden" />
-			</form>
-			<form method="post" action="" name="momShareFacebook">
-				<?php wp_nonce_field( 'momShareFacebook' ); ?>
-				<label for="MOM_enable_share_facebook"><i class="fa fa-facebook"> facebook</i>
-				<?php if( 1 == get_option( 'MOM_enable_share_facebook' ) ) { ?>
-					<i class="fa fa-toggle-on"></i>
-				<?php } else { ?>
-					<i class="fa fa-toggle-off"></i>
-				<?php }?></label>
-				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_facebook' ) ){ echo 0; } else { echo 1; }?>" name="facebook" />
-				<input type="submit" id="MOM_enable_share_facebook" name="MOM_enable_share_facebook" value="Submit" class="hidden" />
-			</form>
-			<form method="post" action="" name="momShareEmail">
-				<?php wp_nonce_field( 'momShareEmail' ); ?>
-				<label for="MOM_enable_share_email"><i class="fa fa-envelope"> email</i>
-				<?php if( 1 == get_option( 'MOM_enable_share_email' ) ) { ?>
-					<i class="fa fa-toggle-on"></i>
-				<?php } else { ?>
-					<i class="fa fa-toggle-off"></i>
-				<?php }?></label>
-				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_email' ) ){ echo 0; } else { echo 1; }?>" name="email" />
-				<input type="submit" id="MOM_enable_share_email" name="MOM_enable_share_email" value="Submit" class="hidden" />
-			</form>
-		</div>
+
+			<div class="simple" id="shareicons">
+				<form method="post" action="#shareicons" name="momShareTop">
+					<?php wp_nonce_field( 'momShareTop' ); ?>
+					<label for="MOM_enable_share_top"><i class="fa fa-arrow-up"></i>
+					<?php if( 1 == get_option( 'MOM_enable_share_top' ) ) { ?>
+						<i class="fa fa-toggle-on"></i>
+					<?php } else { ?>
+						<i class="fa fa-toggle-off"></i>
+					<?php }?></label>
+					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_top' ) ){ echo 0; } else { echo 1; }?>" name="top" />
+					<input type="submit" id="MOM_enable_share_top" name="MOM_enable_share_top" value="Submit" class="hidden" />
+					<span class="info">Place icons <em>before</em> the content of the post.</span>
+				</form>
+				<form method="post" action="#shareicons" name="momShareReddit">
+					<?php wp_nonce_field( 'momShareReddit' ); ?>
+					<label for="MOM_enable_share_reddit"><i class="fa fa-reddit"></i>
+					<?php if( 1 == get_option( 'MOM_enable_share_reddit' ) ) { ?>
+						<i class="fa fa-toggle-on"></i>
+					<?php } else { ?>
+						<i class="fa fa-toggle-off"></i>
+					<?php }?></label>
+					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_reddit' ) ){ echo 0; } else { echo 1; }?>" name="reddit" />
+					<input type="submit" id="MOM_enable_share_reddit" name="MOM_enable_share_reddit" value="Submit" class="hidden" />
+					<span class="info">reddit</span>
+				</form>
+				<form method="post" action="#shareicons" name="momShareGoogle">
+					<?php wp_nonce_field( 'momShareGoogle' ); ?>
+					<label for="MOM_enable_share_google"><i class="fa fa-google-plus"></i>
+					<?php if( 1 == get_option( 'MOM_enable_share_google' ) ) { ?>
+						<i class="fa fa-toggle-on"></i>
+					<?php } else { ?>
+						<i class="fa fa-toggle-off"></i>
+					<?php }?></label>
+					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_google' ) ){ echo 0; } else { echo 1; }?>" name="google" />
+					<input type="submit" id="MOM_enable_share_google" name="MOM_enable_share_google" value="Submit" class="hidden" />
+					<span class="info">Google+</span>
+				</form>
+				<form method="post" action="#shareicons" name="momShareTwitter">
+					<?php wp_nonce_field( 'momShareTwitter' ); ?>
+					<label for="MOM_enable_share_twitter"><i class="fa fa-twitter"></i>
+					<?php if( 1 == get_option( 'MOM_enable_share_twitter' ) ) { ?>
+						<i class="fa fa-toggle-on"></i>
+					<?php } else { ?>
+						<i class="fa fa-toggle-off"></i>
+					<?php }?></label>
+					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_twitter' ) ){ echo 0; } else { echo 1; }?>" name="twitter" />
+					<input type="submit" id="MOM_enable_share_twitter" name="MOM_enable_share_twitter" value="Submit" class="hidden" />
+					<span class="info">Twitter</span>
+				</form>
+				<form method="post" action="#shareicons" name="momShareFacebook">
+					<?php wp_nonce_field( 'momShareFacebook' ); ?>
+					<label for="MOM_enable_share_facebook"><i class="fa fa-facebook"></i>
+					<?php if( 1 == get_option( 'MOM_enable_share_facebook' ) ) { ?>
+						<i class="fa fa-toggle-on"></i>
+					<?php } else { ?>
+						<i class="fa fa-toggle-off"></i>
+					<?php }?></label>
+					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_facebook' ) ){ echo 0; } else { echo 1; }?>" name="facebook" />
+					<input type="submit" id="MOM_enable_share_facebook" name="MOM_enable_share_facebook" value="Submit" class="hidden" />
+					<span class="info">Facebook</span>
+				</form>
+				<form method="post" action="#shareicons" name="momShareEmail">
+					<?php wp_nonce_field( 'momShareEmail' ); ?>
+					<label for="MOM_enable_share_email"><i class="fa fa-envelope"></i>
+					<?php if( 1 == get_option( 'MOM_enable_share_email' ) ) { ?>
+						<i class="fa fa-toggle-on"></i>
+					<?php } else { ?>
+						<i class="fa fa-toggle-off"></i>
+					<?php }?></label>
+					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_email' ) ){ echo 0; } else { echo 1; }?>" name="email" />
+					<input type="submit" id="MOM_enable_share_email" name="MOM_enable_share_email" value="Submit" class="hidden" />
+					<span class="info">Email</span>
+				</form>
+			</div>
+		
 		<?php }?>
+		
 		<?php if( 1 == get_option( 'mommaincontrol_momse' ) ) { ?>
-			<hr />
-			<div class="setting">
+			
+			<div class="setting" id="postexclusion">
 			<p><em>Post Exclusion</em></p>
 				<p><blockquote>Place comma-separated (if multiple) values (from left) 
 				in areas that you wish to hide them from (on right).</blockquote></p>			
