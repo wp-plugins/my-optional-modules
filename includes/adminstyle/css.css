@@ -1,5 +1,104 @@
 /* My Optional Modules Stylesheet 
 	(since version 4.0.5) */
+
+
+	.MOMSettings .settings-section {
+		background-color: rgba(229,246,255,.1);
+		border: 1px solid rgba(0,0,0,.1);
+		clear: both;
+		display: block; 
+		margin: 15px;
+		max-width: 690px;
+		overflow: auto;
+		padding: 50px; 
+	}
+		.MOMSettings .settings-section .clear {
+			display: block; 
+			padding: 10px;
+			width: 98%;
+			margin: 10px auto;
+		}
+		.MOMSettings .settings-section input[type="text"].full,
+		.MOMSettings .settings-section select {
+			width: 95%;
+			margin: 5px 10px;
+		}
+		.MOMSettings .settings-section span.title-full {
+				clear: both; 
+				display: block;
+				font-size: 120%;
+				font-weight: 800;
+				margin: 5px 10px 15px;
+		}
+		.MOMSettings .settings-section em.full {
+			display: block;
+			margin: 5px 10px;			
+		}	
+		.MOMSettings .settings-section form.exclude {
+			clear: both;
+			float: none;
+			padding: 5px;
+			text-align: left;
+			width: 100%;
+		}	
+		.MOMSettings .settings-section form section {
+			clear: both;
+			display: block; 
+			overflow: auto;
+			margin: 5px auto;
+		}
+		.MOMSettings .settings-section form label {
+			float: left;
+			width: 45%;
+			padding: 5px;
+			margin: 0 5px;
+		}
+		.MOMSettings .settings-section form input[type="text"] {
+			float: right; 
+			width: 50%;
+		}
+		.MOMSettings .settings-section .left-half {
+			float: left;
+			width: 45%;
+		}
+			.MOMSettings .settings-section .left-half em {
+				display: block;
+				margin: 5px auto;
+			}
+			.MOMSettings .settings-section .left-half form {
+				font-size: 80%;
+			}
+			.MOMSettings .settings-section .title {
+				clear: both; 
+				display: block;
+				font-size: 120%;
+				font-weight: 800;
+			}
+		.MOMSettings .settings-section .right-half {
+			float: right;
+			width: 50%;
+		}
+			.MOMSettings .settings-section .right-half form {
+				float: left;
+				padding: 5px;
+				text-align: center;
+				width: 19.95%;
+			}
+			.MOMSettings .settings-section .right-half form label,
+			.MOMSettings .settings-section .right-half form i {
+				clear: both;
+				display: block;
+				text-align: center;
+				width: 100%;
+			}
+			.MOMSettings .settings-section .right-half form span {
+				display: block;
+				font-size: 70%;
+				margin: 5px auto;
+				text-align: center;
+				width: 100%;
+			}
+			
 	
 	.MOMSettings *:after,
 	.MOMSettings *:before,
@@ -27,315 +126,11 @@
 		content: ""; 
 		display: table;
 	}
-	.MOMSettings .setting {
-		clear: both; 
-		color: rgba(0,0,0,.5);
-		padding: 10px; 
-	}
-		.MOMSettings .setting .clear select,
-		.MOMSettings .setting form {
-			border: 1px solid rgba(0,0,0,.1);
-			clear: none;
-			margin: 2px;
-			padding: 5px;
-			width: 30%;
-			float: left;
-		}
-		.MOMSettings .setting form label {
-			display: block; 
-			height: 100%;
-			width: 100%;
-		}
-		.MOMSettings .setting form label:hover {
-			color: rgba(0,0,0,.8);
-		}
-			.MOMSettings .setting form label .fa {
-				float: right;
-				padding: 5px;
-			}
-			.MOMSettings .setting form label .fa-exclamation {
-				padding: 5px 8px;
-			}
-		.MOMSettings .clear:after {
-			clear: both; 
-			content: ""; 
-			display: table;
-		}
-		.MOMSettings .clear {
-			clear: both;
-			display: block; 
-			margin: 5px 0 15px;
-		}
-		.MOMSettings .setting .list {
-			border: 1px solid rgba(0,0,0,.1);
-			display: block;
-			float: left;
-			height: 510px; 
-			overflow-x: hidden; 
-			overflow-y: auto; 
-			width: 30%;
-		}
-		.MOMSettings .setting .list span {
-			border: none;
-			clear: both; 
-			display: block; 
-			float: none;
-			margin: 0;
-			padding: 5px; 
-			width: 100%; 		
-		}
-		.MOMSettings .setting .list span em {
-			float: right;
-		}
-		.MOMSettings .setting span {
-			border: 1px solid rgba(0,0,0,.1);
-			float: left;
-			margin: .1%;
-			padding: 5px; 
-			width: 30%; 
-		}
-		select#mompaf_0,
-		.MOMSettings .setting form select {
-			clear: both; 
-			display: block;
-			margin: 5px 0 -10px;
-			width: 100%;
-		}
-		
-		.MOMSettings .setting .rightContainer {
-			width: 70%; 
-			float: right;
-		}
-			.MOMSettings .setting .rightContainer section {
-				clear: both; 
-				width: 100%;
-				height: 20px;
-			}
-				.MOMSettings .setting .rightContainer label {
-					float: left;
-					width: 45%;
-				}
-				.MOMSettings .setting .rightContainer input {
-					float: right;
-					width: 45%;
-				}				
-	
-	
-		.MOMSettings .right .list{ 
-			border: 1px solid rgba(0,0,0,.1);
-			clear: both; 
-			height: 140px;
-			overflow-y: auto;
-			overflow-x: hidden;
-			display: block;
-			padding: 5px;
-			width: 98%;
-		}
-		.MOMSettings .right .list span{ 
-			float: left;
-			margin: 5px;
-			width: 48%;
-		}	
-		.MOMSettings form .right {
-			float: right;
-			width: 70%;
-		}
-		.MOMSettings form .left {
-			float: left;
-			width: 25%;
-		}
-		.MOMSettings form.clear:after, 
-		.MOMSettings form .clear:after {
-			clear: both; 
-			content: "";
-			display: table;
-		}
-		.MOMSettings form.clear {
-			clear: both; 
-			font-size: 95%;
-			display: block; 
-			margin: 5px 0;
-			width: 100%; 
-		}
-		.MOMSettings form .clear {
-			clear: both; 
-			display: block; 
-			width: 100%; 
-		}
-		.MOMSettings form.clear input[type="submit"] {
-			clear: both; 
-			display: block; 
-			width: 100%;
-		}
-		.MOMSettings .right hr {
-			clear: both; 
-			margin: 35px 0;
-		}
-		.MOMSettings .left p,
-		.MOMSettings .moduleHeader p {
-			font-size: 85%;
-			margin: 15px;
-		}
-		.MOMSettings .right p {
-			border-top: 1px solid rgba(0,0,0,.1);
-			clear: both; 
-			font-size: 90%; 
-			margin: 5px 0 0;
-			padding: 10px 0;
-		}
-		.MOMSettings .moduleHeader {
-			border-bottom: 1px solid rgba(0,0,0,.1);
-			clear: both; 
-			display: block;
-			width: 100%; 
-		}
-			.MOMSettings .moduleHeader .sectionTitle {
-				font-size: 105%;
-				font-weight: 900;
-				padding: 5px 0;
-			}
-		.MOMSettings .left {
-			display: block; 
-			float: left; 
-			padding: 5px;
-			width: 100px; 
-		}
-			.MOMSettings .left p {
-				color: rgba(0,0,0,.5);
-				display: block;
-				margin: 10px 0 0;
-				padding: 5px 0;
-				width: 100%; 
-			}
-			.config:after {
-				clear: both; 
-				content: "";
-				display: block; 
-			}
-			.config {
-				clear: both; 
-				display: block; 
-				margin: 5px 0 5px;
-				width: 100%; 
-			}
-			.config i {
-				float: right; 
-				margin: -16px 2px 0 0;
-			}
-			i.fa-reddit,
-			i.fa-google-plus,
-			i.fa-twitter,
-			i.fa-facebook,
-			i.fa-envelope,
-			i.fa-arrow-up {
-				float: left!important;
-			}
-			.config label {
-				width: 100%;
-				float: left;
-				font-size: 85%;
-			}
-				.config label:hover,
-				.config label:hover ~ i{
-					background-color: rgba(0,0,0,.8);
-					color: rgba(255,255,255,.8);
-				}
-			
-		.MOMSettings .right {
-			border-left: 1px solid rgba(0,0,0,.1);		
-			display: block; 
-			float: right; 
-			padding: 5px; 
-			width: 560px;
-		}
-		.MOMSettings .sectionTitle:after {
-			clear: both; 
-			content: "";
-			display: table;
-		}
-		.MOMSettings .sectionTitle {
-			border-bottom: 1px solid rgba(0,0,0,.1);
-			clear: both; 
-			display: block;
-			margin: 0 0 10px;
-			width: 100%; 
-		}
-		.MOMSettings .textAlignRight {
-			text-align: right;
-		}
 		.hidden {
 			display: none;
 			visibility: hidden; 
 		}
-		
-		
-		.simple {
-			clear: both; 
-			display: block; 
-			border-bottom:  1px solid rgba(0,0,0,.1);
-			overflow: auto;
-			padding: 15px 0;
-			margin: 15px auto;
-		}
-		.simple form {
-			border-radius: 3px;
-			width: 24.5%;
-			margin: 1px;
-			height: 150px;
-			float: left;
-			border: 1px solid rgba(0,0,0,.1);
-			position: relative;
-			font-weight: 900;
-			padding: 15px 5px 5px;
-		}
-		.simple form label,
-		.simple form label .fa-twitter,
-		.simple form label .fa-reddit,
-		.simple form label .fa-envelope,
-		.simple form label .fa-facebook,
-		.simple form label .fa-arrow-up,
-		.simple form label .fa-google-plus {
-			display: block; 
-			height: 100%;
-			width: 100%;
-			text-align: center;
-			position: relative; 
-			z-index: 2;
-		}
-		.simple form label .fa-twitter,
-		.simple form label .fa-reddit,
-		.simple form label .fa-envelope,
-		.simple form label .fa-facebook,
-		.simple form label .fa-arrow-up,
-		.simple form label .fa-google-plus {
-			font-size: 150%;
-		}		
-		.simple form label:hover ~ span.info {
-			opacity: 1;
-		}
-		.simple form label .fa-exclamation,
-		.simple form label .fa-exclamation-triangle,		
-		.simple form label .fa-trash-o,
-		.simple form .fa-toggle-on,
-		.simple form .fa-toggle-off {
-			position: absolute; 
-			bottom: 10px; 
-			left: 0;
-			width: 100%;
-			text-align: center;
-		}
-		.simple form span.info {
-			opacity: .7;
-			line-height: 97%;
-			position: absolute; 
-			top: 50px; 
-			left: 0;
-			z-index: 1; 
-			width: 100%; 
-			font-size: 95%;
-			text-align: center;
-			padding: 10px;
-		}
+
 		.fa-toggle-on {
 			color: #1c5c00;
 		}

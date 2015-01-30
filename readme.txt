@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: DNSBL, front, home, database, cleaner, disable, comments, RSS, javascript, footer, archives, author, ajax, font awesome, lazy load, horizontal, gallery, hide, version, mini, loop, exclude, category, tag, post format
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 5.7.7
+Stable tag: 5.7.8
 
 An assortment of functions to enhance WordPress.
 
@@ -34,6 +34,9 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 4. You'll find settings under Dashboard->Settings->My Optional Modules
 
 == Changelog ==
+* 5.7.8    Admin screen streamlining.
+* 5.7.8    Plugin uninstall wasn't erasing some of the Exclusion parameters. (Fixed)
+* 5.7.8    Added a way to disable pingbacks
 * 5.7.7    Font Awesome 4.3
 * 5.7.6    When enabling/disabling share icons/post exclusion, scrolling is unnecessary.
 * 5.7.6    Read more and Theme:Twenty Fifteen conflict resolved
