@@ -2491,7 +2491,7 @@ if(current_user_can( 'manage_options' ) ){
 			</div>
 			<div class="settings-section">
 			<span class="title-full">Random Post Paramter</span>
-			<em class="full">Define a paramter to affix to the end of any URL for the blog to bring up a random post.</em>
+			<em class="full">Define a paramater to affix to the end of any URL for the blog to bring up a random post. (Example: random would be /?random)</em>
 			<form name="mom_random_get_form" method="post" action="">
 				<?php wp_nonce_field( 'mom_random_get_form' ); ?>
 				<section>
