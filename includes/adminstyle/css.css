@@ -313,6 +313,9 @@
 		.simple form label:hover ~ span.info {
 			opacity: 1;
 		}
+		.simple form label .fa-exclamation,
+		.simple form label .fa-exclamation-triangle,		
+		.simple form label .fa-trash-o,
 		.simple form .fa-toggle-on,
 		.simple form .fa-toggle-off {
 			position: absolute; 

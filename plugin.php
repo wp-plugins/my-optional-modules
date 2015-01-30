@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.7.6
+ * Version: 5.7.7
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -1794,83 +1794,7 @@ if(current_user_can( 'manage_options' ) ){
 		[<a href="//wordpress.org/support/view/plugin-reviews/my-optional-modules">rate/review</a>] 
 		[<a href="//wordpress.org/support/plugin/my-optional-modules">support</a>]
 		</div>
-		<hr />
-		<div class="setting">
-			<p><em>Misc. Information/Warnings</em></p>
-			<form><?php if( !defined( 'NONCE_KEY' ) ) { ?><i class="fa fa-exclamation-triangle"></i> NONCE_KEY is <strong>not</strong> defined.<?php } else { ?><i class="fa fa-thumbs-up"></i> NONCE_KEY <strong>is</strong> defined.<?php }?></form>
-			<form><?php if( !defined( 'NONCE_SALT' ) ) { ?><i class="fa fa-exclamation-triangle"></i> NONCE_SALT is <strong>not</strong> defined.<?php } else { ?><i class="fa fa-thumbs-up"></i> NONCE_SALT <strong>is</strong> defined.<?php }?></form>
-		</div>
-		<hr />
-		<div class="setting">
-			<p><em>Uninstallation actions</em></p>
-			<?php if( !isset( $_POST[ 'mom_delete_step_one' ] ) ) { ?>
-				<form method="post" action="" name="mom_delete_step_one">
-				<?php wp_nonce_field( 'mom_delete_step_one' ); ?>
-				<label for="mom_delete_step_one">Initiate uninstall of My Optional Modules <i class="fa fa-exclamation"></i></label>
-				<input type="submit" id="mom_delete_step_one" name="mom_delete_step_one" class="hidden" value="Submit" />
-				</form>
-			<?php } ?>
-			<?php if( isset( $_POST[ 'mom_delete_step_one' ] ) ) { ?>
-				<form method="post" action="" name="MOM_UNINSTALL_EVERYTHING">
-				<?php wp_nonce_field( 'MOM_UNINSTALL_EVERYTHING' ); ?>
-				<label for="MOM_UNINSTALL_EVERYTHING">Confirm uninstall &mdash; Cannot be undone <i class="fa fa-exclamation-triangle"></i></label>
-				<input type="submit" id="MOM_UNINSTALL_EVERYTHING" name="MOM_UNINSTALL_EVERYTHING" class="hidden" value="Submit" />
-				</form>
-			<?php } ?>			
-		</div>
-		<hr />
-		<div class="setting">
-			<form name="mompaf_post_form" method="post" action="">
-				<?php wp_nonce_field( 'mompaf_post_form' ); ?>
-				<section class="clear">
-					<label>Set a blog post as your front page</label>
-					<select name="mompaf_post" id="mompaf_0">
-						<option value="off"<?php if ( get_option( 'mompaf_post' ) == 'off' ) { ?> selected="selected"<?php } ?>>Disabled</option>
-						<option value="on"<?php if ( get_option( 'mompaf_post' ) == 'on' ) { ?> selected="selected"<?php } ?>/>Latest post</option>
-							<?php $mompaf_post = get_option( 'mompaf_post' );
-							selected( get_option( 'mompaf_post' ), 0 );
-							$showmeposts = get_posts(array( 'posts_per_page' => -1) );
-							foreach($showmeposts as $postsshown){ ?>
-								<option name="mompaf_post" id="mompaf_'<?php echo $postsshown->ID; ?>" value="<?php echo $postsshown->ID; ?>"
-								<?php $postID = $postsshown->ID;
-								$selected = selected( $mompaf_post, $postID); ?>
-								><?php echo $postsshown->post_title; ?></option>
-						<?php } ?>
-					</select>
-				</section>
-				<input type="submit" id="mom_postasfront_post_submit" name="mom_postasfront_post_submit" value="Set it!" class="clear">
-			</form>
-			<form name="mom_navlink_classes_form" method="post" action="">
-				<?php wp_nonce_field( 'mom_navlink_classes_form' ); ?>
-				<section class="clear">
-					<label>Previous link class</label>
-					<input type="text" id="previous_link_class" name="previous_link_class" value="<?php if( get_option( 'mom_previous_link_class' ) ) { echo get_option( 'mom_previous_link_class' ); } ?>" />
-				</section>
-				<section class="clear">
-					<label>Next link class</label>
-					<input type="text" id="next_link_class" name="next_link_class" value="<?php if( get_option( 'mom_next_link_class' ) ) { echo get_option( 'mom_next_link_class' ); } ?>" />
-				</section>
-				<input type="submit" id="mom_navlink_classes_submit" name="mom_navlink_classes_submit" value="Set classes" class="clear">
-			</form>
-			<form name="mom_readmore_link_form" method="post" action="">
-				<?php wp_nonce_field( 'mom_readmore_link_form' ); ?>
-				<section class="clear">
-					<label>Read more... content (<em>%blank%</em> to remove it)</label>
-					<input type="text" id="read_more" name="read_more" value="<?php if( get_option( 'mom_readmore_content' ) ) { echo get_option( 'mom_readmore_content' ); } ?>" />
-				</section>
-				<input type="submit" id="mom_readmore_link_submit" name="mom_readmore_link_submit" value="Read more..." class="clear">
-			</form>
-			<form name="mom_random_get_form" method="post" action="">
-				<?php wp_nonce_field( 'mom_random_get_form' ); ?>
-				<section class="clear">
-					<label>Affix the following to the end of a URL for a random post (example: random means that test.com/?random will take you to a random post)</label>
-					<input type="text" id="randomget" name="randomget" value="<?php if( get_option( 'mom_random_get' ) ) { echo get_option( 'mom_random_get' ); } ?>" />
-				</section>
-				<input type="submit" id="mom_random_get_submit" name="mom_random_get_submit" value="Random set" class="clear">
-			</form>			
-		</div>
-		<hr />
-		<div class="setting">
+
 		<?php global $table_prefix, $wpdb;
 		if( isset( $_POST[ 'delete_drafts' ] ) || isset( $_POST[ 'delete_unused_terms' ] ) || isset( $_POST[ 'delete_post_revisions' ] ) || isset( $_POST[ 'delete_unapproved_comments' ] ) || isset( $_POST[ 'deleteAllClutter' ] ) ) {
 			$postsTable = $table_prefix.'posts';
@@ -1927,47 +1851,72 @@ if(current_user_can( 'manage_options' ) ){
 			}
 		}
 		$totalClutter    = ( $terms_count + $comments_count + $revisions_count ); ?>
+		<div class="simple">
+
+			<?php if( !isset( $_POST[ 'mom_delete_step_one' ] ) ) { ?>
+				<form method="post" action="" name="mom_delete_step_one">
+				<?php wp_nonce_field( 'mom_delete_step_one' ); ?>
+				<label for="mom_delete_step_one">Begin Uninstall
+				<i class="fa fa-exclamation"></i></label>
+				<input type="submit" id="mom_delete_step_one" name="mom_delete_step_one" class="hidden" value="Submit" />
+				<span class="info">Initiate uninstall (step 1 of 2)</span>
+				</form>
+			<?php } ?>
+			<?php if( isset( $_POST[ 'mom_delete_step_one' ] ) ) { ?>
+				<form method="post" action="" name="MOM_UNINSTALL_EVERYTHING">
+				<?php wp_nonce_field( 'MOM_UNINSTALL_EVERYTHING' ); ?>
+				<label for="MOM_UNINSTALL_EVERYTHING">Complete Uninstall 
+				<i class="fa fa-exclamation-triangle"></i></label>
+				<input type="submit" id="MOM_UNINSTALL_EVERYTHING" name="MOM_UNINSTALL_EVERYTHING" class="hidden" value="Submit" />
+				<span class="info">Cannot be undone (step 2 of 2)</span>
+				</form>
+			<?php } ?>			
+		
 			<form method="post" name="deleteAllClutterForm">
 				<?php wp_nonce_field( 'deleteAllClutterForm' ); ?>
-				<label for="deleteAllClutter">Clear <u>all</u> database clutter<i class="fa fa-trash-o"> <?php echo esc_attr( $totalClutter );?></i></label>
+				<label for="deleteAllClutter">Clear all clutter
+				<i class="fa fa-trash-o"></i>
+				</label>
 				<input class="hidden" id="deleteAllClutter" type="submit" value="Go" name="deleteAllClutter">
+				<span class="info"><?php echo esc_attr( $totalClutter );?></span>
 			</form>
 			<form method="post" name="deletePostRevisionsForm">
 				<?php wp_nonce_field( 'deletePostRevisionsForm' ); ?>
 				<label for="delete_post_revisions">
-					Clear <u>post</u> clutter
-					<i class="fa fa-trash-o"> <?php echo esc_attr( $revisions_count ); ?></i>
+					Clear post clutter
+					<i class="fa fa-trash-o"></i>
 				</label>
 				<input class="hidden" id="delete_post_revisions" type="submit" value="Go" name="delete_post_revisions">
+				<span class="info"><?php echo esc_attr( $revisions_count ); ?></span>
 			</form>
 			<form method="post" name="deleteUnapprovedCommentsForm">
 				<?php wp_nonce_field( 'deleteUnapprovedCommentsForm' ); ?>
 				<label for="delete_unapproved_comments">
-					Clear <u>comment</u> clutter
-					<i class="fa fa-trash-o"> <?php echo esc_attr( $comments_count ); ?></i>
+					Clear comment clutter
+					<i class="fa fa-trash-o"></i>
 				</label>
 				<input class="hidden" id="delete_unapproved_comments" type="submit" value="Go" name="delete_unapproved_comments">
+				<span class="info"><?php echo esc_attr( $comments_count ); ?></span>
 			</form>
 			<form method="post" name="deleteUnusedTermsForm">
 				<?php wp_nonce_field( 'deleteUnusedTermsForm' ); ?>
 				<label for="delete_unused_terms">
-					Clear <u>taxonomy</u> clutter
-					<i class="fa fa-trash-o"> <?php echo esc_attr( $terms_count ); ?></i>
+					Clear taxonomy clutter
+					<i class="fa fa-trash-o"></i>
 				</label>
 				<input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms">
+				<span class="info"><?php echo esc_attr( $terms_count ); ?></span>
 			</form>
 			<form method="post" name="deleteDraftsForm">
 				<?php wp_nonce_field( 'deleteDraftsForm' ); ?>
 				<label for="delete_drafts">
-					Clear <u>drafts</u> clutter
-					<i class="fa fa-trash-o"> <?php echo esc_attr( $drafts_count ); ?></i>
+					Clear draft clutter
+					<i class="fa fa-trash-o"></i>
 				</label>
 				<input class="hidden" id="delete_drafts" type="submit" value="Go" name="delete_drafts">
+				<span class="info"><?php echo esc_attr( $drafts_count ); ?></span>
 			</form>
-		</div>
-		
-		<div class="simple">
-
+			
 			<form method="post" action="" name="momComments">
 				<?php wp_nonce_field( 'momComments' ); ?>
 				<label for="mom_comments_mode_submit">Disable <strong>all</strong> comments
@@ -2142,6 +2091,7 @@ if(current_user_can( 'manage_options' ) ){
 			</form>
 			
 		</div>
+		
 		<?php if( 1 == get_option( 'mommaincontrol_momshare' ) ) { ?>
 
 			<div class="simple" id="shareicons">
@@ -2220,6 +2170,57 @@ if(current_user_can( 'manage_options' ) ){
 			</div>
 		
 		<?php }?>
+		
+		<div class="setting">
+			<form name="mompaf_post_form" method="post" action="">
+				<?php wp_nonce_field( 'mompaf_post_form' ); ?>
+				<section class="clear">
+					<label>Set a blog post as your front page</label>
+					<select name="mompaf_post" id="mompaf_0">
+						<option value="off"<?php if ( get_option( 'mompaf_post' ) == 'off' ) { ?> selected="selected"<?php } ?>>Disabled</option>
+						<option value="on"<?php if ( get_option( 'mompaf_post' ) == 'on' ) { ?> selected="selected"<?php } ?>/>Latest post</option>
+							<?php $mompaf_post = get_option( 'mompaf_post' );
+							selected( get_option( 'mompaf_post' ), 0 );
+							$showmeposts = get_posts(array( 'posts_per_page' => -1) );
+							foreach($showmeposts as $postsshown){ ?>
+								<option name="mompaf_post" id="mompaf_'<?php echo $postsshown->ID; ?>" value="<?php echo $postsshown->ID; ?>"
+								<?php $postID = $postsshown->ID;
+								$selected = selected( $mompaf_post, $postID); ?>
+								><?php echo $postsshown->post_title; ?></option>
+						<?php } ?>
+					</select>
+				</section>
+				<input type="submit" id="mom_postasfront_post_submit" name="mom_postasfront_post_submit" value="Set it!" class="clear">
+			</form>
+			<form name="mom_navlink_classes_form" method="post" action="">
+				<?php wp_nonce_field( 'mom_navlink_classes_form' ); ?>
+				<section class="clear">
+					<label>Previous link class</label>
+					<input type="text" id="previous_link_class" name="previous_link_class" value="<?php if( get_option( 'mom_previous_link_class' ) ) { echo get_option( 'mom_previous_link_class' ); } ?>" />
+				</section>
+				<section class="clear">
+					<label>Next link class</label>
+					<input type="text" id="next_link_class" name="next_link_class" value="<?php if( get_option( 'mom_next_link_class' ) ) { echo get_option( 'mom_next_link_class' ); } ?>" />
+				</section>
+				<input type="submit" id="mom_navlink_classes_submit" name="mom_navlink_classes_submit" value="Set classes" class="clear">
+			</form>
+			<form name="mom_readmore_link_form" method="post" action="">
+				<?php wp_nonce_field( 'mom_readmore_link_form' ); ?>
+				<section class="clear">
+					<label>Read more... content (<em>%blank%</em> to remove it)</label>
+					<input type="text" id="read_more" name="read_more" value="<?php if( get_option( 'mom_readmore_content' ) ) { echo get_option( 'mom_readmore_content' ); } ?>" />
+				</section>
+				<input type="submit" id="mom_readmore_link_submit" name="mom_readmore_link_submit" value="Read more..." class="clear">
+			</form>
+			<form name="mom_random_get_form" method="post" action="">
+				<?php wp_nonce_field( 'mom_random_get_form' ); ?>
+				<section class="clear">
+					<label>Affix the following to the end of a URL for a random post (example: random means that test.com/?random will take you to a random post)</label>
+					<input type="text" id="randomget" name="randomget" value="<?php if( get_option( 'mom_random_get' ) ) { echo get_option( 'mom_random_get' ); } ?>" />
+				</section>
+				<input type="submit" id="mom_random_get_submit" name="mom_random_get_submit" value="Random set" class="clear">
+			</form>			
+		</div>
 		
 		<?php if( 1 == get_option( 'mommaincontrol_momse' ) ) { ?>
 			
@@ -3353,6 +3354,12 @@ if( current_user_can( 'manage_options' ) ) {
 					<ol id="momEditorMenu">
 						<li class="clear"></li>
 						<?php $icon = array(
+							'bed','buysellads','cart-arrow-down','cart-plus','connectdevelop',
+							'dashcube','diamond','facebook-official','forumbee','heartbeat','hotel','leanpub',
+							'mars','mars-double','mars-stroke','mars-stroke-h','mars-stroke-v','medium',
+							'mercury','motorcycle','neuter','pinterest-p','sellsy','server','ship','shirtsinbulk',
+							'simplybuilt','skyatlas','street-view','subway','train','transgender','transgender-alt',
+							'user-plus','user-secret','user-times','venus','venus-double','venus-mars','viacoin','whatsapp',
 							'angellist','area-chart','at','bell-slash','bell-slash-o','bicycle','binoculars',
 							'birthday-cake','bus','calculator','cc','cc-amex','cc-discover','cc-mastercard',
 							'cc-paypal','cc-stripe','cc-visa','copyright','eyedropper','futbol-o','google-wallet',
