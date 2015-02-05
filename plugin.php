@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.7.8
+ * Version: 5.7.9
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -36,6 +36,13 @@
 
 define( 'MyOptionalModules', true );
 require_once( ABSPATH . 'wp-includes/pluggable.php' );
+
+
+
+
+/**
+ * Actions
+ */
 add_action( 'wp', 'my_optional_modules_scripts' );
 add_action( 'admin_enqueue_scripts', 'my_optional_modules_stylesheets' );
 add_action( 'admin_enqueue_scripts', 'my_optional_modules_font_awesome' );
@@ -43,11 +50,47 @@ add_action( 'wp_print_styles', 'my_optional_modules_main_stylesheet' );
 add_action( 'after_setup_theme', 'myoptionalmodules_postformats' );
 
 
+
+
+
+/**
+ * Variables used throughout the script
+ */
+$date_day                          = date( 'D' );
+$date_y                            = date( 'Y' );
+$date_m                            = date( 'n' );
+$date_d                            = date( 'j' );
+$mommodule_exclude                 = intval( get_option( 'mommaincontrol_momse' ) );
+$mommodule_share                   = intval( get_option( 'mommaincontrol_momshare' ) );
+$mommodule_fontawesome             = intval( get_option( 'mommaincontrol_fontawesome' ) );
+$mommodule_authorarchives          = intval( get_option( 'mommaincontrol_authorarchives' ) );
+$mommodule_datearchives            = intval( get_option( 'mommaincontrol_datearchives' ) );
+$mommodule_footerscripts           = intval( get_option( 'mommaincontrol_footerscripts' ) );
+$mommodule_protectrss              = intval( get_option( 'mommaincontrol_protectrss' ) );
+$mommodule_lazyload                = intval( get_option( 'mommaincontrol_lazyload' ) );
+$mommodule_versionnumbers          = intval( get_option( 'mommaincontrol_versionnumbers' ) );
+$mommodule_disablepingbacks        = intval( get_option( 'mommaincontrol_disablepingbacks' ) );
+$horizontal_galleries              = intval( get_option( 'MOM_themetakeover_horizontal_galleries' ) );
+$momthemetakeover_ajaxcomments     = intval( get_option( 'MOM_themetakeover_ajaxifycomments' ) );
+
+
+
+
+
+/**
+ * Set user level based on what the logged in user can do
+ * If the user isn't logged in, they don't get a user level
+ */
 if( is_user_logged_in() ) {
 
 	if( current_user_can( 'read' ) )                   $user_level = 1;	// Subscriber
 	if( current_user_can( 'delete_posts' ) )           $user_level = 2;	// 
 	if( current_user_can( 'delete_published_posts' ) ) $user_level = 3;	// 
+	
+	// According to the codex, only Super Admin(s) and Aministrator(s) may have access to 
+	// edit_dashboard. So if the current user logged in has this capability, it is safe to say 
+	// that the user is, in fact, an administrator.
+	
 	if( current_user_can( 'edit_dashboard' ) )         $user_level = 4;	// Admin
 	
 } else {
@@ -57,14 +100,15 @@ if( is_user_logged_in() ) {
 }
 
 
+
+
+
 /**
- *
  * Validate the IP address
  * "This function converts a human readable IPv4 or IPv6 address
  * (if PHP was built with IPv6 support enabled) into an address 
  * family appropriate 32bit or 128bit binary structure."
  * Read more at: //php.net/manual/en/function.inet-pton.php
- *
  */
 if( inet_pton( $_SERVER[ 'REMOTE_ADDR' ] ) === false ) {
 
@@ -88,7 +132,6 @@ if( inet_pton( $_SERVER[ 'REMOTE_ADDR' ] ) === false ) {
 	$ipaddress = esc_attr( $_SERVER[ 'REMOTE_ADDR' ] );
 
 }
-
 if( !function_exists ( 'myoptionalmodules_checkdnsbl' ) ) {
 
 	/**
@@ -113,9 +156,7 @@ if( !function_exists ( 'myoptionalmodules_checkdnsbl' ) ) {
 			'dnsbl-2.uceprotect.net',
 			'dnsbl-3.uceprotect.net',
 			'dnsbl.sorbs.net',
-			'zen.spamhaus.org',
-			'dnsbl-2.uceprotect.net',
-			'dnsbl-3.uceprotect.net'
+			'zen.spamhaus.org'
 		);
 
 		if( $ipaddress ) {
@@ -192,150 +233,9 @@ if( !function_exists ( 'myoptionalmodules_checkdnsbl' ) ) {
 
 
 
-
-
-
-
 /**
- * custom Media Embed with oembed fallback
- * usage: new mom_mediaEmbed(url);
+ * Share Icons
  */
-class mom_mediaEmbed {
-	var $url;
-	function mom_mediaEmbed ( $url ) {
-		$url  = esc_url ( $url );
-		$chck = strtolower( $url );
-		$chck = sanitize_text_field( $url );
-		$url  = sanitize_text_field( $url );
-		if( preg_match( '/\/\/(.*imgur\.com\/.*)/i', $url ) ) {
-			if( strpos( $chck, 'imgur.com/a/' ) !== false ) {
-				$url = substr ( $url, 19 );
-				echo '<iframe class="imgur-album" width="100%" height="550" frameborder="0" src="//imgur.com/a/' . $url . '/embed"></iframe>'; 
-			} else {
-				$url = esc_url ( $url );
-				echo '<a href="' . $url . '"><img class="image" alt="image" src="' . $url . '"/></a>';
-			}
-		}
-		elseif( preg_match( '/\/\/(.*youtube\.com\/.*)/i', $url ) ) {
-			// Probably a much better way of doing this..
-			$timeStamp = '';
-			if( strpos( $chck, 't=' ) !== false && strpos( $chck, 'list=' ) === false ) {
-				$url_parse = parse_url( $chck );
-				$timeStamp = sanitize_text_field( str_replace( '038;t=', '', $url_parse[ 'fragment' ] ) );
-				$minutes   = 0;
-				$seconds   = 0;
-				if( strpos( $timeStamp, 'm' ) !== false && strpos( $timeStamp, 's' ) !== false ){
-					$parts     = str_replace( array( 'm','s' ), '', $timeStamp );
-					list( $minutes, $seconds ) = $parts = str_split( $parts );
-					$minutes   = $minutes * 60;
-					$seconds   = $seconds * 1;
-				} elseif( strpos( $timeStamp, 'm' ) !== true && strpos( $timeStamp, 's' ) !== false ) {
-					$seconds   = str_replace( 's', '', $timeStamp ) * 1;
-				} elseif( strpos( $timeStamp, 'm' ) !== false && strpos( $timeStamp, 's' ) !== true ) {
-					$minutes   = str_replace( 'm', '', $timeStamp ) * 60;
-				} else {
-					$minutes = 0;
-					$seconds = 0;
-				}
-				
-				$timeStamp = $minutes + $seconds;
-
-			}
-			if ( preg_match ( '%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match ) ) {
-				$match[1] = sanitize_text_field ( $match[1] );
-				$video_id = $match[1];
-				$url      = $video_id;
-			}
-			echo '
-			<object width="640" height="390" data="https://www.youtube.com/v/' . $url . '?version=3&amp;start=' . $timeStamp . '">
-				<param name="movie" value="https://www.youtube.com/v/' . $url . '?version=3&amp;start=' . $timeStamp . '" />
-				<param name="allowScriptAccess" value="always" />
-				<embed src="https://www.youtube.com/v/' . $url . '?version=3&amp;start=' . $timeStamp . '"
-					type="application/x-shockwave-flash"
-					allowscriptaccess="always"
-					width="640" 
-					height="390" />
-				
-			</object>
-			';
-		}
-		elseif( preg_match( '/\/\/(.*liveleak\.com\/.*)/i', $url ) ) {
-			$url      = parse_url( $url );
-			$video_id = str_replace( 'i=', '', $url[ 'query' ] );
-			echo '
-				<object width="640" height="390" data="http://www.liveleak.com/e/' . $video_id . '">
-					<param name="movie" value="http://www.liveleak.com/e/' . $video_id . '" />
-					<param name="wmode" value="transparent" />
-					<embed src="http://www.liveleak.com/e/' . $video_id . '" 
-						type="application/x-shockwave-flash" 
-						wmode="transparent" 
-						width="640" 
-						height="390" />
-				</object>
-			';              
-		}			
-		elseif( preg_match( '/\/\/(.*youtu\.be\/.*)/i', $url ) ) {
-			$url = explode( '/', $url );
-			$url = $url[sizeof($url)-1];
-			echo '
-			<object width="640" height="390" data="https://www.youtube.com/v/' . $url . '?version=3">
-				<param name="movie" value="https://www.youtube.com/v/' . $url . '?version=3" />
-				<param name="allowScriptAccess" value="always" />
-				<embed src="https://www.youtube.com/v/' . $url . '?version=3"
-					type="application/x-shockwave-flash"
-					allowscriptaccess="always"
-					width="640" 
-					height="390" />
-			</object>
-			';              
-		}           
-		elseif( preg_match( '/\/\/(.*soundcloud\.com\/.*)/i', $url ) ) {
-			echo '<iframe width="100%" height="166" scrolling="no" frameborder="no" src="http://w.soundcloud.com/player/?url=' . $url . '&auto_play=false&color=915f33&theme_color=00FF00"></iframe>'; 
-		}
-		elseif( preg_match( '/\/\/(.*vimeo\.com\/.*)/i', $url ) ) {
-			$url = explode( '/', $url );
-			$url = $url[sizeof($url)-1];
-			echo '<iframe src="//player.vimeo.com/video/' . $url . '?title=0&amp;byline=0&amp;portrait=0&amp;color=d6cece" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'; 
-		}
-		elseif( preg_match( '/\/\/(.*gfycat\.com\/.*)/i', $url ) ) {
-			$url = str_replace ( '//gfycat.com/', '', $url );
-			echo '<iframe src="//gfycat.com/iframe/' . $url . '" frameborder="0" scrolling="no" width="592" height="320" ></iframe>';
-		}
-		elseif( preg_match( '/\/\/(.*funnyordie\.com\/.*)/i', $url ) ) {
-			$url = explode( '/', $url );
-			$url = $url[sizeof($url)-2];
-			echo '
-			<object width="640" height="400" id="ordie_player_' . $url . '" data="http://player.ordienetworks.com/flash/fodplayer.swf">
-				<param name="movie" value="http://player.ordienetworks.com/flash/fodplayer.swf" />
-				<param name="flashvars" value="key=' . $url . '" />
-				<param name="allowfullscreen" value="true" />
-				<param name="allowscriptaccess" value="always">
-				<embed width="640" height="400" flashvars="key=' . $url . '" allowfullscreen="true" allowscriptaccess="always" quality="high" src="http://player.ordienetworks.com/flash/fodplayer.swf" name="ordie_player_5325b03b52" type="application/x-shockwave-flash"></embed>
-			</object>
-			';
-		}
-		elseif( preg_match( '/\/\/(.*vine\.co\/.*)/i', $url ) ) {
-			$url = $url . '/embed/postcard';
-			echo '<iframe class="vine-embed" src="' . $url . '" width="600" height="600" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>';
-		} else {
-			/**
-			 * Fall back to WordPress provided oEmbed if none of the above
-			 * conditions were met.
-			 */			
-			echo wp_oembed_get( $url );
-		}
-	}
-}
-
-
-
-
-
-
-
-
-
-
 if( !function_exists( 'my_optional_modules_share_icons' ) ) { 
 
 	function my_optional_modules_share_icons( $content ) { 
@@ -344,34 +244,65 @@ if( !function_exists( 'my_optional_modules_share_icons' ) ) {
 
 		if( 1 == get_option( 'mommaincontrol_momshare' ) ) {
 
-		$at_top = get_option( 'MOM_enable_share_top' );
-		if( !$at_top ) { 
-			$at_top = 0;
-		} else {
-			$at_top = $at_top;
-		}
-		
-		$id      = $post->ID;
-		$excerpt = $post->post_excerpt;
-		$excerpt = htmlentities( str_replace( ' ', '%20', $excerpt ) ); 
-		$title   = str_replace( ' ', '%20', get_the_title( $id ) );
+			$at_top = get_option( 'MOM_enable_share_top' );
+
+			if( !$at_top ) {
+
+				$at_top = 0;
+
+			} else {
+
+				$at_top = $at_top;
+
+			}
+
+			$id      = $post->ID;
+			$excerpt = $post->post_excerpt;
+			$excerpt = htmlentities( str_replace( ' ', '%20', $excerpt ) ); 
+			$title   = str_replace( ' ', '%20', get_the_title( $id ) );
 		
 			$output = '<span class="mom_shareLinks">';
-				if( 1 == get_option( 'MOM_enable_share_reddit' ) ) {
-					$output .='<a class="reddit fa fa-reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '"></a>';
+			
+				if( 1 == $mommodule_fontawesome ) {
+			
+					if( 1 == get_option( 'MOM_enable_share_reddit' ) ) {
+						$output .='<a class="reddit fa fa-reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '"></a>';
+					}
+					if( 1 == get_option( 'MOM_enable_share_google' ) ) {	
+						$output .='<a class="google fa fa-google-plus" href="https://plus.google.com/share?url=' . get_the_permalink() . '"></a>';
+					}
+					if( 1 == get_option( 'MOM_enable_share_twitter' ) ) {
+						$output .='<a class="twitter fa fa-twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '"></a>';
+					}
+					if( 1 == get_option( 'MOM_enable_share_facebook' ) ) {
+						$output .='<a class="facebook fa fa-facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '"></a>';
+					}
+					if( 1 == get_option( 'MOM_enable_share_email' ) ) {
+						$output .='<a class="email fa fa-envelope" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]"></a>';
+					}
+
+				} else {
+
+					$output .='Share via: ';
+				
+					if( 1 == get_option( 'MOM_enable_share_reddit' ) ) {
+						$output .='<a class="reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '">reddit</a>';
+					}
+					if( 1 == get_option( 'MOM_enable_share_google' ) ) {	
+						$output .='<a class="google" href="https://plus.google.com/share?url=' . get_the_permalink() . '">google+</a>';
+					}
+					if( 1 == get_option( 'MOM_enable_share_twitter' ) ) {
+						$output .='<a class="twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '">twitter</a>';
+					}
+					if( 1 == get_option( 'MOM_enable_share_facebook' ) ) {
+						$output .='<a class="facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '">facebook</a>';
+					}
+					if( 1 == get_option( 'MOM_enable_share_email' ) ) {
+						$output .='<a class="email" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]">email</a>';
+					}
+				
 				}
-				if( 1 == get_option( 'MOM_enable_share_google' ) ) {	
-					$output .='<a class="google fa fa-google-plus" href="https://plus.google.com/share?url=' . get_the_permalink() . '"></a>';
-				}
-				if( 1 == get_option( 'MOM_enable_share_twitter' ) ) {
-					$output .='<a class="twitter fa fa-twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '"></a>';
-				}
-				if( 1 == get_option( 'MOM_enable_share_facebook' ) ) {
-					$output .='<a class="facebook fa fa-facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '"></a>';
-				}
-				if( 1 == get_option( 'MOM_enable_share_email' ) ) {
-					$output .='<a class="email fa fa-envelope" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]"></a>';
-				}
+
 			$output .='</span>';
 			
 			if( is_singular() && 1 == $at_top ) {
@@ -391,13 +322,21 @@ if( !function_exists( 'my_optional_modules_share_icons' ) ) {
 	}
 	
 }
-
 if( 1 == get_option( 'mommaincontrol_momshare' ) ) {
 
 	add_filter( 'the_content', 'my_optional_modules_share_icons' );
 
 }
 
+
+
+
+
+/**
+ * Protocol relative internal URLs
+ * Forces proper functioning URLs regardless of https/http usage for 
+ * inclusion of scripts and css (properly)
+ */
 if( !function_exists( 'my_optional_modules_protocol' ) ) {
 
 	function my_optional_modules_protocol( $url ) {
@@ -408,6 +347,10 @@ if( !function_exists( 'my_optional_modules_protocol' ) ) {
 	}
 
 }
+
+
+
+
  
 if( !function_exists( 'my_optional_modules_scripts' ) ) {
 
@@ -437,24 +380,17 @@ if( !function_exists( 'my_optional_modules_scripts' ) ) {
 
 }
 
-$date_day                          = date( 'D' );
-$date_y                            = date( 'Y' );
-$date_m                            = date( 'n' );
-$date_d                            = date( 'j' );
 
-$mommodule_exclude                 = intval( get_option( 'mommaincontrol_momse' ) );
-$mommodule_share                   = intval( get_option( 'mommaincontrol_momshare' ) );
-$mommodule_fontawesome             = intval( get_option( 'mommaincontrol_fontawesome' ) );
-$mommodule_authorarchives          = intval( get_option( 'mommaincontrol_authorarchives' ) );
-$mommodule_datearchives            = intval( get_option( 'mommaincontrol_datearchives' ) );
-$mommodule_footerscripts           = intval( get_option( 'mommaincontrol_footerscripts' ) );
-$mommodule_protectrss              = intval( get_option( 'mommaincontrol_protectrss' ) );
-$mommodule_lazyload                = intval( get_option( 'mommaincontrol_lazyload' ) );
-$mommodule_versionnumbers          = intval( get_option( 'mommaincontrol_versionnumbers' ) );
-$mommodule_disablepingbacks        = intval( get_option( 'mommaincontrol_disablepingbacks' ) );
-$horizontal_galleries              = intval( get_option( 'MOM_themetakeover_horizontal_galleries' ) );
-$momthemetakeover_ajaxcomments     = intval( get_option( 'MOM_themetakeover_ajaxifycomments' ) );
 
+
+
+/**
+ *
+ * Exclude Taxonomies
+ * Exclude categories, tags, and post formats based on many different paramaters 
+ * as set on the options page. 
+ *
+ */
 if( 1 == $mommodule_exclude ) {
 
 	add_action( 'pre_get_posts', 'mom_exclude_filter_posts' );
@@ -465,10 +401,12 @@ if( 1 == $mommodule_exclude ) {
 			
 			global $date_day;
 			
+			// Are these even used anymore in the code?
+			// $lt_1    = array( '0' );
+			// $t_1     = array( '0' );
+			
 			$c1	     = array( '0' );
-			$lt_1    = array( '0' );
 			$t1	     = array( '0' );
-			$t_1     = array( '0' );
 			$rss_day = array( '0' );
 			$t11     = 0;
 			$c_1     = 0;
@@ -723,6 +661,10 @@ if( 1 == $mommodule_exclude ) {
 	}
 
 }
+
+
+
+
 
 if( 1 == $mommodule_fontawesome ) {
 
@@ -1191,6 +1133,7 @@ if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ) {
 
 
 
+
 /**
  *
  * Admin Stylesheet
@@ -1215,6 +1158,10 @@ if( !function_exists( 'my_optional_modules_stylesheets' ) ) {
 
 }
 
+
+
+
+
 /**
  *
  * Font Awesome CSS enqueue
@@ -1231,6 +1178,10 @@ if( !function_exists( 'my_optional_modules_font_awesome' ) ) {
 	}
 
 }
+
+
+
+
 
 /**
  *
@@ -1250,6 +1201,10 @@ if( !function_exists( 'my_optional_modules_main_stylesheet' ) ) {
 
 }
 
+
+
+
+
 // //davidwalsh.name/wordpress-ajax-comments
 function mom_ajaxComment( $comment_ID, $comment_status ) {
 
@@ -1267,6 +1222,10 @@ function mom_ajaxComment( $comment_ID, $comment_status ) {
 
 }	
 
+
+
+
+
 // RSS feed (link back)
 if( !function_exists( 'myoptionalmodules_rsslinkback' ) ) { 
 
@@ -1277,6 +1236,10 @@ if( !function_exists( 'myoptionalmodules_rsslinkback' ) ) {
 	}
 
 }
+
+
+
+
 
 // JS to Footer (moves javascript to footer)
 if( !function_exists( 'myoptionalmodules_footerscripts' ) ) {
@@ -1290,6 +1253,10 @@ if( !function_exists( 'myoptionalmodules_footerscripts' ) ) {
 	}
 
 }
+
+
+
+
 
 // Disable Authors (archives)(if there is only 1 author on the blog)
 if( !function_exists( 'myoptionalmodules_disableauthorarchives' ) ) {
@@ -1308,6 +1275,10 @@ if( !function_exists( 'myoptionalmodules_disableauthorarchives' ) ) {
 	}
 
 }
+
+
+
+
 
 // Disable Date (based archives)
 if( !function_exists( 'myoptionalmodules_disabledatearchives' ) ) {
@@ -1329,6 +1300,10 @@ if( !function_exists( 'myoptionalmodules_disabledatearchives' ) ) {
 	}
 
 }
+
+
+
+
 
 /**
  * Navigation link classes
@@ -1365,76 +1340,37 @@ if( '' != get_option( 'mom_next_link_class' ) ) {
 	}
 }
 
+
+
+
+
 /**
- * Read More... link content
+ *
+ * Read more..
+ * Ovewrites the default 'read more' link text 
  *
  */
 if( '' != get_option( 'mom_readmore_content' ) ) {
-	
+
 	// Overwrite twentyfifteen_excerpt_more so that MOM's function works properly.
 	function twentyfifteen_excerpt_more( $more ) {}
-	
+
 	if( !function_exists( 'mom_excerpt_more' ) ) {
+
 		add_filter( 'the_content_more_link', 'mom_excerpt_more' );
 		add_filter( 'excerpt_more', 'mom_excerpt_more' );
+
 		function mom_excerpt_more( $more ) {
+
 			if( '%blank%' == get_option( 'mom_readmore_content' ) ) {
+
 				return '';
+
 			} else {
+
 				return '<a href="' . get_permalink() . '">' . sanitize_text_field( get_option( 'mom_readmore_content' ) ) . '</a>';
-			}
-		}
-	}
-}
-
-if( !function_exists( 'myoptionalmodules_excludecategories' ) ) {
-
-	function myoptionalmodules_excludecategories(){
-
-		global $user_level, $mommodule_exclude;
-
-		if( $mommodule_exclude == 1 ) {
-			
-			$MOM_Exclude_level0Categories  = get_option( 'MOM_Exclude_Categories_level0Categories' ); 
-			$MOM_Exclude_level1Categories  = get_option( 'MOM_Exclude_Categories_level1Categories' ); 
-			$MOM_Exclude_level2Categories  = get_option( 'MOM_Exclude_Categories_level2Categories' ); 
-			$MOM_Exclude_level7Categories  = get_option( 'MOM_Exclude_Categories_level7Categories' ); 
-			$loggedOutCats                 = 0;
-			
-			if( '' == $MOM_Exclude_level0Categories ) $MOM_Exclude_level0Categories = 0;
-			if( '' == $MOM_Exclude_level1Categories ) $MOM_Exclude_level1Categories = 0;
-			if( '' == $MOM_Exclude_level2Categories ) $MOM_Exclude_level2Categories = 0;
-			if( '' == $MOM_Exclude_level7Categories ) $MOM_Exclude_level7Categories = 0;
-
-			if( 0 == $user_level ) $loggedOutCats = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-			if( 1 == $user_level ) $loggedOutCats = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-			if( 2 == $user_level ) $loggedOutCats = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-			if( 3 == $user_level ) $loggedOutCats = $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-			if( 4 == $user_level ) $loggedOutCats = $MOM_Exclude_level7Categories;
-			
-			$c1 = explode( ',', $loggedOutCats );
-			foreach( $c1 as &$C1 ){ $C1 = $C1 . ','; }
-			$c_1 = rtrim( implode( $c1 ), ',' );
-			$c11 = explode( ',', str_replace( ' ', '', $c_1 ) );
-			$c11array = array( $c11 );
-			$loggedOutCats = array_filter( $c11 );
-
-		}
-
-		$category_ids = mom_get_all_category_ids();
-
-		foreach( $category_ids as $cat_id ) {
-
-			if( $loggedOutCats ) {
-
-				if( in_array( $cat_id, $loggedOutCats ) )continue;
 
 			}
-
-			$cat  = get_category( $cat_id );
-			$link = get_category_link( $cat_id );
-
-			echo '<li><a href="' . $link . '" title="link to ' . $cat->name . '">' . $cat->name . '</a></li>';
 
 		}
 
@@ -1442,9 +1378,21 @@ if( !function_exists( 'myoptionalmodules_excludecategories' ) ) {
 
 }
 
+
+
+
+
+/*
+ *
+ * Set the front page as a single post
+ * Checks to make sure this option is not disabled
+ * Checks to make sure this option is numerical (post IDs)
+ * Redirects home page to latest post or specified post (depending on set option)
+ *
+ */
 if( !function_exists( 'myoptionalmodules_postasfront' ) ) {
 
-	function myoptionalmodules_postasfront(){
+	function myoptionalmodules_postasfront() {
 
 		if( is_home() && 'off' != get_option( 'mompaf_post' ) ) {
 
@@ -1458,8 +1406,8 @@ if( !function_exists( 'myoptionalmodules_postasfront' ) ) {
 
 			}
 
-			if( have_posts() ):the_post();
-			header( 'location:' . esc_url( get_permalink( $mompaf_front) ) ); 
+			if( have_posts() ) : the_post();
+			header( 'location:' . esc_url( get_permalink( $mompaf_front ) ) ); 
 			exit; 
 			endif;
 
@@ -1469,9 +1417,19 @@ if( !function_exists( 'myoptionalmodules_postasfront' ) ) {
 
 }
 
+
+
+
+
+/*
+ *
+ * Disable Components: Version #
+ * Removes the WordPress version from source
+ *
+ */
 if( !function_exists( 'myoptionalmodules_removeversion' ) ) {
 
-	function myoptionalmodules_removeversion( $src ){
+	function myoptionalmodules_removeversion( $src ) {
 
 		if( strpos( $src, 'ver=' . get_bloginfo( 'version' ) ) ) { 
 
@@ -1485,9 +1443,19 @@ if( !function_exists( 'myoptionalmodules_removeversion' ) ) {
 
 }
 
+
+
+
+
+/**
+ *
+ * Any special files that are specifically used by MOM
+ * that need to be enqueued should be added in this block
+ *
+ */
 if( !function_exists( 'myoptionalmodules_scripts' ) ) {
 
-	function myoptionalmodules_scripts(){
+	function myoptionalmodules_scripts() {
 		
 		$font_awesome_css = plugins_url() . '/' . plugin_basename( dirname( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css';
 		$font_awesome_css = my_optional_modules_protocol( $font_awesome_css );
@@ -1497,1044 +1465,99 @@ if( !function_exists( 'myoptionalmodules_scripts' ) ) {
 
 }
 
+
+
+
+
+/**
+ *
+ * Add theme support for different post formats
+ * (in case the theme being used doesn't already 
+ * add this support by default).
+ *
+ */
 if( !function_exists( 'myoptionalmodules_postformats' ) ) {
 
-	function myoptionalmodules_postformats(){
+	function myoptionalmodules_postformats() {
 
-		add_theme_support( 'post-formats', array( 'aside', 'gallery', 'link', 'image', 'quote', 'status', 'video', 'audio', 'chat' ) );
+		add_theme_support(
 
-	}
+			'post-formats',
 
-}
+			array(
 
-if( !function_exists( 'myoptionalmodules_randomget' ) ) {
-	if( '' != get_option( 'mom_random_get' ) ) {
-		function myoptionalmodules_randomget() {
-			$random = sanitize_text_field( get_option( 'mom_random_get' ) );
-			if( isset( $_GET[ $random ] ) ) {
-				$args = array( 'numberposts' => 1, 'post_type' => 'post', 'post_status' => 'publish', 'orderby' => 'rand' );
-				$get_all = get_posts( $args );
-				foreach ($get_all as $all_posts) {
-					$random_post=$all_posts->ID;
-				}
-				header('location:'.esc_url(get_permalink($random_post)));exit;
-			}
-		}
-		add_action( 'wp', 'myoptionalmodules_randomget' );
-	}
-}
+				'aside',
+				'gallery',
+				'link',
+				'image',
+				'quote',
+				'status',
+				'video',
+				'audio',
+				'chat'
 
-if( current_user_can( 'manage_options' ) ) {
-
-	if( isset( $_POST[ 'MOM_UNINSTALL_EVERYTHING' ] ) && check_admin_referer( 'MOM_UNINSTALL_EVERYTHING' ) ) {
-
-		$option = array( 
-
-			'mommaincontrol_protectrss',
-			'mommaincontrol_footerscripts',
-			'mommaincontrol_authorarchives',
-			'mommaincontrol_datearchives',
-			'mommaincontrol_comments',
-			'mommaincontrol_dnsbl',
-			'MOM_themetakeover_ajaxcomments',
-			'MOM_themetakeover_horizontal_galleries',
-			'mommaincontrol_momse',
-			'mommaincontrol_momshare',
-			'mommaincontrol_fontawesome',
-			'mommaincontrol_lazyload',
-			'mommaincontrol_versionnumbers',
-			'mommaincontrol_disablepingbacks',
-			'mompaf_post',
-			'MOM_Exclude_PostFormats_Visitor',
-			'MOM_Exclude_PostFormats_RSS',
-			'MOM_Exclude_PostFormats_Front',
-			'MOM_Exclude_PostFormats_CategoryArchives',
-			'MOM_Exclude_PostFormats_TagArchives',
-			'MOM_Exclude_PostFormats_SearchResults',
-			'MOM_Exclude_Categories_Front',
-			'MOM_Exclude_Categories_TagArchives',
-			'MOM_Exclude_Tags_TagsSun',
-			'MOM_Exclude_Tags_TagsMon',
-			'MOM_Exclude_Tags_TagsTue',
-			'MOM_Exclude_Tags_TagsWed',
-			'MOM_Exclude_Tags_TagsThu',
-			'MOM_Exclude_Tags_TagsFri',
-			'MOM_Exclude_Tags_TagsSat',
-			'MOM_Exclude_Categories_CategoriesSun',
-			'MOM_Exclude_Categories_CategoriesMon',
-			'MOM_Exclude_Categories_CategoriesTue',
-			'MOM_Exclude_Categories_CategoriesWed',
-			'MOM_Exclude_Categories_CategoriesThu',
-			'MOM_Exclude_Categories_CategoriesFri',
-			'MOM_Exclude_Categories_CategoriesSat',
-			'MOM_Exclude_Categories_SearchResults',
-			'MOM_Exclude_Categories_RSS',
-			'MOM_Exclude_Tags_RSS',
-			'MOM_Exclude_Tags_Front',
-			'MOM_Exclude_Tags_CategoryArchives',
-			'MOM_Exclude_Tags_SearchResults',
-			'MOM_Exclude_PostFormats_Front',
-			'MOM_Exclude_PostFormats_CategoryArchives',
-			'MOM_Exclude_PostFormats_TagArchives',
-			'MOM_Exclude_PostFormats_SearchResults',
-			'MOM_Exclude_PostFormats_Visitor',
-			'MOM_Exclude_PostFormats_RSS',
-			'MOM_Exclude_Tags_Tags',
-			'MOM_Exclude_Categories_Categories',
-			'MOM_Exclude_Categories_level0Categories',
-			'MOM_Exclude_Categories_level1Categories',
-			'MOM_Exclude_Categories_level2Categories',
-			'MOM_Exclude_Categories_level7Categories',
-			'MOM_Exclude_Tags_level0Tags',
-			'MOM_Exclude_Tags_level1Tags',
-			'MOM_Exclude_Tags_level2Tags',
-			'MOM_Exclude_Tags_level7Tags',
-			'MOM_enable_share_top',
-			'MOM_enable_share_reddit',
-			'MOM_enable_share_google',
-			'MOM_enable_share_twitter',
-			'MOM_enable_share_facebook',
-			'MOM_enable_share_email',
-			'mom_next_link_class',
-			'mom_previous_link_class',
-			'mom_readmore_content',
-			'mom_random_get'
+			)
 
 		);
 
-		foreach( $option as &$value ) {
-
-			delete_option( $value );
-
-		}
-
-	} else {
-
-		if( isset( $_POST[ 'mom_random_get_submit' ] ) && check_admin_referer( 'mom_random_get_form' ) ) {
-		
-			$_REQUEST[ 'randomget' ] = sanitize_text_field( $_REQUEST[ 'randomget' ] );
-			update_option( 'mom_random_get', $_REQUEST[ 'randomget' ] );
-		
-		}
-	
-		if( isset( $_POST[ 'mom_protectrss_mode_submit' ] ) && check_admin_referer( 'protectrss' ) ) {
-
-			$_REQUEST[ 'protectrss' ] = sanitize_text_field( $_REQUEST[ 'protectrss' ] );
-			update_option( 'mommaincontrol_protectrss', $_REQUEST[ 'protectrss' ] );
-
-		}
-
-		if( isset( $_POST[ 'mom_footerscripts_mode_submit' ] ) && check_admin_referer( 'footerscripts' ) ) {
-		
-			$_REQUEST[ 'footerscripts' ] = sanitize_text_field( $_REQUEST[ 'footerscripts' ] );
-			update_option( 'mommaincontrol_footerscripts', $_REQUEST[ 'footerscripts' ] );
-
-		}
-
-		if( isset( $_POST[ 'mom_author_archives_mode_submit' ] ) && check_admin_referer( 'authorarchives' ) ) { 
-
-			$_REQUEST[ 'authorarchives' ] = sanitize_text_field( $_REQUEST[ 'authorarchives' ] );
-			update_option( 'mommaincontrol_authorarchives', $_REQUEST[ 'authorarchives' ] );
-
-		}
-
-		if( isset( $_POST[ 'mom_date_archives_mode_submit' ] ) && check_admin_referer( 'datearchives' ) ) { 
-
-			$_REQUEST[ 'datearchives' ] = sanitize_text_field( $_REQUEST[ 'datearchives' ] );
-			update_option( 'mommaincontrol_datearchives', $_REQUEST[ 'datearchives' ] );
-
-		}
-
-		if( isset( $_POST[ 'mom_comments_mode_submit' ] ) && check_admin_referer( 'momComments' ) ) { 
-
-			$_REQUEST[ 'comments' ] = sanitize_text_field( $_REQUEST[ 'comments' ] );		
-			update_option( 'mommaincontrol_comments', $_REQUEST[ 'comments' ] );
-
-		}
-
-		if( isset( $_POST[ 'mom_dnsbl_mode_submit' ] ) && check_admin_referer( 'momDNSBL' ) ) {
-
-			$_REQUEST[ 'dnsbl' ] = sanitize_text_field( $_REQUEST[ 'dnsbl' ] );
-			update_option( 'mommaincontrol_dnsbl', $_REQUEST[ 'dnsbl' ] );
-
-		}
-
-		if( isset( $_POST[ 'mom_ajax_comments_mode_submit' ] ) && check_admin_referer( 'momAjaxComments' ) ) { 
-
-			$_REQUEST[ 'ajaxify' ] = sanitize_text_field( $_REQUEST[ 'ajaxify' ] );
-			update_option( 'MOM_themetakeover_ajaxcomments', $_REQUEST[ 'ajaxify' ] );
-
-		}
-
-		if( isset( $_POST[ 'mom_exclude_mode_submit' ] ) && check_admin_referer( 'momExclude' ) ) { 
-
-			$_REQUEST[ 'exclude' ] = sanitize_text_field( $_REQUEST[ 'exclude' ] );
-			update_option( 'mommaincontrol_momse', $_REQUEST[ 'exclude' ] );
-
-		}
-
-		if( isset( $_POST[ 'mom_share_mode_submit' ] ) && check_admin_referer( 'momShare' ) ) { 
-
-			$_REQUEST[ 'share' ] = sanitize_text_field( $_REQUEST[ 'share' ] );
-			update_option( 'mommaincontrol_momshare', $_REQUEST[ 'share' ] );
-
-		}
-
-		if( 1 == get_option( 'mommaincontrol_momshare' ) ) {
-
-			if( isset( $_POST[ 'MOM_enable_share_top' ] ) && check_admin_referer( 'momShareTop' ) ) { 
-
-				$_REQUEST[ 'top' ] = sanitize_text_field( $_REQUEST[ 'top' ] );
-				update_option( 'MOM_enable_share_top', $_REQUEST[ 'top' ] );
-
-			}
-			if( isset( $_POST[ 'MOM_enable_share_reddit' ] ) && check_admin_referer( 'momShareReddit' ) ) { 
-
-				$_REQUEST[ 'reddit' ] = sanitize_text_field( $_REQUEST[ 'reddit' ] );
-				update_option( 'MOM_enable_share_reddit', $_REQUEST[ 'reddit' ] );
-
-			}
-			if( isset( $_POST[ 'MOM_enable_share_twitter' ] ) && check_admin_referer( 'momShareTwitter' ) ) { 
-
-				$_REQUEST[ 'twitter' ] = sanitize_text_field( $_REQUEST[ 'twitter' ] );
-				update_option( 'MOM_enable_share_twitter', $_REQUEST[ 'twitter' ] );
-
-			}
-			if( isset( $_POST[ 'MOM_enable_share_email' ] ) && check_admin_referer( 'momShareEmail' ) ) { 
-
-				$_REQUEST[ 'email' ] = sanitize_text_field( $_REQUEST[ 'email' ] );
-				update_option( 'MOM_enable_share_email', $_REQUEST[ 'email' ] );
-
-			}
-			if( isset( $_POST[ 'MOM_enable_share_google' ] ) && check_admin_referer( 'momShareGoogle' ) ) { 
-
-				$_REQUEST[ 'google' ] = sanitize_text_field( $_REQUEST[ 'google' ] );
-				update_option( 'MOM_enable_share_google', $_REQUEST[ 'google' ] );
-
-			}
-			if( isset( $_POST[ 'MOM_enable_share_facebook' ] ) && check_admin_referer( 'momShareFacebook' ) ) { 
-
-				$_REQUEST[ 'facebook' ] = sanitize_text_field( $_REQUEST[ 'facebook' ] );
-				update_option( 'MOM_enable_share_facebook', $_REQUEST[ 'facebook' ] );
-
-			}
-
-		}
-
-		if( isset( $_POST[ 'mom_horizontal_galleries_mode_submit' ] ) && check_admin_referer( 'momHorizontalGalleries' ) ) { 
-
-			$_REQUEST[ 'hgalleries' ] = sanitize_text_field( $_REQUEST[ 'hgalleries' ] );
-			update_option( 'MOM_themetakeover_horizontal_galleries', $_REQUEST[ 'hgalleries' ] );
-
-		}
-
-		if( isset( $_POST[ 'mom_fontawesome_mode_submit' ] ) && check_admin_referer( 'fontawesome' ) ) { 
-
-			$_REQUEST[ 'mommaincontrol_fontawesome' ] = sanitize_text_field( $_REQUEST[ 'mommaincontrol_fontawesome' ] );
-			update_option( 'mommaincontrol_fontawesome', $_REQUEST[ 'mommaincontrol_fontawesome' ] );
-
-		}
-		
-		if( isset( $_POST[ 'mom_lazy_mode_submit' ] ) && check_admin_referer( 'lazyload' ) ) { 
-
-			$_REQUEST[ 'mommaincontrol_lazyload' ] = sanitize_text_field( $_REQUEST[ 'mommaincontrol_lazyload' ] );
-			update_option( 'mommaincontrol_lazyload', $_REQUEST[ 'mommaincontrol_lazyload' ] );
-
-		}
-		
-		if( isset( $_POST[ 'mom_versions_submit' ] ) && check_admin_referer( 'hidewpversions' ) ) { 
-
-			$_REQUEST[ 'mommaincontrol_versionnumbers' ] = sanitize_text_field( $_REQUEST[ 'mommaincontrol_versionnumbers' ] );
-			update_option( 'mommaincontrol_versionnumbers', $_REQUEST[ 'mommaincontrol_versionnumbers' ] );
-
-		}
-
-		if( isset( $_POST[ 'mom_disablepingbacks_submit' ] ) && check_admin_referer( 'disablepingbacks' ) ) { 
-
-			$_REQUEST[ 'mommaincontrol_disablepingbacks' ] = sanitize_text_field( $_REQUEST[ 'mommaincontrol_disablepingbacks' ] );
-			update_option( 'mommaincontrol_disablepingbacks', $_REQUEST[ 'mommaincontrol_disablepingbacks' ] );
-
-		}		
-
-		if( !get_option( 'mommaincontrol_mompaf' ) ) {
-
-			add_option( 'mompaf_post', 'off' );
-
-		}
-
-		if( isset( $_POST[ 'mom_navlink_classes_submit' ] ) && check_admin_referer( 'mom_navlink_classes_form' ) ) {
-
-			$_REQUEST[ 'previous_link_class' ] = sanitize_text_field( str_replace( '.', '', $_REQUEST[ 'previous_link_class' ] ) );
-			$_REQUEST[ 'next_link_class' ] = sanitize_text_field( str_replace( '.', '', $_REQUEST[ 'next_link_class' ] ) );
-			update_option( 'mom_previous_link_class', $_REQUEST[ 'previous_link_class' ] );
-			update_option( 'mom_next_link_class', $_REQUEST[ 'next_link_class' ] );
-
-		}
-
-		if( isset( $_POST[ 'mom_readmore_link_submit' ] ) && check_admin_referer( 'mom_readmore_link_form' ) ) {
-
-			$_REQUEST[ 'read_more' ] = sanitize_text_field( $_REQUEST[ 'read_more' ] );
-			update_option( 'mom_readmore_content', $_REQUEST[ 'read_more' ] );
-
-		}		
-
-		if( isset( $_POST[ 'mom_postasfront_post_submit' ] ) && check_admin_referer( 'mompaf_post_form' ) ) {
-
-			$_REQUEST[ 'mompaf_post' ] = sanitize_text_field( $_REQUEST[ 'mompaf_post' ] );
-			update_option( 'mompaf_post', $_REQUEST[ 'mompaf_post' ] );
-
-		}		
-
-		add_option( 'mompaf_post', 'off' );
-
 	}
-	
-	if( isset( $_POST[ 'momsesave' ] ) && check_admin_referer( 'hidecategoriesfrom' ) ) {
 
-		foreach( $_REQUEST as $k => $v ) {
-			update_option( $k, $v );
-		}
-
-		$_REQUEST[ 'MOM_Exclude_PostFormats_Visitor' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_Visitor' ] );
-		$_REQUEST[ 'MOM_Exclude_PostFormats_RSS' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_RSS' ] );
-		$_REQUEST[ 'MOM_Exclude_PostFormats_Front' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_Front' ] );
-		$_REQUEST[ 'MOM_Exclude_PostFormats_CategoryArchives' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_CategoryArchives' ] );
-		$_REQUEST[ 'MOM_Exclude_PostFormats_TagArchives' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_TagArchives' ] );
-		$_REQUEST[ 'MOM_Exclude_PostFormats_SearchResults' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_SearchResults' ] );
-		update_option( 'MOM_Exclude_PostFormats_Visitor', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_Visitor' ] ) );
-		update_option( 'MOM_Exclude_PostFormats_RSS', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_RSS' ] ) );
-		update_option( 'MOM_Exclude_PostFormats_Front', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_Front' ] ) );
-		update_option( 'MOM_Exclude_PostFormats_CategoryArchives', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_CategoryArchives' ] ) );
-		update_option( 'MOM_Exclude_PostFormats_TagArchives', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_TagArchives' ] ) );
-		update_option( 'MOM_Exclude_PostFormats_SearchResults', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_SearchResults' ] ) );
-
-	}	
 }
 
-if(current_user_can( 'manage_options' ) ){
-	// Add options page for plugin to Wordpress backend
-	add_action( 'admin_menu','my_optional_modules_add_options_page' );
-	function my_optional_modules_add_options_page(){
-		add_options_page( 'My Optional Modules','My Optional Modules','manage_options','mommaincontrol','my_optional_modules_page_content' ); 
+
+
+
+
+/**
+ *
+ * Random Post Parameter
+ * ?keyword (set by admin) to redirect to a random post 
+ *
+ * There is no default - this will not function unless
+ * admin has specified a word to use.
+ *
+ */
+if( !function_exists( 'myoptionalmodules_randomget' ) ) {
+
+	if( '' != get_option( 'mom_random_get' ) ) {
+
+		function myoptionalmodules_randomget() {
+
+			$random = sanitize_text_field( get_option( 'mom_random_get' ) );
+
+			if( isset( $_GET[ $random ] ) ) {
+
+				$args = array(
+
+					'numberposts' => 1,
+					'post_type'   => 'post',
+					'post_status' => 'publish',
+					'orderby'     => 'rand'
+
+				);
+
+				$get_all = get_posts( $args );
+
+				foreach ($get_all as $all_posts) {
+
+					$random_post=$all_posts->ID;
+
+				}
+				header( 'location:' . esc_url( get_permalink( $random_post ) ) ); exit;
+
+			}
+
+		}
+
+		add_action( 'wp', 'myoptionalmodules_randomget' );
+
 	}
 
-	// Content to display on the options page
-	function my_optional_modules_page_content(){ ?>
-	<div class="MOMSettings">
-		
-		<div class="settings-section" id="name">
-			<div class="left-half">
-				<span class="title">My Optional Modules</span>
-				<em>Don't forget to <a href="//wordpress.org/support/view/plugin-reviews/my-optional-modules">rate and review</a> 
-				this plugin if you found it helpful. Need help? Post your question on the 
-				<a href="//wordpress.org/support/plugin/my-optional-modules">support</a> forum.</em>
-			</div>
-			<div class="right-half">
-				<?php if( !isset( $_POST[ 'mom_delete_step_one' ] ) ) { ?>
-					<form method="post" action="#name" name="mom_delete_step_one">
-					<?php wp_nonce_field( 'mom_delete_step_one' ); ?>
-					<label for="mom_delete_step_one">
-						<i class="fa fa-exclamation"></i>
-						<span>Uninstall (1/2)</span>
-					</label>
-					<input type="submit" id="mom_delete_step_one" name="mom_delete_step_one" class="hidden" value="Submit" />
-					</form>
-				<?php } ?>
-				<?php if( isset( $_POST[ 'mom_delete_step_one' ] ) ) { ?>
-					<form method="post" action="#name" name="MOM_UNINSTALL_EVERYTHING">
-					<?php wp_nonce_field( 'MOM_UNINSTALL_EVERYTHING' ); ?>
-					<label for="MOM_UNINSTALL_EVERYTHING">
-						<i class="fa fa-exclamation-triangle"></i>
-						<span>Uninstall (2/2)</span>
-					</label>
-					<input type="submit" id="MOM_UNINSTALL_EVERYTHING" name="MOM_UNINSTALL_EVERYTHING" class="hidden" value="Submit" />
-					</form>
-				<?php } ?>			
-			</div>
-		</div>
-		
-		<?php global $table_prefix, $wpdb;
-		if( isset( $_POST[ 'delete_drafts' ] ) || isset( $_POST[ 'delete_unused_terms' ] ) || isset( $_POST[ 'delete_post_revisions' ] ) || isset( $_POST[ 'delete_unapproved_comments' ] ) || isset( $_POST[ 'deleteAllClutter' ] ) ) {
-			$postsTable = $table_prefix.'posts';
-			$commentsTable = $table_prefix.'comments';
-			$termsTable2 = $table_prefix.'terms';
-			$termsTable = $table_prefix.'term_taxonomy';
-			if( isset( $_POST[ 'delete_post_revisions' ] ) && check_admin_referer( 'deletePostRevisionsForm' ) ) {
-				$wpdb->query( "DELETE FROM `$postsTable` WHERE `post_type` = 'revision' OR `post_status` = 'auto-draft' OR `post_status` = 'trash'" );
-			}
-			if( isset ($_POST[ 'delete_unapproved_comments' ] ) && check_admin_referer( 'deleteUnapprovedCommentsForm' ) ) {
-				$wpdb->query( "DELETE FROM `$commentsTable` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'" );
-			}
-			if( isset( $_POST[ 'delete_unused_terms' ] ) && check_admin_referer( 'deleteUnusedTermsForm' ) ) {
-				$wpdb->query( "DELETE FROM `$termsTable2` WHERE `term_id` IN ( select `term_id` from `$termsTable` WHERE `count` = 0 )" );
-				$wpdb->query( "DELETE FROM `$termsTable` WHERE `count` = 0");
-			}
-			if( isset( $_POST[ 'delete_drafts' ] ) && check_admin_referer( 'deleteDraftsForm' ) ) {
-				$wpdb->query( "DELETE FROM `$postsTable` WHERE `post_status` = 'draft'" );
-			}
-			if( isset( $_POST[ 'deleteAllClutter' ] ) && check_admin_referer( 'deleteAllClutterForm' ) ) {
-				$wpdb->query( "DELETE FROM `$postsTable` WHERE `post_type` = 'revision' OR `post_status` = 'auto-draft' OR `post_status` = 'trash'" );
-				$wpdb->query( "DELETE FROM `$commentsTable` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'" );
-				$wpdb->query( "DELETE FROM `$termsTable2` WHERE `term_id` IN ( select `term_id` from `$termsTable` WHERE `count` = 0 )" );
-				$wpdb->query( "DELETE FROM `$termsTable` WHERE `count` = 0" );
-			}
-		}		
-		$drafts_count = $revisions_count = $comments_count = $terms_count = 0;
-		$postsTable      = $table_prefix . 'posts';
-		$commentsTable   = $table_prefix . 'comments';
-		$termsTable2     = $table_prefix . 'terms';
-		$termsTable      = $table_prefix . 'term_taxonomy';
-		$revisions_total = $wpdb->get_results ( "SELECT ID FROM `$postsTable` WHERE `post_type` = 'revision' OR `post_type` = 'auto_draft' OR `post_status` = 'trash'" );
-		$drafts_total    = $wpdb->get_results ( "SELECT ID FROM `$postsTable` WHERE `post_status` = 'draft'" );
-		$comments_total  = $wpdb->get_results ( "SELECT comment_ID FROM `$commentsTable` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'" );
-		$terms_total     = $wpdb->get_results ( "SELECT term_taxonomy_id FROM `$termsTable` WHERE `count` = '0'" );
-		if( count( $drafts_total ) ) {
-			foreach( $drafts_total as $drafts ) {
-				$drafts_count++;
-			}			
-		}
-		if( count( $revisions_total ) ) { 
-			foreach( $revisions_total as $retot ) { 
-				$revisions_count++; 
-			}
-		}
-		if( count( $comments_total ) ) {
-			foreach( $comments_total as $comtot ) { 
-				$comments_count++; 
-			}
-		}
-		if( count( $terms_total ) ) {
-			foreach( $terms_total as $termstot  ) {
-				$terms_count++; 
-			}
-		}
-		$totalClutter    = ( $terms_count + $comments_count + $revisions_count ); ?>
-		
-		<div class="settings-section" id="trash-removal">
-			<div class="left-half">
-				<span class="title">Trash Removal</span>
-				<em>Removes clutter from the database.</em>
-			</div>
-			<div class="right-half">
-				<form method="post" action="#trash-removal" name="deleteAllClutterForm">
-					<?php wp_nonce_field( 'deleteAllClutterForm' ); ?>
-					<label for="deleteAllClutter" title="<?php echo esc_attr( $totalClutter );?>">
-						<i class="fa fa-trash-o"></i>
-						<span>All</span>
-					</label>
-					<input class="hidden" id="deleteAllClutter" type="submit" value="Go" name="deleteAllClutter">
-				</form>
-				<form method="post" action="#trash-removal" name="deletePostRevisionsForm">
-					<?php wp_nonce_field( 'deletePostRevisionsForm' ); ?>
-					<label for="delete_post_revisions" title="<?php echo esc_attr( $revisions_count ); ?>">
-						<i class="fa fa-trash-o"></i>
-						<span>Posts</span>
-					</label>
-					<input class="hidden" id="delete_post_revisions" type="submit" value="Go" name="delete_post_revisions">
-				</form>
-				<form method="post" action="#trash-removal" name="deleteUnapprovedCommentsForm">
-					<?php wp_nonce_field( 'deleteUnapprovedCommentsForm' ); ?>
-					<label for="delete_unapproved_comments" title="<?php echo esc_attr( $comments_count ); ?>">
-						<i class="fa fa-trash-o"></i>
-						<span>Comments</span>
-					</label>
-					<input class="hidden" id="delete_unapproved_comments" type="submit" value="Go" name="delete_unapproved_comments">
-				</form>
-				<form method="post" action="#trash-removal" name="deleteUnusedTermsForm">
-					<?php wp_nonce_field( 'deleteUnusedTermsForm' ); ?>
-					<label for="delete_unused_terms" title="<?php echo esc_attr( $terms_count ); ?>">
-						<i class="fa fa-trash-o"></i>
-						<span>Taxes</span>
-					</label>
-					<input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms">
-				</form>
-				<form method="post" action="#trash-removal" name="deleteDraftsForm">
-					<?php wp_nonce_field( 'deleteDraftsForm' ); ?>
-					<label for="delete_drafts" title="<?php echo esc_attr( $drafts_count ); ?>">
-						<i class="fa fa-trash-o"></i>
-						<span>Drafts</span>
-					</label>
-					<input class="hidden" id="delete_drafts" type="submit" value="Go" name="delete_drafts">
-				</form>
-			</div>			
-		</div>
-		<div class="settings-section" id="disable">
-			<div class="left-half">
-				<span class="title">Disable components</span>
-				<em>Completely disable comments, version number, pingbacks, author archives, or date archives.</em>
-			</div>
-			<div class="right-half">
-				<form method="post" action="#disable" name="momComments">
-					<?php wp_nonce_field( 'momComments' ); ?>
-					<label for="mom_comments_mode_submit">
-					<?php if( 1 == get_option( 'mommaincontrol_comments' ) ) { ?>
-						<i class="fa fa-toggle-on"></i>
-					<?php } else { ?>
-						<i class="fa fa-toggle-off"></i>
-					<?php }?>
-					<span>Comments</span>
-					</label>
-					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_comments' ) ){ echo 0; } else { echo 1; }?>" name="comments" />
-					<input type="submit" id="mom_comments_mode_submit" name="mom_comments_mode_submit" value="Submit" class="hidden" />
-				</form>
-				<form method="post" action="#disable" name="hidewpversions">
-					<?php wp_nonce_field( 'hidewpversions' ); ?>
-					<label for="mom_versions_submit">
-					<?php if( 1 == get_option( 'mommaincontrol_versionnumbers' ) ) { ?>
-						<i class="fa fa-toggle-on"></i>
-					<?php } else { ?>
-						<i class="fa fa-toggle-off"></i>
-					<?php }?>
-					<span>Version #</span>
-					</label>
-					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_versionnumbers' ) ) { echo 0; } else { echo 1; } ?>" name="mommaincontrol_versionnumbers" />
-					<input type="submit" id="mom_versions_submit" name="mom_versions_submit" value="Submit" class="hidden" />
-				</form>
-				<form method="post" action="#disable" name="disablepingbacks">
-					<?php wp_nonce_field( 'disablepingbacks' ); ?>
-					<label for="mom_disablepingbacks_submit">
-					<?php if( 1 == get_option( 'mommaincontrol_disablepingbacks' ) ) { ?>
-						<i class="fa fa-toggle-on"></i>
-					<?php } else { ?>
-						<i class="fa fa-toggle-off"></i>
-					<?php }?>
-					<span>Pingbacks</span>
-					</label>
-					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_disablepingbacks' ) ) { echo 0; } else { echo 1; } ?>" name="mommaincontrol_disablepingbacks" />
-					<input type="submit" id="mom_disablepingbacks_submit" name="mom_disablepingbacks_submit" value="Submit" class="hidden" />
-				</form>
-				<form method="post" action="#disable" name="authorarchives">
-					<?php wp_nonce_field( 'authorarchives' ); ?>
-					<label for="mom_author_archives_mode_submit" title="Author-based archives">
-					<?php if( 1 == get_option( 'mommaincontrol_authorarchives' ) ) { ?>
-						<i class="fa fa-toggle-on"></i>
-					<?php } else { ?>
-						<i class="fa fa-toggle-off"></i>
-					<?php } ?>
-					<span>A Archives</span>
-					</label>
-					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_authorarchives' ) ) { echo 0; } else { echo 1; } ?>" name="authorarchives" />
-					<input type="submit" id="mom_author_archives_mode_submit" name="mom_author_archives_mode_submit" value="Submit" class="hidden" />
-				</form>
-				<form method="post" action="#disable" name="datearchives">
-					<?php wp_nonce_field( 'datearchives' ); ?>
-					<label for="mom_date_archives_mode_submit" title="Dated-based archives">
-					<?php if( 1 == get_option( 'mommaincontrol_datearchives' ) ) { ?>
-						<i class="fa fa-toggle-on"></i>
-					<?php } else { ?>
-						<i class="fa fa-toggle-off"></i>
-					<?php } ?>
-					<span>D Archives</span>
-					</label>
-					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_datearchives' ) ) { echo 0; } else { echo 1; } ?>" name="datearchives" />
-					<input type="submit" id="mom_date_archives_mode_submit" name="mom_date_archives_mode_submit" value="Submit" class="hidden" />
-				</form>
-			
-			</div>
-		</div>
-		<div class="settings-section" id="enable">
-			<div class="left-half">
-				<span class="title">Enable components</span>
-				<em>Horizontal galleries, Font Awesome, Share Icons, or link backs on every RSS item.</em>
-			</div>
-			<div class="right-half">
-				<form method="post" action="#enable" name="momHorizontalGalleries">
-					<?php wp_nonce_field( 'momHorizontalGalleries' ); ?>
-					<label for="mom_horizontal_galleries_mode_submit">
-						<?php if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ) { ?>
-							<i class="fa fa-toggle-on"></i>
-						<?php } else { ?>
-							<i class="fa fa-toggle-off"></i>
-						<?php }?>
-						<span>Horizontal Galleries</span>
-					</label>
-					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ){ echo 0; } else { echo 1; }?>" name="hgalleries" />
-					<input type="submit" id="mom_horizontal_galleries_mode_submit" name="mom_horizontal_galleries_mode_submit" value="Submit" class="hidden" />
-				</form>
-				<form method="post" action="#enable" name="fontawesome">
-					<?php wp_nonce_field( 'fontawesome' ); ?>
-						<label id="font_awesome" for="mom_fontawesome_mode_submit">
-						<?php if( 1 == get_option( 'mommaincontrol_fontawesome' ) ) { ?>
-							<i class="fa fa-toggle-on"></i>
-						<?php } else { ?>
-							<i class="fa fa-toggle-off"></i>
-						<?php } ?>
-						<span>Font Awesome</span>
-					</label>
-					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_fontawesome' ) ) { echo 0; } else { echo 1; } ?>" name="mommaincontrol_fontawesome" />
-					<input type="submit" id="mom_fontawesome_mode_submit" name="mom_fontawesome_mode_submit" value="Submit" class="hidden" />
-				</form>
-				<form method="post" action="#enable" name="momShare">
-					<?php wp_nonce_field( 'momShare' ); ?>
-					<label for="mom_share_mode_submit">
-						<?php if( 1 == get_option( 'mommaincontrol_momshare' ) ) { ?>
-							<i class="fa fa-toggle-on"></i>
-						<?php } else { ?>
-							<i class="fa fa-toggle-off"></i>
-						<?php }?>
-						<span>Share</span>
-					</label>
-					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_momshare' ) ){ echo 0; } else { echo 1; }?>" name="share" />
-					<input type="submit" id="mom_share_mode_submit" name="mom_share_mode_submit" value="Submit" class="hidden" />
-				</form>
-				<form method="post" action="#enable" name="protectrss">
-					<?php wp_nonce_field( 'protectrss' ); ?>
-					<label for="mom_protectrss_mode_submit">
-						<?php if( 1 == get_option( 'mommaincontrol_protectrss' ) ) { ?>
-							<i class="fa fa-toggle-on"></i>
-						<?php } else { ?>
-							<i class="fa fa-toggle-off"></i>
-						<?php }?>
-						<span>RSS Link</span>
-					</label>
-					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_protectrss' ) ) { echo 0; } else { echo 1; } ?>" name="protectrss" />
-					<input type="submit" id="mom_protectrss_mode_submit" name="mom_protectrss_mode_submit" value="Submit" class="hidden" />
-				</form>
-			</div>
-		</div>
-		<?php if( 1 == get_option( 'mommaincontrol_momshare' ) ) { ?>
-			<div class="settings-section" id="shareicons">
-				<div class="left-half">
-					<span class="title">Share Icons</span>
-					<em>Enable/disable different services.</em>
-					<hr />
-					<form method="post" action="#shareicons" name="momShareTop">
-						<?php wp_nonce_field( 'momShareTop' ); ?>
-						<label for="MOM_enable_share_top"> +
-						<?php if( 1 == get_option( 'MOM_enable_share_top' ) ) { ?>
-							Icons appear at top of post (click to change)
-						<?php } else { ?>
-							Icons appear at bottom of post (click to change)
-						<?php }?></label>
-						<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_top' ) ){ echo 0; } else { echo 1; }?>" name="top" />
-						<input type="submit" id="MOM_enable_share_top" name="MOM_enable_share_top" value="Submit" class="hidden" />
-					</form>					
-					
-				</div>
-				<div class="right-half">
-					<form method="post" action="#shareicons" name="momShareReddit">
-						<?php wp_nonce_field( 'momShareReddit' ); ?>
-						<label for="MOM_enable_share_reddit">
-							<?php if( 1 == get_option( 'MOM_enable_share_reddit' ) ) { ?>
-								<i class="fa fa-toggle-on"></i>
-							<?php } else { ?>
-								<i class="fa fa-toggle-off"></i>
-							<?php }?>
-							<span><i class="fa fa-reddit"></i></span>
-						</label>
-						<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_reddit' ) ){ echo 0; } else { echo 1; }?>" name="reddit" />
-						<input type="submit" id="MOM_enable_share_reddit" name="MOM_enable_share_reddit" value="Submit" class="hidden" />
-					</form>
-					<form method="post" action="#shareicons" name="momShareGoogle">
-						<?php wp_nonce_field( 'momShareGoogle' ); ?>
-						<label for="MOM_enable_share_google">
-							<?php if( 1 == get_option( 'MOM_enable_share_google' ) ) { ?>
-								<i class="fa fa-toggle-on"></i>
-							<?php } else { ?>
-								<i class="fa fa-toggle-off"></i>
-							<?php }?>
-							<span><i class="fa fa-google-plus"></i></span>
-						</label>
-						<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_google' ) ){ echo 0; } else { echo 1; }?>" name="google" />
-						<input type="submit" id="MOM_enable_share_google" name="MOM_enable_share_google" value="Submit" class="hidden" />
-					</form>
-					<form method="post" action="#shareicons" name="momShareTwitter">
-						<?php wp_nonce_field( 'momShareTwitter' ); ?>
-						<label for="MOM_enable_share_twitter">
-							<?php if( 1 == get_option( 'MOM_enable_share_twitter' ) ) { ?>
-								<i class="fa fa-toggle-on"></i>
-							<?php } else { ?>
-								<i class="fa fa-toggle-off"></i>
-							<?php }?>
-							<span><i class="fa fa-twitter"></i></span>
-						</label>
-						<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_twitter' ) ){ echo 0; } else { echo 1; }?>" name="twitter" />
-						<input type="submit" id="MOM_enable_share_twitter" name="MOM_enable_share_twitter" value="Submit" class="hidden" />
-					</form>
-					<form method="post" action="#shareicons" name="momShareFacebook">
-						<?php wp_nonce_field( 'momShareFacebook' ); ?>
-						<label for="MOM_enable_share_facebook">
-							<?php if( 1 == get_option( 'MOM_enable_share_facebook' ) ) { ?>
-								<i class="fa fa-toggle-on"></i>
-							<?php } else { ?>
-								<i class="fa fa-toggle-off"></i>
-							<?php }?>
-							<span><i class="fa fa-facebook"></i></span>
-						</label>
-						<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_facebook' ) ){ echo 0; } else { echo 1; }?>" name="facebook" />
-						<input type="submit" id="MOM_enable_share_facebook" name="MOM_enable_share_facebook" value="Submit" class="hidden" />
-					</form>
-					<form method="post" action="#shareicons" name="momShareEmail">
-						<?php wp_nonce_field( 'momShareEmail' ); ?>
-						<label for="MOM_enable_share_email">
-							<?php if( 1 == get_option( 'MOM_enable_share_email' ) ) { ?>
-								<i class="fa fa-toggle-on"></i>
-							<?php } else { ?>
-								<i class="fa fa-toggle-off"></i>
-							<?php }?>
-							<span><i class="fa fa-envelope"></i></span>
-						</label>
-						<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_email' ) ){ echo 0; } else { echo 1; }?>" name="email" />
-						<input type="submit" id="MOM_enable_share_email" name="MOM_enable_share_email" value="Submit" class="hidden" />
-					</form>
-				</div>
-			</div>
-		<?php }?>		
-		<div class="settings-section" id="comment-modules">
-			<div class="left-half">
-				<span class="title">Comment Form Extras</span>
-				<em>Block the form from bad IPs or Ajaxify it.</em>
-			</div>
-			<div class="right-half">
-				<form method="post" action="#comment-modules" name="momDNSBL">
-					<?php wp_nonce_field( 'momDNSBL' ); ?>
-					<label for="mom_dnsbl_mode_submit">
-						<?php if( 1 == get_option( 'mommaincontrol_dnsbl' ) ) { ?>
-							<i class="fa fa-toggle-on"></i>
-						<?php } else { ?>
-							<i class="fa fa-toggle-off"></i>
-						<?php }?>
-						<span>DNSBL</span>
-					</label>
-					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_dnsbl' ) ){ echo 0; } else { echo 1; }?>" name="dnsbl" />
-					<input type="submit" id="mom_dnsbl_mode_submit" name="mom_dnsbl_mode_submit" value="Submit" class="hidden" />
-				</form>
-				<form method="post" action="#comment-modules" name="momAjaxComments">
-					<?php wp_nonce_field( 'momAjaxComments' ); ?>
-					<label for="mom_ajax_comments_mode_submit">
-						<?php if( 1 == get_option( 'MOM_themetakeover_ajaxcomments' ) ) { ?>
-							<i class="fa fa-toggle-on"></i>
-						<?php } else { ?>
-							<i class="fa fa-toggle-off"></i>
-						<?php }?>
-						<span>Ajax</span>
-					</label>
-					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_themetakeover_ajaxcomments' ) ){ echo 0; } else { echo 1; }?>" name="ajaxify" />
-					<input type="submit" id="mom_ajax_comments_mode_submit" name="mom_ajax_comments_mode_submit" value="Submit" class="hidden" />
-				</form>
-			</div>
-		</div>
-		<div class="settings-section" id="extras">
-			<div class="left-half">
-				<span class="title">Extras</span>
-				<em>Move Javascript to footer, lazy load all post images, or the Post Exclusion module.</em>
-			</div>
-			<div class="right-half">
-				<form method="post" action="#extras" name="footerscripts">
-					<?php wp_nonce_field( 'footerscripts' ); ?>
-					<label for="mom_footerscripts_mode_submit">
-						<?php if( 1== get_option( 'mommaincontrol_footerscripts' ) ){ ?>
-							<i class="fa fa-toggle-on"></i>
-						<?php }else{ ?>
-							<i class="fa fa-toggle-off"></i>
-						<?php } ?>
-						<span>Javascript</span>
-					</label>
-					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_footerscripts' ) ) { echo 0; } else { echo 1; } ?>" name="footerscripts" />
-					<input type="submit" id="mom_footerscripts_mode_submit" name="mom_footerscripts_mode_submit" value="Submit" class="hidden" />
-				</form>
-				<form method="post" action="#extras" name="lazyload">
-					<?php wp_nonce_field( 'lazyload' ); ?>
-					<label for="mom_lazy_mode_submit">
-						<?php if( 1 == get_option( 'mommaincontrol_lazyload' ) ) { ?>
-							<i class="fa fa-toggle-on"></i>
-						<?php } else { ?>
-							<i class="fa fa-toggle-off"></i>
-						<?php } ?>
-						<span>Lazy Load</span>
-					</label>
-					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_lazyload' ) ) { echo 0; } else { echo 1; } ?>" name="mommaincontrol_lazyload" />
-					<input type="submit" id="mom_lazy_mode_submit" name="mom_lazy_mode_submit" value="Submit" class="hidden" />
-				</form>
-				<form method="post" action="#extras" name="momExclude">
-					<?php wp_nonce_field( 'momExclude' ); ?>
-					<label for="mom_exclude_mode_submit">
-						<?php if( 1 == get_option( 'mommaincontrol_momse' ) ) { ?>
-							<i class="fa fa-toggle-on"></i>
-						<?php } else { ?>
-							<i class="fa fa-toggle-off"></i>
-						<?php }?>
-						<span>Exclusion</span>
-					</label>
-					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_momse' ) ){ echo 0; } else { echo 1; }?>" name="exclude" />
-					<input type="submit" id="mom_exclude_mode_submit" name="mom_exclude_mode_submit" value="Submit" class="hidden" />
-				</form>				
-			</div>
-		</div>
-
-		<?php if( 1 == get_option( 'mommaincontrol_momse' ) ) { 
-			$showmepages = get_pages(); 			
-			$showmecats = get_categories( 'taxonomy=category&hide_empty=0' ); 
-			$showmetags = get_categories( 'taxonomy=post_tag&hide_empty=0' );
-			$tagcount = 0;
-			$catcount = 0;
-		?>
-
-			<div class="settings-section" id="categories">
-					<span class="title-full">Exclude Taxonomies</span>
-					<em class="full">Each field takes a comma-separated list of items for exclusion from the specified
-					section of the blog.</em>
-					<div class="clear"></div>
-					<span class="title-full">Exclude Categories</span>
-					<em class="full">
-					<?php foreach($showmecats as $catsshown){ ++$catcount; ?>
-						<?php echo $catsshown->cat_name; ?> (<?php echo $catsshown->cat_ID; ?>) &mdash; 
-					<?php }?>
-					</em>
-					<?php 
-					$MOM_Exclude_PostFormats_RSS = get_option( 'MOM_Exclude_PostFormats_RSS' );
-					$MOM_Exclude_PostFormats_Front = get_option( 'MOM_Exclude_PostFormats_Front' );
-					$MOM_Exclude_PostFormats_CategoryArchives = get_option( 'MOM_Exclude_PostFormats_CategoryArchives' );
-					$MOM_Exclude_PostFormats_TagArchives = get_option( 'MOM_Exclude_PostFormats_TagArchives' );
-					$MOM_Exclude_PostFormats_SearchResults = get_option( 'MOM_Exclude_PostFormats_SearchResults' );
-					$MOM_Exclude_PostFormats_Visitor = get_option( 'MOM_Exclude_PostFormats_Visitor' ); ?>
-					<form method="post" class="exclude" name="hidecategoriesfrom">
-						<?php wp_nonce_field( 'hidecategoriesfrom' ); ?>
-						<?php $exclude = array( 
-							'MOM_Exclude_Categories_RSS',
-							'MOM_Exclude_Categories_Front',
-							'MOM_Exclude_Categories_TagArchives',
-							'MOM_Exclude_Categories_SearchResults',
-							'MOM_Exclude_Categories_CategoriesSun',
-							'MOM_Exclude_Categories_CategoriesMon',
-							'MOM_Exclude_Categories_CategoriesTue',
-							'MOM_Exclude_Categories_CategoriesWed',
-							'MOM_Exclude_Categories_CategoriesThu',
-							'MOM_Exclude_Categories_CategoriesFri',
-							'MOM_Exclude_Categories_CategoriesSat',
-							'MOM_Exclude_Categories_level0Categories',
-							'MOM_Exclude_Categories_level1Categories',
-							'MOM_Exclude_Categories_level2Categories',
-							'MOM_Exclude_Categories_level7Categories',
-						); ?>
-						<?php $section = array( 
-							'RSS',
-							'Front page',
-							'Tag',
-							'Search results',
-							'Sunday',
-							'Monday',
-							'Tuesday',
-							'Wednesday',
-							'Thursday',
-							'Friday',
-							'Saturday',
-							'Logged out',
-							'Subscriber',
-							'Contributor',
-							'Author'
-						); ?>
-						<?php 
-							if( $catcount > 0 ) {
-								foreach($exclude as $exc ) { 
-								$title = str_replace($exclude, $section, $exc); ?>
-								<section>
-									<label for="<?php echo $exc;?>"><?php echo $title;?></label>
-									<input type="text" id="<?php echo $exc;?>" name="<?php echo $exc;?>" value="<?php echo get_option($exc);?>">
-								</section>
-							<?php } } else { ?>
-								<em class="full">You have no categories to exclude.</em>
-							<?php }?>
-						<div class="clear"></div>
-						<span class="title-full">Exclude Tags</span>
-						<em class="full">
-							<?php foreach($showmetags as $tagsshown){ 
-								++$tagcount;?>
-								<?php echo $tagsshown->cat_name;?>(<?php echo $tagsshown->cat_ID;?>) &mdash;
-							<?php } ?>
-						</em>
-						<?php 
-							if( $tagcount > 0 ) {
-								$exclude = array( 'MOM_Exclude_Tags_RSS','MOM_Exclude_Tags_Front','MOM_Exclude_Tags_CategoryArchives','MOM_Exclude_Tags_SearchResults','MOM_Exclude_Tags_TagsSun','MOM_Exclude_Tags_TagsMon','MOM_Exclude_Tags_TagsTue','MOM_Exclude_Tags_TagsWed','MOM_Exclude_Tags_TagsThu','MOM_Exclude_Tags_TagsFri','MOM_Exclude_Tags_TagsSat','MOM_Exclude_Tags_level0Tags','MOM_Exclude_Tags_level1Tags','MOM_Exclude_Tags_level2Tags','MOM_Exclude_Tags_level7Tags' );
-								$section = array( 'RSS','Front page','Category archives','Search results','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Logged out','Subscriber','Contributor','Author');
-								foreach($exclude as $exc ) {
-									$title = str_replace($exclude, $section, $exc); ?>
-									<section>
-										<label for="<?php echo $exc;?>"><?php echo $title;?></label>
-										<input type="text" id="<?php echo $exc;?>" name="<?php echo $exc;?>" value="<?php echo get_option($exc);?>">
-									</section>
-						<?php }
-							} else { ?>
-								<em class="full">You have no tags to exclude.</em>
-							<?php } ?>
-			
-						<div class="clear"></div>
-							<span class="title-full">Post Formats</span>
-							<section>
-								<?php echo '
-									<select name="MOM_Exclude_PostFormats_RSS" id="MOM_Exclude_PostFormats_RSS">
-									<option value="">RSS -> none</option>
-									<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-aside' ); echo '>RSS -> Aside</option>
-									<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-gallery' ); echo '>RSS -> Gallery</option>
-									<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-link' ); echo '>RSS -> Link</option>
-									<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-image' ); echo '>RSS -> Image</option>
-									<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-quote' ); echo '>RSS -> Quote</option>
-									<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-status' ); echo '>RSS -> Status</option>
-									<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-video' ); echo '>RSS -> Video</option>
-									<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-audio' ); echo '>RSS -> Audio</option>
-									<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_RSS, 'post-format-chat' ); echo '>RSS -> Chat</option>
-								</select>
-								<select name="MOM_Exclude_PostFormats_Front" id="MOM_Exclude_PostFormats_Front">
-									<option value="">Front Page -> none</option>
-									<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_Front, 'post-format-aside' ); echo '>Front Page -> Aside</option>
-									<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_Front,'post-format-gallery' ); echo '>Front Page -> Gallery</option>
-									<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_Front,'post-format-link' ); echo '>Front Page -> Link</option>
-									<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_Front,'post-format-image' ); echo '>Front Page -> Image</option>
-									<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_Front,'post-format-quote' ); echo '>Front Page -> Quote</option>
-									<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_Front,'post-format-status' ); echo '>Front Page -> Status</option>
-									<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_Front,'post-format-video' ); echo '>Front Page -> Video</option>
-									<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_Front,'post-format-audio' ); echo '>Front Page -> Audio</option>
-									<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_Front,'post-format-chat' ); echo '>Front Page -> Chat</option>
-								</select>
-								<select name="MOM_Exclude_PostFormats_CategoryArchives" id="MOM_Exclude_PostFormats_CategoryArchives">
-									<option value="">Archives -> none</option>
-									<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_CategoryArchives, 'post-format-aside' ); echo '>Archives -> Aside</option>
-									<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-gallery' ); echo '>Archives -> Gallery</option>
-									<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-link' ); echo '>Archives -> Link</option>
-									<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-image' ); echo '>Archives -> Image</option>
-									<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-quote' ); echo '>Archives -> Quote</option>
-									<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-status' ); echo '>Archives -> Status</option>
-									<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-video' ); echo '>Archives -> Video</option>
-									<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-audio' ); echo '>Archives -> Audio</option>
-									<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_CategoryArchives,'post-format-chat' ); echo '>Archives -> Chat</option>
-								</select>
-								<select name="MOM_Exclude_PostFormats_TagArchives" id="MOM_Exclude_PostFormats_TagArchives">
-									<option value="">Tags -> none</option>
-									<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-aside' ); echo '>Tags -> Aside</option>
-									<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-gallery' ); echo '>Tags -> Gallery</option>
-									<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-link' ); echo '>Tags -> Link</option>
-									<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-image' ); echo '>Tags -> Image</option>
-									<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-quote' ); echo '>Tags -> Quote</option>
-									<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-status' ); echo '>Tags -> Status</option>
-									<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-video' ); echo '>Tags -> Video</option>
-									<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-audio' ); echo '>Tags -> Audio</option>
-									<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_TagArchives, 'post-format-chat' ); echo '>Tags -> Chat</option>
-								</select>
-								<select name="MOM_Exclude_PostFormats_SearchResults" id="MOM_Exclude_PostFormats_SearchResults">
-									<option value="">Search -> none</option>
-									<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-aside' ); echo '>Search -> Aside</option>
-									<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-gallery' ); echo '>Search -> Gallery</option>
-									<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-link' ); echo '>Search -> Link</option>
-									<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-image' ); echo '>Search -> Image</option>
-									<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-quote' ); echo '>Search -> Quote</option>
-									<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-status' ); echo '>Search -> Status</option>
-									<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-video' ); echo '>Search -> Video</option>
-									<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-audio' ); echo '>Search -> Audio</option>
-									<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_SearchResults, 'post-format-chat' ); echo '>Search -> Chat</option>
-								</select>
-								<select name="MOM_Exclude_PostFormats_Visitor" id="MOM_Exclude_PostFormats_Visitor">
-									<option value="">Logged out -> none</option>
-									<option value="post-format-aside"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-aside' ); echo '>Logged out -> Aside</option>
-									<option value="post-format-gallery"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-gallery' ); echo '>Logged out -> Gallery</option>
-									<option value="post-format-link"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-link' ); echo '>Logged out -> Link</option>
-									<option value="post-format-image"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-image' ); echo '>Logged out -> Image</option>
-									<option value="post-format-quote"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-quote' ); echo '>Logged out -> Quote</option>
-									<option value="post-format-status"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-status' ); echo '>Logged out -> Status</option>
-									<option value="post-format-video"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-video' ); echo '>Logged out -> Video</option>
-									<option value="post-format-audio"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-audio' ); echo '>Logged out -> Audio</option>
-									<option value="post-format-chat"'; selected($MOM_Exclude_PostFormats_Visitor, 'post-format-chat' ); echo '>Logged out -> Chat</option>
-								</select>
-							</section>'; ?>
-			<input id="momsesave" type="submit" class="clear" value="Exclude them!" name="momsesave"></form>
-			</div>
-		<?php }?>
-		
-
-		
-		<div class="settings-section">
-			<span class="title-full">Set the front page as a single post</span>
-			<form name="mompaf_post_form" method="post" action="">
-				<?php wp_nonce_field( 'mompaf_post_form' ); ?>
-				<section>
-					<select name="mompaf_post" id="mompaf_0">
-						<option value="off"<?php if ( get_option( 'mompaf_post' ) == 'off' ) { ?> selected="selected"<?php } ?>>Disabled</option>
-						<option value="on"<?php if ( get_option( 'mompaf_post' ) == 'on' ) { ?> selected="selected"<?php } ?>/>Latest post</option>
-							<?php $mompaf_post = get_option( 'mompaf_post' );
-							selected( get_option( 'mompaf_post' ), 0 );
-							$showmeposts = get_posts(array( 'posts_per_page' => -1) );
-							foreach($showmeposts as $postsshown){ ?>
-								<option name="mompaf_post" id="mompaf_'<?php echo $postsshown->ID; ?>" value="<?php echo $postsshown->ID; ?>"
-								<?php $postID = $postsshown->ID;
-								$selected = selected( $mompaf_post, $postID); ?>
-								><?php echo $postsshown->post_title; ?></option>
-						<?php } ?>
-					</select>
-				</section>
-				<input type="submit" id="mom_postasfront_post_submit" name="mom_postasfront_post_submit" value="Set it!" class="clear">
-			</form>
-			</div>
-			<div class="settings-section">
-			<span class="title-full">Set a CSS class for previous and next links</span>
-			<form name="mom_navlink_classes_form" method="post" action="">
-				<?php wp_nonce_field( 'mom_navlink_classes_form' ); ?>
-				<section>
-					<label for="previous_link_class">Previous link class</label>
-					<input type="text" id="previous_link_class" name="previous_link_class" value="<?php if( get_option( 'mom_previous_link_class' ) ) { echo get_option( 'mom_previous_link_class' ); } ?>" />
-				</section>
-				<section>
-					<label for="next_link_class">Next link class</label>
-					<input type="text" id="next_link_class" name="next_link_class" value="<?php if( get_option( 'mom_next_link_class' ) ) { echo get_option( 'mom_next_link_class' ); } ?>" />
-				</section>
-				<input type="submit" id="mom_navlink_classes_submit" name="mom_navlink_classes_submit" value="Set classes" class="clear">
-			</form>
-			</div>
-			<div class="settings-section">
-			<span class="title-full">Read More..</span>
-			<em class="full">%blank% will remove the text completely.</em>
-			<form name="mom_readmore_link_form" method="post" action="">
-				<?php wp_nonce_field( 'mom_readmore_link_form' ); ?>
-				<section>
-					<input class="full" type="text" id="read_more" name="read_more" value="<?php if( get_option( 'mom_readmore_content' ) ) { echo get_option( 'mom_readmore_content' ); } ?>" />
-				</section>
-				<input type="submit" id="mom_readmore_link_submit" name="mom_readmore_link_submit" value="Read more..." class="clear">
-			</form>
-			</div>
-			<div class="settings-section">
-			<span class="title-full">Random Post Paramter</span>
-			<em class="full">Define a parameter to affix to the end of any URL for the blog to bring up a random post. (Example: random would be /?random)</em>
-			<form name="mom_random_get_form" method="post" action="">
-				<?php wp_nonce_field( 'mom_random_get_form' ); ?>
-				<section>
-					<input class="full" type="text" id="randomget" name="randomget" value="<?php if( get_option( 'mom_random_get' ) ) { echo get_option( 'mom_random_get' ); } ?>" />
-				</section>
-				<input type="submit" id="mom_random_get_submit" name="mom_random_get_submit" value="Random set" class="clear">
-			</form>			
-		</div>
-		
-
-		
-		<div class="clear"></div>
-		<div class="settings-section">
-				<code>[mom_attachments]</code> inserts a loop of recent images that link to their respective posts.
-				<hr />
-				<span><code>amount=""</code>: How many images to show. (Default: 1)<br /></span>
-				<hr />
-				<span><code>class=""</code>: The .class of the links, for CSS purposes. (Default: none)<br /></span>
-		</div>
-		<div class="settings-section">
-				<code>[mom_miniloop]</code>  inserts a loop of posts via shortcode.
-				<hr />
-				<span><code>meta=""</code>: a meta-key name. (Default: series)<br /></span>
-				<span><code>key=""</code>: a meta-key value. (Default: none)<br /></span>
-				<span><code>paging=""</code>: <em>1</em> to turn on, <em>0</em> to turn off. (Default: 0)<br /></span>
-				<span><code>show_link=""</code>: <em>1</em> to turn on, <em>0</em> to turn off. (Default: 1)<br /></span>
-				<span><code>link_content=""</code>: Text of the permalink to the post. (Default: none)<br /></span>
-				<span><code>amount=""</code>: How many posts to show in the loop. (Default: 4)<br /></span>
-				<span><code>style=""</code>: <em>columns, list, slider, tiled (Default: tiled)</em><br /></span>
-				<span><code>offset=""</code>: How many posts to skip ahead in the loop. (Default: 0)<br /></span>
-				<span><code>category=""</code>: Category ID(s) or names (comma-separated if multiple values). (Default: none)<br /></span>
-				<span><code>orderby=""</code>: Order posts in the loop by a <a href="//codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters">particular value</a>. (Default: post_date)<br /></span>
-				<span><code>order=""</code>: <em>ASC</em> (ascending) or <em>DESC</em> (descending) (Default: DESC)<br /></span>
-				<span><code>post_status=""</code>: Display posts based on their <a href="//codex.wordpress.org/Class_Reference/WP_Query#Status_Parameters">status</a>. (Default: publish)<br /></span>
-				<span><code>year=""</code>: A 4-digit year to pull posts from. (<em>123</em> for current year) (Default: none)<br /></span>
-				<span><code>month=""</code>: A 1-2 digit month to pull posts from. (1-12). (<em>123</em> for current month) (Default: none)<br /></span>
-				<span><code>day=""</code>: A 1-2 digit day to pull posts from. (1-31). (<em>123</em> for current day) (Default: none)<br /></span>
-				<span><code>cache=""</code>: Cache the results of this loop. <em>true</em> or <em>false</em>. (Default: false)<br /></span>
-		</div>
-	</div>
-	<?php 
-	}
 }
+
+
+
+
 
 /**
  *
@@ -2577,6 +1600,10 @@ if( !function_exists( 'font_fa_shortcode' ) ) {
 	}
 
 }
+
+
+
+
 
 /**
  *
@@ -2641,6 +1668,10 @@ if( !function_exists( 'mom_attachments_shortcode' ) ) {
 	}
 
 }
+
+
+
+
 
 if( !function_exists( 'mom_miniloop_shortcode' ) ) { 
 
@@ -3465,11 +2496,14 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 
 }
 
+
+
+
+
 /**
  * Display a miniloop of posts from the blog based on shortcode parameters in
  * a variety of different styles. Can be used multiple times on the same page.
  */
-
 add_filter( 'the_content', 'do_shortcode', 'mom_miniloop' );
 add_shortcode( 'mom_miniloop', 'mom_miniloop_shortcode' );
 
@@ -3477,8 +2511,210 @@ add_filter( 'the_content', 'do_shortcode', 'mom_attachments' );
 add_shortcode( 'mom_attachments', 'mom_attachments_shortcode' );
 
 
-if( current_user_can( 'manage_options' ) ) {
 
+
+
+
+
+
+
+
+
+
+
+if( !function_exists( 'myoptionalmodules_excludecategories' ) ) {
+
+	function myoptionalmodules_excludecategories() {
+
+		global $user_level, $mommodule_exclude;
+
+		if( $mommodule_exclude == 1 ) {
+			
+			$MOM_Exclude_level0Categories  = get_option( 'MOM_Exclude_Categories_level0Categories' ); 
+			$MOM_Exclude_level1Categories  = get_option( 'MOM_Exclude_Categories_level1Categories' ); 
+			$MOM_Exclude_level2Categories  = get_option( 'MOM_Exclude_Categories_level2Categories' ); 
+			$MOM_Exclude_level7Categories  = get_option( 'MOM_Exclude_Categories_level7Categories' ); 
+			$loggedOutCats                 = 0;
+			
+			if( '' == $MOM_Exclude_level0Categories ) $MOM_Exclude_level0Categories = 0;
+			if( '' == $MOM_Exclude_level1Categories ) $MOM_Exclude_level1Categories = 0;
+			if( '' == $MOM_Exclude_level2Categories ) $MOM_Exclude_level2Categories = 0;
+			if( '' == $MOM_Exclude_level7Categories ) $MOM_Exclude_level7Categories = 0;
+
+			if( 0 == $user_level ) $loggedOutCats = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+			if( 1 == $user_level ) $loggedOutCats = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+			if( 2 == $user_level ) $loggedOutCats = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+			if( 3 == $user_level ) $loggedOutCats = $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+			if( 4 == $user_level ) $loggedOutCats = $MOM_Exclude_level7Categories;
+			
+			$c1 = explode( ',', $loggedOutCats );
+			foreach( $c1 as &$C1 ){ $C1 = $C1 . ','; }
+			$c_1 = rtrim( implode( $c1 ), ',' );
+			$c11 = explode( ',', str_replace( ' ', '', $c_1 ) );
+			$c11array = array( $c11 );
+			$loggedOutCats = array_filter( $c11 );
+
+		}
+
+		$category_ids = mom_get_all_category_ids();
+
+		foreach( $category_ids as $cat_id ) {
+
+			if( $loggedOutCats ) {
+
+				if( in_array( $cat_id, $loggedOutCats ) )continue;
+
+			}
+
+			$cat  = get_category( $cat_id );
+			$link = get_category_link( $cat_id );
+
+			echo '<li><a href="' . $link . '" title="link to ' . $cat->name . '">' . $cat->name . '</a></li>';
+
+		}
+
+	}
+
+}
+class mom_mediaEmbed {
+	var $url;
+	function mom_mediaEmbed ( $url ) {
+		$url  = esc_url ( $url );
+		$chck = strtolower( $url );
+		$chck = sanitize_text_field( $url );
+		$url  = sanitize_text_field( $url );
+		if( preg_match( '/\/\/(.*imgur\.com\/.*)/i', $url ) ) {
+			if( strpos( $chck, 'imgur.com/a/' ) !== false ) {
+				$url = substr ( $url, 19 );
+				echo '<iframe class="imgur-album" width="100%" height="550" frameborder="0" src="//imgur.com/a/' . $url . '/embed"></iframe>'; 
+			} else {
+				$url = esc_url ( $url );
+				echo '<a href="' . $url . '"><img class="image" alt="image" src="' . $url . '"/></a>';
+			}
+		}
+		elseif( preg_match( '/\/\/(.*youtube\.com\/.*)/i', $url ) ) {
+			// Probably a much better way of doing this..
+			$timeStamp = '';
+			if( strpos( $chck, 't=' ) !== false && strpos( $chck, 'list=' ) === false ) {
+				$url_parse = parse_url( $chck );
+				$timeStamp = sanitize_text_field( str_replace( '038;t=', '', $url_parse[ 'fragment' ] ) );
+				$minutes   = 0;
+				$seconds   = 0;
+				if( strpos( $timeStamp, 'm' ) !== false && strpos( $timeStamp, 's' ) !== false ){
+					$parts     = str_replace( array( 'm','s' ), '', $timeStamp );
+					list( $minutes, $seconds ) = $parts = str_split( $parts );
+					$minutes   = $minutes * 60;
+					$seconds   = $seconds * 1;
+				} elseif( strpos( $timeStamp, 'm' ) !== true && strpos( $timeStamp, 's' ) !== false ) {
+					$seconds   = str_replace( 's', '', $timeStamp ) * 1;
+				} elseif( strpos( $timeStamp, 'm' ) !== false && strpos( $timeStamp, 's' ) !== true ) {
+					$minutes   = str_replace( 'm', '', $timeStamp ) * 60;
+				} else {
+					$minutes = 0;
+					$seconds = 0;
+				}
+				
+				$timeStamp = $minutes + $seconds;
+
+			}
+			if ( preg_match ( '%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match ) ) {
+				$match[1] = sanitize_text_field ( $match[1] );
+				$video_id = $match[1];
+				$url      = $video_id;
+			}
+			echo '
+			<object width="640" height="390" data="https://www.youtube.com/v/' . $url . '?version=3&amp;start=' . $timeStamp . '">
+				<param name="movie" value="https://www.youtube.com/v/' . $url . '?version=3&amp;start=' . $timeStamp . '" />
+				<param name="allowScriptAccess" value="always" />
+				<embed src="https://www.youtube.com/v/' . $url . '?version=3&amp;start=' . $timeStamp . '"
+					type="application/x-shockwave-flash"
+					allowscriptaccess="always"
+					width="640" 
+					height="390" />
+				
+			</object>
+			';
+		}
+		elseif( preg_match( '/\/\/(.*liveleak\.com\/.*)/i', $url ) ) {
+			$url      = parse_url( $url );
+			$video_id = str_replace( 'i=', '', $url[ 'query' ] );
+			echo '
+				<object width="640" height="390" data="http://www.liveleak.com/e/' . $video_id . '">
+					<param name="movie" value="http://www.liveleak.com/e/' . $video_id . '" />
+					<param name="wmode" value="transparent" />
+					<embed src="http://www.liveleak.com/e/' . $video_id . '" 
+						type="application/x-shockwave-flash" 
+						wmode="transparent" 
+						width="640" 
+						height="390" />
+				</object>
+			';              
+		}			
+		elseif( preg_match( '/\/\/(.*youtu\.be\/.*)/i', $url ) ) {
+			$url = explode( '/', $url );
+			$url = $url[sizeof($url)-1];
+			echo '
+			<object width="640" height="390" data="https://www.youtube.com/v/' . $url . '?version=3">
+				<param name="movie" value="https://www.youtube.com/v/' . $url . '?version=3" />
+				<param name="allowScriptAccess" value="always" />
+				<embed src="https://www.youtube.com/v/' . $url . '?version=3"
+					type="application/x-shockwave-flash"
+					allowscriptaccess="always"
+					width="640" 
+					height="390" />
+			</object>
+			';              
+		}           
+		elseif( preg_match( '/\/\/(.*soundcloud\.com\/.*)/i', $url ) ) {
+			echo '<iframe width="100%" height="166" scrolling="no" frameborder="no" src="http://w.soundcloud.com/player/?url=' . $url . '&auto_play=false&color=915f33&theme_color=00FF00"></iframe>'; 
+		}
+		elseif( preg_match( '/\/\/(.*vimeo\.com\/.*)/i', $url ) ) {
+			$url = explode( '/', $url );
+			$url = $url[sizeof($url)-1];
+			echo '<iframe src="//player.vimeo.com/video/' . $url . '?title=0&amp;byline=0&amp;portrait=0&amp;color=d6cece" width="500" height="281" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'; 
+		}
+		elseif( preg_match( '/\/\/(.*gfycat\.com\/.*)/i', $url ) ) {
+			$url = str_replace ( '//gfycat.com/', '', $url );
+			echo '<iframe src="//gfycat.com/iframe/' . $url . '" frameborder="0" scrolling="no" width="592" height="320" ></iframe>';
+		}
+		elseif( preg_match( '/\/\/(.*funnyordie\.com\/.*)/i', $url ) ) {
+			$url = explode( '/', $url );
+			$url = $url[sizeof($url)-2];
+			echo '
+			<object width="640" height="400" id="ordie_player_' . $url . '" data="http://player.ordienetworks.com/flash/fodplayer.swf">
+				<param name="movie" value="http://player.ordienetworks.com/flash/fodplayer.swf" />
+				<param name="flashvars" value="key=' . $url . '" />
+				<param name="allowfullscreen" value="true" />
+				<param name="allowscriptaccess" value="always">
+				<embed width="640" height="400" flashvars="key=' . $url . '" allowfullscreen="true" allowscriptaccess="always" quality="high" src="http://player.ordienetworks.com/flash/fodplayer.swf" name="ordie_player_5325b03b52" type="application/x-shockwave-flash"></embed>
+			</object>
+			';
+		}
+		elseif( preg_match( '/\/\/(.*vine\.co\/.*)/i', $url ) ) {
+			$url = $url . '/embed/postcard';
+			echo '<iframe class="vine-embed" src="' . $url . '" width="600" height="600" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>';
+		} else {
+			/**
+			 * Fall back to WordPress provided oEmbed if none of the above
+			 * conditions were met.
+			 */			
+			echo wp_oembed_get( $url );
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
+if( current_user_can( 'edit_dashboard' ) ){
+
+	// Add clickable Font Awesome icons to post edit screen
 	$css = plugins_url() . '/' . plugin_basename( dirname( __FILE__ ) ) . '/includes/';
 
 	add_action( 'wp_enqueue_admin_scripts', 'myoptionalmodules_scripts' );
@@ -3603,6 +2839,1029 @@ if( current_user_can( 'manage_options' ) ) {
 			</div>
 
 		<?php }
-	}	
+	}
+
 	add_action( 'edit_form_after_editor','momEditorScreen' );
+
+
+
+
+	// Uninstallation procedure
+	if( isset( $_POST[ 'MOM_UNINSTALL_EVERYTHING' ] ) && check_admin_referer( 'MOM_UNINSTALL_EVERYTHING' ) ) {
+
+		$option = array( 
+
+			'mommaincontrol_protectrss',
+			'mommaincontrol_footerscripts',
+			'mommaincontrol_authorarchives',
+			'mommaincontrol_datearchives',
+			'mommaincontrol_comments',
+			'mommaincontrol_dnsbl',
+			'MOM_themetakeover_ajaxcomments',
+			'MOM_themetakeover_horizontal_galleries',
+			'mommaincontrol_momse',
+			'mommaincontrol_momshare',
+			'mommaincontrol_fontawesome',
+			'mommaincontrol_lazyload',
+			'mommaincontrol_versionnumbers',
+			'mommaincontrol_disablepingbacks',
+			'mompaf_post',
+			'MOM_Exclude_PostFormats_Visitor',
+			'MOM_Exclude_PostFormats_RSS',
+			'MOM_Exclude_PostFormats_Front',
+			'MOM_Exclude_PostFormats_CategoryArchives',
+			'MOM_Exclude_PostFormats_TagArchives',
+			'MOM_Exclude_PostFormats_SearchResults',
+			'MOM_Exclude_Categories_Front',
+			'MOM_Exclude_Categories_TagArchives',
+			'MOM_Exclude_Tags_TagsSun',
+			'MOM_Exclude_Tags_TagsMon',
+			'MOM_Exclude_Tags_TagsTue',
+			'MOM_Exclude_Tags_TagsWed',
+			'MOM_Exclude_Tags_TagsThu',
+			'MOM_Exclude_Tags_TagsFri',
+			'MOM_Exclude_Tags_TagsSat',
+			'MOM_Exclude_Categories_CategoriesSun',
+			'MOM_Exclude_Categories_CategoriesMon',
+			'MOM_Exclude_Categories_CategoriesTue',
+			'MOM_Exclude_Categories_CategoriesWed',
+			'MOM_Exclude_Categories_CategoriesThu',
+			'MOM_Exclude_Categories_CategoriesFri',
+			'MOM_Exclude_Categories_CategoriesSat',
+			'MOM_Exclude_Categories_SearchResults',
+			'MOM_Exclude_Categories_RSS',
+			'MOM_Exclude_Tags_RSS',
+			'MOM_Exclude_Tags_Front',
+			'MOM_Exclude_Tags_CategoryArchives',
+			'MOM_Exclude_Tags_SearchResults',
+			'MOM_Exclude_PostFormats_Front',
+			'MOM_Exclude_PostFormats_CategoryArchives',
+			'MOM_Exclude_PostFormats_TagArchives',
+			'MOM_Exclude_PostFormats_SearchResults',
+			'MOM_Exclude_PostFormats_Visitor',
+			'MOM_Exclude_PostFormats_RSS',
+			'MOM_Exclude_Tags_Tags',
+			'MOM_Exclude_Categories_Categories',
+			'MOM_Exclude_Categories_level0Categories',
+			'MOM_Exclude_Categories_level1Categories',
+			'MOM_Exclude_Categories_level2Categories',
+			'MOM_Exclude_Categories_level7Categories',
+			'MOM_Exclude_Tags_level0Tags',
+			'MOM_Exclude_Tags_level1Tags',
+			'MOM_Exclude_Tags_level2Tags',
+			'MOM_Exclude_Tags_level7Tags',
+			'MOM_enable_share_top',
+			'MOM_enable_share_reddit',
+			'MOM_enable_share_google',
+			'MOM_enable_share_twitter',
+			'MOM_enable_share_facebook',
+			'MOM_enable_share_email',
+			'mom_next_link_class',
+			'mom_previous_link_class',
+			'mom_readmore_content',
+			'mom_random_get'
+
+		);
+
+		foreach( $option as &$value ) {
+
+			delete_option( $value );
+
+		}
+
+	} else {
+
+		if( isset( $_POST[ 'mom_protectrss_mode_submit' ] ) && check_admin_referer( 'protectrss' ) ) {
+
+			$_REQUEST[ 'protectrss' ] = sanitize_text_field( $_REQUEST[ 'protectrss' ] );
+			update_option( 'mommaincontrol_protectrss', $_REQUEST[ 'protectrss' ] );
+
+		}
+
+		if( isset( $_POST[ 'mom_footerscripts_mode_submit' ] ) && check_admin_referer( 'footerscripts' ) ) {
+		
+			$_REQUEST[ 'footerscripts' ] = sanitize_text_field( $_REQUEST[ 'footerscripts' ] );
+			update_option( 'mommaincontrol_footerscripts', $_REQUEST[ 'footerscripts' ] );
+
+		}
+
+		if( isset( $_POST[ 'mom_author_archives_mode_submit' ] ) && check_admin_referer( 'authorarchives' ) ) { 
+
+			$_REQUEST[ 'authorarchives' ] = sanitize_text_field( $_REQUEST[ 'authorarchives' ] );
+			update_option( 'mommaincontrol_authorarchives', $_REQUEST[ 'authorarchives' ] );
+
+		}
+
+		if( isset( $_POST[ 'mom_date_archives_mode_submit' ] ) && check_admin_referer( 'datearchives' ) ) { 
+
+			$_REQUEST[ 'datearchives' ] = sanitize_text_field( $_REQUEST[ 'datearchives' ] );
+			update_option( 'mommaincontrol_datearchives', $_REQUEST[ 'datearchives' ] );
+
+		}
+
+		if( isset( $_POST[ 'mom_comments_mode_submit' ] ) && check_admin_referer( 'momComments' ) ) { 
+
+			$_REQUEST[ 'comments' ] = sanitize_text_field( $_REQUEST[ 'comments' ] );		
+			update_option( 'mommaincontrol_comments', $_REQUEST[ 'comments' ] );
+
+		}
+
+		if( isset( $_POST[ 'mom_dnsbl_mode_submit' ] ) && check_admin_referer( 'momDNSBL' ) ) {
+
+			$_REQUEST[ 'dnsbl' ] = sanitize_text_field( $_REQUEST[ 'dnsbl' ] );
+			update_option( 'mommaincontrol_dnsbl', $_REQUEST[ 'dnsbl' ] );
+
+		}
+
+		if( isset( $_POST[ 'mom_ajax_comments_mode_submit' ] ) && check_admin_referer( 'momAjaxComments' ) ) { 
+
+			$_REQUEST[ 'ajaxify' ] = sanitize_text_field( $_REQUEST[ 'ajaxify' ] );
+			update_option( 'MOM_themetakeover_ajaxcomments', $_REQUEST[ 'ajaxify' ] );
+
+		}
+
+		if( isset( $_POST[ 'mom_exclude_mode_submit' ] ) && check_admin_referer( 'momExclude' ) ) { 
+
+			$_REQUEST[ 'exclude' ] = sanitize_text_field( $_REQUEST[ 'exclude' ] );
+			update_option( 'mommaincontrol_momse', $_REQUEST[ 'exclude' ] );
+
+		}
+
+		if( isset( $_POST[ 'mom_share_mode_submit' ] ) && check_admin_referer( 'momShare' ) ) { 
+
+			$_REQUEST[ 'share' ] = sanitize_text_field( $_REQUEST[ 'share' ] );
+			update_option( 'mommaincontrol_momshare', $_REQUEST[ 'share' ] );
+
+		}
+
+		if( 1 == get_option( 'mommaincontrol_momshare' ) ) {
+
+			if( isset( $_POST[ 'MOM_enable_share_top' ] ) && check_admin_referer( 'momShareTop' ) ) { 
+
+				$_REQUEST[ 'top' ] = sanitize_text_field( $_REQUEST[ 'top' ] );
+				update_option( 'MOM_enable_share_top', $_REQUEST[ 'top' ] );
+
+			}
+			if( isset( $_POST[ 'MOM_enable_share_reddit' ] ) && check_admin_referer( 'momShareReddit' ) ) { 
+
+				$_REQUEST[ 'reddit' ] = sanitize_text_field( $_REQUEST[ 'reddit' ] );
+				update_option( 'MOM_enable_share_reddit', $_REQUEST[ 'reddit' ] );
+
+			}
+			if( isset( $_POST[ 'MOM_enable_share_twitter' ] ) && check_admin_referer( 'momShareTwitter' ) ) { 
+
+				$_REQUEST[ 'twitter' ] = sanitize_text_field( $_REQUEST[ 'twitter' ] );
+				update_option( 'MOM_enable_share_twitter', $_REQUEST[ 'twitter' ] );
+
+			}
+			if( isset( $_POST[ 'MOM_enable_share_email' ] ) && check_admin_referer( 'momShareEmail' ) ) { 
+
+				$_REQUEST[ 'email' ] = sanitize_text_field( $_REQUEST[ 'email' ] );
+				update_option( 'MOM_enable_share_email', $_REQUEST[ 'email' ] );
+
+			}
+			if( isset( $_POST[ 'MOM_enable_share_google' ] ) && check_admin_referer( 'momShareGoogle' ) ) { 
+
+				$_REQUEST[ 'google' ] = sanitize_text_field( $_REQUEST[ 'google' ] );
+				update_option( 'MOM_enable_share_google', $_REQUEST[ 'google' ] );
+
+			}
+			if( isset( $_POST[ 'MOM_enable_share_facebook' ] ) && check_admin_referer( 'momShareFacebook' ) ) { 
+
+				$_REQUEST[ 'facebook' ] = sanitize_text_field( $_REQUEST[ 'facebook' ] );
+				update_option( 'MOM_enable_share_facebook', $_REQUEST[ 'facebook' ] );
+
+			}
+
+		}
+
+		if( isset( $_POST[ 'mom_horizontal_galleries_mode_submit' ] ) && check_admin_referer( 'momHorizontalGalleries' ) ) { 
+
+			$_REQUEST[ 'hgalleries' ] = sanitize_text_field( $_REQUEST[ 'hgalleries' ] );
+			update_option( 'MOM_themetakeover_horizontal_galleries', $_REQUEST[ 'hgalleries' ] );
+
+		}
+
+		if( isset( $_POST[ 'mom_fontawesome_mode_submit' ] ) && check_admin_referer( 'fontawesome' ) ) { 
+
+			$_REQUEST[ 'mommaincontrol_fontawesome' ] = sanitize_text_field( $_REQUEST[ 'mommaincontrol_fontawesome' ] );
+			update_option( 'mommaincontrol_fontawesome', $_REQUEST[ 'mommaincontrol_fontawesome' ] );
+
+		}
+		
+		if( isset( $_POST[ 'mom_lazy_mode_submit' ] ) && check_admin_referer( 'lazyload' ) ) { 
+
+			$_REQUEST[ 'mommaincontrol_lazyload' ] = sanitize_text_field( $_REQUEST[ 'mommaincontrol_lazyload' ] );
+			update_option( 'mommaincontrol_lazyload', $_REQUEST[ 'mommaincontrol_lazyload' ] );
+
+		}
+		
+		if( isset( $_POST[ 'mom_versions_submit' ] ) && check_admin_referer( 'hidewpversions' ) ) { 
+
+			$_REQUEST[ 'mommaincontrol_versionnumbers' ] = sanitize_text_field( $_REQUEST[ 'mommaincontrol_versionnumbers' ] );
+			update_option( 'mommaincontrol_versionnumbers', $_REQUEST[ 'mommaincontrol_versionnumbers' ] );
+
+		}
+
+		if( isset( $_POST[ 'mom_disablepingbacks_submit' ] ) && check_admin_referer( 'disablepingbacks' ) ) { 
+
+			$_REQUEST[ 'mommaincontrol_disablepingbacks' ] = sanitize_text_field( $_REQUEST[ 'mommaincontrol_disablepingbacks' ] );
+			update_option( 'mommaincontrol_disablepingbacks', $_REQUEST[ 'mommaincontrol_disablepingbacks' ] );
+
+		}		
+
+		if( !get_option( 'mommaincontrol_mompaf' ) ) {
+
+			add_option( 'mompaf_post', 'off' );
+
+		}
+
+		if( isset( $_POST[ 'mom_save_form_submit' ] ) && check_admin_referer( 'mom_save_form' ) ) {
+
+			$_REQUEST[ 'mompaf_post' ] = sanitize_text_field( $_REQUEST[ 'mompaf_post' ] );
+			$_REQUEST[ 'previous_link_class' ] = sanitize_text_field( str_replace( '.', '', $_REQUEST[ 'previous_link_class' ] ) );
+			$_REQUEST[ 'next_link_class' ] = sanitize_text_field( str_replace( '.', '', $_REQUEST[ 'next_link_class' ] ) );
+			$_REQUEST[ 'read_more' ] = sanitize_text_field( $_REQUEST[ 'read_more' ] );
+			$_REQUEST[ 'randomget' ] = sanitize_text_field( $_REQUEST[ 'randomget' ] );
+			update_option( 'mom_random_get', $_REQUEST[ 'randomget' ] );
+			update_option( 'mom_previous_link_class', $_REQUEST[ 'previous_link_class' ] );
+			update_option( 'mom_next_link_class', $_REQUEST[ 'next_link_class' ] );
+			update_option( 'mom_readmore_content', $_REQUEST[ 'read_more' ] );
+			update_option( 'mompaf_post', $_REQUEST[ 'mompaf_post' ] );
+
+		}		
+
+		add_option( 'mompaf_post', 'off' );
+
+	}
+	
+	if( isset( $_POST[ 'momsesave' ] ) && check_admin_referer( 'hidecategoriesfrom' ) ) {
+
+		foreach( $_REQUEST as $k => $v ) {
+			update_option( $k, $v );
+		}
+
+		$_REQUEST[ 'MOM_Exclude_PostFormats_Visitor' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_Visitor' ] );
+		$_REQUEST[ 'MOM_Exclude_PostFormats_RSS' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_RSS' ] );
+		$_REQUEST[ 'MOM_Exclude_PostFormats_Front' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_Front' ] );
+		$_REQUEST[ 'MOM_Exclude_PostFormats_CategoryArchives' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_CategoryArchives' ] );
+		$_REQUEST[ 'MOM_Exclude_PostFormats_TagArchives' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_TagArchives' ] );
+		$_REQUEST[ 'MOM_Exclude_PostFormats_SearchResults' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_SearchResults' ] );
+		update_option( 'MOM_Exclude_PostFormats_Visitor', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_Visitor' ] ) );
+		update_option( 'MOM_Exclude_PostFormats_RSS', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_RSS' ] ) );
+		update_option( 'MOM_Exclude_PostFormats_Front', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_Front' ] ) );
+		update_option( 'MOM_Exclude_PostFormats_CategoryArchives', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_CategoryArchives' ] ) );
+		update_option( 'MOM_Exclude_PostFormats_TagArchives', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_TagArchives' ] ) );
+		update_option( 'MOM_Exclude_PostFormats_SearchResults', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_SearchResults' ] ) );
+
+	}
+
+
+
+
+	// Add options page for plugin to Wordpress backend
+	add_action( 'admin_menu','my_optional_modules_add_options_page' );
+	function my_optional_modules_add_options_page(){
+		add_options_page( 'My Optional Modules','My Optional Modules','manage_options','mommaincontrol','my_optional_modules_page_content' ); 
+	}
+
+	// Content to display on the options page
+	function my_optional_modules_page_content(){ ?>
+	<div class="MOMSettings">
+		
+		<div class="settings-section" id="name">
+			<div class="left-half">
+				<span class="title">My Optional Modules</span>
+				<em>Don't forget to <a href="//wordpress.org/support/view/plugin-reviews/my-optional-modules">rate and review</a> 
+				this plugin if you found it helpful. Need help? Post your question on the 
+				<a href="//wordpress.org/support/plugin/my-optional-modules">support</a> forum.</em>
+			</div>
+			<div class="right-half">
+				<?php if( !isset( $_POST[ 'mom_delete_step_one' ] ) ) { ?>
+					<form method="post" action="#name" name="mom_delete_step_one">
+					<?php wp_nonce_field( 'mom_delete_step_one' ); ?>
+					<label for="mom_delete_step_one">
+						<i class="fa fa-exclamation"></i>
+						<span>Uninstall (1/2)</span>
+					</label>
+					<input type="submit" id="mom_delete_step_one" name="mom_delete_step_one" class="hidden" value="Submit" />
+					</form>
+				<?php } ?>
+				<?php if( isset( $_POST[ 'mom_delete_step_one' ] ) ) { ?>
+					<form method="post" action="#name" name="MOM_UNINSTALL_EVERYTHING">
+					<?php wp_nonce_field( 'MOM_UNINSTALL_EVERYTHING' ); ?>
+					<label for="MOM_UNINSTALL_EVERYTHING">
+						<i class="fa fa-exclamation-triangle"></i>
+						<span>Uninstall (2/2)</span>
+					</label>
+					<input type="submit" id="MOM_UNINSTALL_EVERYTHING" name="MOM_UNINSTALL_EVERYTHING" class="hidden" value="Submit" />
+					</form>
+				<?php } ?>			
+			</div>
+		</div>
+		
+		<div class="settings-section" id="donate">
+			<div class="left-half">
+				<span class="title">Consider donating?</span>
+				<em class="full">Enjoy this plugin? Want to show me, its creator, a little bit of love? Consider donating. Just think, 
+				for every penny that you donate, that's like, one more penny that I didn't previously have.</em>
+			</div>
+			<div class="right-half">
+				<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+				<input type="hidden" name="cmd" value="_s-xclick">
+				<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----MIIHRwYJKoZIhvcNAQcEoIIHODCCBzQCAQExggEwMIIBLAIBADCBlDCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb20CAQAwDQYJKoZIhvcNAQEBBQAEgYADDhH+NF6voC2cNiYO4gdaeGNYDQMpCUVkDj0KBxsEilu2CwvoI7aG5A/pQt7+JjwpT59MKWq28QoCygiRJcv/JIDK/TqcmEhnhxXlkIT3nnA4sjKc2sBNe1UVvMHPJ0OumAMPNBk8l1AAYEDj+/WvqG3M96sgsbAOxx4K7vZUUjELMAkGBSsOAwIaBQAwgcQGCSqGSIb3DQEHATAUBggqhkiG9w0DBwQIpjNYfrXnbimAgaC5V4NYH4cqTrdEuNPVUJkmyLIUMl1LzAh5TvYU/Ncys+MQARrXntTer/nIN3PCuGYQNws/Eih1cV4QNJ8OZ5d9MzBy6NF7RAzPRzOGeca0G25O/V+47GDbuG0J9XK4QicsZZnnNs/dRX1Gwt6FBuppQeNCltFYMmIYo7L1BqL1A/dd/Vy5yUP5Wx9RjPE4LMKgRBFuhOH1EGi2cPRozqXWoIIDhzCCA4MwggLsoAMCAQICAQAwDQYJKoZIhvcNAQEFBQAwgY4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEUMBIGA1UEChMLUGF5UGFsIEluYy4xEzARBgNVBAsUCmxpdmVfY2VydHMxETAPBgNVBAMUCGxpdmVfYXBpMRwwGgYJKoZIhvcNAQkBFg1yZUBwYXlwYWwuY29tMB4XDTA0MDIxMzEwMTMxNVoXDTM1MDIxMzEwMTMxNVowgY4xCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJDQTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEUMBIGA1UEChMLUGF5UGFsIEluYy4xEzARBgNVBAsUCmxpdmVfY2VydHMxETAPBgNVBAMUCGxpdmVfYXBpMRwwGgYJKoZIhvcNAQkBFg1yZUBwYXlwYWwuY29tMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDBR07d/ETMS1ycjtkpkvjXZe9k+6CieLuLsPumsJ7QC1odNz3sJiCbs2wC0nLE0uLGaEtXynIgRqIddYCHx88pb5HTXv4SZeuv0Rqq4+axW9PLAAATU8w04qqjaSXgbGLP3NmohqM6bV9kZZwZLR/klDaQGo1u9uDb9lr4Yn+rBQIDAQABo4HuMIHrMB0GA1UdDgQWBBSWn3y7xm8XvVk/UtcKG+wQ1mSUazCBuwYDVR0jBIGzMIGwgBSWn3y7xm8XvVk/UtcKG+wQ1mSUa6GBlKSBkTCBjjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAkNBMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtQYXlQYWwgSW5jLjETMBEGA1UECxQKbGl2ZV9jZXJ0czERMA8GA1UEAxQIbGl2ZV9hcGkxHDAaBgkqhkiG9w0BCQEWDXJlQHBheXBhbC5jb22CAQAwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQUFAAOBgQCBXzpWmoBa5e9fo6ujionW1hUhPkOBakTr3YCDjbYfvJEiv/2P+IobhOGJr85+XHhN0v4gUkEDI8r2/rNk1m0GA8HKddvTjyGw/XqXa+LSTlDYkqI8OwR8GEYj4efEtcRpRYBxV8KxAW93YDWzFGvruKnnLbDAF6VR5w/cCMn5hzGCAZowggGWAgEBMIGUMIGOMQswCQYDVQQGEwJVUzELMAkGA1UECBMCQ0ExFjAUBgNVBAcTDU1vdW50YWluIFZpZXcxFDASBgNVBAoTC1BheVBhbCBJbmMuMRMwEQYDVQQLFApsaXZlX2NlcnRzMREwDwYDVQQDFAhsaXZlX2FwaTEcMBoGCSqGSIb3DQEJARYNcmVAcGF5cGFsLmNvbQIBADAJBgUrDgMCGgUAoF0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMTUwMjA1MTcwMzQxWjAjBgkqhkiG9w0BCQQxFgQU2SdHfNR8UlZzVqgN/DdfdNEJ0lIwDQYJKoZIhvcNAQEBBQAEgYB+L5BCnvgRlZwIshKEip9Gr5W+Lct6qS2zVH9BYFTI0n9Aawr7Co0B0kbdSpHEqWT4m71roz4Wo9D5oX82hfeECVnzxB9yLhF3ivOlSOP/Dsmb0VE/UWdEJdFSZp9JNIcIp1mThvBMix88QUI0/QL2KcPrhDCfzWQ1ecetRjEDcA==-----END PKCS7-----
+				">
+				<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+				<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+				</form>
+			</div>
+		
+		</div>
+		
+		<?php global $table_prefix, $wpdb;
+		if( isset( $_POST[ 'delete_drafts' ] ) || isset( $_POST[ 'delete_unused_terms' ] ) || isset( $_POST[ 'delete_post_revisions' ] ) || isset( $_POST[ 'delete_unapproved_comments' ] ) || isset( $_POST[ 'deleteAllClutter' ] ) ) {
+			$postsTable = $table_prefix.'posts';
+			$commentsTable = $table_prefix.'comments';
+			$termsTable2 = $table_prefix.'terms';
+			$termsTable = $table_prefix.'term_taxonomy';
+			if( isset( $_POST[ 'delete_post_revisions' ] ) && check_admin_referer( 'deletePostRevisionsForm' ) ) {
+				$wpdb->query( "DELETE FROM `$postsTable` WHERE `post_type` = 'revision' OR `post_status` = 'auto-draft' OR `post_status` = 'trash'" );
+			}
+			if( isset ($_POST[ 'delete_unapproved_comments' ] ) && check_admin_referer( 'deleteUnapprovedCommentsForm' ) ) {
+				$wpdb->query( "DELETE FROM `$commentsTable` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'" );
+			}
+			if( isset( $_POST[ 'delete_unused_terms' ] ) && check_admin_referer( 'deleteUnusedTermsForm' ) ) {
+				$wpdb->query( "DELETE FROM `$termsTable2` WHERE `term_id` IN ( select `term_id` from `$termsTable` WHERE `count` = 0 )" );
+				$wpdb->query( "DELETE FROM `$termsTable` WHERE `count` = 0");
+			}
+			if( isset( $_POST[ 'delete_drafts' ] ) && check_admin_referer( 'deleteDraftsForm' ) ) {
+				$wpdb->query( "DELETE FROM `$postsTable` WHERE `post_status` = 'draft'" );
+			}
+			if( isset( $_POST[ 'deleteAllClutter' ] ) && check_admin_referer( 'deleteAllClutterForm' ) ) {
+				$wpdb->query( "DELETE FROM `$postsTable` WHERE `post_type` = 'revision' OR `post_status` = 'auto-draft' OR `post_status` = 'trash'" );
+				$wpdb->query( "DELETE FROM `$commentsTable` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'" );
+				$wpdb->query( "DELETE FROM `$termsTable2` WHERE `term_id` IN ( select `term_id` from `$termsTable` WHERE `count` = 0 )" );
+				$wpdb->query( "DELETE FROM `$termsTable` WHERE `count` = 0" );
+			}
+		}		
+		$drafts_count = $revisions_count = $comments_count = $terms_count = 0;
+		$postsTable      = $table_prefix . 'posts';
+		$commentsTable   = $table_prefix . 'comments';
+		$termsTable2     = $table_prefix . 'terms';
+		$termsTable      = $table_prefix . 'term_taxonomy';
+		$revisions_total = $wpdb->get_results ( "SELECT ID FROM `$postsTable` WHERE `post_type` = 'revision' OR `post_type` = 'auto_draft' OR `post_status` = 'trash'" );
+		$drafts_total    = $wpdb->get_results ( "SELECT ID FROM `$postsTable` WHERE `post_status` = 'draft'" );
+		$comments_total  = $wpdb->get_results ( "SELECT comment_ID FROM `$commentsTable` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'" );
+		$terms_total     = $wpdb->get_results ( "SELECT term_taxonomy_id FROM `$termsTable` WHERE `count` = '0'" );
+		if( count( $drafts_total ) ) {
+			foreach( $drafts_total as $drafts ) {
+				$drafts_count++;
+			}			
+		}
+		if( count( $revisions_total ) ) { 
+			foreach( $revisions_total as $retot ) { 
+				$revisions_count++; 
+			}
+		}
+		if( count( $comments_total ) ) {
+			foreach( $comments_total as $comtot ) { 
+				$comments_count++; 
+			}
+		}
+		if( count( $terms_total ) ) {
+			foreach( $terms_total as $termstot  ) {
+				$terms_count++; 
+			}
+		}
+		$totalClutter    = ( $terms_count + $comments_count + $revisions_count ); ?>
+		
+		<div class="settings-section" id="trash-removal">
+			<div class="left-half">
+				<span class="title">Trash Removal</span>
+				<em>Removes clutter from the database.</em>
+			</div>
+			<div class="right-half">
+				<form method="post" action="#trash-removal" name="deleteAllClutterForm">
+					<?php wp_nonce_field( 'deleteAllClutterForm' ); ?>
+					<label for="deleteAllClutter" title="<?php echo esc_attr( $totalClutter );?>">
+						<i class="fa fa-trash-o"></i>
+						<span>All</span>
+					</label>
+					<input class="hidden" id="deleteAllClutter" type="submit" value="Go" name="deleteAllClutter">
+				</form>
+				<form method="post" action="#trash-removal" name="deletePostRevisionsForm">
+					<?php wp_nonce_field( 'deletePostRevisionsForm' ); ?>
+					<label for="delete_post_revisions" title="<?php echo esc_attr( $revisions_count ); ?>">
+						<i class="fa fa-trash-o"></i>
+						<span>Posts</span>
+					</label>
+					<input class="hidden" id="delete_post_revisions" type="submit" value="Go" name="delete_post_revisions">
+				</form>
+				<form method="post" action="#trash-removal" name="deleteUnapprovedCommentsForm">
+					<?php wp_nonce_field( 'deleteUnapprovedCommentsForm' ); ?>
+					<label for="delete_unapproved_comments" title="<?php echo esc_attr( $comments_count ); ?>">
+						<i class="fa fa-trash-o"></i>
+						<span>Comments</span>
+					</label>
+					<input class="hidden" id="delete_unapproved_comments" type="submit" value="Go" name="delete_unapproved_comments">
+				</form>
+				<form method="post" action="#trash-removal" name="deleteUnusedTermsForm">
+					<?php wp_nonce_field( 'deleteUnusedTermsForm' ); ?>
+					<label for="delete_unused_terms" title="<?php echo esc_attr( $terms_count ); ?>">
+						<i class="fa fa-trash-o"></i>
+						<span>Taxes</span>
+					</label>
+					<input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms">
+				</form>
+				<form method="post" action="#trash-removal" name="deleteDraftsForm">
+					<?php wp_nonce_field( 'deleteDraftsForm' ); ?>
+					<label for="delete_drafts" title="<?php echo esc_attr( $drafts_count ); ?>">
+						<i class="fa fa-trash-o"></i>
+						<span>Drafts</span>
+					</label>
+					<input class="hidden" id="delete_drafts" type="submit" value="Go" name="delete_drafts">
+				</form>
+			</div>			
+		</div>
+		<div class="settings-section" id="disable">
+			<div class="left-half">
+				<span class="title">Disable components</span>
+				<em>Completely disable comments, version number, pingbacks, author archives, or date archives.</em>
+			</div>
+			<div class="right-half">
+				<form method="post" action="#disable" name="momComments">
+					<?php wp_nonce_field( 'momComments' ); ?>
+					<label for="mom_comments_mode_submit">
+					<?php if( 1 == get_option( 'mommaincontrol_comments' ) ) { ?>
+						<i class="fa fa-toggle-on"></i>
+					<?php } else { ?>
+						<i class="fa fa-toggle-off"></i>
+					<?php }?>
+					<span>Comments</span>
+					</label>
+					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_comments' ) ){ echo 0; } else { echo 1; }?>" name="comments" />
+					<input type="submit" id="mom_comments_mode_submit" name="mom_comments_mode_submit" value="Submit" class="hidden" />
+				</form>
+				<form method="post" action="#disable" name="hidewpversions">
+					<?php wp_nonce_field( 'hidewpversions' ); ?>
+					<label for="mom_versions_submit">
+					<?php if( 1 == get_option( 'mommaincontrol_versionnumbers' ) ) { ?>
+						<i class="fa fa-toggle-on"></i>
+					<?php } else { ?>
+						<i class="fa fa-toggle-off"></i>
+					<?php }?>
+					<span>Version</span>
+					</label>
+					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_versionnumbers' ) ) { echo 0; } else { echo 1; } ?>" name="mommaincontrol_versionnumbers" />
+					<input type="submit" id="mom_versions_submit" name="mom_versions_submit" value="Submit" class="hidden" />
+				</form>
+				<form method="post" action="#disable" name="disablepingbacks">
+					<?php wp_nonce_field( 'disablepingbacks' ); ?>
+					<label for="mom_disablepingbacks_submit">
+					<?php if( 1 == get_option( 'mommaincontrol_disablepingbacks' ) ) { ?>
+						<i class="fa fa-toggle-on"></i>
+					<?php } else { ?>
+						<i class="fa fa-toggle-off"></i>
+					<?php }?>
+					<span>Pingbacks</span>
+					</label>
+					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_disablepingbacks' ) ) { echo 0; } else { echo 1; } ?>" name="mommaincontrol_disablepingbacks" />
+					<input type="submit" id="mom_disablepingbacks_submit" name="mom_disablepingbacks_submit" value="Submit" class="hidden" />
+				</form>
+				<form method="post" action="#disable" name="authorarchives">
+					<?php wp_nonce_field( 'authorarchives' ); ?>
+					<label for="mom_author_archives_mode_submit" title="Author-based archives">
+					<?php if( 1 == get_option( 'mommaincontrol_authorarchives' ) ) { ?>
+						<i class="fa fa-toggle-on"></i>
+					<?php } else { ?>
+						<i class="fa fa-toggle-off"></i>
+					<?php } ?>
+					<span>Author</span>
+					</label>
+					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_authorarchives' ) ) { echo 0; } else { echo 1; } ?>" name="authorarchives" />
+					<input type="submit" id="mom_author_archives_mode_submit" name="mom_author_archives_mode_submit" value="Submit" class="hidden" />
+				</form>
+				<form method="post" action="#disable" name="datearchives">
+					<?php wp_nonce_field( 'datearchives' ); ?>
+					<label for="mom_date_archives_mode_submit" title="Dated-based archives">
+					<?php if( 1 == get_option( 'mommaincontrol_datearchives' ) ) { ?>
+						<i class="fa fa-toggle-on"></i>
+					<?php } else { ?>
+						<i class="fa fa-toggle-off"></i>
+					<?php } ?>
+					<span>Dates</span>
+					</label>
+					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_datearchives' ) ) { echo 0; } else { echo 1; } ?>" name="datearchives" />
+					<input type="submit" id="mom_date_archives_mode_submit" name="mom_date_archives_mode_submit" value="Submit" class="hidden" />
+				</form>
+			
+			</div>
+		</div>
+		<div class="settings-section" id="enable">
+			<div class="left-half">
+				<span class="title">Enable components</span>
+				<em>Horizontal galleries, Font Awesome, Share Icons, or link backs on every RSS item.</em>
+			</div>
+			<div class="right-half">
+				<form method="post" action="#enable" name="momHorizontalGalleries">
+					<?php wp_nonce_field( 'momHorizontalGalleries' ); ?>
+					<label for="mom_horizontal_galleries_mode_submit">
+						<?php if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ) { ?>
+							<i class="fa fa-toggle-on"></i>
+						<?php } else { ?>
+							<i class="fa fa-toggle-off"></i>
+						<?php }?>
+						<span>Galleries</span>
+					</label>
+					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ){ echo 0; } else { echo 1; }?>" name="hgalleries" />
+					<input type="submit" id="mom_horizontal_galleries_mode_submit" name="mom_horizontal_galleries_mode_submit" value="Submit" class="hidden" />
+				</form>
+				<form method="post" action="#enable" name="fontawesome">
+					<?php wp_nonce_field( 'fontawesome' ); ?>
+						<label id="font_awesome" for="mom_fontawesome_mode_submit">
+						<?php if( 1 == get_option( 'mommaincontrol_fontawesome' ) ) { ?>
+							<i class="fa fa-toggle-on"></i>
+						<?php } else { ?>
+							<i class="fa fa-toggle-off"></i>
+						<?php } ?>
+						<span>FA</span>
+					</label>
+					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_fontawesome' ) ) { echo 0; } else { echo 1; } ?>" name="mommaincontrol_fontawesome" />
+					<input type="submit" id="mom_fontawesome_mode_submit" name="mom_fontawesome_mode_submit" value="Submit" class="hidden" />
+				</form>
+				<form method="post" action="#enable" name="momShare">
+					<?php wp_nonce_field( 'momShare' ); ?>
+					<label for="mom_share_mode_submit">
+						<?php if( 1 == get_option( 'mommaincontrol_momshare' ) ) { ?>
+							<i class="fa fa-toggle-on"></i>
+						<?php } else { ?>
+							<i class="fa fa-toggle-off"></i>
+						<?php }?>
+						<span>Share</span>
+					</label>
+					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_momshare' ) ){ echo 0; } else { echo 1; }?>" name="share" />
+					<input type="submit" id="mom_share_mode_submit" name="mom_share_mode_submit" value="Submit" class="hidden" />
+				</form>
+				<form method="post" action="#enable" name="protectrss">
+					<?php wp_nonce_field( 'protectrss' ); ?>
+					<label for="mom_protectrss_mode_submit">
+						<?php if( 1 == get_option( 'mommaincontrol_protectrss' ) ) { ?>
+							<i class="fa fa-toggle-on"></i>
+						<?php } else { ?>
+							<i class="fa fa-toggle-off"></i>
+						<?php }?>
+						<span>RSS Link</span>
+					</label>
+					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_protectrss' ) ) { echo 0; } else { echo 1; } ?>" name="protectrss" />
+					<input type="submit" id="mom_protectrss_mode_submit" name="mom_protectrss_mode_submit" value="Submit" class="hidden" />
+				</form>
+			</div>
+		</div>
+		<?php if( 1 == get_option( 'mommaincontrol_momshare' ) ) { ?>
+			<div class="settings-section" id="shareicons">
+				<div class="left-half">
+					<span class="title">Share Icons</span>
+					<em>Enable/disable different services.</em>
+					<hr />
+					<form method="post" action="#shareicons" name="momShareTop">
+						<?php wp_nonce_field( 'momShareTop' ); ?>
+						<label for="MOM_enable_share_top"> +
+						<?php if( 1 == get_option( 'MOM_enable_share_top' ) ) { ?>
+							Icons appear at top of post (click to change)
+						<?php } else { ?>
+							Icons appear at bottom of post (click to change)
+						<?php }?></label>
+						<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_top' ) ){ echo 0; } else { echo 1; }?>" name="top" />
+						<input type="submit" id="MOM_enable_share_top" name="MOM_enable_share_top" value="Submit" class="hidden" />
+					</form>					
+					
+				</div>
+				<div class="right-half">
+					<form method="post" action="#shareicons" name="momShareReddit">
+						<?php wp_nonce_field( 'momShareReddit' ); ?>
+						<label for="MOM_enable_share_reddit">
+							<?php if( 1 == get_option( 'MOM_enable_share_reddit' ) ) { ?>
+								<i class="fa fa-toggle-on"></i>
+							<?php } else { ?>
+								<i class="fa fa-toggle-off"></i>
+							<?php }?>
+							<span><i class="fa fa-reddit"></i></span>
+						</label>
+						<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_reddit' ) ){ echo 0; } else { echo 1; }?>" name="reddit" />
+						<input type="submit" id="MOM_enable_share_reddit" name="MOM_enable_share_reddit" value="Submit" class="hidden" />
+					</form>
+					<form method="post" action="#shareicons" name="momShareGoogle">
+						<?php wp_nonce_field( 'momShareGoogle' ); ?>
+						<label for="MOM_enable_share_google">
+							<?php if( 1 == get_option( 'MOM_enable_share_google' ) ) { ?>
+								<i class="fa fa-toggle-on"></i>
+							<?php } else { ?>
+								<i class="fa fa-toggle-off"></i>
+							<?php }?>
+							<span><i class="fa fa-google-plus"></i></span>
+						</label>
+						<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_google' ) ){ echo 0; } else { echo 1; }?>" name="google" />
+						<input type="submit" id="MOM_enable_share_google" name="MOM_enable_share_google" value="Submit" class="hidden" />
+					</form>
+					<form method="post" action="#shareicons" name="momShareTwitter">
+						<?php wp_nonce_field( 'momShareTwitter' ); ?>
+						<label for="MOM_enable_share_twitter">
+							<?php if( 1 == get_option( 'MOM_enable_share_twitter' ) ) { ?>
+								<i class="fa fa-toggle-on"></i>
+							<?php } else { ?>
+								<i class="fa fa-toggle-off"></i>
+							<?php }?>
+							<span><i class="fa fa-twitter"></i></span>
+						</label>
+						<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_twitter' ) ){ echo 0; } else { echo 1; }?>" name="twitter" />
+						<input type="submit" id="MOM_enable_share_twitter" name="MOM_enable_share_twitter" value="Submit" class="hidden" />
+					</form>
+					<form method="post" action="#shareicons" name="momShareFacebook">
+						<?php wp_nonce_field( 'momShareFacebook' ); ?>
+						<label for="MOM_enable_share_facebook">
+							<?php if( 1 == get_option( 'MOM_enable_share_facebook' ) ) { ?>
+								<i class="fa fa-toggle-on"></i>
+							<?php } else { ?>
+								<i class="fa fa-toggle-off"></i>
+							<?php }?>
+							<span><i class="fa fa-facebook"></i></span>
+						</label>
+						<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_facebook' ) ){ echo 0; } else { echo 1; }?>" name="facebook" />
+						<input type="submit" id="MOM_enable_share_facebook" name="MOM_enable_share_facebook" value="Submit" class="hidden" />
+					</form>
+					<form method="post" action="#shareicons" name="momShareEmail">
+						<?php wp_nonce_field( 'momShareEmail' ); ?>
+						<label for="MOM_enable_share_email">
+							<?php if( 1 == get_option( 'MOM_enable_share_email' ) ) { ?>
+								<i class="fa fa-toggle-on"></i>
+							<?php } else { ?>
+								<i class="fa fa-toggle-off"></i>
+							<?php }?>
+							<span><i class="fa fa-envelope"></i></span>
+						</label>
+						<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_email' ) ){ echo 0; } else { echo 1; }?>" name="email" />
+						<input type="submit" id="MOM_enable_share_email" name="MOM_enable_share_email" value="Submit" class="hidden" />
+					</form>
+				</div>
+			</div>
+		<?php }?>		
+		<div class="settings-section" id="comment-modules">
+			<div class="left-half">
+				<span class="title">Comment Form Extras</span>
+				<em>Block the form from bad IPs or Ajaxify it.</em>
+			</div>
+			<div class="right-half">
+				<form method="post" action="#comment-modules" name="momDNSBL">
+					<?php wp_nonce_field( 'momDNSBL' ); ?>
+					<label for="mom_dnsbl_mode_submit">
+						<?php if( 1 == get_option( 'mommaincontrol_dnsbl' ) ) { ?>
+							<i class="fa fa-toggle-on"></i>
+						<?php } else { ?>
+							<i class="fa fa-toggle-off"></i>
+						<?php }?>
+						<span>DNSBL</span>
+					</label>
+					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_dnsbl' ) ){ echo 0; } else { echo 1; }?>" name="dnsbl" />
+					<input type="submit" id="mom_dnsbl_mode_submit" name="mom_dnsbl_mode_submit" value="Submit" class="hidden" />
+				</form>
+				<form method="post" action="#comment-modules" name="momAjaxComments">
+					<?php wp_nonce_field( 'momAjaxComments' ); ?>
+					<label for="mom_ajax_comments_mode_submit">
+						<?php if( 1 == get_option( 'MOM_themetakeover_ajaxcomments' ) ) { ?>
+							<i class="fa fa-toggle-on"></i>
+						<?php } else { ?>
+							<i class="fa fa-toggle-off"></i>
+						<?php }?>
+						<span>Ajax</span>
+					</label>
+					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_themetakeover_ajaxcomments' ) ){ echo 0; } else { echo 1; }?>" name="ajaxify" />
+					<input type="submit" id="mom_ajax_comments_mode_submit" name="mom_ajax_comments_mode_submit" value="Submit" class="hidden" />
+				</form>
+			</div>
+		</div>
+		<div class="settings-section" id="extras">
+			<div class="left-half">
+				<span class="title">Extras</span>
+				<em>Move Javascript to footer, lazy load all post images, or the Post Exclusion module.</em>
+			</div>
+			<div class="right-half">
+				<form method="post" action="#extras" name="footerscripts">
+					<?php wp_nonce_field( 'footerscripts' ); ?>
+					<label for="mom_footerscripts_mode_submit">
+						<?php if( 1== get_option( 'mommaincontrol_footerscripts' ) ){ ?>
+							<i class="fa fa-toggle-on"></i>
+						<?php }else{ ?>
+							<i class="fa fa-toggle-off"></i>
+						<?php } ?>
+						<span>Javascript</span>
+					</label>
+					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_footerscripts' ) ) { echo 0; } else { echo 1; } ?>" name="footerscripts" />
+					<input type="submit" id="mom_footerscripts_mode_submit" name="mom_footerscripts_mode_submit" value="Submit" class="hidden" />
+				</form>
+				<form method="post" action="#extras" name="lazyload">
+					<?php wp_nonce_field( 'lazyload' ); ?>
+					<label for="mom_lazy_mode_submit">
+						<?php if( 1 == get_option( 'mommaincontrol_lazyload' ) ) { ?>
+							<i class="fa fa-toggle-on"></i>
+						<?php } else { ?>
+							<i class="fa fa-toggle-off"></i>
+						<?php } ?>
+						<span>Lazy</span>
+					</label>
+					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_lazyload' ) ) { echo 0; } else { echo 1; } ?>" name="mommaincontrol_lazyload" />
+					<input type="submit" id="mom_lazy_mode_submit" name="mom_lazy_mode_submit" value="Submit" class="hidden" />
+				</form>
+				<form method="post" action="#extras" name="momExclude">
+					<?php wp_nonce_field( 'momExclude' ); ?>
+					<label for="mom_exclude_mode_submit">
+						<?php if( 1 == get_option( 'mommaincontrol_momse' ) ) { ?>
+							<i class="fa fa-toggle-on"></i>
+						<?php } else { ?>
+							<i class="fa fa-toggle-off"></i>
+						<?php }?>
+						<span>Exclusion</span>
+					</label>
+					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_momse' ) ){ echo 0; } else { echo 1; }?>" name="exclude" />
+					<input type="submit" id="mom_exclude_mode_submit" name="mom_exclude_mode_submit" value="Submit" class="hidden" />
+				</form>				
+			</div>
+		</div>
+
+		<?php if( 1 == get_option( 'mommaincontrol_momse' ) ) { 
+			$showmepages = get_pages(); 			
+			$showmecats = get_categories( 'taxonomy=category&hide_empty=0' ); 
+			$showmetags = get_categories( 'taxonomy=post_tag&hide_empty=0' );
+			$tagcount = 0;
+			$catcount = 0;
+		?>
+
+			<div class="settings-section" id="categories">
+					<span class="title-full">Exclude Taxonomies</span>
+					<em class="full">Each field takes a comma-separated list of items for exclusion from the specified
+					section of the blog.</em>
+					<div class="clear"></div>
+					<span class="title-full">Exclude Categories</span>
+					<em class="full">
+					<?php foreach($showmecats as $catsshown){ ++$catcount; ?>
+						<?php echo $catsshown->cat_name; ?> (<?php echo $catsshown->cat_ID; ?>) &mdash; 
+					<?php }?>
+					</em>
+					<?php 
+					$MOM_Exclude_PostFormats_RSS = get_option( 'MOM_Exclude_PostFormats_RSS' );
+					$MOM_Exclude_PostFormats_Front = get_option( 'MOM_Exclude_PostFormats_Front' );
+					$MOM_Exclude_PostFormats_CategoryArchives = get_option( 'MOM_Exclude_PostFormats_CategoryArchives' );
+					$MOM_Exclude_PostFormats_TagArchives = get_option( 'MOM_Exclude_PostFormats_TagArchives' );
+					$MOM_Exclude_PostFormats_SearchResults = get_option( 'MOM_Exclude_PostFormats_SearchResults' );
+					$MOM_Exclude_PostFormats_Visitor = get_option( 'MOM_Exclude_PostFormats_Visitor' ); ?>
+					<form method="post" class="exclude" name="hidecategoriesfrom">
+						<?php wp_nonce_field( 'hidecategoriesfrom' ); ?>
+						<?php $exclude = array( 
+							'MOM_Exclude_Categories_RSS',
+							'MOM_Exclude_Categories_Front',
+							'MOM_Exclude_Categories_TagArchives',
+							'MOM_Exclude_Categories_SearchResults',
+							'MOM_Exclude_Categories_CategoriesSun',
+							'MOM_Exclude_Categories_CategoriesMon',
+							'MOM_Exclude_Categories_CategoriesTue',
+							'MOM_Exclude_Categories_CategoriesWed',
+							'MOM_Exclude_Categories_CategoriesThu',
+							'MOM_Exclude_Categories_CategoriesFri',
+							'MOM_Exclude_Categories_CategoriesSat',
+							'MOM_Exclude_Categories_level0Categories',
+							'MOM_Exclude_Categories_level1Categories',
+							'MOM_Exclude_Categories_level2Categories',
+							'MOM_Exclude_Categories_level7Categories',
+						); ?>
+						<?php $section = array( 
+							'RSS',
+							'Front page',
+							'Tag',
+							'Search results',
+							'Sunday',
+							'Monday',
+							'Tuesday',
+							'Wednesday',
+							'Thursday',
+							'Friday',
+							'Saturday',
+							'Logged out',
+							'Subscriber',
+							'Contributor',
+							'Author'
+						); ?>
+						<?php 
+							if( $catcount > 0 ) {
+								foreach($exclude as $exc ) { 
+								$title = str_replace($exclude, $section, $exc); ?>
+								<section>
+									<label for="<?php echo $exc;?>"><?php echo $title;?></label>
+									<input type="text" id="<?php echo $exc;?>" name="<?php echo $exc;?>" value="<?php echo get_option($exc);?>">
+								</section>
+							<?php } } else { ?>
+								<em class="full">You have no categories to exclude.</em>
+							<?php }?>
+						<div class="clear"></div>
+						<span class="title-full">Exclude Tags</span>
+						<em class="full">
+							<?php foreach($showmetags as $tagsshown){ 
+								++$tagcount;?>
+								<?php echo $tagsshown->cat_name;?>(<?php echo $tagsshown->cat_ID;?>) &mdash;
+							<?php } ?>
+						</em>
+						<?php 
+							if( $tagcount > 0 ) {
+								$exclude = array( 'MOM_Exclude_Tags_RSS','MOM_Exclude_Tags_Front','MOM_Exclude_Tags_CategoryArchives','MOM_Exclude_Tags_SearchResults','MOM_Exclude_Tags_TagsSun','MOM_Exclude_Tags_TagsMon','MOM_Exclude_Tags_TagsTue','MOM_Exclude_Tags_TagsWed','MOM_Exclude_Tags_TagsThu','MOM_Exclude_Tags_TagsFri','MOM_Exclude_Tags_TagsSat','MOM_Exclude_Tags_level0Tags','MOM_Exclude_Tags_level1Tags','MOM_Exclude_Tags_level2Tags','MOM_Exclude_Tags_level7Tags' );
+								$section = array( 'RSS','Front page','Category archives','Search results','Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Logged out','Subscriber','Contributor','Author');
+								foreach($exclude as $exc ) {
+									$title = str_replace($exclude, $section, $exc); ?>
+									<section>
+										<label for="<?php echo $exc;?>"><?php echo $title;?></label>
+										<input type="text" id="<?php echo $exc;?>" name="<?php echo $exc;?>" value="<?php echo get_option($exc);?>">
+									</section>
+						<?php }
+							} else { ?>
+								<em class="full">You have no tags to exclude.</em>
+							<?php } ?>
+			
+						<div class="clear"></div>
+							<span class="title-full">Post Formats</span>
+							<section>
+								<?php echo '
+									<select name="MOM_Exclude_PostFormats_RSS" id="MOM_Exclude_PostFormats_RSS">
+									<option value="">RSS -> none</option>
+									<option value="post-format-aside"'; selected( $MOM_Exclude_PostFormats_RSS, 'post-format-aside' ); echo '>RSS -> Aside</option>
+									<option value="post-format-gallery"'; selected( $MOM_Exclude_PostFormats_RSS, 'post-format-gallery' ); echo '>RSS -> Gallery</option>
+									<option value="post-format-link"'; selected( $MOM_Exclude_PostFormats_RSS, 'post-format-link' ); echo '>RSS -> Link</option>
+									<option value="post-format-image"'; selected( $MOM_Exclude_PostFormats_RSS, 'post-format-image' ); echo '>RSS -> Image</option>
+									<option value="post-format-quote"'; selected( $MOM_Exclude_PostFormats_RSS, 'post-format-quote' ); echo '>RSS -> Quote</option>
+									<option value="post-format-status"'; selected( $MOM_Exclude_PostFormats_RSS, 'post-format-status' ); echo '>RSS -> Status</option>
+									<option value="post-format-video"'; selected( $MOM_Exclude_PostFormats_RSS, 'post-format-video' ); echo '>RSS -> Video</option>
+									<option value="post-format-audio"'; selected( $MOM_Exclude_PostFormats_RSS, 'post-format-audio' ); echo '>RSS -> Audio</option>
+									<option value="post-format-chat"'; selected( $MOM_Exclude_PostFormats_RSS, 'post-format-chat' ); echo '>RSS -> Chat</option>
+								</select>
+								<select name="MOM_Exclude_PostFormats_Front" id="MOM_Exclude_PostFormats_Front">
+									<option value="">Front Page -> none</option>
+									<option value="post-format-aside"'; selected( $MOM_Exclude_PostFormats_Front, 'post-format-aside' ); echo '>Front Page -> Aside</option>
+									<option value="post-format-gallery"'; selected( $MOM_Exclude_PostFormats_Front,'post-format-gallery' ); echo '>Front Page -> Gallery</option>
+									<option value="post-format-link"'; selected( $MOM_Exclude_PostFormats_Front,'post-format-link' ); echo '>Front Page -> Link</option>
+									<option value="post-format-image"'; selected( $MOM_Exclude_PostFormats_Front,'post-format-image' ); echo '>Front Page -> Image</option>
+									<option value="post-format-quote"'; selected( $MOM_Exclude_PostFormats_Front,'post-format-quote' ); echo '>Front Page -> Quote</option>
+									<option value="post-format-status"'; selected( $MOM_Exclude_PostFormats_Front,'post-format-status' ); echo '>Front Page -> Status</option>
+									<option value="post-format-video"'; selected( $MOM_Exclude_PostFormats_Front,'post-format-video' ); echo '>Front Page -> Video</option>
+									<option value="post-format-audio"'; selected( $MOM_Exclude_PostFormats_Front,'post-format-audio' ); echo '>Front Page -> Audio</option>
+									<option value="post-format-chat"'; selected( $MOM_Exclude_PostFormats_Front,'post-format-chat' ); echo '>Front Page -> Chat</option>
+								</select>
+								<select name="MOM_Exclude_PostFormats_CategoryArchives" id="MOM_Exclude_PostFormats_CategoryArchives">
+									<option value="">Archives -> none</option>
+									<option value="post-format-aside"'; selected( $MOM_Exclude_PostFormats_CategoryArchives, 'post-format-aside' ); echo '>Archives -> Aside</option>
+									<option value="post-format-gallery"'; selected( $MOM_Exclude_PostFormats_CategoryArchives,'post-format-gallery' ); echo '>Archives -> Gallery</option>
+									<option value="post-format-link"'; selected( $MOM_Exclude_PostFormats_CategoryArchives,'post-format-link' ); echo '>Archives -> Link</option>
+									<option value="post-format-image"'; selected( $MOM_Exclude_PostFormats_CategoryArchives,'post-format-image' ); echo '>Archives -> Image</option>
+									<option value="post-format-quote"'; selected( $MOM_Exclude_PostFormats_CategoryArchives,'post-format-quote' ); echo '>Archives -> Quote</option>
+									<option value="post-format-status"'; selected( $MOM_Exclude_PostFormats_CategoryArchives,'post-format-status' ); echo '>Archives -> Status</option>
+									<option value="post-format-video"'; selected( $MOM_Exclude_PostFormats_CategoryArchives,'post-format-video' ); echo '>Archives -> Video</option>
+									<option value="post-format-audio"'; selected( $MOM_Exclude_PostFormats_CategoryArchives,'post-format-audio' ); echo '>Archives -> Audio</option>
+									<option value="post-format-chat"'; selected( $MOM_Exclude_PostFormats_CategoryArchives,'post-format-chat' ); echo '>Archives -> Chat</option>
+								</select>
+								<select name="MOM_Exclude_PostFormats_TagArchives" id="MOM_Exclude_PostFormats_TagArchives">
+									<option value="">Tags -> none</option>
+									<option value="post-format-aside"'; selected( $MOM_Exclude_PostFormats_TagArchives, 'post-format-aside' ); echo '>Tags -> Aside</option>
+									<option value="post-format-gallery"'; selected( $MOM_Exclude_PostFormats_TagArchives, 'post-format-gallery' ); echo '>Tags -> Gallery</option>
+									<option value="post-format-link"'; selected( $MOM_Exclude_PostFormats_TagArchives, 'post-format-link' ); echo '>Tags -> Link</option>
+									<option value="post-format-image"'; selected( $MOM_Exclude_PostFormats_TagArchives, 'post-format-image' ); echo '>Tags -> Image</option>
+									<option value="post-format-quote"'; selected( $MOM_Exclude_PostFormats_TagArchives, 'post-format-quote' ); echo '>Tags -> Quote</option>
+									<option value="post-format-status"'; selected( $MOM_Exclude_PostFormats_TagArchives, 'post-format-status' ); echo '>Tags -> Status</option>
+									<option value="post-format-video"'; selected( $MOM_Exclude_PostFormats_TagArchives, 'post-format-video' ); echo '>Tags -> Video</option>
+									<option value="post-format-audio"'; selected( $MOM_Exclude_PostFormats_TagArchives, 'post-format-audio' ); echo '>Tags -> Audio</option>
+									<option value="post-format-chat"'; selected( $MOM_Exclude_PostFormats_TagArchives, 'post-format-chat' ); echo '>Tags -> Chat</option>
+								</select>
+								<select name="MOM_Exclude_PostFormats_SearchResults" id="MOM_Exclude_PostFormats_SearchResults">
+									<option value="">Search -> none</option>
+									<option value="post-format-aside"'; selected( $MOM_Exclude_PostFormats_SearchResults, 'post-format-aside' ); echo '>Search -> Aside</option>
+									<option value="post-format-gallery"'; selected( $MOM_Exclude_PostFormats_SearchResults, 'post-format-gallery' ); echo '>Search -> Gallery</option>
+									<option value="post-format-link"'; selected( $MOM_Exclude_PostFormats_SearchResults, 'post-format-link' ); echo '>Search -> Link</option>
+									<option value="post-format-image"'; selected( $MOM_Exclude_PostFormats_SearchResults, 'post-format-image' ); echo '>Search -> Image</option>
+									<option value="post-format-quote"'; selected( $MOM_Exclude_PostFormats_SearchResults, 'post-format-quote' ); echo '>Search -> Quote</option>
+									<option value="post-format-status"'; selected( $MOM_Exclude_PostFormats_SearchResults, 'post-format-status' ); echo '>Search -> Status</option>
+									<option value="post-format-video"'; selected( $MOM_Exclude_PostFormats_SearchResults, 'post-format-video' ); echo '>Search -> Video</option>
+									<option value="post-format-audio"'; selected( $MOM_Exclude_PostFormats_SearchResults, 'post-format-audio' ); echo '>Search -> Audio</option>
+									<option value="post-format-chat"'; selected( $MOM_Exclude_PostFormats_SearchResults, 'post-format-chat' ); echo '>Search -> Chat</option>
+								</select>
+								<select name="MOM_Exclude_PostFormats_Visitor" id="MOM_Exclude_PostFormats_Visitor">
+									<option value="">Logged out -> none</option>
+									<option value="post-format-aside"'; selected( $MOM_Exclude_PostFormats_Visitor, 'post-format-aside' ); echo '>Logged out -> Aside</option>
+									<option value="post-format-gallery"'; selected( $MOM_Exclude_PostFormats_Visitor, 'post-format-gallery' ); echo '>Logged out -> Gallery</option>
+									<option value="post-format-link"'; selected( $MOM_Exclude_PostFormats_Visitor, 'post-format-link' ); echo '>Logged out -> Link</option>
+									<option value="post-format-image"'; selected( $MOM_Exclude_PostFormats_Visitor, 'post-format-image' ); echo '>Logged out -> Image</option>
+									<option value="post-format-quote"'; selected( $MOM_Exclude_PostFormats_Visitor, 'post-format-quote' ); echo '>Logged out -> Quote</option>
+									<option value="post-format-status"'; selected( $MOM_Exclude_PostFormats_Visitor, 'post-format-status' ); echo '>Logged out -> Status</option>
+									<option value="post-format-video"'; selected( $MOM_Exclude_PostFormats_Visitor, 'post-format-video' ); echo '>Logged out -> Video</option>
+									<option value="post-format-audio"'; selected( $MOM_Exclude_PostFormats_Visitor, 'post-format-audio' ); echo '>Logged out -> Audio</option>
+									<option value="post-format-chat"'; selected( $MOM_Exclude_PostFormats_Visitor, 'post-format-chat' ); echo '>Logged out -> Chat</option>
+								</select>
+							</section>'; ?>
+			<input id="momsesave" type="submit" class="clear" value="Exclude them!" name="momsesave"></form>
+			</div>
+		<?php }?>
+		
+
+		
+		<div class="settings-section">
+			<span class="title-full">Misc. Theme Settings</span>
+			<em class="full">Setting keyword to <code>keyword</code> will make <code>yoursite.tld/?keyword</code> load a random post</em>
+			<form name="mom_save_form" method="post" action="">
+				<?php wp_nonce_field( 'mom_save_form' ); ?>
+				<section>
+					<select name="mompaf_post" id="mompaf_0">
+						<option value="off"<?php if ( get_option( 'mompaf_post' ) == 'off' ) { ?> selected="selected"<?php } ?>>Post as front page is disabled</option>
+						<option value="on"<?php if ( get_option( 'mompaf_post' ) == 'on' ) { ?> selected="selected"<?php } ?>/>The front page will be your latest post</option>
+							<?php $mompaf_post = get_option( 'mompaf_post' );
+							selected( get_option( 'mompaf_post' ), 0 );
+							$showmeposts = get_posts(array( 'posts_per_page' => -1) );
+							foreach($showmeposts as $postsshown){ ?>
+								<option name="mompaf_post" id="mompaf_'<?php echo $postsshown->ID; ?>" value="<?php echo $postsshown->ID; ?>"
+								<?php $postID = $postsshown->ID;
+								$selected = selected( $mompaf_post, $postID); ?>
+								>The front page will be the post "<?php echo $postsshown->post_title; ?>"</option>
+						<?php } ?>
+					</select>
+				</section>
+				<section>
+					<label for="previous_link_class">Previous link class</label>
+					<input type="text" id="previous_link_class" name="previous_link_class" value="<?php if( get_option( 'mom_previous_link_class' ) ) { echo get_option( 'mom_previous_link_class' ); } ?>" />
+				</section>
+				<section>
+					<label for="next_link_class">Next link class</label>
+					<input type="text" id="next_link_class" name="next_link_class" value="<?php if( get_option( 'mom_next_link_class' ) ) { echo get_option( 'mom_next_link_class' ); } ?>" />
+				</section>
+				<section>
+					<label for="read_more"><code>%blank%</code> for blank</label>
+					<input type="text" id="read_more" name="read_more" value="<?php if( get_option( 'mom_readmore_content' ) ) { 
+						echo get_option( 'mom_readmore_content' ); 
+					} ?>" />
+				</section>
+				<section>
+					<label for="randomget">Set a keyword</label>
+					<input type="text" id="randomget" name="randomget" value="<?php if( get_option( 'mom_random_get' ) ) { 
+						echo get_option( 'mom_random_get' ); 
+					} ?>" />
+				</section>
+				
+				<input type="submit" id="mom_save_form" name="mom_save_form_submit" value="Save">
+				
+			</form>			
+		</div>
+				
+		<?php // [mom_attachments] shortcode information block ?>
+		<div class="settings-section clear">
+				<p>
+					<span class="title">Attachment Loop</span>
+					<code>[mom_attachments]</code> inserts a loop of recent images that link to their respective posts.
+				</p>
+				<p>
+					<em>Defaults</em>: <code>[mom_attachments amount="1" class="" ]</code>
+				</p>
+				<p>
+					<span><code>amount</code> How many images to show.<br /></span>
+					<span><code>class</code> The .class of the links, for CSS purposes.<br /></span>
+				</p>
+				<hr />
+		<?php // [mom_miniloop] shortcode information block ?>
+				<p>
+					<span class="title">Miniloops</span>
+					<code>[mom_miniloop]</code>  inserts a loop of posts via shortcode.
+				</p>
+				<p>
+					<em>Defaults</em>: <code>[mom_miniloop paging="0" show_link="1" month="" day="" year="" meta="series" key="" link_content="" amount="4" style="tiled" offset="0" category="" orderby="post_date" order="DESC" post_status="publish" cache="false"]</code>
+				</p>
+				<p>
+					<span><code>paging</code> 1 (on) / 0 (off)<br /></span>
+					<code>show_link</code> 1 (on) / 0 (off)<br /></span>
+					<span><code>month</code> 1-2 digit date / <code>123</code> for today's date<br /></span>
+					<code>day</code> 1-2 digit date / <code>123</code> for today's date<br /></span>
+					<code>year</code> 1-4 digit date / <code>123</code> for today's date<br /></span>
+					<span><code>meta</code> a meta-key name.<br /></span>
+					<span><code>key</code> a meta-key value.<br /></span>
+					<span><code>link_content</code> Text of the permalink to the post.<br /></span>
+					<span><code>amount</code> How many posts to show in the loop.<br /></span>
+					<span><code>style</code> <em>columns, list, slider, tiled</em><br /></span>
+					<span><code>offset</code> How many posts to skip ahead in the loop.<br /></span>
+					<span><code>category</code> Category ID(s) or names (comma-separated if multiple values).<br /></span>
+					<span><code>orderby</code> Order posts in the loop by a <a href="//codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters">particular value</a>.<br /></span>
+					<span><code>order</code> <em>ASC</em> (ascending) or <em>DESC</em> (descending)<br /></span>
+					<span><code>post_status</code> Display posts based on their <a href="//codex.wordpress.org/Class_Reference/WP_Query#Status_Parameters">status</a>.<br /></span>
+					<span><code>cache</code> Cache the results of this loop. <em>true</em> or <em>false</em>.<br /></span>
+				</p>
+		</div>
+		
+		<?php // Theme functions ?>
+		<div class="settings-section clear">
+			<p><strong>Theme Developers</strong> may use the following functions in your themes for additional functionality.</p>
+			<p><span><code>myoptionalmodules_excludecategories()</code> for a category list that hides categories based on your <strong>Exclude Taxonomies: Exclude Categories</strong> settings.<br /></span></p>
+			<p><span><code>new mom_mediaEmbed( 'MEDIA URL' )</code> for media embeds with <a href="http://codex.wordpress.org/Embeds">oEmbed</a> fallback (supports imgur image links AND albums, youtube/youtu.be (with ?t parameter), soundcloud, vimeo, gfycat, funnyordie, and vine).</p>
+		</div>
+		
+	</div>
+	<?php 
+	}
 }

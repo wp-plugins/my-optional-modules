@@ -12,6 +12,11 @@
 		overflow: auto;
 		padding: 50px; 
 	}
+		.MOMSettings input[type="submit"] {
+			margin: 5px;
+			padding: 5px;
+			width: 99%;
+		}
 		.MOMSettings .settings-section .clear {
 			display: block; 
 			padding: 10px;
