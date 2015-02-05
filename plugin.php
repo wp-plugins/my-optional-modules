@@ -240,7 +240,7 @@ if( !function_exists( 'my_optional_modules_share_icons' ) ) {
 
 	function my_optional_modules_share_icons( $content ) { 
 
-		global $wp, $post;
+		global $wp, $post, $mommodule_fontawesome;
 
 		if( 1 == get_option( 'mommaincontrol_momshare' ) ) {
 
