@@ -83,6 +83,12 @@
 			float: right;
 			width: 50%;
 		}
+			.MOMSettings .settings-section .right-half form.donate {
+				float: left;
+				padding: 25px;
+				text-align: center;
+				width: 19.95%;
+			}		
 			.MOMSettings .settings-section .right-half form {
 				float: left;
 				padding: 5px;

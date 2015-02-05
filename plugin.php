@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.7.9
+ * Version: 5.8.0
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -358,10 +358,6 @@ if( !function_exists( 'my_optional_modules_scripts' ) ) {
 
 		function mom_jquery(){
 
-			$fittext = plugins_url().'/my-optional-modules/includes/javascript/fittext.js';
-			$fittext = my_optional_modules_protocol( $fittext );
-			wp_enqueue_script( 'fittext', $fittext, array( 'jquery' ) );
-
 			if( 1 == get_option( 'mommaincontrol_lazyload' ) ) {
 
 				$lazyLoad = '//cdn.jsdelivr.net/jquery.lazyload/1.9.0/jquery.lazyload.min.js';
@@ -408,8 +404,10 @@ if( 1 == $mommodule_exclude ) {
 			$c1	     = array( '0' );
 			$t1	     = array( '0' );
 			$rss_day = array( '0' );
+			$u1      = array( '0' );
 			$t11     = 0;
 			$c_1     = 0;
+			$u_1     = 0;
 
 			$MOM_Exclude_Categories_Front             = get_option( 'MOM_Exclude_Categories_Front' );
 			$MOM_Exclude_Categories_TagArchives       = get_option( 'MOM_Exclude_Categories_TagArchives' );
@@ -428,6 +426,19 @@ if( 1 == $mommodule_exclude ) {
 			$MOM_Exclude_Tags_Day                     = get_option( 'MOM_Exclude_Tags_Tags' . $date_day . '' );
 			$MOM_Exclude_Cats_Day                     = get_option( 'MOM_Exclude_Categories_Categories' . $date_day . '' );
 
+			$MOM_Exclude_Users_RSS                    = get_option( 'MOM_Exclude_Users_RSS' );
+			$MOM_Exclude_Users_Front                  = get_option( 'MOM_Exclude_Users_Front' );
+			$MOM_Exclude_Users_TagArchives            = get_option( 'MOM_Exclude_Users_TagArchives' );
+			$MOM_Exclude_Users_CategoryArchives       = get_option( 'MOM_Exclude_Users_CategoryArchives' );
+			$MOM_Exclude_Users_SearchResults          = get_option( 'MOM_Exclude_Users_SearchResults' );
+			$MOM_Exclude_Users_Day                    = get_option( 'MOM_Exclude_Users_Users' . $date_day . '' );
+
+			if( '' == $MOM_Exclude_Users_RSS ) $MOM_Exclude_Users_RSS                                       = 0;
+			if( '' == $MOM_Exclude_Users_Front ) $MOM_Exclude_Users_Front                                   = 0;
+			if( '' == $MOM_Exclude_Users_TagArchives ) $MOM_Exclude_Users_TagArchives                       = 0;
+			if( '' == $MOM_Exclude_Users_CategoryArchives ) $MOM_Exclude_Users_CategoryArchives             = 0;
+			if( '' == $MOM_Exclude_Users_SearchResults ) $MOM_Exclude_Users_SearchResults                   = 0;
+			
 			if( '' == $MOM_Exclude_Categories_Front ) $MOM_Exclude_Categories_Front                         = 0;
 			if( '' == $MOM_Exclude_Categories_TagArchives ) $MOM_Exclude_Categories_TagArchives             = 0;
 			if( '' == $MOM_Exclude_Categories_SearchResults ) $MOM_Exclude_Categories_SearchResults         = 0;
@@ -447,17 +458,15 @@ if( 1 == $mommodule_exclude ) {
 			
 			
 			$rss_day = explode( ',', $MOM_Exclude_Tags_Day );
-			
 			foreach( $rss_day as &$rss_day_1 ) {
 
 				$rss_day_1 = $rss_day_1 . ',';
 
 			}
-
 			$rss_day_1     = implode( $rss_day );
 			$rssday        = explode( ',', str_replace ( ' ', '', $rss_day_1 ) );
+			
 			$rss_day_cat   = explode( ',', $MOM_Exclude_Cats_Day );
-
 			if( is_array( $rss_day_cat ) ) {
 
 				foreach( $rss_day_cat as &$rss_day_1_cat ) {
@@ -467,12 +476,29 @@ if( 1 == $mommodule_exclude ) {
 				}
 
 			}
-
 			$rss_day_1_cat = implode( $rss_day_cat );
 			$rssday_cat    = explode( ',', str_replace ( ' ', '', $rss_day_1_cat ) );
+
+			$rss_day_user   = explode( ',', $MOM_Exclude_Users_Day );
+			if( is_array( $rss_day_user ) ) {
+
+				foreach( $rss_day_user as &$rss_day_1_user ) {
+
+					$rss_day_1_user = $rss_day_1_user . ',';
+
+				}
+
+			}
+			$rss_day_1_user = implode( $rss_day_user );
+			$rssday_user    = explode( ',', str_replace ( ' ', '', $rss_day_1_user ) );
+			
 			
 			if( !is_user_logged_in() ) {
 				
+				$MOM_Exclude_level0Users       = get_option( 'MOM_Exclude_Users_level0Users' ); 
+				$MOM_Exclude_level1Users       = get_option( 'MOM_Exclude_Users_level1Users' ); 
+				$MOM_Exclude_level2Users       = get_option( 'MOM_Exclude_Users_level2Users' ); 
+				$MOM_Exclude_level7Users       = get_option( 'MOM_Exclude_Users_level7Users' ); 
 				$MOM_Exclude_level0Categories  = get_option( 'MOM_Exclude_Categories_level0Categories' ); 
 				$MOM_Exclude_level1Categories  = get_option( 'MOM_Exclude_Categories_level1Categories' ); 
 				$MOM_Exclude_level2Categories  = get_option( 'MOM_Exclude_Categories_level2Categories' ); 
@@ -481,9 +507,14 @@ if( 1 == $mommodule_exclude ) {
 				$MOM_Exclude_level1Tags        = get_option( 'MOM_Exclude_Tags_level1Tags' );
 				$MOM_Exclude_level2Tags        = get_option( 'MOM_Exclude_Tags_level2Tags' );
 				$MOM_Exclude_level7Tags        = get_option( 'MOM_Exclude_Tags_level7Tags' );
+				$loggedOutUsers                                                          = 0;
 				$loggedOutCats                                                           = 0;
 				$loggedOutTags                                                           = 0;
 
+				if( '' == $MOM_Exclude_level0Users ) $MOM_Exclude_level0Users            = 0;
+				if( '' == $MOM_Exclude_level1Users ) $MOM_Exclude_level1Users            = 0;
+				if( '' == $MOM_Exclude_level2Users ) $MOM_Exclude_level2Users            = 0;
+				if( '' == $MOM_Exclude_level7Users ) $MOM_Exclude_level7Users            = 0;
 				if( '' == $MOM_Exclude_level0Categories ) $MOM_Exclude_level0Categories  = 0;
 				if( '' == $MOM_Exclude_level1Categories ) $MOM_Exclude_level1Categories  = 0;
 				if( '' == $MOM_Exclude_level2Categories ) $MOM_Exclude_level2Categories  = 0;
@@ -493,31 +524,41 @@ if( 1 == $mommodule_exclude ) {
 				if( '' == $MOM_Exclude_level2Tags ) $MOM_Exclude_level2Tags              = 0;
 				if( '' == $MOM_Exclude_level7Tags ) $MOM_Exclude_level7Tags              = 0;
 				
-				$loggedOutCats = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-				$loggedOutTags = $MOM_Exclude_level0Tags . ',' . $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
+				$loggedOutUsers = $MOM_Exclude_level0Users . ',' . $MOM_Exclude_level1Users . ',' . $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
+				$loggedOutCats  = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+				$loggedOutTags  = $MOM_Exclude_level0Tags . ',' . $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
+				
+				$lu1 = array_unique( explode( ',', $loggedOutUsers ) );
+				foreach( $lu1 as &$LU1 ) { 
+					$LU1 = $LU1 . ','; 
+				}
+				$lu_1 = rtrim( implode( $lu1 ), ',' );				
+				$hideLoggedOutUsers = explode ( ',', str_replace ( ' ', '', $loggedOutUsers ) );
 				
 				$lc1 = array_unique( explode( ',', $loggedOutCats ) );
-				
 				foreach( $lc1 as &$LC1 ) { 
 					$LC1 = $LC1 . ','; 
 				}
-				
 				$lc_1 = rtrim( implode( $lc1 ), ',' );
 				$hideLoggedOutCats = explode ( ',', str_replace ( ' ', '', $loggedOutCats ) );
+
 				$lt1 = array_unique ( explode ( ',', $loggedOutTags ) );
-				
 				foreach( $lt1 as &$LT1 ) { 
 					$LT1 = $LT1 . ','; 
 				}
-				
 				$lt11 = rtrim( implode( $lt1 ), ',' );
 				$hideLoggedOutTags = explode( ',', str_replace ( ' ', '', $lt11 ) );
+
 				$formats_to_hide   = $MOM_Exclude_PostFormats_Visitor;
 
 			} else {
 
 				global $user_level;
 
+				$MOM_Exclude_level0Users  = get_option( 'MOM_Exclude_Users_level0Users' ); 
+				$MOM_Exclude_level1Users  = get_option( 'MOM_Exclude_Users_level1Users' ); 
+				$MOM_Exclude_level2Users  = get_option( 'MOM_Exclude_Users_level2Users' ); 
+				$MOM_Exclude_level7Users  = get_option( 'MOM_Exclude_Users_level7Users' );				
 				$MOM_Exclude_level0Categories  = get_option( 'MOM_Exclude_Categories_level0Categories' ); 
 				$MOM_Exclude_level1Categories  = get_option( 'MOM_Exclude_Categories_level1Categories' ); 
 				$MOM_Exclude_level2Categories  = get_option( 'MOM_Exclude_Categories_level2Categories' ); 
@@ -526,9 +567,14 @@ if( 1 == $mommodule_exclude ) {
 				$MOM_Exclude_level1Tags        = get_option( 'MOM_Exclude_Tags_level1Tags' ); 
 				$MOM_Exclude_level2Tags        = get_option( 'MOM_Exclude_Tags_level2Tags' ); 
 				$MOM_Exclude_level7Tags        = get_option( 'MOM_Exclude_Tags_level7Tags' );
+				$loggedOutUsers                = 0;
 				$loggedOutCats                 = 0;
 				$loggedOutTags                 = 0;
 				
+				if( '' == $MOM_Exclude_level0Users ) $MOM_Exclude_level0Users           = 0;
+				if( '' == $MOM_Exclude_level1Users ) $MOM_Exclude_level1Users           = 0;
+				if( '' == $MOM_Exclude_level2Users ) $MOM_Exclude_level2Users           = 0;
+				if( '' == $MOM_Exclude_level7Users ) $MOM_Exclude_level7Users           = 0;				
 				if( '' == $MOM_Exclude_level0Categories ) $MOM_Exclude_level0Categories = 0;
 				if( '' == $MOM_Exclude_level1Categories ) $MOM_Exclude_level1Categories = 0;
 				if( '' == $MOM_Exclude_level2Categories ) $MOM_Exclude_level2Categories = 0;
@@ -538,6 +584,12 @@ if( 1 == $mommodule_exclude ) {
 				if( '' == $MOM_Exclude_level2Tags ) $MOM_Exclude_level2Tags             = 0; 
 				if( '' == $MOM_Exclude_level7Tags ) $MOM_Exclude_level7Tags             = 0;
 
+				if( $user_level == 0 ) $loggedOutUsers = $MOM_Exclude_level0Users . ',' . $MOM_Exclude_level1Users . ',' . $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
+				if( $user_level == 1 ) $loggedOutUsers = $MOM_Exclude_level1Users . ',' . $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
+				if( $user_level == 2 ) $loggedOutUsers = $MOM_Exclude_level1Users . ',' . $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
+				if( $user_level == 3 ) $loggedOutUsers = $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
+				if( $user_level == 4 ) $loggedOutUsers = $MOM_Exclude_level7Users;				
+				
 				if( $user_level == 0 ) $loggedOutCats = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
 				if( $user_level == 1 ) $loggedOutCats = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
 				if( $user_level == 2 ) $loggedOutCats = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
@@ -550,9 +602,14 @@ if( 1 == $mommodule_exclude ) {
 				if( $user_level == 3 ) $loggedOutTags = $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
 				if( $user_level == 4 ) $loggedOutTags = $MOM_Exclude_level7Tags;	
 
-				$hideLoggedOutCats = explode ( ',', str_replace ( ' ', '', $c_1 ) );
-				$hideLoggedOutTags = explode ( ',', str_replace ( ' ', '', $t11 ) );
-				$lc1               = array_unique ( explode ( ',', $loggedOutCats ) );
+				$hideLoggedOutUsers = explode ( ',', str_replace ( ' ', '', $u_1 ) );
+				$hideLoggedOutCats  = explode ( ',', str_replace ( ' ', '', $c_1 ) );
+				$hideLoggedOutTags  = explode ( ',', str_replace ( ' ', '', $t11 ) );
+				$lu1                = array_unique ( explode ( ',', $loggedOutUsers ) );
+				foreach( $lu1 as &$LU1 ) { $LU1 = $LU1 . ','; }
+				$lu_1              = rtrim ( implode ( $lu1 ), ',' );
+				$hideLoggedOutUsers = explode ( ',', str_replace ( ' ', '', $loggedOutUsers ) );
+				$lc1                = array_unique ( explode ( ',', $loggedOutCats ) );
 				foreach( $lc1 as &$LC1 ) { $LC1 = $LC1 . ','; }
 				$lc_1              = rtrim ( implode ( $lc1 ), ',' );
 				$hideLoggedOutCats = explode ( ',', str_replace ( ' ', '', $loggedOutCats ) );
@@ -565,6 +622,7 @@ if( 1 == $mommodule_exclude ) {
 
 			if( $query->is_feed ) {
 
+				$u1              = explode( ',', $MOM_Exclude_Users_RSS );
 				$c1              = explode( ',', $MOM_Exclude_Categories_RSS );
 				$formats_to_hide = $MOM_Exclude_PostFormats_RSS;
 				$t1              = explode( ',', $MOM_Exclude_Tags_RSS );
@@ -573,6 +631,7 @@ if( 1 == $mommodule_exclude ) {
 			
 			if( $query->is_home ) {
 
+				$u1              = explode( ',', $MOM_Exclude_Users_Front );
 				$c1              = explode( ',', $MOM_Exclude_Categories_Front );
 				$formats_to_hide = $MOM_Exclude_PostFormats_Front;
 				$t1              = explode( ',', $MOM_Exclude_Tags_Front );
@@ -581,6 +640,7 @@ if( 1 == $mommodule_exclude ) {
 			
 			if( $query->is_category ) {
 
+				$u1              = explode( ',', $MOM_Exclude_Users_CategoryArchives );
 				$t1              = explode( ',', $MOM_Exclude_Tags_CategoryArchives );
 				$formats_to_hide = $MOM_Exclude_PostFormats_CategoryArchives;
 
@@ -588,6 +648,7 @@ if( 1 == $mommodule_exclude ) {
 
 			if( $query->is_tag ) {
 
+				$u1              = explode( ',', $MOM_Exclude_Users_TagArchives );
 				$c1              = explode( ',', $MOM_Exclude_Categories_TagArchives );
 				$formats_to_hide = $MOM_Exclude_PostFormats_TagArchives;
 
@@ -595,6 +656,7 @@ if( 1 == $mommodule_exclude ) {
 
 			if( $query->is_search ) {
 
+				$u1              = explode( ',', $MOM_Exclude_Users_SearchResults );
 				$c1              = explode( ',', $MOM_Exclude_Categories_SearchResults );
 				$formats_to_hide = $MOM_Exclude_PostFormats_SearchResults;
 				$t1              = explode( ',', $MOM_Exclude_Tags_SearchResults );
@@ -606,20 +668,29 @@ if( 1 == $mommodule_exclude ) {
 				$C1 = $C1 . ','; 
 
 			}
-			
 			$c_1               = rtrim ( implode ( $c1 ), ',' );
 			$hideUserCats      = explode ( ',', str_replace ( ' ', '', $c_1 ) );
+			
+			foreach( $u1 as &$U1 ) { 
+
+				$U1 = $U1 . ','; 
+
+			}
+			$u_1               = rtrim ( implode ( $u1 ), ',' );
+			$hideUserUsers      = explode ( ',', str_replace ( ' ', '', $u_1 ) );		
 
 			foreach( $t1 as &$T1 ) { 
 
 				$T1 = $T1 . ','; 
 
 			}
-
 			$t11                = rtrim( implode ( $t1 ), ',' );
 			$hideUserTags       = explode( ',', str_replace ( ' ', '', $t11 ) );
+
+			$users_to_hide      = array_merge( ( array ) $hideUserUsers, ( array ) $hideLoggedOutUsers, ( array ) $rssday_user );
 			$categories_to_hide = array_merge( ( array ) $hideUserCats, ( array ) $hideLoggedOutCats, ( array ) $rssday_cat );
 			$tags_to_hide       = array_merge( ( array ) $hideUserTags, ( array ) $hideLoggedOutTags, ( array ) $rssday );
+			$users_to_hide      = array_filter( array_unique ( $users_to_hide ) );
 			$categories_to_hide = array_filter( array_unique ( $categories_to_hide ) );
 			$tags_to_hide       = array_filter( array_unique ( $tags_to_hide ) );	
 			
@@ -651,6 +722,7 @@ if( 1 == $mommodule_exclude ) {
 						)
 					);
 					$query->set( 'tax_query', $tax_query );
+					$query->set( 'author__not_in', $users_to_hide );
 
 				}
 
@@ -2867,6 +2939,22 @@ if( current_user_can( 'edit_dashboard' ) ){
 			'mommaincontrol_disablepingbacks',
 			'mompaf_post',
 			'MOM_Exclude_PostFormats_Visitor',
+			'MOM_Exclude_Users_RSS',
+			'MOM_Exclude_Users_Front',
+			'MOM_Exclude_Users_TagArchives',
+			'MOM_Exclude_Users_CategoryArchives',
+			'MOM_Exclude_Users_SearchResults',
+			'MOM_Exclude_Users_UsersSun',
+			'MOM_Exclude_Users_UsersMon',
+			'MOM_Exclude_Users_UsersTue',
+			'MOM_Exclude_Users_UsersWed',
+			'MOM_Exclude_Users_UsersThu',
+			'MOM_Exclude_Users_UsersFri',
+			'MOM_Exclude_Users_UsersSat',
+			'MOM_Exclude_Users_level0Users',
+			'MOM_Exclude_Users_level1Users',
+			'MOM_Exclude_Users_level2Users',
+			'MOM_Exclude_Users_level7Users',
 			'MOM_Exclude_PostFormats_RSS',
 			'MOM_Exclude_PostFormats_Front',
 			'MOM_Exclude_PostFormats_CategoryArchives',
@@ -3156,18 +3244,8 @@ if( current_user_can( 'edit_dashboard' ) ){
 					</label>
 					<input type="submit" id="MOM_UNINSTALL_EVERYTHING" name="MOM_UNINSTALL_EVERYTHING" class="hidden" value="Submit" />
 					</form>
-				<?php } ?>			
-			</div>
-		</div>
-		
-		<div class="settings-section" id="donate">
-			<div class="left-half">
-				<span class="title">Consider donating?</span>
-				<em class="full">Enjoy this plugin? Want to show me, its creator, a little bit of love? Consider donating. Just think, 
-				for every penny that you donate, that's like, one more penny that I didn't previously have.</em>
-			</div>
-			<div class="right-half">
-				<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+				<?php } ?>
+				<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" class="donate">
 				<input type="hidden" name="cmd" value="_s-xclick">
 				<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
 				">
@@ -3175,7 +3253,6 @@ if( current_user_can( 'edit_dashboard' ) ){
 				<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
 				</form>
 			</div>
-		
 		</div>
 		
 		<?php global $table_prefix, $wpdb;
@@ -3281,7 +3358,24 @@ if( current_user_can( 'edit_dashboard' ) ){
 					</label>
 					<input class="hidden" id="delete_drafts" type="submit" value="Go" name="delete_drafts">
 				</form>
-			</div>			
+			</div>
+		<?php if( count( $drafts_total ) || count( $revisions_total ) || count( $comments_total ) || count( $terms_total ) ) { ?>
+			<div class="clear">
+					<em>Here's what you'll be deleting:</em> 
+					<?php if( count( $drafts_total ) ) {
+							echo '<code>' . $drafts_count . ' drafts</code>';
+					}
+					if( count( $revisions_total ) ) { 
+							echo '<code>' . $revisions_count . ' revisions</code>'; 
+					}
+					if( count( $comments_total ) ) {
+							echo '<code>' . $comments_count . ' unapproved comments</code>'; 
+					}
+					if( count( $terms_total ) ) {
+							echo '<code>' . $terms_count . ' unused taxonomies</code>'; 
+					} ?>
+			</div>
+		<?php }?>
 		</div>
 		<div class="settings-section" id="disable">
 			<div class="left-half">
@@ -3588,24 +3682,21 @@ if( current_user_can( 'edit_dashboard' ) ){
 		</div>
 
 		<?php if( 1 == get_option( 'mommaincontrol_momse' ) ) { 
+
 			$showmepages = get_pages(); 			
-			$showmecats = get_categories( 'taxonomy=category&hide_empty=0' ); 
-			$showmetags = get_categories( 'taxonomy=post_tag&hide_empty=0' );
-			$tagcount = 0;
-			$catcount = 0;
+			$showmecats  = get_categories( 'taxonomy=category&hide_empty=0' ); 
+			$showmetags  = get_categories( 'taxonomy=post_tag&hide_empty=0' );
+			$showmeusers = get_users(  );
+			$tagcount    = 0;
+			$catcount    = 0;
+			$usercount   = 0;
+
 		?>
 
 			<div class="settings-section" id="categories">
 					<span class="title-full">Exclude Taxonomies</span>
 					<em class="full">Each field takes a comma-separated list of items for exclusion from the specified
-					section of the blog.</em>
-					<div class="clear"></div>
-					<span class="title-full">Exclude Categories</span>
-					<em class="full">
-					<?php foreach($showmecats as $catsshown){ ++$catcount; ?>
-						<?php echo $catsshown->cat_name; ?> (<?php echo $catsshown->cat_ID; ?>) &mdash; 
-					<?php }?>
-					</em>
+					section of the blog. When filling out each field, <code>this is the value you will use</code>. Names are there for reference.</em>
 					<?php 
 					$MOM_Exclude_PostFormats_RSS = get_option( 'MOM_Exclude_PostFormats_RSS' );
 					$MOM_Exclude_PostFormats_Front = get_option( 'MOM_Exclude_PostFormats_Front' );
@@ -3615,6 +3706,60 @@ if( current_user_can( 'edit_dashboard' ) ){
 					$MOM_Exclude_PostFormats_Visitor = get_option( 'MOM_Exclude_PostFormats_Visitor' ); ?>
 					<form method="post" class="exclude" name="hidecategoriesfrom">
 						<?php wp_nonce_field( 'hidecategoriesfrom' ); ?>
+						<div class="clear"></div>
+						<span class="title-full">Exclude Authors</span>
+						<em class="full">
+						<?php foreach($showmeusers as $usersshown){ ++$usercount; ?>
+							<?php echo $usersshown->user_nicename; ?> <code><?php echo $usersshown->ID; ?></code> &mdash; 
+						<?php }?>
+						</em>					
+						<?php $exclude = array( 
+							'MOM_Exclude_Users_RSS',
+							'MOM_Exclude_Users_Front',
+							'MOM_Exclude_Users_CategoryArchives',
+							'MOM_Exclude_Users_TagArchives',
+							'MOM_Exclude_Users_SearchResults',
+							'MOM_Exclude_Users_UsersSun',
+							'MOM_Exclude_Users_UsersMon',
+							'MOM_Exclude_Users_UsersTue',
+							'MOM_Exclude_Users_UsersWed',
+							'MOM_Exclude_Users_UsersThu',
+							'MOM_Exclude_Users_UsersFri',
+							'MOM_Exclude_Users_UsersSat',
+							'MOM_Exclude_Users_level0Users',
+							'MOM_Exclude_Users_level1Users',
+							'MOM_Exclude_Users_level2Users',
+							'MOM_Exclude_Users_level7Users',
+						); ?>
+						<?php $section = array( 
+							'RSS',
+							'Front page',
+							'Categories',
+							'Tag',
+							'Search results',
+							'Sunday',
+							'Monday',
+							'Tuesday',
+							'Wednesday',
+							'Thursday',
+							'Friday',
+							'Saturday',
+							'Logged out',
+							'Subscriber',
+							'Contributor',
+							'Author'
+						); ?>
+						<?php 
+							if( $usercount > 0 ) {
+								foreach($exclude as $exc ) { 
+								$title = str_replace($exclude, $section, $exc); ?>
+								<section>
+									<label for="<?php echo $exc;?>"><?php echo $title;?></label>
+									<input type="text" id="<?php echo $exc;?>" name="<?php echo $exc;?>" value="<?php echo get_option($exc);?>">
+								</section>
+							<?php } } else { ?>
+								<em class="full">You have no users to exclude.</em>
+							<?php }?>						
 						<?php $exclude = array( 
 							'MOM_Exclude_Categories_RSS',
 							'MOM_Exclude_Categories_Front',
@@ -3649,6 +3794,13 @@ if( current_user_can( 'edit_dashboard' ) ){
 							'Contributor',
 							'Author'
 						); ?>
+						<div class="clear"></div>
+						<span class="title-full">Exclude Categories</span>
+						<em class="full">
+							<?php foreach($showmecats as $catsshown){ ++$catcount; ?>
+								<?php echo $catsshown->cat_name; ?> <code><?php echo $catsshown->cat_ID; ?></code> &mdash; 
+							<?php }?>
+						</em>
 						<?php 
 							if( $catcount > 0 ) {
 								foreach($exclude as $exc ) { 
@@ -3665,7 +3817,7 @@ if( current_user_can( 'edit_dashboard' ) ){
 						<em class="full">
 							<?php foreach($showmetags as $tagsshown){ 
 								++$tagcount;?>
-								<?php echo $tagsshown->cat_name;?>(<?php echo $tagsshown->cat_ID;?>) &mdash;
+								<?php echo $tagsshown->cat_name;?> <code><?php echo $tagsshown->cat_ID;?></code> &mdash;
 							<?php } ?>
 						</em>
 						<?php 
@@ -3773,8 +3925,8 @@ if( current_user_can( 'edit_dashboard' ) ){
 				<?php wp_nonce_field( 'mom_save_form' ); ?>
 				<section>
 					<select name="mompaf_post" id="mompaf_0">
-						<option value="off"<?php if ( get_option( 'mompaf_post' ) == 'off' ) { ?> selected="selected"<?php } ?>>Post as front page is disabled</option>
-						<option value="on"<?php if ( get_option( 'mompaf_post' ) == 'on' ) { ?> selected="selected"<?php } ?>/>The front page will be your latest post</option>
+						<option value="off"<?php if ( get_option( 'mompaf_post' ) == 'off' ) { ?> selected="selected"<?php } ?>>Front page is default</option>
+						<option value="on"<?php if ( get_option( 'mompaf_post' ) == 'on' ) { ?> selected="selected"<?php } ?>/>Front Page will be your latest post</option>
 							<?php $mompaf_post = get_option( 'mompaf_post' );
 							selected( get_option( 'mompaf_post' ), 0 );
 							$showmeposts = get_posts(array( 'posts_per_page' => -1) );
@@ -3782,7 +3934,7 @@ if( current_user_can( 'edit_dashboard' ) ){
 								<option name="mompaf_post" id="mompaf_'<?php echo $postsshown->ID; ?>" value="<?php echo $postsshown->ID; ?>"
 								<?php $postID = $postsshown->ID;
 								$selected = selected( $mompaf_post, $postID); ?>
-								>The front page will be the post "<?php echo $postsshown->post_title; ?>"</option>
+								>Front page: "<?php echo $postsshown->post_title; ?>"</option>
 						<?php } ?>
 					</select>
 				</section>
