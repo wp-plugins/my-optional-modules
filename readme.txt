@@ -1,40 +1,55 @@
 === My Optional Modules ===
 Contributors: boyevul
-Tags: DNSBL, front, home, database, cleaner, disable, comments, RSS, javascript, footer, archives, author, ajax, font awesome, lazy load, horizontal, gallery, hide, version, mini, loop, exclude, category, tag, post format
+Tags: comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 5.8.0
+Stable tag: 5.8.1
 
 An assortment of functions to enhance WordPress.
 
 == Description ==
-MOM features an assortment of functions designed to add (or extend) functionality within WordPress.
+MOM features an assortment of functions designed to add (or extend) functionality within WordPress. ( We're also available 
+on [Github](https://github.com/onebillion/mom). )
 
-= (Optional) Modules: =
-* Set the front page as a particular post
-* Clear database garbage
-* Disable WordPress version info in source code
-* Comments functionality modules:
-* + Disable comments site-wide
-* + or disable comments for users who appear on one of several DNS Black Lists (DNSBL)
-* + and/or ajaxify the comments form
-* Disable pingbacks
-* Transform default image galleries into horizontal sliders
-* Append links back to your site on all RSS items
-* Enable Font Awesome
-* Javascripts to the footer
-* Lazy Load for images in posts
-* Disable archives for dates and/or authors
-* Mini-loops to be deployed on posts and pages:
-* + Miniature post loops (via shortcode)
-* + Attachment loops (via shortcode) for images (with links to their parent posts)
-* Exclude posts from RSS, the front page, tag/category/date archives, and search results, based on:
-* + the author
-* + the category
-* + the tag
-* + post format
-* + the day of the week
-* + who's logged in 
+= Disable WordPress components =
+*	Comments
+*	Version number in source
+*	Pingbacks to you
+*	Author based archives
+*	Date based archives
+
+= Enable WordPress extras =
+*	Horizontal slider galleries
+*	Font Awesome
+*	Scriptless social sharing links
+*	RSS link backs to your site
+*	DNSBL for the comments form
+*	Ajax for the comments form
+
+= Enable even more extras =
+*	One click database garbage removal
+*	Move Javascript to the footer
+*	Enable Lazy Load for images in posts
+
+= Exclude posts from 'almost' anywhere =
+*	Exclude authors, categories, tags, and post formats
+*	Exclude them from RSS, front page, archives view, or search results
+*	Exclude them based on what day it is
+*	Exclude them based on user level (or if the visitor isn't logged in)
+
+= Enable theme extras =
+*	Turn your front page into a single post
+&	Add a CSS class to next and previous links for styling purposes
+*	Enable ?random post functionality
+*	Change the value of "read more..." for excerpts
+
+= Take advantage of shortcodes =
+*	An attachments loop to show off images (that link to their respective posts)
+*	A highly customizable post loop 
+
+= Take advantage of theme developer options =
+*	a category list that uses the options from the exlude setup
+*	a media embedder with oEmbed fallback
 
 
 
@@ -50,40 +65,47 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 3. Confirm uninstall.
 
 == Changelog ==
-* 5.8.0 : Exclue Taxonomies can now exclude Authors from anywhere on the blog (excluding single post views for obvious reasons)
-* 5.8.0 : FitText.js belonged to a module that hasn't been used for quite some time (FitText.js removed)
-* 5.8.0 : More information regarding how many of what is being deleted for Trash Removal
-* ----- : -----------------
-* 5.7.9 : If Share Icons are enabled but Font Awesome is not, links default text (instead of trying to use icons)
-* 5.7.9 : Previously undocumented theme developer functions are now documented (somewhat) on the settings page
-* 5.7.9 : DNSBL redundancies removed
-* 5.7.8 : Admin screen streamlining
-* 5.7.8 : Plugin uninstall wasn't erasing some of the Exclusion parameters. (Fixed)
-* 5.7.8 : Added a way to disable pingbacks
-* 5.7.7 : Font Awesome 4.3
-* 5.7.6 : When enabling/disabling share icons/post exclusion, scrolling is unnecessary
-* 5.7.6 : Read more and Theme:Twenty Fifteen conflict resolved
-* 5.7.5 : meta generator removal for removing WordPress version from source
-* 5.7.4 : Fix for horizontal galleries to properly display the appropriate images for each individual gallery
-* 5.7.3 : Tested up to/requires at least tag updated
-* 5.7.2 : create a random link query (like ?random or ?goto) to allow visitors to pull a random post from your blog
-* 5.7.2 : fittext footer script moved to fittext.js
-* 5.7.2 : edit the text of the 'read more...' link
-* 5.7.2 : apply custom link classes to 'next' and 'previous' post/posts links (single and archive navigation links)
-* 5.7.2 : user_level(s) altered so that 'logged out' does not mean the same as 'subscriber'.
-* 5.7.2 : draft deletion added to database cleaner; not tied to "clear all database clutter" button
-* 5.7.1 : miniloops should only attempt to output content if there are actually posts in the loop to output
-* 5.7.1 : [mom_attachments] returns a specified number of recently uploaded images (unformated) that link to the post they were added to
-* 5.7.0 : Added default values for reference for [mom_miniloop] on control panel
-* 5.7.0 : Outdated uninstallation for options no longer used removed
-* 5.7.0 : protocol-relative css inclusion for plugin stylesheet
-* 5.7.0 : nonces added to adminstrative menus. (Make sure your install is correct, and has SALTs and KEYS defined in wp-config)
-* 5.7.0 : the settings page will alert you to the presence (or lack thereof) of SALTS and KEYS in the wp-config file
-* 5.7.0 : scriptless share buttons added: google-plus, facebook, reddit, twitter, and email shares
-* ----- : -----------------
-* 5.6.0 : Disable comments if the user is listed on (any) 1 of 7 DNSBL
-* 5.6.0 : Font Awesome updated to current version of 4.2 (40 new icons added)
-* 5.6.0 : miniloop shortcode functionality call to action misplaced
-* 5.6.0 : Admin page CSS @media queries for better display
-* 5.6.0 : All unused code from 5.5.X has been removed
-* 5.6.0 : All uninstallation functionality that has been outdated for quite some time now has been removed
+
+= 5.8.1 =
+* Read more... setting wasn't very clear as to what the field was for
+
+= 5.8.* =
+* Exclue Taxonomies can now exclude Authors from anywhere on the blog (excluding single post views for obvious reasons)
+* FitText.js belonged to a module that hasn't been used for quite some time (FitText.js removed)
+* More information regarding how many of what is being deleted for Trash Removal
+
+= 5.7.* =
+* If Share Icons are enabled but Font Awesome is not, links default text (instead of trying to use icons)
+* Previously undocumented theme developer functions are now documented (somewhat) on the settings page
+* DNSBL redundancies removed
+* Admin screen streamlining
+* Plugin uninstall wasn't erasing some of the Exclusion parameters. (Fixed)
+* Added a way to disable pingbacks
+* Font Awesome 4.3
+* When enabling/disabling share icons/post exclusion, scrolling is unnecessary
+* Read more and Theme:Twenty Fifteen conflict resolved
+* Meta generator removal for removing WordPress version from source
+* Fix for horizontal galleries to properly display the appropriate images for each individual gallery
+* Tested up to/requires at least tag updated
+* Create a random link query (like ?random or ?goto) to allow visitors to pull a random post from your blog
+* FitText footer script moved to fittext.js
+* Edit the text of the 'read more...' link
+* Apply custom link classes to 'next' and 'previous' post/posts links (single and archive navigation links)
+* User_level(s) altered so that 'logged out' does not mean the same as 'subscriber'.
+* Draft deletion added to database cleaner; not tied to "clear all database clutter" button
+* Miniloops should only attempt to output content if there are actually posts in the loop to output
+* [mom_attachments] returns a specified number of recently uploaded images (unformated) that link to the post they were added to
+* Added default values for reference for [mom_miniloop] on control panel
+* Outdated uninstallation for options no longer used removed
+* Protocol-relative css inclusion for plugin stylesheet
+* Nonces added to adminstrative menus. (Make sure your install is correct, and has SALTs and KEYS defined in wp-config)
+* The settings page will alert you to the presence (or lack thereof) of SALTS and KEYS in the wp-config file
+* Scriptless share buttons added: google-plus, facebook, reddit, twitter, and email shares
+
+= 6.5.* =
+* Disable comments if the user is listed on (any) 1 of 7 DNSBL
+* Font Awesome updated to current version of 4.2 (40 new icons added)
+* miniloop shortcode functionality call to action misplaced
+* Admin page CSS @media queries for better display
+* All unused code from 5.5.X has been removed
+* All uninstallation functionality that has been outdated for quite some time now has been removed

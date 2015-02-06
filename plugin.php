@@ -4,7 +4,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.8.0
+ * Version: 5.8.1
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -3921,6 +3921,7 @@ if( current_user_can( 'edit_dashboard' ) ){
 		<div class="settings-section">
 			<span class="title-full">Misc. Theme Settings</span>
 			<em class="full">Setting keyword to <code>keyword</code> will make <code>yoursite.tld/?keyword</code> load a random post</em>
+			<em class="full">Read more can be set to <code>%blank%</code> to make it blank</em>
 			<form name="mom_save_form" method="post" action="">
 				<?php wp_nonce_field( 'mom_save_form' ); ?>
 				<section>
@@ -3947,7 +3948,7 @@ if( current_user_can( 'edit_dashboard' ) ){
 					<input type="text" id="next_link_class" name="next_link_class" value="<?php if( get_option( 'mom_next_link_class' ) ) { echo get_option( 'mom_next_link_class' ); } ?>" />
 				</section>
 				<section>
-					<label for="read_more"><code>%blank%</code> for blank</label>
+					<label for="read_more">Read more... value</label>
 					<input type="text" id="read_more" name="read_more" value="<?php if( get_option( 'mom_readmore_content' ) ) { 
 						echo get_option( 'mom_readmore_content' ); 
 					} ?>" />
