@@ -9,9 +9,26 @@
 		display: block; 
 		margin: 15px;
 		max-width: 690px;
-		overflow: auto;
-		padding: 50px; 
+		overflow-y: auto;
+		padding: 50px 10px; 
+		position: relative;
 	}
+	.MOMSettings .settings-section:hover {
+		background-color: rgba(229,246,255,.3);
+		text-shadow: 0px 1px 1px #fff;
+		color: #000;
+	}
+		.MOMSettings .full-title {
+			background-color: rgba(255,255,255,.8);
+			border-bottom: 1px solid rgba(0,0,0,.1);
+			font-size: 150%;
+			font-weight: 900;
+			left: 0;
+			padding: 10px;
+			position: absolute;
+			top: 0;
+			width: 100%; 
+		}
 		.MOMSettings input[type="submit"] {
 			margin: 5px;
 			padding: 5px;
@@ -25,7 +42,7 @@
 		}
 		.MOMSettings .settings-section input[type="text"].full,
 		.MOMSettings .settings-section select {
-			width: 95%;
+			width: 98%;
 			margin: 5px 10px;
 		}
 		.MOMSettings .settings-section span.title-full {
@@ -49,7 +66,6 @@
 		.MOMSettings .settings-section form section {
 			clear: both;
 			display: block; 
-			overflow: auto;
 			margin: 5px auto;
 		}
 		.MOMSettings .settings-section form label {
@@ -150,7 +166,19 @@
 		}
 		
 
-@media only screen and (max-width: 950px) {
+@media only screen and (max-width: 945px) {
+
+	.MOMSettings .settings-section .left-half {
+		padding: 15px;
+	}
+	.MOMSettings .settings-section .left-half,
+	.MOMSettings .settings-section .right-half {
+		clear: both; 
+		display: block; 
+		float: none; 
+		width: 100%;
+	}
+
 	.MOMSettings .setting span,
 	.MOMSettings .setting .clear select,
 	.MOMSettings .setting form {
@@ -167,6 +195,9 @@
 	.MOMSettings .setting span,
 	.MOMSettings .setting .clear select,
 	.MOMSettings .setting form {
+		clear: both; 
+		display: block;
+		float: none;
 		width: 100%;
 	}
 	.simple form {
