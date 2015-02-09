@@ -74,6 +74,11 @@
 			padding: 5px;
 			margin: 0 5px;
 		}
+		.MOMSettings .settings-section form textarea {
+			float: right; 
+			width: 50%;
+			height: 150px;
+		}
 		.MOMSettings .settings-section form input[type="text"] {
 			float: right; 
 			width: 50%;

@@ -4,8 +4,13 @@
 	-webkit-box-sizing: border-box;
 }
 
-
-h2.mom_related_title{ clear: both; font-size: 95%; margin: 25px auto 0; padding:15px 0 0; border-top: 1px solid rgba(0,0,0,.1);}
+h2.mom_related_title{ 
+	border-top: 1px solid rgba(0,0,0,.1);
+	clear: both; 
+	font-size: 95%; 
+	margin: 25px auto 0; 
+	padding:15px 0 0; 
+}
 
 .mom_shareLinks {
 	display: block;
@@ -73,8 +78,11 @@ h2.mom_related_title{ clear: both; font-size: 95%; margin: 25px auto 0; padding:
 .loopdeloopNavigation a { 
 	padding: 5px; 
 }
-
-.loopdeloopRotation {display:block;clear:both;margin:25px auto;}
+.loopdeloopRotation {
+	clear: both;
+	display: block;
+	margin: 25px auto;
+}
 
 /**
  * [style="tiled"]
@@ -410,11 +418,47 @@ h2.mom_related_title{ clear: both; font-size: 95%; margin: 25px auto 0; padding:
 }
 
 /* Various */
-.clearboth{clear:both}
-.hidden{display:none;visibility:hidden;height:0;width:0}
+.clearboth{
+	clear:both;
+}
+.hidden{
+	display: none;
+	height: 0;
+	visibility: hidden;
+	width: 0;
+}
 
-/* Horizontal Galleries*/
-.horizontalGallery { display: block; height: auto; max-height: 550px; overflow-x: auto; overflow-y: hidden; margin: 10px; max-width: 100%; position: relative; }
-.horizontalGallery .gallery-item .wp-caption-text, .horizontalGallery p { display: none;  height: 0; margin: 0; padding: 0; visibility: hidden; width: 0; }
-.horizontalGallery .gallery-item { clear: none!important; float: left!important; margin: -2px 0!important; max-height: 150px!important; max-width: 150px!important; width: auto!important; }
-.horizontalGallery .gallery-item img { height: auto; width: 100%;  }
+/* 
+ * Horizontal Galleries
+ */
+.horizontalGallery { 
+	display: block; 
+	height: auto; 
+	margin: 10px; 
+	max-height: 550px; 
+	max-width: 100%; 
+	overflow-x: auto; 
+	overflow-y: hidden; 
+	position: relative; 
+}
+	.horizontalGallery .gallery-item .wp-caption-text, .horizontalGallery p { 
+		display: none; 
+		height: 0; 
+		margin: 0; 
+		padding: 0; 
+		visibility: hidden; 
+		width: 0; 
+	}
+	.horizontalGallery .gallery-item { 
+		clear: none; 
+		float: left; 
+		margin: -2px 0; 
+		max-height: 150px; 
+		max-width: 150px; 
+		padding:0; 
+		width: auto; 
+	}
+	.horizontalGallery .gallery-item img { 
+		height: auto; 
+		width: 100%;  
+	}

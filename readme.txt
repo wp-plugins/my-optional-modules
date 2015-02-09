@@ -1,9 +1,9 @@
 === My Optional Modules ===
 Contributors: boyevul
-Tags: 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
+Tags: random, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 5.8.2
+Stable tag: 5.8.3
 
 An assortment of functions to enhance WordPress.
 
@@ -24,6 +24,7 @@ on [Github](https://github.com/onebillion/mom). )
 *	Scriptless social sharing links
 *	RSS link backs to your site
 *	DNSBL for the comments form
+*   Antibot hidden field for comment form
 *	Ajax for the comments form
 *   404 Redirects to the Front Page
 
@@ -39,10 +40,12 @@ on [Github](https://github.com/onebillion/mom). )
 *	Exclude them based on user level (or if the visitor isn't logged in)
 
 = Enable theme extras =
+*   Force default post thumbnails to take up 100% of their container
 *	Turn your front page into a single post
 &	Add a CSS class to next and previous links for styling purposes
 *	Enable ?random post functionality
 *	Change the value of "read more..." for excerpts
+*   Utilize a list of random site titles
 
 = Take advantage of shortcodes =
 *	An attachments loop to show off images (that link to their respective posts)
@@ -67,15 +70,20 @@ on [Github](https://github.com/onebillion/mom). )
 
 == Changelog ==
 
-= 5.8.2 =
+= 5.8.3 =
+* Create a list of site titles to display randomly
+* Toggle force default post thumbnail container/image width to fill 100% of parent container
+* Remove padding on horizontal gallery items and !important declarations so they can be styled by the user properly
+* Optionally include share icons/links on pages as well as posts
+* Toggle a hidden comment form field to reject comments from visitors if filled out (antibot hidden field)
+
+= 5.8.* =
 * Some functions now only "exist" if their module is actually turned on via settings
 * Wording on Author Archive disable changed to better reflect what was actually happening
 * Onclick Font Awesome inserts at cursor
 * Onclick Font Awesome uses [font-fa] shortcode instead of pure html
 * Enable all 404s to redirect to the homepage
 * Admin screen CSS additions
-
-= 5.8.* =
 * Read more... setting wasn't very clear as to what the field was for
 * Exclue Taxonomies can now exclude Authors from anywhere on the blog (excluding single post views for obvious reasons)
 * FitText.js belonged to a module that hasn't been used for quite some time (FitText.js removed)

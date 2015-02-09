@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.8.2
+ * Version: 5.8.3
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -56,6 +56,22 @@ $date_day                          = date( 'D' );
 $date_y                            = date( 'Y' );
 $date_m                            = date( 'n' );
 $date_d                            = date( 'j' );
+$mommodule_exclude                 = 0;
+$mommodule_share                   = 0;
+$mommodule_fontawesome             = 0;
+$mommodule_authorarchives          = 0;
+$mommodule_datearchives            = 0;
+$mommodule_footerscripts           = 0;
+$mommodule_protectrss              = 0;
+$mommodule_lazyload                = 0;
+$mommodule_versionnumbers          = 0;
+$mommodule_disablepingbacks        = 0;
+$horizontal_galleries              = 0;
+$momthemetakeover_ajaxcomments     = 0;
+$momthemetakeover_hidden_field     = 0;
+$mommodule_404                     = 0;
+$mommodule_thumbnails              = 0;
+$mommodule_random_title            = '';
 $mommodule_exclude                 = intval( get_option( 'mommaincontrol_momse' ) );
 $mommodule_share                   = intval( get_option( 'mommaincontrol_momshare' ) );
 $mommodule_fontawesome             = intval( get_option( 'mommaincontrol_fontawesome' ) );
@@ -68,7 +84,10 @@ $mommodule_versionnumbers          = intval( get_option( 'mommaincontrol_version
 $mommodule_disablepingbacks        = intval( get_option( 'mommaincontrol_disablepingbacks' ) );
 $horizontal_galleries              = intval( get_option( 'MOM_themetakeover_horizontal_galleries' ) );
 $momthemetakeover_ajaxcomments     = intval( get_option( 'MOM_themetakeover_ajaxifycomments' ) );
+$momthemetakeover_hidden_field     = intval( get_option( 'MOM_themetakeover_hidden_field' ) );
 $mommodule_404                     = intval( get_option( 'mommaincontrol_404' ) );
+$mommodule_thumbnails              = intval( get_option( 'mommaincontrol_thumbnail' ) );
+$mommodule_random_title            = sanitize_text_field( get_option( 'mommodule_random_title' ) );
 /** End Variables */
 
 /**
@@ -167,15 +186,52 @@ if( !function_exists ( 'myoptionalmodules_checkdnsbl' ) ) {
 }
 /** End Validate the IP */
 
+/** 
+ * Force default thumbnails 100% width
+ * Default themes like Twenty Fifteen, Twenty Fourteen, etc. 
+ * that use .post-thumbnail for the post thumbnail will 
+ * benefit. Those that don't, won't.
+ */
+if( $mommodule_thumbnails ) {
+	if( !function_exists( 'myoptionalmodules_force_thumbnails' ) ) {
+		function myoptionalmodules_force_thumbnails() {
+			$output = "<style> .post-thumbnail { width: 100%; } .post-thumbnail img { width: 100%; height: auto; } </style> \n";
+			echo $output;
+		}
+		add_action( 'wp_head', 'myoptionalmodules_force_thumbnails' );
+	}
+}
+/** End default thumbnails 100% width */
+
+/**
+ * Set a random site title from user defined list
+ */
+if( '' != $mommodule_random_title ) {
+	if( !function_exists( 'mom_random_site_title' ) ) {
+		function mom_random_site_title( $title ) {
+			global $wp, $mommodule_random_title;
+			$title = explode( '::', $mommodule_random_title );
+			if( is_single() || is_page() ) {
+				return $title[ array_rand( $title ) ] . ' | ' . get_the_title();
+			} else {
+				return $title[ array_rand( $title ) ];
+			}
+		}
+		add_filter( 'wp_title', 'mom_random_site_title', 10, 2 );
+	}
+}
+/** End set a random site title */
+
 /**
  * Share Icons
  */
-if( 1 == get_option( 'mommaincontrol_momshare' ) ) {
+if( $mommodule_share ) {
 	if( !function_exists( 'my_optional_modules_share_icons' ) ) { 
 		function my_optional_modules_share_icons( $content ) { 
 			global $wp, $post, $mommodule_fontawesome;
 			if( 1 == get_option( 'mommaincontrol_momshare' ) ) {
-				$at_top = get_option( 'MOM_enable_share_top' );
+				$at_top   = get_option( 'MOM_enable_share_top' );
+				$on_pages = get_option( 'MOM_enable_share_pages' );
 				if( !$at_top ) {
 					$at_top = 0;
 				} else {
@@ -186,45 +242,47 @@ if( 1 == get_option( 'mommaincontrol_momshare' ) ) {
 				$excerpt = htmlentities( str_replace( ' ', '%20', $excerpt ) ); 
 				$title   = str_replace( ' ', '%20', get_the_title( $id ) );
 				$output = '<span class="mom_shareLinks">';
-					if( 1 == $mommodule_fontawesome ) {
-						if( 1 == get_option( 'MOM_enable_share_reddit' ) ) {
-							$output .='<a class="reddit fa fa-reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '"></a>';
-						}
-						if( 1 == get_option( 'MOM_enable_share_google' ) ) {	
-							$output .='<a class="google fa fa-google-plus" href="https://plus.google.com/share?url=' . get_the_permalink() . '"></a>';
-						}
-						if( 1 == get_option( 'MOM_enable_share_twitter' ) ) {
-							$output .='<a class="twitter fa fa-twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '"></a>';
-						}
-						if( 1 == get_option( 'MOM_enable_share_facebook' ) ) {
-							$output .='<a class="facebook fa fa-facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '"></a>';
-						}
-						if( 1 == get_option( 'MOM_enable_share_email' ) ) {
-							$output .='<a class="email fa fa-envelope" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]"></a>';
-						}
-					} else {
-						$output .='Share via: ';
-						if( 1 == get_option( 'MOM_enable_share_reddit' ) ) {
-							$output .='<a class="reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '">reddit</a>';
-						}
-						if( 1 == get_option( 'MOM_enable_share_google' ) ) {	
-							$output .='<a class="google" href="https://plus.google.com/share?url=' . get_the_permalink() . '">google+</a>';
-						}
-						if( 1 == get_option( 'MOM_enable_share_twitter' ) ) {
-							$output .='<a class="twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '">twitter</a>';
-						}
-						if( 1 == get_option( 'MOM_enable_share_facebook' ) ) {
-							$output .='<a class="facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '">facebook</a>';
-						}
-						if( 1 == get_option( 'MOM_enable_share_email' ) ) {
-							$output .='<a class="email" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]">email</a>';
-						}
-					}
+				if( !$mommodule_fontawesome ) {
+					$output .='Share via: ';	
+				}
+				if( 1 == get_option( 'MOM_enable_share_reddit' ) && 1 == $mommodule_fontawesome ) {
+					$output .='<a class="reddit fa fa-reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '"></a>';
+				} elseif( 1 == get_option( 'MOM_enable_share_reddit' ) && !$mommodule_fontawesome ) {
+					$output .='<a class="reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '">reddit</a>';
+				}
+				if( 1 == get_option( 'MOM_enable_share_google' ) && 1 == $mommodule_fontawesome  ) {
+					$output .='<a class="google fa fa-google-plus" href="https://plus.google.com/share?url=' . get_the_permalink() . '"></a>';
+				} elseif( 1 == get_option( 'MOM_enable_share_google' ) && !$mommodule_fontawesome  ) {
+					$output .='<a class="google" href="https://plus.google.com/share?url=' . get_the_permalink() . '">google+</a>';
+				}
+				if( 1 == get_option( 'MOM_enable_share_twitter' ) && 1 == $mommodule_fontawesome  ) {
+					$output .='<a class="twitter fa fa-twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '"></a>';
+				} elseif( 1 == get_option( 'MOM_enable_share_twitter' ) && !$mommodule_fontawesome  ) {
+					$output .='<a class="twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '">twitter</a>';
+				}
+				if( 1 == get_option( 'MOM_enable_share_facebook' ) && 1 == $mommodule_fontawesome  ) {
+					$output .='<a class="facebook fa fa-facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '"></a>';
+				} elseif( 1 == get_option( 'MOM_enable_share_facebook' ) && !$mommodule_fontawesome  ) {
+					$output .='<a class="facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '">facebook</a>';
+				}
+				if( 1 == get_option( 'MOM_enable_share_email' ) && 1 == $mommodule_fontawesome  ) {
+					$output .='<a class="email fa fa-envelope" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]"></a>';
+				} elseif( 1 == get_option( 'MOM_enable_share_email' ) && !$mommodule_fontawesome  ) {
+					$output .='<a class="email" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]">email</a>';
+				}
 				$output .='</span>';
-				if( is_singular() && 1 == $at_top ) {
+				if( is_single() && 1 == $at_top ) {
 					return $output . $content;
-				} else {
+				} elseif( is_singular() && !$at_top ) {
 					return $content . $output;
+				} elseif( is_page() && $on_pages) {
+					if( is_page() && $at_top ) {
+						return $output . $content;
+					} elseif( is_page() && !$at_top ) {
+						return $content . $output;
+					}
+				} else {
+					return $content;
 				}
 			}
 		}
@@ -271,7 +329,7 @@ if( !function_exists( 'my_optional_modules_scripts' ) ) {
  * Exclude categories, tags, and post formats based on many different paramaters 
  * as set on the options page. 
  */
-if( 1 == $mommodule_exclude ) {
+if( $mommodule_exclude ) {
 	if( !function_exists( 'mom_exclude_filter_posts' ) ) {
 		add_action( 'pre_get_posts', 'mom_exclude_filter_posts' );
 		function mom_exclude_filter_posts( $query ) {
@@ -579,7 +637,7 @@ if( 1 == $mommodule_exclude ) {
 /**
  * Disable Pingbacks to the blog
  */
-if( 1 == $mommodule_disablepingbacks ) {
+if( $mommodule_disablepingbacks ) {
 	// http://fooplugins.com/prevent-wordpress-pingback-ddos/
 	// http://thehackernews.com/2015/01/ghost-linux-security-vulnerability_29.html
 	add_filter( 'xmlrpc_methods' , function( $methods ) { unset( $methods[ 'pingback.ping' ] ); return $methods; } );
@@ -591,7 +649,7 @@ if( 1 == $mommodule_disablepingbacks ) {
  * Font Awesome shortcode
  * [font-fa i="ICON NAME"]
  */
-if( 1 == $mommodule_fontawesome ) {
+if( $mommodule_fontawesome ) {
 	if( !function_exists( 'my_optional_modules_add_my_shortcodes' ) ) {
 		add_action ( 'init', 'my_optional_modules_add_my_shortcodes', 99 );
 		function my_optional_modules_add_my_shortcodes() {
@@ -677,7 +735,7 @@ if( 1 == get_option( 'mommaincontrol_comments' ) || 1 == get_option( 'mommaincon
  * Horizontal Galleries
  * Take control over WordPress gallery shenanigans
  */
-if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ) {
+if( $horizontal_galleries ) {
 	remove_shortcode( 'gallery', 'gallery_shortcode' );
 	add_action( 'init', 'mom_gallery_shortcode_add', 99 );
 	function mom_gallery_shortcode_add() {
@@ -927,7 +985,7 @@ if( !function_exists( 'my_optional_modules_main_stylesheet' ) ) {
  * Ajaxify the comment form
  * davidwalsh.name/wordpress-ajax-comments
  */
-if( 1 == $momthemetakeover_ajaxcomments ) {
+if( $momthemetakeover_ajaxcomments ) {
 	if( !function_exists( 'mom_ajaxComment' ) ) {
 		function mom_ajaxComment( $comment_ID, $comment_status ) {
 			if( isset( $_SERVER[ 'HTTP_X_REQUESTED_WITH' ] ) && 'xmlhttprequest' == strtolower( $_SERVER[ 'HTTP_X_REQUESTED_WITH' ] ) ) {
@@ -943,11 +1001,36 @@ if( 1 == $momthemetakeover_ajaxcomments ) {
 /** End Ajaxify the comment form */
 
 /**
+ * Hidden comment form field
+ */
+if( $momthemetakeover_hidden_field ) {
+	if( !function_exists( 'myoptionalmodules_spam_field' ) ) {
+		add_filter( 'comment_form_default_fields', 'myoptionalmodules_spam_field'  );
+		add_action( 'comment_form_logged_in_after', 'myoptionalmodules_spam_field' );
+		add_action( 'comment_form_after_fields', 'myoptionalmodules_spam_field'    );
+
+		function myoptionalmodules_spam_field( $fields ) {
+			$fields[ 'spam' ] = '<input id="mom_fill_me_out" name="mom_fill_me_out" type="hidden" value="" />';
+		return $fields;
+		}
+	}
+	if( !function_exists( 'myoptionalmodules_spam_field_check' ) ) {
+		add_filter( 'preprocess_comment', 'myoptionalmodules_spam_field_check' );
+		function myoptionalmodules_spam_field_check( $commentdata ) {
+		if ( $_REQUEST['mom_fill_me_out'] )
+		wp_die( __( '<strong>Error</strong>: You seem to have filled something out that you shouldn\'t have.' ) );
+		return $commentdata;
+		}
+	}
+}
+/** End Hidden comment form field */
+
+/**
  * RSS link back
  * Append a link back to the blog 
  * Helps to combat site scrapers that don't properly attribute source content
  */
-if( 1 == $mommodule_protectrss ) {
+if( $mommodule_protectrss ) {
 	if( !function_exists( 'myoptionalmodules_rsslinkback' ) ) { 
 		function myoptionalmodules_rsslinkback($content){
 			global $post;
@@ -962,7 +1045,7 @@ if( 1 == $mommodule_protectrss ) {
 /**
  * Move Javascripts to the footer
  */
-if( 1 == $mommodule_footerscripts ) {
+if( $mommodule_footerscripts ) {
 	if( !function_exists( 'myoptionalmodules_footerscripts' ) ) {
 		function myoptionalmodules_footerscripts(){
 			remove_action( 'wp_head','wp_print_scripts' );
@@ -980,7 +1063,7 @@ if( 1 == $mommodule_footerscripts ) {
 /**
  * Disable author based archives (if only 1)
  */
-if( 1 == $mommodule_authorarchives ) {
+if( $mommodule_authorarchives ) {
 	if( !function_exists( 'myoptionalmodules_disableauthorarchives' ) ) {
 		function myoptionalmodules_disableauthorarchives(){
 			global $wp_query;
@@ -997,7 +1080,7 @@ if( 1 == $mommodule_authorarchives ) {
 /**
  * Disable date based archives
  */
-if( 1 == $mommodule_datearchives ) {
+if( $mommodule_datearchives ) {
 	if( !function_exists( 'myoptionalmodules_disabledatearchives' ) ) {
 		function myoptionalmodules_disabledatearchives(){
 			global $wp_query;
@@ -1104,7 +1187,7 @@ if( get_option( 'mompaf_post' ) ) {
  * 404 Redirection
  * Redirect all 404s to the homepage
  */
-if( 1 == $mommodule_404 ) {
+if( $mommodule_404 ) {
 	if( !function_exists( 'myoptionalmodules_404' ) ) {
 		function myoptionalmodules_404() {
 			if( is_404() ) {
@@ -1120,7 +1203,7 @@ if( 1 == $mommodule_404 ) {
  * Disable Components: Version #
  * Removes the WordPress version from source
  */
-if( 1 == $mommodule_versionnumbers ) {
+if( $mommodule_versionnumbers ) {
 	if( !function_exists( 'myoptionalmodules_removeversion' ) ) {
 		function myoptionalmodules_removeversion( $src ) {
 			if( strpos( $src, 'ver=' . get_bloginfo( 'version' ) ) ) { 
@@ -1139,7 +1222,7 @@ if( 1 == $mommodule_versionnumbers ) {
  * Any special files that are specifically used by MOM
  * that need to be enqueued should be added in this block
  */
-if( 1 == $mommodule_fontawesome ) {
+if( $mommodule_fontawesome ) {
 	if( !function_exists( 'myoptionalmodules_scripts' ) ) {
 		function myoptionalmodules_scripts() {
 			$font_awesome_css = plugins_url() . '/' . plugin_basename( dirname( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css';
@@ -2231,6 +2314,9 @@ if( current_user_can( 'edit_dashboard' ) ){
 			'mommaincontrol_comments',
 			'mommaincontrol_dnsbl',
 			'MOM_themetakeover_ajaxcomments',
+			'MOM_themetakeover_hidden_field',
+			'mommaincontrol_thumbnail',
+			'mommodule_random_title',
 			'MOM_themetakeover_horizontal_galleries',
 			'mommaincontrol_momse',
 			'mommaincontrol_momshare',
@@ -2300,6 +2386,7 @@ if( current_user_can( 'edit_dashboard' ) ){
 			'MOM_Exclude_Tags_level2Tags',
 			'MOM_Exclude_Tags_level7Tags',
 			'MOM_enable_share_top',
+			'MOM_enable_share_pages',
 			'MOM_enable_share_reddit',
 			'MOM_enable_share_google',
 			'MOM_enable_share_twitter',
@@ -2314,6 +2401,10 @@ if( current_user_can( 'edit_dashboard' ) ){
 			delete_option( $value );
 		}
 	} else {
+		if( isset( $_POST[ 'mom_thumbnail_mode_submit' ] ) && check_admin_referer( 'thumbnail' ) ) {
+			$_REQUEST[ 'thumbnail' ] = sanitize_text_field( $_REQUEST[ 'thumbnail' ] );
+			update_option( 'mommaincontrol_thumbnail', $_REQUEST[ 'thumbnail' ] );
+		}		
 		if( isset( $_POST[ 'mom_protectrss_mode_submit' ] ) && check_admin_referer( 'protectrss' ) ) {
 			$_REQUEST[ 'protectrss' ] = sanitize_text_field( $_REQUEST[ 'protectrss' ] );
 			update_option( 'mommaincontrol_protectrss', $_REQUEST[ 'protectrss' ] );
@@ -2346,6 +2437,10 @@ if( current_user_can( 'edit_dashboard' ) ){
 			$_REQUEST[ 'ajaxify' ] = sanitize_text_field( $_REQUEST[ 'ajaxify' ] );
 			update_option( 'MOM_themetakeover_ajaxcomments', $_REQUEST[ 'ajaxify' ] );
 		}
+		if( isset( $_POST[ 'mom_hidden_field_mode_submit' ] ) && check_admin_referer( 'momHiddenField' ) ) { 
+			$_REQUEST[ 'hidden' ] = sanitize_text_field( $_REQUEST[ 'hidden' ] );
+			update_option( 'MOM_themetakeover_hidden_field', $_REQUEST[ 'hidden' ] );
+		}		
 		if( isset( $_POST[ 'mom_exclude_mode_submit' ] ) && check_admin_referer( 'momExclude' ) ) { 
 			$_REQUEST[ 'exclude' ] = sanitize_text_field( $_REQUEST[ 'exclude' ] );
 			update_option( 'mommaincontrol_momse', $_REQUEST[ 'exclude' ] );
@@ -2358,6 +2453,10 @@ if( current_user_can( 'edit_dashboard' ) ){
 			if( isset( $_POST[ 'MOM_enable_share_top' ] ) && check_admin_referer( 'momShareTop' ) ) { 
 				$_REQUEST[ 'top' ] = sanitize_text_field( $_REQUEST[ 'top' ] );
 				update_option( 'MOM_enable_share_top', $_REQUEST[ 'top' ] );
+			}
+			if( isset( $_POST[ 'MOM_enable_share_pages' ] ) && check_admin_referer( 'momSharePages' ) ) {
+				$_REQUEST[ 'pages' ] = sanitize_text_field( $_REQUEST[ 'pages' ] );
+				update_option( 'MOM_enable_share_pages', $_REQUEST[ 'pages' ] );
 			}
 			if( isset( $_POST[ 'MOM_enable_share_reddit' ] ) && check_admin_referer( 'momShareReddit' ) ) { 
 				$_REQUEST[ 'reddit' ] = sanitize_text_field( $_REQUEST[ 'reddit' ] );
@@ -2400,40 +2499,37 @@ if( current_user_can( 'edit_dashboard' ) ){
 			$_REQUEST[ 'mommaincontrol_disablepingbacks' ] = sanitize_text_field( $_REQUEST[ 'mommaincontrol_disablepingbacks' ] );
 			update_option( 'mommaincontrol_disablepingbacks', $_REQUEST[ 'mommaincontrol_disablepingbacks' ] );
 		}
+
+		if( isset( $_POST[ 'momsesave' ] ) && check_admin_referer( 'hidecategoriesfrom' ) ) {
+			foreach( $_REQUEST as $k => $v ) {
+				$v = sanitize_text_field( $v );
+				update_option( $k, $v );
+			}
+		}
+		
 		if( !get_option( 'mommaincontrol_mompaf' ) ) {
 			add_option( 'mompaf_post', 'off' );
 		}
+
 		if( isset( $_POST[ 'mom_save_form_submit' ] ) && check_admin_referer( 'mom_save_form' ) ) {
-			$_REQUEST[ 'mompaf_post' ] = sanitize_text_field( $_REQUEST[ 'mompaf_post' ] );
+			$_REQUEST[ 'mompaf_post' ]         = sanitize_text_field( $_REQUEST[ 'mompaf_post' ] );
 			$_REQUEST[ 'previous_link_class' ] = sanitize_text_field( str_replace( '.', '', $_REQUEST[ 'previous_link_class' ] ) );
-			$_REQUEST[ 'next_link_class' ] = sanitize_text_field( str_replace( '.', '', $_REQUEST[ 'next_link_class' ] ) );
-			$_REQUEST[ 'read_more' ] = sanitize_text_field( $_REQUEST[ 'read_more' ] );
-			$_REQUEST[ 'randomget' ] = sanitize_text_field( $_REQUEST[ 'randomget' ] );
+			$_REQUEST[ 'next_link_class' ]     = sanitize_text_field( str_replace( '.', '', $_REQUEST[ 'next_link_class' ] ) );
+			$_REQUEST[ 'read_more' ]           = sanitize_text_field( $_REQUEST[ 'read_more' ] );
+			$_REQUEST[ 'randomget' ]           = sanitize_text_field( $_REQUEST[ 'randomget' ] );
+			$_REQUEST[ 'randomsitetitles' ]    = sanitize_text_field( $_REQUEST[ 'randomsitetitles' ] );
 			update_option( 'mom_random_get', $_REQUEST[ 'randomget' ] );
 			update_option( 'mom_previous_link_class', $_REQUEST[ 'previous_link_class' ] );
 			update_option( 'mom_next_link_class', $_REQUEST[ 'next_link_class' ] );
 			update_option( 'mom_readmore_content', $_REQUEST[ 'read_more' ] );
 			update_option( 'mompaf_post', $_REQUEST[ 'mompaf_post' ] );
+			update_option( 'mommodule_random_title', $_REQUEST[ 'randomsitetitles' ] );
 		}		
 		add_option( 'mompaf_post', 'off' );
 	}
-	if( isset( $_POST[ 'momsesave' ] ) && check_admin_referer( 'hidecategoriesfrom' ) ) {
-		foreach( $_REQUEST as $k => $v ) {
-			update_option( $k, $v );
-		}
-		$_REQUEST[ 'MOM_Exclude_PostFormats_Visitor' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_Visitor' ] );
-		$_REQUEST[ 'MOM_Exclude_PostFormats_RSS' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_RSS' ] );
-		$_REQUEST[ 'MOM_Exclude_PostFormats_Front' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_Front' ] );
-		$_REQUEST[ 'MOM_Exclude_PostFormats_CategoryArchives' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_CategoryArchives' ] );
-		$_REQUEST[ 'MOM_Exclude_PostFormats_TagArchives' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_TagArchives' ] );
-		$_REQUEST[ 'MOM_Exclude_PostFormats_SearchResults' ] = sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_SearchResults' ] );
-		update_option( 'MOM_Exclude_PostFormats_Visitor', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_Visitor' ] ) );
-		update_option( 'MOM_Exclude_PostFormats_RSS', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_RSS' ] ) );
-		update_option( 'MOM_Exclude_PostFormats_Front', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_Front' ] ) );
-		update_option( 'MOM_Exclude_PostFormats_CategoryArchives', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_CategoryArchives' ] ) );
-		update_option( 'MOM_Exclude_PostFormats_TagArchives', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_TagArchives' ] ) );
-		update_option( 'MOM_Exclude_PostFormats_SearchResults', sanitize_text_field( $_REQUEST[ 'MOM_Exclude_PostFormats_SearchResults' ] ) );
-	}
+	
+
+	
 	/** End uninstall/save procedures */
 
 	/**
@@ -2761,7 +2857,8 @@ if( current_user_can( 'edit_dashboard' ) ){
 				<span class="full-title">Share Icons</span>
 				<div class="left-half">
 					<em>Enable/disable different services. Determine whether or not these share links 
-					will appear at the top of the post content or not.</em>
+					will appear at the top of the post content or not. Toggle share icons/links for 
+					pages as well.</em>
 				</div>
 				<div class="right-half">
 					<form method="post" action="#shareicons" name="momShareReddit">
@@ -2872,13 +2969,28 @@ if( current_user_can( 'edit_dashboard' ) ){
 						<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_top' ) ){ echo 0; } else { echo 1; }?>" name="top" />
 						<input type="submit" id="MOM_enable_share_top" name="MOM_enable_share_top" value="Submit" class="hidden" />
 					</form>
+					<form method="post" action="#shareicons" name="momSharePages">
+						<?php wp_nonce_field( 'momSharePages' ); ?>
+						<label for="MOM_enable_share_pages">
+							<?php if( 1 == get_option( 'MOM_enable_share_pages' ) ) { ?>
+								<i class="fa fa-toggle-on"></i>
+							<?php } else { ?>
+								<i class="fa fa-toggle-off"></i>
+							<?php }?>
+							<span>On Pages</span>
+						</label>
+						<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_pages' ) ){ echo 0; } else { echo 1; }?>" name="pages" />
+						<input type="submit" id="MOM_enable_share_pages" name="MOM_enable_share_pages" value="Submit" class="hidden" />
+					</form>					
 				</div>
 			</div>
 		<?php }?>		
 		<div class="settings-section" id="comment-modules">
 			<span class="full-title">Comment Form Extras</span>
 			<div class="left-half">
-				<em>Block the form from bad IPs or Ajaxify it.</em>
+				<em>Block the form from bad IPs, Ajaxify it, or add an extra (hidden) field, 
+				for users who are not logged in, that will 
+				reject the comment if filled out (most likely by a bot).</em>
 			</div>
 			<div class="right-half">
 				<form method="post" action="#comment-modules" name="momDNSBL">
@@ -2894,6 +3006,19 @@ if( current_user_can( 'edit_dashboard' ) ){
 					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_dnsbl' ) ){ echo 0; } else { echo 1; }?>" name="dnsbl" />
 					<input type="submit" id="mom_dnsbl_mode_submit" name="mom_dnsbl_mode_submit" value="Submit" class="hidden" />
 				</form>
+				<form method="post" action="#comment-modules" name="momHiddenField">
+					<?php wp_nonce_field( 'momHiddenField' ); ?>
+					<label for="mom_hidden_field_mode_submit">
+						<?php if( 1 == get_option( 'MOM_themetakeover_hidden_field' ) ) { ?>
+							<i class="fa fa-toggle-on"></i>
+						<?php } else { ?>
+							<i class="fa fa-toggle-off"></i>
+						<?php }?>
+						<span>Extra Field</span>
+					</label>
+					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_themetakeover_hidden_field' ) ){ echo 0; } else { echo 1; }?>" name="hidden" />
+					<input type="submit" id="mom_hidden_field_mode_submit" name="mom_hidden_field_mode_submit" value="Submit" class="hidden" />
+				</form>				
 				<form method="post" action="#comment-modules" name="momAjaxComments">
 					<?php wp_nonce_field( 'momAjaxComments' ); ?>
 					<label for="mom_ajax_comments_mode_submit">
@@ -2912,9 +3037,22 @@ if( current_user_can( 'edit_dashboard' ) ){
 		<div class="settings-section" id="extras">
 			<span class="full-title">Extras</span>
 			<div class="left-half">
-				<em>Move Javascript to footer, lazy load all post images, or the Post Exclusion module.</em>
+				<em>Force default post thumbnails to 100% of their container, move Javascript to footer, lazy load all post images, or the Post Exclusion module.</em>
 			</div>
 			<div class="right-half">
+				<form method="post" action="#enable" name="thumbnail">
+					<?php wp_nonce_field( 'thumbnail' ); ?>
+					<label for="mom_thumbnail_mode_submit">
+						<?php if( 1 == get_option( 'mommaincontrol_thumbnail' ) ) { ?>
+							<i class="fa fa-toggle-on"></i>
+						<?php } else { ?>
+							<i class="fa fa-toggle-off"></i>
+						<?php }?>
+						<span>Thumbnails</span>
+					</label>
+					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_thumbnail' ) ) { echo 0; } else { echo 1; } ?>" name="thumbnail" />
+					<input type="submit" id="mom_thumbnail_mode_submit" name="mom_thumbnail_mode_submit" value="Submit" class="hidden" />
+				</form>			
 				<form method="post" action="#extras" name="footerscripts">
 					<?php wp_nonce_field( 'footerscripts' ); ?>
 					<label for="mom_footerscripts_mode_submit">
@@ -3260,6 +3398,16 @@ if( current_user_can( 'edit_dashboard' ) ){
 						echo get_option( 'mom_random_get' ); 
 					} ?>" />
 				</section>
+				<br /><br />
+				<section>
+					<label for="randomsitetitles">
+						Random site titles<br />
+						Separate each item with <code>::</code>.<br /><code>title 1 :: title 2 :: title 3 :: ...</code><br /><br />
+						On single posts and pages, the post/page title will accompany random site title:<br />
+						<em>random site title</em> | <em>post/page title</em>
+						</label>
+					<textarea id="randomsitetitles" name="randomsitetitles"><?php if( get_option( 'mommodule_random_title' ) ) { echo get_option( 'mommodule_random_title' ); } ?></textarea>
+				</section>				
 				<input type="submit" id="mom_save_form" name="mom_save_form_submit" value="Save">
 			</form>			
 		</div>
