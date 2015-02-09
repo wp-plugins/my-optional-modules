@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: random, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 5.8.3
+Stable tag: 5.8.4
 
 An assortment of functions to enhance WordPress.
 
@@ -68,16 +68,22 @@ on [Github](https://github.com/onebillion/mom). )
 2. Click on Uninstall.
 3. Confirm uninstall.
 
+== Screenshots ==
+1. A horizontal gallery in a post.
+2. Share icons displayed at the top of the post content.
+
 == Changelog ==
 
-= 5.8.3 =
+= 5.8.4 =
+* Horizontal gallery width changed to 100%, left/right margin set to auto (to better fit into parent div)
+* Admin screen now allows visibility toggling for individual module settings containers
+
+= 5.8.* =
 * Create a list of site titles to display randomly
 * Toggle force default post thumbnail container/image width to fill 100% of parent container
 * Remove padding on horizontal gallery items and !important declarations so they can be styled by the user properly
 * Optionally include share icons/links on pages as well as posts
 * Toggle a hidden comment form field to reject comments from visitors if filled out (antibot hidden field)
-
-= 5.8.* =
 * Some functions now only "exist" if their module is actually turned on via settings
 * Wording on Author Archive disable changed to better reflect what was actually happening
 * Onclick Font Awesome inserts at cursor

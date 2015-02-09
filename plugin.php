@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.8.3
+ * Version: 5.8.4
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -2395,7 +2395,17 @@ if( current_user_can( 'edit_dashboard' ) ){
 			'mom_next_link_class',
 			'mom_previous_link_class',
 			'mom_readmore_content',
-			'mom_random_get'
+			'mom_random_get',
+			'toggle_trash',
+			'toggle_disable',
+			'toggle_enable',
+			'toggle_share',
+			'toggle_comment',
+			'toggle_extras',
+			'toggle_misc',
+			'toggle_shortcodes',
+			'toggle_developers',
+			'toggle_categories'
 		);
 		foreach( $option as &$value ) {
 			delete_option( $value );
@@ -2506,6 +2516,47 @@ if( current_user_can( 'edit_dashboard' ) ){
 				update_option( $k, $v );
 			}
 		}
+		
+		if( isset( $_POST[ 'toggle_trash_submit' ] ) && check_admin_referer( 'toggle_trash_form' ) ) {
+			$_REQUEST[ 'toggle_trash' ] = sanitize_text_field( $_REQUEST[ 'toggle_trash' ] );
+			update_option( 'toggle_trash', $_REQUEST[ 'toggle_trash' ] );			
+		}
+		if( isset( $_POST[ 'toggle_disable_submit' ] ) && check_admin_referer( 'toggle_disable_form' ) ) {
+			$_REQUEST[ 'toggle_disable' ] = sanitize_text_field( $_REQUEST[ 'toggle_disable' ] );
+			update_option( 'toggle_disable', $_REQUEST[ 'toggle_disable' ] );			
+		}
+		if( isset( $_POST[ 'toggle_enable_submit' ] ) && check_admin_referer( 'toggle_enable_form' ) ) {
+			$_REQUEST[ 'toggle_enable' ] = sanitize_text_field( $_REQUEST[ 'toggle_enable' ] );
+			update_option( 'toggle_enable', $_REQUEST[ 'toggle_enable' ] );			
+		}
+		if( isset( $_POST[ 'toggle_share_submit' ] ) && check_admin_referer( 'toggle_share_form' ) ) {
+			$_REQUEST[ 'toggle_share' ] = sanitize_text_field( $_REQUEST[ 'toggle_share' ] );
+			update_option( 'toggle_share', $_REQUEST[ 'toggle_share' ] );			
+		}
+		if( isset( $_POST[ 'toggle_comment_submit' ] ) && check_admin_referer( 'toggle_comment_form' ) ) {
+			$_REQUEST[ 'toggle_comment' ] = sanitize_text_field( $_REQUEST[ 'toggle_comment' ] );
+			update_option( 'toggle_comment', $_REQUEST[ 'toggle_comment' ] );			
+		}
+		if( isset( $_POST[ 'toggle_extras_submit' ] ) && check_admin_referer( 'toggle_extras_form' ) ) {
+			$_REQUEST[ 'toggle_extras' ] = sanitize_text_field( $_REQUEST[ 'toggle_extras' ] );
+			update_option( 'toggle_extras', $_REQUEST[ 'toggle_extras' ] );			
+		}
+		if( isset( $_POST[ 'toggle_misc_submit' ] ) && check_admin_referer( 'toggle_misc_form' ) ) {
+			$_REQUEST[ 'toggle_misc' ] = sanitize_text_field( $_REQUEST[ 'toggle_misc' ] );
+			update_option( 'toggle_misc', $_REQUEST[ 'toggle_misc' ] );			
+		}
+		if( isset( $_POST[ 'toggle_shortcodes_submit' ] ) && check_admin_referer( 'toggle_shortcodes_form' ) ) {
+			$_REQUEST[ 'toggle_shortcodes' ] = sanitize_text_field( $_REQUEST[ 'toggle_shortcodes' ] );
+			update_option( 'toggle_shortcodes', $_REQUEST[ 'toggle_shortcodes' ] );			
+		}
+		if( isset( $_POST[ 'toggle_developers_submit' ] ) && check_admin_referer( 'toggle_developers_form' ) ) {
+			$_REQUEST[ 'toggle_developers' ] = sanitize_text_field( $_REQUEST[ 'toggle_developers' ] );
+			update_option( 'toggle_developers', $_REQUEST[ 'toggle_developers' ] );			
+		}
+		if( isset( $_POST[ 'toggle_categories_submit' ] ) && check_admin_referer( 'toggle_categories_form' ) ) {
+			$_REQUEST[ 'toggle_categories' ] = sanitize_text_field( $_REQUEST[ 'toggle_categories' ] );
+			update_option( 'toggle_categories', $_REQUEST[ 'toggle_categories' ] );			
+		}		
 		
 		if( !get_option( 'mommaincontrol_mompaf' ) ) {
 			add_option( 'mompaf_post', 'off' );
@@ -2639,8 +2690,21 @@ if( current_user_can( 'edit_dashboard' ) ){
 			}
 		}
 		$totalClutter    = ( $terms_count + $comments_count + $revisions_count ); ?>
-		<div class="settings-section" id="trash-removal">
-			<span class="full-title">Trash Removal</span>
+		<div class="settings-section<?php if( 1 == get_option( 'toggle_trash' ) ) { ?> toggled<?php }?>" id="trash-removal">
+			<label class="full-title" for="toggle_trash_submit">Trash Removal</label>
+			<form class="toggle" method="post" action="#trash-removal" name="toggle_trash_form">
+				<?php wp_nonce_field( 'toggle_trash_form' ); ?>
+				<label for="toggle_trash_submit"">
+					<?php if( 0 == get_option( 'toggle_trash' ) ) { ?>
+						<i class="fa fa-minus-square"></i>
+						<input type="text" class="hidden" value="1" name="toggle_trash" />
+					<?php } else { ?>
+						<i class="fa fa-plus-square"></i>
+						<input type="text" class="hidden" value="0" name="toggle_trash" />
+					<?php }?>
+				</label>
+				<input class="hidden" id="toggle_trash_submit" type="submit" name="toggle_trash_submit">
+			</form>
 			<div class="left-half">
 				<em>Removes clutter from the database.</em>
 			</div>
@@ -2704,8 +2768,21 @@ if( current_user_can( 'edit_dashboard' ) ){
 			</div>
 		<?php }?>
 		</div>
-		<div class="settings-section" id="disable">
-			<span class="full-title">Disable components</span>
+		<div class="settings-section<?php if( 1 == get_option( 'toggle_disable' ) ) { ?> toggled<?php }?>" id="disable">
+			<label for="toggle_disable_submit" class="full-title">Disable components</label>
+			<form class="toggle" method="post" action="#disable" name="toggle_disable_form">
+				<?php wp_nonce_field( 'toggle_disable_form' ); ?>
+				<label for="toggle_disable_submit"">
+					<?php if( 0 == get_option( 'toggle_disable' ) ) { ?>
+						<i class="fa fa-minus-square"></i>
+						<input type="text" class="hidden" value="1" name="toggle_disable" />
+					<?php } else { ?>
+						<i class="fa fa-plus-square"></i>
+						<input type="text" class="hidden" value="0" name="toggle_disable" />
+					<?php }?>
+				</label>
+				<input class="hidden" id="toggle_disable_submit" type="submit" name="toggle_disable_submit">
+			</form>
 			<div class="left-half">
 				<em>Completely disable comments, version number, pingbacks, author archives if there is only one author, or date archives.</em>
 			</div>
@@ -2778,8 +2855,21 @@ if( current_user_can( 'edit_dashboard' ) ){
 			
 			</div>
 		</div>
-		<div class="settings-section" id="enable">
-			<span class="full-title">Enable components</span>
+		<div class="settings-section<?php if( 1 == get_option( 'toggle_enable' ) ) { ?> toggled<?php }?>" id="enable">
+			<label for="toggle_enable_submit" class="full-title">Enable components</label>
+			<form class="toggle" method="post" action="#enable" name="toggle_enable_form">
+				<?php wp_nonce_field( 'toggle_enable_form' ); ?>
+				<label for="toggle_enable_submit"">
+					<?php if( 0 == get_option( 'toggle_enable' ) ) { ?>
+						<i class="fa fa-minus-square"></i>
+						<input type="text" class="hidden" value="1" name="toggle_enable" />
+					<?php } else { ?>
+						<i class="fa fa-plus-square"></i>
+						<input type="text" class="hidden" value="0" name="toggle_enable" />
+					<?php }?>
+				</label>
+				<input class="hidden" id="toggle_enable_submit" type="submit" name="toggle_enable_submit">
+			</form>			
 			<div class="left-half">
 				<em>Horizontal galleries, Font Awesome, Share Icons, link backs on every RSS item, or redirect all 
 				404s to the homepage.</em>
@@ -2853,8 +2943,21 @@ if( current_user_can( 'edit_dashboard' ) ){
 			</div>
 		</div>
 		<?php if( 1 == get_option( 'mommaincontrol_momshare' ) ) { ?>
-			<div class="settings-section" id="shareicons">
-				<span class="full-title">Share Icons</span>
+			<div class="settings-section<?php if( 1 == get_option( 'toggle_share' ) ) { ?> toggled<?php }?>" id="shareicons">
+				<label for="toggle_share_submit" class="full-title">Share Icons</label>
+				<form class="toggle" method="post" action="#shareicons" name="toggle_share_form">
+					<?php wp_nonce_field( 'toggle_share_form' ); ?>
+					<label for="toggle_share_submit"">
+						<?php if( 0 == get_option( 'toggle_share' ) ) { ?>
+							<i class="fa fa-minus-square"></i>
+							<input type="text" class="hidden" value="1" name="toggle_share" />
+						<?php } else { ?>
+							<i class="fa fa-plus-square"></i>
+							<input type="text" class="hidden" value="0" name="toggle_share" />
+						<?php }?>
+					</label>
+					<input class="hidden" id="toggle_share_submit" type="submit" name="toggle_share_submit">
+				</form>				
 				<div class="left-half">
 					<em>Enable/disable different services. Determine whether or not these share links 
 					will appear at the top of the post content or not. Toggle share icons/links for 
@@ -2985,8 +3088,21 @@ if( current_user_can( 'edit_dashboard' ) ){
 				</div>
 			</div>
 		<?php }?>		
-		<div class="settings-section" id="comment-modules">
-			<span class="full-title">Comment Form Extras</span>
+		<div class="settings-section<?php if( 1 == get_option( 'toggle_comment' ) ) { ?> toggled<?php }?>" id="comment-modules">
+			<label for="toggle_comment_submit" class="full-title">Comment Form Extras</label>
+			<form class="toggle" method="post" action="#comment-modules" name="toggle_comment_form">
+				<?php wp_nonce_field( 'toggle_comment_form' ); ?>
+				<label for="toggle_comment_submit"">
+					<?php if( 0 == get_option( 'toggle_comment' ) ) { ?>
+						<i class="fa fa-minus-square"></i>
+						<input type="text" class="hidden" value="1" name="toggle_comment" />
+					<?php } else { ?>
+						<i class="fa fa-plus-square"></i>
+						<input type="text" class="hidden" value="0" name="toggle_comment" />
+					<?php }?>
+				</label>
+				<input class="hidden" id="toggle_comment_submit" type="submit" name="toggle_comment_submit">
+			</form>			
 			<div class="left-half">
 				<em>Block the form from bad IPs, Ajaxify it, or add an extra (hidden) field, 
 				for users who are not logged in, that will 
@@ -3034,8 +3150,21 @@ if( current_user_can( 'edit_dashboard' ) ){
 				</form>
 			</div>
 		</div>
-		<div class="settings-section" id="extras">
-			<span class="full-title">Extras</span>
+		<div class="settings-section<?php if( 1 == get_option( 'toggle_extras' ) ) { ?> toggled<?php }?>" id="extras">
+			<label for="toggle_extras_submit" class="full-title">Extras</label>
+			<form class="toggle" method="post" action="#extras" name="toggle_extras_form">
+				<?php wp_nonce_field( 'toggle_extras_form' ); ?>
+				<label for="toggle_extras_submit"">
+					<?php if( 0 == get_option( 'toggle_extras' ) ) { ?>
+						<i class="fa fa-minus-square"></i>
+						<input type="text" class="hidden" value="1" name="toggle_extras" />
+					<?php } else { ?>
+						<i class="fa fa-plus-square"></i>
+						<input type="text" class="hidden" value="0" name="toggle_extras" />
+					<?php }?>
+				</label>
+				<input class="hidden" id="toggle_extras_submit" type="submit" name="toggle_extras_submit">
+			</form>			
 			<div class="left-half">
 				<em>Force default post thumbnails to 100% of their container, move Javascript to footer, lazy load all post images, or the Post Exclusion module.</em>
 			</div>
@@ -3103,8 +3232,21 @@ if( current_user_can( 'edit_dashboard' ) ){
 			$catcount    = 0;
 			$usercount   = 0;
 		?>
-		<div class="settings-section" id="categories">
+		<div class="settings-section<?php if( 1 == get_option( 'toggle_categories' ) ) { ?> toggled<?php }?>" id="categories">
 			<span class="full-title">Exclude Taxonomies</span>
+			<form class="toggle" method="post" action="#categories" name="toggle_categories_form">
+				<?php wp_nonce_field( 'toggle_categories_form' ); ?>
+				<label for="toggle_categories_submit"">
+					<?php if( 0 == get_option( 'toggle_categories' ) ) { ?>
+						<i class="fa fa-minus-square"></i>
+						<input type="text" class="hidden" value="1" name="toggle_categories" />
+					<?php } else { ?>
+						<i class="fa fa-plus-square"></i>
+						<input type="text" class="hidden" value="0" name="toggle_categories" />
+					<?php }?>
+				</label>
+				<input class="hidden" id="toggle_categories_submit" type="submit" name="toggle_categories_submit">
+			</form>			
 			<em class="full">Each field takes a comma-separated list of items for exclusion from the specified
 			section of the blog. When filling out each field, <code>this is the value you will use</code>. Names are there for reference.</em>
 			<?php 
@@ -3357,11 +3499,24 @@ if( current_user_can( 'edit_dashboard' ) ){
 			<input id="momsesave" type="submit" class="clear" value="Exclude them!" name="momsesave"></form>
 			</div>
 		<?php }?>
-		<div class="settings-section">
-			<span class="full-title">Misc. Theme Settings</span>
+		<div class="settings-section<?php if( 1 == get_option( 'toggle_misc' ) ) { ?> toggled<?php }?>" id="misc">
+			<label for="toggle_misc_submit" class="full-title">Misc. Theme Settings</label>
+			<form class="toggle" method="post" action="#misc" name="toggle_misc_form">
+				<?php wp_nonce_field( 'toggle_misc_form' ); ?>
+				<label for="toggle_misc_submit"">
+					<?php if( 0 == get_option( 'toggle_misc' ) ) { ?>
+						<i class="fa fa-minus-square"></i>
+						<input type="text" class="hidden" value="1" name="toggle_misc" />
+					<?php } else { ?>
+						<i class="fa fa-plus-square"></i>
+						<input type="text" class="hidden" value="0" name="toggle_misc" />
+					<?php }?>
+				</label>
+				<input class="hidden" id="toggle_misc_submit" type="submit" name="toggle_misc_submit">
+			</form>			
 			<em class="full">Setting keyword to <code>keyword</code> will make <code>yoursite.tld/?keyword</code> load a random post</em>
 			<em class="full">Read more can be set to <code>%blank%</code> to make it blank</em>
-			<form name="mom_save_form" method="post" action="">
+			<form name="mom_save_form" method="post" action="#misc">
 				<?php wp_nonce_field( 'mom_save_form' ); ?>
 				<section>
 					<select name="mompaf_post" id="mompaf_0">
@@ -3412,8 +3567,21 @@ if( current_user_can( 'edit_dashboard' ) ){
 			</form>			
 		</div>
 		<?php // [mom_attachments] shortcode information block ?>
-		<div class="settings-section clear">
-				<span class="full-title">Shortcodes</span>
+		<div class="settings-section clear<?php if( 1 == get_option( 'toggle_shortcodes' ) ) { ?> toggled<?php }?>" id="shortcodes">
+				<label for="toggle_shortcodes_submit" class="full-title">Shortcodes</label>
+				<form class="toggle" method="post" action="#shortcodes" name="toggle_shortcodes_form">
+					<?php wp_nonce_field( 'toggle_shortcodes_form' ); ?>
+					<label for="toggle_shortcodes_submit"">
+						<?php if( 0 == get_option( 'toggle_shortcodes' ) ) { ?>
+							<i class="fa fa-minus-square"></i>
+							<input type="text" class="hidden" value="1" name="toggle_shortcodes" />
+						<?php } else { ?>
+							<i class="fa fa-plus-square"></i>
+							<input type="text" class="hidden" value="0" name="toggle_shortcodes" />
+						<?php }?>
+					</label>
+					<input class="hidden" id="toggle_shortcodes_submit" type="submit" name="toggle_shortcodes_submit">
+				</form>
 				<p>
 					<span class="title">Attachment Loop</span>
 					<code>[mom_attachments]</code> inserts a loop of recent images that link to their respective posts.
@@ -3454,8 +3622,21 @@ if( current_user_can( 'edit_dashboard' ) ){
 				</p>
 		</div>
 		<?php // Theme functions ?>
-		<div class="settings-section clear">
-			<span class="full-title">Developers</span>
+		<div class="settings-section clear<?php if( 1 == get_option( 'toggle_developers' ) ) { ?> toggled<?php }?>" id="developers">
+			<label for="toggle_developers_submit" class="full-title">Developers</label>
+			<form class="toggle" method="post" action="#developers" name="toggle_developers_form">
+				<?php wp_nonce_field( 'toggle_developers_form' ); ?>
+				<label for="toggle_developers_submit"">
+					<?php if( 0 == get_option( 'toggle_developers' ) ) { ?>
+						<i class="fa fa-minus-square"></i>
+						<input type="text" class="hidden" value="1" name="toggle_developers" />
+					<?php } else { ?>
+						<i class="fa fa-plus-square"></i>
+						<input type="text" class="hidden" value="0" name="toggle_developers" />
+					<?php }?>
+				</label>
+				<input class="hidden" id="toggle_developers_submit" type="submit" name="toggle_developers_submit">
+			</form>
 			<p><strong>Theme Developers</strong> may use the following functions in your themes for additional functionality.</p>
 			<p><span><code>myoptionalmodules_excludecategories()</code> for a category list that hides categories based on your <strong>Exclude Taxonomies: Exclude Categories</strong> settings.<br /></span></p>
 			<p><span><code>new mom_mediaEmbed( 'MEDIA URL' )</code> for media embeds with <a href="http://codex.wordpress.org/Embeds">oEmbed</a> fallback (supports imgur image links AND albums, youtube/youtu.be (with ?t parameter), soundcloud, vimeo, gfycat, funnyordie, and vine).</p>
