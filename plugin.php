@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.8.4
+ * Version: 5.8.5
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -594,6 +594,7 @@ if( $mommodule_exclude ) {
 			$users_to_hide      = array_filter( array_unique ( $users_to_hide ) );
 			$categories_to_hide = array_filter( array_unique ( $categories_to_hide ) );
 			$tags_to_hide       = array_filter( array_unique ( $tags_to_hide ) );	
+			
 			/**
 			 * Loop alteration magic
 			 */
@@ -622,10 +623,9 @@ if( $mommodule_exclude ) {
 						)
 					);
 					$query->set( 'tax_query', $tax_query );
-					/** 
-					 * We'll exclude authors in a second query->set 
-					 * because it wouldn't work properlly in the one above 
-					 */
+					$query->set( 'author__not_in', $users_to_hide );
+				}
+				if( $query->is_single ) {
 					$query->set( 'author__not_in', $users_to_hide );
 				}
 			}
@@ -3084,7 +3084,7 @@ if( current_user_can( 'edit_dashboard' ) ){
 						</label>
 						<input type="text" class="hidden" value="<?php if( 1 == get_option( 'MOM_enable_share_pages' ) ){ echo 0; } else { echo 1; }?>" name="pages" />
 						<input type="submit" id="MOM_enable_share_pages" name="MOM_enable_share_pages" value="Submit" class="hidden" />
-					</form>					
+					</form>
 				</div>
 			</div>
 		<?php }?>		
@@ -3246,7 +3246,8 @@ if( current_user_can( 'edit_dashboard' ) ){
 					<?php }?>
 				</label>
 				<input class="hidden" id="toggle_categories_submit" type="submit" name="toggle_categories_submit">
-			</form>			
+			</form>
+
 			<em class="full">Each field takes a comma-separated list of items for exclusion from the specified
 			section of the blog. When filling out each field, <code>this is the value you will use</code>. Names are there for reference.</em>
 			<?php 
