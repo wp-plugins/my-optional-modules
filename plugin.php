@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.8.5
+ * Version: 5.8.6
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -202,6 +202,225 @@ if( $mommodule_thumbnails ) {
 	}
 }
 /** End default thumbnails 100% width */
+
+/**
+ * Much Simpler Implementation of Nelio External Featured Image
+ * //wordpress.org/plugins/external-featured-image/
+ * Altered February 10, 2015
+ * - removed 1x1 pixel 
+ * - reworked implementation of image to being directly linked instead of background-image via inline styling
+ */
+if( 1 == get_option( 'mommaincontrol_externalthumbs' ) ) {
+	if( is_admin() ) {
+		add_action( 'add_meta_boxes', 'myoptionalmodules_add_url_metabox' );
+		function myoptionalmodules_add_url_metabox() {
+			$excluded_post_types = array(
+				'attachment', 'revision', 'nav_menu_item', 'wpcf7_contact_form',
+			);
+			foreach ( get_post_types( '', 'names' ) as $post_type ) {
+				if ( in_array( $post_type, $excluded_post_types ) )
+					continue;
+				add_meta_box(
+					'myoptionalmodules_url_metabox',
+					'External Featured Image',
+					'myoptionalmodules_url_metabox',
+					$post_type,
+					'side',
+					'default'
+				);
+			}
+		}
+		function myoptionalmodules_url_metabox( $post ) {
+			$myoptionalmodules_url = get_post_meta( $post->ID, _myoptionalmodules_url(), true );
+			$myoptionalmodules_alt = get_post_meta( $post->ID, '_myoptionalmodules_alt', true );
+			$has_img = strlen( $myoptionalmodules_url ) > 0;
+			if ( $has_img ) {
+				$hide_if_img = 'display:none;';
+				$show_if_img = '';
+			}
+			else {
+				$hide_if_img = '';
+				$show_if_img = 'display:none;';
+			}
+			?>
+			<input type="text" placeholder="ALT attribute" style="width:100%;margin-top:10px;<?php echo $show_if_img; ?>"
+				id="myoptionalmodules_alt" name="myoptionalmodules_alt"
+				value="<?php echo esc_attr( $myoptionalmodules_alt ); ?>" /><?php
+			if ( $has_img ) { ?>
+			<div id="myoptionalmodules_preview_block"><?php
+			} else { ?>
+			<div id="myoptionalmodules_preview_block" style="display:none;"><?php
+			} ?>
+				<div id="myoptionalmodules_image_wrapper" style="<?php
+					echo (
+						'width:100%;' .
+						'max-width:300px;' .
+						'height:200px;' .
+						'margin-top:10px;' .
+						'background:url(' . $myoptionalmodules_url . ') no-repeat center center; ' .
+						'-webkit-background-size:cover;' .
+						'-moz-background-size:cover;' .
+						'-o-background-size:cover;' .
+						'background-size:cover;' );
+					?>">
+				</div>
+			<a id="myoptionalmodules_remove_button" href="#" onClick="javascript:myoptionalmodulesRemoveFeaturedImage();" style="<?php echo $show_if_img; ?>">Remove featured image</a>
+			<script>
+			function myoptionalmodulesRemoveFeaturedImage() {
+				jQuery("#myoptionalmodules_preview_block").hide();
+				jQuery("#myoptionalmodules_image_wrapper").hide();
+				jQuery("#myoptionalmodules_remove_button").hide();
+				jQuery("#myoptionalmodules_alt").hide();
+				jQuery("#myoptionalmodules_alt").val('');
+				jQuery("#myoptionalmodules_url").val('');
+				jQuery("#myoptionalmodules_url").show();
+				jQuery("#myoptionalmodules_preview_button").parent().show();
+			}
+			function myoptionalmodulesPreview() {
+				jQuery("#myoptionalmodules_preview_block").show();
+				jQuery("#myoptionalmodules_image_wrapper").css('background-image', "url('" + jQuery("#myoptionalmodules_url").val() + "')" );
+				jQuery("#myoptionalmodules_image_wrapper").show();
+				jQuery("#myoptionalmodules_remove_button").show();
+				jQuery("#myoptionalmodules_alt").show();
+				jQuery("#myoptionalmodules_url").hide();
+				jQuery("#myoptionalmodules_preview_button").parent().hide();
+			}
+			</script>
+			</div>
+			<input type="text" placeholder="Image URL" style="width:100%;margin-top:10px;<?php echo $hide_if_img; ?>"
+				id="myoptionalmodules_url" name="myoptionalmodules_url"
+				value="<?php echo esc_attr( $myoptionalmodules_url ); ?>" />
+			<div style="text-align:right;margin-top:10px;<?php echo $hide_if_img; ?>">
+				<a class="button" id="myoptionalmodules_preview_button" onClick="javascript:myoptionalmodulesPreview();">Preview</a>
+			</div>
+			<?php
+		}
+		add_action( 'save_post', 'myoptionalmodules_save_url' );
+		function myoptionalmodules_save_url( $post_ID ) {
+			if ( isset( $_POST['myoptionalmodules_url'] ) ) {
+				$url = strip_tags( $_POST['myoptionalmodules_url'] );
+				update_post_meta( $post_ID, _myoptionalmodules_url(), $url );
+			}
+
+			if ( isset( $_POST['myoptionalmodules_alt'] ) )
+				update_post_meta( $post_ID, '_myoptionalmodules_alt', strip_tags( $_POST['myoptionalmodules_alt'] ) );
+		}
+	}
+	/**
+	 * This function returns the post meta key. The key can be changed
+	 * using the filter `myoptionalmodules_post_meta_key'
+	 */
+	function _myoptionalmodules_url() {
+		return apply_filters( 'myoptionalmodules_post_meta_key', '_myoptionalmodules_url' );
+	}
+	/**
+	 * This function returns whether the post whose id is $id uses an external
+	 * featured image or not
+	 */
+	function uses_myoptionalmodules( $id ) {
+		$image_url = myoptionalmodules_get_thumbnail_src( $id );
+		if ( $image_url === false )
+			return false;
+		else
+			return true;
+	}
+	/**
+	 * This function returns the URL of the external featured image (if any), or
+	 * false otherwise.
+	 */
+	function myoptionalmodules_get_thumbnail_src( $id ) {
+		$image_url = get_post_meta( $id, _myoptionalmodules_url(), true );
+		if ( !$image_url || strlen( $image_url ) == 0 )
+			return false;
+		return $image_url;
+	}
+	/**
+	 * This function prints an image tag with the external featured image (if any).
+	 * This tag, in fact, has a 1x1 px transparent gif image as its src, and
+	 * includes the external featured image via inline CSS styling.
+	 */
+	function myoptionalmodules_the_html_thumbnail( $id, $size = false, $attr = array() ) {
+		if ( uses_myoptionalmodules( $id ) )
+			echo myoptionalmodules_get_html_thumbnail( $id );
+	}
+	/**
+	 * This function returns the image tag with the external featured image (if
+	 * any). This tag, in fact, has a 1x1 px transparent gif image as its src,
+	 * and includes the external featured image via inline CSS styling.
+	 */
+	function myoptionalmodules_get_html_thumbnail( $id, $size = false, $attr = array() ) {
+		if ( uses_myoptionalmodules( $id ) === false )
+			return false;
+
+		$image_url = myoptionalmodules_get_thumbnail_src( $id );
+
+		$width = false;
+		$height = false;
+		$additional_classes = '';
+		global $_wp_additional_image_sizes;
+		if ( is_array( $size ) ) {
+			$width = $size[0];
+			$height = $size[1];
+		}
+		else if ( isset( $_wp_additional_image_sizes[ $size ] ) ) {
+			$width = $_wp_additional_image_sizes[ $size ]['width'];
+			$height = $_wp_additional_image_sizes[ $size ]['height'];
+			$additional_classes = 'attachment-' . $size . ' ';
+		}
+		if ( $width && $width > 0 ) $width = "width:${width}px;";
+		else $width = '';
+		if ( $height && $height > 0 ) $height = "height:${height}px;";
+		else $height = '';
+		if ( isset( $attr['class'] ) )
+			$additional_classes .= $attr['class'];
+		$alt = get_post_meta( $id, '_myoptionalmodules_alt', true );
+		if ( isset( $attr['alt'] ) )
+			$alt = $attr['alt'];
+		if ( !$alt )
+			$alt = '';
+		$html = sprintf(
+			'<img src="' . $image_url . '" ' .
+			'alt="%s" />',
+			$image_url, $width, $height, $additional_classes, $alt 
+		);
+		return $html;
+	}
+	// Overriding post thumbnail when necessary
+	add_filter( 'genesis_pre_get_image', 'myoptionalmodules_genesis_thumbnail', 10, 3 );
+	function myoptionalmodules_genesis_thumbnail( $unknown_param, $args, $post ) {
+		$image_url = get_post_meta( $post->ID, _myoptionalmodules_url(), true );
+		if ( !$image_url || strlen( $image_url ) == 0 ) {
+			return false;
+		}
+		if ( $args['format'] == 'html' ) {
+			$html = myoptionalmodules_replace_thumbnail( '', $post->ID, 0, $args['size'], $args['attr'] );
+			$html = str_replace( 'style="', 'style="min-width:150px;min-height:150px;', $html );
+			return $html;
+		}
+		else {
+			return $image_url;
+		}
+	}
+	// Overriding post thumbnail when necessary
+	add_filter( 'post_thumbnail_html', 'myoptionalmodules_replace_thumbnail', 10, 5 );
+	function myoptionalmodules_replace_thumbnail( $html, $post_id, $post_image_id, $size, $attr ) {
+		if ( uses_myoptionalmodules( $post_id ) )
+			$html = myoptionalmodules_get_html_thumbnail( $post_id, $size, $attr );
+		return $html;
+	}
+	add_action( 'the_post', 'myoptionalmodules_fake_featured_image_if_necessary' );
+	function myoptionalmodules_fake_featured_image_if_necessary( $post ) {
+		if ( is_array( $post ) ) $post_ID = $post['ID'];
+		else $post_ID = $post->ID;
+		$has_myoptionalmodules = strlen( get_post_meta( $post_ID, _myoptionalmodules_url(), true ) ) > 0;
+		$wordpress_featured_image = get_post_meta( $post_ID, '_thumbnail_id', true );
+		if ( $has_myoptionalmodules && !$wordpress_featured_image )
+			update_post_meta( $post_ID, '_thumbnail_id', -1 );
+		if ( !$has_myoptionalmodules && $wordpress_featured_image == -1 )
+			delete_post_meta( $post_ID, '_thumbnail_id' );
+	}
+}
+/** End Much Simpler Implementation of Nelio External Featured Image
 
 /**
  * Set a random site title from user defined list
@@ -2306,6 +2525,7 @@ if( current_user_can( 'edit_dashboard' ) ){
 	 */
 	if( isset( $_POST[ 'MOM_UNINSTALL_EVERYTHING' ] ) && check_admin_referer( 'MOM_UNINSTALL_EVERYTHING' ) ) {
 		$option = array( 
+			'mom_external_thumbs',
 			'mommaincontrol_404',
 			'mommaincontrol_protectrss',
 			'mommaincontrol_footerscripts',
@@ -2575,8 +2795,14 @@ if( current_user_can( 'edit_dashboard' ) ){
 			update_option( 'mom_readmore_content', $_REQUEST[ 'read_more' ] );
 			update_option( 'mompaf_post', $_REQUEST[ 'mompaf_post' ] );
 			update_option( 'mommodule_random_title', $_REQUEST[ 'randomsitetitles' ] );
-		}		
+		}
 		add_option( 'mompaf_post', 'off' );
+		
+		if( isset( $_POST[ 'mom_external_thumbs_mode_submit' ] ) && check_admin_referer( 'externalthumbs' ) ) { 
+			$_REQUEST[ 'externalthumbs' ] = sanitize_text_field( $_REQUEST[ 'externalthumbs' ] );
+			update_option( 'mommaincontrol_externalthumbs', $_REQUEST[ 'externalthumbs' ] );
+		}		
+		
 	}
 	
 
@@ -3233,7 +3459,7 @@ if( current_user_can( 'edit_dashboard' ) ){
 			$usercount   = 0;
 		?>
 		<div class="settings-section<?php if( 1 == get_option( 'toggle_categories' ) ) { ?> toggled<?php }?>" id="categories">
-			<span class="full-title">Exclude Taxonomies</span>
+			<label for="toggle_categories_submit" class="full-title">Exclude Taxonomies</label>
 			<form class="toggle" method="post" action="#categories" name="toggle_categories_form">
 				<?php wp_nonce_field( 'toggle_categories_form' ); ?>
 				<label for="toggle_categories_submit"">
@@ -3642,6 +3868,41 @@ if( current_user_can( 'edit_dashboard' ) ){
 			<p><span><code>myoptionalmodules_excludecategories()</code> for a category list that hides categories based on your <strong>Exclude Taxonomies: Exclude Categories</strong> settings.<br /></span></p>
 			<p><span><code>new mom_mediaEmbed( 'MEDIA URL' )</code> for media embeds with <a href="http://codex.wordpress.org/Embeds">oEmbed</a> fallback (supports imgur image links AND albums, youtube/youtu.be (with ?t parameter), soundcloud, vimeo, gfycat, funnyordie, and vine).</p>
 		</div>
+		<?php if( 
+			1 == get_option( 'toggle_trash' ) && 
+			1 == get_option( 'toggle_disable' ) && 
+			1 == get_option( 'toggle_enable' ) && 
+			1 == get_option( 'toggle_comment' ) && 
+			1 == get_option( 'toggle_extras' ) && 
+			1 == get_option( 'toggle_misc' ) && 
+			1 == get_option( 'toggle_shortcodes' ) && 
+			1 == get_option( 'toggle_developers' )
+		) { ?>
+			<div class="settings-section clear" id="matt">
+				<label class="full-title">Matt's Menu</label>
+				<div class="left-half">
+					<em class="full">
+						Enable the use of external thumbnails (an alternate implentation of <a href="//wordpress.org/plugins/external-featured-image/">Nelio External Featured Image</a>)
+					</em>
+				</div>
+				<div class="right-half">
+					<form method="post" action="#matt" name="externalthumbs">
+						<?php wp_nonce_field( 'externalthumbs' ); ?>
+						<label for="mom_external_thumbs_mode_submit" title="External thumbnails">
+						<?php if( 1 == get_option( 'mommaincontrol_externalthumbs' ) ) { ?>
+							<i class="fa fa-toggle-on"></i>
+						<?php } else { ?>
+							<i class="fa fa-toggle-off"></i>
+						<?php } ?>
+						<span>External</span>
+						</label>
+						<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_externalthumbs' ) ) { echo 0; } else { echo 1; } ?>" name="externalthumbs" />
+						<input type="submit" id="mom_external_thumbs_mode_submit" name="mom_external_thumbs_mode_submit" value="Submit" class="hidden" />
+					</form>
+				</div>
+			</div>
+		<?php }?>
+
 		
 	</div>
 	<?php 
