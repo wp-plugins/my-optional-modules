@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.8.6
+ * Version: 5.8.7
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -255,14 +255,10 @@ if( 1 == get_option( 'mommaincontrol_externalthumbs' ) ) {
 					echo (
 						'width:100%;' .
 						'max-width:300px;' .
-						'height:200px;' .
-						'margin-top:10px;' .
-						'background:url(' . $myoptionalmodules_url . ') no-repeat center center; ' .
-						'-webkit-background-size:cover;' .
-						'-moz-background-size:cover;' .
-						'-o-background-size:cover;' .
-						'background-size:cover;' );
+						'height:200px;' . 
+						'overflow:hidden;');
 					?>">
+					<?php new mom_mediaEmbed( $myoptionalmodules_url ); ?>
 				</div>
 			<a id="myoptionalmodules_remove_button" href="#" onClick="javascript:myoptionalmodulesRemoveFeaturedImage();" style="<?php echo $show_if_img; ?>">Remove featured image</a>
 			<script>
@@ -378,12 +374,7 @@ if( 1 == get_option( 'mommaincontrol_externalthumbs' ) ) {
 			$alt = $attr['alt'];
 		if ( !$alt )
 			$alt = '';
-		$html = sprintf(
-			'<img src="' . $image_url . '" ' .
-			'alt="%s" />',
-			$image_url, $width, $height, $additional_classes, $alt 
-		);
-		return $html;
+		new mom_mediaEmbed( $image_url );
 	}
 	// Overriding post thumbnail when necessary
 	add_filter( 'genesis_pre_get_image', 'myoptionalmodules_genesis_thumbnail', 10, 3 );
@@ -3882,7 +3873,7 @@ if( current_user_can( 'edit_dashboard' ) ){
 				<label class="full-title">Matt's Menu</label>
 				<div class="left-half">
 					<em class="full">
-						Enable the use of external thumbnails (an alternate implentation of <a href="//wordpress.org/plugins/external-featured-image/">Nelio External Featured Image</a>)
+						Enable the use of external media (utilizing mom_mediaEmbed) for post feature images (albums, images, and videos, with oEmbed fallback) (an alternate implentation of <a href="//wordpress.org/plugins/external-featured-image/">Nelio External Featured Image</a>)
 					</em>
 				</div>
 				<div class="right-half">
