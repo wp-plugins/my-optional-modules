@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: random, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 5.8.7
+Stable tag: 5.8.8
 
 An assortment of functions to enhance WordPress.
 
@@ -74,10 +74,11 @@ on [Github](https://github.com/onebillion/mom). )
 
 == Changelog ==
 
-= 5.8.7 =
-* Last minute changes; 5.8.7 upgrade
+= 5.8.8 =
+* MM Addition 2
 
 = 5.8.* =
+* Last minute changes; 5.8.7 upgrade
 * Horizontal gallery width changed to 100%, left/right margin set to auto (to better fit into parent div)
 * Admin screen now allows visibility toggling for individual module settings containers
 * Create a list of site titles to display randomly

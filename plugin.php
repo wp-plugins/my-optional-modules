@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.8.7
+ * Version: 5.8.8
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -71,6 +71,7 @@ $momthemetakeover_ajaxcomments     = 0;
 $momthemetakeover_hidden_field     = 0;
 $mommodule_404                     = 0;
 $mommodule_thumbnails              = 0;
+$mommodule_recent_posts            = 0;
 $mommodule_random_title            = '';
 $mommodule_exclude                 = intval( get_option( 'mommaincontrol_momse' ) );
 $mommodule_share                   = intval( get_option( 'mommaincontrol_momshare' ) );
@@ -87,6 +88,7 @@ $momthemetakeover_ajaxcomments     = intval( get_option( 'MOM_themetakeover_ajax
 $momthemetakeover_hidden_field     = intval( get_option( 'MOM_themetakeover_hidden_field' ) );
 $mommodule_404                     = intval( get_option( 'mommaincontrol_404' ) );
 $mommodule_thumbnails              = intval( get_option( 'mommaincontrol_thumbnail' ) );
+$mommodule_recent_posts            = intval( get_option( 'mommaincontrol_recent_posts' ) );
 $mommodule_random_title            = sanitize_text_field( get_option( 'mommodule_random_title' ) );
 /** End Variables */
 
@@ -203,6 +205,127 @@ if( $mommodule_thumbnails ) {
 }
 /** End default thumbnails 100% width */
 
+/**
+ * Recent Posts reimplementation 
+ * remove currently viewed post from list when in single view
+ */
+if( $mommodule_recent_posts ) {
+	function myoptionalmodules_WP_Widget_Recent_Posts() {
+		register_widget( 'myoptionalmodules_WP_Widget_Recent_Posts' );
+	}
+	add_action( 'widgets_init', 'myoptionalmodules_WP_Widget_Recent_Posts' );
+	/**
+	 * Recent_Posts widget class
+	 *
+	 * @since 2.8.0
+	 */
+	class myoptionalmodules_WP_Widget_Recent_Posts extends WP_Widget {
+
+		function __construct() {
+			$widget_ops = array('classname' => 'widget_recent_entries', 'description' => __( "The most recent posts on your site") );
+			parent::__construct('recent-posts', __('Recent Posts'), $widget_ops);
+			$this->alt_option_name = 'widget_recent_entries';
+
+			add_action( 'save_post', array($this, 'flush_widget_cache') );
+			add_action( 'deleted_post', array($this, 'flush_widget_cache') );
+			add_action( 'switch_theme', array($this, 'flush_widget_cache') );
+		}
+
+		function widget($args, $instance) {
+			$cache = wp_cache_get('widget_recent_posts', 'widget');
+			global $wp, $post;
+
+			if ( !is_array($cache) )
+				$cache = array();
+
+			if ( ! isset( $args['widget_id'] ) )
+				$args['widget_id'] = $this->id;
+
+			if ( isset( $cache[ $args['widget_id'] ] ) ) {
+				echo $cache[ $args['widget_id'] ];
+				return;
+			}
+
+			ob_start();
+			extract($args);
+
+			$title = ( ! empty( $instance['title'] ) ) ? $instance['title'] : __( 'Recent Posts' );
+			$title = apply_filters( 'widget_title', $title, $instance, $this->id_base );
+			$number = ( ! empty( $instance['number'] ) ) ? absint( $instance['number'] ) : 10;
+			if ( ! $number )
+				$number = 10;
+			$show_date = isset( $instance['show_date'] ) ? $instance['show_date'] : false;
+
+			if( is_single() ) {
+				$post_id = get_the_ID();
+				$r  = new WP_Query( apply_filters( 'widget_posts_args', array( 'posts_per_page' => $number, 'no_found_rows' => true, 'post_status' => 'publish', 'ignore_sticky_posts' => true, 'post__not_in' => array( $post_id ) ) ) );
+			} else {
+				$r = new WP_Query( apply_filters( 'widget_posts_args', array( 'posts_per_page' => $number, 'no_found_rows' => true, 'post_status' => 'publish', 'ignore_sticky_posts' => true ) ) );
+			}
+			
+			if ($r->have_posts()) :
+	?>
+			<?php echo $before_widget; ?>
+			<?php if ( $title ) echo $before_title . $title . $after_title; ?>
+			<ul>
+			<?php while ( $r->have_posts() ) : $r->the_post(); ?>
+				<li>
+					<a href="<?php the_permalink() ?>" title="<?php echo esc_attr( get_the_title() ? get_the_title() : get_the_ID() ); ?>"><?php if ( get_the_title() ) the_title(); else the_ID(); ?></a>
+				<?php if ( $show_date ) : ?>
+					<span class="post-date"><?php echo get_the_date(); ?></span>
+				<?php endif; ?>
+				</li>
+			<?php endwhile; ?>
+			</ul>
+			<?php echo $after_widget; ?>
+	<?php
+			// Reset the global $the_post as this query will have stomped on it
+			wp_reset_postdata();
+
+			endif;
+
+			$cache[$args['widget_id']] = ob_get_flush();
+			wp_cache_set('widget_recent_posts', $cache, 'widget');
+		}
+
+		function update( $new_instance, $old_instance ) {
+			$instance = $old_instance;
+			$instance['title'] = strip_tags($new_instance['title']);
+			$instance['number'] = (int) $new_instance['number'];
+			$instance['show_date'] = (bool) $new_instance['show_date'];
+			$this->flush_widget_cache();
+
+			$alloptions = wp_cache_get( 'alloptions', 'options' );
+			if ( isset($alloptions['widget_recent_entries']) )
+				delete_option('widget_recent_entries');
+
+			return $instance;
+		}
+
+		function flush_widget_cache() {
+			wp_cache_delete('widget_recent_posts', 'widget');
+		}
+
+		function form( $instance ) {
+			$title     = isset( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
+			$number    = isset( $instance['number'] ) ? absint( $instance['number'] ) : 5;
+			$show_date = isset( $instance['show_date'] ) ? (bool) $instance['show_date'] : false;
+	?>
+			<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
+			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" /></p>
+
+			<p><label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php _e( 'Number of posts to show:' ); ?></label>
+			<input id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" type="text" value="<?php echo $number; ?>" size="3" /></p>
+
+			<p><input class="checkbox" type="checkbox" <?php checked( $show_date ); ?> id="<?php echo $this->get_field_id( 'show_date' ); ?>" name="<?php echo $this->get_field_name( 'show_date' ); ?>" />
+			<label for="<?php echo $this->get_field_id( 'show_date' ); ?>"><?php _e( 'Display post date?' ); ?></label></p>
+	<?php
+		}
+	}
+}
+
+/** End Recent Posts reimplementation */
+ 
 /**
  * Much Simpler Implementation of Nelio External Featured Image
  * //wordpress.org/plugins/external-featured-image/
@@ -2527,6 +2650,7 @@ if( current_user_can( 'edit_dashboard' ) ){
 			'MOM_themetakeover_ajaxcomments',
 			'MOM_themetakeover_hidden_field',
 			'mommaincontrol_thumbnail',
+			'mommaincontrol_recent_posts',
 			'mommodule_random_title',
 			'MOM_themetakeover_horizontal_galleries',
 			'mommaincontrol_momse',
@@ -2625,6 +2749,10 @@ if( current_user_can( 'edit_dashboard' ) ){
 		if( isset( $_POST[ 'mom_thumbnail_mode_submit' ] ) && check_admin_referer( 'thumbnail' ) ) {
 			$_REQUEST[ 'thumbnail' ] = sanitize_text_field( $_REQUEST[ 'thumbnail' ] );
 			update_option( 'mommaincontrol_thumbnail', $_REQUEST[ 'thumbnail' ] );
+		}
+		if( isset( $_POST[ 'mom_recent_posts_mode_submit' ] ) && check_admin_referer( 'recentposts' ) ) {
+			$_REQUEST[ 'recentposts' ] = sanitize_text_field( $_REQUEST[ 'recentposts' ] );
+			update_option( 'mommaincontrol_recent_posts', $_REQUEST[ 'recentposts' ] );
 		}		
 		if( isset( $_POST[ 'mom_protectrss_mode_submit' ] ) && check_admin_referer( 'protectrss' ) ) {
 			$_REQUEST[ 'protectrss' ] = sanitize_text_field( $_REQUEST[ 'protectrss' ] );
@@ -3873,7 +4001,9 @@ if( current_user_can( 'edit_dashboard' ) ){
 				<label class="full-title">Matt's Menu</label>
 				<div class="left-half">
 					<em class="full">
-						Enable the use of external media (utilizing mom_mediaEmbed) for post feature images (albums, images, and videos, with oEmbed fallback) (an alternate implentation of <a href="//wordpress.org/plugins/external-featured-image/">Nelio External Featured Image</a>)
+						(1) Enable the use of external media (utilizing mom_mediaEmbed) for post feature images (albums, images, and videos, with oEmbed fallback) (an alternate implentation of <a href="//wordpress.org/plugins/external-featured-image/">Nelio External Featured Image</a>) 
+						or 
+						(2) Change the behaviour of the default Recent Posts widget to exclude the currently viewed post from the list.
 					</em>
 				</div>
 				<div class="right-half">
@@ -3890,6 +4020,20 @@ if( current_user_can( 'edit_dashboard' ) ){
 						<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_externalthumbs' ) ) { echo 0; } else { echo 1; } ?>" name="externalthumbs" />
 						<input type="submit" id="mom_external_thumbs_mode_submit" name="mom_external_thumbs_mode_submit" value="Submit" class="hidden" />
 					</form>
+					<form method="post" action="#enable" name="recentposts">
+						<?php wp_nonce_field( 'recentposts' ); ?>
+						<label for="mom_recent_posts_mode_submit">
+							<?php if( 1 == get_option( 'mommaincontrol_recent_posts' ) ) { ?>
+								<i class="fa fa-toggle-on"></i>
+							<?php } else { ?>
+								<i class="fa fa-toggle-off"></i>
+							<?php }?>
+							<span>Recent Posts</span>
+						</label>
+						<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_recent_posts' ) ) { echo 0; } else { echo 1; } ?>" name="recentposts" />
+						<input type="submit" id="mom_recent_posts_mode_submit" name="mom_recent_posts_mode_submit" value="Submit" class="hidden" />
+					</form>			
+					
 				</div>
 			</div>
 		<?php }?>
