@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.8.8
+ * Version: 5.8.9
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -606,7 +606,7 @@ if( $mommodule_share ) {
 				$output .='</span>';
 				if( is_single() && 1 == $at_top ) {
 					return $output . $content;
-				} elseif( is_singular() && !$at_top ) {
+				} elseif( is_single() && !$at_top ) {
 					return $content . $output;
 				} elseif( is_page() && $on_pages) {
 					if( is_page() && $at_top ) {
