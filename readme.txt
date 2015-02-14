@@ -1,9 +1,9 @@
 === My Optional Modules ===
 Contributors: boyevul
-Tags: random, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
+Tags: random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 5.8.9
+Stable tag: 6.0.0
 
 An assortment of functions to enhance WordPress.
 
@@ -45,7 +45,7 @@ on [Github](https://github.com/onebillion/mom). )
 &	Add a CSS class to next and previous links for styling purposes
 *	Enable ?random post functionality
 *	Change the value of "read more..." for excerpts
-*   Utilize a list of random site titles
+*   Utilize a list of random site titles/descriptions
 
 = Take advantage of shortcodes =
 *	An attachments loop to show off images (that link to their respective posts)
@@ -74,10 +74,12 @@ on [Github](https://github.com/onebillion/mom). )
 
 == Changelog ==
 
-= 5.8.9 =
-* is_singular() should have been is_single() on share icons conditional declaration (to keep from showing on pages when not enabled to do so)
+= 6.0.0 =
+* Create a list of site descriptions to display randomly
+* Random titles properly apply to bloginfo('name') element
 
 = 5.8.* =
+* is_singular() should have been is_single() on share icons conditional declaration (to keep from showing on pages when not enabled to do so)
 * MM Addition 2
 * Last minute changes; 5.8.7 upgrade
 * Horizontal gallery width changed to 100%, left/right margin set to auto (to better fit into parent div)

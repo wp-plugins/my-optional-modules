@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 5.8.9
+ * Version: 6.0.0
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -73,6 +73,7 @@ $mommodule_404                     = 0;
 $mommodule_thumbnails              = 0;
 $mommodule_recent_posts            = 0;
 $mommodule_random_title            = '';
+$mommodule_random_descriptions     = '';
 $mommodule_exclude                 = intval( get_option( 'mommaincontrol_momse' ) );
 $mommodule_share                   = intval( get_option( 'mommaincontrol_momshare' ) );
 $mommodule_fontawesome             = intval( get_option( 'mommaincontrol_fontawesome' ) );
@@ -90,6 +91,7 @@ $mommodule_404                     = intval( get_option( 'mommaincontrol_404' ) 
 $mommodule_thumbnails              = intval( get_option( 'mommaincontrol_thumbnail' ) );
 $mommodule_recent_posts            = intval( get_option( 'mommaincontrol_recent_posts' ) );
 $mommodule_random_title            = sanitize_text_field( get_option( 'mommodule_random_title' ) );
+$mommodule_random_descriptions     = sanitize_text_field( get_option( 'mommodule_random_descriptions' ) );
 /** End Variables */
 
 /**
@@ -544,16 +546,28 @@ if( '' != $mommodule_random_title ) {
 		function mom_random_site_title( $title ) {
 			global $wp, $mommodule_random_title;
 			$title = explode( '::', $mommodule_random_title );
-			if( is_single() || is_page() ) {
-				return $title[ array_rand( $title ) ] . ' | ' . get_the_title();
-			} else {
-				return $title[ array_rand( $title ) ];
-			}
+			return $title[ array_rand( $title ) ];
 		}
+		add_filter( 'pre_option_blogname', 'mom_random_site_title', 10, 2 );
 		add_filter( 'wp_title', 'mom_random_site_title', 10, 2 );
 	}
 }
 /** End set a random site title */
+/**
+ * Set a random site description from user defined list
+ */
+if( '' != $mommodule_random_descriptions ) {
+	if( !function_exists( 'mom_random_site_descriptions' ) ) {
+		function mom_random_site_descriptions( $title ) {
+			global $wp, $mommodule_random_descriptions;
+			$descriptions    = explode( '::', $mommodule_random_descriptions );
+			return $descriptions[ array_rand( $descriptions ) ];
+		}
+		add_filter( 'pre_option_blogdescription', 'mom_random_site_descriptions', 10, 2 );
+	}
+}
+/** End set a random site title */
+
 
 /**
  * Share Icons
@@ -2341,7 +2355,7 @@ class mom_mediaEmbed {
 		elseif( preg_match( '/\/\/(.*youtube\.com\/.*)/i', $url ) ) {
 			// Probably a much better way of doing this..
 			$timeStamp = '';
-			if( strpos( $chck, 't=' ) !== false && strpos( $chck, 'list=' ) === false ) {
+			if( strpos( $chck, '038;t=' ) !== false && strpos( $chck, 'list=' ) === false ) {
 				$url_parse = parse_url( $chck );
 				$timeStamp = sanitize_text_field( str_replace( '038;t=', '', $url_parse[ 'fragment' ] ) );
 				$minutes   = 0;
@@ -2651,6 +2665,7 @@ if( current_user_can( 'edit_dashboard' ) ){
 			'MOM_themetakeover_hidden_field',
 			'mommaincontrol_thumbnail',
 			'mommaincontrol_recent_posts',
+			'mommodule_random_descriptions',
 			'mommodule_random_title',
 			'MOM_themetakeover_horizontal_galleries',
 			'mommaincontrol_momse',
@@ -2902,18 +2917,20 @@ if( current_user_can( 'edit_dashboard' ) ){
 		}
 
 		if( isset( $_POST[ 'mom_save_form_submit' ] ) && check_admin_referer( 'mom_save_form' ) ) {
-			$_REQUEST[ 'mompaf_post' ]         = sanitize_text_field( $_REQUEST[ 'mompaf_post' ] );
-			$_REQUEST[ 'previous_link_class' ] = sanitize_text_field( str_replace( '.', '', $_REQUEST[ 'previous_link_class' ] ) );
-			$_REQUEST[ 'next_link_class' ]     = sanitize_text_field( str_replace( '.', '', $_REQUEST[ 'next_link_class' ] ) );
-			$_REQUEST[ 'read_more' ]           = sanitize_text_field( $_REQUEST[ 'read_more' ] );
-			$_REQUEST[ 'randomget' ]           = sanitize_text_field( $_REQUEST[ 'randomget' ] );
-			$_REQUEST[ 'randomsitetitles' ]    = sanitize_text_field( $_REQUEST[ 'randomsitetitles' ] );
+			$_REQUEST[ 'mompaf_post' ]           = sanitize_text_field( $_REQUEST[ 'mompaf_post' ] );
+			$_REQUEST[ 'previous_link_class' ]   = sanitize_text_field( str_replace( '.', '', $_REQUEST[ 'previous_link_class' ] ) );
+			$_REQUEST[ 'next_link_class' ]       = sanitize_text_field( str_replace( '.', '', $_REQUEST[ 'next_link_class' ] ) );
+			$_REQUEST[ 'read_more' ]             = sanitize_text_field( $_REQUEST[ 'read_more' ] );
+			$_REQUEST[ 'randomget' ]             = sanitize_text_field( $_REQUEST[ 'randomget' ] );
+			$_REQUEST[ 'randomsitetitles' ]      = sanitize_text_field( $_REQUEST[ 'randomsitetitles' ] );
+			$_REQUEST[ 'randomsitedescriptions' ] = sanitize_text_field( $_REQUEST[ 'randomsitedescriptions' ] );
 			update_option( 'mom_random_get', $_REQUEST[ 'randomget' ] );
 			update_option( 'mom_previous_link_class', $_REQUEST[ 'previous_link_class' ] );
 			update_option( 'mom_next_link_class', $_REQUEST[ 'next_link_class' ] );
 			update_option( 'mom_readmore_content', $_REQUEST[ 'read_more' ] );
 			update_option( 'mompaf_post', $_REQUEST[ 'mompaf_post' ] );
 			update_option( 'mommodule_random_title', $_REQUEST[ 'randomsitetitles' ] );
+			update_option( 'mommodule_random_descriptions', $_REQUEST[ 'randomsitedescriptions' ] );
 		}
 		add_option( 'mompaf_post', 'off' );
 		
@@ -3908,6 +3925,15 @@ if( current_user_can( 'edit_dashboard' ) ){
 						<em>random site title</em> | <em>post/page title</em>
 						</label>
 					<textarea id="randomsitetitles" name="randomsitetitles"><?php if( get_option( 'mommodule_random_title' ) ) { echo get_option( 'mommodule_random_title' ); } ?></textarea>
+				</section>
+				<section>
+					<label for="randomsitedescriptions">
+						Random site description<br />
+						Separate each item with <code>::</code>.<br /><code>Description 1 :: Description 2 :: Description 3 :: ...</code><br /><br />
+						On single posts and pages, the post/page title will accompany random site description:<br />
+						<em>Site title</em> | <em>post/page description</em>
+						</label>
+					<textarea id="randomsitedescriptions" name="randomsitedescriptions"><?php if( get_option( 'mommodule_random_descriptions' ) ) { echo get_option( 'mommodule_random_descriptions' ); } ?></textarea>
 				</section>				
 				<input type="submit" id="mom_save_form" name="mom_save_form_submit" value="Save">
 			</form>			
