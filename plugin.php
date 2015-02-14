@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 6.0.0
+ * Version: 6.0.1
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -3921,8 +3921,6 @@ if( current_user_can( 'edit_dashboard' ) ){
 					<label for="randomsitetitles">
 						Random site titles<br />
 						Separate each item with <code>::</code>.<br /><code>title 1 :: title 2 :: title 3 :: ...</code><br /><br />
-						On single posts and pages, the post/page title will accompany random site title:<br />
-						<em>random site title</em> | <em>post/page title</em>
 						</label>
 					<textarea id="randomsitetitles" name="randomsitetitles"><?php if( get_option( 'mommodule_random_title' ) ) { echo get_option( 'mommodule_random_title' ); } ?></textarea>
 				</section>
@@ -3930,8 +3928,6 @@ if( current_user_can( 'edit_dashboard' ) ){
 					<label for="randomsitedescriptions">
 						Random site description<br />
 						Separate each item with <code>::</code>.<br /><code>Description 1 :: Description 2 :: Description 3 :: ...</code><br /><br />
-						On single posts and pages, the post/page title will accompany random site description:<br />
-						<em>Site title</em> | <em>post/page description</em>
 						</label>
 					<textarea id="randomsitedescriptions" name="randomsitedescriptions"><?php if( get_option( 'mommodule_random_descriptions' ) ) { echo get_option( 'mommodule_random_descriptions' ); } ?></textarea>
 				</section>				

@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 6.0.0
+Stable tag: 6.0.1
 
 An assortment of functions to enhance WordPress.
 
@@ -74,11 +74,12 @@ on [Github](https://github.com/onebillion/mom). )
 
 == Changelog ==
 
-= 6.0.0 =
-* Create a list of site descriptions to display randomly
-* Random titles properly apply to bloginfo('name') element
+= 6.0.1 =
+* Settings page descriptions altered
 
 = 5.8.* =
+* Create a list of site descriptions to display randomly
+* Random titles properly apply to bloginfo('name') element
 * is_singular() should have been is_single() on share icons conditional declaration (to keep from showing on pages when not enabled to do so)
 * MM Addition 2
 * Last minute changes; 5.8.7 upgrade
