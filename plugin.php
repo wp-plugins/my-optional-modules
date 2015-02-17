@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 6.0.2
+ * Version: 6.0.3
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -44,89 +44,57 @@
  *           When utilizing the read more... functionality, it is vital that we destroy 
  *           Twenty Fifteen's default read more... functionality as it interferes with our new
  *           functionality. 
- *   1.4 - (Exclude) Category List for templtes
- *           A new listing for categories that utilizes the exclude list set in Exclude Taxonomies.
  */
-function my_optional_modules_protocol( $url ) {
-		$url = esc_url( $url );
-		$url = str_replace( array( 'https:', 'http:' ), '', $url );
-		return $url;
-}
-function mom_get_all_category_ids() {
-	if ( ! $cat_ids = wp_cache_get( 'all_category_ids', 'category' ) ) {
-		$cat_ids = get_terms( 'category', array( 'fields' => 'ids', 'get' => 'all' ) );
-		wp_cache_add( 'all_category_ids', $cat_ids, 'category' );
+if( !function_exists( 'my_optional_modules_protocol' ) ) {
+	function my_optional_modules_protocol( $url ) {
+			$url = esc_url( $url );
+			$url = str_replace( array( 'https:', 'http:' ), '', $url );
+			return $url;
 	}
-	return $cat_ids;
 }
-function mom_timesince( $date, $granularity=2 ) {
-	$retval     = '';
-	$date       = strtotime( $date );
-	$difference = time() - $date;
-	$periods = array(
-		' decades' => 315360000, 
-		' years' => 31536000, 
-		' months' => 2628000, 
-		' weeks' => 604800,  
-		' days' => 86400, 
-		' hours' => 3600, 
-		' minutes' => 60, 
-		' seconds' => 1 
-	);
-	foreach( $periods as $key => $value ) {
-		if( $difference >= $value ) {
-			$time = floor ( $difference/$value );
-			$difference %= $value;
-			$retval .= ( $retval ? ' ' : '' ) . $time . '';
-			$retval .= ( ( $time > 1 ) ? $key : $key );
-			$granularity--;
+if( !function_exists( 'my_optional_modules_get_category_ids' ) ) {
+	function my_optional_modules_get_category_ids() {
+		if ( ! $cat_ids = wp_cache_get( 'all_category_ids', 'category' ) ) {
+			$cat_ids = get_terms( 'category', array( 'fields' => 'ids', 'get' => 'all' ) );
+			wp_cache_add( 'all_category_ids', $cat_ids, 'category' );
 		}
-		if( $granularity == '0' ) {
-			break; 
-		}
+		return $cat_ids;
 	}
-	return $retval . ' ago';
+}
+if( !function_exists( 'my_optional_modules_timesince' ) ) {
+	function my_optional_modules_timesince( $date, $granularity=2 ) {
+		$retval     = '';
+		$date       = strtotime( $date );
+		$difference = time() - $date;
+		$periods = array(
+			' decades' => 315360000, 
+			' years' => 31536000, 
+			' months' => 2628000, 
+			' weeks' => 604800,  
+			' days' => 86400, 
+			' hours' => 3600, 
+			' minutes' => 60, 
+			' seconds' => 1 
+		);
+		foreach( $periods as $key => $value ) {
+			if( $difference >= $value ) {
+				$time = floor ( $difference/$value );
+				$difference %= $value;
+				$retval .= ( $retval ? ' ' : '' ) . $time . '';
+				$retval .= ( ( $time > 1 ) ? $key : $key );
+				$granularity--;
+			}
+			if( $granularity == '0' ) {
+				break; 
+			}
+		}
+		return $retval . ' ago';
+	}
 }
 if( '' != get_option( 'mom_readmorecontent' ) ) {
 		function twentyfifteen_excerpt_more( $more ) {
 			// Destroy default readmore for Twenty Fifteen.
 		}
-}
-if( !function_exists( 'myoptionalmodules_excludecategories' ) ) {
-	function myoptionalmodules_excludecategories() {
-		if( 1 == get_option( 'mommaincontrol_momse' ) ) {
-			global $myoptionalmodules_plugin;
-			$MOM_Exclude_level0Categories  = get_option( 'MOM_Exclude_Categories_level0Categories' ); 
-			$MOM_Exclude_level1Categories  = get_option( 'MOM_Exclude_Categories_level1Categories' ); 
-			$MOM_Exclude_level2Categories  = get_option( 'MOM_Exclude_Categories_level2Categories' ); 
-			$MOM_Exclude_level7Categories  = get_option( 'MOM_Exclude_Categories_level7Categories' ); 
-			$loggedOutCats                 = 0;
-			if( '' == $MOM_Exclude_level0Categories ) $MOM_Exclude_level0Categories = 0;
-			if( '' == $MOM_Exclude_level1Categories ) $MOM_Exclude_level1Categories = 0;
-			if( '' == $MOM_Exclude_level2Categories ) $MOM_Exclude_level2Categories = 0;
-			if( '' == $MOM_Exclude_level7Categories ) $MOM_Exclude_level7Categories = 0;
-			if( 0 == $myoptionalmodules_plugin->user_level ) $loggedOutCats = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-			if( 1 == $myoptionalmodules_plugin->user_level ) $loggedOutCats = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-			if( 2 == $myoptionalmodules_plugin->user_level ) $loggedOutCats = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-			if( 3 == $myoptionalmodules_plugin->user_level ) $loggedOutCats = $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-			if( 4 == $myoptionalmodules_plugin->user_level ) $loggedOutCats = $MOM_Exclude_level7Categories;
-			$c1 = explode( ',', $loggedOutCats );
-			foreach( $c1 as &$C1 ){ $C1 = $C1 . ','; }
-			$c_1 = rtrim( implode( $c1 ), ',' );
-			$c11 = explode( ',', str_replace( ' ', '', $c_1 ) );
-			$c11array = array( $c11 );
-			$loggedOutCats = array_filter( $c11 );
-		}
-		$category_ids = mom_get_all_category_ids();
-		foreach( $category_ids as $cat_id ) {
-			if( $loggedOutCats ) {
-				if( in_array( $cat_id, $loggedOutCats ) )continue;
-			}
-			$cat  = get_category( $cat_id );
-			$link = get_category_link( $cat_id );
-			echo '<li><a href="' . $link . '" title="link to ' . $cat->name . '">' . $cat->name . '</a></li>';
-		}
-	}
 }
 /**
  * 2.0 Classes
@@ -252,10 +220,7 @@ class mom_mediaEmbed {
 			$url = $url . '/embed/postcard';
 			echo '<iframe class="vine-embed" src="' . $url . '" width="600" height="600" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>';
 		} else {
-			/**
-			 * Fall back to WordPress provided oEmbed if none of the above
-			 * conditions were met.
-			 */			
+			// Fall back to WordPress provided oEmbed if none of the above conditions were met.
 			echo wp_oembed_get( $url );
 		}
 	}
@@ -268,11 +233,11 @@ class mom_mediaEmbed {
  *   3.4 - Comment form (extras)
  *   3.5 - Extras (extras)
  *   3.6 - Misc. (theme extras)
+ *   3.7 - Initiate our calls when appropriate
  */
 class myoptionalmodules {
-
+	
 	public $user_level, $ipaddress, $DNSBL;
-
 	/**
 	 * Add actions
 	 *  - plugin dependent scripts
@@ -335,7 +300,6 @@ class myoptionalmodules {
 			)
 		);
 	}
-
 	/**
 	 * Fetch user level
 	 *  - level 1 (subscriber)
@@ -354,8 +318,7 @@ class myoptionalmodules {
 			$this->user_level = 0;
 		}
 	}
-	function validate_ip_address() {
-		
+	function validate_ip_address() {	
 		/**
 		 * Validate the IP address
 		 * "This function converts a human readable IPv4 or IPv6 address
@@ -408,12 +371,6 @@ class myoptionalmodules {
 		
 	}
 
-}
-$myoptionalmodules_plugin = new myoptionalmodules();
-$myoptionalmodules_plugin->actions();
-$myoptionalmodules_plugin->userlevel();
-if( 4 != $myoptionalmodules_plugin->user_level ) {
-	$myoptionalmodules_plugin->validate_ip_address();
 }
 class myoptionalmodules_enable {
 
@@ -716,8 +673,6 @@ class myoptionalmodules_enable {
 	}
 
 }
-$myoptionalmodules_enable = new myoptionalmodules_enable();
-$myoptionalmodules_enable->actions();
 class myoptionalmodules_disable {
 
 	function actions() {
@@ -767,8 +722,6 @@ class myoptionalmodules_disable {
 	}
 	
 }
-$myoptionalmodules_disable = new myoptionalmodules_disable();
-$myoptionalmodules_disable->actions();
 class myoptionalmodules_comment_form {
 
 	function actions() {
@@ -801,8 +754,6 @@ class myoptionalmodules_comment_form {
 	}
 
 }
-$myoptionalmodules_comment_form = new myoptionalmodules_comment_form();
-$myoptionalmodules_comment_form->actions();
 class myoptionalmodules_extras {
 
 	/**
@@ -816,9 +767,7 @@ class myoptionalmodules_extras {
 			add_action( 'wp_head', array( $this, 'thumbnails' ) );
 		}
 		if( 1 == get_option( 'mommaincontrol_footerscripts' ) ) {
-			remove_action( 'wp_head', 'wp_print_scripts' );
-			remove_action( 'wp_head', 'wp_print_head_scripts', 9 );
-			remove_action( 'wp_head', 'wp_enqueue_scripts', 1 );
+			add_action( 'wp_enqueue_scripts', array( $this, 'remove' ) );
 			add_action( 'wp_footer', 'wp_print_scripts', 5 );
 			add_action( 'wp_footer', 'wp_enqueue_scripts', 5 );
 			add_action( 'wp_footer', 'wp_print_head_scripts', 5 );
@@ -827,6 +776,11 @@ class myoptionalmodules_extras {
 			add_action( 'pre_get_posts', array( $this, 'exclude' ) );	
 		}
 
+	}
+	function remove() {
+		remove_action( 'wp_head', 'wp_print_scripts' );
+		remove_action( 'wp_head', 'wp_print_head_scripts', 9 );
+		remove_action( 'wp_head', 'wp_enqueue_scripts', 1 );
 	}
 	function thumbnails() {
 		$output = "<style> .post-thumbnail { width: 100%; } .post-thumbnail img { width: 100%; height: auto; } </style> \n";
@@ -1134,8 +1088,6 @@ class myoptionalmodules_extras {
 	}
 
 }
-$myoptionalmodules_extras = new myoptionalmodules_extras();
-$myoptionalmodules_extras->actions();
 class myoptionalmodules_misc {
 
 	function actions() {
@@ -1237,13 +1189,29 @@ class myoptionalmodules_misc {
 	}
 
 }
-$myoptionalmodules_misc = new myoptionalmodules_misc();
+$myoptionalmodules_plugin       = new myoptionalmodules();
+$myoptionalmodules_enable       = new myoptionalmodules_enable();
+$myoptionalmodules_disable      = new myoptionalmodules_disable();
+$myoptionalmodules_comment_form = new myoptionalmodules_comment_form();
+$myoptionalmodules_extras       = new myoptionalmodules_extras();
+$myoptionalmodules_misc         = new myoptionalmodules_misc();
+$myoptionalmodules_plugin->actions();
+$myoptionalmodules_plugin->userlevel();
+if( 4 != $myoptionalmodules_plugin->user_level ) {
+	$myoptionalmodules_plugin->validate_ip_address();
+}
+$myoptionalmodules_enable->actions();
+$myoptionalmodules_disable->actions();
+$myoptionalmodules_comment_form->actions();
+$myoptionalmodules_extras->actions();
 $myoptionalmodules_misc->actions();
 /**
  * 4.0 Extra Features
- *   4.1 - Recent Posts Widget
+ *   4.1 - (Exclude) Category List for templtes
+ *           A new listing for categories that utilizes the exclude list set in Exclude Taxonomies.
+ *   4.2 - Recent Posts Widget
  *           Remove currently viewed post from the widget when viewing in single post (is_single)
- *   4.2 - External Thumbnails
+ *   4.3 - External Thumbnails
  *           Much simpler implementation of 'Nelio External Featured Image'
  *           //wordpress.org/plugins/external-featured-image/
  *           + removed 1x1 pixel (February 10, 2015)
@@ -1251,6 +1219,42 @@ $myoptionalmodules_misc->actions();
  *           + media embedding through mom_mediaEmbed to allow for more media to be used
  *             for featured image (and not images alone) (February 10, 2015)
  */
+if( !function_exists( 'my_optional_modules_exclude_categories' ) ) {
+	function my_optional_modules_exclude_categories() {
+		if( 1 == get_option( 'mommaincontrol_momse' ) ) {
+			global $myoptionalmodules_plugin;
+			$MOM_Exclude_level0Categories  = get_option( 'MOM_Exclude_Categories_level0Categories' ); 
+			$MOM_Exclude_level1Categories  = get_option( 'MOM_Exclude_Categories_level1Categories' ); 
+			$MOM_Exclude_level2Categories  = get_option( 'MOM_Exclude_Categories_level2Categories' ); 
+			$MOM_Exclude_level7Categories  = get_option( 'MOM_Exclude_Categories_level7Categories' ); 
+			$loggedOutCats                 = 0;
+			if( '' == $MOM_Exclude_level0Categories ) $MOM_Exclude_level0Categories = 0;
+			if( '' == $MOM_Exclude_level1Categories ) $MOM_Exclude_level1Categories = 0;
+			if( '' == $MOM_Exclude_level2Categories ) $MOM_Exclude_level2Categories = 0;
+			if( '' == $MOM_Exclude_level7Categories ) $MOM_Exclude_level7Categories = 0;
+			if( 0 == $myoptionalmodules_plugin->user_level ) $loggedOutCats = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+			if( 1 == $myoptionalmodules_plugin->user_level ) $loggedOutCats = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+			if( 2 == $myoptionalmodules_plugin->user_level ) $loggedOutCats = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+			if( 3 == $myoptionalmodules_plugin->user_level ) $loggedOutCats = $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+			if( 4 == $myoptionalmodules_plugin->user_level ) $loggedOutCats = $MOM_Exclude_level7Categories;
+			$c1 = explode( ',', $loggedOutCats );
+			foreach( $c1 as &$C1 ){ $C1 = $C1 . ','; }
+			$c_1 = rtrim( implode( $c1 ), ',' );
+			$c11 = explode( ',', str_replace( ' ', '', $c_1 ) );
+			$c11array = array( $c11 );
+			$loggedOutCats = array_filter( $c11 );
+		}
+		$category_ids = my_optional_modules_get_category_ids();
+		foreach( $category_ids as $cat_id ) {
+			if( $loggedOutCats ) {
+				if( in_array( $cat_id, $loggedOutCats ) )continue;
+			}
+			$cat  = get_category( $cat_id );
+			$link = get_category_link( $cat_id );
+			echo '<li><a href="' . $link . '" title="link to ' . $cat->name . '">' . $cat->name . '</a></li>';
+		}
+	}
+}
 if( 1 == get_option( 'mommaincontrol_recent_posts' ) ) {
 	function myoptionalmodules_WP_Widget_Recent_Posts() {
 		register_widget( 'myoptionalmodules_WP_Widget_Recent_Posts' );
@@ -2001,7 +2005,7 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 			$title         = get_the_title( $id );
 			$date          = get_the_date();
 			$comment_count = get_comments_number();
-			$since         = mom_timesince( $date );
+			$since         = my_optional_modules_timesince( $date );
 			$author        = get_the_author();
 			/**
 			 * Grab the category(s) associated with the post
@@ -3703,7 +3707,7 @@ if( current_user_can( 'edit_dashboard' ) ){
 				<input class="hidden" id="toggle_developers_submit" type="submit" name="toggle_developers_submit">
 			</form>
 			<p><strong>Theme Developers</strong> may use the following functions in your themes for additional functionality.</p>
-			<p><span><code>myoptionalmodules_excludecategories()</code> for a category list that hides categories based on your <strong>Exclude Taxonomies: Exclude Categories</strong> settings.<br /></span></p>
+			<p><span><code>my_optional_modules_exclude_categories()</code> for a category list that hides categories based on your <strong>Exclude Taxonomies: Exclude Categories</strong> settings.<br /></span></p>
 			<p><span><code>new mom_mediaEmbed( 'MEDIA URL' )</code> for media embeds with <a href="http://codex.wordpress.org/Embeds">oEmbed</a> fallback (supports imgur image links AND albums, youtube/youtu.be (with ?t parameter), soundcloud, vimeo, gfycat, funnyordie, and vine).</p>
 		</div>
 		<?php if( 

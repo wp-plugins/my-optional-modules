@@ -74,8 +74,10 @@ on [Github](https://github.com/onebillion/mom). )
 
 == Changelog ==
 
-= 6.0.2 =
-* Code clean-up
+= 6.0.3 =
+* Function moved
+* Fixed issue with moving scripts to footer also moving the stylesheets
 
 = 6.0.* =
+* Code clean-up
 * Settings page descriptions altered
