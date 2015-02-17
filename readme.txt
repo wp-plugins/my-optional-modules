@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 6.0.1
+Stable tag: 6.0.2
 
 An assortment of functions to enhance WordPress.
 
@@ -74,29 +74,8 @@ on [Github](https://github.com/onebillion/mom). )
 
 == Changelog ==
 
-= 6.0.1 =
-* Settings page descriptions altered
+= 6.0.2 =
+* Code clean-up
 
-= 5.8.* =
-* Create a list of site descriptions to display randomly
-* Random titles properly apply to bloginfo('name') element
-* is_singular() should have been is_single() on share icons conditional declaration (to keep from showing on pages when not enabled to do so)
-* MM Addition 2
-* Last minute changes; 5.8.7 upgrade
-* Horizontal gallery width changed to 100%, left/right margin set to auto (to better fit into parent div)
-* Admin screen now allows visibility toggling for individual module settings containers
-* Create a list of site titles to display randomly
-* Toggle force default post thumbnail container/image width to fill 100% of parent container
-* Remove padding on horizontal gallery items and !important declarations so they can be styled by the user properly
-* Optionally include share icons/links on pages as well as posts
-* Toggle a hidden comment form field to reject comments from visitors if filled out (antibot hidden field)
-* Some functions now only "exist" if their module is actually turned on via settings
-* Wording on Author Archive disable changed to better reflect what was actually happening
-* Onclick Font Awesome inserts at cursor
-* Onclick Font Awesome uses [font-fa] shortcode instead of pure html
-* Enable all 404s to redirect to the homepage
-* Admin screen CSS additions
-* Read more... setting wasn't very clear as to what the field was for
-* Exclue Taxonomies can now exclude Authors from anywhere on the blog (excluding single post views for obvious reasons)
-* FitText.js belonged to a module that hasn't been used for quite some time (FitText.js removed)
-* More information regarding how many of what is being deleted for Trash Removal
+= 6.0.* =
+* Settings page descriptions altered
