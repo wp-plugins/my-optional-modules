@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 6.0.3
+ * Version: 6.0.4
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -1459,7 +1459,12 @@ if( 1 == get_option( 'mommaincontrol_externalthumbs' ) ) {
 	 * featured image or not
 	 */
 	function uses_myoptionalmodules( $id ) {
-		$image_url = myoptionalmodules_get_thumbnail_src( $id );
+		if( myoptionalmodules_get_thumbnail_src( $id ) )
+			$image_url = myoptionalmodules_get_thumbnail_src( $id );
+		elseif( has_post_thumbnail( $id ) )
+			$image_url = wp_get_attachment_url( $id );
+		else
+			$image_url = '';
 		if ( $image_url === false )
 			return false;
 		else
