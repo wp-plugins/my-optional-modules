@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 6.0.5
+ * Version: 6.0.6
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -31,12 +31,14 @@
  * things sometimes slip by.  
  *
  */
+
+ 
+ 
+ 
+ 
 /**
  * 1.0 Functions 
- *   1.1 - Protocol relative URLs
- *           Strips http: (or) https: from a URL to properly utilize enqueued scripts and 
- *           stylesheets without mixing media on https:// enabled websites.
- *   1.2 - Get all category IDs
+ *   1.1 - Get all category IDs
  *           Gets all category IDs from the database for use elsewhere in the script.
  *   1.2 - Calculate time between timestamps
  *           Calculates time between dates and displays as '(time) ago'
@@ -45,18 +47,21 @@
  *           Twenty Fifteen's default read more... functionality as it interferes with our new
  *           functionality. 
  */
-if( !function_exists( 'my_optional_modules_protocol' ) ) {
-	function my_optional_modules_protocol( $url ) {
-			$url = esc_url( $url );
-			$url = str_replace( array( 'https:', 'http:' ), '', $url );
-			return $url;
-	}
-}
 if( !function_exists( 'my_optional_modules_get_category_ids' ) ) {
 	function my_optional_modules_get_category_ids() {
 		if ( ! $cat_ids = wp_cache_get( 'all_category_ids', 'category' ) ) {
-			$cat_ids = get_terms( 'category', array( 'fields' => 'ids', 'get' => 'all' ) );
-			wp_cache_add( 'all_category_ids', $cat_ids, 'category' );
+			$cat_ids = get_terms( 
+				'category', 
+				array( 
+					'fields' => 'ids', 
+					'get'    => 'all' 
+				) 
+			);
+			wp_cache_add( 
+				'all_category_ids', 
+				$cat_ids, 
+				'category' 
+			);
 		}
 		return $cat_ids;
 	}
@@ -65,14 +70,14 @@ if( !function_exists( 'my_optional_modules_timesince' ) ) {
 	function my_optional_modules_timesince( $date, $granularity=2 ) {
 		$retval     = '';
 		$date       = strtotime( $date );
-		$difference = time() - $date;
+		$difference = $_SERVER['REQUEST_TIME'] - $date;
 		$periods = array(
 			' decades' => 315360000, 
-			' years' => 31536000, 
-			' months' => 2628000, 
-			' weeks' => 604800,  
-			' days' => 86400, 
-			' hours' => 3600, 
+			' years'   => 31536000, 
+			' months'  => 2628000, 
+			' weeks'   => 604800,  
+			' days'    => 86400, 
+			' hours'   => 3600, 
 			' minutes' => 60, 
 			' seconds' => 1 
 		);
@@ -92,10 +97,13 @@ if( !function_exists( 'my_optional_modules_timesince' ) ) {
 	}
 }
 if( '' != get_option( 'mom_readmorecontent' ) ) {
-		function twentyfifteen_excerpt_more( $more ) {
-			// Destroy default readmore for Twenty Fifteen.
-		}
+	function twentyfifteen_excerpt_more( $more ) {}
 }
+
+
+
+
+
 /**
  * 2.0 Classes
  *   2.1 - Media Embed
@@ -104,19 +112,16 @@ if( '' != get_option( 'mom_readmorecontent' ) ) {
  */
 class mom_mediaEmbed {
 	var $url;
-
 	function mom_mediaEmbed ( $url ) {
-		
 		$url  = sanitize_text_field( esc_url ( $url ) );
 		//$chck = sanitize_text_field( strtolower( $url ) );
-
 		if( preg_match( '/\/\/(.*imgur\.com\/.*)/i', $url ) ) {
 			if( strpos( strtolower( $url ), 'imgur.com/a/' ) !== false ) {
 				$url = substr ( $url, 19 );
 				echo '<iframe class="imgur-album" width="100%" height="550" frameborder="0" src="//imgur.com/a/' . $url . '/embed"></iframe>'; 
 			} else {
 				$url = esc_url ( $url );
-				echo '<a href="' . $url . '"><img class="image" alt="image" src="' . $url . '"/></a>';
+				echo '<img class="image" alt="image" src="' . $url . '"/>';
 			}
 		}
 		elseif( preg_match( '/\/\/(.*youtube\.com\/.*)/i', $url ) ) {
@@ -226,6 +231,11 @@ class mom_mediaEmbed {
 		}
 	}
 }
+
+
+
+
+
 /**
  * 3.0 Plugin Functionality
  *   3.1 - Actions
@@ -235,6 +245,12 @@ class mom_mediaEmbed {
  *   3.5 - Extras (extras)
  *   3.6 - Misc. (theme extras)
  *   3.7 - Initiate our calls when appropriate
+ */
+
+/**
+ * 3.1 - Actions
+ * These actions are enabled REGARDLESS of settings.
+ * These are values that we need to grab and use throughout the plugin.
  */
 class myoptionalmodules {
 	
@@ -262,7 +278,7 @@ class myoptionalmodules {
 		if( 1 == get_option( 'mommaincontrol_lazyload' ) ) {
 			function mom_jquery(){
 				$lazyLoad          = '//cdn.jsdelivr.net/jquery.lazyload/1.9.0/jquery.lazyload.min.js';
-				$lazyLoadFunctions = my_optional_modules_protocol( plugins_url().'/my-optional-modules/includes/javascript/lazyload.js' );
+				$lazyLoadFunctions = str_replace( array( 'https:', 'http:' ), '', esc_url( plugins_url().'/my-optional-modules/includes/javascript/lazyload.js' ) );
 				wp_enqueue_script( 'lazyload', $lazyLoad, array( 'jquery' ) );
 				wp_enqueue_script( 'lazyloadFunctions', $lazyLoadFunctions, array( 'jquery' ) );
 			}
@@ -270,20 +286,20 @@ class myoptionalmodules {
 		}
 	}
 	function font_awesome() {
-		$font_awesome_css = my_optional_modules_protocol( plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' );
+		$font_awesome_css = str_replace( array( 'https:', 'http:' ), '', esc_url( plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' ) );
 		wp_register_style( 'font_awesome', $font_awesome_css );
 		wp_enqueue_style( 'font_awesome' );
 	}
 	function plugin_stylesheets() {
-		$myStyleFile = my_optional_modules_protocol( WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules.css' );
+		$myStyleFile = str_replace( array( 'https:', 'http:' ), '', esc_url( WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules.css' ) );
 		wp_register_style( 'my_optional_modules', $myStyleFile );
 		wp_enqueue_style( 'my_optional_modules' );
 	}
 	function stylesheets( $hook ){
 		if( 'settings_page_mommaincontrol' != $hook )
 		return;
-		$font_awesome_css = my_optional_modules_protocol( plugins_url() . '/' . plugin_basename( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' );
-		$mom_admin_css    = my_optional_modules_protocol( plugins_url() . '/' . plugin_basename( dirname ( __FILE__ ) ) . '/includes/adminstyle/css.css' );
+		$font_awesome_css = str_replace( array( 'https:', 'http:' ), '', esc_url( plugins_url() . '/' . plugin_basename( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' ) );
+		$mom_admin_css    = str_replace( array( 'https:', 'http:' ), '', esc_url( plugins_url() . '/' . plugin_basename( dirname ( __FILE__ ) ) . '/includes/adminstyle/css.css' ) );
 		wp_enqueue_style( 'mom_admin_css', $mom_admin_css );
 		wp_enqueue_style( 'font_awesome',  $font_awesome_css );
 	}
@@ -375,839 +391,981 @@ class myoptionalmodules {
 	}
 
 }
-class myoptionalmodules_enable {
-
-	function actions() {
-
-		if( 1 == get_option( 'mommaincontrol_comments' ) || 1 == get_option( 'mommaincontrol_dnsbl' ) && true === $myoptionalmodules_plugin->DNSBL ){
-			add_filter( 'comments_template', array( $this, 'comments' ) );
-			add_filter( 'comments_open', array( $this, 'comments_form'), 10, 2 );
-		}
-		if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ) {
-			remove_shortcode( 'gallery', 'gallery_shortcode' );
-			add_action( 'init', array( $this, 'horizontal_gallery_shortcode'), 99 );
-			add_filter( 'use_default_gallery_style', '__return_false' );
-		}
-		if( 1 == get_option( 'mommaincontrol_momshare' ) ) {
-			add_filter( 'the_content', array( $this, 'share' ) );
-		}
-		if( 1 == get_option( 'mommaincontrol_protectrss' ) ) {
-			add_filter( 'the_content_feed', array( $this, 'rss' ) );
-			add_filter( 'the_excerpt_rss', array( $this, 'rss' ) );
-		}
-		if( 1 == get_option( 'mommaincontrol_404' ) ) {
-			add_action( 'wp', array( $this, 'no_404s' ) );
-		}
-		if( 1 == get_option( 'mommaincontrol_fontawesome' ) ) {
-			add_action( 'wp_enqueue_scripts', array( $this, 'fontawesome' ) );
-			add_action ( 'init', array( $this, 'fontawesome_shortcode' ), 99 );
-			add_filter( 'the_content', 'do_shortcode', 'font_fa_shortcode' );
-		}
-	
-	}
-	function comments( $comment_template ) {
-		return dirname( __FILE__ ) . '/includes/templates/comments.php';
-	}
-	function comments_form( $open, $post_id ) {
-		$post = get_post( $post_id );
-		$open = false;
-		return $open;
-	}
-	function horizontal_gallery_shortcode() {
-		add_shortcode( 'gallery', array( $this, 'shortcode_output' ) );
-	}
-	function fontawesome() {
-		$font_awesome_css = plugins_url() . '/' . plugin_basename( dirname( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css';
-		$font_awesome_css = my_optional_modules_protocol( $font_awesome_css );
-		wp_enqueue_style( 'font_awesome',  $font_awesome_css );
-	}
-	function fontawesome_shortcode() {
-		add_shortcode( 'font-fa',  array( $this, 'font_fa_shortcode' ) );
-	}
-	function font_fa_shortcode( $atts, $content = null ) {
-		extract(
-			shortcode_atts( array (
-				"i" => ''
-			), $atts )
-		);
-		$icon = esc_attr( $i );
-		if( '' != $icon ) {
-			$iconfinal = $icon;
-		}
-		ob_start();
-		return '<i class="fa fa-' . $iconfinal . '"></i>';
-		return ob_get_clean();
-	}
-	function shortcode_output( $attr ) {
-		$post = get_post();
-		static $instance = 0;
-		$instance++;
-		if( has_shortcode( $post->post_content, 'gallery' ) ) {
-			if ( ! empty( $attr[ 'ids' ] ) ) {
-				// 'ids' is explicitly ordered, unless you specify otherwise.
-				if ( empty( $attr[ 'orderby' ] ) )
-				$attr[ 'orderby' ] = 'post__in';
-				$attr[ 'include' ] = $attr[ 'ids' ];
-			}
-			/**
-			 * Filter the default gallery shortcode output.
-			 *
-			 * If the filtered output isn't empty, it will be used instead of generating
-			 * the default gallery template.
-			 *
-			 * @since 2.5.0
-			 *
-			 * @see gallery_shortcode()
-			 *
-			 * @param string $output The gallery output. Default empty.
-			 * @param array  $attr   Attributes of the gallery shortcode.
-			 */
-			$output = apply_filters( 'post_gallery', '', $attr );
-			if ( $output != '' )
-				return $output;
-			// We're trusting author input, so let's at least make sure it looks like a valid orderby statement
-			if ( isset( $attr[ 'orderby' ] ) ) {
-				$attr[ 'orderby' ] = sanitize_sql_orderby( $attr[ 'orderby' ] );
-				if ( !$attr[ 'orderby' ] )
-					unset( $attr[ 'orderby' ] );
-			}
-			$html5 = current_theme_supports( 'html5', 'gallery' );
-			extract(shortcode_atts(array(
-				'order'      => 'ASC',
-				'orderby'    => 'menu_order ID',
-				'id'         => $post ? $post->ID : 0,
-				'itemtag'    => $html5 ? 'figure'     : 'dl',
-				'icontag'    => $html5 ? 'div'        : 'dt',
-				'captiontag' => $html5 ? 'figcaption' : 'dd',
-				'columns'    => 3,
-				'size'       => 'thumbnail',
-				'include'    => '',
-				'exclude'    => '',
-				'link'       => ''
-			), $attr, 'gallery' ) );
-			$id = intval( $id );
-			if ( 'RAND' == $order )
-				$orderby = 'none';
-			if ( !empty($include) ) {
-				$_attachments = get_posts( array( 'include' => $include, 'post_status' => null, 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
-				$attachments = array();
-				foreach ( $_attachments as $key => $val ) {
-					$attachments[$val->ID] = $_attachments[$key];
-				}
-			} elseif ( !empty($exclude) ) {
-				$attachments = get_children( array( 'post_parent' => $id, 'exclude' => $exclude, 'post_status' => null, 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
-			} else {
-				$attachments = get_children( array( 'post_parent' => $id, 'post_status' => null, 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
-			}
-			if ( empty($attachments) )
-				return '';
-			if ( is_feed() ) {
-				$output = "\n";
-				foreach ( $attachments as $att_id => $attachment )
-					$output .= wp_get_attachment_link($att_id, $size, true) . "\n";
-				return $output;
-			}
-			$itemtag = tag_escape($itemtag);
-			$captiontag = tag_escape($captiontag);
-			$icontag = tag_escape($icontag);
-			$valid_tags = wp_kses_allowed_html( 'post' );
-			if ( ! isset( $valid_tags[ $itemtag ] ) )
-				$itemtag = 'dl';
-			if ( ! isset( $valid_tags[ $captiontag ] ) )
-				$captiontag = 'dd';
-			if ( ! isset( $valid_tags[ $icontag ] ) )
-				$icontag = 'dt';
-			$columns = intval($columns);
-			$itemwidth = $columns > 0 ? floor(100/$columns) : 100;
-			$float = is_rtl() ? 'right' : 'left';
-			$selector = "gallery-{$instance}";
-			$gallery_style = $gallery_div = '';
-			/**
-			 * Filter whether to print default gallery styles.
-			 *
-			 * @since 3.1.0
-			 *
-			 * @param bool $print Whether to print default gallery styles.
-			 *                    Defaults to false if the theme supports HTML5 galleries.
-			 *                    Otherwise, defaults to true.
-			 */
-			if ( apply_filters( 'use_default_gallery_style', ! $html5 ) ) {
-				$gallery_style = "
-				<style type='text/css'>
-					#{$selector} {
-						margin: auto;
-					}
-					#{$selector} .gallery-item {
-						float: {$float};
-						margin-top: 10px;
-						text-align: center;
-						width: {$itemwidth}%;
-					}
-					#{$selector} img {
-						border: 2px solid #cfcfcf;
-					}
-					#{$selector} .gallery-caption {
-						margin-left: 0;
-					}
-					/* see gallery_shortcode() in wp-includes/media.php */
-				</style>\n\t\t";
-			}
-			$items = 0;
-			foreach ( $attachments as $id => $attachment ) {
-				$items++;
-			}
-			$div_length = ( $items * 150 ) . 'px';
-			$size_class = sanitize_html_class( $size );
-			$gallery_div = "<div id='$selector' class='horizontalGallery galleryid-{$id} gallery-columns-{$columns} gallery-size-{$size_class}'>
-				<div style=\"width:" . $div_length . "\" class=\"innerGallery\">";
-			/**
-			 * Filter the default gallery shortcode CSS styles.
-			 *
-			 * @since 2.5.0
-			 *
-			 * @param string $gallery_style Default gallery shortcode CSS styles.
-			 * @param string $gallery_div   Opening HTML div container for the gallery shortcode output.
-			 */
-			$output = apply_filters( 'gallery_style', $gallery_style . $gallery_div );
-			$i = 0;
-			foreach ( $attachments as $id => $attachment ) {
-				if ( ! empty( $link ) && 'file' === $link )
-					$image_output = wp_get_attachment_link( $id, $size, false, false );
-				elseif ( ! empty( $link ) && 'none' === $link )
-					$image_output = wp_get_attachment_image( $id, $size, false );
-				else
-					$image_output = wp_get_attachment_link( $id, $size, true, false );
-				$image_meta  = wp_get_attachment_metadata( $id );
-				$orientation = '';
-				if ( isset( $image_meta[ 'height' ], $image_meta[ 'width' ] ) )
-					$orientation = ( $image_meta[ 'height' ] > $image_meta[ 'width' ] ) ? 'portrait' : 'landscape';
-				$output .= "<{$itemtag} class='gallery-item'>";
-				$output .= "
-					<{$icontag} class='gallery-icon {$orientation}'>
-						$image_output
-					</{$icontag}>";
-				if ( $captiontag && trim($attachment->post_excerpt) ) {
-					$output .= "
-						<{$captiontag} class='wp-caption-text gallery-caption'>
-						" . wptexturize($attachment->post_excerpt) . "
-						</{$captiontag}>";
-				}
-				$output .= "</{$itemtag}>";
-				if ( ! $html5 && $columns > 0 && ++$i % $columns == 0 ) {
-					$output .= '<br style="clear: both" />';
-				}
-			}
-			$output .= "
-				</div></div>\n";
-			return $output;
-		}
-	}
-	function share( $content ) { 
-		global $wp, $post;
-		
-		$fontawesome = get_option( 'mommaincontrol_fontawesome' );
-		
-		$at_top   = get_option( 'MOM_enable_share_top' );
-		$on_pages = get_option( 'MOM_enable_share_pages' );
-		
-		if( !$at_top ) {
-			$at_top = 0;
-		} else {
-			$at_top = $at_top;
-		}
-		$id      = $post->ID;
-		$excerpt = $post->post_excerpt;
-		$excerpt = htmlentities( str_replace( ' ', '%20', $excerpt ) ); 
-		$title   = str_replace( ' ', '%20', get_the_title( $id ) );
-		$output = '<span class="mom_shareLinks">';
-		if( !$fontawesome ) {
-			$output .='Share via: ';	
-		}
-		if( 1 == get_option( 'MOM_enable_share_reddit' ) && 1 == $fontawesome ) {
-			$output .='<a class="reddit fa fa-reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '"></a>';
-		} elseif( 1 == get_option( 'MOM_enable_share_reddit' ) && !$fontawesome ) {
-			$output .='<a class="reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '">reddit</a>';
-		}
-		if( 1 == get_option( 'MOM_enable_share_google' ) && 1 == $fontawesome  ) {
-			$output .='<a class="google fa fa-google-plus" href="https://plus.google.com/share?url=' . get_the_permalink() . '"></a>';
-		} elseif( 1 == get_option( 'MOM_enable_share_google' ) && !$fontawesome  ) {
-			$output .='<a class="google" href="https://plus.google.com/share?url=' . get_the_permalink() . '">google+</a>';
-		}
-		if( 1 == get_option( 'MOM_enable_share_twitter' ) && 1 == $fontawesome  ) {
-			$output .='<a class="twitter fa fa-twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '"></a>';
-		} elseif( 1 == get_option( 'MOM_enable_share_twitter' ) && !$fontawesome  ) {
-			$output .='<a class="twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '">twitter</a>';
-		}
-		if( 1 == get_option( 'MOM_enable_share_facebook' ) && 1 == $fontawesome  ) {
-			$output .='<a class="facebook fa fa-facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '"></a>';
-		} elseif( 1 == get_option( 'MOM_enable_share_facebook' ) && !$fontawesome  ) {
-			$output .='<a class="facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '">facebook</a>';
-		}
-		if( 1 == get_option( 'MOM_enable_share_email' ) && 1 == $fontawesome  ) {
-			$output .='<a class="email fa fa-envelope" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]"></a>';
-		} elseif( 1 == get_option( 'MOM_enable_share_email' ) && !$fontawesome  ) {
-			$output .='<a class="email" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]">email</a>';
-		}
-		$output .='</span>';
-		if( is_single() && 1 == $at_top ) {
-			return $output . $content;
-		} elseif( is_single() && !$at_top ) {
-			return $content . $output;
-		} elseif( is_page() && $on_pages) {
-			if( is_page() && $at_top ) {
-				return $output . $content;
-			} elseif( is_page() && !$at_top ) {
-				return $content . $output;
-			}
-		} else {
-			return $content;
-		}
-
-	}
-	function rss($content){
-		global $post;
-		return $content . '<p><a href="' . esc_url( get_permalink( $post->ID ) ) . '">' . htmlentities( get_post_field( 'post_title', $post->ID ) ) . '</a> via <a href="' . esc_url( home_url( '/' ) ) . '">' . get_bloginfo( 'site_name' ) . '</a></p>';
-	}
-	function no_404s() {
-		if( is_404() ) {
-			header( 'location:' . esc_url( get_site_url() ) );
-			exit;
-		}
-	}
-
-}
-class myoptionalmodules_disable {
-
-	function actions() {
-		if( 1 == get_option( 'mommaincontrol_disablepingbacks' ) ) {
-			add_filter( 'xmlrpc_methods', array( $this, 'pingbacks' ) );
-		}
-		if( 1 == get_option( 'mommaincontrol_versionnumbers' ) ) {
-			remove_action('wp_head', 'wp_generator');
-			add_filter( 'style_loader_src', array( $this, 'versions' ), 0 );
-			add_filter( 'script_loader_src', array( $this, 'versions' ), 0 );
-		}
-		if( 1 == get_option( 'mommaincontrol_authorarchives' ) ) {
-			add_action( 'template_redirect', array( $this, 'author_archives' ) );
-		}
-		if( 1 == get_option( 'mommaincontrol_datearchives' ) ) {
-			add_action( 'wp', array( $this, 'date_archives' ) );
-			add_action( 'template_redirect', array( $this, 'date_archives' ) );
-		}
-
-	}
-	function versions( $src ) {
-		if( strpos( $src, 'ver=' . get_bloginfo( 'version' ) ) ) { 
-			$src = remove_query_arg( 'ver', $src );
-		}
-		return $src;
-	}
-	function author_archives(){
-		global $wp_query;
-		if( is_author() ) {
-			if( sizeof( get_users( 'who=authors' ) ) ===1 )
-			wp_redirect( get_bloginfo( 'url' ) );
-		}
-	}
-	function date_archives(){
-		global $wp_query;
-		if( is_date() || is_year() || is_month() || is_day() || is_time() || is_new_day() ) {
-			$homeURL = esc_url( home_url( '/' ) );
-			if( have_posts() ):the_post();
-			header( 'location:' . $homeURL );
-			exit;
-			endif;
-		}
-	}
-	function pingbacks( $methods ) {
-		unset( $methods['pingback.ping'] );
-		return $methods;
-	}
-	
-}
-class myoptionalmodules_comment_form {
-
-	function actions() {
-		if( 1 == get_option( 'MOM_themetakeover_ajaxifycomments' ) ) {
-			add_action ( 'comment_post', array( $this, 'ajax' ), 20, 2 );
-		}
-		if( 1 == get_option( 'MOM_themetakeover_hidden_field' ) ) {
-				add_filter( 'comment_form_default_fields', array( $this, 'spam_field' ) );
-				add_action( 'comment_form_logged_in_after', array( $this, 'spam_field' ) );
-				add_action( 'comment_form_after_fields', array( $this, 'spam_field' ) );
-				add_filter( 'preprocess_comment', array( $this, 'field_check' ) );
-		}		
-	}
-	function ajax( $comment_ID, $comment_status ) {
-		if( isset( $_SERVER[ 'HTTP_X_REQUESTED_WITH' ] ) && 'xmlhttprequest' == strtolower( $_SERVER[ 'HTTP_X_REQUESTED_WITH' ] ) ) {
-			$comment = get_comment($comment_ID);
-			$commentContent = getCommentHTML($comment);
-			wp_notify_postauthor( $comment_ID, $comment->comment_type );
-			die( $commentContent );
-		}
-	}
-	function spam_field( $fields ) {
-		$fields[ 'spam' ] = '<input id="mom_fill_me_out" name="mom_fill_me_out" type="hidden" value="" />';
-		return $fields;
-	}
-	function field_check( $commentdata ) {
-		if ( $_REQUEST['mom_fill_me_out'] )
-		wp_die( __( '<strong>Error</strong>: You seem to have filled something out that you shouldn\'t have.' ) );
-		return $commentdata;
-	}
-
-}
-class myoptionalmodules_extras {
-
-	/**
-	 * Extras
-	 *  - full width thumbnails
-	 *  - move javascript to the footer
-	 */
-	function actions() {
-
-		if( 1 == get_option( 'mommaincontrol_thumbnail' ) ) {
-			add_action( 'wp_head', array( $this, 'thumbnails' ) );
-		}
-		if( 1 == get_option( 'mommaincontrol_footerscripts' ) ) {
-			add_action( 'wp_enqueue_scripts', array( $this, 'remove' ) );
-			add_action( 'wp_footer', 'wp_print_scripts', 5 );
-			add_action( 'wp_footer', 'wp_enqueue_scripts', 5 );
-			add_action( 'wp_footer', 'wp_print_head_scripts', 5 );
-		}
-		if( 1 == get_option( 'mommaincontrol_momse' ) ) {
-			add_action( 'pre_get_posts', array( $this, 'exclude' ) );	
-		}
-
-	}
-	function remove() {
-		remove_action( 'wp_head', 'wp_print_scripts' );
-		remove_action( 'wp_head', 'wp_print_head_scripts', 9 );
-		remove_action( 'wp_head', 'wp_enqueue_scripts', 1 );
-	}
-	function thumbnails() {
-		$output = "<style> .post-thumbnail { width: 100%; } .post-thumbnail img { width: 100%; height: auto; } </style> \n";
-		echo $output;
-	}
-	function exclude( $query ) {
-		
-		global $myoptionalmodules_plugin;
-		$date_day = date( 'D' );
-		
-		/**
-		 * Set default variables
-		 * Set them (initially) to nothing
-		 * Then, grab the value from the database and reset them
-		 */
-		$c1	     = array( '0' );
-		$t1	     = array( '0' );
-		$rss_day = array( '0' );
-		$u1      = array( '0' );
-		$t11     = 0;
-		$c_1     = 0;
-		$u_1     = 0;
-		$MOM_Exclude_Categories_Front             = 0;
-		$MOM_Exclude_Categories_TagArchives       = 0;
-		$MOM_Exclude_Categories_SearchResults     = 0;
-		$MOM_Exclude_Categories_RSS               = 0;
-		$MOM_Exclude_Tags_Front                   = 0;
-		$MOM_Exclude_Tags_RSS                     = 0;
-		$MOM_Exclude_Tags_CategoryArchives        = 0;
-		$MOM_Exclude_Tags_SearchResults           = 0;
-		$MOM_Exclude_PostFormats_Front            = 0;
-		$MOM_Exclude_PostFormats_CategoryArchives = 0;
-		$MOM_Exclude_PostFormats_TagArchives      = 0;
-		$MOM_Exclude_PostFormats_SearchResults    = 0;
-		$MOM_Exclude_PostFormats_Visitor          = 0;
-		$MOM_Exclude_PostFormats_RSS              = 0;
-		$MOM_Exclude_Tags_Day                     = 0;
-		$MOM_Exclude_Cats_Day                     = 0;
-		$MOM_Exclude_Users_RSS                    = 0;
-		$MOM_Exclude_Users_Front                  = 0;
-		$MOM_Exclude_Users_TagArchives            = 0;
-		$MOM_Exclude_Users_CategoryArchives       = 0;
-		$MOM_Exclude_Users_SearchResults          = 0;
-		$MOM_Exclude_Users_Day                    = 0;
-		$MOM_Exclude_Categories_Front             = get_option( 'MOM_Exclude_Categories_Front' );
-		$MOM_Exclude_Categories_TagArchives       = get_option( 'MOM_Exclude_Categories_TagArchives' );
-		$MOM_Exclude_Categories_SearchResults     = get_option( 'MOM_Exclude_Categories_SearchResults' );
-		$MOM_Exclude_Categories_RSS               = get_option( 'MOM_Exclude_Categories_RSS' );
-		$MOM_Exclude_Tags_Front                   = get_option( 'MOM_Exclude_Tags_Front' );
-		$MOM_Exclude_Tags_RSS                     = get_option( 'MOM_Exclude_Tags_RSS' );
-		$MOM_Exclude_Tags_CategoryArchives        = get_option( 'MOM_Exclude_Tags_CategoryArchives' );
-		$MOM_Exclude_Tags_SearchResults           = get_option( 'MOM_Exclude_Tags_SearchResults' );
-		$MOM_Exclude_PostFormats_Front            = get_option( 'MOM_Exclude_PostFormats_Front' );
-		$MOM_Exclude_PostFormats_CategoryArchives = get_option( 'MOM_Exclude_PostFormats_CategoryArchives' );
-		$MOM_Exclude_PostFormats_TagArchives      = get_option( 'MOM_Exclude_PostFormats_TagArchives' );
-		$MOM_Exclude_PostFormats_SearchResults    = get_option( 'MOM_Exclude_PostFormats_SearchResults' );
-		$MOM_Exclude_PostFormats_Visitor          = get_option( 'MOM_Exclude_PostFormats_Visitor' );
-		$MOM_Exclude_PostFormats_RSS              = get_option( 'MOM_Exclude_PostFormats_RSS' );
-		$MOM_Exclude_Tags_Day                     = get_option( 'MOM_Exclude_Tags_Tags' . $date_day . '' );
-		$MOM_Exclude_Cats_Day                     = get_option( 'MOM_Exclude_Categories_Categories' . $date_day . '' );
-		$MOM_Exclude_Users_RSS                    = get_option( 'MOM_Exclude_Users_RSS' );
-		$MOM_Exclude_Users_Front                  = get_option( 'MOM_Exclude_Users_Front' );
-		$MOM_Exclude_Users_TagArchives            = get_option( 'MOM_Exclude_Users_TagArchives' );
-		$MOM_Exclude_Users_CategoryArchives       = get_option( 'MOM_Exclude_Users_CategoryArchives' );
-		$MOM_Exclude_Users_SearchResults          = get_option( 'MOM_Exclude_Users_SearchResults' );
-		$MOM_Exclude_Users_Day                    = get_option( 'MOM_Exclude_Users_Users' . $date_day . '' );
-		/**
-		 * Get the (current) days values
-		 * Only both with this if there's something to actually bother with
-		 */
-		$rss_day = explode( ',', $MOM_Exclude_Tags_Day );
-		if( is_array( $rss_day ) ) {
-			foreach( $rss_day as &$rss_day_1 ) {
-				$rss_day_1 = $rss_day_1 . ',';
-			}
-		}
-		$rss_day_1     = implode( $rss_day );
-		$rssday        = explode( ',', str_replace ( ' ', '', $rss_day_1 ) );
-		$rss_day_cat   = explode( ',', $MOM_Exclude_Cats_Day );
-		if( is_array( $rss_day_cat ) ) {
-			foreach( $rss_day_cat as &$rss_day_1_cat ) {
-				$rss_day_1_cat = $rss_day_1_cat . ',';
-			}
-		}
-		$rss_day_1_cat = implode( $rss_day_cat );
-		$rssday_cat    = explode( ',', str_replace ( ' ', '', $rss_day_1_cat ) );
-		$rss_day_user   = explode( ',', $MOM_Exclude_Users_Day );
-		if( is_array( $rss_day_user ) ) {
-			foreach( $rss_day_user as &$rss_day_1_user ) {
-				$rss_day_1_user = $rss_day_1_user . ',';
-			}
-		}
-		$rss_day_1_user = implode( $rss_day_user );
-		$rssday_user    = explode( ',', str_replace ( ' ', '', $rss_day_1_user ) );
-		/**
-		 * Grab values for a user who is not logged in
-		 */
-		if( !is_user_logged_in() ) {
-			$MOM_Exclude_level0Users       = 0;
-			$MOM_Exclude_level1Users       = 0;
-			$MOM_Exclude_level2Users       = 0;
-			$MOM_Exclude_level7Users       = 0;
-			$MOM_Exclude_level0Categories  = 0;
-			$MOM_Exclude_level1Categories  = 0;
-			$MOM_Exclude_level2Categories  = 0;
-			$MOM_Exclude_level7Categories  = 0;
-			$MOM_Exclude_level0Tags        = 0;
-			$MOM_Exclude_level1Tags        = 0;
-			$MOM_Exclude_level2Tags        = 0;
-			$MOM_Exclude_level7Tags        = 0;
-			$loggedOutUsers                = 0;
-			$loggedOutCats                 = 0;
-			$loggedOutTags                 = 0;
-			$MOM_Exclude_level0Users       = get_option( 'MOM_Exclude_Users_level0Users' ); 
-			$MOM_Exclude_level1Users       = get_option( 'MOM_Exclude_Users_level1Users' ); 
-			$MOM_Exclude_level2Users       = get_option( 'MOM_Exclude_Users_level2Users' ); 
-			$MOM_Exclude_level7Users       = get_option( 'MOM_Exclude_Users_level7Users' ); 
-			$MOM_Exclude_level0Categories  = get_option( 'MOM_Exclude_Categories_level0Categories' ); 
-			$MOM_Exclude_level1Categories  = get_option( 'MOM_Exclude_Categories_level1Categories' ); 
-			$MOM_Exclude_level2Categories  = get_option( 'MOM_Exclude_Categories_level2Categories' ); 
-			$MOM_Exclude_level7Categories  = get_option( 'MOM_Exclude_Categories_level7Categories' ); 
-			$MOM_Exclude_level0Tags        = get_option( 'MOM_Exclude_Tags_level0Tags' );
-			$MOM_Exclude_level1Tags        = get_option( 'MOM_Exclude_Tags_level1Tags' );
-			$MOM_Exclude_level2Tags        = get_option( 'MOM_Exclude_Tags_level2Tags' );
-			$MOM_Exclude_level7Tags        = get_option( 'MOM_Exclude_Tags_level7Tags' );
-			$loggedOutUsers = $MOM_Exclude_level0Users . ',' . $MOM_Exclude_level1Users . ',' . $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
-			$loggedOutCats  = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-			$loggedOutTags  = $MOM_Exclude_level0Tags . ',' . $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
-			$lu1 = array_unique( explode( ',', $loggedOutUsers ) );
-			foreach( $lu1 as &$LU1 ) { 
-				$LU1 = $LU1 . ','; 
-			}
-			$lu_1 = rtrim( implode( $lu1 ), ',' );				
-			$hideLoggedOutUsers = explode ( ',', str_replace ( ' ', '', $loggedOutUsers ) );
-			$lc1 = array_unique( explode( ',', $loggedOutCats ) );
-			foreach( $lc1 as &$LC1 ) { 
-				$LC1 = $LC1 . ','; 
-			}
-			$lc_1 = rtrim( implode( $lc1 ), ',' );
-			$hideLoggedOutCats = explode ( ',', str_replace ( ' ', '', $loggedOutCats ) );
-			$lt1 = array_unique ( explode ( ',', $loggedOutTags ) );
-			foreach( $lt1 as &$LT1 ) { 
-				$LT1 = $LT1 . ','; 
-			}
-			$lt11 = rtrim( implode( $lt1 ), ',' );
-			$hideLoggedOutTags = explode( ',', str_replace ( ' ', '', $lt11 ) );
-			$formats_to_hide   = $MOM_Exclude_PostFormats_Visitor;
-		} else {
-			$loggedOutUsers                = 0;
-			$loggedOutCats                 = 0;
-			$loggedOutTags                 = 0;
-			$MOM_Exclude_level0Users       = 0;
-			$MOM_Exclude_level1Users       = 0;
-			$MOM_Exclude_level2Users       = 0;
-			$MOM_Exclude_level7Users       = 0;				
-			$MOM_Exclude_level0Categories  = 0;
-			$MOM_Exclude_level1Categories  = 0;
-			$MOM_Exclude_level2Categories  = 0;
-			$MOM_Exclude_level7Categories  = 0;
-			$MOM_Exclude_level0Tags        = 0;
-			$MOM_Exclude_level1Tags        = 0;
-			$MOM_Exclude_level2Tags        = 0; 
-			$MOM_Exclude_level7Tags        = 0;
-			$MOM_Exclude_level0Users       = get_option( 'MOM_Exclude_Users_level0Users' ); 
-			$MOM_Exclude_level1Users       = get_option( 'MOM_Exclude_Users_level1Users' ); 
-			$MOM_Exclude_level2Users       = get_option( 'MOM_Exclude_Users_level2Users' ); 
-			$MOM_Exclude_level7Users       = get_option( 'MOM_Exclude_Users_level7Users' );				
-			$MOM_Exclude_level0Categories  = get_option( 'MOM_Exclude_Categories_level0Categories' ); 
-			$MOM_Exclude_level1Categories  = get_option( 'MOM_Exclude_Categories_level1Categories' ); 
-			$MOM_Exclude_level2Categories  = get_option( 'MOM_Exclude_Categories_level2Categories' ); 
-			$MOM_Exclude_level7Categories  = get_option( 'MOM_Exclude_Categories_level7Categories' ); 
-			$MOM_Exclude_level0Tags        = get_option( 'MOM_Exclude_Tags_level0Tags' ); 
-			$MOM_Exclude_level1Tags        = get_option( 'MOM_Exclude_Tags_level1Tags' ); 
-			$MOM_Exclude_level2Tags        = get_option( 'MOM_Exclude_Tags_level2Tags' ); 
-			$MOM_Exclude_level7Tags        = get_option( 'MOM_Exclude_Tags_level7Tags' );
-			if( 0 == $myoptionalmodules_plugin->user_level ) {
-				$loggedOutUsers = $MOM_Exclude_level0Users . ',' . $MOM_Exclude_level1Users . ',' . $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
-				$loggedOutCats  = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-				$loggedOutTags  = $MOM_Exclude_level0Tags . ',' . $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
-			}
-			if( 1 == $myoptionalmodules_plugin->user_level ) {
-				$loggedOutUsers = $MOM_Exclude_level1Users . ',' . $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
-				$loggedOutCats  = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-				$loggedOutTags  = $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
-			}
-			if( 2 == $myoptionalmodules_plugin->user_level ) {
-				$loggedOutUsers = $MOM_Exclude_level1Users . ',' . $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
-				$loggedOutCats  = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-				$loggedOutTags  = $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
-			}
-			if( 3 == $myoptionalmodules_plugin->user_level ) {
-				$loggedOutUsers = $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
-				$loggedOutCats  = $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-				$loggedOutTags  = $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
-			}
-			if( 4 == $myoptionalmodules_plugin->user_level ) {
-				$loggedOutUsers = $MOM_Exclude_level7Users;				
-				$loggedOutCats  = $MOM_Exclude_level7Categories;
-				$loggedOutTags  = $MOM_Exclude_level7Tags;
-			}
-			$hideLoggedOutUsers = explode ( ',', str_replace ( ' ', '', $u_1 ) );
-			$hideLoggedOutCats  = explode ( ',', str_replace ( ' ', '', $c_1 ) );
-			$hideLoggedOutTags  = explode ( ',', str_replace ( ' ', '', $t11 ) );
-			$lu1                = array_unique ( explode ( ',', $loggedOutUsers ) );
-			foreach( $lu1 as &$LU1 ) { $LU1 = $LU1 . ','; }
-			$lu_1               = rtrim ( implode ( $lu1 ), ',' );
-			$hideLoggedOutUsers = explode ( ',', str_replace ( ' ', '', $loggedOutUsers ) );
-			$lc1                = array_unique ( explode ( ',', $loggedOutCats ) );
-			foreach( $lc1 as &$LC1 ) { $LC1 = $LC1 . ','; }
-			$lc_1               = rtrim ( implode ( $lc1 ), ',' );
-			$hideLoggedOutCats  = explode ( ',', str_replace ( ' ', '', $loggedOutCats ) );
-			$lt1                = array_unique ( explode ( ',', $loggedOutTags ) );
-			foreach( $lt1 as &$LT1 ) { $LT1 = $LT1 .','; }
-			$lt11               = rtrim ( implode ( $lt1 ), ',' );
-			$hideLoggedOutTags  = explode ( ',', str_replace ( ' ', '', $lt11 ) );
-		}
-		/**
-		 * Piece all arrays together properly to be utilized for the loop
-		 */
-		if( $query->is_feed ) {
-			$u1              = explode( ',', $MOM_Exclude_Users_RSS );
-			$c1              = explode( ',', $MOM_Exclude_Categories_RSS );
-			$formats_to_hide = $MOM_Exclude_PostFormats_RSS;
-			$t1              = explode( ',', $MOM_Exclude_Tags_RSS );
-		}
-		if( $query->is_home ) {
-			$u1              = explode( ',', $MOM_Exclude_Users_Front );
-			$c1              = explode( ',', $MOM_Exclude_Categories_Front );
-			$formats_to_hide = $MOM_Exclude_PostFormats_Front;
-			$t1              = explode( ',', $MOM_Exclude_Tags_Front );
-		}
-		if( $query->is_category ) {
-			$u1              = explode( ',', $MOM_Exclude_Users_CategoryArchives );
-			$t1              = explode( ',', $MOM_Exclude_Tags_CategoryArchives );
-			$formats_to_hide = $MOM_Exclude_PostFormats_CategoryArchives;
-		}
-		if( $query->is_tag ) {
-			$u1              = explode( ',', $MOM_Exclude_Users_TagArchives );
-			$c1              = explode( ',', $MOM_Exclude_Categories_TagArchives );
-			$formats_to_hide = $MOM_Exclude_PostFormats_TagArchives;
-		}
-		if( $query->is_search ) {
-			$u1              = explode( ',', $MOM_Exclude_Users_SearchResults );
-			$c1              = explode( ',', $MOM_Exclude_Categories_SearchResults );
-			$formats_to_hide = $MOM_Exclude_PostFormats_SearchResults;
-			$t1              = explode( ',', $MOM_Exclude_Tags_SearchResults );
-
-		}
-		foreach( $c1 as &$C1 ) { 
-			$C1 = $C1 . ','; 
-		}
-		$c_1               = rtrim ( implode ( $c1 ), ',' );
-		$hideUserCats      = explode ( ',', str_replace ( ' ', '', $c_1 ) );
-		foreach( $u1 as &$U1 ) { 
-			$U1 = $U1 . ','; 
-		}
-		$u_1               = rtrim ( implode ( $u1 ), ',' );
-		$hideUserUsers      = explode ( ',', str_replace ( ' ', '', $u_1 ) );		
-		foreach( $t1 as &$T1 ) { 
-			$T1 = $T1 . ','; 
-		}
-		$t11                = rtrim( implode ( $t1 ), ',' );
-		$hideUserTags       = explode( ',', str_replace ( ' ', '', $t11 ) );
-		$users_to_hide      = array_merge( ( array ) $hideUserUsers, ( array ) $hideLoggedOutUsers, ( array ) $rssday_user );
-		$categories_to_hide = array_merge( ( array ) $hideUserCats, ( array ) $hideLoggedOutCats, ( array ) $rssday_cat );
-		$tags_to_hide       = array_merge( ( array ) $hideUserTags, ( array ) $hideLoggedOutTags, ( array ) $rssday );
-		$users_to_hide      = array_filter( array_unique ( $users_to_hide ) );
-		$categories_to_hide = array_filter( array_unique ( $categories_to_hide ) );
-		$tags_to_hide       = array_filter( array_unique ( $tags_to_hide ) );	
-		
-		/**
-		 * Loop alteration magic
-		 */
-		if( $query->is_main_query() ) {
-			if( $query->is_feed || $query->is_home || $query->is_search || $query->is_tag || $query->is_category ) {
-				$tax_query = array (
-					'ignore_sticky_posts' => true,
-					'post_type'           => 'any',
-					array (
-						'taxonomy'        => 'category',
-						'terms'           => $categories_to_hide,
-						'field'           => 'id',
-						'operator'        => 'NOT IN'
-					),
-					array (
-						'taxonomy'        => 'post_tag',
-						'terms'           => $tags_to_hide,
-						'field'           => 'id',
-						'operator'        => 'NOT IN'
-					),
-					array (
-						'taxonomy'        => 'post_format',
-						'field'           => 'slug',
-						'terms'           => array($formats_to_hide),
-						'operator'        => 'NOT IN'
-					)
-				);
-				$query->set( 'tax_query', $tax_query );
-				$query->set( 'author__not_in', $users_to_hide );
-			}
-			if( $query->is_single ) {
-				$query->set( 'author__not_in', $users_to_hide );
-			}
-		}
-	}
-
-}
-class myoptionalmodules_misc {
-
-	function actions() {
-		if( get_option( 'mompaf_post' ) && 'off' != get_option( 'mompaf_post' ) ) {
-			add_action ( 'wp', array( $this, 'front_post' ) );
-		}
-		if( '' != get_option( 'mom_previous_link_class' ) ) {
-			add_filter( 'previous_posts_link_attributes', array( $this, 'previous_link_class' ) );
-			add_filter( 'previous_post_link', array( $this, 'previous_link' ) );
-		}
-		if( '' != get_option( 'mom_next_link_class' ) ) {
-			add_filter( 'next_posts_link_attributes', array( $this, 'next_link_class' ) );
-			add_filter( 'next_post_link', array( $this, 'next_link' ) );
-		}
-		if( '' != get_option( 'mom_readmore_content' ) ) {
-			add_filter( 'the_content_more_link', array( $this, 'read_more' ) );
-			add_filter( 'excerpt_more', array( $this, 'read_more' ) );
-		}
-		if( '' != get_option( 'mom_random_get' ) ) {
-			add_action( 'wp', array( $this, 'random' ) );
-		}
-		if( '' != get_option( 'mommodule_random_title' ) ) {
-			add_filter( 'pre_option_blogname', array( $this, 'random_title' ), 10, 2 );
-		}
-		if( '' != get_option( 'mommodule_random_descriptions' ) ) {
-			add_filter( 'pre_option_blogdescription', array( $this, 'random_description' ), 10, 2 );	
-		}
-	}
-	function front_post() {
-		if( is_home() && 'off' != get_option( 'mompaf_post' ) ) {
-			if( is_numeric( get_option( 'mompaf_post' ) ) ) {
-				$mompaf_front = get_option( 'mompaf_post' );
-			} elseif( get_option( 'mompaf_post' ) == 'on' ) {
-				$mompaf_front = '';
-			}
-			if( have_posts() ) : the_post();
-			header( 'location:' . esc_url( get_permalink( $mompaf_front ) ) ); 
-			exit; 
-			endif;
-		}
-	}
-	function previous_link_class() {
-		return 'class="' . get_option( 'mom_previous_link_class' ) . '"';
-	}
-	function previous_link( $output ) {
-		$class = 'class="' . get_option( 'mom_previous_link_class' ) . '"';
-		return str_replace( '<a href=', '<a '.$class.' href=', $output);
-	}
-	function next_link_class() {
-		return 'class="' . get_option( 'mom_next_link_class' ) . '"';
-	}
-	function next_link( $output ) {
-		$class = 'class="' . get_option( 'mom_next_link_class' ) . '"';
-		return str_replace( '<a href=', '<a '.$class.' href=', $output);	
-	}
-	function read_more( $more ) {
-		if( '%blank%' == get_option( 'mom_readmore_content' ) ) {
-			return '';
-		} else {
-			return '<a href="' . get_permalink() . '">' . sanitize_text_field( get_option( 'mom_readmore_content' ) ) . '</a>';
-		}
-	}
-	function random() {
-
-		$random = sanitize_text_field( get_option( 'mom_random_get' ) );
-
-		if( isset( $_GET[ $random ] ) ) {
-			$args = array(
-				'numberposts' => 1,
-				'post_type'   => 'post',
-				'post_status' => 'publish',
-				'orderby'     => 'rand'
-			);
-			$get_all = get_posts( $args );
-			foreach ($get_all as $all_posts) {
-				$random_post=$all_posts->ID;
-			}
-			header( 'location:' . esc_url( get_permalink( $random_post ) ) ); exit;
-		}
-
-	}
-	function random_title( $title ) {
-		global $wp;
-		$titles = '';
-		if( '' != get_option( 'mommodule_random_title' ) ) {
-			$titles = sanitize_text_field( get_option( 'mommodule_random_title' ) );
-		}
-		$title = explode( '::', $titles );
-		return $title[ array_rand( $title ) ];
-	}
-	function random_description( $title ) {
-		global $wp;
-		$descriptions = '';
-		if( '' != get_option( 'mommodule_random_descriptions' ) ) {
-			$descriptions = sanitize_text_field( get_option( 'mommodule_random_descriptions' ) );
-		}
-		$descriptions = explode( '::', $descriptions );
-		return $descriptions[ array_rand( $descriptions ) ];
-	}
-
-}
-$myoptionalmodules_plugin       = new myoptionalmodules();
-$myoptionalmodules_enable       = new myoptionalmodules_enable();
-$myoptionalmodules_disable      = new myoptionalmodules_disable();
-$myoptionalmodules_comment_form = new myoptionalmodules_comment_form();
-$myoptionalmodules_extras       = new myoptionalmodules_extras();
-$myoptionalmodules_misc         = new myoptionalmodules_misc();
+$myoptionalmodules_plugin = new myoptionalmodules();
 $myoptionalmodules_plugin->actions();
 $myoptionalmodules_plugin->userlevel();
 if( 4 != $myoptionalmodules_plugin->user_level ) {
 	$myoptionalmodules_plugin->validate_ip_address();
 }
-$myoptionalmodules_enable->actions();
-$myoptionalmodules_disable->actions();
-$myoptionalmodules_comment_form->actions();
-$myoptionalmodules_extras->actions();
-$myoptionalmodules_misc->actions();
+
+/**
+ * 3.2 - Enable (modules)
+ * Horizontal galleries, Font Awesome, Share icons/links, RSS linkbacks, 404 redirects to home
+ *  - Check if ANY of the options for these things are switched before further deciding which functionality
+ *    to enable. If none of these options are switched on via settings, then skip this class altogether.
+ */
+if( 
+	1 == get_option( 'mommaincontrol_comments' ) || 
+	1 == get_option( 'mommaincontrol_dnsbl' ) && true === $myoptionalmodules_plugin->DNSBL || 
+	1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) || 
+	1 == get_option( 'mommaincontrol_momshare' ) || 
+	1 == get_option( 'mommaincontrol_protectrss' ) || 
+	1 == get_option( 'mommaincontrol_404' ) || 
+	1 == get_option( 'mommaincontrol_fontawesome' )
+) {
+
+	class myoptionalmodules_enable {
+		function actions() {
+			global $myoptionalmodules_plugin;
+			if( 1 == get_option( 'mommaincontrol_comments' ) || 1 == get_option( 'mommaincontrol_dnsbl' ) && true === $myoptionalmodules_plugin->DNSBL ){
+				add_filter( 'comments_template', array( $this, 'comments' ) );
+				add_filter( 'comments_open', array( $this, 'comments_form'), 10, 2 );
+			}
+			if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ) {
+				remove_shortcode( 'gallery', 'gallery_shortcode' );
+				add_action( 'init', array( $this, 'horizontal_gallery_shortcode'), 99 );
+				add_filter( 'use_default_gallery_style', '__return_false' );
+			}
+			if( 1 == get_option( 'mommaincontrol_momshare' ) ) {
+				add_filter( 'the_content', array( $this, 'share' ) );
+			}
+			if( 1 == get_option( 'mommaincontrol_protectrss' ) ) {
+				add_filter( 'the_content_feed', array( $this, 'rss' ) );
+				add_filter( 'the_excerpt_rss', array( $this, 'rss' ) );
+			}
+			if( 1 == get_option( 'mommaincontrol_404' ) ) {
+				add_action( 'wp', array( $this, 'no_404s' ) );
+			}
+			if( 1 == get_option( 'mommaincontrol_fontawesome' ) ) {
+				add_action( 'wp_enqueue_scripts', array( $this, 'fontawesome' ) );
+				add_action ( 'init', array( $this, 'fontawesome_shortcode' ), 99 );
+				add_filter( 'the_content', 'do_shortcode', 'font_fa_shortcode' );
+			}
+		
+		}
+		function comments( $comment_template ) {
+			return dirname( __FILE__ ) . '/includes/templates/comments.php';
+		}
+		function comments_form( $open, $post_id ) {
+			$post = get_post( $post_id );
+			$open = false;
+			return $open;
+		}
+		function horizontal_gallery_shortcode() {
+			add_shortcode( 'gallery', array( $this, 'shortcode_output' ) );
+		}
+		function fontawesome() {
+			$font_awesome_css = plugins_url() . '/' . plugin_basename( dirname( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css';
+			$font_awesome_css = str_replace( array( 'https:', 'http:' ), '', esc_url( $font_awesome_css ) );
+			wp_enqueue_style( 'font_awesome',  $font_awesome_css );
+		}
+		function fontawesome_shortcode() {
+			add_shortcode( 'font-fa',  array( $this, 'font_fa_shortcode' ) );
+		}
+		function font_fa_shortcode( $atts, $content = null ) {
+			extract(
+				shortcode_atts( array (
+					"i" => ''
+				), $atts )
+			);
+			$icon = esc_attr( $i );
+			if( '' != $icon ) {
+				$iconfinal = $icon;
+			}
+			ob_start();
+			return '<i class="fa fa-' . $iconfinal . '"></i>';
+			return ob_get_clean();
+		}
+		function shortcode_output( $attr ) {
+			$post = get_post();
+			static $instance = 0;
+			++$instance;
+			if( has_shortcode( $post->post_content, 'gallery' ) ) {
+				if ( ! empty( $attr[ 'ids' ] ) ) {
+					// 'ids' is explicitly ordered, unless you specify otherwise.
+					if ( empty( $attr[ 'orderby' ] ) )
+					$attr[ 'orderby' ] = 'post__in';
+					$attr[ 'include' ] = $attr[ 'ids' ];
+				}
+				/**
+				 * Filter the default gallery shortcode output.
+				 *
+				 * If the filtered output isn't empty, it will be used instead of generating
+				 * the default gallery template.
+				 *
+				 * @since 2.5.0
+				 *
+				 * @see gallery_shortcode()
+				 *
+				 * @param string $output The gallery output. Default empty.
+				 * @param array  $attr   Attributes of the gallery shortcode.
+				 */
+				$output = apply_filters( 'post_gallery', '', $attr );
+				if ( $output != '' )
+					return $output;
+				// We're trusting author input, so let's at least make sure it looks like a valid orderby statement
+				if ( isset( $attr[ 'orderby' ] ) ) {
+					$attr[ 'orderby' ] = sanitize_sql_orderby( $attr[ 'orderby' ] );
+					if ( !$attr[ 'orderby' ] )
+						unset( $attr[ 'orderby' ] );
+				}
+				$html5 = current_theme_supports( 'html5', 'gallery' );
+				extract(shortcode_atts(array(
+					'order'      => 'ASC',
+					'orderby'    => 'menu_order ID',
+					'id'         => $post ? $post->ID : 0,
+					'itemtag'    => $html5 ? 'figure'     : 'dl',
+					'icontag'    => $html5 ? 'div'        : 'dt',
+					'captiontag' => $html5 ? 'figcaption' : 'dd',
+					'columns'    => 3,
+					'size'       => 'thumbnail',
+					'include'    => '',
+					'exclude'    => '',
+					'link'       => ''
+				), $attr, 'gallery' ) );
+				$id = intval( $id );
+				if ( 'RAND' == $order )
+					$orderby = 'none';
+				if ( !empty($include) ) {
+					$_attachments = get_posts( array( 'include' => $include, 'post_status' => null, 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
+					$attachments = array();
+					foreach ( $_attachments as $key => $val ) {
+						$attachments[$val->ID] = $_attachments[$key];
+					}
+				} elseif ( !empty($exclude) ) {
+					$attachments = get_children( array( 'post_parent' => $id, 'exclude' => $exclude, 'post_status' => null, 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
+				} else {
+					$attachments = get_children( array( 'post_parent' => $id, 'post_status' => null, 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => $order, 'orderby' => $orderby) );
+				}
+				if ( empty($attachments) )
+					return '';
+				if ( is_feed() ) {
+					$output = "\n";
+					foreach ( $attachments as $att_id => $attachment )
+						$output .= wp_get_attachment_link($att_id, $size, true) . "\n";
+					return $output;
+				}
+				$itemtag = tag_escape($itemtag);
+				$captiontag = tag_escape($captiontag);
+				$icontag = tag_escape($icontag);
+				$valid_tags = wp_kses_allowed_html( 'post' );
+				if ( ! isset( $valid_tags[ $itemtag ] ) )
+					$itemtag = 'dl';
+				if ( ! isset( $valid_tags[ $captiontag ] ) )
+					$captiontag = 'dd';
+				if ( ! isset( $valid_tags[ $icontag ] ) )
+					$icontag = 'dt';
+				$columns = intval($columns);
+				$itemwidth = $columns > 0 ? floor(100/$columns) : 100;
+				$float = is_rtl() ? 'right' : 'left';
+				$selector = "gallery-{$instance}";
+				$gallery_style = $gallery_div = '';
+				/**
+				 * Filter whether to print default gallery styles.
+				 *
+				 * @since 3.1.0
+				 *
+				 * @param bool $print Whether to print default gallery styles.
+				 *                    Defaults to false if the theme supports HTML5 galleries.
+				 *                    Otherwise, defaults to true.
+				 */
+				if ( apply_filters( 'use_default_gallery_style', ! $html5 ) ) {
+					$gallery_style = "
+					<style type='text/css'>
+						#{$selector} {
+							margin: auto;
+						}
+						#{$selector} .gallery-item {
+							float: {$float};
+							margin-top: 10px;
+							text-align: center;
+							width: {$itemwidth}%;
+						}
+						#{$selector} img {
+							border: 2px solid #cfcfcf;
+						}
+						#{$selector} .gallery-caption {
+							margin-left: 0;
+						}
+						/* see gallery_shortcode() in wp-includes/media.php */
+					</style>\n\t\t";
+				}
+				$items = 0;
+				foreach ( $attachments as $id => $attachment ) {
+					++$items;
+				}
+				$div_length = ( $items * 150 ) . 'px';
+				$size_class = sanitize_html_class( $size );
+				$gallery_div = "<div id='$selector' class='horizontalGallery galleryid-{$id} gallery-columns-{$columns} gallery-size-{$size_class}'>
+					<div style=\"width:" . $div_length . "\" class=\"innerGallery\">";
+				/**
+				 * Filter the default gallery shortcode CSS styles.
+				 *
+				 * @since 2.5.0
+				 *
+				 * @param string $gallery_style Default gallery shortcode CSS styles.
+				 * @param string $gallery_div   Opening HTML div container for the gallery shortcode output.
+				 */
+				$output = apply_filters( 'gallery_style', $gallery_style . $gallery_div );
+				$i = 0;
+				foreach ( $attachments as $id => $attachment ) {
+					if ( ! empty( $link ) && 'file' === $link )
+						$image_output = wp_get_attachment_link( $id, $size, false, false );
+					elseif ( ! empty( $link ) && 'none' === $link )
+						$image_output = wp_get_attachment_image( $id, $size, false );
+					else
+						$image_output = wp_get_attachment_link( $id, $size, true, false );
+					$image_meta  = wp_get_attachment_metadata( $id );
+					$orientation = '';
+					if ( isset( $image_meta[ 'height' ], $image_meta[ 'width' ] ) )
+						$orientation = ( $image_meta[ 'height' ] > $image_meta[ 'width' ] ) ? 'portrait' : 'landscape';
+					$output .= "<{$itemtag} class='gallery-item'>";
+					$output .= "
+						<{$icontag} class='gallery-icon {$orientation}'>
+							$image_output
+						</{$icontag}>";
+					if ( $captiontag && trim($attachment->post_excerpt) ) {
+						$output .= "
+							<{$captiontag} class='wp-caption-text gallery-caption'>
+							" . wptexturize($attachment->post_excerpt) . "
+							</{$captiontag}>";
+					}
+					$output .= "</{$itemtag}>";
+					if ( ! $html5 && $columns > 0 && ++$i % $columns == 0 ) {
+						$output .= '<br style="clear: both" />';
+					}
+				}
+				$output .= "
+					</div></div>\n";
+				return $output;
+			}
+		}
+		function share( $content ) { 
+			global $wp, $post;
+			
+			$fontawesome = get_option( 'mommaincontrol_fontawesome' );
+			
+			$at_top   = get_option( 'MOM_enable_share_top' );
+			$on_pages = get_option( 'MOM_enable_share_pages' );
+			
+			if( !$at_top ) {
+				$at_top = 0;
+			} else {
+				$at_top = $at_top;
+			}
+			$id      = $post->ID;
+			$excerpt = $post->post_excerpt;
+			$excerpt = htmlentities( str_replace( ' ', '%20', $excerpt ) ); 
+			$title   = str_replace( ' ', '%20', get_the_title( $id ) );
+			$output = '<span class="mom_shareLinks">';
+			if( !$fontawesome ) {
+				$output .='Share via: ';	
+			}
+			if( 1 == get_option( 'MOM_enable_share_reddit' ) && 1 == $fontawesome ) {
+				$output .='<a class="reddit fa fa-reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '"></a>';
+			} elseif( 1 == get_option( 'MOM_enable_share_reddit' ) && !$fontawesome ) {
+				$output .='<a class="reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '">reddit</a>';
+			}
+			if( 1 == get_option( 'MOM_enable_share_google' ) && 1 == $fontawesome  ) {
+				$output .='<a class="google fa fa-google-plus" href="https://plus.google.com/share?url=' . get_the_permalink() . '"></a>';
+			} elseif( 1 == get_option( 'MOM_enable_share_google' ) && !$fontawesome  ) {
+				$output .='<a class="google" href="https://plus.google.com/share?url=' . get_the_permalink() . '">google+</a>';
+			}
+			if( 1 == get_option( 'MOM_enable_share_twitter' ) && 1 == $fontawesome  ) {
+				$output .='<a class="twitter fa fa-twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '"></a>';
+			} elseif( 1 == get_option( 'MOM_enable_share_twitter' ) && !$fontawesome  ) {
+				$output .='<a class="twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '">twitter</a>';
+			}
+			if( 1 == get_option( 'MOM_enable_share_facebook' ) && 1 == $fontawesome  ) {
+				$output .='<a class="facebook fa fa-facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '"></a>';
+			} elseif( 1 == get_option( 'MOM_enable_share_facebook' ) && !$fontawesome  ) {
+				$output .='<a class="facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '">facebook</a>';
+			}
+			if( 1 == get_option( 'MOM_enable_share_email' ) && 1 == $fontawesome  ) {
+				$output .='<a class="email fa fa-envelope" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]"></a>';
+			} elseif( 1 == get_option( 'MOM_enable_share_email' ) && !$fontawesome  ) {
+				$output .='<a class="email" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]">email</a>';
+			}
+			$output .='</span>';
+			if( is_single() && 1 == $at_top ) {
+				return $output . $content;
+			} elseif( is_single() && !$at_top ) {
+				return $content . $output;
+			} elseif( is_page() && $on_pages) {
+				if( is_page() && $at_top ) {
+					return $output . $content;
+				} elseif( is_page() && !$at_top ) {
+					return $content . $output;
+				}
+			} else {
+				return $content;
+			}
+
+		}
+		function rss($content){
+			global $post;
+			return $content . '<p><a href="' . esc_url( get_permalink( $post->ID ) ) . '">' . htmlentities( get_post_field( 'post_title', $post->ID ) ) . '</a> via <a href="' . esc_url( home_url( '/' ) ) . '">' . get_bloginfo( 'site_name' ) . '</a></p>';
+		}
+		function no_404s() {
+			if( is_404() ) {
+				header( 'location:' . esc_url( get_site_url() ) );
+				exit;
+			}
+		}
+
+	}
+	$myoptionalmodules_enable = new myoptionalmodules_enable();
+	$myoptionalmodules_enable->actions();
+
+}
+
+/**
+ * 3.3 - Disable (modules)
+ * Disable: comments, version number, pingbacks, author archives, date archives
+ *  - Check if ANY of the options for these things are switched before further deciding which functionality
+ *    to enable. If none of these options are switched on via settings, then skip this class altogether.
+ */  
+if(
+	1 == get_option( 'mommaincontrol_disablepingbacks' ) || 
+	1 == get_option( 'mommaincontrol_versionnumbers' ) || 
+	1 == get_option( 'mommaincontrol_authorarchives' ) || 
+	1 == get_option( 'mommaincontrol_datearchives' )
+) {
+
+	class myoptionalmodules_disable {
+
+		function actions() {
+			if( 1 == get_option( 'mommaincontrol_disablepingbacks' ) ) {
+				add_filter( 'xmlrpc_methods', array( $this, 'pingbacks' ) );
+			}
+			if( 1 == get_option( 'mommaincontrol_versionnumbers' ) ) {
+				remove_action('wp_head', 'wp_generator');
+				add_filter( 'style_loader_src', array( $this, 'versions' ), 0 );
+				add_filter( 'script_loader_src', array( $this, 'versions' ), 0 );
+			}
+			if( 1 == get_option( 'mommaincontrol_authorarchives' ) ) {
+				add_action( 'template_redirect', array( $this, 'author_archives' ) );
+			}
+			if( 1 == get_option( 'mommaincontrol_datearchives' ) ) {
+				add_action( 'wp', array( $this, 'date_archives' ) );
+				add_action( 'template_redirect', array( $this, 'date_archives' ) );
+			}
+
+		}
+		function versions( $src ) {
+			if( strpos( $src, 'ver=' . get_bloginfo( 'version' ) ) ) { 
+				$src = remove_query_arg( 'ver', $src );
+			}
+			return $src;
+		}
+		function author_archives(){
+			global $wp_query;
+			if( is_author() ) {
+				if( sizeof( get_users( 'who=authors' ) ) ===1 )
+				wp_redirect( get_bloginfo( 'url' ) );
+			}
+		}
+		function date_archives(){
+			global $wp_query;
+			if( is_date() || is_year() || is_month() || is_day() || is_time() || is_new_day() ) {
+				$homeURL = esc_url( home_url( '/' ) );
+				if( have_posts() ):the_post();
+				header( 'location:' . $homeURL );
+				exit;
+				endif;
+			}
+		}
+		function pingbacks( $methods ) {
+			unset( $methods['pingback.ping'] );
+			return $methods;
+		}
+		
+	}
+	
+	$myoptionalmodules_disable = new myoptionalmodules_disable();
+	$myoptionalmodules_disable->actions();
+
+}
+
+/**
+ * 3.4 - Comment form (extras)
+ * DNSBL blocklist, extra field (spam trap), Ajax
+ *  - Check if ANY of the options for these things are switched before further deciding which functionality
+ *    to enable. If none of these options are switched on via settings, then skip this class altogether.
+ */
+if(
+	1 == get_option( 'MOM_themetakeover_ajaxifycomments' ) || 
+	1 == get_option( 'MOM_themetakeover_hidden_field' )
+){
+	class myoptionalmodules_comment_form {
+
+		function actions() {
+			if( 1 == get_option( 'MOM_themetakeover_ajaxifycomments' ) ) {
+				add_action ( 'comment_post', array( $this, 'ajax' ), 20, 2 );
+			}
+			if( 1 == get_option( 'MOM_themetakeover_hidden_field' ) ) {
+					add_filter( 'comment_form_default_fields', array( $this, 'spam_field' ) );
+					add_action( 'comment_form_logged_in_after', array( $this, 'spam_field' ) );
+					add_action( 'comment_form_after_fields', array( $this, 'spam_field' ) );
+					add_filter( 'preprocess_comment', array( $this, 'field_check' ) );
+			}		
+		}
+		function ajax( $comment_ID, $comment_status ) {
+			if( isset( $_SERVER[ 'HTTP_X_REQUESTED_WITH' ] ) && 'xmlhttprequest' == strtolower( $_SERVER[ 'HTTP_X_REQUESTED_WITH' ] ) ) {
+				$comment = get_comment($comment_ID);
+				$commentContent = getCommentHTML($comment);
+				wp_notify_postauthor( $comment_ID, $comment->comment_type );
+				die( $commentContent );
+			}
+		}
+		function spam_field( $fields ) {
+			$fields[ 'spam' ] = '<input id="mom_fill_me_out" name="mom_fill_me_out" type="hidden" value="" />';
+			return $fields;
+		}
+		function field_check( $commentdata ) {
+			if ( $_REQUEST['mom_fill_me_out'] )
+			wp_die( __( '<strong>Error</strong>: You seem to have filled something out that you shouldn\'t have.' ) );
+			return $commentdata;
+		}
+
+	}
+
+	$myoptionalmodules_comment_form = new myoptionalmodules_comment_form();
+	$myoptionalmodules_comment_form->actions();
+
+}
+
+/**
+ * 3.5 - Extras (extras)
+ * Full-width thumbnails, javascript to footer, lazy loading, exclusion functionality
+ *  - Check if ANY of the options for these things are switched before further deciding which functionality
+ *    to enable. If none of these options are switched on via settings, then skip this class altogether.
+ */ 
+if( 
+	1 == get_option( 'mommaincontrol_thumbnail' ) || 
+	1 == get_option( 'mommaincontrol_footerscripts' ) || 
+	1 == get_option( 'mommaincontrol_momse' )
+) {
+
+	class myoptionalmodules_extras {
+
+		/**
+		 * Extras
+		 *  - full width thumbnails
+		 *  - move javascript to the footer
+		 */
+		function actions() {
+
+			if( 1 == get_option( 'mommaincontrol_thumbnail' ) ) {
+				add_action( 'wp_head', array( $this, 'thumbnails' ) );
+			}
+			if( 1 == get_option( 'mommaincontrol_footerscripts' ) ) {
+				add_action( 'wp_enqueue_scripts', array( $this, 'remove' ) );
+				add_action( 'wp_footer', 'wp_print_scripts', 5 );
+				add_action( 'wp_footer', 'wp_enqueue_scripts', 5 );
+				add_action( 'wp_footer', 'wp_print_head_scripts', 5 );
+			}
+			if( 1 == get_option( 'mommaincontrol_momse' ) ) {
+				add_action( 'pre_get_posts', array( $this, 'exclude' ) );	
+			}
+
+		}
+		function remove() {
+			remove_action( 'wp_head', 'wp_print_scripts' );
+			remove_action( 'wp_head', 'wp_print_head_scripts', 9 );
+			remove_action( 'wp_head', 'wp_enqueue_scripts', 1 );
+		}
+		function thumbnails() {
+			$output = "<style> .post-thumbnail { width: 100%; } .post-thumbnail img { width: 100%; height: auto; } </style> \n";
+			echo $output;
+		}
+		function exclude( $query ) {
+			
+			global $myoptionalmodules_plugin;
+			$date_day = date( 'D' );
+			
+			/**
+			 * Set default variables
+			 * Set them (initially) to nothing
+			 * Then, grab the value from the database and reset them
+			 */
+			$c1	     = array( '0' );
+			$t1	     = array( '0' );
+			$rss_day = array( '0' );
+			$u1      = array( '0' );
+			$t11     = 0;
+			$c_1     = 0;
+			$u_1     = 0;
+			$MOM_Exclude_Categories_Front             = 0;
+			$MOM_Exclude_Categories_TagArchives       = 0;
+			$MOM_Exclude_Categories_SearchResults     = 0;
+			$MOM_Exclude_Categories_RSS               = 0;
+			$MOM_Exclude_Tags_Front                   = 0;
+			$MOM_Exclude_Tags_RSS                     = 0;
+			$MOM_Exclude_Tags_CategoryArchives        = 0;
+			$MOM_Exclude_Tags_SearchResults           = 0;
+			$MOM_Exclude_PostFormats_Front            = 0;
+			$MOM_Exclude_PostFormats_CategoryArchives = 0;
+			$MOM_Exclude_PostFormats_TagArchives      = 0;
+			$MOM_Exclude_PostFormats_SearchResults    = 0;
+			$MOM_Exclude_PostFormats_Visitor          = 0;
+			$MOM_Exclude_PostFormats_RSS              = 0;
+			$MOM_Exclude_Tags_Day                     = 0;
+			$MOM_Exclude_Cats_Day                     = 0;
+			$MOM_Exclude_Users_RSS                    = 0;
+			$MOM_Exclude_Users_Front                  = 0;
+			$MOM_Exclude_Users_TagArchives            = 0;
+			$MOM_Exclude_Users_CategoryArchives       = 0;
+			$MOM_Exclude_Users_SearchResults          = 0;
+			$MOM_Exclude_Users_Day                    = 0;
+			$MOM_Exclude_Categories_Front             = get_option( 'MOM_Exclude_Categories_Front' );
+			$MOM_Exclude_Categories_TagArchives       = get_option( 'MOM_Exclude_Categories_TagArchives' );
+			$MOM_Exclude_Categories_SearchResults     = get_option( 'MOM_Exclude_Categories_SearchResults' );
+			$MOM_Exclude_Categories_RSS               = get_option( 'MOM_Exclude_Categories_RSS' );
+			$MOM_Exclude_Tags_Front                   = get_option( 'MOM_Exclude_Tags_Front' );
+			$MOM_Exclude_Tags_RSS                     = get_option( 'MOM_Exclude_Tags_RSS' );
+			$MOM_Exclude_Tags_CategoryArchives        = get_option( 'MOM_Exclude_Tags_CategoryArchives' );
+			$MOM_Exclude_Tags_SearchResults           = get_option( 'MOM_Exclude_Tags_SearchResults' );
+			$MOM_Exclude_PostFormats_Front            = get_option( 'MOM_Exclude_PostFormats_Front' );
+			$MOM_Exclude_PostFormats_CategoryArchives = get_option( 'MOM_Exclude_PostFormats_CategoryArchives' );
+			$MOM_Exclude_PostFormats_TagArchives      = get_option( 'MOM_Exclude_PostFormats_TagArchives' );
+			$MOM_Exclude_PostFormats_SearchResults    = get_option( 'MOM_Exclude_PostFormats_SearchResults' );
+			$MOM_Exclude_PostFormats_Visitor          = get_option( 'MOM_Exclude_PostFormats_Visitor' );
+			$MOM_Exclude_PostFormats_RSS              = get_option( 'MOM_Exclude_PostFormats_RSS' );
+			$MOM_Exclude_Tags_Day                     = get_option( 'MOM_Exclude_Tags_Tags' . $date_day . '' );
+			$MOM_Exclude_Cats_Day                     = get_option( 'MOM_Exclude_Categories_Categories' . $date_day . '' );
+			$MOM_Exclude_Users_RSS                    = get_option( 'MOM_Exclude_Users_RSS' );
+			$MOM_Exclude_Users_Front                  = get_option( 'MOM_Exclude_Users_Front' );
+			$MOM_Exclude_Users_TagArchives            = get_option( 'MOM_Exclude_Users_TagArchives' );
+			$MOM_Exclude_Users_CategoryArchives       = get_option( 'MOM_Exclude_Users_CategoryArchives' );
+			$MOM_Exclude_Users_SearchResults          = get_option( 'MOM_Exclude_Users_SearchResults' );
+			$MOM_Exclude_Users_Day                    = get_option( 'MOM_Exclude_Users_Users' . $date_day . '' );
+			/**
+			 * Get the (current) days values
+			 * Only both with this if there's something to actually bother with
+			 */
+			$rss_day = explode( ',', $MOM_Exclude_Tags_Day );
+			if( is_array( $rss_day ) ) {
+				foreach( $rss_day as &$rss_day_1 ) {
+					$rss_day_1 = $rss_day_1 . ',';
+				}
+			}
+			$rss_day_1     = implode( $rss_day );
+			$rssday        = explode( ',', str_replace ( ' ', '', $rss_day_1 ) );
+			$rss_day_cat   = explode( ',', $MOM_Exclude_Cats_Day );
+			if( is_array( $rss_day_cat ) ) {
+				foreach( $rss_day_cat as &$rss_day_1_cat ) {
+					$rss_day_1_cat = $rss_day_1_cat . ',';
+				}
+			}
+			$rss_day_1_cat = implode( $rss_day_cat );
+			$rssday_cat    = explode( ',', str_replace ( ' ', '', $rss_day_1_cat ) );
+			$rss_day_user   = explode( ',', $MOM_Exclude_Users_Day );
+			if( is_array( $rss_day_user ) ) {
+				foreach( $rss_day_user as &$rss_day_1_user ) {
+					$rss_day_1_user = $rss_day_1_user . ',';
+				}
+			}
+			$rss_day_1_user = implode( $rss_day_user );
+			$rssday_user    = explode( ',', str_replace ( ' ', '', $rss_day_1_user ) );
+			/**
+			 * Grab values for a user who is not logged in
+			 */
+			if( !is_user_logged_in() ) {
+				$MOM_Exclude_level0Users       = 0;
+				$MOM_Exclude_level1Users       = 0;
+				$MOM_Exclude_level2Users       = 0;
+				$MOM_Exclude_level7Users       = 0;
+				$MOM_Exclude_level0Categories  = 0;
+				$MOM_Exclude_level1Categories  = 0;
+				$MOM_Exclude_level2Categories  = 0;
+				$MOM_Exclude_level7Categories  = 0;
+				$MOM_Exclude_level0Tags        = 0;
+				$MOM_Exclude_level1Tags        = 0;
+				$MOM_Exclude_level2Tags        = 0;
+				$MOM_Exclude_level7Tags        = 0;
+				$loggedOutUsers                = 0;
+				$loggedOutCats                 = 0;
+				$loggedOutTags                 = 0;
+				$MOM_Exclude_level0Users       = get_option( 'MOM_Exclude_Users_level0Users' ); 
+				$MOM_Exclude_level1Users       = get_option( 'MOM_Exclude_Users_level1Users' ); 
+				$MOM_Exclude_level2Users       = get_option( 'MOM_Exclude_Users_level2Users' ); 
+				$MOM_Exclude_level7Users       = get_option( 'MOM_Exclude_Users_level7Users' ); 
+				$MOM_Exclude_level0Categories  = get_option( 'MOM_Exclude_Categories_level0Categories' ); 
+				$MOM_Exclude_level1Categories  = get_option( 'MOM_Exclude_Categories_level1Categories' ); 
+				$MOM_Exclude_level2Categories  = get_option( 'MOM_Exclude_Categories_level2Categories' ); 
+				$MOM_Exclude_level7Categories  = get_option( 'MOM_Exclude_Categories_level7Categories' ); 
+				$MOM_Exclude_level0Tags        = get_option( 'MOM_Exclude_Tags_level0Tags' );
+				$MOM_Exclude_level1Tags        = get_option( 'MOM_Exclude_Tags_level1Tags' );
+				$MOM_Exclude_level2Tags        = get_option( 'MOM_Exclude_Tags_level2Tags' );
+				$MOM_Exclude_level7Tags        = get_option( 'MOM_Exclude_Tags_level7Tags' );
+				$loggedOutUsers = $MOM_Exclude_level0Users . ',' . $MOM_Exclude_level1Users . ',' . $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
+				$loggedOutCats  = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+				$loggedOutTags  = $MOM_Exclude_level0Tags . ',' . $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
+				$lu1 = array_unique( explode( ',', $loggedOutUsers ) );
+				foreach( $lu1 as &$LU1 ) { 
+					$LU1 = $LU1 . ','; 
+				}
+				$lu_1 = rtrim( implode( $lu1 ), ',' );				
+				$hideLoggedOutUsers = explode ( ',', str_replace ( ' ', '', $loggedOutUsers ) );
+				$lc1 = array_unique( explode( ',', $loggedOutCats ) );
+				foreach( $lc1 as &$LC1 ) { 
+					$LC1 = $LC1 . ','; 
+				}
+				$lc_1 = rtrim( implode( $lc1 ), ',' );
+				$hideLoggedOutCats = explode ( ',', str_replace ( ' ', '', $loggedOutCats ) );
+				$lt1 = array_unique ( explode ( ',', $loggedOutTags ) );
+				foreach( $lt1 as &$LT1 ) { 
+					$LT1 = $LT1 . ','; 
+				}
+				$lt11 = rtrim( implode( $lt1 ), ',' );
+				$hideLoggedOutTags = explode( ',', str_replace ( ' ', '', $lt11 ) );
+				$formats_to_hide   = $MOM_Exclude_PostFormats_Visitor;
+			} else {
+				$loggedOutUsers                = 0;
+				$loggedOutCats                 = 0;
+				$loggedOutTags                 = 0;
+				$MOM_Exclude_level0Users       = 0;
+				$MOM_Exclude_level1Users       = 0;
+				$MOM_Exclude_level2Users       = 0;
+				$MOM_Exclude_level7Users       = 0;				
+				$MOM_Exclude_level0Categories  = 0;
+				$MOM_Exclude_level1Categories  = 0;
+				$MOM_Exclude_level2Categories  = 0;
+				$MOM_Exclude_level7Categories  = 0;
+				$MOM_Exclude_level0Tags        = 0;
+				$MOM_Exclude_level1Tags        = 0;
+				$MOM_Exclude_level2Tags        = 0; 
+				$MOM_Exclude_level7Tags        = 0;
+				$MOM_Exclude_level0Users       = get_option( 'MOM_Exclude_Users_level0Users' ); 
+				$MOM_Exclude_level1Users       = get_option( 'MOM_Exclude_Users_level1Users' ); 
+				$MOM_Exclude_level2Users       = get_option( 'MOM_Exclude_Users_level2Users' ); 
+				$MOM_Exclude_level7Users       = get_option( 'MOM_Exclude_Users_level7Users' );				
+				$MOM_Exclude_level0Categories  = get_option( 'MOM_Exclude_Categories_level0Categories' ); 
+				$MOM_Exclude_level1Categories  = get_option( 'MOM_Exclude_Categories_level1Categories' ); 
+				$MOM_Exclude_level2Categories  = get_option( 'MOM_Exclude_Categories_level2Categories' ); 
+				$MOM_Exclude_level7Categories  = get_option( 'MOM_Exclude_Categories_level7Categories' ); 
+				$MOM_Exclude_level0Tags        = get_option( 'MOM_Exclude_Tags_level0Tags' ); 
+				$MOM_Exclude_level1Tags        = get_option( 'MOM_Exclude_Tags_level1Tags' ); 
+				$MOM_Exclude_level2Tags        = get_option( 'MOM_Exclude_Tags_level2Tags' ); 
+				$MOM_Exclude_level7Tags        = get_option( 'MOM_Exclude_Tags_level7Tags' );
+				if( 0 == $myoptionalmodules_plugin->user_level ) {
+					$loggedOutUsers = $MOM_Exclude_level0Users . ',' . $MOM_Exclude_level1Users . ',' . $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
+					$loggedOutCats  = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+					$loggedOutTags  = $MOM_Exclude_level0Tags . ',' . $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
+				}
+				if( 1 == $myoptionalmodules_plugin->user_level ) {
+					$loggedOutUsers = $MOM_Exclude_level1Users . ',' . $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
+					$loggedOutCats  = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+					$loggedOutTags  = $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
+				}
+				if( 2 == $myoptionalmodules_plugin->user_level ) {
+					$loggedOutUsers = $MOM_Exclude_level1Users . ',' . $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
+					$loggedOutCats  = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+					$loggedOutTags  = $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
+				}
+				if( 3 == $myoptionalmodules_plugin->user_level ) {
+					$loggedOutUsers = $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
+					$loggedOutCats  = $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
+					$loggedOutTags  = $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
+				}
+				if( 4 == $myoptionalmodules_plugin->user_level ) {
+					$loggedOutUsers = $MOM_Exclude_level7Users;				
+					$loggedOutCats  = $MOM_Exclude_level7Categories;
+					$loggedOutTags  = $MOM_Exclude_level7Tags;
+				}
+				$hideLoggedOutUsers = explode ( ',', str_replace ( ' ', '', $u_1 ) );
+				$hideLoggedOutCats  = explode ( ',', str_replace ( ' ', '', $c_1 ) );
+				$hideLoggedOutTags  = explode ( ',', str_replace ( ' ', '', $t11 ) );
+				$lu1                = array_unique ( explode ( ',', $loggedOutUsers ) );
+				foreach( $lu1 as &$LU1 ) { $LU1 = $LU1 . ','; }
+				$lu_1               = rtrim ( implode ( $lu1 ), ',' );
+				$hideLoggedOutUsers = explode ( ',', str_replace ( ' ', '', $loggedOutUsers ) );
+				$lc1                = array_unique ( explode ( ',', $loggedOutCats ) );
+				foreach( $lc1 as &$LC1 ) { $LC1 = $LC1 . ','; }
+				$lc_1               = rtrim ( implode ( $lc1 ), ',' );
+				$hideLoggedOutCats  = explode ( ',', str_replace ( ' ', '', $loggedOutCats ) );
+				$lt1                = array_unique ( explode ( ',', $loggedOutTags ) );
+				foreach( $lt1 as &$LT1 ) { $LT1 = $LT1 .','; }
+				$lt11               = rtrim ( implode ( $lt1 ), ',' );
+				$hideLoggedOutTags  = explode ( ',', str_replace ( ' ', '', $lt11 ) );
+			}
+			/**
+			 * Piece all arrays together properly to be utilized for the loop
+			 */
+			if( $query->is_feed ) {
+				$u1              = explode( ',', $MOM_Exclude_Users_RSS );
+				$c1              = explode( ',', $MOM_Exclude_Categories_RSS );
+				$formats_to_hide = $MOM_Exclude_PostFormats_RSS;
+				$t1              = explode( ',', $MOM_Exclude_Tags_RSS );
+			}
+			if( $query->is_home ) {
+				$u1              = explode( ',', $MOM_Exclude_Users_Front );
+				$c1              = explode( ',', $MOM_Exclude_Categories_Front );
+				$formats_to_hide = $MOM_Exclude_PostFormats_Front;
+				$t1              = explode( ',', $MOM_Exclude_Tags_Front );
+			}
+			if( $query->is_category ) {
+				$u1              = explode( ',', $MOM_Exclude_Users_CategoryArchives );
+				$t1              = explode( ',', $MOM_Exclude_Tags_CategoryArchives );
+				$formats_to_hide = $MOM_Exclude_PostFormats_CategoryArchives;
+			}
+			if( $query->is_tag ) {
+				$u1              = explode( ',', $MOM_Exclude_Users_TagArchives );
+				$c1              = explode( ',', $MOM_Exclude_Categories_TagArchives );
+				$formats_to_hide = $MOM_Exclude_PostFormats_TagArchives;
+			}
+			if( $query->is_search ) {
+				$u1              = explode( ',', $MOM_Exclude_Users_SearchResults );
+				$c1              = explode( ',', $MOM_Exclude_Categories_SearchResults );
+				$formats_to_hide = $MOM_Exclude_PostFormats_SearchResults;
+				$t1              = explode( ',', $MOM_Exclude_Tags_SearchResults );
+
+			}
+			foreach( $c1 as &$C1 ) { 
+				$C1 = $C1 . ','; 
+			}
+			$c_1               = rtrim ( implode ( $c1 ), ',' );
+			$hideUserCats      = explode ( ',', str_replace ( ' ', '', $c_1 ) );
+			foreach( $u1 as &$U1 ) { 
+				$U1 = $U1 . ','; 
+			}
+			$u_1               = rtrim ( implode ( $u1 ), ',' );
+			$hideUserUsers      = explode ( ',', str_replace ( ' ', '', $u_1 ) );		
+			foreach( $t1 as &$T1 ) { 
+				$T1 = $T1 . ','; 
+			}
+			$t11                = rtrim( implode ( $t1 ), ',' );
+			$hideUserTags       = explode( ',', str_replace ( ' ', '', $t11 ) );
+			$users_to_hide      = array_merge( ( array ) $hideUserUsers, ( array ) $hideLoggedOutUsers, ( array ) $rssday_user );
+			$categories_to_hide = array_merge( ( array ) $hideUserCats, ( array ) $hideLoggedOutCats, ( array ) $rssday_cat );
+			$tags_to_hide       = array_merge( ( array ) $hideUserTags, ( array ) $hideLoggedOutTags, ( array ) $rssday );
+			$users_to_hide      = array_filter( array_unique ( $users_to_hide ) );
+			$categories_to_hide = array_filter( array_unique ( $categories_to_hide ) );
+			$tags_to_hide       = array_filter( array_unique ( $tags_to_hide ) );	
+			
+			/**
+			 * Loop alteration magic
+			 */
+			if( $query->is_main_query() ) {
+				if( $query->is_feed || $query->is_home || $query->is_search || $query->is_tag || $query->is_category ) {
+					$tax_query = array (
+						'ignore_sticky_posts' => true,
+						'post_type'           => 'any',
+						array (
+							'taxonomy'        => 'category',
+							'terms'           => $categories_to_hide,
+							'field'           => 'id',
+							'operator'        => 'NOT IN'
+						),
+						array (
+							'taxonomy'        => 'post_tag',
+							'terms'           => $tags_to_hide,
+							'field'           => 'id',
+							'operator'        => 'NOT IN'
+						),
+						array (
+							'taxonomy'        => 'post_format',
+							'field'           => 'slug',
+							'terms'           => array($formats_to_hide),
+							'operator'        => 'NOT IN'
+						)
+					);
+					$query->set( 'tax_query', $tax_query );
+					$query->set( 'author__not_in', $users_to_hide );
+				}
+				if( $query->is_single ) {
+					$query->set( 'author__not_in', $users_to_hide );
+				}
+			}
+
+			$c1      = null;
+			$t1      = null;
+			$rss_day = null;
+			$u1      = null;
+			$t11     = null;
+			$c_1     = null;
+			$u_1     = null;
+			$MOM_Exclude_Categories_Front             = null;
+			$MOM_Exclude_Categories_TagArchives       = null;
+			$MOM_Exclude_Categories_SearchResults     = null;
+			$MOM_Exclude_Categories_RSS               = null;
+			$MOM_Exclude_Tags_Front                   = null;
+			$MOM_Exclude_Tags_RSS                     = null;
+			$MOM_Exclude_Tags_CategoryArchives        = null;
+			$MOM_Exclude_Tags_SearchResults           = null;
+			$MOM_Exclude_PostFormats_Front            = null;
+			$MOM_Exclude_PostFormats_CategoryArchives = null;
+			$MOM_Exclude_PostFormats_TagArchives      = null;
+			$MOM_Exclude_PostFormats_SearchResults    = null;
+			$MOM_Exclude_PostFormats_Visitor          = null;
+			$MOM_Exclude_PostFormats_RSS              = null;
+			$MOM_Exclude_Tags_Day                     = null;
+			$MOM_Exclude_Cats_Day                     = null;
+			$MOM_Exclude_Users_RSS                    = null;
+			$MOM_Exclude_Users_Front                  = null;
+			$MOM_Exclude_Users_TagArchives            = null;
+			$MOM_Exclude_Users_CategoryArchives       = null;
+			$MOM_Exclude_Users_SearchResults          = null;
+			$MOM_Exclude_Users_Day                    = null;
+			$MOM_Exclude_Categories_Front             = null;
+			$MOM_Exclude_Categories_TagArchives       = null;
+			$MOM_Exclude_Categories_SearchResults     = null;
+			$MOM_Exclude_Categories_RSS               = null;
+			$MOM_Exclude_Tags_Front                   = null;
+			$MOM_Exclude_Tags_RSS                     = null;
+			$MOM_Exclude_Tags_CategoryArchives        = null;
+			$MOM_Exclude_Tags_SearchResults           = null;
+			$MOM_Exclude_PostFormats_Front            = null;
+			$MOM_Exclude_PostFormats_CategoryArchives = null;
+			$MOM_Exclude_PostFormats_TagArchives      = null;
+			$MOM_Exclude_PostFormats_SearchResults    = null;
+			$MOM_Exclude_PostFormats_Visitor          = null;
+			$MOM_Exclude_PostFormats_RSS              = null;
+			$MOM_Exclude_Tags_Day                     = null;
+			$MOM_Exclude_Cats_Day                     = null;
+			$MOM_Exclude_Users_RSS                    = null;
+			$MOM_Exclude_Users_Front                  = null;
+			$MOM_Exclude_Users_TagArchives            = null;
+			$MOM_Exclude_Users_CategoryArchives       = null;
+			$MOM_Exclude_Users_SearchResults          = null;
+			$MOM_Exclude_Users_Day                    = null;
+
+		}
+	}
+
+	$myoptionalmodules_extras = new myoptionalmodules_extras();
+	$myoptionalmodules_extras->actions();
+
+}
+
+/**
+ * 3.6 - Misc. (theme extras)
+ * Front page as post, previous/next link classes, read more... override, random site titles/descriptions
+ *  - Check if ANY of the options for these things are switched before further deciding which functionality
+ *    to enable. If none of these options are switched on via settings, then skip this class altogether.
+ */
+if( 
+	get_option( 'mompaf_post' ) && 'off' != get_option( 'mompaf_post' ) || 
+	'' != get_option( 'mom_previous_link_class' ) || 
+	'' != get_option( 'mom_next_link_class' ) || 
+	'' != get_option( 'mom_readmore_content' ) || 
+	'' != get_option( 'mom_random_get' ) || 
+	'' != get_option( 'mommodule_random_title' ) || 
+	'' != get_option( 'mommodule_random_descriptions' )
+){
+
+	class myoptionalmodules_misc {
+
+		function actions() {
+			if( get_option( 'mompaf_post' ) && 'off' != get_option( 'mompaf_post' ) ) {
+				add_action ( 'wp', array( $this, 'front_post' ) );
+			}
+			if( '' != get_option( 'mom_previous_link_class' ) ) {
+				add_filter( 'previous_posts_link_attributes', array( $this, 'previous_link_class' ) );
+				add_filter( 'previous_post_link', array( $this, 'previous_link' ) );
+			}
+			if( '' != get_option( 'mom_next_link_class' ) ) {
+				add_filter( 'next_posts_link_attributes', array( $this, 'next_link_class' ) );
+				add_filter( 'next_post_link', array( $this, 'next_link' ) );
+			}
+			if( '' != get_option( 'mom_readmore_content' ) ) {
+				add_filter( 'the_content_more_link', array( $this, 'read_more' ) );
+				add_filter( 'excerpt_more', array( $this, 'read_more' ) );
+			}
+			if( '' != get_option( 'mom_random_get' ) ) {
+				add_action( 'wp', array( $this, 'random' ) );
+			}
+			if( '' != get_option( 'mommodule_random_title' ) ) {
+				add_filter( 'pre_option_blogname', array( $this, 'random_title' ), 10, 2 );
+			}
+			if( '' != get_option( 'mommodule_random_descriptions' ) ) {
+				add_filter( 'pre_option_blogdescription', array( $this, 'random_description' ), 10, 2 );	
+			}
+		}
+		function front_post() {
+			if( is_home() && 'off' != get_option( 'mompaf_post' ) ) {
+				if( is_numeric( get_option( 'mompaf_post' ) ) ) {
+					$mompaf_front = get_option( 'mompaf_post' );
+				} elseif( get_option( 'mompaf_post' ) == 'on' ) {
+					$mompaf_front = '';
+				}
+				if( have_posts() ) : the_post();
+				header( 'location:' . esc_url( get_permalink( $mompaf_front ) ) ); 
+				exit; 
+				endif;
+			}
+		}
+		function previous_link_class() {
+			return 'class="' . get_option( 'mom_previous_link_class' ) . '"';
+		}
+		function previous_link( $output ) {
+			$class = 'class="' . get_option( 'mom_previous_link_class' ) . '"';
+			return str_replace( '<a href=', '<a '.$class.' href=', $output);
+		}
+		function next_link_class() {
+			return 'class="' . get_option( 'mom_next_link_class' ) . '"';
+		}
+		function next_link( $output ) {
+			$class = 'class="' . get_option( 'mom_next_link_class' ) . '"';
+			return str_replace( '<a href=', '<a '.$class.' href=', $output);	
+		}
+		function read_more( $more ) {
+			if( '%blank%' == get_option( 'mom_readmore_content' ) ) {
+				return '';
+			} else {
+				return '<a href="' . get_permalink() . '">' . sanitize_text_field( get_option( 'mom_readmore_content' ) ) . '</a>';
+			}
+		}
+		function random() {
+
+			$random = sanitize_text_field( get_option( 'mom_random_get' ) );
+
+			if( isset( $_GET[ $random ] ) ) {
+				$args = array(
+					'numberposts' => 1,
+					'post_type'   => 'post',
+					'post_status' => 'publish',
+					'orderby'     => 'rand'
+				);
+				$get_all = get_posts( $args );
+				foreach ($get_all as $all_posts) {
+					$random_post=$all_posts->ID;
+				}
+				header( 'location:' . esc_url( get_permalink( $random_post ) ) ); exit;
+			}
+
+		}
+		function random_title( $title ) {
+			global $wp;
+			$titles = '';
+			if( '' != get_option( 'mommodule_random_title' ) ) {
+				$titles = sanitize_text_field( get_option( 'mommodule_random_title' ) );
+			}
+			$title = explode( '::', $titles );
+			return $title[ array_rand( $title ) ];
+		}
+		function random_description( $title ) {
+			global $wp;
+			$descriptions = '';
+			if( '' != get_option( 'mommodule_random_descriptions' ) ) {
+				$descriptions = sanitize_text_field( get_option( 'mommodule_random_descriptions' ) );
+			}
+			$descriptions = explode( '::', $descriptions );
+			return $descriptions[ array_rand( $descriptions ) ];
+		}
+
+	}
+
+	$myoptionalmodules_misc = new myoptionalmodules_misc();
+	$myoptionalmodules_misc->actions();
+	
+}
+
+
+
+
+
 /**
  * 4.0 Extra Features
  *   4.1 - (Exclude) Category List for templtes
@@ -1479,7 +1637,7 @@ if( 1 == get_option( 'mommaincontrol_externalthumbs' ) ) {
 	 */
 	function myoptionalmodules_get_thumbnail_src( $id ) {
 		$image_url = get_post_meta( $id, _myoptionalmodules_url(), true );
-		if ( !$image_url || strlen( $image_url ) == 0 )
+		if ( !$image_url || !isset( $image_url ) )
 			return false;
 		return $image_url;
 	}
@@ -1533,7 +1691,7 @@ if( 1 == get_option( 'mommaincontrol_externalthumbs' ) ) {
 	add_filter( 'genesis_pre_get_image', 'myoptionalmodules_genesis_thumbnail', 10, 3 );
 	function myoptionalmodules_genesis_thumbnail( $unknown_param, $args, $post ) {
 		$image_url = get_post_meta( $post->ID, _myoptionalmodules_url(), true );
-		if ( !$image_url || strlen( $image_url ) == 0 ) {
+		if ( !$image_url || !isset( $image_url ) ) {
 			return false;
 		}
 		if ( $args['format'] == 'html' ) {
@@ -1564,6 +1722,11 @@ if( 1 == get_option( 'mommaincontrol_externalthumbs' ) ) {
 			delete_post_meta( $post_ID, '_thumbnail_id' );
 	}
 }
+
+
+
+
+
 /**
  * 5.0 Shortcodes
  *   5.1 - Attachments shortcode
@@ -1922,7 +2085,7 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 		$myposts = get_posts( $args );
 		$post_counter = 0;
 		foreach( $myposts as $post ) {
-			$post_counter++;
+			++$post_counter;
 		}
 		if( 0 < $post_counter ) {
 			if( $related ) {
@@ -1946,7 +2109,7 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 					$post_counter = 0;
 					$open .= '<style>';
 					foreach( $myposts as $post ) {
-						$post_counter++;
+						++$post_counter;
 					}
 					$open .= '.loopdeloopRotation .inner { width:' . $post_counter * 500 . 'px; }</style>';
 				} else {
@@ -1961,7 +2124,7 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 					$post_counter = 0;
 					echo '<style>';
 					foreach( $myposts as $post ) {
-						$post_counter++;
+						++$post_counter;
 					}
 					echo '.loopdeloopRotation .inner { width:' . $post_counter * 500 . 'px; }</style>';
 				}
@@ -2038,7 +2201,7 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 			 * Determine what post number we're currently on relative to the amount of posts 
 			 * in the loop; has nothing to do with the post's ID
 			 */
-			$recent_count++;
+			++$recent_count;
 			/**
 			 * Grab the thumbnail associated with the post, and then fetch an appropriate URL 
 			 * based on whether we want the full image or a "downsized" image (thumbnail quality)
@@ -2064,16 +2227,7 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 						echo '<div class="thumb"><img src="' . $thumb_path . '" /></div>';
 					}
 					echo '<div class="text"><span class="title"><a href="' . $link . '">' . $title . '</a></span>';
-					if( 1 != $related ) {
-						echo '<span class="author">posted <date title="' . $date . '">' . $since . '</date> by ' . $author . ' to ';
-							if( $categories ) {
-								foreach( array_slice( $categories, 0, 1 ) as $category ) {
-									$output .= '<a href="'.get_category_link( $category->term_id ).'" title="' . esc_attr( sprintf( __( "View all posts in %s" ), $category->name ) ) . '">'.$category->cat_name.'</a>'.$separator;
-								}
-							echo trim( $output, $separator );
-							}
-							echo '</span><span class="meta"><a href="' . $link . '">' . $comment_count . ' comments</a></span>';
-					}
+					echo '<span class="meta">' . the_excerpt() . '</span>';
 					echo '</div>
 				</section>';
 			}
@@ -2166,7 +2320,7 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 			 * Close all open containers associated with this miniloop
 			 */
 			if( 1 != $related ) {
-				$close = '</div></div>';
+				$close = '</div></div></div>';
 			} else { 
 				echo '</div></div></div>';
 			}
@@ -2184,6 +2338,11 @@ add_filter   ( 'the_content', 'do_shortcode', 'mom_miniloop'    );
 add_shortcode( 'mom_miniloop', 'mom_miniloop_shortcode'         );
 add_filter   ( 'the_content', 'do_shortcode', 'mom_attachments' );
 add_shortcode( 'mom_attachments', 'mom_attachments_shortcode'   );
+
+
+
+
+
 /**
  * 6.0 Administrative Functionality
  *   6.1 - Font Awesome clickable icons for post editing screen
@@ -2367,6 +2526,7 @@ if( current_user_can( 'edit_dashboard' ) ){
 	 */
 	if( isset( $_POST[ 'MOM_UNINSTALL_EVERYTHING' ] ) && check_admin_referer( 'MOM_UNINSTALL_EVERYTHING' ) ) {
 		$option = array( 
+			'mommaincontrol_externalthumbs',
 			'mommaincontrol_enablecss',
 			'mom_external_thumbs',
 			'mommaincontrol_404',
@@ -2765,22 +2925,22 @@ if( current_user_can( 'edit_dashboard' ) ){
 		$terms_total     = $wpdb->get_results ( "SELECT term_taxonomy_id FROM `$termsTable` WHERE `count` = '0'" );
 		if( count( $drafts_total ) ) {
 			foreach( $drafts_total as $drafts ) {
-				$drafts_count++;
+				++$drafts_count;
 			}			
 		}
 		if( count( $revisions_total ) ) { 
 			foreach( $revisions_total as $retot ) { 
-				$revisions_count++; 
+				++$revisions_count; 
 			}
 		}
 		if( count( $comments_total ) ) {
 			foreach( $comments_total as $comtot ) { 
-				$comments_count++; 
+				++$comments_count; 
 			}
 		}
 		if( count( $terms_total ) ) {
 			foreach( $terms_total as $termstot  ) {
-				$terms_count++; 
+				++$terms_count; 
 			}
 		}
 		$totalClutter    = ( $terms_count + $comments_count + $revisions_count ); ?>
