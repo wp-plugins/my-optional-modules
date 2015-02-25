@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 6.0.4
+ * Version: 6.0.5
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -104,13 +104,14 @@ if( '' != get_option( 'mom_readmorecontent' ) ) {
  */
 class mom_mediaEmbed {
 	var $url;
+
 	function mom_mediaEmbed ( $url ) {
-		$url  = esc_url ( $url );
-		$chck = strtolower( $url );
-		$chck = sanitize_text_field( $url );
-		$url  = sanitize_text_field( $url );
+		
+		$url  = sanitize_text_field( esc_url ( $url ) );
+		//$chck = sanitize_text_field( strtolower( $url ) );
+
 		if( preg_match( '/\/\/(.*imgur\.com\/.*)/i', $url ) ) {
-			if( strpos( $chck, 'imgur.com/a/' ) !== false ) {
+			if( strpos( strtolower( $url ), 'imgur.com/a/' ) !== false ) {
 				$url = substr ( $url, 19 );
 				echo '<iframe class="imgur-album" width="100%" height="550" frameborder="0" src="//imgur.com/a/' . $url . '/embed"></iframe>'; 
 			} else {
@@ -121,8 +122,8 @@ class mom_mediaEmbed {
 		elseif( preg_match( '/\/\/(.*youtube\.com\/.*)/i', $url ) ) {
 			// Probably a much better way of doing this..
 			$timeStamp = '';
-			if( strpos( $chck, '038;t=' ) !== false && strpos( $chck, 'list=' ) === false ) {
-				$url_parse = parse_url( $chck );
+			if( strpos( strtolower( $url ), '038;t=' ) !== false && strpos( strtolower( $url ), 'list=' ) === false ) {
+				$url_parse = parse_url( strtolower( $url ) );
 				$timeStamp = sanitize_text_field( str_replace( '038;t=', '', $url_parse[ 'fragment' ] ) );
 				$minutes   = 0;
 				$seconds   = 0;
@@ -220,7 +221,7 @@ class mom_mediaEmbed {
 			$url = $url . '/embed/postcard';
 			echo '<iframe class="vine-embed" src="' . $url . '" width="600" height="600" frameborder="0"></iframe><script async src="//platform.vine.co/static/scripts/embed.js" charset="utf-8"></script>';
 		} else {
-			// Fall back to WordPress provided oEmbed if none of the above conditions were met.
+			// //codex.wordpress.org/Embeds
 			echo wp_oembed_get( $url );
 		}
 	}
@@ -251,7 +252,9 @@ class myoptionalmodules {
 		require_once( ABSPATH . 'wp-includes/pluggable.php' );
 		add_action  ( 'wp', array( $this, 'scripts' ) );
 		add_action  ( 'admin_enqueue_scripts', array( $this, 'font_awesome' ) );
-		add_action  ( 'wp_print_styles', array( $this, 'plugin_stylesheets' ) );
+		if( 0 == get_option( 'mommaincontrol_enablecss' ) || !get_option( 'mommaincontrol_enablecss' ) ) {
+			add_action  ( 'wp_print_styles', array( $this, 'plugin_stylesheets' ) );
+		}
 		add_action  ( 'admin_enqueue_scripts', array( $this, 'stylesheets' ) );
 		add_action  ( 'after_setup_theme', array( $this, 'post_formats' ) );
 	}
@@ -2364,6 +2367,7 @@ if( current_user_can( 'edit_dashboard' ) ){
 	 */
 	if( isset( $_POST[ 'MOM_UNINSTALL_EVERYTHING' ] ) && check_admin_referer( 'MOM_UNINSTALL_EVERYTHING' ) ) {
 		$option = array( 
+			'mommaincontrol_enablecss',
 			'mom_external_thumbs',
 			'mommaincontrol_404',
 			'mommaincontrol_protectrss',
@@ -2500,6 +2504,10 @@ if( current_user_can( 'edit_dashboard' ) ){
 			$_REQUEST[ 'datearchives' ] = sanitize_text_field( $_REQUEST[ 'datearchives' ] );
 			update_option( 'mommaincontrol_datearchives', $_REQUEST[ 'datearchives' ] );
 		}
+		if( isset( $_POST[ 'mom_plugin_css_mode_submit' ] ) && check_admin_referer( 'pluginCSS' ) ) { 
+			$_REQUEST[ 'pluginCSS' ] = sanitize_text_field( $_REQUEST[ 'pluginCSS' ] );
+			update_option( 'mommaincontrol_enablecss', $_REQUEST[ 'pluginCSS' ] );
+		}		
 		if( isset( $_POST[ 'mom_comments_mode_submit' ] ) && check_admin_referer( 'momComments' ) ) { 
 			$_REQUEST[ 'comments' ] = sanitize_text_field( $_REQUEST[ 'comments' ] );		
 			update_option( 'mommaincontrol_comments', $_REQUEST[ 'comments' ] );
@@ -2644,6 +2652,7 @@ if( current_user_can( 'edit_dashboard' ) ){
 			update_option( 'mommodule_random_descriptions', $_REQUEST[ 'randomsitedescriptions' ] );
 		}
 		add_option( 'mompaf_post', 'off' );
+		add_option( 'mommaincontrol_enablecss', 0 );
 		
 		if( isset( $_POST[ 'mom_external_thumbs_mode_submit' ] ) && check_admin_referer( 'externalthumbs' ) ) { 
 			$_REQUEST[ 'externalthumbs' ] = sanitize_text_field( $_REQUEST[ 'externalthumbs' ] );
@@ -2671,8 +2680,25 @@ if( current_user_can( 'edit_dashboard' ) ){
 				<em>Don't forget to <a href="//wordpress.org/support/view/plugin-reviews/my-optional-modules">rate and review</a> 
 				this plugin if you found it helpful. Need help? Post your question on the 
 				<a href="//wordpress.org/support/plugin/my-optional-modules">support</a> forum.</em>
+				<br /><br />
+				Enable/Disable the inclusion of plugin CSS (you'll need to style <strong>everything</strong> on your own 
+				if you choose to disable its inclusion.
+				
 			</div>
 			<div class="right-half">
+				<form method="post" action="#name" name="pluginCSS">
+					<?php wp_nonce_field( 'pluginCSS' ); ?>
+					<label for="mom_plugin_css_mode_submit">
+					<?php if( 1 == get_option( 'mommaincontrol_enablecss' ) ) { ?>
+						<i class="fa fa-toggle-on"></i>
+					<?php } else { ?>
+						<i class="fa fa-toggle-off"></i>
+					<?php }?>
+					<span>Disable Plugin CSS</span>
+					</label>
+					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_enablecss' ) ){ echo 0; } else { echo 1; }?>" name="pluginCSS" />
+					<input type="submit" id="mom_plugin_css_mode_submit" name="mom_plugin_css_mode_submit" value="Submit" class="hidden" />
+				</form>			
 				<?php if( !isset( $_POST[ 'mom_delete_step_one' ] ) ) { ?>
 					<form method="post" action="#name" name="mom_delete_step_one">
 					<?php wp_nonce_field( 'mom_delete_step_one' ); ?>

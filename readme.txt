@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 6.0.4
+Stable tag: 6.0.5
 
 An assortment of functions to enhance WordPress.
 
@@ -74,10 +74,11 @@ on [Github](https://github.com/onebillion/mom). )
 
 == Changelog ==
 
-= 6.0.4 =
-* WordPress default post thumbnail integration as fallback if external thumbnail non-existent (or nothing if neither)
+= 6.0.5 =
+* Optionally remove the inclusion of the plugin's CSS (you WILL need to style everything should you decide to disable the plugin CSS) (advanced option)
 
 = 6.0.* =
+* WordPress default post thumbnail integration as fallback if external thumbnail non-existent (or nothing if neither)
 * Function moved
 * Fixed issue with moving scripts to footer also moving the stylesheets
 * Code clean-up
