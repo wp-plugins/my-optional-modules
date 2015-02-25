@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 6.0.6
+Stable tag: 6.0.6.1
 
 An assortment of functions to enhance WordPress.
 
@@ -74,7 +74,10 @@ on [Github](https://github.com/onebillion/mom). )
 
 == Changelog ==
 
-= 6.0.6 =
+= 6.0.6.1 =
+* Previous function no longer being used removed
+
+= 6.0.* =
 * Uninstallation procedure missing a recently added option for removal 
 * miniloop additional div close
 * miniloop list style now outputs the excerpt in place of time since post, author and category information
@@ -82,8 +85,6 @@ on [Github](https://github.com/onebillion/mom). )
 * Pre-increment swapped for all instances of variables using post-incremement (++$variable instead of $variable++)
 * $_SERVER['REQUEST_TIME'] replaces time()
 * In some instances, strlen has been replaced by isset
-
-= 6.0.* =
 * Optionally remove the inclusion of the plugin's CSS (you WILL need to style everything should you decide to disable the plugin CSS) (advanced option)
 * WordPress default post thumbnail integration as fallback if external thumbnail non-existent (or nothing if neither)
 * Function moved

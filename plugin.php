@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 6.0.6
+ * Version: 6.0.6.1
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -40,9 +40,7 @@
  * 1.0 Functions 
  *   1.1 - Get all category IDs
  *           Gets all category IDs from the database for use elsewhere in the script.
- *   1.2 - Calculate time between timestamps
- *           Calculates time between dates and displays as '(time) ago'
- *   1.3 - Destroy Twenty Fifteen Read More...
+ *   1.2 - Destroy Twenty Fifteen Read More...
  *           When utilizing the read more... functionality, it is vital that we destroy 
  *           Twenty Fifteen's default read more... functionality as it interferes with our new
  *           functionality. 
@@ -64,36 +62,6 @@ if( !function_exists( 'my_optional_modules_get_category_ids' ) ) {
 			);
 		}
 		return $cat_ids;
-	}
-}
-if( !function_exists( 'my_optional_modules_timesince' ) ) {
-	function my_optional_modules_timesince( $date, $granularity=2 ) {
-		$retval     = '';
-		$date       = strtotime( $date );
-		$difference = $_SERVER['REQUEST_TIME'] - $date;
-		$periods = array(
-			' decades' => 315360000, 
-			' years'   => 31536000, 
-			' months'  => 2628000, 
-			' weeks'   => 604800,  
-			' days'    => 86400, 
-			' hours'   => 3600, 
-			' minutes' => 60, 
-			' seconds' => 1 
-		);
-		foreach( $periods as $key => $value ) {
-			if( $difference >= $value ) {
-				$time = floor ( $difference/$value );
-				$difference %= $value;
-				$retval .= ( $retval ? ' ' : '' ) . $time . '';
-				$retval .= ( ( $time > 1 ) ? $key : $key );
-				$granularity--;
-			}
-			if( $granularity == '0' ) {
-				break; 
-			}
-		}
-		return $retval . ' ago';
 	}
 }
 if( '' != get_option( 'mom_readmorecontent' ) ) {
@@ -2176,7 +2144,6 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 			$title         = get_the_title( $id );
 			$date          = get_the_date();
 			$comment_count = get_comments_number();
-			$since         = my_optional_modules_timesince( $date );
 			$author        = get_the_author();
 			/**
 			 * Grab the category(s) associated with the post
