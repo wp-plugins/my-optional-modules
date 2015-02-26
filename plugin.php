@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 6.0.6.2
+ * Version: 6.0.7
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -1697,9 +1697,35 @@ if( 1 == get_option( 'mommaincontrol_externalthumbs' ) ) {
 
 /**
  * 5.0 Shortcodes
- *   5.1 - Attachments shortcode
- *   5.2 - Miniloop
+ *   5.1 - Media Embedding
+ *   5.2 - Attachments shortcode
+ *   5.3 - Miniloop
  */
+if( !function_exists( 'mom_mediaembed_shortcode' ) ) {
+	function mom_mediaembed_shortcode( $atts ) {
+		extract(
+			shortcode_atts( array(
+				'url' => '',
+				'class' => ''
+			), $atts )
+		);
+		if( $url ) {
+			$url = esc_url( $url );
+			if( $class ) { 
+				sanitize_text_field( $class ); 
+			}
+			ob_start();
+			if( $class ) {
+				echo '<div class="' . $class . '">';
+			}
+			new mom_mediaEmbed( $url );
+			if( $class ) {
+				echo '</div>';
+			}
+			return ob_get_clean();			
+		}
+	}
+} 
 if( !function_exists( 'mom_attachments_shortcode' ) ) {
 	function mom_attachments_shortcode( $atts ) {
 		global $post,$wp;
@@ -2305,7 +2331,8 @@ add_filter   ( 'the_content', 'do_shortcode', 'mom_miniloop'    );
 add_shortcode( 'mom_miniloop', 'mom_miniloop_shortcode'         );
 add_filter   ( 'the_content', 'do_shortcode', 'mom_attachments' );
 add_shortcode( 'mom_attachments', 'mom_attachments_shortcode'   );
-
+add_filter ( 'the_content', 'do_shortcode', 'mom_mediaembed_shortcode' );
+add_shortcode( 'mom_embed', 'mom_mediaembed_shortcode' );
 
 
 
@@ -3839,6 +3866,30 @@ if( current_user_can( 'edit_dashboard' ) ){
 					</label>
 					<input class="hidden" id="toggle_shortcodes_submit" type="submit" name="toggle_shortcodes_submit">
 				</form>
+				<p>
+					<span class="title">Media Embeds</span>
+					<code>[mom_embed]</code> inserts external media.
+				</p>
+				<p>
+					<em>Defaults</em>: <code>[mom_embed url="" class="" ]</code>
+				</p>
+				<p>
+					<span><code>url</code> URL to media in question<br /></span>
+					<span><code>class</code> Optional div to wrap media in<br /></span>
+				</p>
+				<p>
+					Media supported:<br />
+					 - Image links<br />
+					 - Imgur albums<br />
+					 - Youtube/youtu.be (youtube links <strong>with</strong> ?t parameter, as well)<br />
+					 - Soundcloud<br />
+					 - Vimeo<br />
+					 - Gfycat<br />
+					 - Funnyordie<br />
+					 - Vine<br />
+					 - Any already <a href="http://codex.wordpress.org/Embeds">supported</a> oEmbed providers
+				</p>
+				<hr />
 				<p>
 					<span class="title">Attachment Loop</span>
 					<code>[mom_attachments]</code> inserts a loop of recent images that link to their respective posts.
