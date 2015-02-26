@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 6.0.6.1
+Stable tag: 6.0.6.2
 
 An assortment of functions to enhance WordPress.
 
@@ -74,10 +74,11 @@ on [Github](https://github.com/onebillion/mom). )
 
 == Changelog ==
 
-= 6.0.6.1 =
-* Previous function no longer being used removed
+= 6.0.6.2 =
+* Moved External Thumbnails and Recent Posts Widget to Extras menu
 
 = 6.0.* =
+* Previous function no longer being used removed
 * Uninstallation procedure missing a recently added option for removal 
 * miniloop additional div close
 * miniloop list style now outputs the excerpt in place of time since post, author and category information

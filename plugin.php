@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 6.0.6.1
+ * Version: 6.0.6.2
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -829,7 +829,7 @@ if(
 			}
 			if( 1 == get_option( 'mommaincontrol_footerscripts' ) ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'remove' ) );
-				add_action( 'wp_footer', 'wp_print_scripts', 5 );
+				// add_action( 'wp_footer', 'wp_print_scripts', 5 );
 				add_action( 'wp_footer', 'wp_enqueue_scripts', 5 );
 				add_action( 'wp_footer', 'wp_print_head_scripts', 5 );
 			}
@@ -839,7 +839,7 @@ if(
 
 		}
 		function remove() {
-			remove_action( 'wp_head', 'wp_print_scripts' );
+			// remove_action( 'wp_head', 'wp_print_scripts' );
 			remove_action( 'wp_head', 'wp_print_head_scripts', 9 );
 			remove_action( 'wp_head', 'wp_enqueue_scripts', 1 );
 		}
@@ -3387,10 +3387,26 @@ if( current_user_can( 'edit_dashboard' ) ){
 				<input class="hidden" id="toggle_extras_submit" type="submit" name="toggle_extras_submit">
 			</form>			
 			<div class="left-half">
+				<em>Enable the use of external media (utilizing mom_mediaEmbed) for post feature images (albums, images, and videos, with oEmbed fallback) (an alternate implentation of <a href="//wordpress.org/plugins/external-featured-image/">Nelio External Featured Image</a>)</em>
 				<em>Force default post thumbnails to 100% of their container, move Javascript to footer, lazy load all post images, or the Post Exclusion module.</em>
+				<em>Change the behaviour of the default Recent Posts widget to exclude the currently viewed post from the list.</em>
+
 			</div>
 			<div class="right-half">
-				<form method="post" action="#enable" name="thumbnail">
+				<form method="post" action="#extras" name="externalthumbs">
+					<?php wp_nonce_field( 'externalthumbs' ); ?>
+					<label for="mom_external_thumbs_mode_submit" title="External thumbnails">
+					<?php if( 1 == get_option( 'mommaincontrol_externalthumbs' ) ) { ?>
+						<i class="fa fa-toggle-on"></i>
+					<?php } else { ?>
+						<i class="fa fa-toggle-off"></i>
+					<?php } ?>
+					<span>External Thumbnails</span>
+					</label>
+					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_externalthumbs' ) ) { echo 0; } else { echo 1; } ?>" name="externalthumbs" />
+					<input type="submit" id="mom_external_thumbs_mode_submit" name="mom_external_thumbs_mode_submit" value="Submit" class="hidden" />
+				</form>
+				<form method="post" action="#extras" name="thumbnail">
 					<?php wp_nonce_field( 'thumbnail' ); ?>
 					<label for="mom_thumbnail_mode_submit">
 						<?php if( 1 == get_option( 'mommaincontrol_thumbnail' ) ) { ?>
@@ -3442,6 +3458,20 @@ if( current_user_can( 'edit_dashboard' ) ){
 					<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_momse' ) ){ echo 0; } else { echo 1; }?>" name="exclude" />
 					<input type="submit" id="mom_exclude_mode_submit" name="mom_exclude_mode_submit" value="Submit" class="hidden" />
 				</form>				
+				<div class="clear"></div>
+				<form method="post" action="#extras" name="recentposts">
+					<?php wp_nonce_field( 'recentposts' ); ?>
+					<label for="mom_recent_posts_mode_submit">
+						<?php if( 1 == get_option( 'mommaincontrol_recent_posts' ) ) { ?>
+							<i class="fa fa-toggle-on"></i>
+						<?php } else { ?>
+							<i class="fa fa-toggle-off"></i>
+						<?php }?>
+						<span>Recent Posts Widget</span>
+					</label>
+					<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_recent_posts' ) ) { echo 0; } else { echo 1; } ?>" name="recentposts" />
+					<input type="submit" id="mom_recent_posts_mode_submit" name="mom_recent_posts_mode_submit" value="Submit" class="hidden" />
+				</form>
 			</div>
 		</div>
 		<?php if( 1 == get_option( 'mommaincontrol_momse' ) ) { 
@@ -3868,57 +3898,6 @@ if( current_user_can( 'edit_dashboard' ) ){
 			<p><span><code>my_optional_modules_exclude_categories()</code> for a category list that hides categories based on your <strong>Exclude Taxonomies: Exclude Categories</strong> settings.<br /></span></p>
 			<p><span><code>new mom_mediaEmbed( 'MEDIA URL' )</code> for media embeds with <a href="http://codex.wordpress.org/Embeds">oEmbed</a> fallback (supports imgur image links AND albums, youtube/youtu.be (with ?t parameter), soundcloud, vimeo, gfycat, funnyordie, and vine).</p>
 		</div>
-		<?php if( 
-			1 == get_option( 'toggle_trash' ) && 
-			1 == get_option( 'toggle_disable' ) && 
-			1 == get_option( 'toggle_enable' ) && 
-			1 == get_option( 'toggle_comment' ) && 
-			1 == get_option( 'toggle_extras' ) && 
-			1 == get_option( 'toggle_misc' ) && 
-			1 == get_option( 'toggle_shortcodes' ) && 
-			1 == get_option( 'toggle_developers' )
-		) { ?>
-			<div class="settings-section clear" id="matt">
-				<label class="full-title">Matt's Menu</label>
-				<div class="left-half">
-					<em class="full">
-						(1) Enable the use of external media (utilizing mom_mediaEmbed) for post feature images (albums, images, and videos, with oEmbed fallback) (an alternate implentation of <a href="//wordpress.org/plugins/external-featured-image/">Nelio External Featured Image</a>) 
-						or 
-						(2) Change the behaviour of the default Recent Posts widget to exclude the currently viewed post from the list.
-					</em>
-				</div>
-				<div class="right-half">
-					<form method="post" action="#matt" name="externalthumbs">
-						<?php wp_nonce_field( 'externalthumbs' ); ?>
-						<label for="mom_external_thumbs_mode_submit" title="External thumbnails">
-						<?php if( 1 == get_option( 'mommaincontrol_externalthumbs' ) ) { ?>
-							<i class="fa fa-toggle-on"></i>
-						<?php } else { ?>
-							<i class="fa fa-toggle-off"></i>
-						<?php } ?>
-						<span>External</span>
-						</label>
-						<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_externalthumbs' ) ) { echo 0; } else { echo 1; } ?>" name="externalthumbs" />
-						<input type="submit" id="mom_external_thumbs_mode_submit" name="mom_external_thumbs_mode_submit" value="Submit" class="hidden" />
-					</form>
-					<form method="post" action="#enable" name="recentposts">
-						<?php wp_nonce_field( 'recentposts' ); ?>
-						<label for="mom_recent_posts_mode_submit">
-							<?php if( 1 == get_option( 'mommaincontrol_recent_posts' ) ) { ?>
-								<i class="fa fa-toggle-on"></i>
-							<?php } else { ?>
-								<i class="fa fa-toggle-off"></i>
-							<?php }?>
-							<span>Recent Posts</span>
-						</label>
-						<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_recent_posts' ) ) { echo 0; } else { echo 1; } ?>" name="recentposts" />
-						<input type="submit" id="mom_recent_posts_mode_submit" name="mom_recent_posts_mode_submit" value="Submit" class="hidden" />
-					</form>			
-					
-				</div>
-			</div>
-		<?php }?>
-
 		
 	</div>
 	<?php 
