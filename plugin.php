@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 6.0.7.1
+ * Version: 6.0.7.2
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -407,7 +407,11 @@ if(
 			if( 1 == get_option( 'mommaincontrol_fontawesome' ) ) {
 				add_action( 'wp_enqueue_scripts', array( $this, 'fontawesome' ) );
 				add_action ( 'init', array( $this, 'fontawesome_shortcode' ), 99 );
+				/**
+				 * Removed this call in 6.0.7.2
+				 * (preliminary) interfering with other plugins ability to interpret shortcodes properly (?)
 				add_filter( 'the_content', 'do_shortcode', 'font_fa_shortcode' );
+				 */
 			}
 		
 		}

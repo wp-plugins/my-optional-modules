@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 6.0.7.1
+Stable tag: 6.0.7.2
 
 An assortment of functions to enhance WordPress.
 
@@ -74,10 +74,11 @@ on [Github](https://github.com/onebillion/mom). )
 
 == Changelog ==
 
-= 6.0.7.1 =
-* Minor change to how mom_miniloop, mom_attachments, mom_mediaembed_shortcode shortcodes were implemented as they were/may have been interfering with other plugins ability to properly initiate certain shortcodes (SyntaxHighllighter Evolved as one example).
+= 6.0.7.2 =
+* Minor change to how Font Awesome shortcodes behave
 
 = 6.0.* =
+* Minor change to how mom_miniloop, mom_attachments, mom_mediaembed_shortcode shortcodes were implemented as they were/may have been interfering with other plugins ability to properly initiate certain shortcodes (SyntaxHighllighter Evolved as one example).
 * [mom_embed] will now embed media using mom_mediaEmbed - supports imgur albums, youtube with ?t parameter, soundcloud, vimeo, gfycat, funnyordie, vine, with oEmbed fallback for WordPress supported embeds not covered.
 * Moved External Thumbnails and Recent Posts Widget to Extras menu
 * Previous function no longer being used removed
