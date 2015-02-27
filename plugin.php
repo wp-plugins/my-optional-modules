@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 6.0.7
+ * Version: 6.0.7.1
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -1725,7 +1725,7 @@ if( !function_exists( 'mom_mediaembed_shortcode' ) ) {
 			return ob_get_clean();			
 		}
 	}
-} 
+}
 if( !function_exists( 'mom_attachments_shortcode' ) ) {
 	function mom_attachments_shortcode( $atts ) {
 		global $post,$wp;
@@ -2327,11 +2327,15 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 		}
 	}
 }
+/**
+ * Removed this call in 6.0.7.1
+ * (preliminary) interfering with other plugins ability to interpret shortcodes properly (?)
 add_filter   ( 'the_content', 'do_shortcode', 'mom_miniloop'    );
-add_shortcode( 'mom_miniloop', 'mom_miniloop_shortcode'         );
 add_filter   ( 'the_content', 'do_shortcode', 'mom_attachments' );
+add_filter   ( 'the_content', 'do_shortcode', 'mom_mediaembed_shortcode' );
+*/
+add_shortcode( 'mom_miniloop', 'mom_miniloop_shortcode'         );
 add_shortcode( 'mom_attachments', 'mom_attachments_shortcode'   );
-add_filter ( 'the_content', 'do_shortcode', 'mom_mediaembed_shortcode' );
 add_shortcode( 'mom_embed', 'mom_mediaembed_shortcode' );
 
 
