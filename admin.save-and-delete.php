@@ -272,7 +272,10 @@ if( isset( $_POST[ 'MOM_UNINSTALL_EVERYTHING' ] ) && check_admin_referer( 'MOM_U
 	if( !get_option( 'mommaincontrol_mompaf' ) ) {
 		add_option( 'mompaf_post', 'off' );
 	}
-
+	if( !get_option( 'mommaincontrol_enablecss' ) ) {
+		add_option( 'mommaincontrol_enablecss', 0 );
+	}
+	
 	if( isset( $_POST[ 'mom_save_form_submit' ] ) && check_admin_referer( 'mom_save_form' ) ) {
 		$_REQUEST[ 'mompaf_post' ]           = sanitize_text_field( $_REQUEST[ 'mompaf_post' ] );
 		$_REQUEST[ 'previous_link_class' ]   = sanitize_text_field( str_replace( '.', '', $_REQUEST[ 'previous_link_class' ] ) );
@@ -288,9 +291,8 @@ if( isset( $_POST[ 'MOM_UNINSTALL_EVERYTHING' ] ) && check_admin_referer( 'MOM_U
 		update_option( 'mompaf_post', $_REQUEST[ 'mompaf_post' ] );
 		update_option( 'mommodule_random_title', $_REQUEST[ 'randomsitetitles' ] );
 		update_option( 'mommodule_random_descriptions', $_REQUEST[ 'randomsitedescriptions' ] );
-	}
-	add_option( 'mompaf_post', 'off' );
-	add_option( 'mommaincontrol_enablecss', 0 );
+	}	
+	
 	
 	if( isset( $_POST[ 'mom_external_thumbs_mode_submit' ] ) && check_admin_referer( 'externalthumbs' ) ) { 
 		$_REQUEST[ 'externalthumbs' ] = sanitize_text_field( $_REQUEST[ 'externalthumbs' ] );

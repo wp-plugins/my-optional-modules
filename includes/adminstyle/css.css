@@ -35,6 +35,11 @@
 			top: 0;
 			width: 100%; 
 		}
+			.MOMSettings .full-title a {
+				float: right; 
+				font-size: 65%;
+				margin: 0 15px 0 0;
+			}
 		.MOMSettings input[type="submit"] {
 			margin: 5px;
 			padding: 5px;
@@ -96,52 +101,33 @@
 			float: right; 
 			width: 50%;
 		}
-		.MOMSettings .settings-section .left-half {
-			float: left;
-			width: 45%;
-		}
-			.MOMSettings .settings-section .left-half em {
-				display: block;
-				margin: 5px auto;
-			}
-			.MOMSettings .settings-section .left-half form {
-				font-size: 80%;
-			}
 			.MOMSettings .settings-section .title {
 				clear: both; 
 				display: block;
 				font-size: 120%;
 				font-weight: 800;
 			}
-		.MOMSettings .settings-section .right-half {
-			float: right;
-			width: 50%;
-		}
-			.MOMSettings .settings-section .right-half form.donate {
-				float: left;
-				padding: 25px;
-				text-align: center;
-				width: 19.95%;
-			}		
 			.MOMSettings .settings-section .right-half form {
-				float: left;
-				padding: 5px;
-				text-align: center;
-				width: 19.95%;
-			}
-			.MOMSettings .settings-section .right-half form label,
-			.MOMSettings .settings-section .right-half form i {
-				clear: both;
+				border-bottom: 1px solid rgba(0,0,0,.0);
+				clear: both; 
 				display: block;
-				text-align: center;
+				padding: 30px 5px;
 				width: 100%;
+			}
+			.MOMSettings .settings-section .right-half form:hover {
+				border-bottom: 1px solid rgba(0,0,0,.1);
+			}
+			.MOMSettings .settings-section .right-half form label {
+				display: block;
+				width: 100%;
+			}
+			.MOMSettings .settings-section .right-half form i {
+				display: inline;
 			}
 			.MOMSettings .settings-section .right-half form span {
-				display: block;
-				font-size: 70%;
-				margin: 5px auto;
-				text-align: center;
-				width: 100%;
+				float: right;
+				font-size: 90%;
+				
 			}
 			
 	
@@ -186,17 +172,12 @@
 
 @media only screen and (max-width: 945px) {
 
-	.MOMSettings .settings-section .left-half {
-		padding: 15px;
-	}
-	.MOMSettings .settings-section .left-half,
 	.MOMSettings .settings-section .right-half {
 		clear: both; 
 		display: block; 
 		float: none; 
 		width: 100%;
 	}
-
 	.MOMSettings .setting span,
 	.MOMSettings .setting .clear select,
 	.MOMSettings .setting form {
