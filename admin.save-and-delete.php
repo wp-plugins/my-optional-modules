@@ -13,6 +13,7 @@ if( isset( $_POST[ 'MOM_UNINSTALL_EVERYTHING' ] ) && check_admin_referer( 'MOM_U
 		'mommaincontrol_authorarchives',
 		'mommaincontrol_datearchives',
 		'mommaincontrol_comments',
+		'mommaincontrol_wordpress',
 		'mommaincontrol_dnsbl',
 		'MOM_themetakeover_ajaxcomments',
 		'MOM_themetakeover_hidden_field',
@@ -150,6 +151,10 @@ if( isset( $_POST[ 'MOM_UNINSTALL_EVERYTHING' ] ) && check_admin_referer( 'MOM_U
 		$_REQUEST[ 'comments' ] = sanitize_text_field( $_REQUEST[ 'comments' ] );		
 		update_option( 'mommaincontrol_comments', $_REQUEST[ 'comments' ] );
 	}
+	if( isset( $_POST[ 'mom_wordpress_mode_submit' ] ) && check_admin_referer( 'momWordpress' ) ) { 
+		$_REQUEST[ 'wordpress' ] = sanitize_text_field( $_REQUEST[ 'wordpress' ] );		
+		update_option( 'mommaincontrol_wordpress', $_REQUEST[ 'wordpress' ] );
+	}
 	if( isset( $_POST[ 'mom_dnsbl_mode_submit' ] ) && check_admin_referer( 'momDNSBL' ) ) {
 		$_REQUEST[ 'dnsbl' ] = sanitize_text_field( $_REQUEST[ 'dnsbl' ] );
 		update_option( 'mommaincontrol_dnsbl', $_REQUEST[ 'dnsbl' ] );
@@ -211,10 +216,6 @@ if( isset( $_POST[ 'MOM_UNINSTALL_EVERYTHING' ] ) && check_admin_referer( 'MOM_U
 	if( isset( $_POST[ 'mom_lazy_mode_submit' ] ) && check_admin_referer( 'lazyload' ) ) { 
 		$_REQUEST[ 'mommaincontrol_lazyload' ] = sanitize_text_field( $_REQUEST[ 'mommaincontrol_lazyload' ] );
 		update_option( 'mommaincontrol_lazyload', $_REQUEST[ 'mommaincontrol_lazyload' ] );
-	}
-	if( isset( $_POST[ 'mom_versions_submit' ] ) && check_admin_referer( 'hidewpversions' ) ) { 
-		$_REQUEST[ 'mommaincontrol_versionnumbers' ] = sanitize_text_field( $_REQUEST[ 'mommaincontrol_versionnumbers' ] );
-		update_option( 'mommaincontrol_versionnumbers', $_REQUEST[ 'mommaincontrol_versionnumbers' ] );
 	}
 	if( isset( $_POST[ 'mom_disablepingbacks_submit' ] ) && check_admin_referer( 'disablepingbacks' ) ) { 
 		$_REQUEST[ 'mommaincontrol_disablepingbacks' ] = sanitize_text_field( $_REQUEST[ 'mommaincontrol_disablepingbacks' ] );

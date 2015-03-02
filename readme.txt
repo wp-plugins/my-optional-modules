@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 6.0.8.1
+Stable tag: 6.0.9
 
 An assortment of functions to enhance WordPress.
 
@@ -47,6 +47,12 @@ on [Github](https://github.com/onebillion/mom). )
 *	Change the value of "read more..." for excerpts
 *   Utilize a list of random site titles/descriptions
 
+= Remove Unnecessary Code = 
+*	Hide version information
+*	Remove id information from enqueued stylesheets
+*	Remove identifying elements from the head
+*	Enqueue jquery versions from CDN (and not locally)
+
 = Take advantage of shortcodes =
 *	An attachments loop to show off images (that link to their respective posts)
 *	A highly customizable post loop 
@@ -74,10 +80,13 @@ on [Github](https://github.com/onebillion/mom). )
 
 == Changelog ==
 
-= 6.0.8.1 =
-* Options are more clear as to what they are doing. 
+= 6.0.9 =
+* 'Hide Versions' functionality moved to 'Remove unnecessary code'
+* Only perform DNSBL lookups if 'DNSBL' is enabled
+* 'Lazy Load' version bumped from 1.9.0 to 1.9.1
 
 = 6.0.* =
+* Options are more clear as to what they are doing. 
 * Fixed an issue with my_optional_modules_exclude_categories() that would return errors if exclusion module was turned off
 * Minor change to how Font Awesome shortcodes behave
 * Minor change to how mom_miniloop, mom_attachments, mom_mediaembed_shortcode shortcodes were implemented as they were/may have been interfering with other plugins ability to properly initiate certain shortcodes (SyntaxHighllighter Evolved as one example).

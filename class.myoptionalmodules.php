@@ -10,29 +10,22 @@ if(!defined('MyOptionalModules')) { die('You can not call this file directly.');
 class myoptionalmodules {
 	
 	public $user_level, $ipaddress, $DNSBL;
-	/**
-	 * Add actions
-	 *  - plugin dependent scripts
-	 *  - font awesome
-	 *  - plugin stylesheet
-	 *  - admin stylesheet
-	 *  - post formats
-	 */
+	
 	function actions() {
 		add_action  ( 'wp', array( $this, 'scripts' ) );
 		add_action  ( 'admin_enqueue_scripts', array( $this, 'font_awesome' ) );
-		if( 0 == get_option( 'mommaincontrol_enablecss' ) || !get_option( 'mommaincontrol_enablecss' ) ) {
+		if( !get_option( 'mommaincontrol_enablecss' ) || !get_option( 'mommaincontrol_enablecss' ) ) {
 			add_action  ( 'wp_print_styles', array( $this, 'plugin_stylesheets' ) );
 		}
-		add_action  ( 'admin_enqueue_scripts', array( $this, 'stylesheets' ) );
-		add_action  ( 'after_setup_theme', array( $this, 'post_formats' ) );
+		add_action ( 'admin_enqueue_scripts', array( $this, 'stylesheets' ) );
+		add_action ( 'after_setup_theme', array( $this, 'post_formats' ) );
 	}
 	function scripts(){
-		if( 1 == get_option( 'mommaincontrol_lazyload' ) ) {
+		if( get_option( 'mommaincontrol_lazyload' ) ) {
 			function mom_jquery(){
-				$lazyLoad          = '//cdn.jsdelivr.net/jquery.lazyload/1.9.0/jquery.lazyload.min.js';
+				global $myoptionalmodules_lazyload_version;
 				$lazyLoadFunctions = str_replace( array( 'https:', 'http:' ), '', esc_url( plugins_url().'/my-optional-modules/includes/javascript/lazyload.js' ) );
-				wp_enqueue_script( 'lazyload', $lazyLoad, array( 'jquery' ) );
+				wp_enqueue_script( 'lazyload', $myoptionalmodules_lazyload_version, array( 'jquery' ) );
 				wp_enqueue_script( 'lazyloadFunctions', $lazyLoadFunctions, array( 'jquery' ) );
 			}
 			add_action( 'wp_enqueue_scripts', 'mom_jquery' );
@@ -90,28 +83,37 @@ class myoptionalmodules {
 			$this->user_level = 0;
 		}
 	}
-	function validate_ip_address() {	
+	
+	function validate_ip_address() {
 		/**
-		 * Validate the IP address
-		 * "This function converts a human readable IPv4 or IPv6 address
-		 * (if PHP was built with IPv6 support enabled) into an address 
-		 * family appropriate 32bit or 128bit binary structure."
-		 * Read more at: //php.net/manual/en/function.inet-pton.php
+		 * Only look up the IP address if we actually need to.
+		 * If DNSBL is not enabled, we don't need to check the IP.
 		 */
-		if( inet_pton( $_SERVER[ 'REMOTE_ADDR' ] ) === false ) {
-			$this->ipaddress = false;
+		if( 1 == get_option( 'mommaincontrol_dnsbl' ) ) {
 			/**
-			 * If the IP address can't validate, treat it like it's hostile, and flag it 
-			 * as being DNSBL listed (regardless of whether it actually is or isn't)
+			 * Validate the IP address
+			 * "This function converts a human readable IPv4 or IPv6 address
+			 * (if PHP was built with IPv6 support enabled) into an address 
+			 * family appropriate 32bit or 128bit binary structure."
+			 * Read more at: //php.net/manual/en/function.inet-pton.php
 			 */
-			$this->DNSBL = true;
-		} else {
-			// If the IP address DOES validate, pass it along for further analysis
-			$this->ipaddress = esc_attr( $_SERVER[ 'REMOTE_ADDR' ] );
-			$this->DNSBL = false;
-		}
-
-		// Check the IP address (if it was validated) against the DNSBL
+			if( inet_pton( $_SERVER[ 'REMOTE_ADDR' ] ) === false ) {
+				$this->ipaddress = false;
+				/**
+				 * If the IP address can't validate, treat it like it's hostile, and flag it 
+				 * as being DNSBL listed (regardless of whether it actually is or isn't)
+				 */
+				$this->DNSBL = true;
+			} else {
+				/**
+				 * If the IP address DOES validate, pass it along for further analysis
+				 */
+				$this->ipaddress = esc_attr( $_SERVER[ 'REMOTE_ADDR' ] );
+				$this->DNSBL = false;
+			}
+			/**
+			 * Check the IP address (if it was validated) against the DNSBL
+			 */
 			$listed = 0;
 			/**
 			 * Blacklists to check
@@ -136,14 +138,18 @@ class myoptionalmodules {
 				$this->DNSBL == false;
 			}
 			elseif( $listed ) {
-				// If the IP is listed on one of the blacklists, treat it as a hostile
+				/**
+				 * If the IP is listed on one of the blacklists, treat it as a hostile
+				 */
 				$this->DNSBL     === true;
 				$this->ipaddress === false;
 			} else {
-				// If the IP was NOT listed on one of the blacklists, treat it as a friendly
+				/**
+				 * If the IP was NOT listed on one of the blacklists, treat it as a friendly
+				 */
 				$this->DNSBL === false;
 			}
-
+		}
 	}
 
 }

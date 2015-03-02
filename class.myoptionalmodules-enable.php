@@ -33,11 +33,6 @@ class myoptionalmodules_enable {
 		if( 1 == get_option( 'mommaincontrol_fontawesome' ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'fontawesome' ) );
 			add_action ( 'init', array( $this, 'fontawesome_shortcode' ), 99 );
-			/**
-			 * Removed this call in 6.0.7.2
-			 * (preliminary) interfering with other plugins ability to interpret shortcodes properly (?)
-			add_filter( 'the_content', 'do_shortcode', 'font_fa_shortcode' );
-			 */
 		}
 	
 	}

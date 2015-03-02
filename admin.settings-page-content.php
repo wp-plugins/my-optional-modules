@@ -197,7 +197,7 @@ function my_optional_modules_page_content(){
 				</label>
 				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_enablecss' ) ){ echo 0; } else { echo 1; }?>" name="pluginCSS" />
 				<input type="submit" id="mom_plugin_css_mode_submit" name="mom_plugin_css_mode_submit" value="Submit" class="hidden" />
-			</form>			
+			</form>	
 			<form method="post" action="#disable" name="momComments">
 				<?php wp_nonce_field( 'momComments' ); ?>
 				<label for="mom_comments_mode_submit">
@@ -213,20 +213,20 @@ function my_optional_modules_page_content(){
 				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_comments' ) ){ echo 0; } else { echo 1; }?>" name="comments" />
 				<input type="submit" id="mom_comments_mode_submit" name="mom_comments_mode_submit" value="Submit" class="hidden" />
 			</form>
-			<form method="post" action="#disable" name="hidewpversions">
-				<?php wp_nonce_field( 'hidewpversions' ); ?>
-				<label for="mom_versions_submit">
-				<?php if( 1 == get_option( 'mommaincontrol_versionnumbers' ) ) { ?>
+			<form method="post" action="#disable" name="momWordpress">
+				<?php wp_nonce_field( 'momWordpress' ); ?>
+				<label for="mom_wordpress_mode_submit">
+				<?php if( 1 == get_option( 'mommaincontrol_wordpress' ) ) { ?>
 					<i class="fa fa-toggle-on"></i>
-					<span>Version numbers are not visible in source</span>
+					<span>Removed: version info, style IDs, head junk - Added: CDN jquery</span>
 				<?php } else { ?>
 					<i class="fa fa-toggle-off"></i>
-					<span>Version numbers are visible in source</span>
+					<span>Your code is unaltered</span>
 				<?php }?>
-				Version
+				Remove unnecessary code
 				</label>
-				<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_versionnumbers' ) ) { echo 0; } else { echo 1; } ?>" name="mommaincontrol_versionnumbers" />
-				<input type="submit" id="mom_versions_submit" name="mom_versions_submit" value="Submit" class="hidden" />
+				<input type="text" class="hidden" value="<?php if( 1 == get_option( 'mommaincontrol_wordpress' ) ){ echo 0; } else { echo 1; }?>" name="wordpress" />
+				<input type="submit" id="mom_wordpress_mode_submit" name="mom_wordpress_mode_submit" value="Submit" class="hidden" />
 			</form>
 			<form method="post" action="#disable" name="disablepingbacks">
 				<?php wp_nonce_field( 'disablepingbacks' ); ?>
@@ -273,7 +273,6 @@ function my_optional_modules_page_content(){
 				<input class="hidden" type="text" value="<?php if( 1 == get_option( 'mommaincontrol_datearchives' ) ) { echo 0; } else { echo 1; } ?>" name="datearchives" />
 				<input type="submit" id="mom_date_archives_mode_submit" name="mom_date_archives_mode_submit" value="Submit" class="hidden" />
 			</form>
-		
 		</div>
 	</div>
 	
