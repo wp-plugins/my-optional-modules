@@ -6,69 +6,78 @@
  *    to enable. If none of these options are switched on via settings, then skip this class altogether.
  */
 
-if(!defined('MyOptionalModules')) { die('You can not call this file directly.'); }
+if( !defined( 'MyOptionalModules' ) ) { 
+	die( 'You can not call this file directly.' ); 
+}
 
 class myoptionalmodules_enable {
 	function actions() {
 		global $myoptionalmodules_plugin;
-		if( 1 == get_option( 'mommaincontrol_comments' ) || 1 == get_option( 'mommaincontrol_dnsbl' ) && true === $myoptionalmodules_plugin->DNSBL ){
+		if( get_option( 'mommaincontrol_comments' ) || get_option( 'mommaincontrol_dnsbl' ) && true === $myoptionalmodules_plugin->DNSBL ){
 			add_filter( 'comments_template', array( $this, 'comments' ) );
 			add_filter( 'comments_open', array( $this, 'comments_form'), 10, 2 );
 		}
-		if( 1 == get_option( 'MOM_themetakeover_horizontal_galleries' ) ) {
+		if( get_option( 'MOM_themetakeover_horizontal_galleries' ) ) {
 			remove_shortcode( 'gallery', 'gallery_shortcode' );
 			add_action( 'init', array( $this, 'horizontal_gallery_shortcode'), 99 );
 			add_filter( 'use_default_gallery_style', '__return_false' );
 		}
-		if( 1 == get_option( 'mommaincontrol_momshare' ) ) {
+		if( get_option( 'mommaincontrol_momshare' ) ) {
 			add_filter( 'the_content', array( $this, 'share' ) );
 		}
-		if( 1 == get_option( 'mommaincontrol_protectrss' ) ) {
+		if( get_option( 'mommaincontrol_protectrss' ) ) {
 			add_filter( 'the_content_feed', array( $this, 'rss' ) );
 			add_filter( 'the_excerpt_rss', array( $this, 'rss' ) );
 		}
-		if( 1 == get_option( 'mommaincontrol_404' ) ) {
+		if( get_option( 'mommaincontrol_404' ) ) {
 			add_action( 'wp', array( $this, 'no_404s' ) );
 		}
-		if( 1 == get_option( 'mommaincontrol_fontawesome' ) ) {
+		if( get_option( 'mommaincontrol_fontawesome' ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'fontawesome' ) );
 			add_action ( 'init', array( $this, 'fontawesome_shortcode' ), 99 );
 		}
-	
 	}
+
 	function comments( $comment_template ) {
 		return dirname( __FILE__ ) . '/includes/templates/comments.php';
 	}
+
 	function comments_form( $open, $post_id ) {
 		$post = get_post( $post_id );
-		$open = false;
-		return $open;
+		return false;
 	}
+
 	function horizontal_gallery_shortcode() {
 		add_shortcode( 'gallery', array( $this, 'shortcode_output' ) );
 	}
+
 	function fontawesome() {
 		$font_awesome_css = plugins_url() . '/' . plugin_basename( dirname( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css';
 		$font_awesome_css = str_replace( array( 'https:', 'http:' ), '', esc_url( $font_awesome_css ) );
+
 		wp_enqueue_style( 'font_awesome',  $font_awesome_css );
+
+		$font_awesome_css = null;
 	}
+
 	function fontawesome_shortcode() {
 		add_shortcode( 'font-fa',  array( $this, 'font_fa_shortcode' ) );
 	}
+
 	function font_fa_shortcode( $atts, $content = null ) {
 		extract(
 			shortcode_atts( array (
 				"i" => ''
 			), $atts )
 		);
-		$icon = esc_attr( $i );
-		if( '' != $icon ) {
-			$iconfinal = $icon;
-		}
+
 		ob_start();
-		return '<i class="fa fa-' . $iconfinal . '"></i>';
+		return '<i class="fa fa-' . sanitize_text_field( $i ) . '"></i>';
 		return ob_get_clean();
+
+		$i = null;
 	}
+
 	function shortcode_output( $attr ) {
 		$post = get_post();
 		static $instance = 0;
@@ -233,54 +242,58 @@ class myoptionalmodules_enable {
 			return $output;
 		}
 	}
-	function share( $content ) { 
+
+	/**
+	 * Social Share Links
+	 */
+	function share( $content ) {
 		global $wp, $post;
 		
-		$fontawesome = get_option( 'mommaincontrol_fontawesome' );
-		
-		$at_top   = get_option( 'MOM_enable_share_top' );
-		$on_pages = get_option( 'MOM_enable_share_pages' );
-		
-		if( !$at_top ) {
-			$at_top = 0;
-		} else {
-			$at_top = $at_top;
-		}
-		$id      = $post->ID;
-		$excerpt = $post->post_excerpt;
-		$excerpt = htmlentities( str_replace( ' ', '%20', $excerpt ) ); 
-		$title   = str_replace( ' ', '%20', get_the_title( $id ) );
+		/**
+		 * Settings and variables
+		 */
+		$fontawesome = sanitize_text_field( get_option( 'mommaincontrol_fontawesome' ) );
+		$at_top      = sanitize_text_field( get_option( 'MOM_enable_share_top' ) );
+		$on_pages    = sanitize_text_field( get_option( 'MOM_enable_share_pages' ) );
+		$excerpt     = htmlentities( str_replace( ' ', '%20', $post->post_excerpt ) ); 
+		$title       = str_replace( ' ', '%20', get_the_title( $post->ID ) );
+
+		/**
+		 * Content output
+		 */
 		$output = '<span class="mom_shareLinks">';
-		if( !$fontawesome ) {
-			$output .='Share via: ';	
-		}
-		if( 1 == get_option( 'MOM_enable_share_reddit' ) && 1 == $fontawesome ) {
+		$output .='Share via: ';	
+		if( get_option( 'MOM_enable_share_reddit' ) && $fontawesome ) {
 			$output .='<a class="reddit fa fa-reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '"></a>';
-		} elseif( 1 == get_option( 'MOM_enable_share_reddit' ) && !$fontawesome ) {
+		} elseif( get_option( 'MOM_enable_share_reddit' ) && !$fontawesome ) {
 			$output .='<a class="reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '">reddit</a>';
 		}
-		if( 1 == get_option( 'MOM_enable_share_google' ) && 1 == $fontawesome  ) {
+		if( get_option( 'MOM_enable_share_google' ) && $fontawesome  ) {
 			$output .='<a class="google fa fa-google-plus" href="https://plus.google.com/share?url=' . get_the_permalink() . '"></a>';
-		} elseif( 1 == get_option( 'MOM_enable_share_google' ) && !$fontawesome  ) {
+		} elseif( get_option( 'MOM_enable_share_google' ) && !$fontawesome  ) {
 			$output .='<a class="google" href="https://plus.google.com/share?url=' . get_the_permalink() . '">google+</a>';
 		}
-		if( 1 == get_option( 'MOM_enable_share_twitter' ) && 1 == $fontawesome  ) {
+		if( get_option( 'MOM_enable_share_twitter' ) && $fontawesome  ) {
 			$output .='<a class="twitter fa fa-twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '"></a>';
-		} elseif( 1 == get_option( 'MOM_enable_share_twitter' ) && !$fontawesome  ) {
+		} elseif( get_option( 'MOM_enable_share_twitter' ) && !$fontawesome  ) {
 			$output .='<a class="twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '">twitter</a>';
 		}
-		if( 1 == get_option( 'MOM_enable_share_facebook' ) && 1 == $fontawesome  ) {
+		if( get_option( 'MOM_enable_share_facebook' ) && $fontawesome  ) {
 			$output .='<a class="facebook fa fa-facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '"></a>';
-		} elseif( 1 == get_option( 'MOM_enable_share_facebook' ) && !$fontawesome  ) {
+		} elseif( get_option( 'MOM_enable_share_facebook' ) && !$fontawesome  ) {
 			$output .='<a class="facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '">facebook</a>';
 		}
-		if( 1 == get_option( 'MOM_enable_share_email' ) && 1 == $fontawesome  ) {
+		if( get_option( 'MOM_enable_share_email' ) && $fontawesome  ) {
 			$output .='<a class="email fa fa-envelope" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]"></a>';
-		} elseif( 1 == get_option( 'MOM_enable_share_email' ) && !$fontawesome  ) {
-			$output .='<a class="email" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]">email</a>';
+		} elseif( get_option( 'MOM_enable_share_email' ) && !$fontawesome  ) {
+			$output .='<a class="email" href="mailto:?subject=' . $title . '&amp;body=' . $excerpt . '%20[ ' . get_the_permalink() . ' ]">email</a>';
 		}
 		$output .='</span>';
-		if( is_single() && 1 == $at_top ) {
+
+		/**
+		 * Determine if top or bottom of post, then display
+		 */
+		if( is_single() && $at_top ) {
 			return $output . $content;
 		} elseif( is_single() && !$at_top ) {
 			return $content . $output;
@@ -294,11 +307,28 @@ class myoptionalmodules_enable {
 			return $content;
 		}
 
+		/**
+		 * Done with these - drop them
+		 */
+		$fontawesome = null;
+		$at_top      = null;
+		$on_pages    = null;
+		$excerpt     = null;
+		$title       = null;
+		$output      = null;
 	}
+
+	/**
+	 * RSS Link Backs
+	 */
 	function rss($content){
 		global $post;
 		return $content . '<p><a href="' . esc_url( get_permalink( $post->ID ) ) . '">' . htmlentities( get_post_field( 'post_title', $post->ID ) ) . '</a> via <a href="' . esc_url( home_url( '/' ) ) . '">' . get_bloginfo( 'site_name' ) . '</a></p>';
 	}
+
+	/**
+	 * 404 Redirection
+	 */
 	function no_404s() {
 		if( is_404() ) {
 			header( 'location:' . esc_url( get_site_url() ) );

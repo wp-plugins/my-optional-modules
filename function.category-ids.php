@@ -7,6 +7,7 @@
 if( !defined( 'MyOptionalModules' ) ) { 
 	die( 'You can not call this file directly.' ); 
 }
+
 if( !function_exists( 'my_optional_modules_get_category_ids' ) ) {
 	function my_optional_modules_get_category_ids() {
 		if ( !$cat_ids = wp_cache_get( 'all_category_ids', 'category' ) ) {

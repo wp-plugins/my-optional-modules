@@ -60,6 +60,13 @@ if( !function_exists( 'my_optional_modules_exclude_categories' ) ) {
 		$MOM_Exclude_level1Categories = null;
 		$MOM_Exclude_level2Categories = null;
 		$MOM_Exclude_level7Categories = null;
+		$c1                           = null;
+		$C1                           = null;
+		$c11                          = null;
+		$c11array                     = null;
+		$category_ids                 = null;
+		$cat                          = null;
+		$link                         = null;
 		$loggedOutCats                = null;
 	}
 }

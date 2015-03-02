@@ -1,6 +1,8 @@
 <?php 
 
-if(!defined('MyOptionalModules')) { die('You can not call this file directly.'); }
+if( !defined( 'MyOptionalModules' ) ) { 
+	die( 'You can not call this file directly.' ); 
+}
 
 if( !function_exists( 'mom_miniloop_shortcode' ) ) { 
 	function mom_miniloop_shortcode( $atts ) {
@@ -9,26 +11,27 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 		 * for use in this shortcode(where necessary and called for)
 		 */
 		global $paged, $post;
-		$thumbs        = '';
-		$show_link     = '';
-		$amount        = '';
-		$downsize      = '';
-		$offset        = '';
-		$paging        = '';
-		$related       = '';
-		$year          = '';
-		$month         = '';
-		$day           = '';
-		$link_content  = '';
-		$style         = '';
-		$category      = '';
-		$orderby       = '';
-		$order         = '';
-		$post_status   = '';
-		$cache_results = '';
-		$meta          = '';
-		$key           = '';
-		$title         = '';
+		$thumbs        = null;
+		$show_link     = null;
+		$amount        = null;
+		$downsize      = null;
+		$offset        = null;
+		$paging        = null;
+		$related       = null;
+		$year          = null;
+		$month         = null;
+		$day           = null;
+		$link_content  = null;
+		$style         = null;
+		$category      = null;
+		$orderby       = null;
+		$order         = null;
+		$post_status   = null;
+		$cache_results = null;
+		$meta          = null;
+		$key           = null;
+		$title         = null;
+		
 		/**
 		 * Set up some default values that we can override later
 		 */
@@ -36,7 +39,7 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 		$category_count = 0;
 		$alt            = 0;
 		$recent_count   = 0;
-		$exclude_cats   = '';
+		$exclude_cats   = null;
 		$related_class  = ' element';
 		$series         = get_post_meta($post->ID, 'series', true);
 		/**
@@ -54,20 +57,20 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 				'offset'        => 0,					// how many posts to offset 
 				'paging'        => 0,					// Whether or not to page the results
 				'related'       => 0,
-				'year'          => '',					// numerical date (year) (ex: 2014,2013,2012,2011..)
-				'month'         => '',					// numerical date (month) (ex: 1,2,3,4,5,6,7,8,9,10,11,12)
-				'day'           => '',					// numerical date (day) (ex: 1,2,3,4,5,6,7,8,9,10,11,...)
-				'exclude'       => '',                  // post IDs to exclude
-				'link_content'  => '',					// alpha-numeric value for post content (defaults to post title) (ex: "Click me")
+				'year'          => null,				// numerical date (year) (ex: 2014,2013,2012,2011..)
+				'month'         => null,				// numerical date (month) (ex: 1,2,3,4,5,6,7,8,9,10,11,12)
+				'day'           => null,				// numerical date (day) (ex: 1,2,3,4,5,6,7,8,9,10,11,...)
+				'exclude'       => null,                // post IDs to exclude
+				'link_content'  => null,				// alpha-numeric value for post content (defaults to post title) (ex: "Click me")
 				'style'         => 'tiled',				// columns,slider,tiled,list
-				'category'      => '',					// numerical ID(s) or category name(s) (multiple separated by commas) (do not mix the two)
+				'category'      => null,				// numerical ID(s) or category name(s) (multiple separated by commas) (do not mix the two)
 				'orderby'       => 'post_date',			// none,ID,author,title,name,type,date,modified,parent,rand
 				'order'         => 'DESC',				// DESC(descending) or ASC(ascending)
 				'post_status'   => 'publish',			// publish,pending,draft,auto-draft,future,private,inherit,trash,any
 				'cache_results' => false,				// true or false
 				'meta'          => 'series',            // Posts with THIS meta key
-				'key'           => '',                  // Post with THIS meta key VALUE
-				'title'         => ''
+				'key'           => null,                // Post with THIS meta key VALUE
+				'title'         => null
 			), $atts )
 		);
 		/**
@@ -402,7 +405,7 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 			 * Set up any post information that can only be gathered while inside of the loop
 			 */
 			$id            = get_the_ID();
-			$link_text     = '';
+			$link_text     = null;
 			$link          = esc_url( get_permalink( $id ) );
 			$title         = get_the_title( $id );
 			$date          = get_the_date();
@@ -413,13 +416,13 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 			 */
 			$categories = get_the_category( $id );
 			$separator = ' ';
-			$output = '';
+			$output = null;
 			/**
 			 * Set up link text, and determine whether or not to use custom link text
 			 * [link_content="Click me!"] would result in links that say "Click me!"
 			 * while the default is to just use the title of the post as the link text
 			 */
-			if( '' == $link_content ) {
+			if( !$link_content ) {
 				$link_text_text = get_the_title( $id );
 			} else {
 				$link_text_text = $link_content;
@@ -562,5 +565,39 @@ if( !function_exists( 'mom_miniloop_shortcode' ) ) {
 				return $open . ob_get_clean() . $close;
 			} else { }
 		}
+
+		$open           = null;
+		$close          = null;
+		$thumbs         = null;
+		$show_link      = null;
+		$amount         = null;
+		$downsize       = null;
+		$offset         = null;
+		$paging         = null;
+		$related        = null;
+		$year           = null;
+		$month          = null;
+		$day            = null;
+		$link_content   = null;
+		$style          = null;
+		$category       = null;
+		$orderby        = null;
+		$order          = null;
+		$post_status    = null;
+		$cache_results  = null;
+		$meta           = null;
+		$key            = null;
+		$title          = null;
+		$maxposts       = null;
+		$category_count = null;
+		$alt            = null;
+		$recent_count   = null;
+		$exclude_cats   = null;
+		$related_class  = null;
+		$series         = null;
+		$year           = null;
+		$month          = null;
+		$day            = null;
+
 	}
 }

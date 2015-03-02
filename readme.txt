@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 6.0.9
+Stable tag: 7
 
 An assortment of functions to enhance WordPress.
 
@@ -80,29 +80,5 @@ on [Github](https://github.com/onebillion/mom). )
 
 == Changelog ==
 
-= 6.0.9 =
-* 'Hide Versions' functionality moved to 'Remove unnecessary code'
-* Only perform DNSBL lookups if 'DNSBL' is enabled
-* 'Lazy Load' version bumped from 1.9.0 to 1.9.1
-
-= 6.0.* =
-* Options are more clear as to what they are doing. 
-* Fixed an issue with my_optional_modules_exclude_categories() that would return errors if exclusion module was turned off
-* Minor change to how Font Awesome shortcodes behave
-* Minor change to how mom_miniloop, mom_attachments, mom_mediaembed_shortcode shortcodes were implemented as they were/may have been interfering with other plugins ability to properly initiate certain shortcodes (SyntaxHighllighter Evolved as one example).
-* [mom_embed] will now embed media using mom_mediaEmbed - supports imgur albums, youtube with ?t parameter, soundcloud, vimeo, gfycat, funnyordie, vine, with oEmbed fallback for WordPress supported embeds not covered.
-* Moved External Thumbnails and Recent Posts Widget to Extras menu
-* Previous function no longer being used removed
-* Uninstallation procedure missing a recently added option for removal 
-* miniloop additional div close
-* miniloop list style now outputs the excerpt in place of time since post, author and category information
-* Further limit function inclusions if they aren't being called for via settings
-* Pre-increment swapped for all instances of variables using post-incremement (++$variable instead of $variable++)
-* $_SERVER['REQUEST_TIME'] replaces time()
-* In some instances, strlen has been replaced by isset
-* Optionally remove the inclusion of the plugin's CSS (you WILL need to style everything should you decide to disable the plugin CSS) (advanced option)
-* WordPress default post thumbnail integration as fallback if external thumbnail non-existent (or nothing if neither)
-* Function moved
-* Fixed issue with moving scripts to footer also moving the stylesheets
-* Code clean-up
-* Settings page descriptions altered
+= 7 =
+* 7 branch
