@@ -1,0 +1,465 @@
+.mom_minilist *:before, .mom_minilist *:after, .mom_minilist *,#mom_onthisday *:before,#mom_onthisday *:after, #mom_onthisday *,.mom_postrotation *:before, .mom_postrotation *:after, .mom_postrotation * {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+
+h2.mom_related_title{ 
+	border-top: 1px solid rgba(0,0,0,.1);
+	clear: both; 
+	font-size: 95%; 
+	margin: 25px auto 0; 
+	padding:15px 0 0; 
+}
+
+.mom_shareLinks {
+	display: block;
+	float: right;
+	margin: 0;
+	padding: 25px 5px;
+	text-align: right;
+	width: 100%;
+	z-index: 99;
+}
+.mom_shareLinks a{
+	background-color: #fff;
+	border: 1px solid rgba(0,0,0,.1);
+	color: #000;
+	margin: 5px -5px 5px 0;
+	padding: 15px 25px;
+	text-align: center;
+	text-decoration: none; 
+	width: auto;
+}
+.mom_shareLinks .facebook:hover {
+	color: #3e5a93;
+}
+.mom_shareLinks .twitter:hover {
+	color: #55acee;
+}
+.mom_shareLinks .google:hover {
+	color: #d54334;
+}
+.mom_shareLinks .email:hover {
+	color: #0a2a45;
+}
+.mom_shareLinks .reddit:hover {
+	color: #cee3f8;
+}
+
+/* Tiled */
+/**
+ * Proper sizing for all elements of this plugin.
+ */
+.loopdeloopNavigation *:before, 
+.loopdeloopNavigation *:after, 
+.loopdeloopNavigation * {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+.loopdeloopNavigation:after,
+.loopdeloopRotation:after { 
+	clear: both;
+	content: "";
+	display: block;
+}
+.loopdeloopNavigation { 
+	clear: both;
+	display: block;
+	margin: 5px auto;
+	padding: 5px;
+	text-align: center;
+}
+
+/**
+ * MOM_Miniloop
+ */
+.loopdeloopNavigation a { 
+	padding: 5px; 
+}
+.loopdeloopRotation {
+	clear: both;
+	display: block;
+	margin: 25px auto;
+}
+
+/**
+ * [style="tiled"]
+ */
+.loopdeloop_tiled {
+	display: block; 
+	margin: 25px auto;
+	max-width: 100%;
+	padding:0;
+}
+.loopdeloop_tiled .mediaEmbed {
+	border-bottom: none;
+	bottom: 0;
+	clear: both;
+	display: block;
+	height: 100%;
+	left: 0;
+	overflow: hidden;
+	padding: 0 0 5px;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+.loopdeloop_tiled .thumbnailFull {
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background: no-repeat center center fixed;
+	background-size: cover;
+	border: 1px solid rgba(0,0,0,.1);
+	display: block;
+	height: 100%;
+	margin: 0;
+	overflow: hidden;
+	position: relative;
+	width: 100%;
+}
+.loopdeloop_tiled .thumbnailFull:hover {
+	-webkit-box-shadow:inset 0 0 5px 1px rgba(0,0,0,.2);
+	box-shadow:inset 0 0 5px 1px rgba(0,0,0,.2);
+}
+.loopdeloop_tiled .feature {
+	clear: both;
+	height: 400px;
+	margin: 0;
+	width: 100%;
+}
+.loopdeloop_tiled .second {
+	height: 300px;
+	width: 100%;
+}
+.loopdeloop_tiled .second .thumbnailFull:nth-child(1) {
+	float: left;
+	height: 100%;
+	width: 50%;
+}
+.loopdeloop_tiled .second .leftSmall a {
+	padding: 25%;
+}
+.loopdeloop_tiled .secondThird {
+	float: right;
+	height: 100%;
+	width: 50%;
+}
+.loopdeloop_tiled .secondThird a {
+	padding: 5%!important;
+}
+.loopdeloop_tiled .secondThird .thumbnailFull {
+	height: 150px!important;
+	clear: both;
+	width: 100%!important;
+}
+.loopdeloop_tiled .thumbnailFull a.mediaNotPresent {
+	clear: both;
+	display: block;
+	font-size: 150%;
+	font-weight: 900;
+	height: 100%;
+	left: 0;
+	opacity: .3;
+	position: absolute;
+	padding: 15%;
+	text-align: center;
+	text-decoration: none;
+	text-shadow: none;
+	top: 0;
+	width: 100%;
+}
+.loopdeloop_tiled .thumbnailFull a:hover {
+	opacity: 1;
+	text-shadow:  0 0 1px rgba(0,0,0,.9);
+}
+
+/**
+ *  [style="slider"]
+ */
+.loopdeloopSlideContainer .fa-arrow-up {
+	clear: both;
+	display: block;
+	font-size: 45%; 
+	text-align: center;
+	width: 100%;
+}
+.loopdeloopSlideContainer {
+	-webkit-box-shadow:inset 0 0 5px 1px rgba(0,0,0,.2);
+	border: 1px solid rgba(0,0,0,.9);
+	box-shadow: inset 0 0 5px 1px rgba(0,0,0,.2);
+	height: 300px;
+	margin: 0 auto;
+	max-width: 500px;
+	overflow-y: hidden;
+	overflow-x: auto;
+	position: relative;
+}
+.loopdeloopSlideContainer .slide {
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	-webkit-background-size: cover;
+	background: no-repeat center center fixed;
+	background-size: cover;
+}
+.loopdeloopSlideContainer .inner .slide {
+	display: block;
+	float: left;
+	height: 300px;
+	position: relative;
+	width: 500px;
+}
+.loopdeloopSlideContainer .inner .slide img {
+	height: 100%;
+}
+.loopdeloopSlideContainer .inner .slide span {
+	left: 0;
+	font-size: 200%;
+	font-weight: 900;
+	padding: 20%;
+	position:absolute;
+	text-align: center;
+	top: 0;
+	width: 100%;
+}
+
+/**
+ * [style="columns"]
+ */
+.loopdeloopColumns .fa-arrow-up {
+	background-color: rgba(0,0,0,.8);
+	color: rgba(255,255,255,.8);
+	cursor: default;
+	font-size: 65%;
+	padding: 5px;
+	position: absolute;
+	right: 5px;
+	top: 5px;
+}
+.loopdeloopColumns .column {
+	border: 1px solid rgba(0,0,0,.1);
+	border-radius: 2px;
+	display: block;
+	float: left;
+	height: 150px;
+	margin: 0 0 12px 2%;
+	overflow: hidden;
+	position:relative;
+	width: 48%;
+}
+.loopdeloopColumns .mediaNotPresent {
+	display:block;
+	height: 100%;
+	width: 100%;
+}
+.loopdeloopColumns .column .inner {
+	-moz-background-size:cover;
+	-o-background-size:cover;
+	-webkit-background-size:cover;
+	-webkit-box-shadow:inset 0 0 5px 1px rgba(0,0,0,.2);
+	background:no-repeat center center fixed;
+	background-color: rgba(0,0,0,.1);
+	background-size:cover;
+	box-shadow:inset 0 0 5px 1px rgba(0,0,0,.2);
+	height: 100%;
+}
+.loopdeloopColumns .column span {
+	-moz-transition:all .3s ease-in-out;
+	-o-transition:all .3s ease-in-out;
+	-webkit-transition:all .3s ease-in-out;
+	background-color: rgba(0,0,0,.8);
+	bottom: 0;
+	margin-bottom: -100%;
+	padding:5px;
+	position: absolute;
+	transition:all .3s ease-in-out;
+	width: 100%;
+}
+.loopdeloopColumns .column span em{
+	display: none;
+	visibility:hidden;
+}
+.loopdeloopColumns .column:hover span{
+	margin-bottom: 0;
+}
+.loopdeloopColumns .column:hover span em{
+	clear: both;
+	color: rgba(255,255,255,.8);
+	display: block;
+	padding: 5px;
+	font-size: 75%;
+	visibility: visible;
+}
+.loopdeloopColumns .column span a{
+	color: rgba(255,255,255,.8);
+	font-size: 75%;
+	text-decoration: none;
+}
+
+/**
+ * [style="list"]
+ */
+.loopdeloopList {
+	margin: 25px auto;
+	padding: 5px; 
+}
+.loopdeloopList .fa-arrow-up {
+	font-size: 75%; 
+	margin-left: 10px;
+}
+.loopdeloopList section:after {
+	clear: both;
+	content: "";	
+	display: block;
+}
+.loopdeloopList section {
+	clear: both;
+	margin: 5px auto 10px;
+	padding: 5px 0; 
+	width: 100%;
+}
+.loopdeloopList section div {
+	cursor: default;	
+}
+.loopdeloopList section div.counter {
+	float: left;
+	font-size: 65%;
+	margin: 1px 0 5px;
+	padding: 12px;
+	text-align: center;
+	width: 10%;
+}
+.loopdeloopList section div.thumb {
+	float: left;
+	margin: 1px 0 5px;
+	padding: 5px 5px 5px 0;
+	width: 10%;
+}
+.loopdeloopList section div.text {
+	float: left;
+	width: 80%;
+	margin: 0; 
+}
+.loopdeloopList section span {
+	clear: both;
+	display: block;
+	margin: 0 auto;
+	padding: 0;
+	width: 100%; 
+}
+.loopdeloopList section span a {
+	text-decoration: none;	
+}
+.loopdeloopList section span.title {
+	font-size: 100%; 
+}
+.loopdeloopList section span.author {
+	font-size: 80%; 
+}
+.loopdeloopList section span.meta {
+	font-size: 70%; 
+}
+.loopdeloopList section img {
+	width: 100%; 
+}
+.loopdeloopList .sidebar section:after {
+	clear: both;
+	display: block;
+	content: ""; 
+}
+.loopdeloopList .sidebar {
+	border-bottom: 1px solid rgba(0,0,0,.1);
+	padding: 5px;
+}
+.loopdeloopList .sidebar section {
+	clear: both;
+	margin: 5px auto 10px;
+	padding: 5px; 
+	width: 100%;
+}
+.loopdeloopList .sidebar section div {
+	cursor: default; 
+}
+.loopdeloopList .sidebar img {
+	height: auto; 
+	width: 100%; 
+}
+.loopdeloopList .sidebar div.thumb {
+	float: right;
+	margin: 0;
+	padding: 1%;
+	width: 40%;
+}
+.loopdeloopList .sidebar div.counter {
+	color: rgba(0,0,0,.3);
+	float: left; 
+	font-size: 200%;
+	font-weight: 900;
+	margin: 0;
+	width: 10%;
+}
+.loopdeloopList .sidebar div.text {
+	float: left;
+	margin: 0 2%; 
+	padding: 0 10px 0 20px;
+	width: 40%;
+}
+.loopdeloopList .sidebar span {
+	clear: both;
+	display: block;
+	margin: 0 auto;
+	padding: 0;
+	width: 98%; 
+}
+.loopdeloopList .sidebar span a {
+	text-decoration: none; 
+}
+
+/* Various */
+.clearboth{
+	clear:both;
+}
+.hidden{
+	display: none;
+	height: 0;
+	visibility: hidden;
+	width: 0;
+}
+
+/* 
+ * Horizontal Galleries
+ */
+.horizontalGallery { 
+	display: block; 
+	height: auto; 
+	margin: 10px auto; 
+	max-height: 550px; 
+	max-width: 100%; 
+	overflow-x: auto; 
+	overflow-y: hidden; 
+	position: relative; 
+	width: 100%;
+}
+	.horizontalGallery .gallery-item .wp-caption-text, .horizontalGallery p { 
+		display: none; 
+		height: 0; 
+		margin: 0; 
+		padding: 0; 
+		visibility: hidden; 
+		width: 0; 
+	}
+	.horizontalGallery .gallery-item { 
+		clear: none; 
+		float: left; 
+		margin: -2px 0; 
+		max-height: 150px; 
+		max-width: 150px; 
+		padding:0; 
+		width: auto; 
+	}
+	.horizontalGallery .gallery-item img { 
+		height: auto; 
+		width: 100%;  
+	}
