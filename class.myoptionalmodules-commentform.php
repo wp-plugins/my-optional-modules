@@ -13,7 +13,7 @@ class myoptionalmodules_comment_form {
 		if( 1 == get_option( 'MOM_themetakeover_ajaxifycomments' ) ) {
 			add_action ( 'comment_post', array( $this, 'ajax' ), 20, 2 );
 		}
-		if( 1 == get_option( 'MOM_themetakeover_hidden_field' ) ) {
+		if( 1 == get_option( 'myoptionalmodules_commentspamfield' ) ) {
 				add_filter( 'comment_form_default_fields', array( $this, 'spam_field' ) );
 				add_action( 'comment_form_logged_in_after', array( $this, 'spam_field' ) );
 				add_action( 'comment_form_after_fields', array( $this, 'spam_field' ) );

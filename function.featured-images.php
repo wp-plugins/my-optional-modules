@@ -2,7 +2,7 @@
 
 if(!defined('MyOptionalModules')) { die('You can not call this file directly.'); }
 
-if( 1 == get_option( 'mommaincontrol_externalthumbs' ) ) {
+if( 1 == get_option( 'myoptionalmodules_nelio' ) ) {
 	if( is_admin() ) {
 		add_action( 'add_meta_boxes', 'myoptionalmodules_add_url_metabox' );
 		function myoptionalmodules_add_url_metabox() {

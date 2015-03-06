@@ -11,17 +11,17 @@ if(!defined('MyOptionalModules')) { die('You can not call this file directly.');
 class myoptionalmodules_disable {
 
 	function actions() {
-		if( 1 == get_option( 'mommaincontrol_disablepingbacks' ) ) {
+		if( 1 == get_option( 'myoptionalmodules_disablepingbacks' ) ) {
 			add_filter( 'xmlrpc_methods', array( $this, 'pingbacks' ) );
 		}
-		if( 1 == get_option( 'mommaincontrol_authorarchives' ) ) {
+		if( 1 == get_option( 'myoptionalmodules_authorarchives' ) ) {
 			add_action( 'template_redirect', array( $this, 'author_archives' ) );
 		}
-		if( 1 == get_option( 'mommaincontrol_datearchives' ) ) {
+		if( 1 == get_option( 'myoptionalmodules_datearchives' ) ) {
 			add_action( 'wp', array( $this, 'date_archives' ) );
 			add_action( 'template_redirect', array( $this, 'date_archives' ) );
 		}
-		if( 1 == get_option( 'mommaincontrol_wordpress' ) ) {
+		if( 1 == get_option( 'myoptionalmodules_removecode' ) ) {
 			if ( !in_array( $GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php' ) ) ) {
 				remove_action('wp_head', 'wp_generator');
 				add_filter( 'style_loader_src', array( $this, 'versions' ), 0 );

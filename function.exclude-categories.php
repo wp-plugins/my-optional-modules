@@ -13,7 +13,7 @@ if( !defined( 'MyOptionalModules' ) ) {
 if( !function_exists( 'my_optional_modules_exclude_categories' ) ) {
 	function my_optional_modules_exclude_categories() {
 		$loggedOutCats = 0;
-		if( 1 == get_option( 'mommaincontrol_momse' ) ) {
+		if( 1 == get_option( 'myoptionalmodules_exclude' ) ) {
 			global $myoptionalmodules_plugin;
 			$MOM_Exclude_level0Categories  = 0;
 			$MOM_Exclude_level1Categories  = 0;

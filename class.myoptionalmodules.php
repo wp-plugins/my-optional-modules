@@ -5,7 +5,9 @@
  * These are values that we need to grab and use throughout the plugin.
  */
  
-if(!defined('MyOptionalModules')) { die('You can not call this file directly.'); }
+if( !defined( 'MyOptionalModules' ) ) { 
+	die( 'You can not call this file directly.' ); 
+}
 
 class myoptionalmodules {
 	
@@ -14,14 +16,14 @@ class myoptionalmodules {
 	function actions() {
 		add_action  ( 'wp', array( $this, 'scripts' ) );
 		add_action  ( 'admin_enqueue_scripts', array( $this, 'font_awesome' ) );
-		if( !get_option( 'mommaincontrol_enablecss' ) || !get_option( 'mommaincontrol_enablecss' ) ) {
+		if( !get_option( 'myoptionalmodules_plugincss' ) || !get_option( 'myoptionalmodules_plugincss' ) ) {
 			add_action  ( 'wp_print_styles', array( $this, 'plugin_stylesheets' ) );
 		}
-		add_action ( 'admin_enqueue_scripts', array( $this, 'stylesheets' ) );
 		add_action ( 'after_setup_theme', array( $this, 'post_formats' ) );
 	}
+
 	function scripts(){
-		if( get_option( 'mommaincontrol_lazyload' ) ) {
+		if( get_option( 'myoptionalmodules_lazyload' ) ) {
 			function mom_jquery(){
 				global $myoptionalmodules_lazyload_version;
 				$lazyLoadFunctions = str_replace( array( 'https:', 'http:' ), '', esc_url( plugins_url().'/my-optional-modules/includes/javascript/lazyload.js' ) );
@@ -31,24 +33,19 @@ class myoptionalmodules {
 			add_action( 'wp_enqueue_scripts', 'mom_jquery' );
 		}
 	}
+
 	function font_awesome() {
 		$font_awesome_css = str_replace( array( 'https:', 'http:' ), '', esc_url( plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' ) );
 		wp_register_style( 'font_awesome', $font_awesome_css );
 		wp_enqueue_style( 'font_awesome' );
 	}
+
 	function plugin_stylesheets() {
 		$myStyleFile = str_replace( array( 'https:', 'http:' ), '', esc_url( WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules.css' ) );
 		wp_register_style( 'my_optional_modules', $myStyleFile );
 		wp_enqueue_style( 'my_optional_modules' );
 	}
-	function stylesheets( $hook ){
-		if( 'settings_page_mommaincontrol' != $hook )
-		return;
-		$font_awesome_css = str_replace( array( 'https:', 'http:' ), '', esc_url( plugins_url() . '/' . plugin_basename( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' ) );
-		$mom_admin_css    = str_replace( array( 'https:', 'http:' ), '', esc_url( plugins_url() . '/' . plugin_basename( dirname ( __FILE__ ) ) . '/includes/adminstyle/css.css' ) );
-		wp_enqueue_style( 'mom_admin_css', $mom_admin_css );
-		wp_enqueue_style( 'font_awesome',  $font_awesome_css );
-	}
+
 	function post_formats() {
 		add_theme_support(
 			'post-formats',
@@ -65,31 +62,20 @@ class myoptionalmodules {
 			)
 		);
 	}
-	/**
-	 * Fetch user level
-	 *  - level 1 (subscriber)
-	 *  - level 2 (author)
-	 *  - level 3 (editor)
-	 *  - level 4 (admin)
-	 *  - level 0 (not logged in)
-	 */
+
 	function userlevel() {
 		if( is_user_logged_in() ) {
-			if( current_user_can( 'read' ) )                   $this->user_level = 1;
-			if( current_user_can( 'delete_posts' ) )           $this->user_level = 2;
-			if( current_user_can( 'delete_published_posts' ) ) $this->user_level = 3;
-			if( current_user_can( 'edit_dashboard' ) )         $this->user_level = 4;
+			if( current_user_can( 'edit_dashboard' ) )         $this->user_level = 4; // Admin
+			if( current_user_can( 'delete_published_posts' ) ) $this->user_level = 3; // Editor
+			if( current_user_can( 'delete_posts' ) )           $this->user_level = 2; // Author
+			if( current_user_can( 'read' ) )                   $this->user_level = 1; // Subscriber
 		} else {
 			$this->user_level = 0;
 		}
 	}
 	
 	function validate_ip_address() {
-		/**
-		 * Only look up the IP address if we actually need to.
-		 * If DNSBL is not enabled, we don't need to check the IP.
-		 */
-		if( 1 == get_option( 'mommaincontrol_dnsbl' ) ) {
+		if( 1 == get_option( 'myoptionalmodules_dnsbl' ) ) {
 			/**
 			 * Validate the IP address
 			 * "This function converts a human readable IPv4 or IPv6 address

@@ -13,31 +13,122 @@ if( !defined( 'MyOptionalModules' ) ) {
 class myoptionalmodules_enable {
 	function actions() {
 		global $myoptionalmodules_plugin;
-		if( get_option( 'mommaincontrol_comments' ) || get_option( 'mommaincontrol_dnsbl' ) && true === $myoptionalmodules_plugin->DNSBL ){
+		if( get_option( 'myoptionalmodules_metatags' ) ) {
+				add_action( 'wp_head', array( $this, 'meta' ) );
+				add_filter( 'jetpack_enable_opengraph', '__return_false', 99 );
+				add_filter( 'user_contactmethods', array( $this, 'twitter' ) );
+				add_filter( 'admin_init', array( $this, 'twitter' ) );
+		}
+		if( get_option( 'myoptionalmodules_disablecomments' ) || get_option( 'myoptionalmodules_dnsbl' ) && true === $myoptionalmodules_plugin->DNSBL ){
 			add_filter( 'comments_template', array( $this, 'comments' ) );
 			add_filter( 'comments_open', array( $this, 'comments_form'), 10, 2 );
 		}
-		if( get_option( 'MOM_themetakeover_horizontal_galleries' ) ) {
+		if( get_option( 'myoptionalmodules_horizontalgalleries' ) ) {
 			remove_shortcode( 'gallery', 'gallery_shortcode' );
 			add_action( 'init', array( $this, 'horizontal_gallery_shortcode'), 99 );
 			add_filter( 'use_default_gallery_style', '__return_false' );
 		}
-		if( get_option( 'mommaincontrol_momshare' ) ) {
+		if( get_option( 'myoptionalmodules_sharelinks' ) ) {
 			add_filter( 'the_content', array( $this, 'share' ) );
 		}
-		if( get_option( 'mommaincontrol_protectrss' ) ) {
+		if( get_option( 'myoptionalmodules_rsslinkbacks' ) ) {
 			add_filter( 'the_content_feed', array( $this, 'rss' ) );
 			add_filter( 'the_excerpt_rss', array( $this, 'rss' ) );
 		}
-		if( get_option( 'mommaincontrol_404' ) ) {
+		if( get_option( 'myoptionalmodules_404s' ) ) {
 			add_action( 'wp', array( $this, 'no_404s' ) );
 		}
-		if( get_option( 'mommaincontrol_fontawesome' ) ) {
+		if( get_option( 'myoptionalmodules_fontawesome' ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'fontawesome' ) );
 			add_action ( 'init', array( $this, 'fontawesome_shortcode' ), 99 );
 		}
 	}
 
+	function twitter( $profile_fields ){
+		$profile_fields['twitter_personal'] = 'Twitter handle';
+		return $profile_fields;
+	}
+
+	function meta(){
+	global $post, $wp;
+
+		$author = null;
+		$author = $post->post_author;
+		
+		/**
+		 * Facebook
+		 */
+		$id      = null;
+		$title   = null;
+		$type    = null;
+		$image   = null;
+		$url     = null;
+		$site    = null;
+		$excerpt = null;
+		
+		$id    = $post->ID;
+		if( is_single() || is_page() ) {
+			$title   = sanitize_text_field( str_replace( '\'', '', get_post_field( 'post_title', $id ) ) );
+			$image   = wp_get_attachment_image_src( get_post_thumbnail_id( $id ), 'single-post-thumbnail' );
+			$image   = $image[0];
+			$image   = str_replace( array( 'https:', 'http:' ), '', esc_url( $image ) );
+			$url     = get_permalink( $id );
+			$site    = get_bloginfo( 'name' );
+			$excerpt = strip_tags( esc_html( preg_replace('/\s\s+/i','', get_the_excerpt( ) ) ) );
+			$type    = 'article';
+		} else {
+			$title   = get_bloginfo( 'name' );
+			$url     = esc_url( home_url( '/' ) );
+			$type    = 'website';
+		}
+		$title = sanitize_text_field( str_replace( '\'', '', $title ) );
+		$url   = sanitize_text_field( str_replace( array( 'https:', 'http:' ), '', esc_url( $url ) ) );
+
+		if( $title )   echo "\n<meta property='og:title' content='$title'>";
+		if( $site )    echo "\n<meta property='og:site_name' content='$site'>";
+		if( $excerpt ) echo "\n<meta property='og:description' content='$excerpt'>";
+		if( $type )    echo "\n<meta property='og:type' content='$type'>";
+		if( $image )   echo "\n<meta property='og:image' content='$image'>";
+		if( $url )     echo "\n<meta property='og:url' content='$url'>";
+
+		$id      = null;
+		$title   = null;
+		$type    = null;
+		$image   = null;
+		$url     = null;
+		$site    = null;
+		$excerpt = null;
+
+		/**
+		 * Twitter
+		 */
+		$card        = null;
+		$attribution = null;
+		
+		if( is_single() || is_page() ) {
+			$card        = 'summary';
+			$attribution = get_the_author_meta( 'twitter_personal', $author );
+			$attribution = sanitize_text_field( str_replace( array( '@', '\'' ), '', $attribution ) );
+			if( $attribution ) {
+				if( $card )        echo "\n<meta name='twitter:card' content='$card'>";
+				if( $attribution ) echo "\n<meta name='twitter:creator' content='@$attribution'>";
+			}
+			$card         = null;
+			$attribution  = null;
+		}
+		
+		/**
+		 * No index, no follow archives, 404s, and search results
+		 */
+		if( is_search() || is_404() || is_archive() ){ 
+			echo "\n<meta name='robots' content='noindex,nofollow'>";
+		}
+		echo "\n\n";
+		
+		$author = null;
+
+	}
+	
 	function comments( $comment_template ) {
 		return dirname( __FILE__ ) . '/includes/templates/comments.php';
 	}
@@ -252,9 +343,9 @@ class myoptionalmodules_enable {
 		/**
 		 * Settings and variables
 		 */
-		$fontawesome = sanitize_text_field( get_option( 'mommaincontrol_fontawesome' ) );
-		$at_top      = sanitize_text_field( get_option( 'MOM_enable_share_top' ) );
-		$on_pages    = sanitize_text_field( get_option( 'MOM_enable_share_pages' ) );
+		$fontawesome = sanitize_text_field( get_option( 'myoptionalmodules_fontawesome' ) );
+		$at_top      = sanitize_text_field( get_option( 'myoptionalmodules_shareslinks_top' ) );
+		$on_pages    = sanitize_text_field( get_option( 'myoptionalmodules_sharelinks_pages' ) );
 		$excerpt     = htmlentities( str_replace( ' ', '%20', $post->post_excerpt ) ); 
 		$title       = str_replace( ' ', '%20', get_the_title( $post->ID ) );
 
@@ -263,29 +354,29 @@ class myoptionalmodules_enable {
 		 */
 		$output = '<span class="mom_shareLinks">';
 		$output .='Share via: ';	
-		if( get_option( 'MOM_enable_share_reddit' ) && $fontawesome ) {
+		if( get_option( 'myoptionalmodules_sharelinks_reddit' ) && $fontawesome ) {
 			$output .='<a class="reddit fa fa-reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '"></a>';
-		} elseif( get_option( 'MOM_enable_share_reddit' ) && !$fontawesome ) {
+		} elseif( get_option( 'myoptionalmodules_sharelinks_reddit' ) && !$fontawesome ) {
 			$output .='<a class="reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '">reddit</a>';
 		}
-		if( get_option( 'MOM_enable_share_google' ) && $fontawesome  ) {
+		if( get_option( 'myoptionalmodules_sharelinks_google' ) && $fontawesome  ) {
 			$output .='<a class="google fa fa-google-plus" href="https://plus.google.com/share?url=' . get_the_permalink() . '"></a>';
-		} elseif( get_option( 'MOM_enable_share_google' ) && !$fontawesome  ) {
+		} elseif( get_option( 'myoptionalmodules_sharelinks_google' ) && !$fontawesome  ) {
 			$output .='<a class="google" href="https://plus.google.com/share?url=' . get_the_permalink() . '">google+</a>';
 		}
-		if( get_option( 'MOM_enable_share_twitter' ) && $fontawesome  ) {
+		if( get_option( 'myoptionalmodules_sharelinks_twitter' ) && $fontawesome  ) {
 			$output .='<a class="twitter fa fa-twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '"></a>';
-		} elseif( get_option( 'MOM_enable_share_twitter' ) && !$fontawesome  ) {
+		} elseif( get_option( 'myoptionalmodules_sharelinks_twitter' ) && !$fontawesome  ) {
 			$output .='<a class="twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '">twitter</a>';
 		}
-		if( get_option( 'MOM_enable_share_facebook' ) && $fontawesome  ) {
+		if( get_option( 'myoptionalmodules_sharelinks_facebook' ) && $fontawesome  ) {
 			$output .='<a class="facebook fa fa-facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '"></a>';
-		} elseif( get_option( 'MOM_enable_share_facebook' ) && !$fontawesome  ) {
+		} elseif( get_option( 'myoptionalmodules_sharelinks_facebook' ) && !$fontawesome  ) {
 			$output .='<a class="facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '">facebook</a>';
 		}
-		if( get_option( 'MOM_enable_share_email' ) && $fontawesome  ) {
+		if( get_option( 'myoptionalmodules_sharelinks_email' ) && $fontawesome  ) {
 			$output .='<a class="email fa fa-envelope" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]"></a>';
-		} elseif( get_option( 'MOM_enable_share_email' ) && !$fontawesome  ) {
+		} elseif( get_option( 'myoptionalmodules_sharelinks_email' ) && !$fontawesome  ) {
 			$output .='<a class="email" href="mailto:?subject=' . $title . '&amp;body=' . $excerpt . '%20[ ' . get_the_permalink() . ' ]">email</a>';
 		}
 		$output .='</span>';

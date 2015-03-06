@@ -1,9 +1,9 @@
 === My Optional Modules ===
 Contributors: boyevul
-Tags: random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
+Tags: meta, og, twitter, facebook, google, random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 7
+Stable tag: 8-RC-1
 
 An assortment of functions to enhance WordPress.
 
@@ -27,11 +27,10 @@ on [Github](https://github.com/onebillion/mom). )
 *   Antibot hidden field for comment form
 *	Ajax for the comments form
 *   404 Redirects to the Front Page
-
-= Enable even more extras =
 *	One click database garbage removal
 *	Move Javascript to the footer
 *	Enable Lazy Load for images in posts
+*   OG:tag integration w/ optional Twitter card tags
 
 = Exclude posts from 'almost' anywhere =
 *	Exclude authors, categories, tags, and post formats
@@ -46,6 +45,7 @@ on [Github](https://github.com/onebillion/mom). )
 *	Enable ?random post functionality
 *	Change the value of "read more..." for excerpts
 *   Utilize a list of random site titles/descriptions
+*   Easily integrate Google Analytics
 
 = Remove Unnecessary Code = 
 *	Hide version information
@@ -54,6 +54,7 @@ on [Github](https://github.com/onebillion/mom). )
 *	Enqueue jquery versions from CDN (and not locally)
 
 = Take advantage of shortcodes =
+*   A media embedder with oEmbed fallback
 *	An attachments loop to show off images (that link to their respective posts)
 *	A highly customizable post loop 
 
@@ -61,7 +62,9 @@ on [Github](https://github.com/onebillion/mom). )
 *	a category list that uses the options from the exlude setup
 *	a media embedder with oEmbed fallback
 
-
+== To-Do ==
+*	Optimize option calls 
+*	Remove 7->8 upgrade once majority of users are using version 8
 
 == Installation ==
 = 3-step installation =
@@ -80,5 +83,10 @@ on [Github](https://github.com/onebillion/mom). )
 
 == Changelog ==
 
-= 7 =
-* 7 branch
+= 8-RC-1 =
+* 'mom_miniloop', 'mom_attachments', 'mom_embed' code optimized (shortcode) (upgrade)
+* When saving options, if values are empty, they are removed from the database (upgrade)
+* 'Uninstall' missing options rounded up (100% cleaning up after itself) (bugfix)
+* Insert Google Analytics tracking code on your blog (addition)
+* Exclusion rules for user levels now affects single post view (addition)
+* 'Meta tags' enables open graph (og:) tags with optional Twitter card information (addition)

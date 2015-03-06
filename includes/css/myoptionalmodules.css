@@ -179,14 +179,14 @@ h2.mom_related_title{
 /**
  *  [style="slider"]
  */
-.loopdeloopSlideContainer .fa-arrow-up {
+.loopdeloop_slideContainer .fa-arrow-up {
 	clear: both;
 	display: block;
 	font-size: 45%; 
 	text-align: center;
 	width: 100%;
 }
-.loopdeloopSlideContainer {
+.loopdeloop_slideContainer {
 	-webkit-box-shadow:inset 0 0 5px 1px rgba(0,0,0,.2);
 	border: 1px solid rgba(0,0,0,.9);
 	box-shadow: inset 0 0 5px 1px rgba(0,0,0,.2);
@@ -197,24 +197,24 @@ h2.mom_related_title{
 	overflow-x: auto;
 	position: relative;
 }
-.loopdeloopSlideContainer .slide {
+.loopdeloop_slideContainer .slide {
 	-moz-background-size: cover;
 	-o-background-size: cover;
 	-webkit-background-size: cover;
 	background: no-repeat center center fixed;
 	background-size: cover;
 }
-.loopdeloopSlideContainer .inner .slide {
+.loopdeloop_slideContainer .inner .slide {
 	display: block;
 	float: left;
 	height: 300px;
 	position: relative;
 	width: 500px;
 }
-.loopdeloopSlideContainer .inner .slide img {
+.loopdeloop_slideContainer .inner .slide img {
 	height: 100%;
 }
-.loopdeloopSlideContainer .inner .slide span {
+.loopdeloop_slideContainer .inner .slide span {
 	left: 0;
 	font-size: 200%;
 	font-weight: 900;
@@ -228,7 +228,7 @@ h2.mom_related_title{
 /**
  * [style="columns"]
  */
-.loopdeloopColumns .fa-arrow-up {
+.loopdeloop_columns .fa-arrow-up {
 	background-color: rgba(0,0,0,.8);
 	color: rgba(255,255,255,.8);
 	cursor: default;
@@ -238,7 +238,7 @@ h2.mom_related_title{
 	right: 5px;
 	top: 5px;
 }
-.loopdeloopColumns .column {
+.loopdeloop_columns .column {
 	border: 1px solid rgba(0,0,0,.1);
 	border-radius: 2px;
 	display: block;
@@ -249,12 +249,12 @@ h2.mom_related_title{
 	position:relative;
 	width: 48%;
 }
-.loopdeloopColumns .mediaNotPresent {
+.loopdeloop_columns .mediaNotPresent {
 	display:block;
 	height: 100%;
 	width: 100%;
 }
-.loopdeloopColumns .column .inner {
+.loopdeloop_columns .column .inner {
 	-moz-background-size:cover;
 	-o-background-size:cover;
 	-webkit-background-size:cover;
@@ -265,7 +265,7 @@ h2.mom_related_title{
 	box-shadow:inset 0 0 5px 1px rgba(0,0,0,.2);
 	height: 100%;
 }
-.loopdeloopColumns .column span {
+.loopdeloop_columns .column span {
 	-moz-transition:all .3s ease-in-out;
 	-o-transition:all .3s ease-in-out;
 	-webkit-transition:all .3s ease-in-out;
@@ -277,14 +277,14 @@ h2.mom_related_title{
 	transition:all .3s ease-in-out;
 	width: 100%;
 }
-.loopdeloopColumns .column span em{
+.loopdeloop_columns .column span em{
 	display: none;
 	visibility:hidden;
 }
-.loopdeloopColumns .column:hover span{
+.loopdeloop_columns .column:hover span{
 	margin-bottom: 0;
 }
-.loopdeloopColumns .column:hover span em{
+.loopdeloop_columns .column:hover span em{
 	clear: both;
 	color: rgba(255,255,255,.8);
 	display: block;
@@ -292,7 +292,7 @@ h2.mom_related_title{
 	font-size: 75%;
 	visibility: visible;
 }
-.loopdeloopColumns .column span a{
+.loopdeloop_columns .column span a{
 	color: rgba(255,255,255,.8);
 	font-size: 75%;
 	text-decoration: none;
@@ -301,29 +301,29 @@ h2.mom_related_title{
 /**
  * [style="list"]
  */
-.loopdeloopList {
+.loopdeloop_list {
 	margin: 25px auto;
 	padding: 5px; 
 }
-.loopdeloopList .fa-arrow-up {
+.loopdeloop_list .fa-arrow-up {
 	font-size: 75%; 
 	margin-left: 10px;
 }
-.loopdeloopList section:after {
+.loopdeloop_list section:after {
 	clear: both;
 	content: "";	
 	display: block;
 }
-.loopdeloopList section {
+.loopdeloop_list section {
 	clear: both;
 	margin: 5px auto 10px;
 	padding: 5px 0; 
 	width: 100%;
 }
-.loopdeloopList section div {
+.loopdeloop_list section div {
 	cursor: default;	
 }
-.loopdeloopList section div.counter {
+.loopdeloop_list section div.counter {
 	float: left;
 	font-size: 65%;
 	margin: 1px 0 5px;
@@ -331,68 +331,68 @@ h2.mom_related_title{
 	text-align: center;
 	width: 10%;
 }
-.loopdeloopList section div.thumb {
+.loopdeloop_list section div.thumb {
 	float: left;
 	margin: 1px 0 5px;
 	padding: 5px 5px 5px 0;
 	width: 10%;
 }
-.loopdeloopList section div.text {
+.loopdeloop_list section div.text {
 	float: left;
 	width: 80%;
 	margin: 0; 
 }
-.loopdeloopList section span {
+.loopdeloop_list section span {
 	clear: both;
 	display: block;
 	margin: 0 auto;
 	padding: 0;
 	width: 100%; 
 }
-.loopdeloopList section span a {
+.loopdeloop_list section span a {
 	text-decoration: none;	
 }
-.loopdeloopList section span.title {
+.loopdeloop_list section span.title {
 	font-size: 100%; 
 }
-.loopdeloopList section span.author {
+.loopdeloop_list section span.author {
 	font-size: 80%; 
 }
-.loopdeloopList section span.meta {
+.loopdeloop_list section span.meta {
 	font-size: 70%; 
 }
-.loopdeloopList section img {
+.loopdeloop_list section img {
 	width: 100%; 
 }
-.loopdeloopList .sidebar section:after {
+.loopdeloop_list .sidebar section:after {
 	clear: both;
 	display: block;
 	content: ""; 
 }
-.loopdeloopList .sidebar {
+.loopdeloop_list .sidebar {
 	border-bottom: 1px solid rgba(0,0,0,.1);
 	padding: 5px;
 }
-.loopdeloopList .sidebar section {
+.loopdeloop_list .sidebar section {
 	clear: both;
 	margin: 5px auto 10px;
 	padding: 5px; 
 	width: 100%;
 }
-.loopdeloopList .sidebar section div {
+.loopdeloop_list .sidebar section div {
 	cursor: default; 
 }
-.loopdeloopList .sidebar img {
+.loopdeloop_list .sidebar img {
 	height: auto; 
 	width: 100%; 
 }
-.loopdeloopList .sidebar div.thumb {
+.loopdeloop_list .sidebar div.thumb {
 	float: right;
 	margin: 0;
 	padding: 1%;
 	width: 40%;
 }
-.loopdeloopList .sidebar div.counter {
+.loopdeloop_list .sidebar div.counter {
 	color: rgba(0,0,0,.3);
 	float: left; 
 	font-size: 200%;
@@ -400,20 +400,20 @@ h2.mom_related_title{
 	margin: 0;
 	width: 10%;
 }
-.loopdeloopList .sidebar div.text {
+.loopdeloop_list .sidebar div.text {
 	float: left;
 	margin: 0 2%; 
 	padding: 0 10px 0 20px;
 	width: 40%;
 }
-.loopdeloopList .sidebar span {
+.loopdeloop_list .sidebar span {
 	clear: both;
 	display: block;
 	margin: 0 auto;
 	padding: 0;
 	width: 98%; 
 }
-.loopdeloopList .sidebar span a {
+.loopdeloop_list .sidebar span a {
 	text-decoration: none; 
 }
 
@@ -463,3 +463,9 @@ h2.mom_related_title{
 		height: auto; 
 		width: 100%;  
 	}
+
+.mom_attachments {
+	clear: both; 
+	display: block; 
+	position: relative;
+}

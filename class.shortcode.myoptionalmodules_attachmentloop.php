@@ -1,24 +1,39 @@
 <?php 
 
-if(!defined('MyOptionalModules')) { die('You can not call this file directly.'); }
+if( !defined( 'MyOptionalModules' ) ) { 
+	die( 'You can not call this file directly.' ); 
+}
 
-if( !function_exists( 'mom_attachments_shortcode' ) ) {
-	function mom_attachments_shortcode( $atts ) {
+class myoptionalmodules_attachment_loop_shortcode{
+
+	function construct() {
+		add_shortcode( 'mom_attachments', array( $this, 'shortcode' ) );
+	}
+
+	function shortcode( $atts ) {
 		global $post,$wp;
-		/**
-		 * Shortcode attributes(to be set inside of the shortcode)
-		 * These attributes will be used as the default settings, which can be overridden by 
-		 * attributes set inside of the shortcode.
-		 */
+
+		$amount           = null;
+		$class            = null;
+		$all_images       = null;
+		$id               = null;
+		$parent_id        = null;
+		$parent_title     = null;
+		$mime_type        = null;
+		$attachment       = null;
+		$output           = null;
+		$parent_permalink = null;
+		
 		extract(
 			shortcode_atts( array(
 				'amount' => 1,                // numerical value of how many attachments to return			
 				'class'  => 'mom_attachment'  // default class for the linked attachments
 			), $atts )
 		);
+
 		if( $amount ) $amount = intval( $amount );
 		if( $class  ) $class  = sanitize_text_field( $class );
-		// Get all image attachments
+
 		$all_images = get_posts(
 			array(
 				'post_type' => 'attachment',
@@ -26,7 +41,8 @@ if( !function_exists( 'mom_attachments_shortcode' ) ) {
 				'post_mime_type ' => 'image',
 			)
 		);
-		$output = '';
+
+		$output .= '<div class="mom_attachments">';
 		foreach ( $all_images as $image ) {
 			$id               = $image->ID;
 			$parent_id        = $image->post_parent;
@@ -38,6 +54,19 @@ if( !function_exists( 'mom_attachments_shortcode' ) ) {
 				$output .= '<a class="' . $class . '" href="' . $parent_permalink . '"><img src="' . $attachment . '" /></a>';
 			}
 		}
+		$output .= '</div>';
 		return $output;
+		
+		$amount           = null;
+		$class            = null;
+		$all_images       = null;
+		$id               = null;
+		$parent_id        = null;
+		$parent_title     = null;
+		$mime_type        = null;
+		$attachment       = null;
+		$output           = null;
+		$parent_permalink = null;
 	}
+
 }

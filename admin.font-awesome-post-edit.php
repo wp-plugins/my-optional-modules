@@ -10,7 +10,7 @@ function momEditorScreen( $post_type ) {
 	if( $edit_post_type != 'post' )
 	if( $edit_post_type != 'page' )
 	return;
-	if( 1 == get_option( 'mommaincontrol_fontawesome' ) ) { ?>
+	if( 1 == get_option( 'myoptionalmodules_fontawesome' ) ) { ?>
 		<div class="momEditorScreen postbox">
 			<h3>Font Awesome Icons &mdash; shortcode usage: [font-fa i="<em>icon-name</em>"]</h3>
 			<div class="inside">

@@ -25,3 +25,12 @@ $myoptionalmodules_extras->actions();
 
 $myoptionalmodules_misc = new myoptionalmodules_misc();
 $myoptionalmodules_misc->actions();
+
+$myoptionalmodules_miniloop_shortcode = new myoptionalmodules_miniloop_shortcode();
+$myoptionalmodules_miniloop_shortcode->construct();
+
+$myoptionalmodules_attachment_loop_shortcode = new myoptionalmodules_attachment_loop_shortcode();
+$myoptionalmodules_attachment_loop_shortcode->construct();
+
+$myoptionalmodules_mediaembed_shortcode = new myoptionalmodules_mediaembed_shortcode();
+$myoptionalmodules_mediaembed_shortcode->construct();
