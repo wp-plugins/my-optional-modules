@@ -84,7 +84,6 @@ function my_optional_modules_page_content(){
 					$wpdb->query( "OPTIMIZE TABLE `$commentsTable` ");
 					$wpdb->query( "OPTIMIZE TABLE `$termsTable2` ");
 					$wpdb->query( "OPTIMIZE TABLE `$termsTable` ");
-					echo 'test';
 				}
 			}		
 			$drafts_count = $revisions_count = $comments_count = $terms_count = 0;
