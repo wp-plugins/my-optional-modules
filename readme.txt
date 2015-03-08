@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: meta, og, twitter, facebook, google, random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 8-RC-1.1
+Stable tag: 8-RC-1.2
 
 An assortment of functions to enhance WordPress.
 
@@ -82,6 +82,9 @@ on [Github](https://github.com/onebillion/mom). )
 2. Share icons displayed at the top of the post content.
 
 == Changelog ==
+
+= 8-RC-1.2 =
+* Options should now be able to be enabled/disabled properly (bugfix)
 
 = 8-RC-1.1 =
 * Upgrade version '2' (upgrade)

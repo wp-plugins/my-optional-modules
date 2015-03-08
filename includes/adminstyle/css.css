@@ -25,6 +25,15 @@
 		content: ""; 
 		display: table;
 	}
+	p {
+		margin: 5px;
+		padding: 5px;
+	}
+	code {
+		background-color: rgba(0,0,0,.4);
+		border: 1px solid rgba(255,255,255,.3);
+		margin: 0 2px;
+	}
 	hr {
 		clear: both; 
 		display: block;
@@ -190,6 +199,31 @@
 		position: relative;
 		width: 100%;
 	}
+		.MOMSettings .fullwidth section {
+			clear: both; 
+			display: block;
+			padding: 5px;
+			position: relative;
+		}
+		.MOMSettings .fullwidth section section {
+			width: 48%;
+			float: left;
+			clear: none;
+		}
+		.MOMSettings .fullwidth label {
+			background-color: rgba(0,0,0,.5);
+			border-right: 1px solid rgba(0,0,0,.5);
+			left: 5px;
+			padding: 8px;
+			position: absolute; 
+			width: 140px;
+		}
+		.MOMSettings .fullwidth input[type="text"] {
+			display: block;
+			float: none!important;
+			padding: 5px 5px 5px 145px ;
+			width: 100%!important; 
+		}
 	
 	.MOMSettings .settings-section {
 		clear: both;

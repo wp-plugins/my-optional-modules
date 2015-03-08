@@ -202,10 +202,9 @@ function my_optional_modules_page_content(){
 							foreach( $all_options as &$option ){
 								if( isset( $_POST[ $option ] ) ){
 									$value = intval( $_POST[ $option ] );
-									if( $value )
 										update_option( $option, $value );
-									else
-										delete_option( $option );
+								} else {
+									delete_option( $option );
 								}
 							}
 							$value = null;
@@ -450,15 +449,18 @@ function my_optional_modules_page_content(){
 				$myoptionalmodules_exclude_postformatscategoryarchives = get_option( 'myoptionalmodules_exclude_postformatscategoryarchives' );
 				$myoptionalmodules_exclude_postformatstagarchives      = get_option( 'myoptionalmodules_exclude_postformatstagarchives' );
 				$myoptionalmodules_exclude_postformatssearchresults    = get_option( 'myoptionalmodules_exclude_postformatssearchresults' );
-				$myoptionalmodules_exclude_visitorpostformats          = get_option( 'myoptionalmodules_exclude_visitorpostformats' ); ?>
-					<hr />
-					<p>Exclude <em>these</em> Author(s) <em>from</em></p>
-					<p>
-					<?php foreach($showmeusers as $usersshown){ ++$usercount; ?>
-						<?php echo $usersshown->user_nicename; ?> <code><?php echo $usersshown->ID; ?></code> &mdash; 
-					<?php }?>
-					</p>
-					<?php $exclude = array( 
+				$myoptionalmodules_exclude_visitorpostformats          = get_option( 'myoptionalmodules_exclude_visitorpostformats' );
+					
+					echo '
+					<section>
+						<p>Exclude these <code>Authors</code> from</p>
+						<p>';
+					foreach($showmeusers as $usersshown){
+						echo $usersshown->user_nicename;
+						echo "<code>$usersshown->ID</code> &nbsp;&nbsp;";
+					}
+					echo '</p>';
+					$exclude = array( 
 						'myoptionalmodules_exclude_usersrss',
 						'myoptionalmodules_exclude_usersfront',
 						'myoptionalmodules_exclude_userscategoryarchives',
@@ -468,44 +470,43 @@ function my_optional_modules_page_content(){
 						'myoptionalmodules_exclude_usersusersmon',
 						'myoptionalmodules_exclude_usersuserstue',
 						'myoptionalmodules_exclude_usersuserswed',
-						'myoptionalmodules_exclude_usersusersthu',
-						'myoptionalmodules_exclude_usersusersfri',
-						'myoptionalmodules_exclude_usersuserssat',
-						'myoptionalmodules_exclude_userslevel10users',
-						'myoptionalmodules_exclude_userslevel1users',
-						'myoptionalmodules_exclude_userslevel2users',
-						'myoptionalmodules_exclude_userslevel7users',
-					); ?>
-					<?php $section = array( 
-						' the feed',
-						' the front page',
-						' category archives',
-						' tag archives',
-						' any search results',
-						' any area on Sunday',
-						' any area on Monday',
-						' any area on Tuesday',
-						' any area on Wednesday',
-						' any area on Thursday',
-						' any area on Friday',
-						' any area on Saturday',
-						' any visitor who is not logged in',
-						' any visitor who is a subscriber',
-						' any visitor who is a contributor',
-						' any visitor who is an author'
-					); ?>
-					<?php 
-						if( $usercount > 0 ) {
+								'myoptionalmodules_exclude_usersusersthu',
+								'myoptionalmodules_exclude_usersusersfri',
+								'myoptionalmodules_exclude_usersuserssat',
+								'myoptionalmodules_exclude_userslevel10users',
+								'myoptionalmodules_exclude_userslevel1users',
+								'myoptionalmodules_exclude_userslevel2users',
+								'myoptionalmodules_exclude_userslevel7users',
+							);
+							$section = array( 
+								'feed',
+								'home',
+								'category archives',
+								'tag archives',
+								'search results',
+								'Sunday',
+								'Monday',
+								'Tuesday',
+								'Wednesday',
+								'Thursday',
+								'Friday',
+								'Saturday',
+								'not logged in',
+								'subscribers',
+								'contributors',
+								'authors'
+							);
 							foreach($exclude as $exc ) { 
-								$title = str_replace($exclude, $section, $exc); ?>
-								<section class="small-section">
-									<label for="<?php echo $exc;?>"><?php echo $title;?></label>
-									<input type="text" id="<?php echo $exc;?>" name="<?php echo $exc;?>" value="<?php echo get_option($exc);?>">
-								</section>
-							<?php } } else { ?>
-								<p>You have no users to exclude.</p>
-							<?php }?>						
-							<?php $exclude = array( 
+								$title  = str_replace( $exclude, $section, $exc );
+								$option = sanitize_text_field( get_option($exc) );
+								echo "<section>
+									<label for='$exc'>$title</label>
+									<input type='text' id='$exc' name='$exc' value='$option'>
+								</section>";
+							}
+							$title = $option = null;
+							echo '</section>';
+							$exclude = array( 
 								'myoptionalmodules_exclude_categoriesrss',
 								'myoptionalmodules_exclude_categoriesfront',
 								'myoptionalmodules_exclude_categoriestagarchives',
@@ -521,174 +522,143 @@ function my_optional_modules_page_content(){
 								'myoptionalmodules_exclude_categorieslevel1categories',
 								'myoptionalmodules_exclude_categorieslevel2categories',
 								'myoptionalmodules_exclude_categorieslevel7categories',
-							); ?>
-							<?php $section = array( 
-								' the feed',
-								' the front page',
-								' tag archives',
-								' any search results',
-								' any area on Sunday',
-								' any area on Monday',
-								' any area on Tuesday',
-								' any area on Wednesday',
-								' any area on Thursday',
-								' any area on Friday',
-								' any area on Saturday',
-								' any visitor who is not logged in',
-								' any visitor who is a subscriber',
-								' any visitor who is a contributor',
-								' any visitor who is an author'						
-							); ?>
-							<hr />
-							<p>Exclude <em>these</em> Categories <em>from</em></p>
-							<p>
-								<?php foreach($showmecats as $catsshown){ ++$catcount; ?>
-									<?php echo $catsshown->cat_name; ?> <code><?php echo $catsshown->cat_ID; ?></code> &mdash; 
-								<?php }?>
-							</p>
-							<?php 
-								if( $catcount > 0 ) {
-									foreach($exclude as $exc ) { 
-									$title = str_replace($exclude, $section, $exc); ?>
-									<section class="small-section">
-										<label for="<?php echo $exc;?>"><?php echo $title;?></label>
-										<input type="text" id="<?php echo $exc;?>" name="<?php echo $exc;?>" value="<?php echo get_option($exc);?>">
-									</section>
-								<?php } } else { ?>
-									<p>You have no categories to exclude.</p>
-								<?php }?>
-							<hr />
-							<span class="title-full">Exclude <em>these</em> Tag(s) <em>from</em></span>
-							<p>
-								<?php foreach($showmetags as $tagsshown){ 
-									++$tagcount;?>
-									<?php echo $tagsshown->cat_name;?> <code><?php echo $tagsshown->cat_ID;?></code> &mdash;
-								<?php } ?>
-							</p>
-							<?php 
-								if( $tagcount > 0 ) {
-									$exclude = array( 
-										'myoptionalmodules_exclude_tagsrss',
-										'myoptionalmodules_exclude_tagsfront',
-										'myoptionalmodules_exclude_tagscategoryarchives',
-										'myoptionalmodules_exclude_tagssearchresults',
-										'myoptionalmodules_exclude_tagstagssun',
-										'myoptionalmodules_exclude_tagstagsmon',
-										'myoptionalmodules_exclude_tagstagstue',
-										'myoptionalmodules_exclude_tagstagswed',
-										'myoptionalmodules_exclude_tagstagsthu',
-										'myoptionalmodules_exclude_tagstagsfri',
-										'myoptionalmodules_exclude_tagstagssat',
-										'myoptionalmodules_exclude_tagslevel0tags',
-										'myoptionalmodules_exclude_tagslevel1tags',
-										'myoptionalmodules_exclude_tagslevel2tags',
-										'myoptionalmodules_exclude_tagslevel7tags' 
-									);
-									$section = array( 
-										' the feed',
-										' the front page',
-										' category archives',
-										' any search results',
-										' any area on Sunday',
-										' any area on Monday',
-										' any area on Tuesday',
-										' any area on Wednesday',
-										' any area on Thursday',
-										' any area on Friday',
-										' any area on Saturday',
-										' any visitor who is not logged in',
-										' any visitor who is a subscriber',
-										' any visitor who is a contributor',
-										' any visitor who is an author'
-									);
-									foreach($exclude as $exc ) {
-										$title = str_replace($exclude, $section, $exc); ?>
-										<section class="small-section">
-											<label for="<?php echo $exc;?>"><?php echo $title;?></label>
-											<input type="text" id="<?php echo $exc;?>" name="<?php echo $exc;?>" value="<?php echo get_option($exc);?>">
-										</section>
-							<?php }
-								} else { ?>
-									<p>You have no tags to exclude.</p>
-								<?php } ?>
-							<hr />
-							<p>Exclude <em>these</em> Post Format(s) <em>from</em></p>
+							);
+							$section = array( 
+								'feed',
+								'home',
+								'tag archives',
+								'search results',
+								'Sunday',
+								'Monday',
+								'Tuesday',
+								'Wednesday',
+								'Thursday',
+								'Friday',
+								'Saturday',
+								'not logged in',
+								'subscribers',
+								'contributors',
+								'authors'
+							);
+							echo '
 							<section>
-								<?php echo '
-									<select name="myoptionalmodules_exclude_postformatsrss" id="myoptionalmodules_exclude_postformatsrss">
-									<option value="">RSS -> none</option>
-									<option value="post-format-aside"'; selected( $myoptionalmodules_exclude_postformatsrss, 'post-format-aside' ); echo '>RSS -> Aside</option>
-									<option value="post-format-gallery"'; selected( $myoptionalmodules_exclude_postformatsrss, 'post-format-gallery' ); echo '>RSS -> Gallery</option>
-									<option value="post-format-link"'; selected( $myoptionalmodules_exclude_postformatsrss, 'post-format-link' ); echo '>RSS -> Link</option>
-									<option value="post-format-image"'; selected( $myoptionalmodules_exclude_postformatsrss, 'post-format-image' ); echo '>RSS -> Image</option>
-									<option value="post-format-quote"'; selected( $myoptionalmodules_exclude_postformatsrss, 'post-format-quote' ); echo '>RSS -> Quote</option>
-									<option value="post-format-status"'; selected( $myoptionalmodules_exclude_postformatsrss, 'post-format-status' ); echo '>RSS -> Status</option>
-									<option value="post-format-video"'; selected( $myoptionalmodules_exclude_postformatsrss, 'post-format-video' ); echo '>RSS -> Video</option>
-									<option value="post-format-audio"'; selected( $myoptionalmodules_exclude_postformatsrss, 'post-format-audio' ); echo '>RSS -> Audio</option>
-									<option value="post-format-chat"'; selected( $myoptionalmodules_exclude_postformatsrss, 'post-format-chat' ); echo '>RSS -> Chat</option>
-								</select>
-								<select name="myoptionalmodules_exclude_postformatsfront" id="myoptionalmodules_exclude_postformatsfront">
-									<option value="">Front Page -> none</option>
-									<option value="post-format-aside"'; selected( $myoptionalmodules_exclude_postformatsfront, 'post-format-aside' ); echo '>Front Page -> Aside</option>
-									<option value="post-format-gallery"'; selected( $myoptionalmodules_exclude_postformatsfront,'post-format-gallery' ); echo '>Front Page -> Gallery</option>
-									<option value="post-format-link"'; selected( $myoptionalmodules_exclude_postformatsfront,'post-format-link' ); echo '>Front Page -> Link</option>
-									<option value="post-format-image"'; selected( $myoptionalmodules_exclude_postformatsfront,'post-format-image' ); echo '>Front Page -> Image</option>
-									<option value="post-format-quote"'; selected( $myoptionalmodules_exclude_postformatsfront,'post-format-quote' ); echo '>Front Page -> Quote</option>
-									<option value="post-format-status"'; selected( $myoptionalmodules_exclude_postformatsfront,'post-format-status' ); echo '>Front Page -> Status</option>
-									<option value="post-format-video"'; selected( $myoptionalmodules_exclude_postformatsfront,'post-format-video' ); echo '>Front Page -> Video</option>
-									<option value="post-format-audio"'; selected( $myoptionalmodules_exclude_postformatsfront,'post-format-audio' ); echo '>Front Page -> Audio</option>
-									<option value="post-format-chat"'; selected( $myoptionalmodules_exclude_postformatsfront,'post-format-chat' ); echo '>Front Page -> Chat</option>
-								</select>
-								<select name="myoptionalmodules_exclude_postformatscategoryarchives" id="myoptionalmodules_exclude_postformatscategoryarchives">
-									<option value="">Archives -> none</option>
-									<option value="post-format-aside"'; selected( $myoptionalmodules_exclude_postformatscategoryarchives, 'post-format-aside' ); echo '>Archives -> Aside</option>
-									<option value="post-format-gallery"'; selected( $myoptionalmodules_exclude_postformatscategoryarchives,'post-format-gallery' ); echo '>Archives -> Gallery</option>
-									<option value="post-format-link"'; selected( $myoptionalmodules_exclude_postformatscategoryarchives,'post-format-link' ); echo '>Archives -> Link</option>
-									<option value="post-format-image"'; selected( $myoptionalmodules_exclude_postformatscategoryarchives,'post-format-image' ); echo '>Archives -> Image</option>
-									<option value="post-format-quote"'; selected( $myoptionalmodules_exclude_postformatscategoryarchives,'post-format-quote' ); echo '>Archives -> Quote</option>
-									<option value="post-format-status"'; selected( $myoptionalmodules_exclude_postformatscategoryarchives,'post-format-status' ); echo '>Archives -> Status</option>
-									<option value="post-format-video"'; selected( $myoptionalmodules_exclude_postformatscategoryarchives,'post-format-video' ); echo '>Archives -> Video</option>
-									<option value="post-format-audio"'; selected( $myoptionalmodules_exclude_postformatscategoryarchives,'post-format-audio' ); echo '>Archives -> Audio</option>
-									<option value="post-format-chat"'; selected( $myoptionalmodules_exclude_postformatscategoryarchives,'post-format-chat' ); echo '>Archives -> Chat</option>
-								</select>
-								<select name="myoptionalmodules_exclude_postformatstagarchives" id="myoptionalmodules_exclude_postformatstagarchives">
-									<option value="">Tags -> none</option>
-									<option value="post-format-aside"'; selected( $myoptionalmodules_exclude_postformatstagarchives, 'post-format-aside' ); echo '>Tags -> Aside</option>
-									<option value="post-format-gallery"'; selected( $myoptionalmodules_exclude_postformatstagarchives, 'post-format-gallery' ); echo '>Tags -> Gallery</option>
-									<option value="post-format-link"'; selected( $myoptionalmodules_exclude_postformatstagarchives, 'post-format-link' ); echo '>Tags -> Link</option>
-									<option value="post-format-image"'; selected( $myoptionalmodules_exclude_postformatstagarchives, 'post-format-image' ); echo '>Tags -> Image</option>
-									<option value="post-format-quote"'; selected( $myoptionalmodules_exclude_postformatstagarchives, 'post-format-quote' ); echo '>Tags -> Quote</option>
-									<option value="post-format-status"'; selected( $myoptionalmodules_exclude_postformatstagarchives, 'post-format-status' ); echo '>Tags -> Status</option>
-									<option value="post-format-video"'; selected( $myoptionalmodules_exclude_postformatstagarchives, 'post-format-video' ); echo '>Tags -> Video</option>
-									<option value="post-format-audio"'; selected( $myoptionalmodules_exclude_postformatstagarchives, 'post-format-audio' ); echo '>Tags -> Audio</option>
-									<option value="post-format-chat"'; selected( $myoptionalmodules_exclude_postformatstagarchives, 'post-format-chat' ); echo '>Tags -> Chat</option>
-								</select>
-								<select name="myoptionalmodules_exclude_postformatssearchresults" id="myoptionalmodules_exclude_postformatssearchresults">
-									<option value="">Search -> none</option>
-									<option value="post-format-aside"'; selected( $myoptionalmodules_exclude_postformatssearchresults, 'post-format-aside' ); echo '>Search -> Aside</option>
-									<option value="post-format-gallery"'; selected( $myoptionalmodules_exclude_postformatssearchresults, 'post-format-gallery' ); echo '>Search -> Gallery</option>
-									<option value="post-format-link"'; selected( $myoptionalmodules_exclude_postformatssearchresults, 'post-format-link' ); echo '>Search -> Link</option>
-									<option value="post-format-image"'; selected( $myoptionalmodules_exclude_postformatssearchresults, 'post-format-image' ); echo '>Search -> Image</option>
-									<option value="post-format-quote"'; selected( $myoptionalmodules_exclude_postformatssearchresults, 'post-format-quote' ); echo '>Search -> Quote</option>
-									<option value="post-format-status"'; selected( $myoptionalmodules_exclude_postformatssearchresults, 'post-format-status' ); echo '>Search -> Status</option>
-									<option value="post-format-video"'; selected( $myoptionalmodules_exclude_postformatssearchresults, 'post-format-video' ); echo '>Search -> Video</option>
-									<option value="post-format-audio"'; selected( $myoptionalmodules_exclude_postformatssearchresults, 'post-format-audio' ); echo '>Search -> Audio</option>
-									<option value="post-format-chat"'; selected( $myoptionalmodules_exclude_postformatssearchresults, 'post-format-chat' ); echo '>Search -> Chat</option>
-								</select>
-								<select name="myoptionalmodules_exclude_visitorpostformats" id="myoptionalmodules_exclude_visitorpostformats">
-									<option value="">Logged out -> none</option>
-									<option value="post-format-aside"'; selected( $myoptionalmodules_exclude_visitorpostformats, 'post-format-aside' ); echo '>Logged out -> Aside</option>
-									<option value="post-format-gallery"'; selected( $myoptionalmodules_exclude_visitorpostformats, 'post-format-gallery' ); echo '>Logged out -> Gallery</option>
-									<option value="post-format-link"'; selected( $myoptionalmodules_exclude_visitorpostformats, 'post-format-link' ); echo '>Logged out -> Link</option>
-									<option value="post-format-image"'; selected( $myoptionalmodules_exclude_visitorpostformats, 'post-format-image' ); echo '>Logged out -> Image</option>
-									<option value="post-format-quote"'; selected( $myoptionalmodules_exclude_visitorpostformats, 'post-format-quote' ); echo '>Logged out -> Quote</option>
-									<option value="post-format-status"'; selected( $myoptionalmodules_exclude_visitorpostformats, 'post-format-status' ); echo '>Logged out -> Status</option>
-									<option value="post-format-video"'; selected( $myoptionalmodules_exclude_visitorpostformats, 'post-format-video' ); echo '>Logged out -> Video</option>
-									<option value="post-format-audio"'; selected( $myoptionalmodules_exclude_visitorpostformats, 'post-format-audio' ); echo '>Logged out -> Audio</option>
-									<option value="post-format-chat"'; selected( $myoptionalmodules_exclude_visitorpostformats, 'post-format-chat' ); echo '>Logged out -> Chat</option>
-								</select>
-							</section>
-						</div>';
+							<p>Exclude these <code>categories</code> from...</p>
+							<p>';
+							foreach( $showmecats as $catsshown ) { 
+								++$catcount;
+								echo $catsshown->cat_name;
+								echo "<code>$catsshown->cat_ID</code> &nbsp;&nbsp;";
+							}
+							echo '</p>';
+						if( $catcount > 0 ) {
+							foreach($exclude as $exc ) { 
+							$title  = str_replace( $exclude, $section, $exc );
+							$option = sanitize_text_field( get_option( $exc ) );
+							echo "
+								<section>
+									<label for='$exc'>$title</label>
+									<input type='text' id='$exc' name='$exc' value='$option'>
+								</section>";
+							}
+							$title = $option = null;
+						}
+						echo '</section>';
+						foreach( $showmetags as $tagsshown ) { 
+							++$tagcount;
+						}
+						if( $tagcount ) {
+							$exclude = array( 
+								'myoptionalmodules_exclude_tagsrss',
+								'myoptionalmodules_exclude_tagsfront',
+								'myoptionalmodules_exclude_tagscategoryarchives',
+								'myoptionalmodules_exclude_tagssearchresults',
+								'myoptionalmodules_exclude_tagstagssun',
+								'myoptionalmodules_exclude_tagstagsmon',
+								'myoptionalmodules_exclude_tagstagstue',
+								'myoptionalmodules_exclude_tagstagswed',
+								'myoptionalmodules_exclude_tagstagsthu',
+								'myoptionalmodules_exclude_tagstagsfri',
+								'myoptionalmodules_exclude_tagstagssat',
+								'myoptionalmodules_exclude_tagslevel0tags',
+								'myoptionalmodules_exclude_tagslevel1tags',
+								'myoptionalmodules_exclude_tagslevel2tags',
+								'myoptionalmodules_exclude_tagslevel7tags' 
+							);
+							$section = array( 
+								'feed',
+								'home',
+								'category archives',
+								'search',
+								'Sunday',
+								'Monday',
+								'Tuesday',
+								'Wednesday',
+								'Thursday',
+								'Friday',
+								'Saturday',
+								'not logged in',
+								'subscribers',
+								'contributors',
+								'authors'
+							);
+							echo '<section>';
+							echo '<p>Exclude these <code>tags</code> from...</p>';
+							echo '<p>';
+							foreach( $showmetags as $tagsshown ) { 
+								echo $tagsshown->cat_name;
+								echo "<code>$tagsshown->cat_ID</code> &nbsp;&nbsp;";
+							}
+							echo '</p>';
+							foreach( $exclude as $exc ) {
+								$title  = str_replace( $exclude, $section, $exc );
+								$option = sanitize_text_field( get_option( $exc ) );
+								echo "
+								<section>
+									<label for='$exc'>$title</label>
+									<input type='text' id='$exc' name='$exc' value='$option'>
+								</section>";
+							}
+							$title = $option = null;
+							echo '</section>';
+						}
+
+						$keys_post_formats = array( 
+							'myoptionalmodules_exclude_postformatsrss',
+							'myoptionalmodules_exclude_postformatsfront',
+							'myoptionalmodules_exclude_postformatscategoryarchives',
+							'myoptionalmodules_exclude_postformatstagarchives',
+							'myoptionalmodules_exclude_postformatssearchresults',
+							'myoptionalmodules_exclude_visitorpostformats'
+						);
+						$fields_post_formats = array( 
+							'RSS',
+							'Front page',
+							'Archives',
+							'Tags',
+							'Search',
+							'Logged out'
+						);
+						echo '<section>';
+						echo '<p>Exclude these <code>Post Formats</code> from...</p>';
+						foreach( $keys_post_formats as &$keys ){
+							$title = str_replace($keys_post_formats, $fields_post_formats, $keys);
+							echo "
+								<select name='$keys' id='$keys'>
+									<option value=''>$title (none)</option>
+									<option value='post-format-aside'";   selected( get_option( $keys ), 'post-format-aside'   ); echo ">$title (aside)</option>
+									<option value='post-format-gallery'"; selected( get_option( $keys ), 'post-format-gallery' ); echo ">$title (gallery)</option>
+									<option value='post-format-link'";    selected( get_option( $keys ), 'post-format-link'    ); echo ">$title (link)</option>
+									<option value='post-format-image'";   selected( get_option( $keys ), 'post-format-image'   ); echo ">$title (image)</option>
+									<option value='post-format-quote'";   selected( get_option( $keys ), 'post-format-quote'   ); echo ">$title (quote)</option>
+									<option value='post-format-status'";  selected( get_option( $keys ), 'post-format-status'  ); echo ">$title (status)</option>
+									<option value='post-format-video'";   selected( get_option( $keys ), 'post-format-video'   ); echo ">$title (video)</option>
+									<option value='post-format-audio'";   selected( get_option( $keys ), 'post-format-audio'   ); echo ">$title (audio)</option>
+									<option value='post-format-chat'";    selected( get_option( $keys ), 'post-format-chat'    ); echo ">$title (chat)</option>
+							</select>";
+						}
+						$title = null;
+						echo '</section>';
+						echo '</div>';
 				$showmepages = $showmecats  = $showmetags  = $showmeusers = $tagcount    = $catcount    = $usercount   = null;
 			}
 						
