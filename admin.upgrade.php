@@ -4,6 +4,20 @@ if( !defined( 'MyOptionalModules' ) ) {
 	die( 'You can not call this file directly.' ); 
 }
 if( is_admin() ) {
+	
+		// 8-RC-1.2
+		if( get_option( 'myoptionalmodules_admin_toggledisable' ) ) delete_option( 'myoptionalmodules_admin_toggledisable' );
+		if( get_option( 'myoptionalmodules_admin_toggleenable' ) ) delete_option( 'myoptionalmodules_admin_toggleenable' );
+		if( get_option( 'myoptionalmodules_admin_toggleshare' ) ) delete_option( 'myoptionalmodules_admin_toggleshare' );
+		if( get_option( 'myoptionalmodules_admin_togglecomment' ) ) delete_option( 'myoptionalmodules_admin_togglecomment' );
+		if( get_option( 'myoptionalmodules_admin_toggleextras' ) ) delete_option( 'myoptionalmodules_admin_toggleextras' );
+		if( get_option( 'myoptionalmodules_admin_togglemisc' ) ) delete_option( 'myoptionalmodules_admin_togglemisc' );
+		if( get_option( 'myoptionalmodules_admin_toggletrash' ) ) delete_option( 'myoptionalmodules_admin_toggletrash' );
+		if( get_option( 'myoptionalmodules_admin_toggleshortcodes' ) ) delete_option( 'myoptionalmodules_admin_toggleshortcodes' );
+		if( get_option( 'myoptionalmodules_admin_toggledevelopers' ) ) delete_option( 'myoptionalmodules_admin_toggledevelopers' );
+		if( get_option( 'myoptionalmodules_admin_togglecategories' ) ) delete_option( 'myoptionalmodules_admin_togglecategories' );
+	
+		// 7 to 8
 		$myoptionalmodules_frontpage = sanitize_text_field( get_option( 'mompaf_post' ) );
 		$myoptionalmodules_nelio = sanitize_text_field( get_option( 'mommaincontrol_externalthumbs' ) );
 		$myoptionalmodules_plugincss = sanitize_text_field( get_option( 'mommaincontrol_enablecss' ) );		
@@ -205,7 +219,6 @@ if( is_admin() ) {
 		if( $myoptionalmodules_exclude_tagslevel1tags ) update_option( 'myoptionalmodules_exclude_tagslevel1tags', $myoptionalmodules_exclude_tagslevel1tags ); delete_option( 'MOM_Exclude_Tags_level1Tags' ); 
 		if( $myoptionalmodules_exclude_tagslevel2tags ) update_option( 'myoptionalmodules_exclude_tagslevel2tags', $myoptionalmodules_exclude_tagslevel2tags ); delete_option( 'MOM_Exclude_Tags_level2Tags' ); 
 		if( $myoptionalmodules_exclude_tagslevel7tags ) update_option( 'myoptionalmodules_exclude_tagslevel7tags', $myoptionalmodules_exclude_tagslevel7tags ); delete_option( 'MOM_Exclude_Tags_level7Tags' ); 
-		
 		delete_option( 'MOM_Exclude_Tags_Single' ); 
 		delete_option( 'mom_save_form_submit' ); 
 		delete_option( 'mommaincontrol_versionnumbers' ); 
@@ -217,5 +230,7 @@ if( is_admin() ) {
 		delete_option( 'MOM_force_single' ); 
 		delete_option( 'mom_disablepingbacks_submit' ); 
 		delete_option( 'mom_comments_mode_submit' ); 
+		
+		// Update version
 		update_option( 'myoptionalmodules_upgrade_version', $myoptionalmodules_upgrade_version  );
 }

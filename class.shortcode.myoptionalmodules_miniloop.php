@@ -110,7 +110,7 @@ class myoptionalmodules_miniloop_shortcode{
 		
 		$open = '<div class="loopdeloopRotation loopdeloop_' . $style .'">';
 
-		if( 1 == $paging ) {
+		if( $paging ) {
 			$paged = (get_query_var( 'page' ) ) ? get_query_var( 'page' ) : 1;
 		}
 

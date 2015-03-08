@@ -50,7 +50,7 @@ if( 1 == get_option( 'myoptionalmodules_nelio' ) ) {
 						'height:200px;' . 
 						'overflow:hidden;');
 					?>">
-					<?php new mom_mediaEmbed( $myoptionalmodules_url ); ?>
+					<?php if( $myoptionalmodules_url ) new mom_mediaEmbed( $myoptionalmodules_url ); ?>
 				</div>
 			<a id="myoptionalmodules_remove_button" href="#" onClick="javascript:myoptionalmodulesRemoveFeaturedImage();" style="<?php echo $show_if_img; ?>">Remove featured image</a>
 			<script>
@@ -94,6 +94,7 @@ if( 1 == get_option( 'myoptionalmodules_nelio' ) ) {
 				update_post_meta( $post_ID, '_myoptionalmodules_alt', strip_tags( $_POST['myoptionalmodules_alt'] ) );
 		}
 	}
+	
 	/**
 	 * This function returns the post meta key. The key can be changed
 	 * using the filter `myoptionalmodules_post_meta_key'

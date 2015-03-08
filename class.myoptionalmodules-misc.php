@@ -43,7 +43,10 @@ class myoptionalmodules_misc {
 	function google_analytics() {
 
 $tracking_id = sanitize_text_field( get_option( 'myoptionalmodules_google' ) );
-$home        = esc_url( home_url ('/' ) );
+if( is_single() || is_page() )
+	$url = get_permalink();
+else
+	$url = esc_url( home_url ('/' ) );
 
 echo "
 <script>
@@ -51,7 +54,7 @@ echo "
 	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-	ga('create', '$tracking_id', '$home');
+	ga('create', '$tracking_id', '$url');
 	ga('send', 'pageview');
 </script>\n\n";
 	}

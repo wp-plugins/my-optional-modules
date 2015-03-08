@@ -75,7 +75,7 @@ class myoptionalmodules {
 	}
 	
 	function validate_ip_address() {
-		if( 1 == get_option( 'myoptionalmodules_dnsbl' ) ) {
+		if( get_option( 'myoptionalmodules_dnsbl' ) ) {
 			/**
 			 * Validate the IP address
 			 * "This function converts a human readable IPv4 or IPv6 address

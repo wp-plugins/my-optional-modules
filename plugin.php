@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 8-RC-1
+ * Version: 8-RC-1.1
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -20,7 +20,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-$myoptionalmodules_upgrade_version = '8';
+$myoptionalmodules_upgrade_version = '2';
 define ( 'MyOptionalModules', true );
 require_once( ABSPATH . 'wp-includes/pluggable.php' );
 
@@ -61,6 +61,5 @@ if( current_user_can( 'edit_dashboard' ) && is_admin() ){
 	$myoptionalmodules_admin_css = new myoptionalmodules_admin_css();
 	$myoptionalmodules_admin_css->actions();
 	include( 'admin.font-awesome-post-edit.php' );
-	include( 'admin.save-and-delete.php' );
 	include( 'admin.settings-page-content.php' );
 }

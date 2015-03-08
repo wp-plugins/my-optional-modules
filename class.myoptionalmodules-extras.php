@@ -9,17 +9,18 @@
 if( !defined( 'MyOptionalModules' ) ) { 
 	die( 'You can not call this file directly.' ); 
 }
+
 class myoptionalmodules_extras {
 	function actions() {
-		if( 1 == get_option( 'myoptionalmodules_featureimagewidth' ) ) {
+		if( get_option( 'myoptionalmodules_featureimagewidth' ) ) {
 			add_action( 'wp_head', array( $this, 'thumbnails' ) );
 		}
-		if( 1 == get_option( 'myoptionalmodules_javascripttofooter' ) ) {
+		if( get_option( 'myoptionalmodules_javascripttofooter' ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'remove' ) );
 			add_action( 'wp_footer', 'wp_enqueue_scripts', 5 );
 			add_action( 'wp_footer', 'wp_print_head_scripts', 5 );
 		}
-		if( 1 == get_option( 'myoptionalmodules_exclude' ) ) {
+		if( get_option( 'myoptionalmodules_exclude' ) ) {
 			add_action( 'pre_get_posts', array( $this, 'exclude' ) );	
 		}
 	}

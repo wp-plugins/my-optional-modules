@@ -1,143 +1,5 @@
 /* My Optional Modules Stylesheet 
 	(since version 4.0.5) */
-
-
-	.MOMSettings .settings-section {
-		background-color: rgba(229,246,255,.1);
-		border: 1px solid rgba(0,0,0,.1);
-		clear: both;
-		display: block; 
-		margin: 15px;
-		max-width: 690px;
-		overflow-y: auto;
-		padding: 50px 10px; 
-		position: relative;
-	}
-	.MOMSettings .settings-section:hover {
-		background-color: rgba(229,246,255,.3);
-		text-shadow: 0px 1px 1px #fff;
-		color: #000;
-	}
-		.MOMSettings .toggle {
-			position: absolute; 
-			top: 0;
-			right: 0;
-			padding: 5px;
-		}
-		.MOMSettings .full-title {
-			background-color: rgba(255,255,255,.8);
-			border-bottom: 1px solid rgba(0,0,0,.1);
-			font-size: 150%;
-			font-weight: 900;
-			left: 0;
-			padding: 10px;
-			position: absolute;
-			top: 0;
-			width: 100%; 
-		}
-			.MOMSettings .full-title a {
-				float: right; 
-				font-size: 65%;
-				margin: 0 15px 0 0;
-			}
-		.MOMSettings input[type="submit"] {
-			margin: 5px;
-			padding: 5px;
-			width: 99%;
-		}
-		.MOMSettings .toggled {
-			overflow: hidden;
-			display: block; 
-			padding: 38px 0 0 0; 
-			height: 0;
-			
-		}
-		.MOMSettings .settings-section .clear {
-			display: block; 
-			padding: 10px;
-			width: 98%;
-			margin: 10px auto;
-		}
-		.MOMSettings .settings-section input[type="text"].full,
-		.MOMSettings .settings-section select {
-			width: 98%;
-			margin: 5px 10px;
-		}
-		.MOMSettings .settings-section span.title-full {
-				clear: both; 
-				display: block;
-				font-size: 120%;
-				font-weight: 800;
-				margin: 5px 10px 15px;
-		}
-		.MOMSettings .settings-section em.full {
-			display: block;
-			margin: 5px 10px;			
-		}	
-		.MOMSettings .settings-section form.exclude {
-			clear: both;
-			float: none;
-			padding: 5px;
-			text-align: left;
-			width: 100%;
-		}	
-		.MOMSettings .settings-section form section {
-			clear: both;
-			display: block; 
-			margin: 5px auto;
-		}
-		.MOMSettings .settings-section form label {
-			float: left;
-			width: 45%;
-			padding: 5px;
-			margin: 0 5px;
-		}
-		.MOMSettings .settings-section form textarea {
-			float: right; 
-			width: 50%;
-			height: 150px;
-		}
-		.MOMSettings .settings-section form input[type="text"] {
-			float: right; 
-			width: 50%;
-		}
-			.MOMSettings .settings-section .title {
-				clear: both; 
-				display: block;
-				font-size: 120%;
-				font-weight: 800;
-			}
-			.MOMSettings .settings-section .right-half p {
-				background: rgba(227,241,255,.5);
-				border: 1px solid rgba(227,241,255,.9);
-				border-radius: 2px;
-				cursor: default;
-				padding: 5px 30px;
-			}
-			.MOMSettings .settings-section .right-half form {
-				border-bottom: 1px solid rgba(0,0,0,.0);
-				clear: both; 
-				display: block;
-				padding: 30px 5px;
-				width: 100%;
-			}
-			.MOMSettings .settings-section .right-half form:hover {
-				border-bottom: 1px solid rgba(0,0,0,.1);
-			}
-			.MOMSettings .settings-section .right-half form label {
-				display: block;
-				width: 100%;
-			}
-			.MOMSettings .settings-section .right-half form i {
-				display: inline;
-			}
-			.MOMSettings .settings-section .right-half form span {
-				float: right;
-				font-size: 90%;
-				
-			}
-			
-	
 	.MOMSettings *:after,
 	.MOMSettings *:before,
 	.MOMSettings * {
@@ -152,7 +14,6 @@
 	}
 	.MOMSettings {
 		background-color: #fff;
-		border: 1px solid rgba(0,0,0,.1);
 		clear: both;
 		display: block; 
 		padding: 5px; 
@@ -164,49 +25,195 @@
 		content: ""; 
 		display: table;
 	}
-		.hidden {
-			display: none;
-			visibility: hidden; 
-		}
-
-		.fa-toggle-on {
-			color: #1c5c00;
-		}
-		.fa-toggle-off {
-			color: #5c0000;
-		}
-		
-
-@media only screen and (max-width: 945px) {
-
-	.MOMSettings .settings-section .right-half {
-		clear: both; 
-		display: block; 
-		float: none; 
-		width: 100%;
-	}
-	.MOMSettings .setting span,
-	.MOMSettings .setting .clear select,
-	.MOMSettings .setting form {
-		width: 45%;
-	}
-	.MOMSettings form.clear {
-		width: 100%;
-	}
-	.simple form {
-		width: 49.5%;
-	}
-}
-@media only screen and (max-width: 782px) {
-	.MOMSettings .setting span,
-	.MOMSettings .setting .clear select,
-	.MOMSettings .setting form {
+	hr {
 		clear: both; 
 		display: block;
+		margin: 20px 0 10px;
+		width: 100%; 	
+	}
+	.MOMSettings .full .small{
+		background-color: rgba(47,51,53,.7);
+		border: 1px solid rgba(47,51,53,.9);
+		color: #fff;
+		float: left;
+		margin: 5px;
+		padding: 30px 5px 5px;
+		position: relative;
+		width: 200px;
+	}
+		.MOMSettings .full .small form label{
+			clear: both;
+			display: block;
+			margin: 2px 0;
+			padding: 5px 2px;
+			text-align: left;
+			width: 100%;
+		}
+		.MOMSettings .full .small form label:hover{
+			background-color: rgba(47,51,53,.9);
+		}
+		.MOMSettings .small i {
+			margin-right: 10px;
+		}
+	.MOMSettings .warning {
+		background-color: #fff6f6;
+		border: 1px solid rgba(77,9,9,.1);
+		clear: both;
+		font-size: 150%;
+		height: 100%;
+		left: 0;
+		line-height: 150%;
+		overflow: hidden;
+		padding: 5px;
+		position: absolute;
+		text-align: center;
+		top: 0;
+		width: 100%;
+		z-index: 2;
+	}
+		.MOMSettings .warning i {
+			clear: both;
+			color: rgba(0,0,0,.1);
+			display: block;
+			font-size: 1000%;
+			left: 0;
+			opacity: .5;
+			padding: 20px;
+			position: absolute; 
+			text-align: center;
+			top: 0;
+			width: 100%; 
+		}
+		.MOMSettings .warning form,
+		.MOMSettings .warning label {
+			display: block; 
+			height: 100%; 
+			padding: 55px 30px 0;
+			width: 100%;
+		}
+	.MOMSettings .full,
+	.MOMSettings .MOM_form {
+		clear: both;
+		margin: 0;
+		position: relative;
+		width: 96%;
+	}
+		.MOMSettings .full div section {
+			display: block; 
+			padding: 5px; 
+			height: 173px; 
+			background-color: #fff;
+			color: #000;
+			overflow-y:auto;
+			margin: 5px;
+		}
+		.MOMSettings .MOM_form .clear {
+			clear: both;
+		}
+		.MOMSettings .MOM_form section{
+			clear: both;
+			display: block;
+			text-align: left;
+			width: 100%;
+		}
+		.MOMSettings .MOM_form input[type="submit"]{
+			float: left;
+			display: block;
+			margin: 5px;
+			padding: 0;
+			width: 120px;
+		}
+		.MOMSettings .MOM_form .left-section {
+			float: left;
+			width: 200px;
+		}
+			.MOMSettings .MOM_form .left-section div{
+				background-color: rgba(47,51,53,.7);
+				border: 1px solid rgba(47,51,53,.9);
+				color: #fff;
+				margin: 5px;
+				padding: 30px 5px 5px;
+				position: relative;
+				width: 200px;
+			}
+			.MOMSettings .fullwidth strong,
+			.MOMSettings .full .right-section strong,
+			.MOMSettings .full .small strong,
+			.MOMSettings .MOM_form .left-section strong {
+				background-color: #bec9cf;
+				color: rgba(47,51,53,.7);
+				left: 0;
+				padding: 5px;
+				position: absolute; 
+				top: 0;
+				width: 100%;
+			}
+		.MOMSettings .full .right-section,
+		.MOMSettings .MOM_form .right-section {
+			float: right; 
+			width: 430px;
+		}
+			.MOMSettings .MOM_form .right-section label {
+				display: inline;
+				padding: 5px 10px;
+			}
+			.MOMSettings .right-section div,
+			.MOMSettings .MOM_form .right-section div{
+				background-color: rgba(47,51,53,.7);
+				border: 1px solid rgba(47,51,53,.9);
+				color: #fff;
+				margin: 5px;
+				overflow-y: auto;
+				overflow-x: hidden;
+				padding: 30px 5px 5px 0;
+				position: relative;
+				width: 100%;
+			}
+			.MOMSettings .MOM_form .right-section strong {
+				background-color: #bec9cf;
+				color: rgba(47,51,53,.7);
+				left: 0;
+				padding: 5px;
+				position: absolute; 
+				top: 0;
+				width: 100%;
+			}	
+	
+	.MOMSettings .fullwidth {
+		background-color: rgba(47,51,53,.7);
+		border: 1px solid rgba(47,51,53,.9);
+		color: #fff;
+		clear: both;
 		float: none;
+		margin: 5px;
+		padding: 30px 5px 5px;
+		position: relative;
 		width: 100%;
 	}
-	.simple form {
-		width: 99.5%;
+	
+	.MOMSettings .settings-section {
+		clear: both;
+		display: block; 
+		margin: 15px;
+		width: 690px;
+		overflow-y: auto;
+		padding: 50px 10px; 
+		position: relative;
 	}
-}
+
+		.MOMSettings .settings-section input[type="text"].full,
+		.MOMSettings .settings-section select {
+			width: 98%;
+			margin: 5px 10px;
+		}
+
+	
+		.MOMSettings .settings-section form textarea {
+			float: right; 
+			width: 50%;
+			height: 150px;
+		}
+		.MOMSettings .settings-section form input[type="text"] {
+			float: right; 
+			width: 50%;
+		}
