@@ -215,8 +215,7 @@ function my_optional_modules_page_content(){
 									if( $field == 'myoptionalmodules_nextlinkclass' )
 										$_REQUEST[ 'myoptionalmodules_nextlinkclass' ]     = str_replace( '.', '', $_REQUEST[ 'myoptionalmodules_nextlinkclass' ] );
 									$value = sanitize_text_field( $_REQUEST[ $field ] );
-									if( $value )
-										update_option( $field, $value );
+									update_option( $field, $value );
 								}
 							}
 							$value = null;

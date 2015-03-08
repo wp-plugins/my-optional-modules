@@ -41,7 +41,8 @@ class myoptionalmodules {
 	}
 
 	function plugin_stylesheets() {
-		$myStyleFile = str_replace( array( 'https:', 'http:' ), '', esc_url( WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules.css' ) );
+		global $myoptionalmodules_plugin_version;
+		$myStyleFile = str_replace( array( 'https:', 'http:' ), '', esc_url( WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules' . $myoptionalmodules_plugin_version . '.css' ) );
 		wp_register_style( 'my_optional_modules', $myStyleFile );
 		wp_enqueue_style( 'my_optional_modules' );
 	}

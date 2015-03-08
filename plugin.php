@@ -3,7 +3,7 @@
  * Plugin Name: My Optional Modules
  * Plugin URI: //wordpress.org/plugins/my-optional-modules/
  * Description: Optional modules and additions for Wordpress.
- * Version: 8-RC-1.2
+ * Version: 8-RC-1.3
  * Author: Matthew Trevino
  * Author URI: //wordpress.org/plugins/my-optional-modules/
  *	
@@ -20,6 +20,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+$myoptionalmodules_plugin_version  = '8RC13';
 $myoptionalmodules_upgrade_version = '2';
 define ( 'MyOptionalModules', true );
 require_once( ABSPATH . 'wp-includes/pluggable.php' );
@@ -50,10 +51,11 @@ if( current_user_can( 'edit_dashboard' ) && is_admin() ){
 			add_action ( 'admin_enqueue_scripts', array( $this, 'stylesheets' ) );
 		}
 		function stylesheets( $hook ){
+			global $myoptionalmodules_plugin_version;
 			if( 'settings_page_mommaincontrol' != $hook )
 			return;
 			$font_awesome_css = str_replace( array( 'https:', 'http:' ), '', esc_url( plugins_url() . '/' . plugin_basename( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' ) );
-			$mom_admin_css    = str_replace( array( 'https:', 'http:' ), '', esc_url( plugins_url() . '/' . plugin_basename( dirname ( __FILE__ ) ) . '/includes/adminstyle/css.css' ) );
+			$mom_admin_css    = str_replace( array( 'https:', 'http:' ), '', esc_url( plugins_url() . '/' . plugin_basename( dirname ( __FILE__ ) ) . '/includes/adminstyle/css' . $myoptionalmodules_plugin_version . '.css' ) );
 			wp_enqueue_style( 'mom_admin_css', $mom_admin_css );
 			wp_enqueue_style( 'font_awesome',  $font_awesome_css );
 		}
