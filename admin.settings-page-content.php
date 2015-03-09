@@ -138,7 +138,8 @@ function my_optional_modules_page_content(){
 							'myoptionalmodules_readmore',
 							'myoptionalmodules_randompost',
 							'myoptionalmodules_randomtitles',
-							'myoptionalmodules_randomdescriptions'
+							'myoptionalmodules_randomdescriptions',
+							'myoptionalmodules_frontpage'							
 						);
 						
 						$options_exclude = array(
