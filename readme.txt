@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: meta, og, twitter, facebook, google, random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 8-RC-1.3.1
+Stable tag: 8-RC-1.4
 
 An assortment of functions to enhance WordPress.
 
@@ -57,14 +57,29 @@ on [Github](https://github.com/onebillion/mom). )
 *   A media embedder with oEmbed fallback
 *	An attachments loop to show off images (that link to their respective posts)
 *	A highly customizable post loop 
+*	Hide content on a post
 
 = Take advantage of theme developer options =
 *	a category list that uses the options from the exlude setup
 *	a media embedder with oEmbed fallback
 
 == To-Do ==
-*	Optimize option calls 
-*	Remove 7->8 upgrade once majority of users are using version 8
+= Development =
+Development of any new features past 9-RC will cease until all code is as clean and well documented/commented 
+as I find humanly possible to accomplish. There is no determined time-table as to when MOM will pass on from 
+the 8-RC-* series to the 9-RC-* series, nor is there any determined time-table as to how long further optimization 
+of the 9-RC-* will take.
+
+= Documentation = 
+As of right now, there is plugin documentation on the admin screen, but my hope is to, at some point, get better 
+documentation put up on the web in an easier to digest format. Until then, the current documentation (as is) will 
+have to do.
+
+= The 'Upgrade' Issue =
+This will not affect anybody who has performed a fresh installation after version 8-RC-1.3.
+
+The transition from 7 to 8, and then 8 to the 8-RC-* series, brought with it the need to upgrade several options in the 
+database, as well as remove no longer used options. Coming in 9-RC-*, the upgrade functionality will no longer be present.
 
 == Installation ==
 = 3-step installation =
@@ -82,6 +97,10 @@ on [Github](https://github.com/onebillion/mom). )
 2. Share icons displayed at the top of the post content.
 
 == Changelog ==
+
+= 8-RC-1.4 =
+* Attach a default miniloop to the bottom of each post utilizing meta keys. (addition)
+* [mom_hidden]content[/mom_hidden] allows you to specify content to hide based on parameters. (check shortcode documentation in admin) (addition)
 
 = 8-RC-1.2 / 8-RC-1.3 / 8-RC-1.3.1 =
 * Options should now be able to be enabled/disabled properly (bugfix) (persistent)

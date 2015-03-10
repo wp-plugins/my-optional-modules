@@ -1,6 +1,8 @@
 <?php 
 
-if(!defined('MyOptionalModules')) { die('You can not call this file directly.'); }
+if(!defined('MyOptionalModules')){
+	die();
+}
 
 $css  = plugins_url() . '/' . plugin_basename( dirname( __FILE__ ) ) . '/includes/';
 add_action( 'wp_enqueue_admin_scripts', 'myoptionalmodules_scripts' );

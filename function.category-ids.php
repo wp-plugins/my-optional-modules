@@ -4,8 +4,8 @@
  * Returns a list of all category IDs 
  */
 
-if( !defined( 'MyOptionalModules' ) ) { 
-	die( 'You can not call this file directly.' ); 
+if(!defined('MyOptionalModules')){
+	die();
 }
 
 if( !function_exists( 'my_optional_modules_get_category_ids' ) ) {

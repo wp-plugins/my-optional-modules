@@ -1,8 +1,9 @@
 <?php 
 
-if( !defined( 'MyOptionalModules' ) ) { 
-	die( 'You can not call this file directly.' ); 
+if(!defined('MyOptionalModules')){
+	die();
 }
+
 if( is_admin() ) {
 	
 		// 8-RC-1.2

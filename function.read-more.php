@@ -4,8 +4,8 @@
  * Destroy the default Twenty Fifteen excerpt 'read more' content
  */
 
-if( !defined( 'MyOptionalModules' ) ) { 
-	die( 'You can not call this file directly.' ); 
+if(!defined('MyOptionalModules')){
+	die();
 }
 
 if( get_option( 'mom_readmorecontent' ) ) {

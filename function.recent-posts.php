@@ -5,9 +5,10 @@
  * if is_single(). Behaves normally otherwise.
  */
 
-if( !defined( 'MyOptionalModules' ) ) { 
-	die( 'You can not call this file directly.' ); 
+if(!defined('MyOptionalModules')){
+	die();
 }
+
 if( 1 == get_option( 'myoptionalmodules_recentpostswidget' ) ) {
 	function myoptionalmodules_WP_Widget_Recent_Posts() {
 		register_widget( 'myoptionalmodules_WP_Widget_Recent_Posts' );

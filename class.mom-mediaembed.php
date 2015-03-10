@@ -4,7 +4,9 @@
  * new mom_mediaEmbed( 'URL' )
  */
 
-if(!defined('MyOptionalModules')) { die('You can not call this file directly.'); }
+if(!defined('MyOptionalModules')){
+	die();
+}
 
 class mom_mediaEmbed {
 	var $url;

@@ -4,8 +4,8 @@
  * Exclude posts from the loop based on a set of options
  */ 
 
-if( !defined( 'MyOptionalModules' ) ) { 
-	die( 'You can not call this file directly.' ); 
+if(!defined('MyOptionalModules')){
+	die();
 }
 
 global $myoptionalmodules_plugin;

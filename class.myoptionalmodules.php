@@ -5,10 +5,9 @@
  * These are values that we need to grab and use throughout the plugin.
  */
  
-if( !defined( 'MyOptionalModules' ) ) { 
-	die( 'You can not call this file directly.' ); 
+if(!defined('MyOptionalModules')){
+	die();
 }
-
 class myoptionalmodules {
 	
 	public $user_level, $ipaddress, $DNSBL;

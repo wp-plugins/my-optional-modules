@@ -1,7 +1,7 @@
 <?php 
 
-if( !defined( 'MyOptionalModules' ) ) { 
-	die( 'You can not call this file directly.' ); 
+if(!defined('MyOptionalModules')){
+	die();
 }
 
 class myoptionalmodules_attachment_loop_shortcode{

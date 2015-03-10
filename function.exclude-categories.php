@@ -7,9 +7,10 @@
  * my_optional_modules_exclude_categories();
  */
 
-if( !defined( 'MyOptionalModules' ) ) { 
-	die( 'You can not call this file directly.' ); 
+if(!defined('MyOptionalModules')){
+	die();
 }
+
 if( !function_exists( 'my_optional_modules_exclude_categories' ) ) {
 	function my_optional_modules_exclude_categories() {
 		$loggedOutCats = 0;

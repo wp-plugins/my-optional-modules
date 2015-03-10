@@ -6,7 +6,9 @@
  *    to enable. If none of these options are switched on via settings, then skip this class altogether.
  */  
 
-if(!defined('MyOptionalModules')) { die('You can not call this file directly.'); } 
+if(!defined('MyOptionalModules')){
+	die();
+}
 
 class myoptionalmodules_disable {
 

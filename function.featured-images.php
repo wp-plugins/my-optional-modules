@@ -1,6 +1,8 @@
 <?php 
 
-if(!defined('MyOptionalModules')) { die('You can not call this file directly.'); }
+if(!defined('MyOptionalModules')){
+	die();
+}
 
 if( 1 == get_option( 'myoptionalmodules_nelio' ) ) {
 	if( is_admin() ) {

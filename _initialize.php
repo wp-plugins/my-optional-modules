@@ -4,7 +4,9 @@
  *
  */
 
-if(!defined('MyOptionalModules')) { die('You can not call this file directly.'); }
+if(!defined('MyOptionalModules')){
+	die();
+}
 
 $myoptionalmodules_plugin = new myoptionalmodules();
 $myoptionalmodules_plugin->actions();
@@ -26,8 +28,8 @@ $myoptionalmodules_extras->actions();
 $myoptionalmodules_misc = new myoptionalmodules_misc();
 $myoptionalmodules_misc->actions();
 
-$myoptionalmodules_miniloop_shortcode = new myoptionalmodules_miniloop_shortcode();
-$myoptionalmodules_miniloop_shortcode->construct();
+$myoptionalmodules_shortcode_hidden = new myoptionalmodules_hidden();
+$myoptionalmodules_shortcode_hidden->construct();
 
 $myoptionalmodules_attachment_loop_shortcode = new myoptionalmodules_attachment_loop_shortcode();
 $myoptionalmodules_attachment_loop_shortcode->construct();

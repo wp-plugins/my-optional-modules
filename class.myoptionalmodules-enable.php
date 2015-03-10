@@ -6,8 +6,8 @@
  *    to enable. If none of these options are switched on via settings, then skip this class altogether.
  */
 
-if( !defined( 'MyOptionalModules' ) ) { 
-	die( 'You can not call this file directly.' ); 
+if(!defined('MyOptionalModules')){
+	die();
 }
 
 class myoptionalmodules_enable {
@@ -30,6 +30,9 @@ class myoptionalmodules_enable {
 		}
 		if( get_option( 'myoptionalmodules_sharelinks' ) ) {
 			add_filter( 'the_content', array( $this, 'share' ) );
+		}
+		if( get_option( 'myoptionalmodules_miniloopmeta' ) && get_option( 'myoptionalmodules_miniloopstyle' ) && get_option( 'myoptionalmodules_miniloopamount' ) ) {
+			add_filter( 'the_content', array( $this, 'miniloop' ) );
 		}
 		if( get_option( 'myoptionalmodules_rsslinkbacks' ) ) {
 			add_filter( 'the_content_feed', array( $this, 'rss' ) );
@@ -407,6 +410,20 @@ class myoptionalmodules_enable {
 		$excerpt     = null;
 		$title       = null;
 		$output      = null;
+	}
+	
+	function miniloop( $content ) {
+		global $wp, $post;
+		if( is_single() ) {
+			$meta   = sanitize_text_field( get_option( 'myoptionalmodules_miniloopmeta' ) );
+			$key    = get_post_meta( $post->ID, $meta, true );
+			$style  = sanitize_text_field( strtolower( get_option( 'myoptionalmodules_miniloopstyle' ) ) );
+			$amount = intval( get_option( 'myoptionalmodules_miniloopamount' ) );
+			$output = do_shortcode( '[mom_miniloop meta="' . $meta . '" style="' . $style . '" amount="' . $amount . '" ]' );
+			return $content . $output;
+		} else {
+			return $content;
+		}
 	}
 
 	/**
