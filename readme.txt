@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: meta, og, twitter, facebook, google, random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 8-RC-1.4
+Stable tag: 8-RC-1.5
 
 An assortment of functions to enhance WordPress.
 
@@ -97,6 +97,10 @@ database, as well as remove no longer used options. Coming in 9-RC-*, the upgrad
 2. Share icons displayed at the top of the post content.
 
 == Changelog ==
+
+= 8-RC-1.5 =
+* '[mom_embed]'/media embedding uses strpos > preg_match (upgrade)
+* 'Font Awesome' shortcode menu on post creation screen sectioned off for slightly easier navigation
 
 = 8-RC-1.4 =
 * Attach a default miniloop to the bottom of each post utilizing meta keys. (addition)
