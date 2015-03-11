@@ -19,6 +19,8 @@ class mom_mediaEmbed {
 		$path      = null;
 		$query     = null;
 		$timestamp = null;
+		$thumbnail = null;
+		$embed     = null;
 
 		if ( filter_var( $url, FILTER_VALIDATE_URL ) !== false )
 			if ( isset ( parse_url ( $url ) [ 'host'  ] ) ) 
@@ -118,16 +120,50 @@ class mom_mediaEmbed {
 					$url = $url [ sizeof ( $url ) - 1 ];
 				if ( strpos ( $host , 'youtu.be' ) === false )
 					$url = str_replace ( array ( 'v=' , '&' ) , '' , $query );
+		
+				
+				$embed  = '<object width="640" height="390" data="https://www.youtube.com/v/' . $url . '?version=3&amp;autoplay=1' . $timestamp . '">';
+				$embed .= '<param name="movie" value="https://www.youtube.com/v/' . $url . '?version=3&amp;autoplay=1' . $timestamp . '" />';
+				$embed .= '<param name="allowScriptAccess" value="always" />';
+				$embed .= '<embed src="https://www.youtube.com/v/' . $url . '?version=3&amp;autoplay=1' . $timestamp . '"';
+				$embed .= 'type="application/x-shockwave-flash"';
+				$embed .= 'allowscriptaccess="always"';
+				$embed .= 'width="640" ';
+				$embed .= 'height="390" />';
+				$embed .= '</object>';
+		
+				$thumbnail = '//img.youtube.com/vi/' . $url . '/0.jpg';
+				
+				echo '<div class="myoptionalmodules_mediaembed_youtube">';
+				echo '<span id="youtube-' . $url . '" class="play"><i class="fa fa-play-circle"></i></span>';
+				echo '<img id="youtube-' . $url . '-thumbnail" src="' . $thumbnail . '" class="myoptionalmodules_mediaembed_youtube_thumbnail" />';
+				echo '<div id="youtube-content-' . $url . '"></div>';
 				echo '
-				<object width="640" height="390" data="https://www.youtube.com/v/' . $url . '?version=3&amp;start=' . $timestamp . '">
-					<param name="movie" value="https://www.youtube.com/v/' . $url . '?version=3&amp;start=' . $timestamp . '" />
-					<param name="allowScriptAccess" value="always" />
-					<embed src="https://www.youtube.com/v/' . $url . '?version=3' . $timestamp . '"
+				<script>
+					jQuery(document).ready(function($){
+						$( \'#youtube-' . $url . '\' ).css({ "visibility":"visible", "display":"block" , "margin-top":"-42px"});
+						$( \'#youtube-' . $url . '-thumbnail\' ).css({ "visibility":"visible", "display":"block" , "margin-top":"-42px"});
+						$( \'#youtube-' . $url . '\' ).live( \'click\', function( event){
+							$( \'#youtube-content-' . $url . '\').append(\'' . $embed . '\');
+							$( \'#youtube-content-' . $url . '\').css({ "height":"390","width":"640" });
+							$( \'#youtube-' . $url . '-thumbnail\' ).remove();
+							$( \'#youtube-' . $url . '\' ).remove();
+						});
+					});
+				</script>';
+				echo '
+				<noscript>
+					<object width="640" height="390" data="https://www.youtube.com/v/' . $url . '?version=3' . $timestamp . '">
+						<param name="movie" value="https://www.youtube.com/v/' . $url . '?version=3' . $timestamp . '" />
+						<param name="allowScriptAccess" value="always" />
+						<embed src="https://www.youtube.com/v/' . $url . '?version=3' . $timestamp . '"
 						type="application/x-shockwave-flash"
 						allowscriptaccess="always"
 						width="640" 
 						height="390" />
-				</object>';
+					</object>
+				</noscript>
+				</div>';
 			}
 
 			// embeds not handled by the above
