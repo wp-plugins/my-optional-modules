@@ -30,8 +30,6 @@ class mom_mediaEmbed {
 
 		if ( $host ) {
 
-			$url = str_replace ( array ( 'https://' , 'http://' ) , '' , $url );
-
 			if( strpos ( $host, 'funnyordie.com' ) !== false ) {
 				$url = explode ( '/' , $url );
 				$url = $url [ sizeof ( $url ) - 2 ];
@@ -48,13 +46,13 @@ class mom_mediaEmbed {
 
 			// gfycat
 			elseif( strpos ( $host , 'gfycat.com' ) !== false ) {
-				$url = str_replace ( 'gfycat.com', '', $url );
+				$url = str_replace ( array ( 'https://' , 'http://' , 'gfycat.com' ), '', $url );
 				echo '<iframe src="//gfycat.com/iframe/' . $url . '" frameborder="0" scrolling="no" width="592" height="320" ></iframe>';
 			}
 
 			// imgur
 			elseif ( strpos ( $host , 'imgur.com' ) !== false ) {
-				$url = str_replace ( array ( 'imgur.com/album/' , 'i.imgur.com/' ) , '' , $url );
+				$url = str_replace ( array ( 'https://' , 'http://' , 'imgur.com/album/' , 'i.imgur.com/' ) , '' , $url );
 				if ( strpos ( $path , '/album/' ) !== false ) 
 					echo '<iframe class="imgur-album" width="100%" height="550" frameborder="0" src="//imgur.com/a/' . $url . '/embed"></iframe>';
 				else
