@@ -95,23 +95,23 @@ class mom_mediaEmbed {
 			elseif ( strpos ( $host , 'youtube.com' ) !== false || strpos ( $host , 'youtu.be' ) !== false ) {
 				if ( strpos ( strtolower ( $url ), '038;t=' ) !== false && strpos ( strtolower ( $url ), 'list=' ) === false ) {
 					$url_parse = parse_url ( strtolower ( $url ) );
-					$timeStamp = sanitize_text_field ( str_replace ( '038;t=', '', $url_parse [ 'fragment' ] ) );
+					$timestamp = sanitize_text_field ( str_replace ( '038;t=', '', $url_parse [ 'fragment' ] ) );
 					$minutes   = 0;
 					$seconds   = 0;
-					if ( strpos( $timeStamp, 'm' ) !== false && strpos ( $timeStamp, 's' ) !== false ) {
-						$parts     = str_replace ( array ( 'm' , 's' ) , '' , $timeStamp );
+					if ( strpos( $timestamp, 'm' ) !== false && strpos ( $timestamp, 's' ) !== false ) {
+						$parts     = str_replace ( array ( 'm' , 's' ) , '' , $timestamp );
 						list ( $minutes , $seconds ) = $parts = str_split ( $parts );
 						$minutes   = $minutes * 60;
 						$seconds   = $seconds * 1;
-					} elseif ( strpos ( $timeStamp , 'm' ) !== true && strpos ( $timeStamp , 's' ) !== false ) {
-						$seconds   = str_replace( 's' , '' , $timeStamp ) * 1;
-					} elseif ( strpos ( $timeStamp , 'm' ) !== false && strpos ( $timeStamp, 's' ) !== true ) {
-						$minutes   = str_replace ( 'm' , '' , $timeStamp ) * 60;
+					} elseif ( strpos ( $timestamp , 'm' ) !== true && strpos ( $timestamp , 's' ) !== false ) {
+						$seconds   = str_replace( 's' , '' , $timestamp ) * 1;
+					} elseif ( strpos ( $timestamp , 'm' ) !== false && strpos ( $timestamp, 's' ) !== true ) {
+						$minutes   = str_replace ( 'm' , '' , $timestamp ) * 60;
 					} else {
 						$minutes = 0;
 						$seconds = 0;
 					}
-					$timeStamp = '&amp;start-' . $minutes + $seconds;
+					$timestamp = '&amp;start-' . $minutes + $seconds;
 				}
 				if ( strpos ( $host , 'youtu.be' ) !== false )
 					$url = explode ( '/' , $url );
@@ -119,10 +119,10 @@ class mom_mediaEmbed {
 				if ( strpos ( $host , 'youtu.be' ) === false )
 					$url = str_replace ( array ( 'v=' , '&' ) , '' , $query );
 				echo '
-				<object width="640" height="390" data="https://www.youtube.com/v/' . $url . '?version=3&amp;start=' . $timeStamp . '">
-					<param name="movie" value="https://www.youtube.com/v/' . $url . '?version=3&amp;start=' . $timeStamp . '" />
+				<object width="640" height="390" data="https://www.youtube.com/v/' . $url . '?version=3&amp;start=' . $timestamp . '">
+					<param name="movie" value="https://www.youtube.com/v/' . $url . '?version=3&amp;start=' . $timestamp . '" />
 					<param name="allowScriptAccess" value="always" />
-					<embed src="https://www.youtube.com/v/' . $url . '?version=3' . $timeStamp . '"
+					<embed src="https://www.youtube.com/v/' . $url . '?version=3' . $timestamp . '"
 						type="application/x-shockwave-flash"
 						allowscriptaccess="always"
 						width="640" 
