@@ -6,6 +6,12 @@ if(!defined('MyOptionalModules')){
 
 if( is_admin() ) {
 	
+		// 8-RC-1.5.3
+		if( get_option( 'myoptionalmodules_nelio_submit' ) ) 
+			$nelio = sanitize_text_field( get_option( 'myoptionalmodules_nelio_submit' ) );
+			update_option( 'myoptionalmodules_nelio', $nelio );
+			delete_option( 'myoptionalmodules_nelio_submit' );
+	
 		// 8-RC-1.2
 		if( get_option( 'myoptionalmodules_admin_toggledisable' ) ) delete_option( 'myoptionalmodules_admin_toggledisable' );
 		if( get_option( 'myoptionalmodules_admin_toggleenable' ) ) delete_option( 'myoptionalmodules_admin_toggleenable' );
