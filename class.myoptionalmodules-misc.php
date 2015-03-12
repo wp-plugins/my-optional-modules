@@ -14,7 +14,7 @@ class myoptionalmodules_misc {
 
 	function actions() {
 		if( get_option( 'myoptionalmodules_google' ) ) {
-			add_action( 'wp_footer', array( $this, 'google_analytics' ) );
+			add_action( 'wp_head', array( $this, 'google_analytics' ) );
 		}
 		if( get_option( 'myoptionalmodules_frontpage' ) && 'off' != get_option( 'myoptionalmodules_frontpage' ) ) {
 			add_action ( 'wp', array( $this, 'front_post' ) );
