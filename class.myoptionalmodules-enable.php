@@ -56,43 +56,89 @@ class myoptionalmodules_enable {
 	global $post, $wp;
 
 		$author = null;
-		$author = $post->post_author;
 		
 		/**
 		 * Facebook
 		 */
-		$id      = null;
-		$title   = null;
-		$type    = null;
-		$image   = null;
-		$url     = null;
-		$site    = null;
-		$excerpt = null;
-		
-		$id    = $post->ID;
+		$id        = null;
+		$title     = null;
+		$type      = null;
+		$thumbnail = null;
+		$image     = null;
+		$url       = null;
+		$site      = null;
+		$excerpt   = null;
+		$external  = null;
+		$host      = null;
+		$path      = null;
+		$video_w   = null;
+		$video_h   = null;
+		if( is_single() || is_page() )
+			$id        = $post->ID;
+		if( is_single() || is_page() )
+			$author = $post->post_author;		
+		$og_type   = 'image';
+
+	
 		if( is_single() || is_page() ) {
-			$title   = sanitize_text_field( str_replace( '\'', '', get_post_field( 'post_title', $id ) ) );
-			$image   = wp_get_attachment_image_src( get_post_thumbnail_id( $id ), 'single-post-thumbnail' );
-			$image   = $image[0];
-			$image   = str_replace( array( 'https:', 'http:' ), '', esc_url( $image ) );
-			$url     = get_permalink( $id );
-			$site    = get_bloginfo( 'name' );
-			$excerpt = strip_tags( esc_html( preg_replace('/\s\s+/i','', get_the_excerpt( ) ) ) );
-			$type    = 'article';
+			$type     = 'article';
+			$title    = sanitize_text_field( str_replace( '\'', '', get_post_field( 'post_title', $id ) ) );
+			$image    = wp_get_attachment_image_src( get_post_thumbnail_id ( $id ), 'single-post-thumbnail' );
+			$image    = $image[0];
+		
+			if ( function_exists ( 'myoptionalmodules_get_thumbnail_src' ) ) {
+				$external = myoptionalmodules_get_thumbnail_src( $id );
+			}
+			if( $external ) {
+				if ( isset ( parse_url ( $external ) [ 'host'  ] ) )
+					$host  = parse_url ( $external ) [ 'host'  ];
+				if ( isset ( parse_url ( $external ) [ 'path'  ] ) )
+					$path  = parse_url ( $external ) [ 'path'  ];
+				if( strpos ( $host , 'youtube.com' ) !== false ) {				
+					$video = explode ( '/' , $external );
+					$video = $video [ sizeof ( $video ) - 1 ];
+					$og_type   = 'video';
+					$image     = "//youtube.com/v/$video?version=3&amp;autohide=1";
+					$video_w   = '398';
+					$video_h   = '264';
+					$thumbnail = "//img.youtube.com/vi/$video/0.jpg";
+					$type      = 'video';
+				}
+				
+				if( strpos ( $host, 'imgur.com' ) !== false && strpos ( $path, '/album/') === false ) {
+					$image   = $external;
+				}
+			}
+
+			$url      = get_permalink( $id );
+			$site     = get_bloginfo( 'name' );
+			$excerpt  = strip_tags( esc_html( preg_replace('/\s\s+/i','', get_the_excerpt( ) ) ) );
 		} else {
-			$title   = get_bloginfo( 'name' );
-			$url     = esc_url( home_url( '/' ) );
-			$type    = 'website';
+			$title    = get_bloginfo( 'name' );
+			$url      = esc_url( home_url( '/' ) );
+			$type     = 'website';
 		}
 		$title = sanitize_text_field( str_replace( '\'', '', $title ) );
 		$url   = sanitize_text_field( str_replace( array( 'https:', 'http:' ), '', esc_url( $url ) ) );
 
-		if( $title )   echo "\n<meta property='og:title' content='$title'>";
-		if( $site )    echo "\n<meta property='og:site_name' content='$site'>";
-		if( $excerpt ) echo "\n<meta property='og:description' content='$excerpt'>";
-		if( $type )    echo "\n<meta property='og:type' content='$type'>";
-		if( $image )   echo "\n<meta property='og:image' content='$image'>";
-		if( $url )     echo "\n<meta property='og:url' content='$url'>";
+		$title     = sanitize_text_field( $title );
+		$site      = sanitize_text_field( $site );
+		$excerpt   = sanitize_text_field( $excerpt );
+		$type      = sanitize_text_field( $type );
+		$image     = sanitize_text_field( $image );
+		$video_w   = sanitize_text_field( $video_w );
+		$video_h   = sanitize_text_field( $video_h );
+		$url       = sanitize_text_field( $url );
+		
+		if( $title )     echo "\n<meta property='og:title' content='$title'>";
+		if( $site )      echo "\n<meta property='og:site_name' content='$site'>";
+		if( $excerpt )   echo "\n<meta property='og:description' content='$excerpt'>";
+		if( $type )      echo "\n<meta property='og:type' content='$type'>";
+		if( $thumbnail ) echo "\n<meta property='og:image' content='$thumbnail'>";
+		if( $image )     echo "\n<meta property='og:$og_type' content='$image'>";
+		if( $video_w )   echo "\n<meta property='og:video:width' content='$video_w'>";
+		if( $video_h )   echo "\n<meta property='og:video:height' content='$video_h'>";
+		if( $url )       echo "\n<meta property='og:url' content='$url'>";
 
 		$id      = null;
 		$title   = null;
@@ -113,6 +159,8 @@ class myoptionalmodules_enable {
 			$attribution = get_the_author_meta( 'twitter_personal', $author );
 			$attribution = sanitize_text_field( str_replace( array( '@', '\'' ), '', $attribution ) );
 			if( $attribution ) {
+				$card        = sanitize_text_field ( $card );
+				$attribution = sanitize_text_field ( $attribution );
 				if( $card )        echo "\n<meta name='twitter:card' content='$card'>";
 				if( $attribution ) echo "\n<meta name='twitter:creator' content='@$attribution'>";
 			}
