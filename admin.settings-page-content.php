@@ -2,7 +2,7 @@
 /**
  * ADMIN Settings Page Content
  *
- * File last update: 8-RC-1.5.6
+ * File last update: 9
  *
  * Content of the /wp-admin/ SETTINGS PAGE for this plugin
  * INCLUDING all SAVE OPERATIONS.
@@ -20,15 +20,15 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 	}
 
 	function my_optional_modules_page_content() {
-		global $myoptionalmodules_upgrade_version;
 		echo '
 		<div class="MOMSettings">';
 
 			class myoptionalmodules_settings_form {
 
 				function _construct() {
-					global $myoptionalmodules_upgrade_version , $table_prefix , $wpdb;
+					global $table_prefix , $wpdb;
 
+					// Trash Removal
 					if (
 						isset ( $_POST['optimizeTables'] ) ||
 						isset ( $_POST['delete_drafts'] ) ||
@@ -311,24 +311,10 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 							<div class="right-section">
 								<div>
 									<strong>My Optional Modules</strong>
-									<section>';
-
-										if ( isset ( $_POST['MOM_UPGRADE'] ) && check_admin_referer ( 'MOM_UPGRADE' ) ) {
-											include ( 'admin.upgrade.php' );
-										}
-
-										if ( $myoptionalmodules_upgrade_version != get_option ( 'myoptionalmodules_upgrade_version' ) ) {
-											echo '
-											<form class="warning" method="post" action="" name="MOM_UPGRADE">';
-												wp_nonce_field ( 'MOM_UPGRADE' );
-												echo '
-												<label for="MOM_UPGRADE"><i class="fa fa-warning"></i><code>Plugin is uninstalled or disabled due to a necessary database upgrade. Click here to fix, or, if uninstalling, disable and remove it from the plugins menu.</code></label>
-												<input type="submit" id="MOM_UPGRADE" name="MOM_UPGRADE" class="hidden" value="Submit" />
-											</form>';
-										}
-
-										include ( 'admin.documentation.php' );
-									echo '
+									<section>
+									<p>Need help? <a href="https://wordpress.org/support/plugin/my-optional-modules">Support forum</a></p>
+									<p>Need information? <a href="http://iamnotu.com/my-optional-modules/">Documentation</a></p>
+									<p>Give it a rating? <a href="https://wordpress.org/support/view/plugin-reviews/my-optional-modules">Review</a></p>
 									</section>
 								</div>
 							</div>
@@ -469,6 +455,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 												<option value="list"';    selected ( $miniloop_style , 'list'    ); echo '>Miniloop style: List</option>
 												<option value="slider"';  selected ( $miniloop_style , 'slider'  ); echo '>Miniloop style: Slider</option>
 												<option value="tiled"';   selected ( $miniloop_style , 'tiled'   ); echo '>Miniloop style: Tiled</option>
+												<option value="blurbs"';  selected ( $miniloop_style , 'blurbs'  ); echo '>Miniloop style: Blurbs</option>
 											</select>';
 										echo "
 										</section>

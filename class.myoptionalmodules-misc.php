@@ -2,9 +2,10 @@
 /**
  * CLASS myoptionalmodules_misc()
  *
- * File last update: 8-RC-1.5.6
+ * File last update: 9
  *
  * Functionality for:
+ * - Miniloops
  * - Google Analytics
  * - Frontpage post
  * - Previous/Next Link Class
@@ -22,6 +23,10 @@ class myoptionalmodules_misc {
 
 	function actions() {
 
+		if( get_option ( 'myoptionalmodules_miniloopmeta' ) && get_option ( 'myoptionalmodules_miniloopstyle' ) && get_option ( 'myoptionalmodules_miniloopamount' ) ) {
+			add_filter ( 'the_content' , array ( $this , 'miniloop' ) );
+		}	
+	
 		if( get_option ( 'myoptionalmodules_google' ) )
 			add_action ( 'wp_head' , array ( $this , 'google_analytics' ) );
 
@@ -53,6 +58,24 @@ class myoptionalmodules_misc {
 
 		if( '' != get_option ( 'myoptionalmodules_randomdescriptions' ) )
 			add_filter ( 'pre_option_blogdescription' , array ( $this , 'random_description' ) , 10 , 2 );
+
+	}
+
+	// Miniloops
+	function miniloop( $content ) {
+
+		global $wp, $post;
+
+		if( is_single() ) {
+			$meta   = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopmeta' ) );
+			$key    = get_post_meta ( $post->ID , $meta , true );
+			$style  = sanitize_text_field ( strtolower ( get_option ( 'myoptionalmodules_miniloopstyle' ) ) );
+			$amount = intval ( get_option ( 'myoptionalmodules_miniloopamount' ) );
+			$output = do_shortcode ( '[mom_miniloop meta="' . $meta . '" style="' . $style . '" amount="' . $amount . '" ]' );
+			return $content . $output;
+		} else {
+			return $content;
+		}
 
 	}
 

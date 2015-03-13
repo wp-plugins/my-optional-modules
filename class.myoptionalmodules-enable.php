@@ -2,14 +2,12 @@
 /**
  * CLASS myoptionalmodules_enable()
  *
- * File last update: 8-RC-1.5.6
+ * File last update: 9
  *
  * Functionality for:
  * - Meta Tags
- * - Disable Comments
  * - Horizontal Galleries
  * - Share Links
- * - Mini Loops
  * - RSS Linkbacks
  * - 404s
  * - Font Awesome
@@ -23,18 +21,11 @@ class myoptionalmodules_enable {
 
 	function actions() {
 
-		global $myoptionalmodules_plugin;
-
 		if( get_option ( 'myoptionalmodules_metatags' ) ) {
-				add_action ( 'wp_head' , array ( $this , 'meta' ) );
-				add_filter ( 'jetpack_enable_opengraph' , '__return_false' , 99 );
-				add_filter ( 'user_contactmethods' , array ( $this , 'twitter' ) );
-				add_filter ( 'admin_init' , array ( $this , 'twitter' ) );
-		}
-
-		if( get_option ( 'myoptionalmodules_disablecomments' ) || get_option ( 'myoptionalmodules_dnsbl' ) && true === $myoptionalmodules_plugin->DNSBL ){
-			add_filter ( 'comments_template' , array ( $this , 'comments' ) );
-			add_filter ( 'comments_open' , array ( $this , 'comments_form') , 10, 2 );
+			add_action ( 'wp_head' , array ( $this , 'meta' ) );
+			add_filter ( 'jetpack_enable_opengraph' , '__return_false' , 99 );
+			add_filter ( 'user_contactmethods' , array ( $this , 'twitter' ) );
+			add_filter ( 'admin_init' , array ( $this , 'twitter' ) );
 		}
 
 		if( get_option ( 'myoptionalmodules_horizontalgalleries' ) ) {
@@ -47,9 +38,6 @@ class myoptionalmodules_enable {
 			add_filter ( 'the_content' , array ( $this , 'share' ) );
 		}
 
-		if( get_option ( 'myoptionalmodules_miniloopmeta' ) && get_option ( 'myoptionalmodules_miniloopstyle' ) && get_option ( 'myoptionalmodules_miniloopamount' ) ) {
-			add_filter ( 'the_content' , array ( $this , 'miniloop' ) );
-		}
 		if( get_option ( 'myoptionalmodules_rsslinkbacks' ) ) {
 			add_filter ( 'the_content_feed' , array ( $this , 'rss' ) );
 			add_filter ( 'the_excerpt_rss' , array ( $this , 'rss' ) );
@@ -210,21 +198,6 @@ class myoptionalmodules_enable {
 		echo "\n\n";
 		
 		$author = null;
-
-	}
-
-	// Blank Comments template
-	function comments( $comment_template ) {
-
-		return dirname( __FILE__ ) . '/includes/templates/comments.php';
-
-	}
-
-	// Destroy the Comments Form (if we need to)
-	function comments_form( $open , $post_id ) {
-
-		$post = get_post ( $post_id );
-		return false;
 
 	}
 
@@ -505,24 +478,6 @@ class myoptionalmodules_enable {
 		$excerpt     = null;
 		$title       = null;
 		$output      = null;
-
-	}
-
-	// Miniloops
-	function miniloop( $content ) {
-
-		global $wp, $post;
-
-		if( is_single() ) {
-			$meta   = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopmeta' ) );
-			$key    = get_post_meta ( $post->ID , $meta , true );
-			$style  = sanitize_text_field ( strtolower ( get_option ( 'myoptionalmodules_miniloopstyle' ) ) );
-			$amount = intval ( get_option ( 'myoptionalmodules_miniloopamount' ) );
-			$output = do_shortcode ( '[mom_miniloop meta="' . $meta . '" style="' . $style . '" amount="' . $amount . '" ]' );
-			return $content . $output;
-		} else {
-			return $content;
-		}
 
 	}
 

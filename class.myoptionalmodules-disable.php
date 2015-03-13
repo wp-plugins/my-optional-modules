@@ -2,12 +2,13 @@
 /**
  * CLASS myoptionalmodules_disable
  *
- * File last update: 8-RC-1.5.6
+ * File last update: 9
  *
  * Functionality for:
  * - Pingbacks
  * - Author Archives
  * - Date Archives
+ * - Disable Comments
  * - Removing Superfluous Code
  */  
 
@@ -19,6 +20,8 @@ class myoptionalmodules_disable {
 
 	function actions() {
 
+		global $myoptionalmodules_plugin;
+	
 		if( get_option( 'myoptionalmodules_disablepingbacks' ) ) {
 			add_filter( 'xmlrpc_methods' , array ( $this , 'pingbacks' ) );
 		}
@@ -30,6 +33,11 @@ class myoptionalmodules_disable {
 		if( get_option( 'myoptionalmodules_datearchives' ) ) {
 			add_action( 'wp', array ( $this , 'date_archives' ) );
 			add_action( 'template_redirect' , array ( $this , 'date_archives' ) );
+		}
+
+		if( get_option ( 'myoptionalmodules_disablecomments' ) || get_option ( 'myoptionalmodules_dnsbl' ) && true === $myoptionalmodules_plugin->DNSBL ){
+			add_filter ( 'comments_template' , array ( $this , 'comments' ) );
+			add_filter ( 'comments_open' , array ( $this , 'comments_form') , 10, 2 );
 		}
 
 		if( get_option( 'myoptionalmodules_removecode' ) ) {
@@ -152,6 +160,21 @@ class myoptionalmodules_disable {
 		}
 
 	}
+
+	// Blank Comments template
+	function comments( $comment_template ) {
+
+		return dirname( __FILE__ ) . '/includes/templates/comments.php';
+
+	}
+
+	// Destroy the Comments Form (if we need to)
+	function comments_form( $open , $post_id ) {
+
+		$post = get_post ( $post_id );
+		return false;
+
+	}	
 
 	// Disable Pingback.php
 	function pingbacks( $methods ) {

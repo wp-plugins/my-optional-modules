@@ -2,7 +2,7 @@
 /**
  * CLASS mom_mediaEmbed()
  *
- * File last update: 8-RC-1.5.6
+ * File last update: 9
  *
  * Create a media embed from a URL in a template (or other) by passing a 
  * URL through the class:
@@ -59,8 +59,8 @@ class mom_mediaEmbed {
 
 			// imgur
 			elseif ( strpos ( $host , 'imgur.com' ) !== false ) {
-				$url = str_replace ( array ( 'https://' , 'http://' , 'imgur.com/album/' , 'i.imgur.com/' ) , '' , $url );
-				if ( strpos ( $path , '/album/' ) !== false ) 
+				$url = str_replace ( array ( 'https://' , 'http://' , 'imgur.com/a/' , 'i.imgur.com/' ) , '' , $url );
+				if ( strpos ( $path , '/a/' ) !== false ) 
 					echo '<iframe class="imgur-album" width="100%" height="550" frameborder="0" src="//imgur.com/a/' . $url . '/embed"></iframe>';
 				else
 					echo '<img class="image" alt="image" src="//i.imgur.com/' . $url . '"/>';
@@ -139,36 +139,16 @@ class mom_mediaEmbed {
 		
 				$thumbnail = '//img.youtube.com/vi/' . $url . '/0.jpg';
 				
-				echo '<div class="myoptionalmodules_mediaembed_youtube">';
-				echo '<span id="youtube-' . $url . '" class="play"><i class="fa fa-play-circle"></i></span>';
-				echo '<img id="youtube-' . $url . '-thumbnail" src="' . $thumbnail . '" class="myoptionalmodules_mediaembed_youtube_thumbnail" />';
-				echo '<div id="youtube-content-' . $url . '"></div>';
 				echo '
-				<script>
-					jQuery(document).ready(function($){
-						$( \'#youtube-' . $url . '\' ).css({ "visibility":"visible", "display":"block" , "margin-top":"-42px"});
-						$( \'#youtube-' . $url . '-thumbnail\' ).css({ "visibility":"visible", "display":"block" , "margin-top":"-42px"});
-						$( \'#youtube-' . $url . '\' ).live( \'click\', function( event){
-							$( \'#youtube-content-' . $url . '\').append(\'' . $embed . '\');
-							$( \'#youtube-content-' . $url . '\').css({ "height":"390","width":"640" });
-							$( \'#youtube-' . $url . '-thumbnail\' ).remove();
-							$( \'#youtube-' . $url . '\' ).remove();
-						});
-					});
-				</script>';
-				echo '
-				<noscript>
-					<object width="640" height="390" data="https://www.youtube.com/v/' . $url . '?version=3' . $timestamp . '">
-						<param name="movie" value="https://www.youtube.com/v/' . $url . '?version=3' . $timestamp . '" />
-						<param name="allowScriptAccess" value="always" />
-						<embed src="https://www.youtube.com/v/' . $url . '?version=3' . $timestamp . '"
-						type="application/x-shockwave-flash"
-						allowscriptaccess="always"
-						width="640" 
-						height="390" />
-					</object>
-				</noscript>
-				</div>';
+				<object width="640" height="390" data="https://www.youtube.com/v/' . $url . '?version=3' . $timestamp . '">
+					<param name="movie" value="https://www.youtube.com/v/' . $url . '?version=3' . $timestamp . '" />
+					<param name="allowScriptAccess" value="always" />
+					<embed src="https://www.youtube.com/v/' . $url . '?version=3' . $timestamp . '"
+					type="application/x-shockwave-flash"
+					allowscriptaccess="always"
+					width="640" 
+					height="390" />
+				</object>';
 			}
 
 			// embeds not handled by the above

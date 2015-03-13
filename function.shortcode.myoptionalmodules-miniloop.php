@@ -2,7 +2,7 @@
 /*
  * FUNCTION SHORTCODE myoptionalmodules_miniloop_shortcode()
  *
- * File last update: 8-RC-1.5.6
+ * File last update: 9
  *
  * Insert a mini loop of posts based on a set of parameters
  * [mom_miniloop PARAMETERS]
@@ -45,7 +45,6 @@ function myoptionalmodules_miniloop_shortcode( $atts ) {
 	$alt            = 0;
 	$recent_count   = 0;
 	$maxposts       = get_option ( 'posts_per_page' );
-	$series         = get_post_meta ( $post->ID , 'series' , true);
 
 	extract (
 		shortcode_atts (
@@ -68,7 +67,7 @@ function myoptionalmodules_miniloop_shortcode( $atts ) {
 				'orderby'       => 'post_date', // none,ID,author,title,name,type,date,modified,parent,rand
 				'order'         => 'DESC',      // DESC(descending) or ASC(ascending)
 				'post_status'   => 'publish',   // publish,pending,draft,auto-draft,future,private,inherit,trash,any
-				'meta'          => 'series'     // Posts with THIS meta key
+				'meta'          => null         // Posts with THIS meta key
 			)
 			, $atts 
 		)
@@ -93,6 +92,8 @@ function myoptionalmodules_miniloop_shortcode( $atts ) {
 	$meta          = sanitize_text_field ( $meta );
 	$key           = sanitize_text_field ( $key );
 	$style         = strtolower( sanitize_text_field( $style ) );
+	
+	if( $meta ) $meta = get_post_meta ( $post->ID , $meta , true);
 	
 	if( 123 == $year )
 		$year = date ( 'Y' );
@@ -244,6 +245,13 @@ function myoptionalmodules_miniloop_shortcode( $atts ) {
 			echo '><a class="mediaNotPresent" href="' . get_permalink ( $id ) . '"><span class="title">'. $link_text_text . '</span></a></div>';
 		}
 
+		if( $style == 'blurbs' ) {
+			echo '<div class="blurb">';
+				echo '<a class="title" href="' . $link . '">' . $title . '</a>';
+				echo '<div class="content">' . the_content() . '</div>';
+			echo '</div>';
+		}
+		
 		if( $style == 'tiled' ) {
 				if( $recent_count == 1 ) {
 				$container = 'feature';

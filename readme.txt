@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: meta, og, twitter, facebook, google, random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 8-RC-1.5.6
+Stable tag: 9
 
 An assortment of functions to enhance WordPress.
 
@@ -80,30 +80,9 @@ on [Github](https://github.com/onebillion/mom). )
 
 == Changelog ==
 
-= 8-RC-1.5.6 =
-* 'function.exclude-categories' calling wrong options (bugfix)
-* Files updated with information regarding when they were last changed (source)
-
-= 8-RC-*.*.* =
-* 8-RC-1.5.5 -- Fixed issue with 'Meta tags' where they would not function properly if 'External Thumbnails' weren't enabled
-* 8-RC-1.5.5 -- 'External thumbnails', if using imgur or youtube, will output appropriate og:tags if 'Meta tags' are enabled
-* 8-RC-1.5.4 -- Moved Google Analytics to wp_header (from wp_footer) (change)
-* 8-RC-1.5.3 -- Issue with wrong option name being called for external thumbnails (bugfix)
-* 8-RC-1.5.2 -- Youtube embeds with '[mom_embed]' utilize thumbnails to click to load the video. (Falls back to an embed if js is turned off browser side)
-* 8-RC-1.5.1 -- undefined variable 'timeStamp' with '[mom_embed]' (bugfix)
-* 8-RC-1.5.0 -- '[mom_embed]'/media embedding uses strpos > preg_match (upgrade)
-* 8-RC-1.5.0 -- 'Font Awesome' shortcode menu on post creation screen sectioned off for slightly easier navigation
-* 8-RC-1.4.0 -- Attach a default miniloop to the bottom of each post utilizing meta keys. (addition)
-* 8-RC-1.4.0 -- [mom_hidden]content[/mom_hidden] allows you to specify content to hide based on parameters. (check shortcode documentation in admin) (addition)
-* 8-RC-1.2/3 -- Options should now be able to be enabled/disabled properly (bugfix) (persistent)
-* 8-RC-1.1.0 -- Upgrade version '2' (upgrade)
-* 8-RC-1.1.0 -- Settings page now utilizes a single form (upgrade)
-* 8-RC-1.1.0 -- Plugin documentation (addition)
-* 8-RC-1.1.0 -- Ability to reset all plugin settings added (addition)
-* 8-RC-1.1.0 -- Google Tracking Code now properly tracks single post/page views instead of treating every hit like a hit to the homepage (bugfix)
-* 8-RC-1.0.0 -- 'mom_miniloop', 'mom_attachments', 'mom_embed' code optimized (shortcode) (upgrade)
-* 8-RC-1.0.0 -- When saving options, if values are empty, they are removed from the database (upgrade)
-* 8-RC-1.0.0 -- 'Uninstall' missing options rounded up (100% cleaning up after itself) (bugfix)
-* 8-RC-1.0.0 -- Insert Google Analytics tracking code on your blog (addition)
-* 8-RC-1.0.0 -- Exclusion rules for user levels now affects single post view (addition)
-* 8-RC-1.0.0 -- 'Meta tags' enables open graph (og:) tags with optional Twitter card information (addition)
+= 9 =
+* Version 7->8->8-RC-1.2->8-RC-1.5.3 transition code removed
+* Fix for 'mom_embed' imgur albums (bugfix)
+* Updated URLs for official documentation (addition)
+* Temporarily removed Click to Play functionality from Youtube embeds until a better system can be devised (code)
+* Removed default 'mom_miniloop' 'meta' value (code)

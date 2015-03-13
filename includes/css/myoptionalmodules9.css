@@ -448,6 +448,40 @@ h2.mom_related_title{
 	text-decoration: none; 
 }
 
+/* [style='blurbs'] */
+.loopdeloop_blurbs {
+	display: block;
+	margin: 0 auto 75px;
+	padding: 0;
+	position: relative;
+}
+	.loopdeloop_blurbs .blurb {
+		background-color: rgba(255,255,255,.5);
+		border: 1px solid rgba(0,0,0,.1);
+		clear: both;
+		display: block;
+		margin: 25px 0;
+		padding: 30px;
+	}
+	.loopdeloop_blurbs div div {
+		border: 0px;
+		margin: 10px 0;
+		padding: 0;
+	}
+	.loopdeloop_blurbs blockquote {
+		margin: 75px auto;
+	}
+	.loopdeloop_blurbs .title {
+		border-bottom: 1px solid rgba(0,0,0,.1);
+		display: inline; 
+		font-size: 115%;
+		margin-right: 5px;
+	}
+	.loopdeloop_blurbs .content {
+		display: inline; 
+		margin-right: 10px;
+	}
+
 /* Various */
 .clearboth{
 	clear:both;
