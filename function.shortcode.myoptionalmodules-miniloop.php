@@ -2,7 +2,7 @@
 /*
  * FUNCTION SHORTCODE myoptionalmodules_miniloop_shortcode()
  *
- * File last update: 9
+ * File last update: 9.1
  *
  * Insert a mini loop of posts based on a set of parameters
  * [mom_miniloop PARAMETERS]
@@ -93,7 +93,7 @@ function myoptionalmodules_miniloop_shortcode( $atts ) {
 	$key           = sanitize_text_field ( $key );
 	$style         = strtolower( sanitize_text_field( $style ) );
 	
-	if( $meta ) $meta = get_post_meta ( $post->ID , $meta , true);
+	
 	
 	if( 123 == $year )
 		$year = date ( 'Y' );
@@ -104,12 +104,6 @@ function myoptionalmodules_miniloop_shortcode( $atts ) {
 	if( 123 == $day )
 		$day = date ( 'j' );
 
-	if( $meta == strtolower ( 'series' ) ) {
-		$key     = $series;
-		$amount  = -1;
-		$exclude = $post->ID;
-	}
-	
 	if( intval ( $category ) )
 		$category_id   = $category;
 	else
@@ -120,7 +114,7 @@ function myoptionalmodules_miniloop_shortcode( $atts ) {
 	if( $paging )
 		$paged = ( get_query_var ( 'page' ) ) ? get_query_var ( 'page' ) : 1;
 
-	if( $key ) {
+	if( $meta && $key ) {
 		$args = array (
 			'post__not_in'     => array ( $exclude ),
 			'posts_per_page'   => $amount,
@@ -369,7 +363,6 @@ function myoptionalmodules_miniloop_shortcode( $atts ) {
 	$alt            = null;
 	$recent_count   = null;
 	$exclude_cats   = null;
-	$series         = null;
 	$year           = null;
 	$month          = null;
 	$day            = null;
