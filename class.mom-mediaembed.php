@@ -1,10 +1,15 @@
 <?php 
 /**
- * class.mom_mediaEmbed
- * new mom_mediaEmbed( 'URL' )
+ * CLASS mom_mediaEmbed()
+ *
+ * File last update: 8-RC-1.5.6
+ *
+ * Create a media embed from a URL in a template (or other) by passing a 
+ * URL through the class:
+ * - new mom_mediaEmbed( 'URL' )
  */
 
-if(!defined('MyOptionalModules')){
+if ( !defined ('MyOptionalModules' ) ) {
 	die();
 }
 

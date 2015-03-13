@@ -1,29 +1,35 @@
 <?php 
 
 /**
- * Returns a list of all category IDs 
+ * FUNCTION my_optional_modules_get_category_ids()
+ *
+ * File last update: 8-RC-1.5.6
+ *
+ * Returns all category IDs for the blog.
  */
 
-if(!defined('MyOptionalModules')){
+if ( !defined ( 'MyOptionalModules' ) ) {
 	die();
 }
 
-if( !function_exists( 'my_optional_modules_get_category_ids' ) ) {
-	function my_optional_modules_get_category_ids() {
-		if ( !$cat_ids = wp_cache_get( 'all_category_ids', 'category' ) ) {
-			$cat_ids = get_terms( 
-				'category', 
-				array( 
-					'fields' => 'ids', 
-					'get'    => 'all' 
-				) 
-			);
-			wp_cache_add( 
-				'all_category_ids', 
-				$cat_ids, 
-				'category' 
-			);
-		}
-		return $cat_ids;
-	}
+function my_optional_modules_get_category_ids() {
+
+	$cat_ids = null;
+	$cat_ids = get_terms( 
+		'category', 
+		array( 
+			'fields' => 'ids', 
+			'get'    => 'all' 
+		) 
+	);
+
+	wp_cache_add( 
+		'all_category_ids', 
+		$cat_ids, 
+		'category' 
+	);
+
+	return $cat_ids;
+	$cat_ids = null;
+
 }

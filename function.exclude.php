@@ -1,10 +1,13 @@
 <?php 
 /**
- * function.exclude
- * Exclude posts from the loop based on a set of options
+ * FUNCTION(ality) Exclude Posts
+ *
+ * File last update: 8-RC-1.5.6
+ *
+ * Alter the query to remove posts based on many parameters
  */ 
 
-if(!defined('MyOptionalModules')){
+if ( !defined ( 'MyOptionalModules' ) ) {
 	die();
 }
 
@@ -16,10 +19,10 @@ $date_day = date( 'D' );
  * Set them (initially) to nothing
  * Then, grab the value from the database and reset them
  */
-$c1	     = array( '0' );
-$t1	     = array( '0' );
-$rss_day = array( '0' );
-$u1      = array( '0' );
+$c1	     = array ( '0' );
+$t1	     = array ( '0' );
+$rss_day = array ( '0' );
+$u1      = array ( '0' );
 $t11     = 0;
 $c_1     = 0;
 $u_1     = 0;

@@ -1,4 +1,12 @@
 <?php
+/*
+ * ADMIN Font Awesome
+ *
+ * File last update: 8-RC-1.5.6
+ *
+ * Adds Font Awesome buttons to click to add to post edit content
+ * while NOT IN VISUAL MODE. 
+ */
 
 if ( !defined ( 'MyOptionalModules' ) ) {
 	die();
@@ -6,7 +14,7 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 
 
 $css  = plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/';
-add_action ( 'wp_enqueue_admin_scripts', 'myoptionalmodules_scripts' );
+add_action ( 'wp_enqueue_admin_scripts' , 'myoptionalmodules_scripts' );
 
 function myoptionalmodules_fontfa_posteditscreen ( $post_type ) {
 
@@ -509,6 +517,7 @@ function myoptionalmodules_fontfa_posteditscreen ( $post_type ) {
 			</div>
 		</div>
 	<?php }
+
 }
 
-add_action( 'edit_form_after_editor','myoptionalmodules_fontfa_posteditscreen' );
+add_action ( 'edit_form_after_editor' ,'myoptionalmodules_fontfa_posteditscreen' );

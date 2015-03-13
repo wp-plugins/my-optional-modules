@@ -1,9 +1,17 @@
 <?php 
+/*
+ * ADMIN Plugin Documentation
+ *
+ * File last update: 8-RC-1.5.6
+ *
+ * TEMPORARY information storehouse for 'My Optional Modules'
+ */
 
-if(!defined('MyOptionalModules')){
+if ( !defined ( 'MyOptionalModules' ) ) {
 	die();
-} 
-if( current_user_can( 'edit_dashboard' ) && is_admin() ){
+}
+
+if ( current_user_can ( 'edit_dashboard' ) && is_admin() ) {
 ?>
 	<p>
 		Plugin Documentatio

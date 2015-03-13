@@ -1,6 +1,21 @@
 <?php 
 
-if(!defined('MyOptionalModules')){
+/**
+ * Version information
+ *
+ * File last update: 8-RC-1.5.6
+ *
+ * Define which versions of (what) to enqueue from CDN, making sure
+ * to always update for current releases.
+ *
+ * //cdnjs.com/
+ * - Last checked 8-RC-1.5.6
+ * - - //cdnjs.com/libraries/jquery.lazyload
+ * - - //cdnjs.com/libraries/jquery
+ * - - //cdnjs.com/libraries/jquery-migrate
+ */
+
+if ( !defined ( 'MyOptionalModules' ) ) {
 	die();
 }
 

@@ -1,19 +1,28 @@
 <?php 
 
 /**
- * Manipulates the 'Recent Posts' widget to exclude the post that is currently being viewed
- * if is_single(). Behaves normally otherwise.
+ * FUNCTION myoptionalmodules_WP_Widget_Recent_Posts()
+ *
+ * File last update: 8-RC-1.5.6
+ *
+ * Alters the default 'Recent Posts' widget to exclude the post
+ * that is currently being viewed ( is_single() )
+ *
+ * This is pretty much a copy/paste from core, so we aren't going 
+ * to be altering TOO much of the original code.
  */
 
-if(!defined('MyOptionalModules')){
+if ( !defined ( 'MyOptionalModules' ) ) {
 	die();
 }
 
-if( 1 == get_option( 'myoptionalmodules_recentpostswidget' ) ) {
+if( get_option( 'myoptionalmodules_recentpostswidget' ) ) {
+
 	function myoptionalmodules_WP_Widget_Recent_Posts() {
-		register_widget( 'myoptionalmodules_WP_Widget_Recent_Posts' );
+		register_widget ( 'myoptionalmodules_WP_Widget_Recent_Posts' );
 	}
-	add_action( 'widgets_init', 'myoptionalmodules_WP_Widget_Recent_Posts' );
+	add_action ( 'widgets_init' , 'myoptionalmodules_WP_Widget_Recent_Posts' );
+
 	/**
 	 * Recent_Posts widget class
 	 *

@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: meta, og, twitter, facebook, google, random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 8-RC-1.5.5
+Stable tag: 8-RC-1.5.6
 
 An assortment of functions to enhance WordPress.
 
@@ -63,24 +63,6 @@ on [Github](https://github.com/onebillion/mom). )
 *	a category list that uses the options from the exlude setup
 *	a media embedder with oEmbed fallback
 
-== To-Do ==
-= Development =
-Development of any new features past 9-RC will cease until all code is as clean and well documented/commented 
-as I find humanly possible to accomplish. There is no determined time-table as to when MOM will pass on from 
-the 8-RC-* series to the 9-RC-* series, nor is there any determined time-table as to how long further optimization 
-of the 9-RC-* will take.
-
-= Documentation = 
-As of right now, there is plugin documentation on the admin screen, but my hope is to, at some point, get better 
-documentation put up on the web in an easier to digest format. Until then, the current documentation (as is) will 
-have to do.
-
-= The 'Upgrade' Issue =
-This will not affect anybody who has performed a fresh installation after version 8-RC-1.3.
-
-The transition from 7 to 8, and then 8 to the 8-RC-* series, brought with it the need to upgrade several options in the 
-database, as well as remove no longer used options. Coming in 9-RC-*, the upgrade functionality will no longer be present.
-
 == Installation ==
 = 3-step installation =
 1. Upload /my-optional-modules/ to your plguins folder.
@@ -98,44 +80,30 @@ database, as well as remove no longer used options. Coming in 9-RC-*, the upgrad
 
 == Changelog ==
 
-= 8-RC-1.5.5 =
-* Fixed issue with 'Meta tags' where they would not function properly if 'External Thumbnails' weren't enabled
-* 'External thumbnails', if using imgur or youtube, will output appropriate og:tags if 'Meta tags' are enabled
+= 8-RC-1.5.6 =
+* 'function.exclude-categories' calling wrong options (bugfix)
+* Files updated with information regarding when they were last changed (source)
 
-= 8-RC-1.5.4 =
-* Moved Google Analytics to wp_header (from wp_footer) (change)
-
-= 8-RC-1.5.3 =
-* Issue with wrong option name being called for external thumbnails (bugfix)
-
-= 8-RC-1.5.2 =
-* Youtube embeds with '[mom_embed]' utilize thumbnails to click to load the video. (Falls back to an embed if js is turned off browser side)
-
-= 8-RC-1.5.1 =
-* undefined variable 'timeStamp' with '[mom_embed]' (bugfix)
-
-= 8-RC-1.5 =
-* '[mom_embed]'/media embedding uses strpos > preg_match (upgrade)
-* 'Font Awesome' shortcode menu on post creation screen sectioned off for slightly easier navigation
-
-= 8-RC-1.4 =
-* Attach a default miniloop to the bottom of each post utilizing meta keys. (addition)
-* [mom_hidden]content[/mom_hidden] allows you to specify content to hide based on parameters. (check shortcode documentation in admin) (addition)
-
-= 8-RC-1.2 / 8-RC-1.3 / 8-RC-1.3.1 =
-* Options should now be able to be enabled/disabled properly (bugfix) (persistent)
-
-= 8-RC-1.1 =
-* Upgrade version '2' (upgrade)
-* Settings page now utilizes a single form (upgrade)
-* Plugin documentation (addition)
-* Ability to reset all plugin settings added (addition)
-* Google Tracking Code now properly tracks single post/page views instead of treating every hit like a hit to the homepage (bugfix)
-
-= 8-RC-1 =
-* 'mom_miniloop', 'mom_attachments', 'mom_embed' code optimized (shortcode) (upgrade)
-* When saving options, if values are empty, they are removed from the database (upgrade)
-* 'Uninstall' missing options rounded up (100% cleaning up after itself) (bugfix)
-* Insert Google Analytics tracking code on your blog (addition)
-* Exclusion rules for user levels now affects single post view (addition)
-* 'Meta tags' enables open graph (og:) tags with optional Twitter card information (addition)
+= 8-RC-*.*.* =
+* 8-RC-1.5.5 -- Fixed issue with 'Meta tags' where they would not function properly if 'External Thumbnails' weren't enabled
+* 8-RC-1.5.5 -- 'External thumbnails', if using imgur or youtube, will output appropriate og:tags if 'Meta tags' are enabled
+* 8-RC-1.5.4 -- Moved Google Analytics to wp_header (from wp_footer) (change)
+* 8-RC-1.5.3 -- Issue with wrong option name being called for external thumbnails (bugfix)
+* 8-RC-1.5.2 -- Youtube embeds with '[mom_embed]' utilize thumbnails to click to load the video. (Falls back to an embed if js is turned off browser side)
+* 8-RC-1.5.1 -- undefined variable 'timeStamp' with '[mom_embed]' (bugfix)
+* 8-RC-1.5.0 -- '[mom_embed]'/media embedding uses strpos > preg_match (upgrade)
+* 8-RC-1.5.0 -- 'Font Awesome' shortcode menu on post creation screen sectioned off for slightly easier navigation
+* 8-RC-1.4.0 -- Attach a default miniloop to the bottom of each post utilizing meta keys. (addition)
+* 8-RC-1.4.0 -- [mom_hidden]content[/mom_hidden] allows you to specify content to hide based on parameters. (check shortcode documentation in admin) (addition)
+* 8-RC-1.2/3 -- Options should now be able to be enabled/disabled properly (bugfix) (persistent)
+* 8-RC-1.1.0 -- Upgrade version '2' (upgrade)
+* 8-RC-1.1.0 -- Settings page now utilizes a single form (upgrade)
+* 8-RC-1.1.0 -- Plugin documentation (addition)
+* 8-RC-1.1.0 -- Ability to reset all plugin settings added (addition)
+* 8-RC-1.1.0 -- Google Tracking Code now properly tracks single post/page views instead of treating every hit like a hit to the homepage (bugfix)
+* 8-RC-1.0.0 -- 'mom_miniloop', 'mom_attachments', 'mom_embed' code optimized (shortcode) (upgrade)
+* 8-RC-1.0.0 -- When saving options, if values are empty, they are removed from the database (upgrade)
+* 8-RC-1.0.0 -- 'Uninstall' missing options rounded up (100% cleaning up after itself) (bugfix)
+* 8-RC-1.0.0 -- Insert Google Analytics tracking code on your blog (addition)
+* 8-RC-1.0.0 -- Exclusion rules for user levels now affects single post view (addition)
+* 8-RC-1.0.0 -- 'Meta tags' enables open graph (og:) tags with optional Twitter card information (addition)

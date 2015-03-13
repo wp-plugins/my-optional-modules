@@ -1,16 +1,27 @@
 <?php 
-
-if(!defined('MyOptionalModules')){
+/**
+ * CLASS SHORTCODE myoptionalmodules_attachment_loop_shortcode()
+ *
+ * File last update: 8-RC-1.5.6
+ *
+ * Shortcode to display a loop of recent images with links to the posts they belong to
+ * [mom_attachments]
+ */
+ 
+if ( !defined ( 'MyOptionalModules' ) ) {
 	die();
 }
 
 class myoptionalmodules_attachment_loop_shortcode{
 
 	function construct() {
-		add_shortcode( 'mom_attachments', array( $this, 'shortcode' ) );
+
+		add_shortcode ( 'mom_attachments' , array ( $this , 'shortcode' ) );
+
 	}
 
 	function shortcode( $atts ) {
+
 		global $post,$wp;
 
 		$amount           = null;
@@ -23,19 +34,22 @@ class myoptionalmodules_attachment_loop_shortcode{
 		$attachment       = null;
 		$output           = null;
 		$parent_permalink = null;
-		
-		extract(
-			shortcode_atts( array(
-				'amount' => 1,                // numerical value of how many attachments to return			
-				'class'  => 'mom_attachment'  // default class for the linked attachments
-			), $atts )
+
+		extract (
+			shortcode_atts ( 
+				array (
+					'amount' => 1,                // numerical value of how many attachments to return			
+					'class'  => 'mom_attachment'  // default class for the linked attachments
+				), 
+				$atts 
+			)
 		);
 
-		if( $amount ) $amount = intval( $amount );
-		if( $class  ) $class  = sanitize_text_field( $class );
+		if( $amount ) $amount = intval ( $amount );
+		if( $class  ) $class  = sanitize_text_field ( esc_html ( $class ) );
 
-		$all_images = get_posts(
-			array(
+		$all_images = get_posts (
+			array (
 				'post_type' => 'attachment',
 				'numberposts' => $amount,
 				'post_mime_type ' => 'image',
@@ -43,17 +57,23 @@ class myoptionalmodules_attachment_loop_shortcode{
 		);
 
 		$output .= '<div class="mom_attachments">';
+
 		foreach ( $all_images as $image ) {
 			$id               = $image->ID;
 			$parent_id        = $image->post_parent;
-			$parent_title     = get_the_title( $parent_id );
-			$parent_permalink = get_the_permalink( $parent_id );
-			$mime_type        = get_post_mime_type( $id );
-			$attachment       = wp_get_attachment_url($id, 'full' );
-			if( 'image/jpeg' == $mime_type || 'image/png' == $mime_type || 'image/gif' == $mime_type ) {
+			$parent_title     = get_the_title ( $parent_id );
+			$parent_permalink = get_the_permalink ( $parent_id );
+			$mime_type        = get_post_mime_type ( $id );
+			$attachment       = wp_get_attachment_url ($id , 'full' );
+			if( 
+				'image/jpeg' == $mime_type || 
+				'image/png' == $mime_type || 
+				'image/gif' == $mime_type 
+			) {
 				$output .= '<a class="' . $class . '" href="' . $parent_permalink . '"><img src="' . $attachment . '" /></a>';
 			}
 		}
+
 		$output .= '</div>';
 		return $output;
 		
@@ -67,6 +87,7 @@ class myoptionalmodules_attachment_loop_shortcode{
 		$attachment       = null;
 		$output           = null;
 		$parent_permalink = null;
+
 	}
 
 }

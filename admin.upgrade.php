@@ -1,28 +1,37 @@
 <?php 
+/**
+ * ADMIN Upgrade Functionality
+ *
+ * File last update: 8-RC-1.5.6
+ *
+ * TEMPORARY Upgrade platform for previous installations.
+ * Will not be present once we hit version 9.
+ */
 
-if(!defined('MyOptionalModules')){
+if ( !defined ( 'MyOptionalModules' ) ) {
 	die();
 }
 
 if( is_admin() ) {
 	
 		// 8-RC-1.5.3
-		if( get_option( 'myoptionalmodules_nelio_submit' ) ) 
-			$nelio = sanitize_text_field( get_option( 'myoptionalmodules_nelio_submit' ) );
-			update_option( 'myoptionalmodules_nelio', $nelio );
-			delete_option( 'myoptionalmodules_nelio_submit' );
+		if( get_option ( 'myoptionalmodules_nelio_submit' ) ) {
+			$nelio = sanitize_text_field ( get_option ( 'myoptionalmodules_nelio_submit' ) );
+			update_option ( 'myoptionalmodules_nelio' , $nelio );
+			delete_option ( 'myoptionalmodules_nelio_submit' );
+		}
 	
 		// 8-RC-1.2
-		if( get_option( 'myoptionalmodules_admin_toggledisable' ) ) delete_option( 'myoptionalmodules_admin_toggledisable' );
-		if( get_option( 'myoptionalmodules_admin_toggleenable' ) ) delete_option( 'myoptionalmodules_admin_toggleenable' );
-		if( get_option( 'myoptionalmodules_admin_toggleshare' ) ) delete_option( 'myoptionalmodules_admin_toggleshare' );
-		if( get_option( 'myoptionalmodules_admin_togglecomment' ) ) delete_option( 'myoptionalmodules_admin_togglecomment' );
-		if( get_option( 'myoptionalmodules_admin_toggleextras' ) ) delete_option( 'myoptionalmodules_admin_toggleextras' );
-		if( get_option( 'myoptionalmodules_admin_togglemisc' ) ) delete_option( 'myoptionalmodules_admin_togglemisc' );
-		if( get_option( 'myoptionalmodules_admin_toggletrash' ) ) delete_option( 'myoptionalmodules_admin_toggletrash' );
-		if( get_option( 'myoptionalmodules_admin_toggleshortcodes' ) ) delete_option( 'myoptionalmodules_admin_toggleshortcodes' );
-		if( get_option( 'myoptionalmodules_admin_toggledevelopers' ) ) delete_option( 'myoptionalmodules_admin_toggledevelopers' );
-		if( get_option( 'myoptionalmodules_admin_togglecategories' ) ) delete_option( 'myoptionalmodules_admin_togglecategories' );
+		if( get_option ( 'myoptionalmodules_admin_toggledisable' ) ) delete_option( 'myoptionalmodules_admin_toggledisable' );
+		if( get_option ( 'myoptionalmodules_admin_toggleenable' ) ) delete_option( 'myoptionalmodules_admin_toggleenable' );
+		if( get_option ( 'myoptionalmodules_admin_toggleshare' ) ) delete_option( 'myoptionalmodules_admin_toggleshare' );
+		if( get_option ( 'myoptionalmodules_admin_togglecomment' ) ) delete_option( 'myoptionalmodules_admin_togglecomment' );
+		if( get_option ( 'myoptionalmodules_admin_toggleextras' ) ) delete_option( 'myoptionalmodules_admin_toggleextras' );
+		if( get_option ( 'myoptionalmodules_admin_togglemisc' ) ) delete_option( 'myoptionalmodules_admin_togglemisc' );
+		if( get_option ( 'myoptionalmodules_admin_toggletrash' ) ) delete_option( 'myoptionalmodules_admin_toggletrash' );
+		if( get_option ( 'myoptionalmodules_admin_toggleshortcodes' ) ) delete_option( 'myoptionalmodules_admin_toggleshortcodes' );
+		if( get_option ( 'myoptionalmodules_admin_toggledevelopers' ) ) delete_option( 'myoptionalmodules_admin_toggledevelopers' );
+		if( get_option ( 'myoptionalmodules_admin_togglecategories' ) ) delete_option( 'myoptionalmodules_admin_togglecategories' );
 	
 		// 7 to 8
 		$myoptionalmodules_frontpage = sanitize_text_field( get_option( 'mompaf_post' ) );
