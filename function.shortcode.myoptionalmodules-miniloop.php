@@ -2,7 +2,7 @@
 /*
  * FUNCTION SHORTCODE myoptionalmodules_miniloop_shortcode()
  *
- * File last update: 9.1
+ * File last update: 9.2
  *
  * Insert a mini loop of posts based on a set of parameters
  * [mom_miniloop PARAMETERS]
@@ -242,7 +242,7 @@ function myoptionalmodules_miniloop_shortcode( $atts ) {
 		if( $style == 'blurbs' ) {
 			echo '<div class="blurb">';
 				echo '<a class="title" href="' . $link . '">' . $title . '</a>';
-				echo '<div class="content">' . the_content() . '</div>';
+				echo '<div class="content">' . the_excerpt() . '</div>';
 			echo '</div>';
 		}
 		

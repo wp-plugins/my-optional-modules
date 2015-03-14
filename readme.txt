@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: meta, og, twitter, facebook, google, random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 9.1
+Stable tag: 9.1.1
 
 An assortment of functions to enhance WordPress.
 
@@ -80,6 +80,9 @@ on [Github](https://github.com/onebillion/mom). )
 
 == Changelog ==
 
+= 9.1.1 =
+* Replaced the_content() with the_excerpt() in 'blurbs' for 'mom_miniloop'
+
 = 9.1 =
 * 'miniloop' meta/key fix (bugfix)
 
@@ -87,5 +90,4 @@ on [Github](https://github.com/onebillion/mom). )
 * Version 7->8->8-RC-1.2->8-RC-1.5.3 transition code removed
 * Fix for 'mom_embed' imgur albums (bugfix)
 * Updated URLs for official documentation (addition)
-* Temporarily removed Click to Play functionality from Youtube embeds until a better system can be devised (code)
 * Removed default 'mom_miniloop' 'meta' value (code)
