@@ -6,7 +6,7 @@
  * //wordpress.org/plugins/external-featured-image/changelog/
  * - version 1.2.0
  *
- * File last update: 8-RC-1.5.6
+ * File last update: 9.1.2
  *
  * Utilizes 'Nelio External Featured Image' to be used in conjunction 
  * with our own media embed class to be able to utilize ALL media for 
@@ -17,7 +17,7 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 	die();
 }
 
-if( get_option ( 'myoptionalmodules_nelio' ) ) {
+if( $myoptionalmodules_nelio ) {
 	if ( is_admin() ) {
 		add_action ( 'add_meta_boxes', 'myoptionalmodules_add_url_metabox' );
 

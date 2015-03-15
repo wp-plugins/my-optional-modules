@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_enable()
  *
- * File last update: 9
+ * File last update: 9.1.2
  *
  * Functionality for:
  * - Meta Tags
@@ -21,34 +21,36 @@ class myoptionalmodules_enable {
 
 	function actions() {
 
-		if( get_option ( 'myoptionalmodules_metatags' ) ) {
+		global $myoptionalmodules_metatags , $myoptionalmodules_horizontalgalleries , $myoptionalmodules_sharelinks , $myoptionalmodules_rsslinkbacks , $myoptionalmodules_404s , $myoptionalmodules_fontawesome;
+		if( $myoptionalmodules_metatags ) {
 			add_action ( 'wp_head' , array ( $this , 'meta' ) );
 			add_filter ( 'jetpack_enable_opengraph' , '__return_false' , 99 );
 			add_filter ( 'user_contactmethods' , array ( $this , 'twitter' ) );
 			add_filter ( 'admin_init' , array ( $this , 'twitter' ) );
 		}
 
-		if( get_option ( 'myoptionalmodules_horizontalgalleries' ) ) {
+		if( $myoptionalmodules_horizontalgalleries ) {
 			remove_shortcode ( 'gallery' , 'gallery_shortcode' );
 			add_action ( 'init' , array ( $this , 'horizontal_gallery_shortcode' ) , 99 );
 			add_filter ( 'use_default_gallery_style' , '__return_false' );
 		}
 
-		if( get_option ( 'myoptionalmodules_sharelinks' ) ) {
+		if( $myoptionalmodules_sharelinks ) {
 			add_filter ( 'the_content' , array ( $this , 'share' ) );
 		}
 
-		if( get_option ( 'myoptionalmodules_rsslinkbacks' ) ) {
+		if( $myoptionalmodules_rsslinkbacks ) {
 			add_filter ( 'the_content_feed' , array ( $this , 'rss' ) );
 			add_filter ( 'the_excerpt_rss' , array ( $this , 'rss' ) );
 		}
-		if( get_option ( 'myoptionalmodules_404s' ) ) {
+		if( $myoptionalmodules_404s ) {
 			add_action ( 'wp' , array ( $this , 'no_404s' ) );
 		}
-		if( get_option ( 'myoptionalmodules_fontawesome' ) ) {
+		if( $myoptionalmodules_fontawesome ) {
 			add_action ( 'wp_enqueue_scripts' , array ( $this , 'fontawesome' ) );
 			add_action ( 'init' , array ( $this , 'fontawesome_shortcode' ) , 99 );
 		}
+
 	}
 
 	// Twitter Field for User Profiles
@@ -415,69 +417,59 @@ class myoptionalmodules_enable {
 	// Share Links
 	function share( $content ) {
 
-		global $wp, $post;
-		
-		$fontawesome = sanitize_text_field ( get_option ( 'myoptionalmodules_fontawesome' ) );
-		$at_top      = sanitize_text_field ( get_option ( 'myoptionalmodules_shareslinks_top' ) );
-		$on_pages    = sanitize_text_field ( get_option ( 'myoptionalmodules_sharelinks_pages' ) );
+		global $wp, $post, $myoptionalmodules_fontawesome , $myoptionalmodules_shareslinks_top , $myoptionalmodules_sharelinks_pages , $myoptionalmodules_sharelinks_reddit , $myoptionalmodules_sharelinks_google , $myoptionalmodules_sharelinks_twitter , $myoptionalmodules_sharelinks_facebook , $myoptionalmodules_sharelinks_email;
+
 		$excerpt     = htmlentities ( str_replace ( ' ' , '%20' , $post->post_excerpt ) ); 
 		$title       = str_replace ( ' ' , '%20' , get_the_title ( $post->ID ) );
 
 		$output  = '<span class="mom_shareLinks">';
 		$output .='Share via: ';
 
-		if( get_option ( 'myoptionalmodules_sharelinks_reddit' ) && $fontawesome ) {
+		if( $myoptionalmodules_sharelinks_reddit && $myoptionalmodules_fontawesome ) {
 			$output .='<a class="reddit fa fa-reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '"></a>';
-		} elseif( get_option ( 'myoptionalmodules_sharelinks_reddit' ) && !$fontawesome ) {
+		} elseif( $myoptionalmodules_sharelinks_reddit && !$myoptionalmodules_fontawesome ) {
 			$output .='<a class="reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '">reddit</a>';
 		}
 
-		if( get_option ( 'myoptionalmodules_sharelinks_google' ) && $fontawesome  ) {
+		if( $myoptionalmodules_sharelinks_google && $myoptionalmodules_fontawesome  ) {
 			$output .='<a class="google fa fa-google-plus" href="https://plus.google.com/share?url=' . get_the_permalink() . '"></a>';
-		} elseif( get_option ( 'myoptionalmodules_sharelinks_google' ) && !$fontawesome  ) {
+		} elseif( $myoptionalmodules_sharelinks_google && !$myoptionalmodules_fontawesome  ) {
 			$output .='<a class="google" href="https://plus.google.com/share?url=' . get_the_permalink() . '">google+</a>';
 		}
 
-		if( get_option ( 'myoptionalmodules_sharelinks_twitter' ) && $fontawesome  ) {
+		if( $myoptionalmodules_sharelinks_twitter && $myoptionalmodules_fontawesome  ) {
 			$output .='<a class="twitter fa fa-twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '"></a>';
-		} elseif( get_option ( 'myoptionalmodules_sharelinks_twitter' ) && !$fontawesome  ) {
+		} elseif( $myoptionalmodules_sharelinks_twitter && !$myoptionalmodules_fontawesome  ) {
 			$output .='<a class="twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '">twitter</a>';
 		}
 
-		if( get_option ( 'myoptionalmodules_sharelinks_facebook' ) && $fontawesome  ) {
+		if( $myoptionalmodules_sharelinks_facebook && $myoptionalmodules_fontawesome  ) {
 			$output .='<a class="facebook fa fa-facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '"></a>';
-		} elseif( get_option ( 'myoptionalmodules_sharelinks_facebook' ) && !$fontawesome  ) {
+		} elseif( $myoptionalmodules_sharelinks_facebook && !$myoptionalmodules_fontawesome  ) {
 			$output .='<a class="facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '">facebook</a>';
 		}
 
-		if( get_option ( 'myoptionalmodules_sharelinks_email' ) && $fontawesome  ) {
+		if( $myoptionalmodules_sharelinks_email && $myoptionalmodules_fontawesome  ) {
 			$output .='<a class="email fa fa-envelope" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]"></a>';
-		} elseif( get_option ( 'myoptionalmodules_sharelinks_email' ) && !$fontawesome  ) {
+		} elseif( $myoptionalmodules_sharelinks_email && !$myoptionalmodules_fontawesome  ) {
 			$output .='<a class="email" href="mailto:?subject=' . $title . '&amp;body=' . $excerpt . '%20[ ' . get_the_permalink() . ' ]">email</a>';
 		}
 
 		$output .='</span>';
 
-		if( is_single() && $at_top ) {
+		if( is_single() && $myoptionalmodules_shareslinks_top ) {
 			return $output . $content;
-		} elseif( is_single() && !$at_top ) {
+		} elseif( is_single() && !$myoptionalmodules_shareslinks_top ) {
 			return $content . $output;
-		} elseif( is_page() && $on_pages) {
-			if( is_page() && $at_top ) {
+		} elseif( is_page() && $myoptionalmodules_sharelinks_pages) {
+			if( is_page() && $myoptionalmodules_shareslinks_top ) {
 				return $output . $content;
-			} elseif( is_page() && !$at_top ) {
+			} elseif( is_page() && !$myoptionalmodules_shareslinks_top ) {
 				return $content . $output;
 			}
 		} else {
 			return $content;
 		}
-
-		$fontawesome = null;
-		$at_top      = null;
-		$on_pages    = null;
-		$excerpt     = null;
-		$title       = null;
-		$output      = null;
 
 	}
 

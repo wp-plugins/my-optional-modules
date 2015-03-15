@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_extras()
  *
- * File last update: 8-RC-1.5.6
+ * File last update: 9.1.2
  *
  * Functionality for:
  * - Full-length feature images
@@ -18,17 +18,18 @@ class myoptionalmodules_extras {
 
 	function actions() {
 
-		if( get_option ( 'myoptionalmodules_featureimagewidth' ) ) {
+		global $myoptionalmodules_featureimagewidth , $myoptionalmodules_javascripttofooter , $myoptionalmodules_exclude;
+		if( $myoptionalmodules_featureimagewidth ) {
 			add_action ( 'wp_head' , array ( $this , 'thumbnails' ) );
 		}
 
-		if( get_option ( 'myoptionalmodules_javascripttofooter' ) ) {
+		if( $myoptionalmodules_javascripttofooter ) {
 			add_action ( 'wp_enqueue_scripts', array ( $this , 'remove' ) );
 			add_action ( 'wp_footer' , 'wp_enqueue_scripts' , 5 );
 			add_action ( 'wp_footer' , 'wp_print_head_scripts' , 5 );
 		}
 
-		if( get_option( 'myoptionalmodules_exclude' ) ) {
+		if( $myoptionalmodules_exclude ) {
 			add_action( 'pre_get_posts', array ( $this , 'exclude' ) );	
 		}
 

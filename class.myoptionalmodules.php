@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules()
  *
- * File last update: 8-RC-1.5.6
+ * File last update: 9.1.2
  *
  * Actions REQUIRED by the plugin (unless otherwise noted).
  * Regardless of settings, these actions will always run.
@@ -27,8 +27,14 @@ class myoptionalmodules {
 		add_action ( 'wp', array( $this, 'scripts' ) );
 		add_action ( 'admin_enqueue_scripts' , array ( $this , 'font_awesome' ) );
 
-		if ( !get_option ( 'myoptionalmodules_plugincss' ) )
-			add_action  ( 'wp_print_styles' , array ( $this , 'plugin_stylesheets' ) );
+		global $myoptionalmodules_getallpluginoptions;
+		
+		foreach( $myoptionalmodules_getallpluginoptions as $name => $value ) {
+			if( $name == 'myoptionalmodules_plugincss' && $value == 1 ) {
+			} else {
+				add_action  ( 'wp_print_styles' , array ( $this , 'plugin_stylesheets' ) );
+			}
+		}
 
 		add_action ( 'after_setup_theme' , array ( $this , 'post_formats' ) );
 
@@ -37,16 +43,18 @@ class myoptionalmodules {
 	// Enqueue scripts
 	function scripts(){
 		// JQUERY dependent
-		if( get_option( 'myoptionalmodules_lazyload' ) ) {
-			function mom_jquery(){
-				global $myoptionalmodules_lazyload_version;
-				$lazyLoadFunctions = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/lazyload.js' ) );
-				wp_enqueue_script ( 'lazyload' , $myoptionalmodules_lazyload_version , array ( 'jquery' ) );
-				wp_enqueue_script ( 'lazyloadFunctions' , $lazyLoadFunctions , array ( 'jquery' ) );
+		global $myoptionalmodules_getallpluginoptions;
+		foreach( $myoptionalmodules_getallpluginoptions as $name => $value ) {
+			if( $name == 'myoptionalmodules_lazyload' && $value == 1 ) {
+				function mom_jquery(){
+					global $myoptionalmodules_lazyload_version;
+					$lazyLoadFunctions = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/lazyload.js' ) );
+					wp_enqueue_script ( 'lazyload' , $myoptionalmodules_lazyload_version , array ( 'jquery' ) );
+					wp_enqueue_script ( 'lazyloadFunctions' , $lazyLoadFunctions , array ( 'jquery' ) );
+				}
+				add_action( 'wp_enqueue_scripts' , 'mom_jquery' );
 			}
-			add_action( 'wp_enqueue_scripts' , 'mom_jquery' );
 		}
-
 	}
 
 	// Enqueue Font Awesome for ADMIN
@@ -105,7 +113,9 @@ class myoptionalmodules {
 	// Validate an IP address and check against DNSBlacklists (if enabled)
 	function validate_ip_address() {
 
-		if( get_option ( 'myoptionalmodules_dnsbl' ) ) {
+		global $myoptionalmodules_dnsbl;
+		
+		if( $myoptionalmodules_dnsbl ) {
 			/**
 			 * Validate the IP address
 			 * "This function converts a human readable IPv4 or IPv6 address
@@ -171,5 +181,4 @@ class myoptionalmodules {
 		}
 
 	}
-
 }

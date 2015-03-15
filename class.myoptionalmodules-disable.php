@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_disable
  *
- * File last update: 9
+ * File last update: 9.1.2
  *
  * Functionality for:
  * - Pingbacks
@@ -20,27 +20,30 @@ class myoptionalmodules_disable {
 
 	function actions() {
 
-		global $myoptionalmodules_plugin;
-	
-		if( get_option( 'myoptionalmodules_disablepingbacks' ) ) {
+		global $myoptionalmodules_plugin , $myoptionalmodules_disablepingbacks , $myoptionalmodules_authorarchives , $myoptionalmodules_datearchives , $myoptionalmodules_disablecomments , $myoptionalmodules_dnsbl , $myoptionalmodules_removecode;
+
+		if( $myoptionalmodules_disablepingbacks ) {
 			add_filter( 'xmlrpc_methods' , array ( $this , 'pingbacks' ) );
 		}
 
-		if( get_option( 'myoptionalmodules_authorarchives' ) ) {
+		if( $myoptionalmodules_authorarchives ) {
 			add_action( 'template_redirect', array ( $this , 'author_archives' ) );
 		}
 
-		if( get_option( 'myoptionalmodules_datearchives' ) ) {
+		if( $myoptionalmodules_datearchives ) {
 			add_action( 'wp', array ( $this , 'date_archives' ) );
 			add_action( 'template_redirect' , array ( $this , 'date_archives' ) );
 		}
 
-		if( get_option ( 'myoptionalmodules_disablecomments' ) || get_option ( 'myoptionalmodules_dnsbl' ) && true === $myoptionalmodules_plugin->DNSBL ){
+		if( 
+			$myoptionalmodules_disablecomments || 
+			$myoptionalmodules_dnsbl && true === $myoptionalmodules_plugin->DNSBL 
+		){
 			add_filter ( 'comments_template' , array ( $this , 'comments' ) );
 			add_filter ( 'comments_open' , array ( $this , 'comments_form') , 10, 2 );
 		}
 
-		if( get_option( 'myoptionalmodules_removecode' ) ) {
+		if( $myoptionalmodules_removecode ) {
 			if ( !in_array ( $GLOBALS['pagenow'] , array ( 'wp-login.php' , 'wp-register.php' ) ) ) {
 				remove_action ('wp_head' , 'wp_generator');
 				add_filter    ( 'style_loader_src' , array ( $this , 'versions' ) , 0 );

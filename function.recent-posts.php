@@ -3,7 +3,7 @@
 /**
  * FUNCTION myoptionalmodules_WP_Widget_Recent_Posts()
  *
- * File last update: 8-RC-1.5.6
+ * File last update: 9.1.2
  *
  * Alters the default 'Recent Posts' widget to exclude the post
  * that is currently being viewed ( is_single() )
@@ -16,7 +16,7 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 	die();
 }
 
-if( get_option( 'myoptionalmodules_recentpostswidget' ) ) {
+if( $myoptionalmodules_recentpostswidget ) {
 
 	function myoptionalmodules_WP_Widget_Recent_Posts() {
 		register_widget ( 'myoptionalmodules_WP_Widget_Recent_Posts' );

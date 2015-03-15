@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_comment_form()
  *
- * File last update: 8-RC-1.5.6
+ * File last update: 9.1.2
  *
  * Functionality for:
  * - Ajaxify comment form
@@ -17,11 +17,13 @@ class myoptionalmodules_comment_form {
 
 	function actions() {
 
-		if( get_option ( 'MOM_themetakeover_ajaxifycomments' ) ) {
+		global $myoptionalmodules_ajaxcomments , $myoptionalmodules_commentspamfield;
+		
+		if( $myoptionalmodules_ajaxcomments ) {
 			add_action ( 'comment_post' , array ( $this , 'ajax' ) , 20 , 2 );
 		}
 
-		if( get_option ( 'myoptionalmodules_commentspamfield' ) ) {
+		if( $myoptionalmodules_commentspamfield ) {
 				add_filter ( 'comment_form_default_fields' , array ( $this , 'spam_field' ) );
 				add_action ( 'comment_form_logged_in_after' , array ( $this , 'spam_field' ) );
 				add_action ( 'comment_form_after_fields' , array ( $this , 'spam_field' ) );

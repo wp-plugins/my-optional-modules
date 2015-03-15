@@ -3,7 +3,7 @@
 /**
  * FUNCTION my_optional_modules_exclude_categories()
  *
- * File last update: 8-RC-1.5.6
+ * File last update: 9.1.2
  *
  * Returns a list of categories that follow the 'exclusion' rules (if any).
  * This is a template tag:
@@ -18,17 +18,17 @@ function my_optional_modules_exclude_categories() {
 
 	$loggedOutCats = 0;
 
-	if ( 1 == get_option ( 'myoptionalmodules_exclude' ) ) {
-		global $myoptionalmodules_plugin;
+	global $myoptionalmodules_exclude, $myoptionalmodules_plugin , $myoptionalmodules_exclude_categorieslevel0categories , $myoptionalmodules_exclude_categorieslevel1categories , $myoptionalmodules_exclude_categorieslevel2categories , $myoptionalmodules_exclude_categorieslevel7categories;
+	if ( $myoptionalmodules_exclude ) {
 
 		$MOM_Exclude_level0Categories  = 0;
 		$MOM_Exclude_level1Categories  = 0;
 		$MOM_Exclude_level2Categories  = 0;
 		$MOM_Exclude_level7Categories  = 0;
-		$MOM_Exclude_level0Categories  = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categorieslevel0categories' ) );
-		$MOM_Exclude_level1Categories  = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categorieslevel1categories' ) );
-		$MOM_Exclude_level2Categories  = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categorieslevel2categories' ) );
-		$MOM_Exclude_level7Categories  = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categorieslevel7categories' ) );
+		$MOM_Exclude_level0Categories  = $myoptionalmodules_exclude_categorieslevel0categories;
+		$MOM_Exclude_level1Categories  = $myoptionalmodules_exclude_categorieslevel1categories;
+		$MOM_Exclude_level2Categories  = $myoptionalmodules_exclude_categorieslevel2categories;
+		$MOM_Exclude_level7Categories  = $myoptionalmodules_exclude_categorieslevel7categories;
 
 		if ( 0 == $myoptionalmodules_plugin->user_level ) {
 			$loggedOutCats = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
@@ -71,10 +71,6 @@ function my_optional_modules_exclude_categories() {
 
 	}
 
-	$MOM_Exclude_level0Categories = null;
-	$MOM_Exclude_level1Categories = null;
-	$MOM_Exclude_level2Categories = null;
-	$MOM_Exclude_level7Categories = null;
 	$c1                           = null;
 	$C1                           = null;
 	$c11                          = null;

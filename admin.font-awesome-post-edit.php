@@ -2,7 +2,7 @@
 /*
  * ADMIN Font Awesome
  *
- * File last update: 8-RC-1.5.6
+ * File last update: 9.1.2
  *
  * Adds Font Awesome buttons to click to add to post edit content
  * while NOT IN VISUAL MODE. 
@@ -25,7 +25,8 @@ function myoptionalmodules_fontfa_posteditscreen ( $post_type ) {
 	if ( $edit_post_type != 'page' )
 	return;
 
-	if ( get_option( 'myoptionalmodules_fontawesome' ) ) { ?>
+	global $myoptionalmodules_fontawesome;
+	if ( $myoptionalmodules_fontawesome ) { ?>
 		<div class="myoptionalmodules_fontfa_posteditscreen postbox">
 			<h3>Font Awesome Icons &mdash; shortcode usage: [font-fa i="<em>icon-name</em>"] (<a href="http://fortawesome.github.io/Font-Awesome/icons/">Names</a>)</h3>
 			<div class="inside">

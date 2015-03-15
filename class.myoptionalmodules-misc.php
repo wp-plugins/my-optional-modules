@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_misc()
  *
- * File last update: 9.1
+ * File last update: 9.1.2
  *
  * Functionality for:
  * - Miniloops
@@ -22,41 +22,39 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 class myoptionalmodules_misc {
 
 	function actions() {
-
-		if( get_option ( 'myoptionalmodules_miniloopmeta' ) && get_option ( 'myoptionalmodules_miniloopstyle' ) && get_option ( 'myoptionalmodules_miniloopamount' ) ) {
-			add_filter ( 'the_content' , array ( $this , 'miniloop' ) );
-		}	
+		
+		global $myoptionalmodules_google , $myoptionalmodules_frontpage , $myoptionalmodules_previouslinkclass , $myoptionalmodules_nextlinkclass , $myoptionalmodules_readmore , $myoptionalmodules_randomtitles , $myoptionalmodules_randomdescriptions;
+		
+		add_filter ( 'the_content' , array ( $this , 'miniloop' ) );
 	
-		if( get_option ( 'myoptionalmodules_google' ) )
+		if( $myoptionalmodules_google )
 			add_action ( 'wp_head' , array ( $this , 'google_analytics' ) );
 
-
-		if( get_option ( 'myoptionalmodules_frontpage' ) && 'off' != get_option ( 'myoptionalmodules_frontpage' ) )
+		if( $myoptionalmodules_frontpage && 'off' != $myoptionalmodules_frontpage )
 			add_action ( 'wp' , array ( $this , 'front_post' ) );
 
-
-		if( '' != get_option ( 'myoptionalmodules_previouslinkclass' ) ) {
+		if( $myoptionalmodules_previouslinkclass ) {
 			add_filter ( 'previous_posts_link_attributes', array ( $this , 'previous_link_class' ) );
 			add_filter ( 'previous_post_link' , array ( $this , 'previous_link' ) );
 		}
 
-		if( '' != get_option ( 'myoptionalmodules_nextlinkclass' ) ) {
+		if( $myoptionalmodules_nextlinkclass ) {
 			add_filter ( 'next_posts_link_attributes', array ( $this , 'next_link_class' ) );
 			add_filter ( 'next_post_link', array ( $this , 'next_link' ) );
 		}
 
-		if( '' != get_option ( 'myoptionalmodules_readmore' ) ) {
+		if( $myoptionalmodules_readmore ) {
 			add_filter ( 'the_content_more_link' , array ( $this , 'read_more' ) );
 			add_filter ( 'excerpt_more' , array ( $this , 'read_more' ) );
 		}
 
-		if( '' != get_option ( 'myoptionalmodules_randompost' ) )
+		if( $myoptionalmodules_randompost )
 			add_action ( 'wp' , array ( $this , 'random' ) );
 
-		if( '' != get_option ( 'myoptionalmodules_randomtitles' ) )
+		if( $myoptionalmodules_randomtitles )
 			add_filter ( 'pre_option_blogname' , array ( $this , 'random_title' ) , 10 , 2 );
 
-		if( '' != get_option ( 'myoptionalmodules_randomdescriptions' ) )
+		if( $myoptionalmodules_randomdescriptions )
 			add_filter ( 'pre_option_blogdescription' , array ( $this , 'random_description' ) , 10 , 2 );
 
 	}
@@ -66,13 +64,17 @@ class myoptionalmodules_misc {
 
 		global $wp, $post;
 
-		if( is_single() ) {
-			$meta   = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopmeta' ) );
+		$meta   = null;
+		$style  = null;
+		$amount = null;
+		
+		global $myoptionalmodules_miniloopmeta , $myoptionalmodules_miniloopstyle , $myoptionalmodules_miniloopamount;
+		
+
+		if( is_single() && $myoptionalmodules_miniloopmeta && $myoptionalmodules_miniloopstyle && $myoptionalmodules_miniloopamount) {
 			$key    = get_post_meta ( $post->ID , $meta , true );
-			$style  = sanitize_text_field ( strtolower ( get_option ( 'myoptionalmodules_miniloopstyle' ) ) );
-			$amount = intval ( get_option ( 'myoptionalmodules_miniloopamount' ) );
 			if( $key && $meta )
-				$output = do_shortcode ( '[mom_miniloop meta="' . $meta . '" key="' . $key . '" style="' . $style . '" amount="' . $amount . '" ]' );
+				$output = do_shortcode ( '[mom_miniloop meta="' . $myoptionalmodules_miniloopmeta . '" key="' . $key . '" style="' . $myoptionalmodules_miniloopstyle . '" amount="' . $myoptionalmodules_miniloopamount . '" ]' );
 			else
 				$output = null;
 			return $content . $output;
@@ -84,8 +86,8 @@ class myoptionalmodules_misc {
 
 	// Google Analytics
 	function google_analytics() {
-
-		$tracking_id = sanitize_text_field( get_option( 'myoptionalmodules_google' ) );
+		
+		global $myoptionalmodules_google;
 
 		if( is_single() || is_page() )
 			$url = get_permalink();
@@ -98,7 +100,7 @@ class myoptionalmodules_misc {
 			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-			ga('create', '$tracking_id', '$url');
+			ga('create', '$myoptionalmodules_google', '$url');
 			ga('send', 'pageview');
 		</script>\n\n";
 
@@ -106,65 +108,72 @@ class myoptionalmodules_misc {
 
 	// Frontpage post
 	function front_post() {
+		
+		global $myoptionalmodules_frontpage;
 
-		if( is_home() && 'off' != get_option ( 'myoptionalmodules_frontpage' ) ) {
+		if( is_home() && 'off' != $myoptionalmodules_frontpage ) {
 
-			if( is_numeric ( get_option ( 'myoptionalmodules_frontpage' ) ) )
-				$mompaf_front = get_option( 'myoptionalmodules_frontpage' );
-			elseif( get_option ( 'myoptionalmodules_frontpage' ) == 'on' )
-				$mompaf_front = '';
+			if( is_numeric ( $myoptionalmodules_frontpage ) )
+				$myoptionalmodules_frontpage = $myoptionalmodules_frontpage;
+			elseif( $myoptionalmodules_frontpage )
+				$myoptionalmodules_frontpage = '';
 
 			if( have_posts() ) : the_post();
-				header( 'location:' . esc_url( get_permalink( $mompaf_front ) ) ); 
+				header( 'location:' . esc_url( get_permalink( $myoptionalmodules_frontpage ) ) ); 
 				exit; 
 			endif;
-
 		}
 
 	}
 
 	// Previous/Next Link Class
 	function previous_link_class() {
-
-		return 'class="' . get_option ( 'myoptionalmodules_previouslinkclass' ) . '"';
+		
+		global $myoptionalmodules_previouslinkclass;
+		return 'class="' . $myoptionalmodules_previouslinkclass . '"';
 
 	}
 
 	function previous_link( $output ) {
 
-		$class = 'class="' . get_option( 'myoptionalmodules_previouslinkclass' ) . '"';
+		global $myoptionalmodules_previouslinkclass;
+		$class = 'class="' . $myoptionalmodules_previouslinkclass . '"';
 		return str_replace ( '<a href=' , '<a '.$class.' href=' , $output);
 
 	}
 
 	function next_link_class() {
 
-		return 'class="' . get_option ( 'myoptionalmodules_nextlinkclass' ) . '"';
+		global $myoptionalmodules_nextlinkclass;
+		return 'class="' . $myoptionalmodules_nextlinkclass . '"';
 
 	}
 
 	function next_link( $output ) {
 
-		$class = 'class="' . get_option ( 'myoptionalmodules_nextlinkclass' ) . '"';
+		global $myoptionalmodules_nextlinkclass;
+		$class = 'class="' . $myoptionalmodules_nextlinkclass . '"';
 		return str_replace ( '<a href=' , '<a '.$class.' href=' , $output);	
+
 	}
 
 	// Read More
 	function read_more( $more ) {
 
-		if( '%blank%' == get_option ( 'myoptionalmodules_readmore' ) )
+		global $myoptionalmodules_readmore;
+		if( '%blank%' == $myoptionalmodules_readmore )
 			return '';
 		else
-			return '<a href="' . get_permalink() . '">' . sanitize_text_field ( get_option ( 'myoptionalmodules_readmore' ) ) . '</a>';
+			return '<a href="' . get_permalink() . '">' . $myoptionalmodules_readmore . '</a>';
 
 	}
 
 	// Random
 	function random() {
 
-		$random = sanitize_text_field ( esc_html ( get_option ( 'myoptionalmodules_randompost' ) ) );
+		global $myoptionalmodules_randompost;
 
-		if( isset( $_GET[ $random ] ) ) {
+		if( isset( $_GET[ $myoptionalmodules_randompost ] ) ) {
 			$args = array (
 				'numberposts' => 1,
 				'post_type'   => 'post',
@@ -186,12 +195,12 @@ class myoptionalmodules_misc {
 	// Random Titles
 	function random_title( $title ) {
 
-		global $wp;
+		global $wp, $myoptionalmodules_randomtitles;
 
 		$titles = '';
 
-		if( '' != get_option( 'myoptionalmodules_randomtitles' ) )
-			$titles = sanitize_text_field( get_option( 'myoptionalmodules_randomtitles' ) );
+		if( '' != $myoptionalmodules_randomtitles )
+			$titles = $myoptionalmodules_randomtitles;
 
 		$title = explode ( '::' , $titles );
 		return $title[ array_rand ( $title ) ];
@@ -201,12 +210,12 @@ class myoptionalmodules_misc {
 	// Random Descriptions
 	function random_description( $title ) {
 
-		global $wp;
+		global $wp, $myoptionalmodules_randomdescriptions;
 
 		$descriptions = '';
 
-		if( '' != get_option( 'myoptionalmodules_randomdescriptions' ) )
-			$descriptions = sanitize_text_field ( get_option ( 'myoptionalmodules_randomdescriptions' ) );
+		if( '' != $myoptionalmodules_randomdescriptions )
+			$descriptions = $myoptionalmodules_randomdescriptions;
 
 		$descriptions = explode ( '::' , $descriptions );
 		return $descriptions[ array_rand ( $descriptions ) ];
