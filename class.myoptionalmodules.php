@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules()
  *
- * File last update: 9.1.2
+ * File last update: 9.1.3
  *
  * Actions REQUIRED by the plugin (unless otherwise noted).
  * Regardless of settings, these actions will always run.
@@ -27,14 +27,14 @@ class myoptionalmodules {
 		add_action ( 'wp', array( $this, 'scripts' ) );
 		add_action ( 'admin_enqueue_scripts' , array ( $this , 'font_awesome' ) );
 
-		global $myoptionalmodules_getallpluginoptions;
+		global $myoptionalmodules_plugincss;
 		
-		foreach( $myoptionalmodules_getallpluginoptions as $name => $value ) {
-			if( $name == 'myoptionalmodules_plugincss' && $value == 1 ) {
-			} else {
-				add_action  ( 'wp_print_styles' , array ( $this , 'plugin_stylesheets' ) );
-			}
+		
+		if( 1 == $myoptionalmodules_plugincss ) {
+		} else {
+			add_action  ( 'wp_print_styles' , array ( $this , 'plugin_stylesheets' ) );
 		}
+		
 
 		add_action ( 'after_setup_theme' , array ( $this , 'post_formats' ) );
 
@@ -43,17 +43,15 @@ class myoptionalmodules {
 	// Enqueue scripts
 	function scripts(){
 		// JQUERY dependent
-		global $myoptionalmodules_getallpluginoptions;
-		foreach( $myoptionalmodules_getallpluginoptions as $name => $value ) {
-			if( $name == 'myoptionalmodules_lazyload' && $value == 1 ) {
-				function mom_jquery(){
-					global $myoptionalmodules_lazyload_version;
-					$lazyLoadFunctions = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/lazyload.js' ) );
-					wp_enqueue_script ( 'lazyload' , $myoptionalmodules_lazyload_version , array ( 'jquery' ) );
-					wp_enqueue_script ( 'lazyloadFunctions' , $lazyLoadFunctions , array ( 'jquery' ) );
-				}
-				add_action( 'wp_enqueue_scripts' , 'mom_jquery' );
+		global $myoptionalmodules_lazyload;
+		if( $myoptionalmodules_lazyload ) {
+			function mom_jquery(){
+				global $myoptionalmodules_lazyload_version;
+				$lazyLoadFunctions = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/lazyload.js' ) );
+				wp_enqueue_script ( 'lazyload' , $myoptionalmodules_lazyload_version , array ( 'jquery' ) );
+				wp_enqueue_script ( 'lazyloadFunctions' , $lazyLoadFunctions , array ( 'jquery' ) );
 			}
+			add_action( 'wp_enqueue_scripts' , 'mom_jquery' );
 		}
 	}
 

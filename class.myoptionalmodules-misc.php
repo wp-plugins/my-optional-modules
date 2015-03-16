@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_misc()
  *
- * File last update: 9.1.2
+ * File last update: 9.1.3
  *
  * Functionality for:
  * - Miniloops
@@ -23,7 +23,7 @@ class myoptionalmodules_misc {
 
 	function actions() {
 		
-		global $myoptionalmodules_google , $myoptionalmodules_frontpage , $myoptionalmodules_previouslinkclass , $myoptionalmodules_nextlinkclass , $myoptionalmodules_readmore , $myoptionalmodules_randomtitles , $myoptionalmodules_randomdescriptions;
+		global $myoptionalmodules_randompost , $myoptionalmodules_google , $myoptionalmodules_frontpage , $myoptionalmodules_previouslinkclass , $myoptionalmodules_nextlinkclass , $myoptionalmodules_readmore , $myoptionalmodules_randomtitles , $myoptionalmodules_randomdescriptions;
 		
 		add_filter ( 'the_content' , array ( $this , 'miniloop' ) );
 	
