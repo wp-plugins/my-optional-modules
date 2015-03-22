@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URL: //iamnotu.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 9.1.3
+Version: 9.1.4
 Author: Matthew Trevino
 Author URI: //iamnotu.com
 
@@ -58,7 +58,7 @@ $myoptionalmodules_exclude_categoriescategoriestue     = $myoptionalmodules_excl
 $myoptionalmodules_exclude_categoriescategoriesfri     = $myoptionalmodules_exclude_categoriescategoriessat    = $myoptionalmodules_exclude_usersuserssun = 
 $myoptionalmodules_exclude_usersusersmon               = $myoptionalmodules_exclude_usersuserstue              = $myoptionalmodules_exclude_usersuserswed = 
 $myoptionalmodules_exclude_usersusersthu               = $myoptionalmodules_exclude_usersusersfri              = $myoptionalmodules_exclude_usersuserssat =
-$myoptionalmodules_plugincss                           = $myoptionalmodules_lazyload                           =
+$myoptionalmodules_plugincss                           = $myoptionalmodules_lazyload                           = $myoptionalmodules_verification = 
 null;
 
 $myoptionalmodules_getallpluginoptions  = wp_load_alloptions();
@@ -148,6 +148,7 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ) {
 	 * - Miniloop: style
 	 * - Miniloop: amount
 	 * - Google Tracking ID
+	 * - Google Site Verification Content
 	 * - Previous link class
 	 * - Next link class
 	 * - Read more... value
@@ -160,6 +161,7 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ) {
 	if( $name == 'myoptionalmodules_miniloopstyle' && $value )                       $myoptionalmodules_miniloopstyle                        = strtolower( $value );
 	if( $name == 'myoptionalmodules_miniloopamount' && $value )                      $myoptionalmodules_miniloopamount                       = intval( $value );
 	if( $name == 'myoptionalmodules_google' && $value )                              $myoptionalmodules_google                               = $value;
+	if( $name == 'myoptionalmodules_verification' && $value )                        $myoptionalmodules_verification                         = $value;
 	if( $name == 'myoptionalmodules_previouslinkclass' && $value )                   $myoptionalmodules_previouslinkclass                    = $value;
 	if( $name == 'myoptionalmodules_nextlinkclass' && $value )                       $myoptionalmodules_nextlinkclass                        = $value;
 	if( $name == 'myoptionalmodules_readmore' && $value )                            $myoptionalmodules_readmore                             = $value;
@@ -242,7 +244,6 @@ include( 'class.shortcode.myoptionalmodules-attachmentloop.php' );
 include( 'class.shortcode.myoptionalmodules-mediaembed.php' );
 include( 'class.shortcode.myoptionalmodules-hidden.php' );
 include( 'function.shortcode.myoptionalmodules-miniloop.php' );
-include( '_initialize.php' );
 
 if( current_user_can( 'edit_dashboard' ) && is_admin() ){
 	class myoptionalmodules_admin_css {

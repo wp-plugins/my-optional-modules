@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_comment_form()
  *
- * File last update: 9.1.2
+ * File last update: 9.1.4
  *
  * Functionality for:
  * - Ajaxify comment form
@@ -64,3 +64,6 @@ class myoptionalmodules_comment_form {
 	}
 
 }
+
+$myoptionalmodules_comment_form = new myoptionalmodules_comment_form();
+$myoptionalmodules_comment_form->actions();

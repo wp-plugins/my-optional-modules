@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules()
  *
- * File last update: 9.1.3
+ * File last update: 9.1.4
  *
  * Actions REQUIRED by the plugin (unless otherwise noted).
  * Regardless of settings, these actions will always run.
@@ -180,3 +180,8 @@ class myoptionalmodules {
 
 	}
 }
+
+$myoptionalmodules_plugin = new myoptionalmodules();
+$myoptionalmodules_plugin->actions();
+$myoptionalmodules_plugin->userlevel();
+$myoptionalmodules_plugin->validate_ip_address();

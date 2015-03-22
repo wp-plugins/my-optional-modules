@@ -10,9 +10,9 @@
  *
  * //cdnjs.com/
  * - Last checked 8-RC-1.5.6
- * - - //cdnjs.com/libraries/jquery.lazyload
- * - - //cdnjs.com/libraries/jquery
- * - - //cdnjs.com/libraries/jquery-migrate
+ * - - 1.9.1 //cdnjs.com/libraries/jquery.lazyload
+ * - - 2.1.3 //cdnjs.com/libraries/jquery
+ * - - 1.2.1 //cdnjs.com/libraries/jquery-migrate
  */
 
 if ( !defined ( 'MyOptionalModules' ) ) {

@@ -2,7 +2,7 @@
 /**
  * CLASS SHORTCODE myoptionalmodules_mediaembed_shortcode()
  *
- * File last update: 8-RC-1.5.6
+ * File last update: 9.1.4
  *
  * Allow a media embed through shortcode
  * - [mom_embed url='URL']
@@ -61,3 +61,6 @@ class myoptionalmodules_mediaembed_shortcode{
 	}
 
 }
+
+$myoptionalmodules_mediaembed_shortcode = new myoptionalmodules_mediaembed_shortcode();
+$myoptionalmodules_mediaembed_shortcode->construct();

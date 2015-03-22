@@ -2,7 +2,7 @@
 /*
  * CLASS SHORTCODE myoptionalmodules_hidden()
  *
- * File last update: 8-RC-1.5.6
+ * File last update: 9.1.4
  *
  * Hide content from is_home/is_single OR users who are not logged in
  * - [mom_hidden single='0/1' logged='0/1'] content [/mom_hidden]
@@ -53,3 +53,6 @@ class myoptionalmodules_hidden{
 	}
 
 }
+
+$myoptionalmodules_shortcode_hidden = new myoptionalmodules_hidden();
+$myoptionalmodules_shortcode_hidden->construct();

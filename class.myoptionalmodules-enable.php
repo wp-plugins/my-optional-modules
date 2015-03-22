@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_enable()
  *
- * File last update: 9.1.2
+ * File last update: 9.1.4
  *
  * Functionality for:
  * - Meta Tags
@@ -87,7 +87,7 @@ class myoptionalmodules_enable {
 		if( is_single() || is_page() )
 			$id = $post->ID;
 
-		if( is_single() || is_page() )
+		if( is_single() || is_page() || is_author() )
 			$author = $post->post_author;
 
 		$og_type = 'image';
@@ -131,6 +131,11 @@ class myoptionalmodules_enable {
 			$title    = get_bloginfo ( 'name' );
 			$url      = esc_url ( home_url ( '/' ) );
 			$type     = 'website';
+		}
+
+		if( is_author() ) {
+			$type  = 'profile';
+			$url   = get_author_posts_url( $author );
 		}
 
 		$title     = sanitize_text_field ( str_replace ( '\'' , '' , $title ) );
@@ -194,7 +199,7 @@ class myoptionalmodules_enable {
 			is_404() || 
 			is_archive() 
 		){ 
-			echo "\n<meta name='robots' content='noindex,nofollow'>";
+			echo "\n<meta name='robots' content='noindex,noarchive'>";
 		}
 
 		echo "\n\n";
@@ -492,3 +497,6 @@ class myoptionalmodules_enable {
 	}
 
 }
+
+$myoptionalmodules_enable = new myoptionalmodules_enable();
+$myoptionalmodules_enable->actions();

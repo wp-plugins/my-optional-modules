@@ -2,11 +2,12 @@
 /**
  * CLASS myoptionalmodules_misc()
  *
- * File last update: 9.1.3
+ * File last update: 9.1.4
  *
  * Functionality for:
  * - Miniloops
  * - Google Analytics
+ * - Google Site Verification
  * - Frontpage post
  * - Previous/Next Link Class
  * - Read More
@@ -23,12 +24,15 @@ class myoptionalmodules_misc {
 
 	function actions() {
 		
-		global $myoptionalmodules_randompost , $myoptionalmodules_google , $myoptionalmodules_frontpage , $myoptionalmodules_previouslinkclass , $myoptionalmodules_nextlinkclass , $myoptionalmodules_readmore , $myoptionalmodules_randomtitles , $myoptionalmodules_randomdescriptions;
+		global $myoptionalmodules_randompost , $myoptionalmodules_google , $myoptionalmodules_verification , $myoptionalmodules_frontpage , $myoptionalmodules_previouslinkclass , $myoptionalmodules_nextlinkclass , $myoptionalmodules_readmore , $myoptionalmodules_randomtitles , $myoptionalmodules_randomdescriptions;
 		
 		add_filter ( 'the_content' , array ( $this , 'miniloop' ) );
 	
 		if( $myoptionalmodules_google )
 			add_action ( 'wp_head' , array ( $this , 'google_analytics' ) );
+		
+		if( $myoptionalmodules_verification )
+			add_action ( 'wp_head' , array ( $this , 'site_verification' ) );
 
 		if( $myoptionalmodules_frontpage && 'off' != $myoptionalmodules_frontpage )
 			add_action ( 'wp' , array ( $this , 'front_post' ) );
@@ -62,18 +66,12 @@ class myoptionalmodules_misc {
 	// Miniloops
 	function miniloop( $content ) {
 
-		global $wp, $post;
-
-		$meta   = null;
-		$style  = null;
-		$amount = null;
+		global $wp , $post , $myoptionalmodules_miniloopmeta , $myoptionalmodules_miniloopstyle , $myoptionalmodules_miniloopamount;
 		
-		global $myoptionalmodules_miniloopmeta , $myoptionalmodules_miniloopstyle , $myoptionalmodules_miniloopamount;
-		
-
 		if( is_single() && $myoptionalmodules_miniloopmeta && $myoptionalmodules_miniloopstyle && $myoptionalmodules_miniloopamount) {
-			$key    = get_post_meta ( $post->ID , $meta , true );
-			if( $key && $meta )
+			$key    = sanitize_text_field ( get_post_meta ( $post->ID , $myoptionalmodules_miniloopmeta , true ) );
+			
+			if( $key && $myoptionalmodules_miniloopmeta )
 				$output = do_shortcode ( '[mom_miniloop meta="' . $myoptionalmodules_miniloopmeta . '" key="' . $key . '" style="' . $myoptionalmodules_miniloopstyle . '" amount="' . $myoptionalmodules_miniloopamount . '" ]' );
 			else
 				$output = null;
@@ -104,6 +102,14 @@ class myoptionalmodules_misc {
 			ga('send', 'pageview');
 		</script>\n\n";
 
+	}
+	
+	// Site Verification Content
+	function site_verification() {
+
+		global $myoptionalmodules_verification;
+		echo "<meta name='google-site-verification' content='$myoptionalmodules_verification' />\n\n";
+	
 	}
 
 	// Frontpage post
@@ -223,3 +229,6 @@ class myoptionalmodules_misc {
 	}
 
 }
+
+$myoptionalmodules_misc = new myoptionalmodules_misc();
+$myoptionalmodules_misc->actions();

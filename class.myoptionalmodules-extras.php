@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_extras()
  *
- * File last update: 9.1.2
+ * File last update: 9.1.4
  *
  * Functionality for:
  * - Full-length feature images
@@ -58,3 +58,6 @@ class myoptionalmodules_extras {
 	}
 
 }
+
+$myoptionalmodules_extras = new myoptionalmodules_extras();
+$myoptionalmodules_extras->actions();

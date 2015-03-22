@@ -2,7 +2,7 @@
 /**
  * ADMIN Settings Page Content
  *
- * File last update: 9
+ * File last update: 9.1.4
  *
  * Content of the /wp-admin/ SETTINGS PAGE for this plugin
  * INCLUDING all SAVE OPERATIONS.
@@ -37,40 +37,141 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						isset ( $_POST['delete_unapproved_comments'] ) ||
 						isset ( $_POST['deleteAllClutter'] )
 					) {
-						$postsTable    = $table_prefix.'posts';
-						$commentsTable = $table_prefix.'comments';
-						$termsTable2   = $table_prefix.'terms';
-						$termsTable    = $table_prefix.'term_taxonomy';
 
 						if ( isset( $_POST['delete_post_revisions'] ) && check_admin_referer( 'deletePostRevisionsForm' ) ) {
-							$wpdb->query( "DELETE FROM `$postsTable` WHERE `post_type` = 'revision' OR `post_status` = 'auto-draft' OR `post_status` = 'trash'" );
+							$wpdb->query ( 
+								$wpdb->prepare ( 
+									"
+									DELETE FROM $wpdb->posts 
+									WHERE post_type = %s 
+									OR post_status = %s 
+									OR post_status = %s
+									OR post_status = %s
+									" ,
+									'revision' ,
+									'post_status' ,
+									'auto-draft' ,
+									'trash'
+								)
+							);
 						}
 
 						if ( isset ( $_POST['delete_unapproved_comments'] ) && check_admin_referer( 'deleteUnapprovedCommentsForm' ) ) {
-							$wpdb->query( "DELETE FROM `$commentsTable` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'" );
+							$wpdb->query ( 
+								$wpdb->prepare (
+									"
+									DELETE FROM $wpdb->comments 
+									WHERE comment_approved = %d 
+									OR comment_approved = %s 
+									OR comment_approved = %s 
+									" ,
+									0 ,
+									'post-trashed' ,
+									'spam'
+								)
+							);
 						}
 
 						if ( isset( $_POST['delete_unused_terms'] ) && check_admin_referer( 'deleteUnusedTermsForm' ) ) {
-							$wpdb->query( "DELETE FROM `$termsTable2` WHERE `term_id` IN ( select `term_id` from `$termsTable` WHERE `count` = 0 )" );
-							$wpdb->query( "DELETE FROM `$termsTable` WHERE `count` = 0" );
+							$wpdb->query (
+								$wpdb->prepare ( 
+									"
+									DELETE FROM $wpdb->terms 
+									WHERE term_id IN ( 
+										SELECT term_id FROM $wpdb->term_taxonomy WHERE count = %d
+									)
+									" ,
+									0
+								)
+							);
+							$wpdb->query ( 
+								$wpdb->prepare (
+									"
+									DELETE FROM $wpdb->term_taxonomy 
+									WHERE count = %d
+									" ,
+									0
+								)
+							);
 						}
 
 						if ( isset( $_POST['delete_drafts'] ) && check_admin_referer( 'deleteDraftsForm' ) ) {
-							$wpdb->query( "DELETE FROM `$postsTable` WHERE `post_status` = 'draft'" );
+							$wpdb->query ( 
+								$wpdb->prepare (
+									"
+									DELETE FROM $wpdb->posts 
+									WHERE post_status = %s 
+									",
+									'draft'
+								)
+							);
 						}
 
 						if ( isset( $_POST['deleteAllClutter'] ) && check_admin_referer( 'deleteAllClutterForm' ) ) {
-							$wpdb->query( "DELETE FROM `$postsTable` WHERE `post_type` = 'revision' OR `post_status` = 'auto-draft' OR `post_status` = 'trash'" );
-							$wpdb->query( "DELETE FROM `$commentsTable` WHERE `comment_approved` = '0' OR `comment_approved` = 'post-trashed' or `comment_approved` = 'spam'" );
-							$wpdb->query( "DELETE FROM `$termsTable2` WHERE `term_id` IN ( select `term_id` from `$termsTable` WHERE `count` = 0 )" );
-							$wpdb->query( "DELETE FROM `$termsTable` WHERE `count` = 0" );
+							$wpdb->query ( 
+								$wpdb->prepare ( 
+									"
+									DELETE FROM $wpdb->posts 
+									WHERE post_type = %s 
+									OR post_status = %s 
+									OR post_status = %s
+									OR post_status = %s
+									" ,
+									'revision' ,
+									'post_status' ,
+									'auto-draft' ,
+									'trash'
+								)
+							);
+							$wpdb->query ( 
+								$wpdb->prepare (
+									"
+									DELETE FROM $wpdb->comments 
+									WHERE comment_approved = %d 
+									OR comment_approved = %s 
+									OR comment_approved = %s 
+									" ,
+									0 ,
+									'post-trashed' ,
+									'spam'
+								)
+							);
+							$wpdb->query (
+								$wpdb->prepare ( 
+									"
+									DELETE FROM $wpdb->terms 
+									WHERE term_id IN ( 
+										SELECT term_id FROM $wpdb->term_taxonomy WHERE count = %d
+									)
+									" ,
+									0
+								)
+							);
+							$wpdb->query ( 
+								$wpdb->prepare (
+									"
+									DELETE FROM $wpdb->term_taxonomy 
+									WHERE count = %d
+									" ,
+									0
+								)
+							);
+							$wpdb->query ( 
+								$wpdb->prepare (
+									"
+									DELETE FROM $wpdb->posts 
+									WHERE post_status = %s 
+									",
+									'draft'
+								)
+							);
 						}
 
 						if ( isset( $_POST['optimizeTables'] ) && check_admin_referer( 'optimizeTablesForm' ) ) {
-							$wpdb->query( "OPTIMIZE TABLE `$postsTable` " );
-							$wpdb->query( "OPTIMIZE TABLE `$commentsTable` " );
-							$wpdb->query( "OPTIMIZE TABLE `$termsTable2` " );
-							$wpdb->query( "OPTIMIZE TABLE `$termsTable` " );
+							$wpdb->query ( "OPTIMIZE TABLE $wpdb->posts" );
+							$wpdb->query ( "OPTIMIZE TABLE $wpdb->comments" );
+							$wpdb->query ( "OPTIMIZE TABLE $wpdb->terms" );
+							$wpdb->query ( "OPTIMIZE TABLE $wpdb->term_taxonomy" );
 						}
 					}
 
@@ -153,6 +254,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 					);
 					$theme_extras = array (
 						'myoptionalmodules_google' ,
+						'myoptionalmodules_verification' ,
 						'myoptionalmodules_previouslinkclass' ,
 						'myoptionalmodules_nextlinkclass' ,
 						'myoptionalmodules_readmore' ,
@@ -238,7 +340,10 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 
 								if ( $field == 'myoptionalmodules_previouslinkclass' )
 									$_REQUEST['myoptionalmodules_previouslinkclass'] = str_replace( '.' , '' , $_REQUEST['myoptionalmodules_previouslinkclass'] );
-
+								
+								if ( $field == 'myoptionalmodules_verification' )
+									$_REQUEST['myoptionalmodules_verification'] = str_replace ( array ( '<meta name=\"google-site-verification\" content=\"' , '\" />' ) , '' , $_REQUEST['myoptionalmodules_verification' ] );
+								
 								if ( $field == 'myoptionalmodules_nextlinkclass' )
 									$_REQUEST['myoptionalmodules_nextlinkclass']     = str_replace( '.' , '' , $_REQUEST['myoptionalmodules_nextlinkclass'] );
 								$value = sanitize_text_field ( $_REQUEST[ $field ] );
@@ -372,22 +477,26 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 										echo '
 										</div>';
 								}
-							echo '
-							<div>
-								<strong>Comment Form</strong>';
-								foreach ( $options_comment_form as &$option ) {
-									$title = str_replace ( $options_comment_form , $keys_comment_form , $option );
-									$checked = null;
-
-									if ( get_option ( $option ) )
-										$checked = ' checked';
-									echo "
-									<section>
-										<input type='checkbox' value='1' name='$option' id='$option'$checked> $title
-									</section>";
-								}
+							
+							if( !get_option ( 'myoptionalmodules_disablecomments' ) ) {
 								echo '
-								</div>
+								<div>
+									<strong>Comment Form</strong>';
+									foreach ( $options_comment_form as &$option ) {
+										$title = str_replace ( $options_comment_form , $keys_comment_form , $option );
+										$checked = null;
+	
+										if ( get_option ( $option ) )
+											$checked = ' checked';
+										echo "
+										<section>
+											<input type='checkbox' value='1' name='$option' id='$option'$checked> $title
+										</section>";
+									}
+								echo '
+								</div>';
+							}
+							echo '
 								<div>
 									<strong>Extras</strong>';
 									foreach ( $options_extras as &$option ) {
@@ -432,16 +541,17 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 										echo '
 										</select>';
 										$google = $previousclass = $nextclass = $readmore = $randompost = $randomtitles = $randomdescriptions = null;
-										$google             = get_option( 'myoptionalmodules_google' );
-										$previousclass      = get_option( 'myoptionalmodules_previouslinkclass' );
-										$nextclass          = get_option( 'myoptionalmodules_nextlinkclass' );
-										$readmore           = get_option( 'myoptionalmodules_readmore' );
-										$randompost         = get_option( 'myoptionalmodules_randompost' );
-										$randomtitles       = get_option( 'myoptionalmodules_randomtitles' );
-										$randomdescriptions = get_option( 'myoptionalmodules_randomdescriptions' );
-										$miniloop_meta      = get_option( 'myoptionalmodules_miniloopmeta' );
-										$miniloop_style     = get_option( 'myoptionalmodules_miniloopstyle' );
-										$miniloop_amount    = get_option( 'myoptionalmodules_miniloopamount' );
+										$google             = sanitize_text_field ( get_option( 'myoptionalmodules_google' ) );
+										$verification       = sanitize_text_field ( get_option( 'myoptionalmodules_verification' ) );
+										$previousclass      = sanitize_text_field ( get_option( 'myoptionalmodules_previouslinkclass' ) );
+										$nextclass          = sanitize_text_field ( get_option( 'myoptionalmodules_nextlinkclass' ) );
+										$readmore           = sanitize_text_field ( get_option( 'myoptionalmodules_readmore' ) );
+										$randompost         = sanitize_text_field ( get_option( 'myoptionalmodules_randompost' ) );
+										$randomtitles       = sanitize_text_field ( get_option( 'myoptionalmodules_randomtitles' ) );
+										$randomdescriptions = sanitize_text_field ( get_option( 'myoptionalmodules_randomdescriptions' ) );
+										$miniloop_meta      = sanitize_text_field ( get_option( 'myoptionalmodules_miniloopmeta' ) );
+										$miniloop_style     = sanitize_text_field ( get_option( 'myoptionalmodules_miniloopstyle' ) );
+										$miniloop_amount    = sanitize_text_field ( get_option( 'myoptionalmodules_miniloopamount' ) );										
 										echo "
 										<section>
 											<label>Miniloop: meta</label>
@@ -466,6 +576,10 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 										<section>
 											<label>Google Tracking ID</label>
 											<input type='text' id='myoptionalmodules_google' name='myoptionalmodules_google' value='$google' />
+										</section>
+										<section>
+											<label>Google Verification Content</label>
+											<input type='text' id='myoptionalmodules_verification' name='myoptionalmodules_verification' value='$verification' />
 										</section>
 										<section>
 											<label>Previous link class</label>

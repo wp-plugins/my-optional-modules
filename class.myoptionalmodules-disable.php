@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_disable
  *
- * File last update: 9.1.2
+ * File last update: 9.1.4
  *
  * Functionality for:
  * - Pingbacks
@@ -188,3 +188,6 @@ class myoptionalmodules_disable {
 	}
 
 }
+
+$myoptionalmodules_disable = new myoptionalmodules_disable();
+$myoptionalmodules_disable->actions();

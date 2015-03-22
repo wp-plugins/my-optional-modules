@@ -18,6 +18,11 @@ function myoptionalmodules_miniloop_shortcode( $atts ) {
 
 	global $paged, $post;
 	
+	$current_post   = 0;
+	if( is_single() )
+		$current_post = $post->ID;
+	if( is_page() )
+		$current_post = $post->ID;
 	$thumbs         = null;
 	$show_link      = null;
 	$amount         = null;
@@ -93,8 +98,6 @@ function myoptionalmodules_miniloop_shortcode( $atts ) {
 	$key           = sanitize_text_field ( $key );
 	$style         = strtolower( sanitize_text_field( $style ) );
 	
-	
-	
 	if( 123 == $year )
 		$year = date ( 'Y' );
 
@@ -116,7 +119,7 @@ function myoptionalmodules_miniloop_shortcode( $atts ) {
 
 	if( $meta && $key ) {
 		$args = array (
-			'post__not_in'     => array ( $exclude ),
+			'post__not_in'     => array ( $exclude , $current_post ),
 			'posts_per_page'   => $amount,
 			'offset'           => $offset,
 			'category'         => $category_id,
@@ -141,7 +144,7 @@ function myoptionalmodules_miniloop_shortcode( $atts ) {
 		);
 	} else {
 		$args = array (
-		'post__not_in'     => array ( $exclude ),
+		'post__not_in'     => array ( $exclude , $current_post ),
 		'posts_per_page'   => $amount,
 		'offset'           => $offset,
 		'category'         => $category_id,
