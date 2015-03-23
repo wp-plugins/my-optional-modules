@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_misc()
  *
- * File last update: 9.1.4
+ * File last update: 9.1.5
  *
  * Functionality for:
  * - Miniloops
@@ -75,9 +75,9 @@ class myoptionalmodules_misc {
 				$output = do_shortcode ( '[mom_miniloop meta="' . $myoptionalmodules_miniloopmeta . '" key="' . $key . '" style="' . $myoptionalmodules_miniloopstyle . '" amount="' . $myoptionalmodules_miniloopamount . '" ]' );
 			else
 				$output = null;
-			return $content . $output;
+			return do_shortcode ( $content ) . $output;
 		} else {
-			return $content;
+			return do_shortcode ( $content );
 		}
 
 	}

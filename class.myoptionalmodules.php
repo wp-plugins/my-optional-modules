@@ -44,15 +44,17 @@ class myoptionalmodules {
 	function scripts(){
 		// JQUERY dependent
 		global $myoptionalmodules_lazyload;
-		if( $myoptionalmodules_lazyload ) {
 			function mom_jquery(){
 				global $myoptionalmodules_lazyload_version;
-				$lazyLoadFunctions = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/lazyload.js' ) );
-				wp_enqueue_script ( 'lazyload' , $myoptionalmodules_lazyload_version , array ( 'jquery' ) );
-				wp_enqueue_script ( 'lazyloadFunctions' , $lazyLoadFunctions , array ( 'jquery' ) );
+				if( $myoptionalmodules_lazyload ) {
+					$lazyLoadFunctions = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/lazyload.js' ) );
+					wp_enqueue_script ( 'lazyload' , $myoptionalmodules_lazyload_version , array ( 'jquery' ) );
+					wp_enqueue_script ( 'lazyloadFunctions' , $lazyLoadFunctions , array ( 'jquery' ) );
+				}
+				$pluginfunctions = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/script.js' ) );
+				wp_enqueue_script ( 'mom_plugin_functions' , $pluginfunctions , array ( 'jquery' ) );
 			}
 			add_action( 'wp_enqueue_scripts' , 'mom_jquery' );
-		}
 	}
 
 	// Enqueue Font Awesome for ADMIN

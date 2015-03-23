@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URL: //iamnotu.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 9.1.4
+Version: 9.1.5
 Author: Matthew Trevino
 Author URI: //iamnotu.com
 

@@ -2,7 +2,7 @@
 /**
  * FUNCTION(ality) Exclude Posts
  *
- * File last update: 9.1.2
+ * File last update: 9.1.5
  *
  * Alter the query to remove posts based on many parameters
  */ 
@@ -364,7 +364,7 @@ if( $chck_users || $chck_cats || $chck_tags ) {
 			if( is_single() ) {
 				$content = '<div class="mom-unauthorized-content">You do not have permission to view this content.</div>';
 			}
-			return $content;
+			return do_shortcode ( $content );
 		}
 	}
 }

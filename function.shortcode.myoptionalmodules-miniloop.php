@@ -12,7 +12,10 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 	die();
 }
 
-add_shortcode ( 'mom_miniloop' , 'myoptionalmodules_miniloop_shortcode' );
+function myoptionalmodules_register_miniloop() {
+	add_shortcode ( 'mom_miniloop' , 'myoptionalmodules_miniloop_shortcode' );
+}
+add_action ( 'init' , 'myoptionalmodules_register_miniloop' );
 
 function myoptionalmodules_miniloop_shortcode( $atts ) {
 

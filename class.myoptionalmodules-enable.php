@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_enable()
  *
- * File last update: 9.1.4
+ * File last update: 9.1.5
  *
  * Functionality for:
  * - Meta Tags
@@ -465,15 +465,15 @@ class myoptionalmodules_enable {
 		if( is_single() && $myoptionalmodules_shareslinks_top ) {
 			return $output . $content;
 		} elseif( is_single() && !$myoptionalmodules_shareslinks_top ) {
-			return $content . $output;
+			return do_shortcode ( $content ) . $output;
 		} elseif( is_page() && $myoptionalmodules_sharelinks_pages) {
 			if( is_page() && $myoptionalmodules_shareslinks_top ) {
 				return $output . $content;
 			} elseif( is_page() && !$myoptionalmodules_shareslinks_top ) {
-				return $content . $output;
+				return do_shortcode ( $content ) . $output;
 			}
 		} else {
-			return $content;
+			return do_shortcode ( $content );
 		}
 
 	}
