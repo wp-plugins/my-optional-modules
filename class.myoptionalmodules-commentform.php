@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_comment_form()
  *
- * File last update: 9.1.4
+ * File last update: 9.1.6
  *
  * Functionality for:
  * - Ajaxify comment form
@@ -15,7 +15,7 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 
 class myoptionalmodules_comment_form {
 
-	function actions() {
+	function __construct() {
 
 		global $myoptionalmodules_ajaxcomments , $myoptionalmodules_commentspamfield;
 		
@@ -66,4 +66,3 @@ class myoptionalmodules_comment_form {
 }
 
 $myoptionalmodules_comment_form = new myoptionalmodules_comment_form();
-$myoptionalmodules_comment_form->actions();

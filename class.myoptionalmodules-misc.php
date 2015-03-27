@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_misc()
  *
- * File last update: 9.1.5
+ * File last update: 9.1.6
  *
  * Functionality for:
  * - Miniloops
@@ -22,7 +22,7 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 
 class myoptionalmodules_misc {
 
-	function actions() {
+	function __construct() {
 		
 		global $myoptionalmodules_randompost , $myoptionalmodules_google , $myoptionalmodules_verification , $myoptionalmodules_frontpage , $myoptionalmodules_previouslinkclass , $myoptionalmodules_nextlinkclass , $myoptionalmodules_readmore , $myoptionalmodules_randomtitles , $myoptionalmodules_randomdescriptions;
 		
@@ -231,4 +231,3 @@ class myoptionalmodules_misc {
 }
 
 $myoptionalmodules_misc = new myoptionalmodules_misc();
-$myoptionalmodules_misc->actions();

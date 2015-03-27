@@ -503,3 +503,31 @@ h2.mom_related_title{
 	display: block; 
 	position: relative;
 }
+
+/*
+ * Youtube
+ */
+.mom-youtube-content-div {
+	position:relative;
+	overflow: hidden; 
+}
+.mom-youtube-play-button {
+	color: #fff;
+	background-color: #000;
+	display:none;
+	visibility:hidden;
+	position:absolute;
+	z-index:2;
+	width:auto;
+	text-align:left;
+	top:0;
+	left:0;
+	cursor:pointer;
+	padding: 10px;
+	font-size: 85%;
+}
+.mom-youtube-thumbnail {
+	cursor: pointer;
+	display:none;
+	visibility:hidden;
+}

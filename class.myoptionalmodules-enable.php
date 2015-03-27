@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_enable()
  *
- * File last update: 9.1.5
+ * File last update: 9.1.6
  *
  * Functionality for:
  * - Meta Tags
@@ -19,7 +19,7 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 
 class myoptionalmodules_enable {
 
-	function actions() {
+	function __construct() {
 
 		global $myoptionalmodules_metatags , $myoptionalmodules_horizontalgalleries , $myoptionalmodules_sharelinks , $myoptionalmodules_rsslinkbacks , $myoptionalmodules_404s , $myoptionalmodules_fontawesome;
 		if( $myoptionalmodules_metatags ) {
@@ -422,42 +422,48 @@ class myoptionalmodules_enable {
 	// Share Links
 	function share( $content ) {
 
-		global $wp, $post, $myoptionalmodules_fontawesome , $myoptionalmodules_shareslinks_top , $myoptionalmodules_sharelinks_pages , $myoptionalmodules_sharelinks_reddit , $myoptionalmodules_sharelinks_google , $myoptionalmodules_sharelinks_twitter , $myoptionalmodules_sharelinks_facebook , $myoptionalmodules_sharelinks_email;
+		global 
+		$wp                                  , $post                                 , $myoptionalmodules_fontawesome         , 
+		$myoptionalmodules_shareslinks_top   , $myoptionalmodules_sharelinks_pages   , $myoptionalmodules_sharelinks_reddit   , 
+		$myoptionalmodules_sharelinks_google , $myoptionalmodules_sharelinks_twitter , $myoptionalmodules_sharelinks_facebook , 
+		$myoptionalmodules_sharelinks_email  , $myoptionalmodules_sharelinks_text;
 
 		$excerpt     = htmlentities ( str_replace ( ' ' , '%20' , $post->post_excerpt ) ); 
 		$title       = str_replace ( ' ' , '%20' , get_the_title ( $post->ID ) );
 
 		$output  = '<span class="mom_shareLinks">';
-		$output .='Share via: ';
+		
+		if( $myoptionalmodules_sharelinks_text )
+			$output .= esc_html ( $myoptionalmodules_sharelinks_text );
 
 		if( $myoptionalmodules_sharelinks_reddit && $myoptionalmodules_fontawesome ) {
-			$output .='<a class="reddit fa fa-reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '"></a>';
+			$output .= '<a class="reddit fa fa-reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '"></a>';
 		} elseif( $myoptionalmodules_sharelinks_reddit && !$myoptionalmodules_fontawesome ) {
-			$output .='<a class="reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '">reddit</a>';
+			$output .= '<a class="reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '">reddit</a>';
 		}
 
 		if( $myoptionalmodules_sharelinks_google && $myoptionalmodules_fontawesome  ) {
-			$output .='<a class="google fa fa-google-plus" href="https://plus.google.com/share?url=' . get_the_permalink() . '"></a>';
+			$output .= '<a class="google fa fa-google-plus" href="https://plus.google.com/share?url=' . get_the_permalink() . '"></a>';
 		} elseif( $myoptionalmodules_sharelinks_google && !$myoptionalmodules_fontawesome  ) {
-			$output .='<a class="google" href="https://plus.google.com/share?url=' . get_the_permalink() . '">google+</a>';
+			$output .= '<a class="google" href="https://plus.google.com/share?url=' . get_the_permalink() . '">google+</a>';
 		}
 
 		if( $myoptionalmodules_sharelinks_twitter && $myoptionalmodules_fontawesome  ) {
-			$output .='<a class="twitter fa fa-twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '"></a>';
+			$output .= '<a class="twitter fa fa-twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '"></a>';
 		} elseif( $myoptionalmodules_sharelinks_twitter && !$myoptionalmodules_fontawesome  ) {
-			$output .='<a class="twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '">twitter</a>';
+			$output .= '<a class="twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '">twitter</a>';
 		}
 
 		if( $myoptionalmodules_sharelinks_facebook && $myoptionalmodules_fontawesome  ) {
-			$output .='<a class="facebook fa fa-facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '"></a>';
+			$output .= '<a class="facebook fa fa-facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '"></a>';
 		} elseif( $myoptionalmodules_sharelinks_facebook && !$myoptionalmodules_fontawesome  ) {
-			$output .='<a class="facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '">facebook</a>';
+			$output .= '<a class="facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '">facebook</a>';
 		}
 
 		if( $myoptionalmodules_sharelinks_email && $myoptionalmodules_fontawesome  ) {
-			$output .='<a class="email fa fa-envelope" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]"></a>';
+			$output .= '<a class="email fa fa-envelope" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]"></a>';
 		} elseif( $myoptionalmodules_sharelinks_email && !$myoptionalmodules_fontawesome  ) {
-			$output .='<a class="email" href="mailto:?subject=' . $title . '&amp;body=' . $excerpt . '%20[ ' . get_the_permalink() . ' ]">email</a>';
+			$output .= '<a class="email" href="mailto:?subject=' . $title . '&amp;body=' . $excerpt . '%20[ ' . get_the_permalink() . ' ]">email</a>';
 		}
 
 		$output .='</span>';
@@ -499,4 +505,3 @@ class myoptionalmodules_enable {
 }
 
 $myoptionalmodules_enable = new myoptionalmodules_enable();
-$myoptionalmodules_enable->actions();

@@ -1,9 +1,9 @@
 <?php 
 /*
 Plugin Name: My Optional Modules
-Plugin URL: //iamnotu.com/my-optional-modules/
+Plugin URI: //iamnotu.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 9.1.5
+Version: 9.1.6
 Author: Matthew Trevino
 Author URI: //iamnotu.com
 
@@ -59,7 +59,7 @@ $myoptionalmodules_exclude_categoriescategoriesfri     = $myoptionalmodules_excl
 $myoptionalmodules_exclude_usersusersmon               = $myoptionalmodules_exclude_usersuserstue              = $myoptionalmodules_exclude_usersuserswed = 
 $myoptionalmodules_exclude_usersusersthu               = $myoptionalmodules_exclude_usersusersfri              = $myoptionalmodules_exclude_usersuserssat =
 $myoptionalmodules_plugincss                           = $myoptionalmodules_lazyload                           = $myoptionalmodules_verification = 
-null;
+$myoptionalmodules_sharelinks_text                     = null;
 
 $myoptionalmodules_getallpluginoptions  = wp_load_alloptions();
 foreach( $myoptionalmodules_getallpluginoptions as $name => $value ) {
@@ -99,6 +99,7 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ) {
 	
 	/**
 	 * Social Links
+	 * - Share text
 	 * - reddit
 	 * - google plus
 	 * - twitter
@@ -107,6 +108,7 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ) {
 	 * - place at top
 	 * - place on pages
 	 */
+	if( $name == 'myoptionalmodules_sharelinks_text' && $value )                     $myoptionalmodules_sharelinks_text                      = $value;
 	if( $name == 'myoptionalmodules_sharelinks_reddit' && $value )                   $myoptionalmodules_sharelinks_reddit                    = $value;
 	if( $name == 'myoptionalmodules_sharelinks_google' && $value )                   $myoptionalmodules_sharelinks_google                    = $value;
 	if( $name == 'myoptionalmodules_sharelinks_twitter' && $value )                  $myoptionalmodules_sharelinks_twitter                   = $value;
@@ -248,7 +250,7 @@ include( 'function.shortcode.myoptionalmodules-miniloop.php' );
 if( current_user_can( 'edit_dashboard' ) && is_admin() ){
 	class myoptionalmodules_admin_css {
 
-		function actions() {
+		function __construct() {
 
 			add_action ( 'admin_enqueue_scripts', array( $this, 'stylesheets' ) );
 
@@ -270,7 +272,6 @@ if( current_user_can( 'edit_dashboard' ) && is_admin() ){
 	}
 
 	$myoptionalmodules_admin_css = new myoptionalmodules_admin_css();
-	$myoptionalmodules_admin_css->actions();
 
 	include( 'admin.font-awesome-post-edit.php' );
 	include( 'admin.settings-page-content.php' );

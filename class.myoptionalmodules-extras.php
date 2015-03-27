@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_extras()
  *
- * File last update: 9.1.4
+ * File last update: 9.1.6
  *
  * Functionality for:
  * - Full-length feature images
@@ -16,7 +16,7 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 
 class myoptionalmodules_extras {
 
-	function actions() {
+	function __construct() {
 
 		global $myoptionalmodules_featureimagewidth , $myoptionalmodules_javascripttofooter , $myoptionalmodules_exclude;
 		if( $myoptionalmodules_featureimagewidth ) {
@@ -60,4 +60,3 @@ class myoptionalmodules_extras {
 }
 
 $myoptionalmodules_extras = new myoptionalmodules_extras();
-$myoptionalmodules_extras->actions();

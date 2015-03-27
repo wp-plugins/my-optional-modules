@@ -136,6 +136,9 @@
 			float: left;
 			width: 200px;
 		}
+			.MOMSettings .MOM_form .left-section input[type='text'] {
+				width: 100%;
+			}
 			.MOMSettings .MOM_form .left-section div{
 				background-color: rgba(47,51,53,.7);
 				border: 1px solid rgba(47,51,53,.9);

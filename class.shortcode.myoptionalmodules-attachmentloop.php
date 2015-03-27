@@ -2,7 +2,7 @@
 /**
  * CLASS SHORTCODE myoptionalmodules_attachment_loop_shortcode()
  *
- * File last update: 9.1.4
+ * File last update: 9.1.6
  *
  * Shortcode to display a loop of recent images with links to the posts they belong to
  * [mom_attachments]
@@ -14,7 +14,7 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 
 class myoptionalmodules_attachment_loop_shortcode{
 
-	function construct() {
+	function __construct() {
 
 		add_shortcode ( 'mom_attachments' , array ( $this , 'shortcode' ) );
 
@@ -93,4 +93,3 @@ class myoptionalmodules_attachment_loop_shortcode{
 }
 
 $myoptionalmodules_attachment_loop_shortcode = new myoptionalmodules_attachment_loop_shortcode();
-$myoptionalmodules_attachment_loop_shortcode->construct();

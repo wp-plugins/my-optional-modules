@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules()
  *
- * File last update: 9.1.4
+ * File last update: 9.1.6
  *
  * Actions REQUIRED by the plugin (unless otherwise noted).
  * Regardless of settings, these actions will always run.
@@ -22,7 +22,7 @@ class myoptionalmodules {
 	
 	public $user_level, $ipaddress, $DNSBL;
 	
-	function actions() {
+	function __construct() {
 
 		add_action ( 'wp', array( $this, 'scripts' ) );
 		add_action ( 'admin_enqueue_scripts' , array ( $this , 'font_awesome' ) );
@@ -43,8 +43,8 @@ class myoptionalmodules {
 	// Enqueue scripts
 	function scripts(){
 		// JQUERY dependent
-		global $myoptionalmodules_lazyload;
 			function mom_jquery(){
+				global $myoptionalmodules_lazyload;
 				global $myoptionalmodules_lazyload_version;
 				if( $myoptionalmodules_lazyload ) {
 					$lazyLoadFunctions = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/lazyload.js' ) );
@@ -184,6 +184,5 @@ class myoptionalmodules {
 }
 
 $myoptionalmodules_plugin = new myoptionalmodules();
-$myoptionalmodules_plugin->actions();
 $myoptionalmodules_plugin->userlevel();
 $myoptionalmodules_plugin->validate_ip_address();

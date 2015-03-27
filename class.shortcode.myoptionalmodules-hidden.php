@@ -2,7 +2,7 @@
 /*
  * CLASS SHORTCODE myoptionalmodules_hidden()
  *
- * File last update: 9.1.5
+ * File last update: 9.1.6
  *
  * Hide content from is_home/is_single OR users who are not logged in
  * - [mom_hidden single='0/1' logged='0/1'] content [/mom_hidden]
@@ -14,7 +14,7 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 
 class myoptionalmodules_hidden{
 
-	function construct() {
+	function __construct() {
 
 		add_shortcode( 'mom_hidden' , array ( $this , 'shortcode' ) );
 
@@ -55,4 +55,3 @@ class myoptionalmodules_hidden{
 }
 
 $myoptionalmodules_shortcode_hidden = new myoptionalmodules_hidden();
-$myoptionalmodules_shortcode_hidden->construct();

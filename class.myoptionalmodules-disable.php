@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_disable
  *
- * File last update: 9.1.4
+ * File last update: 9.1.6
  *
  * Functionality for:
  * - Pingbacks
@@ -18,7 +18,7 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 
 class myoptionalmodules_disable {
 
-	function actions() {
+	function __construct() {
 
 		global $myoptionalmodules_plugin , $myoptionalmodules_disablepingbacks , $myoptionalmodules_authorarchives , $myoptionalmodules_datearchives , $myoptionalmodules_disablecomments , $myoptionalmodules_dnsbl , $myoptionalmodules_removecode;
 
@@ -190,4 +190,3 @@ class myoptionalmodules_disable {
 }
 
 $myoptionalmodules_disable = new myoptionalmodules_disable();
-$myoptionalmodules_disable->actions();

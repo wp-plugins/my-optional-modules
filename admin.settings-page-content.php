@@ -25,7 +25,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 
 			class myoptionalmodules_settings_form {
 
-				function _construct() {
+				function __construct() {
 					global $table_prefix , $wpdb;
 
 					// Trash Removal
@@ -253,6 +253,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						' Enable Exclude Posts'
 					);
 					$theme_extras = array (
+						'myoptionalmodules_sharelinks_text' ,
 						'myoptionalmodules_google' ,
 						'myoptionalmodules_verification' ,
 						'myoptionalmodules_previouslinkclass' ,
@@ -463,6 +464,13 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 									echo '
 									<div>
 										<strong>Social Links</strong>';
+										
+										$myoptionalmodules_sharelinks_text = sanitize_text_field ( get_option ( 'myoptionalmodules_sharelinks_text' ) );
+										
+										echo '
+										<label>Share text &mdash; <small><em>ex: share via:</em></small></label>
+										<input type="text" value="' . $myoptionalmodules_sharelinks_text . '" id="myoptionalmodules_sharelinks_text" name="myoptionalmodules_sharelinks_text" />';
+										
 										foreach ( $options_shares as &$option ) {
 											$title = str_replace ( $options_shares , $keys_shares , $option );
 											$checked = null;
@@ -876,7 +884,6 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 				}
 			}
 			$myoptionalmodules_settings_form = new myoptionalmodules_settings_form();
-			$myoptionalmodules_settings_form->_construct();
 		echo '
 		</div>';
 	}

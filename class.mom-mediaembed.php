@@ -26,7 +26,9 @@ class mom_mediaEmbed {
 		$timestamp = null;
 		$thumbnail = null;
 		$embed     = null;
-
+		
+		echo '<div class="media-embed">';
+		
 		if ( filter_var( $url, FILTER_VALIDATE_URL ) !== false )
 			if ( isset ( parse_url ( $url ) [ 'host'  ] ) ) 
 				$host  = parse_url ( $url ) [ 'host'  ];
@@ -127,28 +129,24 @@ class mom_mediaEmbed {
 					$url = str_replace ( array ( 'v=' , '&' ) , '' , $query );
 		
 				
-				$embed  = '<object width="640" height="390" data="https://www.youtube.com/v/' . $url . '?version=3&amp;autoplay=1' . $timestamp . '">';
-				$embed .= '<param name="movie" value="https://www.youtube.com/v/' . $url . '?version=3&amp;autoplay=1' . $timestamp . '" />';
-				$embed .= '<param name="allowScriptAccess" value="always" />';
-				$embed .= '<embed src="https://www.youtube.com/v/' . $url . '?version=3&amp;autoplay=1' . $timestamp . '"';
-				$embed .= 'type="application/x-shockwave-flash"';
-				$embed .= 'allowscriptaccess="always"';
-				$embed .= 'width="640" ';
-				$embed .= 'height="390" />';
-				$embed .= '</object>';
-		
 				$thumbnail = '//img.youtube.com/vi/' . $url . '/0.jpg';
 				
 				echo '
-				<object width="640" height="390" data="https://www.youtube.com/v/' . $url . '?version=3' . $timestamp . '">
-					<param name="movie" value="https://www.youtube.com/v/' . $url . '?version=3' . $timestamp . '" />
-					<param name="allowScriptAccess" value="always" />
-					<embed src="https://www.youtube.com/v/' . $url . '?version=3' . $timestamp . '"
-					type="application/x-shockwave-flash"
-					allowscriptaccess="always"
-					width="640" 
-					height="390" />
-				</object>';
+				<div id="mom-youtube-' . $url . '" class="mom-youtube-content-div">
+					<img src="' . $thumbnail . '" data-time="' . $timestamp . '" data-video="' . $url . '" id="mom-youtube-thumbnail-' . $url . '" class="mom-youtube-thumbnail" />
+					<i class="mom-youtube-play-button fa fa-play-circle"> &mdash; click thumbnail to play</i>
+				</div>
+				<noscript>
+					<object width="640" height="390" data="https://www.youtube.com/v/' . $url . '?version=3' . $timestamp . '">
+						<param name="movie" value="https://www.youtube.com/v/' . $url . '?version=3' . $timestamp . '" />
+						<param name="allowScriptAccess" value="always" />
+						<embed src="https://www.youtube.com/v/' . $url . '?version=3' . $timestamp . '"
+						type="application/x-shockwave-flash"
+						allowscriptaccess="always"
+						width="640" 
+						height="390" />
+					</object>
+				</noscript>';
 			}
 
 			// embeds not handled by the above
@@ -156,6 +154,8 @@ class mom_mediaEmbed {
 			else {
 				echo wp_oembed_get( $url );
 			}
+			
+			echo '</div>';
 
 		}
 

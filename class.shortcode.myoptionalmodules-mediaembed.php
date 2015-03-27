@@ -2,7 +2,7 @@
 /**
  * CLASS SHORTCODE myoptionalmodules_mediaembed_shortcode()
  *
- * File last update: 9.1.4
+ * File last update: 9.1.6
  *
  * Allow a media embed through shortcode
  * - [mom_embed url='URL']
@@ -14,7 +14,7 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 
 class myoptionalmodules_mediaembed_shortcode{
 
-	function construct() {
+	function __construct() {
 
 		add_shortcode( 'mom_embed' , array ( $this , 'shortcode' ) );
 
@@ -63,4 +63,3 @@ class myoptionalmodules_mediaembed_shortcode{
 }
 
 $myoptionalmodules_mediaembed_shortcode = new myoptionalmodules_mediaembed_shortcode();
-$myoptionalmodules_mediaembed_shortcode->construct();
