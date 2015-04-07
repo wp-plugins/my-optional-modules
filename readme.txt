@@ -73,25 +73,25 @@ on [Github](https://github.com/onebillion/mom). )
 
 == Changelog ==
 = 9.1.8 =
-*	Release Date – 6th, April, 2015
+*	*Release Date - 6th, April, 2015*
 *	mom_charts shortcode added
 *	Horizontal galleries images loaded below on-click
 *	Multiple embeds from a single mom_embed
 *	gists added to mom_embed
 
 = 9.1.7 =
-*	Release Date - 2nd, April, 2015
+*	*Release Date - 2nd, April, 2015*
 *	[mom_catalog] shortcode added
 
 = 9.1.6 =
-*	Release Date - 27th, March, 2015
+*	*Release Date - 27th, March, 2015*
 *	.media-embed wrapper class for media_embeds
 *	mom_embed for Youtube utilizes click-to-play thumbnail with noscript object embed fallback
 *	Change the 'Share via:' text ( or output nothing )
 *	__construct utilized for classes
 
 = 9.1.4 / 9.1.5 =
-*	Release Date - 22nd, March, 2015
+*	*Release Date - 22nd, March, 2015*
 *	Several instances of return $content have been altered to work with [shortcodes] properly, under certain circumstances
 *	Automatic 'Miniloop' bugfix ( wrong $variable )
 *	$wpdb->prepare used for 'Trash Removal'
@@ -99,15 +99,15 @@ on [Github](https://github.com/onebillion/mom). )
 *	'noindex, nofollow' changed to 'noindex, noarchive' for 'Meta Tags' archives/search/404
 
 = 9.1.3 =
-*	Release Date - 16th March, 2015
+*	*Release Date - 16th March, 2015*
 *	Undefined variable 'myoptionalmodules_randompost'
 *	In some instances, $values were being prematurely nulled
 
 = 9.1.2 =
-*	Release Date - 15th March, 2015
+*	*Release Date - 15th March, 2015*
 *	wp_load_alloptions() used in place of get_option()
 
 = 9.1.1 / 9.1 / 9 =
-*	Release Date - 13th March, 2015
+*	*Release Date - 13th March, 2015*
 *	'miniloop' meta/key fix
 *	Fix for 'mom_embed' imgur albums
