@@ -1,5 +1,4 @@
 <?php 
-
 /**
  * FUNCTION myoptionalmodules_WP_Widget_Recent_Posts()
  *

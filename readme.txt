@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: meta, og, twitter, facebook, google, random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 9.1.6
+Stable tag: 9.1.8
 
 An assortment of functions to enhance WordPress.
 
@@ -72,7 +72,19 @@ on [Github](https://github.com/onebillion/mom). )
 2.	Share icons displayed at the top of the post content.
 
 == Changelog ==
+= 9.1.8 =
+*Release Date – 6th, April, 2015*
+*	mom_charts shortcode added
+*	Horizontal galleries images loaded below on-click
+*	Multiple embeds from a single mom_embed
+*	gists added to mom_embed
+
+= 9.1.7 =
+*Release Date - 2nd, April, 2015*
+*	[mom_catalog] shortcode added
+
 = 9.1.6 =
+*Release Date - 27th, March, 2015*
 *	.media-embed wrapper class for media_embeds
 *	mom_embed for Youtube utilizes click-to-play thumbnail with noscript object embed fallback
 *	Change the 'Share via:' text ( or output nothing )

@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: //iamnotu.com/my-optional-modules/
 Description: Optional modules and additions for Wordpress.
-Version: 9.1.6
+Version: 9.1.8
 Author: Matthew Trevino
 Author URI: //iamnotu.com
 
@@ -234,7 +234,6 @@ include( 'function.category-ids.php' );
 include( 'function.exclude-categories.php' );
 include( 'function.recent-posts.php' );
 include( 'function.featured-images.php' );
-include( 'function.read-more.php' );
 include( 'class.mom-mediaembed.php' ); 
 include( 'class.myoptionalmodules.php' );
 include( 'class.myoptionalmodules-enable.php' );
@@ -242,9 +241,7 @@ include( 'class.myoptionalmodules-disable.php' );
 include( 'class.myoptionalmodules-commentform.php' );
 include( 'class.myoptionalmodules-extras.php' );
 include( 'class.myoptionalmodules-misc.php' );
-include( 'class.shortcode.myoptionalmodules-attachmentloop.php' );
-include( 'class.shortcode.myoptionalmodules-mediaembed.php' );
-include( 'class.shortcode.myoptionalmodules-hidden.php' );
+include( 'class.myoptionalmodules-shortcodes.php' );
 include( 'function.shortcode.myoptionalmodules-miniloop.php' );
 
 if( current_user_can( 'edit_dashboard' ) && is_admin() ){

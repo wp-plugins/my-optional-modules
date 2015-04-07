@@ -439,7 +439,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 											$checked = ' checked';
 										echo "
 										<section>
-											<input type='checkbox' value='1' name='$option' id='$option'$checked> $title
+											<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> {$title}
 										</section>";
 									}
 								echo '
@@ -454,7 +454,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 											$checked = ' checked';
 										echo "
 										<section>
-											<input type='checkbox' value='1' name='$option' id='$option'$checked> $title
+											<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> {$title}
 										</section>";
 									}
 								echo '
@@ -467,9 +467,9 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 										
 										$myoptionalmodules_sharelinks_text = sanitize_text_field ( get_option ( 'myoptionalmodules_sharelinks_text' ) );
 										
-										echo '
+										echo "
 										<label>Share text &mdash; <small><em>ex: share via:</em></small></label>
-										<input type="text" value="' . $myoptionalmodules_sharelinks_text . '" id="myoptionalmodules_sharelinks_text" name="myoptionalmodules_sharelinks_text" />';
+										<input type='text' value='{$myoptionalmodules_sharelinks_text}' id='myoptionalmodules_sharelinks_text' name='myoptionalmodules_sharelinks_text' />";
 										
 										foreach ( $options_shares as &$option ) {
 											$title = str_replace ( $options_shares , $keys_shares , $option );
@@ -479,7 +479,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 												$checked = ' checked';
 											echo "
 											<section>
-												<input type='checkbox' value='1' name='$option' id='$option'$checked> $title
+												<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> {$title}
 											</section>";
 										}
 										echo '
@@ -498,7 +498,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 											$checked = ' checked';
 										echo "
 										<section>
-											<input type='checkbox' value='1' name='$option' id='$option'$checked> $title
+											<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> {$title}
 										</section>";
 									}
 								echo '
@@ -515,12 +515,13 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 											$checked = ' checked';
 											echo "
 											<section>
-												<input type='checkbox' value='1' name='$option' id='$option'$checked> $title
+												<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> {$title}
 											</section>";
 									}
 									echo '
 									</div>
 								</div>
+								
 								<div class="right-section">
 									<div>
 										<strong>Theme Extras</strong>
@@ -540,11 +541,11 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 											$showmeposts = get_posts ( array ( 'posts_per_page' => -1 ) );
 											foreach ( $showmeposts as $postsshown ) {
 												echo "
-												<option name='myoptionalmodules_frontpage' id='mompaf_'$postsshown->ID' value='$postsshown->ID'";
+												<option name='myoptionalmodules_frontpage' id='mompaf_{$postsshown->ID}' value='{$postsshown->ID}'";
 												$postID   = $postsshown->ID;
 												$selected = selected ( $myoptionalmodules_frontpage , $postID );
 												echo "
-												>Front page: '$postsshown->post_title'</option>";
+												>Front page: '{$postsshown->post_title}'</option>";
 											}
 										echo '
 										</select>';
@@ -579,42 +580,43 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 										</section>
 										<section>
 											<label>Miniloop: amount</label>
-											<input type='text' id='myoptionalmodules_miniloopamount' name='myoptionalmodules_miniloopamount' value='$miniloop_amount' />
+											<input type='text' id='myoptionalmodules_miniloopamount' name='myoptionalmodules_miniloopamount' value='{$miniloop_amount}' />
 										</section>
 										<section>
 											<label>Google Tracking ID</label>
-											<input type='text' id='myoptionalmodules_google' name='myoptionalmodules_google' value='$google' />
+											<input type='text' id='myoptionalmodules_google' name='myoptionalmodules_google' value='{$google}' />
 										</section>
 										<section>
 											<label>Google Verification Content</label>
-											<input type='text' id='myoptionalmodules_verification' name='myoptionalmodules_verification' value='$verification' />
+											<input type='text' id='myoptionalmodules_verification' name='myoptionalmodules_verification' value='{$verification}' />
 										</section>
 										<section>
 											<label>Previous link class</label>
-											<input type='text' id='myoptionalmodules_previouslinkclass' name='myoptionalmodules_previouslinkclass' value='$previousclass' />
+											<input type='text' id='myoptionalmodules_previouslinkclass' name='myoptionalmodules_previouslinkclass' value='{$previousclass}' />
 										</section>
 										<section>
 											<label>Next link class</label>
-											<input type='text' id='myoptionalmodules_nextlinkclass' name='myoptionalmodules_nextlinkclass' value='$nextclass' />
+											<input type='text' id='myoptionalmodules_nextlinkclass' name='myoptionalmodules_nextlinkclass' value='{$nextclass}' />
 										</section>
 										<section>
 											<label>Read more... value</label>
-											<input type='text' id='myoptionalmodules_readmore' name='myoptionalmodules_readmore' value='$readmore' />
+											<input type='text' id='myoptionalmodules_readmore' name='myoptionalmodules_readmore' value='{$readmore}' />
 										</section>
 										<section>
 											<label>yoursite.tld/<em>?random</em> keyword</label>
-											<input type='text' id='myoptionalmodules_randompost' name='myoptionalmodules_randompost' value='$randompost' />
+											<input type='text' id='myoptionalmodules_randompost' name='myoptionalmodules_randompost' value='{$randompost}' />
 										</section>
 										<section>
 											<label>Random::site::titles</label>
-											<textarea id='myoptionalmodules_randomtitles' name='myoptionalmodules_randomtitles'>$randomtitles</textarea>
+											<textarea id='myoptionalmodules_randomtitles' name='myoptionalmodules_randomtitles'>{$randomtitles}</textarea>
 										</section>
 										<section>
 											<label>Random::site::description</label>
-											<textarea id='myoptionalmodules_randomdescriptions' name='myoptionalmodules_randomdescriptions'>$randomdescriptions</textarea>
+											<textarea id='myoptionalmodules_randomdescriptions' name='myoptionalmodules_randomdescriptions'>{$randomdescriptions}</textarea>
 										</section>
 									</div>
 								</div>
+								
 								<div class='clear'>";
 
 									if ( get_option ( 'myoptionalmodules_exclude' ) ) {
@@ -690,8 +692,8 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 													$option = sanitize_text_field ( get_option ( $exc ) );
 													echo "
 													<section>
-														<label for='$exc'>$title</label>
-														<input type='text' id='$exc' name='$exc' value='$option'>
+														<label for='{$exc}'>{$title}</label>
+														<input type='text' id='{$exc}' name='{$exc}' value='{$option}'>
 													</section>";
 												}
 												$title = $option = null;
@@ -738,7 +740,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 												foreach ( $showmecats as $catsshown ) {
 													++$catcount;
 													echo $catsshown->cat_name;
-													echo "<code>$catsshown->cat_ID</code> &nbsp;&nbsp;";
+													echo "<code>{$catsshown->cat_ID}</code> &nbsp;&nbsp;";
 												}
 											echo '
 											</p>';
@@ -749,8 +751,8 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 													$option = sanitize_text_field ( get_option ( $exc ) );
 													echo "
 													<section>
-														<label for='$exc'>$title</label>
-														<input type='text' id='$exc' name='$exc' value='$option'>
+														<label for='{$exc}'>{$title}</label>
+														<input type='text' id='{$exc}' name='{$exc}' value='{$option}'>
 													</section>";
 												}
 												$title = $option = null;
@@ -802,7 +804,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 												<p>';
 													foreach ( $showmetags as $tagsshown ) {
 														echo $tagsshown->cat_name;
-														echo "<code>$tagsshown->cat_ID</code> &nbsp;&nbsp;";
+														echo "<code>{$tagsshown->cat_ID}</code> &nbsp;&nbsp;";
 													}
 												echo '
 												</p>';
@@ -811,8 +813,8 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 													$option = sanitize_text_field ( get_option ( $exc ) );
 													echo "
 													<section>
-														<label for='$exc'>$title</label>
-														<input type='text' id='$exc' name='$exc' value='$option'>
+														<label for='{$exc}'>{$title}</label>
+														<input type='text' id='{$exc}' name='{$exc}' value='{$option}'>
 													</section>";
 												}
 												$title = $option = null;
@@ -841,17 +843,17 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 										foreach ( $keys_post_formats as &$keys ) {
 											$title = str_replace ( $keys_post_formats , $fields_post_formats , $keys );
 											echo "
-											<select name='$keys' id='$keys'>
-												<option value=''>$title (none)</option>
-												<option value='post-format-aside'";   selected ( get_option ( $keys ) , 'post-format-aside'   ); echo ">$title (aside)</option>
-												<option value='post-format-gallery'"; selected ( get_option ( $keys ) , 'post-format-gallery' ); echo ">$title (gallery)</option>
-												<option value='post-format-link'";    selected ( get_option ( $keys ) , 'post-format-link'    ); echo ">$title (link)</option>
-												<option value='post-format-image'";   selected ( get_option ( $keys ) , 'post-format-image'   ); echo ">$title (image)</option>
-												<option value='post-format-quote'";   selected ( get_option ( $keys ) , 'post-format-quote'   ); echo ">$title (quote)</option>
-												<option value='post-format-status'";  selected ( get_option ( $keys ) , 'post-format-status'  ); echo ">$title (status)</option>
-												<option value='post-format-video'";   selected ( get_option ( $keys ) , 'post-format-video'   ); echo ">$title (video)</option>
-												<option value='post-format-audio'";   selected ( get_option ( $keys ) , 'post-format-audio'   ); echo ">$title (audio)</option>
-												<option value='post-format-chat'";    selected ( get_option ( $keys ) , 'post-format-chat'    ); echo ">$title (chat)</option>
+											<select name='{$keys}' id='$keys'>
+												<option value=''>{$title} (none)</option>
+												<option value='post-format-aside'";   selected ( get_option ( $keys ) , 'post-format-aside'   ); echo ">{$title} (aside)</option>
+												<option value='post-format-gallery'"; selected ( get_option ( $keys ) , 'post-format-gallery' ); echo ">{$title} (gallery)</option>
+												<option value='post-format-link'";    selected ( get_option ( $keys ) , 'post-format-link'    ); echo ">{$title} (link)</option>
+												<option value='post-format-image'";   selected ( get_option ( $keys ) , 'post-format-image'   ); echo ">{$title} (image)</option>
+												<option value='post-format-quote'";   selected ( get_option ( $keys ) , 'post-format-quote'   ); echo ">{$title} (quote)</option>
+												<option value='post-format-status'";  selected ( get_option ( $keys ) , 'post-format-status'  ); echo ">{$title} (status)</option>
+												<option value='post-format-video'";   selected ( get_option ( $keys ) , 'post-format-video'   ); echo ">{$title} (video)</option>
+												<option value='post-format-audio'";   selected ( get_option ( $keys ) , 'post-format-audio'   ); echo ">{$title} (audio)</option>
+												<option value='post-format-chat'";    selected ( get_option ( $keys ) , 'post-format-chat'    ); echo ">{$title} (chat)</option>
 											</select>";
 										}
 										$title = null;

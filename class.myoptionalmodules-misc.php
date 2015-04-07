@@ -88,9 +88,9 @@ class myoptionalmodules_misc {
 		global $myoptionalmodules_google;
 
 		if( is_single() || is_page() )
-			$url = get_permalink();
+			$url = esc_js ( get_permalink() );
 		else
-			$url = esc_url ( home_url ('/' ) );
+			$url = esc_js ( esc_url ( home_url ('/' ) ) );
 
 		echo "
 		<script>
@@ -98,7 +98,7 @@ class myoptionalmodules_misc {
 			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-			ga('create', '$myoptionalmodules_google', '$url');
+			ga('create', '{$myoptionalmodules_google}', '{$url}');
 			ga('send', 'pageview');
 		</script>\n\n";
 
@@ -136,30 +136,30 @@ class myoptionalmodules_misc {
 	function previous_link_class() {
 		
 		global $myoptionalmodules_previouslinkclass;
-		return 'class="' . $myoptionalmodules_previouslinkclass . '"';
+		return "class='{$myoptionalmodules_previouslinkclass}'";
 
 	}
 
 	function previous_link( $output ) {
 
 		global $myoptionalmodules_previouslinkclass;
-		$class = 'class="' . $myoptionalmodules_previouslinkclass . '"';
-		return str_replace ( '<a href=' , '<a '.$class.' href=' , $output);
+		$class = "class='{$myoptionalmodules_previouslinkclass}'";
+		return str_replace ( '<a href=' , "<a {$class} href=" , $output);
 
 	}
 
 	function next_link_class() {
 
 		global $myoptionalmodules_nextlinkclass;
-		return 'class="' . $myoptionalmodules_nextlinkclass . '"';
+		return "class='{$myoptionalmodules_nextlinkclass}'";
 
 	}
 
 	function next_link( $output ) {
 
 		global $myoptionalmodules_nextlinkclass;
-		$class = 'class="' . $myoptionalmodules_nextlinkclass . '"';
-		return str_replace ( '<a href=' , '<a '.$class.' href=' , $output);	
+		$class = "class='{$myoptionalmodules_nextlinkclass}'";
+		return str_replace ( '<a href=' , "<a {$class} href=" , $output);	
 
 	}
 
@@ -167,10 +167,11 @@ class myoptionalmodules_misc {
 	function read_more( $more ) {
 
 		global $myoptionalmodules_readmore;
+		$get_link = esc_url ( get_permalink() );
 		if( '%blank%' == $myoptionalmodules_readmore )
 			return '';
 		else
-			return '<a href="' . get_permalink() . '">' . $myoptionalmodules_readmore . '</a>';
+			return "<a href='{$get_link}'>{$myoptionalmodules_readmore}</a>";
 
 	}
 

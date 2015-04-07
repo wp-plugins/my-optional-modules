@@ -1,9 +1,8 @@
 <?php 
-
 /**
  * FUNCTION my_optional_modules_exclude_categories()
  *
- * File last update: 9.1.2
+ * File last update: 9.1.8
  *
  * Returns a list of categories that follow the 'exclusion' rules (if any).
  * This is a template tag:
@@ -21,10 +20,7 @@ function my_optional_modules_exclude_categories() {
 	global $myoptionalmodules_exclude, $myoptionalmodules_plugin , $myoptionalmodules_exclude_categorieslevel0categories , $myoptionalmodules_exclude_categorieslevel1categories , $myoptionalmodules_exclude_categorieslevel2categories , $myoptionalmodules_exclude_categorieslevel7categories;
 	if ( $myoptionalmodules_exclude ) {
 
-		$MOM_Exclude_level0Categories  = 0;
-		$MOM_Exclude_level1Categories  = 0;
-		$MOM_Exclude_level2Categories  = 0;
-		$MOM_Exclude_level7Categories  = 0;
+		$MOM_Exclude_level0Categories  = $MOM_Exclude_level1Categories  = $MOM_Exclude_level2Categories  = $MOM_Exclude_level7Categories  = 0;
 		$MOM_Exclude_level0Categories  = $myoptionalmodules_exclude_categorieslevel0categories;
 		$MOM_Exclude_level1Categories  = $myoptionalmodules_exclude_categorieslevel1categories;
 		$MOM_Exclude_level2Categories  = $myoptionalmodules_exclude_categorieslevel2categories;
@@ -33,16 +29,16 @@ function my_optional_modules_exclude_categories() {
 		if ( 0 == $myoptionalmodules_plugin->user_level ) {
 			$loggedOutCats = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
 		}
-		if ( 1 == $myoptionalmodules_plugin->user_level ) {
+		elseif ( 1 == $myoptionalmodules_plugin->user_level ) {
 			$loggedOutCats = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
 		}
-		if ( 2 == $myoptionalmodules_plugin->user_level ) {
+		elseif ( 2 == $myoptionalmodules_plugin->user_level ) {
 			$loggedOutCats = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
 		}
-		if ( 3 == $myoptionalmodules_plugin->user_level ) {
+		elseif ( 3 == $myoptionalmodules_plugin->user_level ) {
 			$loggedOutCats = $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
 		}
-		if ( 4 == $myoptionalmodules_plugin->user_level ) {
+		elseif ( 4 == $myoptionalmodules_plugin->user_level ) {
 			$loggedOutCats = $MOM_Exclude_level7Categories;
 		} else {
 			$loggedOutCats = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;				
@@ -71,13 +67,6 @@ function my_optional_modules_exclude_categories() {
 
 	}
 
-	$c1                           = null;
-	$C1                           = null;
-	$c11                          = null;
-	$c11array                     = null;
-	$category_ids                 = null;
-	$cat                          = null;
-	$link                         = null;
-	$loggedOutCats                = null;
+	$c1 = $C1 = $c11 = $c11array = $category_ids = $cat = $link = $loggedOutCats = null;
 
 }

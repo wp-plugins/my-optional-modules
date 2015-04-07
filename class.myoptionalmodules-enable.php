@@ -30,7 +30,7 @@ class myoptionalmodules_enable {
 		}
 
 		if( $myoptionalmodules_horizontalgalleries ) {
-			remove_shortcode ( 'gallery' , 'gallery_shortcode' );
+			remove_shortcode ( 'gallery' );
 			add_action ( 'init' , array ( $this , 'horizontal_gallery_shortcode' ) , 99 );
 			add_filter ( 'use_default_gallery_style' , '__return_false' );
 		}
@@ -149,15 +149,15 @@ class myoptionalmodules_enable {
 		$video_h   = sanitize_text_field( $video_h );
 		$url       = sanitize_text_field( $url );
 		
-		if( $title )     echo "\n<meta property='og:title' content='$title'>";
-		if( $site )      echo "\n<meta property='og:site_name' content='$site'>";
-		if( $excerpt )   echo "\n<meta property='og:description' content='$excerpt'>";
-		if( $type )      echo "\n<meta property='og:type' content='$type'>";
-		if( $thumbnail ) echo "\n<meta property='og:image' content='$thumbnail'>";
-		if( $image )     echo "\n<meta property='og:$og_type' content='$image'>";
-		if( $video_w )   echo "\n<meta property='og:video:width' content='$video_w'>";
-		if( $video_h )   echo "\n<meta property='og:video:height' content='$video_h'>";
-		if( $url )       echo "\n<meta property='og:url' content='$url'>";
+		if( $title )     echo "\n<meta property='og:title' content='{$title}'>";
+		if( $site )      echo "\n<meta property='og:site_name' content='{$site}'>";
+		if( $excerpt )   echo "\n<meta property='og:description' content='{$excerpt}'>";
+		if( $type )      echo "\n<meta property='og:type' content='{$type}'>";
+		if( $thumbnail ) echo "\n<meta property='og:image' content='{$thumbnail}'>";
+		if( $image )     echo "\n<meta property='og:$og_type' content='{$image}'>";
+		if( $video_w )   echo "\n<meta property='og:video:width' content='{$video_w}'>";
+		if( $video_h )   echo "\n<meta property='og:video:height' content='{$video_h}'>";
+		if( $url )       echo "\n<meta property='og:url' content='{$url}'>";
 
 		$id        = null;
 		$title     = null;
@@ -183,8 +183,8 @@ class myoptionalmodules_enable {
 				$card        = sanitize_text_field ( $card );
 				$attribution = sanitize_text_field ( $attribution );
 
-				if( $card )        echo "\n<meta name='twitter:card' content='$card'>";
-				if( $attribution ) echo "\n<meta name='twitter:creator' content='@$attribution'>";
+				if( $card )        echo "\n<meta name='twitter:card' content='{$card}'>";
+				if( $attribution ) echo "\n<meta name='twitter:creator' content='@{$attribution}'>";
 
 			}
 
@@ -339,7 +339,7 @@ class myoptionalmodules_enable {
 			}
 			$div_length = ( $items * 150 ) . 'px';
 			$size_class = sanitize_html_class( $size );
-			$gallery_div = "<div id='$selector' class='horizontalGallery galleryid-{$id} gallery-columns-{$columns} gallery-size-{$size_class}'>
+		$gallery_div = "<div id='mom-hgallery-$selector' data-gallery-id='{$id}' class='horizontalGallery galleryid-{$id} gallery-columns-{$columns} gallery-size-{$size_class}'>
 				<div style=\"width:" . $div_length . "\" class=\"innerGallery\">";
 			/**
 			 * Filter the default gallery shortcode CSS styles.
@@ -379,7 +379,7 @@ class myoptionalmodules_enable {
 				}
 			}
 			$output .= "
-				</div></div>\n";
+				</div></div><div id='mom_hgallery_catch_{$id}' class='mom-hgallery-catch'></div>\n";
 			return $output;
 		}
 	}
@@ -430,43 +430,45 @@ class myoptionalmodules_enable {
 
 		$excerpt     = htmlentities ( str_replace ( ' ' , '%20' , $post->post_excerpt ) ); 
 		$title       = str_replace ( ' ' , '%20' , get_the_title ( $post->ID ) );
-
-		$output  = '<span class="mom_shareLinks">';
+		$url         = esc_url ( get_the_permalink() );
 		
-		if( $myoptionalmodules_sharelinks_text )
-			$output .= esc_html ( $myoptionalmodules_sharelinks_text );
-
+		$output  = '<div class="mom_shareLinks">';
+		
+		if( $myoptionalmodules_sharelinks_text ) {
+			$myoptionalmodules_sharelinks_text = esc_html ( $myoptionalmodules_sharelinks_text );
+		$output .= "<span>{$myoptionalmodules_sharelinks_text}</span>";
+		}
 		if( $myoptionalmodules_sharelinks_reddit && $myoptionalmodules_fontawesome ) {
-			$output .= '<a class="reddit fa fa-reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '"></a>';
+			$output .= "<a class='reddit fa fa-reddit' href='//www.reddit.com/submit?url={$url}'></a>";
 		} elseif( $myoptionalmodules_sharelinks_reddit && !$myoptionalmodules_fontawesome ) {
-			$output .= '<a class="reddit" href="//www.reddit.com/submit?url=' . get_the_permalink() . '">reddit</a>';
+			$output .= "<a class='reddit' href='//www.reddit.com/submit?url={$url}'>reddit</a>";
 		}
 
 		if( $myoptionalmodules_sharelinks_google && $myoptionalmodules_fontawesome  ) {
-			$output .= '<a class="google fa fa-google-plus" href="https://plus.google.com/share?url=' . get_the_permalink() . '"></a>';
+			$output .= "<a class='google fa fa-google-plus' href='https://plus.google.com/share?url={$url}'></a>";
 		} elseif( $myoptionalmodules_sharelinks_google && !$myoptionalmodules_fontawesome  ) {
-			$output .= '<a class="google" href="https://plus.google.com/share?url=' . get_the_permalink() . '">google+</a>';
+			$output .= "<a class='google' href='https://plus.google.com/share?url={$url}'>google+</a>";
 		}
 
 		if( $myoptionalmodules_sharelinks_twitter && $myoptionalmodules_fontawesome  ) {
-			$output .= '<a class="twitter fa fa-twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '"></a>';
+			$output .= "<a class='twitter fa fa-twitter' href='//twitter.com/home?status=Reading:%20{$url}'></a>";
 		} elseif( $myoptionalmodules_sharelinks_twitter && !$myoptionalmodules_fontawesome  ) {
-			$output .= '<a class="twitter" href="//twitter.com/home?status=Reading:%20' . get_the_permalink() . '">twitter</a>';
+			$output .= "<a class='twitter' href='//twitter.com/home?status=Reading:%20{$url}'>twitter</a>";
 		}
 
 		if( $myoptionalmodules_sharelinks_facebook && $myoptionalmodules_fontawesome  ) {
-			$output .= '<a class="facebook fa fa-facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '"></a>';
+			$output .= "<a class='facebook fa fa-facebook' href='//www.facebook.com/sharer.php?u={$url}&amp;t={$title}'></a>";
 		} elseif( $myoptionalmodules_sharelinks_facebook && !$myoptionalmodules_fontawesome  ) {
-			$output .= '<a class="facebook" href="//www.facebook.com/sharer.php?u=' . get_the_permalink() . '&amp;t=' . $title . '">facebook</a>';
+			$output .= "<a class='facebook' href='//www.facebook.com/sharer.php?u={$url}&amp;t={$title}'>facebook</a>";
 		}
 
 		if( $myoptionalmodules_sharelinks_email && $myoptionalmodules_fontawesome  ) {
-			$output .= '<a class="email fa fa-envelope" href="mailto:?subject=' . $title . '&amp;body=%20' . $excerpt . '[ ' . get_the_permalink() . ' ]"></a>';
+			$output .= "<a class='email fa fa-envelope' href='mailto:?subject={$title}&amp;body=%20{$excerpt}[{$url}]'></a>";
 		} elseif( $myoptionalmodules_sharelinks_email && !$myoptionalmodules_fontawesome  ) {
-			$output .= '<a class="email" href="mailto:?subject=' . $title . '&amp;body=' . $excerpt . '%20[ ' . get_the_permalink() . ' ]">email</a>';
+			$output .= "<a class='email' href='mailto:?subject={$title}&amp;body={$excerpt}%20[{$url}]'>email</a>";
 		}
 
-		$output .='</span>';
+		$output .='</div>';
 
 		if( is_single() && $myoptionalmodules_shareslinks_top ) {
 			return $output . $content;

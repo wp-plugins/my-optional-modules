@@ -1,5 +1,4 @@
 <?php 
-
 /*
  * FUNCTION External Feattured Images
  *

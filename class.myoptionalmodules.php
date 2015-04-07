@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules()
  *
- * File last update: 9.1.6
+ * File last update: 9.1.8
  *
  * Actions REQUIRED by the plugin (unless otherwise noted).
  * Regardless of settings, these actions will always run.
@@ -24,19 +24,16 @@ class myoptionalmodules {
 	
 	function __construct() {
 
+		global $myoptionalmodules_plugincss;
+
 		add_action ( 'wp', array( $this, 'scripts' ) );
 		add_action ( 'admin_enqueue_scripts' , array ( $this , 'font_awesome' ) );
-
-		global $myoptionalmodules_plugincss;
-		
-		
+		add_action ( 'after_setup_theme' , array ( $this , 'post_formats' ) );
+	
 		if( 1 == $myoptionalmodules_plugincss ) {
 		} else {
 			add_action  ( 'wp_print_styles' , array ( $this , 'plugin_stylesheets' ) );
 		}
-		
-
-		add_action ( 'after_setup_theme' , array ( $this , 'post_formats' ) );
 
 	}
 
@@ -59,26 +56,21 @@ class myoptionalmodules {
 
 	// Enqueue Font Awesome for ADMIN
 	function font_awesome() {
-
 		$font_awesome_css = str_replace ( array ( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' ) );
 		wp_register_style ( 'font_awesome' , $font_awesome_css );
 		wp_enqueue_style  ( 'font_awesome' );
-
 	}
 
 	// Enqueue plugin CSS
 	function plugin_stylesheets() {
-
 		global $myoptionalmodules_plugin_version;
 		$myStyleFile = str_replace ( array ( 'https:', 'http:' ) , '' , esc_url( WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules' . $myoptionalmodules_plugin_version . '.css' ) );
 		wp_register_style ( 'my_optional_modules' , $myStyleFile );
 		wp_enqueue_style  ( 'my_optional_modules' );
-
 	}
 
 	// Add ALL POST FORMATS
 	function post_formats() {
-
 		add_theme_support (
 			'post-formats',
 			array (
@@ -93,12 +85,10 @@ class myoptionalmodules {
 				'chat'
 			)
 		);
-
 	}
 
 	// GET USER LEVELs for use throughout
 	function userlevel() {
-
 		if( is_user_logged_in() ) {
 			if( current_user_can ( 'edit_dashboard' ) )         $this->user_level = 4; // Admin
 			if( current_user_can ( 'delete_published_posts' ) ) $this->user_level = 3; // Editor
@@ -107,12 +97,10 @@ class myoptionalmodules {
 		} else {
 			$this->user_level = 0;
 		}
-
 	}
 
 	// Validate an IP address and check against DNSBlacklists (if enabled)
 	function validate_ip_address() {
-
 		global $myoptionalmodules_dnsbl;
 		
 		if( $myoptionalmodules_dnsbl ) {
@@ -179,7 +167,6 @@ class myoptionalmodules {
 			}
 
 		}
-
 	}
 }
 

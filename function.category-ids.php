@@ -1,5 +1,4 @@
 <?php 
-
 /**
  * FUNCTION my_optional_modules_get_category_ids()
  *
