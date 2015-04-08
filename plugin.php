@@ -1,11 +1,11 @@
 <?php 
 /*
 Plugin Name: My Optional Modules
-Plugin URI: //iamnotu.com/my-optional-modules/
+Plugin URI: 
 Description: Optional modules and additions for Wordpress.
-Version: 9.1.8
+Version: 9.1.9.1
 Author: Matthew Trevino
-Author URI: //iamnotu.com
+Author URI: 
 
 LICENSE
 This program is free software; you can redistribute it and/or modify
@@ -59,7 +59,7 @@ $myoptionalmodules_exclude_categoriescategoriesfri     = $myoptionalmodules_excl
 $myoptionalmodules_exclude_usersusersmon               = $myoptionalmodules_exclude_usersuserstue              = $myoptionalmodules_exclude_usersuserswed = 
 $myoptionalmodules_exclude_usersusersthu               = $myoptionalmodules_exclude_usersusersfri              = $myoptionalmodules_exclude_usersuserssat =
 $myoptionalmodules_plugincss                           = $myoptionalmodules_lazyload                           = $myoptionalmodules_verification = 
-$myoptionalmodules_sharelinks_text                     = null;
+$myoptionalmodules_sharelinks_text                     = $myoptionalmodules_favicon                            = null;
 
 $myoptionalmodules_getallpluginoptions  = wp_load_alloptions();
 foreach( $myoptionalmodules_getallpluginoptions as $name => $value ) {
@@ -158,6 +158,7 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ) {
 	 * - Random::site::titles
 	 * - Random::site:description
 	 */
+	if( $name == 'myoptionalmodules_favicon' && $value )                             $myoptionalmodules_favicon                              = $value;
 	if( $name == 'myoptionalmodules_frontpage' && 'off' != $value )                  $myoptionalmodules_frontpage                            = $value;
 	if( $name == 'myoptionalmodules_miniloopmeta' && $value )                        $myoptionalmodules_miniloopmeta                         = $value;
 	if( $name == 'myoptionalmodules_miniloopstyle' && $value )                       $myoptionalmodules_miniloopstyle                        = strtolower( $value );

@@ -264,6 +264,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						'myoptionalmodules_randomdescriptions' ,
 						'myoptionalmodules_frontpage' ,
 						'myoptionalmodules_miniloopmeta' ,
+						'myoptionalmodules_favicon' ,
 						'myoptionalmodules_miniloopstyle' ,
 						'myoptionalmodules_miniloopamount'
 					);
@@ -417,11 +418,6 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 							<div class="right-section">
 								<div>
 									<strong>My Optional Modules</strong>
-									<section>
-									<p>Need help? <a href="https://wordpress.org/support/plugin/my-optional-modules">Support forum</a></p>
-									<p>Need information? <a href="http://iamnotu.com/my-optional-modules/">Documentation</a></p>
-									<p>Give it a rating? <a href="https://wordpress.org/support/view/plugin-reviews/my-optional-modules">Review</a></p>
-									</section>
 								</div>
 							</div>
 						</div>
@@ -559,9 +555,14 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 										$randomtitles       = sanitize_text_field ( get_option( 'myoptionalmodules_randomtitles' ) );
 										$randomdescriptions = sanitize_text_field ( get_option( 'myoptionalmodules_randomdescriptions' ) );
 										$miniloop_meta      = sanitize_text_field ( get_option( 'myoptionalmodules_miniloopmeta' ) );
+										$favicon            = sanitize_text_field ( esc_url ( get_option ( 'myoptionalmodules_favicon' ) ) );
 										$miniloop_style     = sanitize_text_field ( get_option( 'myoptionalmodules_miniloopstyle' ) );
 										$miniloop_amount    = sanitize_text_field ( get_option( 'myoptionalmodules_miniloopamount' ) );										
 										echo "
+										<section>
+											<label>Favicon URL</label>
+											<input type='text' id='myoptionalmodules_favicon' name='myoptionalmodules_favicon' value='{$favicon}' />
+										</section>
 										<section>
 											<label>Miniloop: meta</label>
 											<input type='text' id='myoptionalmodules_miniloopmeta' name='myoptionalmodules_miniloopmeta' value='$miniloop_meta' />

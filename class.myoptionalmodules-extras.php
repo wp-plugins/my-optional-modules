@@ -18,7 +18,11 @@ class myoptionalmodules_extras {
 
 	function __construct() {
 
-		global $myoptionalmodules_featureimagewidth , $myoptionalmodules_javascripttofooter , $myoptionalmodules_exclude;
+		global $myoptionalmodules_featureimagewidth , $myoptionalmodules_javascripttofooter , $myoptionalmodules_exclude , $myoptionalmodules_favicon;
+		if ( $myoptionalmodules_favicon ) {
+			add_action ( 'wp_head' , array ( $this , 'favicon' ) );
+		}
+		
 		if( $myoptionalmodules_featureimagewidth ) {
 			add_action ( 'wp_head' , array ( $this , 'thumbnails' ) );
 		}
@@ -35,6 +39,15 @@ class myoptionalmodules_extras {
 
 	}
 
+	function favicon() {
+		global $myoptionalmodules_favicon;
+		if ( $myoptionalmodules_favicon ) {
+			$url    = esc_url ( $myoptionalmodules_favicon );
+			$output = "<link rel='shortcut icon' href='{$url}' />\n";
+			echo $output;
+		}
+	}
+	
 	// Full-length feature images
 	function thumbnails() {
 

@@ -366,9 +366,9 @@ class myoptionalmodules_shortcodes{
 								$output .= "<strong>{$rating_nom}</strong>";
 								$output .= "<hr style='top:0;left:5px;position:absolute;z-index:0;width:{$percent}%;background-color:rgba(0,0,0,.1);overflow:hidden;height:1px;' />";
 								if ( $description ) {
-									foreach ( $description as $description ) {
-										$description = esc_html ( $description );
-										$output .= "<span>{$description}</span>";
+									foreach ( $description as $des ) {
+										$des = esc_html ( $des );
+										$output .= "<span>{$des}</span>";
 									}
 								}
 								$rating_tot = $rating_tot + $rating_nom;
