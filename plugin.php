@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: 
 Description: Optional modules and additions for Wordpress.
-Version: 9.1.9.1
+Version: 10
 Author: Matthew Trevino
 Author URI: 
 
@@ -26,7 +26,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  * Initialize all functionality for this plugin
  */
 
-$myoptionalmodules_plugin_version       = '9';
+$myoptionalmodules_plugin_version       = '10';
 
 $myoptionalmodules_metatags                            = $myoptionalmodules_horizontalgalleries                = $myoptionalmodules_sharelinks = 
 $myoptionalmodules_rsslinkbacks                        = $myoptionalmodules_404s                               = $myoptionalmodules_fontawesome = 
@@ -260,11 +260,12 @@ if( current_user_can( 'edit_dashboard' ) && is_admin() ){
 
 			if( 'settings_page_mommaincontrol' != $hook ) return;
 
-			$font_awesome_css = str_replace ( array ( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/' . plugin_basename( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' ) );
-			$mom_admin_css    = str_replace ( array ( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/' . plugin_basename( dirname ( __FILE__ ) ) . '/includes/adminstyle/css' . $myoptionalmodules_plugin_version . '.css' ) );
+			$font_awesome_css = str_replace ( array ( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' ) );
+			$mom_admin_css    = str_replace ( array ( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/adminstyle/css' . $myoptionalmodules_plugin_version . '.css' ) );
+			$mom_admin_script = str_replace ( array ( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/adminstyle/script.js' ) );
 			wp_enqueue_style ( 'mom_admin_css' , $mom_admin_css );
 			wp_enqueue_style ( 'font_awesome' ,  $font_awesome_css );
-
+			wp_enqueue_script ( 'mom_admin_script' , $mom_admin_script , array ( 'jquery' ) );
 		}
 
 	}

@@ -1,0 +1,139 @@
+/* My Optional Modules Stylesheet 
+	(since version 4.0.5) */
+	
+	#myoptionalmodules {
+		background-color: #fff;
+		border: 1px solid rgba(0,0,0,.1);
+		display: block;
+		margin: 5px auto;
+		padding: 10px;
+		width: 98%;
+	}
+	#myoptionalmodules *:after,
+	#myoptionalmodules *:before,
+	#myoptionalmodules * {
+		box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;	
+	}
+	#myoptionalmodules:after {
+		clear: both; 
+		content: ""; 
+		display: table;
+	}	
+		#myoptionalmodules h2 {
+			font-size: 2rem;
+			font-weight: 400;
+			display: block;
+			margin: 20px 0 30px;
+		}
+		.control-panel {
+			display: block;
+			font-size: 1rem;
+			margin: 10px 0;
+		}
+			.control-panel a {
+				border: 1px solid rgba(0,0,0,.1);
+				border-radius: 2px;
+				cursor: pointer;
+				padding: 10px 5px 5px;
+				text-align: center;
+			}
+				.control-panel a span {
+					display: block; 
+					font-size: .8rem;
+					margin: 5px;
+				}
+		#myoptionalmodules .enabled {
+			display: block;
+			border: 1px solid rgba(0,0,0,.1);
+			padding: 10px;
+		}
+		#myoptionalmodules .disabled {
+			display: none; 
+			visibility: hidden;
+		}
+			#myoptionalmodules .enabled .clutter {
+				padding: 5px 7px;
+			}
+				#myoptionalmodules .enabled .clutter i {
+					border: 1px solid rgba(0,0,0,.1);
+					margin: 5px;
+					padding: 5px;
+				}
+				#myoptionalmodules .enabled .clutter label {
+					border-left: 5px solid #fff;
+				}				
+				#myoptionalmodules .enabled .clutter label:hover {
+					border-left: 5px solid rgba(0,0,0,.1);
+				}
+				#myoptionalmodules .enabled input[type='checkbox'] {
+					clear: both;
+					padding: 5px;
+				}
+				#myoptionalmodules .enabled select,
+				#myoptionalmodules .enabled input[type='text']{
+					max-width: 100%;
+					padding: 5px;
+				}				
+				#myoptionalmodules .enabled section {
+					clear: both;
+					display: block; 
+					overflow: auto;
+					padding: 5px 0;
+				}
+				#myoptionalmodules .enabled section label {
+					float: left;
+					padding: 5px;
+				}
+				#myoptionalmodules .enabled section select,
+				#myoptionalmodules .enabled section textarea,
+				#myoptionalmodules .enabled section input[type='text'] {
+					float: right;
+				}
+		#myoptionalmodules .clear {
+			clear: both; 
+			display: block; 
+			padding: 5px;
+		}
+	#myoptionalmodules .fullwidth {
+		background-color: rgba(47,51,53,.7);
+		border: 1px solid rgba(47,51,53,.9);
+		color: #fff;
+		clear: both;
+		float: none;
+		margin: 5px;
+		padding: 30px 5px 5px;
+		position: relative;
+		width: 100%;
+	}
+		#myoptionalmodules .fullwidth section {
+			clear: both; 
+			display: block;
+			padding: 5px;
+			position: relative;
+		}
+		#myoptionalmodules .fullwidth section section {
+			width: 48%;
+			float: left;
+			clear: none;
+		}
+		#myoptionalmodules .fullwidth section label {
+			background-color: rgba(0,0,0,.5);
+			border-right: 1px solid rgba(0,0,0,.5);
+			left: 5px;
+			padding: 8px;
+			position: absolute; 
+			width: 140px;
+		}
+		#myoptionalmodules .fullwidth input[type="text"] {
+			display: block;
+			float: none!important;
+			padding: 5px 5px 5px 145px ;
+			width: 100%!important; 
+		}
+		#myoptionalmodules .fullwidth select {
+			width: 98%;
+			margin: 5px 10px;
+		}
+	
