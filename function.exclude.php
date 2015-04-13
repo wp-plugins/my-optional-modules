@@ -2,7 +2,7 @@
 /**
  * FUNCTION(ality) Exclude Posts
  *
- * File last update: 9.1.5
+ * File last update: 10.0.1
  *
  * Alter the query to remove posts based on many parameters
  */ 
@@ -19,97 +19,51 @@ $date_day = strtolower( date( 'D' ) );
  * Set them (initially) to nothing
  * Then, grab the value from the database and reset them
  */
-$c1	     = array ( '0' );
-$t1	     = array ( '0' );
-$rss_day = array ( '0' );
-$u1      = array ( '0' );
-$t11     = 0;
-$c_1     = 0;
-$u_1     = 0;
-$loggedOutUsers                           = 0;
-$loggedOutCats                            = 0;
-$loggedOutTags                            = 0;
-$chck_users                               = 0; 
-$chck_cats                                = 0;
-$chck_tags                                = 0;
-$MOM_Exclude_Categories_Front             = 0;
-$MOM_Exclude_Categories_TagArchives       = 0;
-$MOM_Exclude_Categories_SearchResults     = 0;
-$MOM_Exclude_Categories_RSS               = 0;
-$MOM_Exclude_Tags_Front                   = 0;
-$MOM_Exclude_Tags_RSS                     = 0;
-$MOM_Exclude_Tags_CategoryArchives        = 0;
-$MOM_Exclude_Tags_SearchResults           = 0;
-$MOM_Exclude_PostFormats_Front            = 0;
-$MOM_Exclude_PostFormats_CategoryArchives = 0;
-$MOM_Exclude_PostFormats_TagArchives      = 0;
-$MOM_Exclude_PostFormats_SearchResults    = 0;
-$MOM_Exclude_PostFormats_Visitor          = 0;
-$MOM_Exclude_PostFormats_RSS              = 0;
-$MOM_Exclude_Tags_Day                     = 0;
-$MOM_Exclude_Cats_Day                     = 0;
-$MOM_Exclude_Users_RSS                    = 0;
-$MOM_Exclude_Users_Front                  = 0;
-$MOM_Exclude_Users_TagArchives            = 0;
-$myoptionalmodules_exclude_userscategoryarchives       = 0;
-$myoptionalmodules_exclude_userssearchresults          = 0;
-$MOM_Exclude_Users_Day                    = 0;
 
-$MOM_Exclude_Categories_Front                    = $myoptionalmodules_exclude_categoriesfront;
-$MOM_Exclude_Categories_TagArchives              = $myoptionalmodules_exclude_categoriestagarchives;
-$MOM_Exclude_Categories_SearchResults            = $myoptionalmodules_exclude_categoriessearchresults;
-$MOM_Exclude_Categories_RSS                      = $myoptionalmodules_exclude_categoriesrss;
-$MOM_Exclude_Tags_Front                          = $myoptionalmodules_exclude_tagsfront;
-$MOM_Exclude_Tags_RSS                            = $myoptionalmodules_exclude_tagsrss;
-$MOM_Exclude_Tags_CategoryArchives               = $myoptionalmodules_exclude_tagscategoryarchives;
-$MOM_Exclude_Tags_SearchResults                  = $myoptionalmodules_exclude_tagssearchresults;
-$MOM_Exclude_PostFormats_Front                   = $myoptionalmodules_exclude_postformatsfront;
-$MOM_Exclude_PostFormats_CategoryArchives        = $myoptionalmodules_exclude_postformatscategoryarchives;
-$MOM_Exclude_PostFormats_TagArchives             = $myoptionalmodules_exclude_postformatstagarchives;
-$MOM_Exclude_PostFormats_SearchResults           = $myoptionalmodules_exclude_postformatssearchresults;
-$MOM_Exclude_PostFormats_Visitor                 = $myoptionalmodules_exclude_visitorpostformats;
-$MOM_Exclude_PostFormats_RSS                     = $myoptionalmodules_exclude_postformatsrss;
-$MOM_Exclude_Users_RSS                           = $myoptionalmodules_exclude_usersrss;
-$MOM_Exclude_Users_Front                         = $myoptionalmodules_exclude_usersfront;
-$MOM_Exclude_Users_TagArchives                   = $myoptionalmodules_exclude_userstagarchives;
-$myoptionalmodules_exclude_userscategoryarchives = $myoptionalmodules_exclude_userscategoryarchives;
-$myoptionalmodules_exclude_userssearchresults    = $myoptionalmodules_exclude_userssearchresults;
+$c1 = $t1 = $rss_day = 
+$u1 = array ( '0' );
 
-if( $date_day == 'sun' ){
+$t11                                                   = $c_1                                              = $u_1                                                =
+$loggedOutUsers                                        = $loggedOutCats                                    = $loggedOutTags                                      =
+$chck_users                                            = $chck_cats                                        = $chck_tags                                          =
+$myoptionalmodules_exclude_categoriesfront             = $myoptionalmodules_exclude_categoriestagarchives  = $myoptionalmodules_exclude_categoriessearchresults  =
+$myoptionalmodules_exclude_categoriesrss               = $myoptionalmodules_exclude_tagsfront              = $myoptionalmodules_exclude_tagsrss                  =
+$myoptionalmodules_exclude_tagscategoryarchives        = $myoptionalmodules_exclude_tagssearchresults      = $myoptionalmodules_exclude_postformatsfront         =
+$myoptionalmodules_exclude_postformatscategoryarchives = $myoptionalmodules_exclude_postformatstagarchives = $myoptionalmodules_exclude_postformatssearchresults =
+$myoptionalmodules_exclude_visitorpostformats          = $myoptionalmodules_exclude_postformatsrss         = $MOM_Exclude_Tags_Day                               =
+$MOM_Exclude_Cats_Day                                  = $myoptionalmodules_exclude_usersrss               = $myoptionalmodules_exclude_usersfront               =
+$myoptionalmodules_exclude_userstagarchives            = $myoptionalmodules_exclude_userscategoryarchives  = $myoptionalmodules_exclude_userssearchresults       =
+$MOM_Exclude_Users_Day                                 = 0;
+
+if( $date_day == 'sun' ):
 	$MOM_Exclude_Tags_Day  = $myoptionalmodules_exclude_tagstagssun;
 	$MOM_Exclude_Cats_Day  = $myoptionalmodules_exclude_categoriescategoriessun;
 	$MOM_Exclude_Users_Day = $myoptionalmodules_exclude_usersuserssun;
-}
-if( $date_day == 'mon' ){
+elseif( $date_day == 'mon' ):
 	$MOM_Exclude_Tags_Day  = $myoptionalmodules_exclude_tagstagsmon;
 	$MOM_Exclude_Cats_Day  = $myoptionalmodules_exclude_categoriescategoriesmon;
 	$MOM_Exclude_Users_Day = $myoptionalmodules_exclude_usersusersmon;
-}
-if( $date_day == 'tue' ){
+elseif( $date_day == 'tue' ):
 	$MOM_Exclude_Tags_Day  = $myoptionalmodules_exclude_tagstagstue;
 	$MOM_Exclude_Cats_Day  = $myoptionalmodules_exclude_categoriescategoriestue;
 	$MOM_Exclude_Users_Day = $myoptionalmodules_exclude_usersuserstue;
-}
-if( $date_day == 'wed' ){
+elseif( $date_day == 'wed' ):
 	$MOM_Exclude_Tags_Day  = $myoptionalmodules_exclude_tagstagswed;
 	$MOM_Exclude_Cats_Day  = $myoptionalmodules_exclude_categoriescategorieswed;
 	$MOM_Exclude_Users_Day = $myoptionalmodules_exclude_usersuserswed;
-}
-if( $date_day == 'thu' ){
+elseif( $date_day == 'thu' ):
 	$MOM_Exclude_Tags_Day  = $myoptionalmodules_exclude_tagstagsthu;
 	$MOM_Exclude_Cats_Day  = $myoptionalmodules_exclude_categoriescategoriesthu;
 	$MOM_Exclude_Users_Day = $myoptionalmodules_exclude_usersusersthu;
-}
-if( $date_day == 'fri' ){
+elseif( $date_day == 'fri' ):
 	$MOM_Exclude_Tags_Day  = $myoptionalmodules_exclude_tagstagsfri;
 	$MOM_Exclude_Cats_Day  = $myoptionalmodules_exclude_categoriescategoriesfri;
 	$MOM_Exclude_Users_Day = $myoptionalmodules_exclude_usersusersfri;
-}
-if( $date_day == 'sat' ){
+elseif( $date_day == 'sat' ):
 	$MOM_Exclude_Tags_Day  = $myoptionalmodules_exclude_tagstagssat;
 	$MOM_Exclude_Cats_Day  = $myoptionalmodules_exclude_categoriescategoriessat;
 	$MOM_Exclude_Users_Day = $myoptionalmodules_exclude_usersuserssat;
-}
+endif;
 
 /**
  * Get the (current) days values
@@ -142,170 +96,127 @@ $rssday_user    = explode( ',', str_replace ( ' ', '', $rss_day_1_user ) );
 /**
  * Grab values for a user who is not logged in
  */
-if( !is_user_logged_in() ) {
-	$MOM_Exclude_level0Users       = 0;
-	$MOM_Exclude_level1Users       = 0;
-	$MOM_Exclude_level2Users       = 0;
-	$MOM_Exclude_level7Users       = 0;
-	$MOM_Exclude_level0Categories  = 0;
-	$MOM_Exclude_level1Categories  = 0;
-	$MOM_Exclude_level2Categories  = 0;
-	$MOM_Exclude_level7Categories  = 0;
-	$MOM_Exclude_level0Tags        = 0;
-	$MOM_Exclude_level1Tags        = 0;
-	$MOM_Exclude_level2Tags        = 0;
-	$MOM_Exclude_level7Tags        = 0;
-	$loggedOutUsers                = 0;
-	$loggedOutCats                 = 0;
-	$loggedOutTags                 = 0;
-	$MOM_Exclude_level0Users       = $myoptionalmodules_exclude_userslevel10users;
-	$MOM_Exclude_level1Users       = $myoptionalmodules_exclude_userslevel1users;
-	$MOM_Exclude_level2Users       = $myoptionalmodules_exclude_userslevel2users;
-	$MOM_Exclude_level7Users       = $myoptionalmodules_exclude_userslevel7users;
-	$MOM_Exclude_level0Categories  = $myoptionalmodules_exclude_categories_level0categories;
-	$MOM_Exclude_level1Categories  = $myoptionalmodules_exclude_categorieslevel1categories;
-	$MOM_Exclude_level2Categories  = $myoptionalmodules_exclude_categorieslevel2categories;
-	$MOM_Exclude_level7Categories  = $myoptionalmodules_exclude_categorieslevel7categories;
-	$MOM_Exclude_level0Tags        = $myoptionalmodules_exclude_tagslevel0tags;
-	$MOM_Exclude_level1Tags        = $myoptionalmodules_exclude_tagslevel1tags;
-	$MOM_Exclude_level2Tags        = $myoptionalmodules_exclude_tagslevel2tags;
-	$MOM_Exclude_level7Tags        = $myoptionalmodules_exclude_tagslevel7tags;
-	$loggedOutUsers = $MOM_Exclude_level0Users . ',' . $MOM_Exclude_level1Users . ',' . $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
-	$loggedOutCats  = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-	$loggedOutTags  = $MOM_Exclude_level0Tags . ',' . $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
-	$lu1 = array_unique( explode( ',', $loggedOutUsers ) );
-	foreach( $lu1 as &$LU1 ) { 
+if ( !is_user_logged_in() ) {
+
+	$myoptionalmodules_exclude_userslevel10users          = $myoptionalmodules_exclude_userslevel1users            = $myoptionalmodules_exclude_userslevel2users           =
+	$myoptionalmodules_exclude_userslevel7users           = $myoptionalmodules_exclude_categories_level0categories = $myoptionalmodules_exclude_categorieslevel1categories =
+	$myoptionalmodules_exclude_categorieslevel2categories = $myoptionalmodules_exclude_categorieslevel7categories  = $myoptionalmodules_exclude_tagslevel0tags             =
+	$myoptionalmodules_exclude_tagslevel1tags             = $myoptionalmodules_exclude_tagslevel2tags              = $myoptionalmodules_exclude_tagslevel7tags             =
+	$loggedOutUsers                                       = $loggedOutCats                                         = $loggedOutTags                                        = 
+	0;
+
+	$loggedOutUsers = "{$myoptionalmodules_exclude_userslevel10users},{$myoptionalmodules_exclude_userslevel1users},{$myoptionalmodules_exclude_userslevel2users},{$myoptionalmodules_exclude_userslevel7users}";
+	$loggedOutCats  = "{$myoptionalmodules_exclude_categories_level0categories},{$myoptionalmodules_exclude_categorieslevel1categories},{$myoptionalmodules_exclude_categorieslevel2categories},{$myoptionalmodules_exclude_categorieslevel7categories}";
+	$loggedOutTags  = "{$myoptionalmodules_exclude_tagslevel0tags},{$myoptionalmodules_exclude_tagslevel1tags},{$myoptionalmodules_exclude_tagslevel2tags},{$myoptionalmodules_exclude_tagslevel7tags}";
+	
+	$lu1 = array_unique ( explode ( ',' , $loggedOutUsers ) );
+	foreach ( $lu1 as &$LU1 ) { 
 		$LU1 = $LU1 . ','; 
 	}
-	$lu_1 = rtrim( implode( $lu1 ), ',' );				
-	$hideLoggedOutUsers = explode ( ',', str_replace ( ' ', '', $loggedOutUsers ) );
-	$lc1 = array_unique( explode( ',', $loggedOutCats ) );
-	foreach( $lc1 as &$LC1 ) { 
+	$lu_1 = rtrim ( implode ( $lu1 ) , ',' );				
+	$hideLoggedOutUsers = explode ( ',' , str_replace ( ' ' , '' , $loggedOutUsers ) );
+	$lc1 = array_unique ( explode( ',' , $loggedOutCats ) );
+	foreach ( $lc1 as &$LC1 ) { 
 		$LC1 = $LC1 . ','; 
 	}
-	$lc_1 = rtrim( implode( $lc1 ), ',' );
-	$hideLoggedOutCats = explode ( ',', str_replace ( ' ', '', $loggedOutCats ) );
-	$lt1 = array_unique ( explode ( ',', $loggedOutTags ) );
-	foreach( $lt1 as &$LT1 ) { 
+	$lc_1 = rtrim ( implode( $lc1 ) , ',' );
+	$hideLoggedOutCats = explode ( ',' , str_replace ( ' ' , '' , $loggedOutCats ) );
+	$lt1 = array_unique ( explode ( ',' , $loggedOutTags ) );
+	foreach ( $lt1 as &$LT1 ) { 
 		$LT1 = $LT1 . ','; 
 	}
-	$lt11 = rtrim( implode( $lt1 ), ',' );
-	$hideLoggedOutTags = explode( ',', str_replace ( ' ', '', $lt11 ) );
-	$formats_to_hide   = $MOM_Exclude_PostFormats_Visitor;
+	$lt11 = rtrim ( implode ( $lt1 ) , ',' );
+	$hideLoggedOutTags = explode ( ',' , str_replace ( ' ' , '' , $lt11 ) );
+	$formats_to_hide   = $myoptionalmodules_exclude_visitorpostformats;
+
 } else {
-	$loggedOutUsers                = 0;
-	$loggedOutCats                 = 0;
-	$loggedOutTags                 = 0;
-	$MOM_Exclude_level0Users       = 0;
-	$MOM_Exclude_level1Users       = 0;
-	$MOM_Exclude_level2Users       = 0;
-	$MOM_Exclude_level7Users       = 0;				
-	$MOM_Exclude_level0Categories  = 0;
-	$MOM_Exclude_level1Categories  = 0;
-	$MOM_Exclude_level2Categories  = 0;
-	$MOM_Exclude_level7Categories  = 0;
-	$MOM_Exclude_level0Tags        = 0;
-	$MOM_Exclude_level1Tags        = 0;
-	$MOM_Exclude_level2Tags        = 0; 
-	$MOM_Exclude_level7Tags        = 0;
-	$MOM_Exclude_level0Users       = $myoptionalmodules_exclude_userslevel10users;
-	$MOM_Exclude_level1Users       = $myoptionalmodules_exclude_userslevel1users;
-	$MOM_Exclude_level2Users       = $myoptionalmodules_exclude_userslevel2users;
-	$MOM_Exclude_level7Users       = $myoptionalmodules_exclude_userslevel7users;
-	$MOM_Exclude_level0Categories  = $myoptionalmodules_exclude_categories_level0categories;
-	$MOM_Exclude_level1Categories  = $myoptionalmodules_exclude_categorieslevel1categories;
-	$MOM_Exclude_level2Categories  = $myoptionalmodules_exclude_categorieslevel2categories;
-	$MOM_Exclude_level7Categories  = $myoptionalmodules_exclude_categorieslevel7categories;
-	$MOM_Exclude_level0Tags        = $myoptionalmodules_exclude_tagslevel0tags; 
-	$MOM_Exclude_level1Tags        = $myoptionalmodules_exclude_tagslevel1tags; 
-	$MOM_Exclude_level2Tags        = $myoptionalmodules_exclude_tagslevel2tags; 
-	$MOM_Exclude_level7Tags        = $myoptionalmodules_exclude_tagslevel7tags;
-	if( !$myoptionalmodules_plugin->user_level ) {
-		$loggedOutUsers = $MOM_Exclude_level0Users . ',' . $MOM_Exclude_level1Users . ',' . $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
-		$loggedOutCats  = $MOM_Exclude_level0Categories . ',' . $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-		$loggedOutTags  = $MOM_Exclude_level0Tags . ',' . $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
-	}
-	if( 1 == $myoptionalmodules_plugin->user_level ) {
-		$loggedOutUsers = $MOM_Exclude_level1Users . ',' . $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
-		$loggedOutCats  = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-		$loggedOutTags  = $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
-	}
-	if( 2 == $myoptionalmodules_plugin->user_level ) {
-		$loggedOutUsers = $MOM_Exclude_level1Users . ',' . $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
-		$loggedOutCats  = $MOM_Exclude_level1Categories . ',' . $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-		$loggedOutTags  = $MOM_Exclude_level1Tags . ',' . $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
-	}
-	if( 3 == $myoptionalmodules_plugin->user_level ) {
-		$loggedOutUsers = $MOM_Exclude_level2Users . ',' . $MOM_Exclude_level7Users;
-		$loggedOutCats  = $MOM_Exclude_level2Categories . ',' . $MOM_Exclude_level7Categories;
-		$loggedOutTags  = $MOM_Exclude_level2Tags . ',' . $MOM_Exclude_level7Tags;
-	}
-	if( 4 == $myoptionalmodules_plugin->user_level ) {
-		$loggedOutUsers = $MOM_Exclude_level7Users;				
-		$loggedOutCats  = $MOM_Exclude_level7Categories;
-		$loggedOutTags  = $MOM_Exclude_level7Tags;
-	}
 	
-	$hideLoggedOutUsers = explode ( ',', str_replace ( ' ', '', $u_1 ) );
-	$hideLoggedOutCats  = explode ( ',', str_replace ( ' ', '', $c_1 ) );
-	$hideLoggedOutTags  = explode ( ',', str_replace ( ' ', '', $t11 ) );
-	$lu1                = array_unique ( explode ( ',', $loggedOutUsers ) );
+	$loggedOutUsers                                       = $loggedOutCats                                         = $loggedOutTags                                        =
+	$myoptionalmodules_exclude_userslevel10users          = $myoptionalmodules_exclude_userslevel1users            = $myoptionalmodules_exclude_userslevel2users           =
+	$myoptionalmodules_exclude_userslevel7users           = $myoptionalmodules_exclude_categories_level0categories = $myoptionalmodules_exclude_categorieslevel1categories =
+	$myoptionalmodules_exclude_categorieslevel2categories = $myoptionalmodules_exclude_categorieslevel7categories  = $myoptionalmodules_exclude_tagslevel0tags             =
+	$myoptionalmodules_exclude_tagslevel1tags             = $myoptionalmodules_exclude_tagslevel2tags              = $myoptionalmodules_exclude_tagslevel7tags             = 
+	0;
+	
+	if ( 1 == $myoptionalmodules_plugin->user_level ):
+		$loggedOutUsers = "{$myoptionalmodules_exclude_userslevel1users},{$myoptionalmodules_exclude_userslevel2users},{$myoptionalmodules_exclude_userslevel7users}";
+		$loggedOutCats  = "{$myoptionalmodules_exclude_categorieslevel1categories},{$myoptionalmodules_exclude_categorieslevel2categories},{$myoptionalmodules_exclude_categorieslevel7categories}";
+		$loggedOutTags  = "{$myoptionalmodules_exclude_tagslevel1tags},{$myoptionalmodules_exclude_tagslevel2tags},{$myoptionalmodules_exclude_tagslevel7tags}";
+	elseif ( 2 == $myoptionalmodules_plugin->user_level ):
+		$loggedOutUsers = "{$myoptionalmodules_exclude_userslevel1users},{$myoptionalmodules_exclude_userslevel2users},{$myoptionalmodules_exclude_userslevel7users}";
+		$loggedOutCats  = "{$myoptionalmodules_exclude_categorieslevel1categories},{$myoptionalmodules_exclude_categorieslevel2categories},{$myoptionalmodules_exclude_categorieslevel7categories}";
+		$loggedOutTags  = "{$myoptionalmodules_exclude_tagslevel1tags},{$myoptionalmodules_exclude_tagslevel2tags},{$myoptionalmodules_exclude_tagslevel7tags}";
+	elseif ( 3 == $myoptionalmodules_plugin->user_level ):
+		$loggedOutUsers = "{$myoptionalmodules_exclude_userslevel2users},{$myoptionalmodules_exclude_userslevel7users}";
+		$loggedOutCats  = "{$myoptionalmodules_exclude_categorieslevel2categories},{$myoptionalmodules_exclude_categorieslevel7categories}";
+		$loggedOutTags  = "{$myoptionalmodules_exclude_tagslevel2tags},{$myoptionalmodules_exclude_tagslevel7tags}";
+	elseif ( 4 == $myoptionalmodules_plugin->user_level ):
+		$loggedOutUsers = "{$myoptionalmodules_exclude_userslevel7users}";
+		$loggedOutCats  = "{$myoptionalmodules_exclude_categorieslevel7categories}";
+		$loggedOutTags  = "{$myoptionalmodules_exclude_tagslevel7tags}";
+	else:
+		$loggedOutUsers = "{$myoptionalmodules_exclude_userslevel10users},{$myoptionalmodules_exclude_userslevel1users},{$myoptionalmodules_exclude_userslevel2users},{$myoptionalmodules_exclude_userslevel7users}";
+		$loggedOutCats  = "{$myoptionalmodules_exclude_categories_level0categories},{$myoptionalmodules_exclude_categorieslevel1categories},{$myoptionalmodules_exclude_categorieslevel2categories},{$myoptionalmodules_exclude_categorieslevel7categories}";
+		$loggedOutTags  = "{$myoptionalmodules_exclude_tagslevel0tags},{$myoptionalmodules_exclude_tagslevel1tags},{$myoptionalmodules_exclude_tagslevel2tags},{$myoptionalmodules_exclude_tagslevel7tags}";
+	endif;
+	
+	$hideLoggedOutUsers = explode ( ',' , str_replace ( ' ' , '' , $u_1 ) );
+	$hideLoggedOutCats  = explode ( ',' , str_replace ( ' ' , '' , $c_1 ) );
+	$hideLoggedOutTags  = explode ( ',' , str_replace ( ' ' , '' , $t11 ) );
+	$lu1                = array_unique ( explode ( ',' , $loggedOutUsers ) );
 	foreach( $lu1 as &$LU1 ) { $LU1 = $LU1 . ','; }
-	$lu_1               = rtrim ( implode ( $lu1 ), ',' );
-	$hideLoggedOutUsers = explode ( ',', str_replace ( ' ', '', $loggedOutUsers ) );
-	$lc1                = array_unique ( explode ( ',', $loggedOutCats ) );
+	$lu_1               = rtrim ( implode ( $lu1 ) , ',' );
+	$hideLoggedOutUsers = explode ( ',' , str_replace ( ' ' , '' , $loggedOutUsers ) );
+	$lc1                = array_unique ( explode ( ',' , $loggedOutCats ) );
 	foreach( $lc1 as &$LC1 ) { $LC1 = $LC1 . ','; }
-	$lc_1               = rtrim ( implode ( $lc1 ), ',' );
-	$hideLoggedOutCats  = explode ( ',', str_replace ( ' ', '', $loggedOutCats ) );
-	$lt1                = array_unique ( explode ( ',', $loggedOutTags ) );
-	foreach( $lt1 as &$LT1 ) { $LT1 = $LT1 .','; }
-	$lt11               = rtrim ( implode ( $lt1 ), ',' );
-	$hideLoggedOutTags  = explode ( ',', str_replace ( ' ', '', $lt11 ) );
+	$lc_1               = rtrim ( implode ( $lc1 ) , ',' );
+	$hideLoggedOutCats  = explode ( ',' , str_replace ( ' ' , '' , $loggedOutCats ) );
+	$lt1                = array_unique ( explode ( ',' , $loggedOutTags ) );
+	foreach( $lt1 as &$LT1 ) { $LT1 = $LT1 . ','; }
+	$lt11               = rtrim ( implode ( $lt1 ) , ',' );
+	$hideLoggedOutTags  = explode ( ',' , str_replace ( ' ' , '' , $lt11 ) );
+
 }
 
 /**
  * Piece all arrays together properly to be utilized for the loop
  */
-if( $query->is_feed ) {
-	$u1              = explode( ',', $MOM_Exclude_Users_RSS );
-	$c1              = explode( ',', $MOM_Exclude_Categories_RSS );
-	$formats_to_hide = $MOM_Exclude_PostFormats_RSS;
-	$t1              = explode( ',', $MOM_Exclude_Tags_RSS );
-}
-if( $query->is_home ) {
-	$u1              = explode( ',', $MOM_Exclude_Users_Front );
-	$c1              = explode( ',', $MOM_Exclude_Categories_Front );
-	$formats_to_hide = $MOM_Exclude_PostFormats_Front;
-	$t1              = explode( ',', $MOM_Exclude_Tags_Front );
-}
-if( $query->is_category ) {
-	$u1              = explode( ',', $myoptionalmodules_exclude_userscategoryarchives );
-	$t1              = explode( ',', $MOM_Exclude_Tags_CategoryArchives );
-	$formats_to_hide = $MOM_Exclude_PostFormats_CategoryArchives;
-}
-if( $query->is_tag ) {
-	$u1              = explode( ',', $MOM_Exclude_Users_TagArchives );
-	$c1              = explode( ',', $MOM_Exclude_Categories_TagArchives );
-	$formats_to_hide = $MOM_Exclude_PostFormats_TagArchives;
-}
-if( $query->is_search ) {
-	$u1              = explode( ',', $myoptionalmodules_exclude_userssearchresults );
-	$c1              = explode( ',', $MOM_Exclude_Categories_SearchResults );
-	$formats_to_hide = $MOM_Exclude_PostFormats_SearchResults;
-	$t1              = explode( ',', $MOM_Exclude_Tags_SearchResults );
+if ( $query->is_feed ):
+	$u1              = explode ( ',' , $myoptionalmodules_exclude_usersrss );
+	$c1              = explode ( ',' , $myoptionalmodules_exclude_categoriesrss );
+	$t1              = explode ( ',' , $myoptionalmodules_exclude_tagsrss );
+	$formats_to_hide = $myoptionalmodules_exclude_postformatsrss;
+elseif ( $query->is_category ):
+	$u1              = explode ( ',' , $myoptionalmodules_exclude_userscategoryarchives );
+	$t1              = explode ( ',' , $myoptionalmodules_exclude_tagscategoryarchives );
+	$formats_to_hide = $myoptionalmodules_exclude_postformatscategoryarchives;
+elseif ( $query->is_tag ):
+	$u1              = explode ( ',' , $myoptionalmodules_exclude_userstagarchives );
+	$c1              = explode ( ',' , $myoptionalmodules_exclude_categoriestagarchives );
+	$formats_to_hide = $myoptionalmodules_exclude_postformatstagarchives;
+elseif ( $query->is_search ):
+	$u1              = explode ( ',' , $myoptionalmodules_exclude_userssearchresults );
+	$c1              = explode ( ',' , $myoptionalmodules_exclude_categoriessearchresults );
+	$t1              = explode ( ',' , $myoptionalmodules_exclude_tagssearchresults );
+	$formats_to_hide = $myoptionalmodules_exclude_postformatssearchresults;
+else:
+	$u1              = explode ( ',' , $myoptionalmodules_exclude_usersfront );
+	$c1              = explode ( ',' , $myoptionalmodules_exclude_categoriesfront );
+	$t1              = explode ( ',' , $myoptionalmodules_exclude_tagsfront );
+	$formats_to_hide = $myoptionalmodules_exclude_postformatsfront;
+endif;
 
-}
-foreach( $c1 as &$C1 ) { 
+foreach( $c1 as &$C1 ) {
 	$C1 = $C1 . ','; 
 }
 $c_1               = rtrim ( implode ( $c1 ), ',' );
 $hideUserCats      = explode ( ',', str_replace ( ' ', '', $c_1 ) );
-foreach( $u1 as &$U1 ) { 
+foreach ( $u1 as &$U1 ) { 
 	$U1 = $U1 . ','; 
 }
 $u_1               = rtrim ( implode ( $u1 ), ',' );
 $hideUserUsers      = explode ( ',', str_replace ( ' ', '', $u_1 ) );		
-foreach( $t1 as &$T1 ) { 
+foreach ( $t1 as &$T1 ) { 
 	$T1 = $T1 . ','; 
 }
 $t11                = rtrim( implode ( $t1 ), ',' );
@@ -320,8 +231,8 @@ $tags_to_hide       = array_filter( array_unique ( $tags_to_hide ) );
 /**
  * Loop alteration magic
  */
-if( $query->is_main_query() ) {
-	if( $query->is_feed || $query->is_home || $query->is_search || $query->is_tag || $query->is_category ) {
+if( $query->is_main_query() ) :
+	if( $query->is_feed || $query->is_home || $query->is_search || $query->is_tag || $query->is_category ):
 		$tax_query = array (
 			'ignore_sticky_posts' => true,
 			'post_type'           => 'any',
@@ -344,62 +255,29 @@ if( $query->is_main_query() ) {
 				'operator'        => 'NOT IN'
 			)
 		);
-		$query->set( 'tax_query', $tax_query );
-		$query->set( 'author__not_in', $users_to_hide );
-	}
-}
+		$query->set ( 'tax_query' , $tax_query );
+		$query->set ( 'author__not_in' , $users_to_hide );
+	endif;
+endif;
 
 /**
  * Exclusion rules based on user levels will determine if these posts 
  * can be viewed in is_single() or not.
  */
-$chck_users = str_replace( ',', '', $loggedOutUsers );
-$chck_cats  = str_replace( ',', '', $loggedOutCats );
-$chck_tags  = str_replace( ',', '', $loggedOutTags );
+if ( $loggedOutUsers )
+	$chck_users = str_replace ( ',' , '' , $loggedOutUsers );
+if ( $loggedOutCats )
+	$chck_cats  = str_replace ( ',' , '' , $loggedOutCats );
+if ( $loggedOutTags )
+	$chck_tags  = str_replace ( ',' , '' , $loggedOutTags );
 
-if( $chck_users || $chck_cats || $chck_tags ) {
+
+if ( intval ( $chck_users ) || intval ( $chck_cats ) || intval ( $chck_tags ) ):
 	add_filter( 'the_content', 'myoptionalmodules_destroy_content_view', 20 );
-	if( !function_exists( 'myoptionalmodules_destroy_content_view' ) ) {
-		function myoptionalmodules_destroy_content_view( $content ) {
-			if( is_single() ) {
-				$content = '<div class="mom-unauthorized-content">You do not have permission to view this content.</div>';
-			}
-			return do_shortcode ( $content );
+	function myoptionalmodules_destroy_content_view( $content ) {
+		if( is_single() ) {
+			$content = '<div class="mom-unauthorized-content">You do not have permission to view this content.</div>';
 		}
+		return do_shortcode ( $content );
 	}
-}
-
-$c1      = null;
-$t1      = null;
-$rss_day = null;
-$u1      = null;
-$t11     = null;
-$c_1     = null;
-$u_1     = null;
-$MOM_Exclude_Categories_Front             = null;
-$MOM_Exclude_Categories_TagArchives       = null;
-$MOM_Exclude_Categories_SearchResults     = null;
-$MOM_Exclude_Categories_RSS               = null;
-$MOM_Exclude_Tags_Front                   = null;
-$MOM_Exclude_Tags_RSS                     = null;
-$MOM_Exclude_Tags_CategoryArchives        = null;
-$MOM_Exclude_Tags_SearchResults           = null;
-$MOM_Exclude_PostFormats_Front            = null;
-$MOM_Exclude_PostFormats_CategoryArchives = null;
-$MOM_Exclude_PostFormats_TagArchives      = null;
-$MOM_Exclude_PostFormats_SearchResults    = null;
-$MOM_Exclude_PostFormats_Visitor          = null;
-$MOM_Exclude_PostFormats_RSS              = null;
-$MOM_Exclude_Tags_Day                     = null;
-$MOM_Exclude_Cats_Day                     = null;
-$MOM_Exclude_Users_RSS                    = null;
-$MOM_Exclude_Users_Front                  = null;
-$MOM_Exclude_Users_TagArchives            = null;
-$myoptionalmodules_exclude_userscategoryarchives       = null;
-$myoptionalmodules_exclude_userssearchresults          = null;
-$MOM_Exclude_Users_Day                    = null;
-$chck_users                               = null; 
-$chck_cats                                = null;
-$loggedOutUsers                           = null;
-$loggedOutCats                            = null;
-$loggedOutTags                            = null;
+endif;
