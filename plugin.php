@@ -4,7 +4,7 @@ Plugin Name: My Optional Modules
 Plugin URI: 
 Description: Optional modules and additions for Wordpress.
 Version: 10.0.1
-Author: Matthew Trevino
+Author: boyevul
 Author URI: 
 
 LICENSE
@@ -230,20 +230,20 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ) {
 define ( 'MyOptionalModules', true );
 require_once( ABSPATH . 'wp-includes/pluggable.php' );
 
-include( '_versions.php' );
-include( 'function.category-ids.php' );
-include( 'function.exclude-categories.php' );
-include( 'function.recent-posts.php' );
-include( 'function.featured-images.php' );
-include( 'class.mom-mediaembed.php' ); 
-include( 'class.myoptionalmodules.php' );
-include( 'class.myoptionalmodules-enable.php' );
-include( 'class.myoptionalmodules-disable.php' );
-include( 'class.myoptionalmodules-commentform.php' );
-include( 'class.myoptionalmodules-extras.php' );
-include( 'class.myoptionalmodules-misc.php' );
-include( 'class.myoptionalmodules-shortcodes.php' );
-include( 'function.shortcode.myoptionalmodules-miniloop.php' );
+include ( '_versions.php' );
+include ( 'function.category-ids.php' );
+include ( 'function.exclude-categories.php' );
+include ( 'function.recent-posts.php' );
+include ( 'function.featured-images.php' );
+include ( 'class.mom-mediaembed.php' ); 
+include ( 'class.myoptionalmodules.php' );
+include ( 'class.myoptionalmodules-enable.php' );
+include ( 'class.myoptionalmodules-disable.php' );
+include ( 'class.myoptionalmodules-commentform.php' );
+include ( 'class.myoptionalmodules-extras.php' );
+include ( 'class.myoptionalmodules-misc.php' );
+include ( 'class.myoptionalmodules-shortcodes.php' );
+include ( 'function.shortcode.myoptionalmodules-miniloop.php' );
 
 if( current_user_can( 'edit_dashboard' ) && is_admin() ){
 	class myoptionalmodules_admin_css {
@@ -258,7 +258,7 @@ if( current_user_can( 'edit_dashboard' ) && is_admin() ){
 
 			global $myoptionalmodules_plugin_version;
 
-			if( 'settings_page_mommaincontrol' != $hook ) return;
+			if ( 'settings_page_mommaincontrol' != $hook ) return;
 
 			$font_awesome_css = str_replace ( array ( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' ) );
 			$mom_admin_css    = str_replace ( array ( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/adminstyle/css' . $myoptionalmodules_plugin_version . '.css' ) );
@@ -272,6 +272,6 @@ if( current_user_can( 'edit_dashboard' ) && is_admin() ){
 
 	$myoptionalmodules_admin_css = new myoptionalmodules_admin_css();
 
-	include( 'admin.font-awesome-post-edit.php' );
-	include( 'admin.settings-page-content.php' );
+	include ( 'admin.font-awesome-post-edit.php' );
+	include ( 'admin.settings-page-content.php' );
 }

@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_misc()
  *
- * File last update: 9.1.6
+ * File last update: 10.0.2
  *
  * Functionality for:
  * - Miniloops
@@ -72,7 +72,7 @@ class myoptionalmodules_misc {
 			$key    = sanitize_text_field ( get_post_meta ( $post->ID , $myoptionalmodules_miniloopmeta , true ) );
 			
 			if( $key && $myoptionalmodules_miniloopmeta )
-				$output = do_shortcode ( '[mom_miniloop meta="' . $myoptionalmodules_miniloopmeta . '" key="' . $key . '" style="' . $myoptionalmodules_miniloopstyle . '" amount="' . $myoptionalmodules_miniloopamount . '" ]' );
+				$output = do_shortcode ( '[mom_miniloop meta="{$myoptionalmodules_miniloopmeta}" key="{$key}" style="{$myoptionalmodules_miniloopstyle}" amount="{$myoptionalmodules_miniloopamount}" ]' );
 			else
 				$output = null;
 			return do_shortcode ( $content ) . $output;
