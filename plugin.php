@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: 
 Description: Optional modules and additions for Wordpress.
-Version: 10.0.1
+Version: 10.0.2
 Author: boyevul
 Author URI: 
 
@@ -40,7 +40,9 @@ $myoptionalmodules_exclude                             = $myoptionalmodules_neli
 $myoptionalmodules_google                              = $myoptionalmodules_frontpage                          = $myoptionalmodules_previouslinkclass = 
 $myoptionalmodules_nextlinkclass                       = $myoptionalmodules_readmore                           = $myoptionalmodules_randompost = 
 $myoptionalmodules_randomtitles                        = $myoptionalmodules_randomdescriptions                 = $myoptionalmodules_miniloopmeta = 
-$myoptionalmodules_miniloopstyle                       = $myoptionalmodules_miniloopamount                     = $myoptionalmodules_exclude_categorieslevel0categories = 
+$myoptionalmodules_miniloopstyle                       = $myoptionalmodules_miniloopamount                     = null;
+
+$myoptionalmodules_exclude_categorieslevel0categories  = 
 $myoptionalmodules_exclude_categorieslevel1categories  = $myoptionalmodules_exclude_categorieslevel2categories = $myoptionalmodules_exclude_categorieslevel7categories = 
 $myoptionalmodules_exclude_categoriesfront             = $myoptionalmodules_exclude_categoriestagarchives      = $myoptionalmodules_exclude_categoriessearchresults = 
 $myoptionalmodules_exclude_categoriesrss               = $myoptionalmodules_exclude_tagsfront                  = $myoptionalmodules_exclude_tagsrss = 
@@ -57,7 +59,8 @@ $myoptionalmodules_exclude_tagstagssat                 = $myoptionalmodules_excl
 $myoptionalmodules_exclude_categoriescategoriestue     = $myoptionalmodules_exclude_categoriescategorieswed    = $myoptionalmodules_exclude_categoriescategoriesthu = 
 $myoptionalmodules_exclude_categoriescategoriesfri     = $myoptionalmodules_exclude_categoriescategoriessat    = $myoptionalmodules_exclude_usersuserssun = 
 $myoptionalmodules_exclude_usersusersmon               = $myoptionalmodules_exclude_usersuserstue              = $myoptionalmodules_exclude_usersuserswed = 
-$myoptionalmodules_exclude_usersusersthu               = $myoptionalmodules_exclude_usersusersfri              = $myoptionalmodules_exclude_usersuserssat =
+$myoptionalmodules_exclude_usersusersthu               = $myoptionalmodules_exclude_usersusersfri              = $myoptionalmodules_exclude_usersuserssat = 0;
+
 $myoptionalmodules_plugincss                           = $myoptionalmodules_lazyload                           = $myoptionalmodules_verification = 
 $myoptionalmodules_sharelinks_text                     = $myoptionalmodules_favicon                            = null;
 

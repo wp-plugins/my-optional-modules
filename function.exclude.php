@@ -20,20 +20,10 @@ $date_day = strtolower( date( 'D' ) );
  * Then, grab the value from the database and reset them
  */
 
+ $t11 = $c_1 = $u_1 = null;
+ 
 $c1 = $t1 = $rss_day = 
 $u1 = array ( '0' );
-
-$t11                                                   = $c_1                                              = $u_1                                                =
-$loggedOutUsers                                        = $loggedOutCats                                    = $loggedOutTags                                      =
-$chck_users                                            = $chck_cats                                        = $chck_tags                                          =
-$myoptionalmodules_exclude_categoriesfront             = $myoptionalmodules_exclude_categoriestagarchives  = $myoptionalmodules_exclude_categoriessearchresults  =
-$myoptionalmodules_exclude_categoriesrss               = $myoptionalmodules_exclude_tagsfront              = $myoptionalmodules_exclude_tagsrss                  =
-$myoptionalmodules_exclude_tagscategoryarchives        = $myoptionalmodules_exclude_tagssearchresults      = $myoptionalmodules_exclude_postformatsfront         =
-$myoptionalmodules_exclude_postformatscategoryarchives = $myoptionalmodules_exclude_postformatstagarchives = $myoptionalmodules_exclude_postformatssearchresults =
-$myoptionalmodules_exclude_visitorpostformats          = $myoptionalmodules_exclude_postformatsrss         = $MOM_Exclude_Tags_Day                               =
-$MOM_Exclude_Cats_Day                                  = $myoptionalmodules_exclude_usersrss               = $myoptionalmodules_exclude_usersfront               =
-$myoptionalmodules_exclude_userstagarchives            = $myoptionalmodules_exclude_userscategoryarchives  = $myoptionalmodules_exclude_userssearchresults       =
-$MOM_Exclude_Users_Day                                 = 0;
 
 if( $date_day == 'sun' ):
 	$MOM_Exclude_Tags_Day  = $myoptionalmodules_exclude_tagstagssun;
@@ -98,13 +88,6 @@ $rssday_user    = explode( ',', str_replace ( ' ', '', $rss_day_1_user ) );
  */
 if ( !is_user_logged_in() ) {
 
-	$myoptionalmodules_exclude_userslevel10users          = $myoptionalmodules_exclude_userslevel1users            = $myoptionalmodules_exclude_userslevel2users           =
-	$myoptionalmodules_exclude_userslevel7users           = $myoptionalmodules_exclude_categories_level0categories = $myoptionalmodules_exclude_categorieslevel1categories =
-	$myoptionalmodules_exclude_categorieslevel2categories = $myoptionalmodules_exclude_categorieslevel7categories  = $myoptionalmodules_exclude_tagslevel0tags             =
-	$myoptionalmodules_exclude_tagslevel1tags             = $myoptionalmodules_exclude_tagslevel2tags              = $myoptionalmodules_exclude_tagslevel7tags             =
-	$loggedOutUsers                                       = $loggedOutCats                                         = $loggedOutTags                                        = 
-	0;
-
 	$loggedOutUsers = "{$myoptionalmodules_exclude_userslevel10users},{$myoptionalmodules_exclude_userslevel1users},{$myoptionalmodules_exclude_userslevel2users},{$myoptionalmodules_exclude_userslevel7users}";
 	$loggedOutCats  = "{$myoptionalmodules_exclude_categories_level0categories},{$myoptionalmodules_exclude_categorieslevel1categories},{$myoptionalmodules_exclude_categorieslevel2categories},{$myoptionalmodules_exclude_categorieslevel7categories}";
 	$loggedOutTags  = "{$myoptionalmodules_exclude_tagslevel0tags},{$myoptionalmodules_exclude_tagslevel1tags},{$myoptionalmodules_exclude_tagslevel2tags},{$myoptionalmodules_exclude_tagslevel7tags}";
@@ -130,14 +113,7 @@ if ( !is_user_logged_in() ) {
 	$formats_to_hide   = $myoptionalmodules_exclude_visitorpostformats;
 
 } else {
-	
-	$loggedOutUsers                                       = $loggedOutCats                                         = $loggedOutTags                                        =
-	$myoptionalmodules_exclude_userslevel10users          = $myoptionalmodules_exclude_userslevel1users            = $myoptionalmodules_exclude_userslevel2users           =
-	$myoptionalmodules_exclude_userslevel7users           = $myoptionalmodules_exclude_categories_level0categories = $myoptionalmodules_exclude_categorieslevel1categories =
-	$myoptionalmodules_exclude_categorieslevel2categories = $myoptionalmodules_exclude_categorieslevel7categories  = $myoptionalmodules_exclude_tagslevel0tags             =
-	$myoptionalmodules_exclude_tagslevel1tags             = $myoptionalmodules_exclude_tagslevel2tags              = $myoptionalmodules_exclude_tagslevel7tags             = 
-	0;
-	
+
 	if ( 1 == $myoptionalmodules_plugin->user_level ):
 		$loggedOutUsers = "{$myoptionalmodules_exclude_userslevel1users},{$myoptionalmodules_exclude_userslevel2users},{$myoptionalmodules_exclude_userslevel7users}";
 		$loggedOutCats  = "{$myoptionalmodules_exclude_categorieslevel1categories},{$myoptionalmodules_exclude_categorieslevel2categories},{$myoptionalmodules_exclude_categorieslevel7categories}";

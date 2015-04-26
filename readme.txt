@@ -8,8 +8,7 @@ Stable tag: 10.0.1
 An assortment of functions to enhance WordPress.
 
 == Description ==
-MOM features an assortment of functions designed to add (or extend) functionality within WordPress. ( We're also available 
-on [Github](https://github.com/onebillion/mom). )
+MOM features an assortment of functions designed to add (or extend) functionality within WordPress.
 
 = Trash Removal =
 *	Optimize the WordPress database
@@ -72,6 +71,9 @@ on [Github](https://github.com/onebillion/mom). )
 2.	Share icons displayed at the top of the post content.
 
 == Changelog ==
+= 10.0.2 =
+*	*Release Date - 25th, April, 2015*
+*	Fix for exclusion module no longer excluding posts.
 = 10.0.1 =
 *	*Release Date - 13th, April, 2015*
 *	Exclusion hiding for single post content was not working correctly
