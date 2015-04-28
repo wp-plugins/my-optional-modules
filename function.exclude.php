@@ -20,7 +20,7 @@ $date_day = strtolower( date( 'D' ) );
  * Then, grab the value from the database and reset them
  */
 
- $t11 = $c_1 = $u_1 = null;
+$chck_users = $chck_cats = $chck_tags = $t11 = $c_1 = $u_1 = null;
  
 $c1 = $t1 = $rss_day = 
 $u1 = array ( '0' );
@@ -86,12 +86,10 @@ $rssday_user    = explode( ',', str_replace ( ' ', '', $rss_day_1_user ) );
 /**
  * Grab values for a user who is not logged in
  */
-if ( !is_user_logged_in() ) {
-
+if ( 0 == $myoptionalmodules_plugin->user_level ):
 	$loggedOutUsers = "{$myoptionalmodules_exclude_userslevel10users},{$myoptionalmodules_exclude_userslevel1users},{$myoptionalmodules_exclude_userslevel2users},{$myoptionalmodules_exclude_userslevel7users}";
 	$loggedOutCats  = "{$myoptionalmodules_exclude_categories_level0categories},{$myoptionalmodules_exclude_categorieslevel1categories},{$myoptionalmodules_exclude_categorieslevel2categories},{$myoptionalmodules_exclude_categorieslevel7categories}";
 	$loggedOutTags  = "{$myoptionalmodules_exclude_tagslevel0tags},{$myoptionalmodules_exclude_tagslevel1tags},{$myoptionalmodules_exclude_tagslevel2tags},{$myoptionalmodules_exclude_tagslevel7tags}";
-	
 	$lu1 = array_unique ( explode ( ',' , $loggedOutUsers ) );
 	foreach ( $lu1 as &$LU1 ) { 
 		$LU1 = $LU1 . ','; 
@@ -111,9 +109,7 @@ if ( !is_user_logged_in() ) {
 	$lt11 = rtrim ( implode ( $lt1 ) , ',' );
 	$hideLoggedOutTags = explode ( ',' , str_replace ( ' ' , '' , $lt11 ) );
 	$formats_to_hide   = $myoptionalmodules_exclude_visitorpostformats;
-
-} else {
-
+else:
 	if ( 1 == $myoptionalmodules_plugin->user_level ):
 		$loggedOutUsers = "{$myoptionalmodules_exclude_userslevel1users},{$myoptionalmodules_exclude_userslevel2users},{$myoptionalmodules_exclude_userslevel7users}";
 		$loggedOutCats  = "{$myoptionalmodules_exclude_categorieslevel1categories},{$myoptionalmodules_exclude_categorieslevel2categories},{$myoptionalmodules_exclude_categorieslevel7categories}";
@@ -151,8 +147,7 @@ if ( !is_user_logged_in() ) {
 	foreach( $lt1 as &$LT1 ) { $LT1 = $LT1 . ','; }
 	$lt11               = rtrim ( implode ( $lt1 ) , ',' );
 	$hideLoggedOutTags  = explode ( ',' , str_replace ( ' ' , '' , $lt11 ) );
-
-}
+endif;
 
 /**
  * Piece all arrays together properly to be utilized for the loop

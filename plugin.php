@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: 
 Description: Optional modules and additions for Wordpress.
-Version: 10.0.2
+Version: 10.0.3
 Author: boyevul
 Author URI: 
 
@@ -42,7 +42,7 @@ $myoptionalmodules_nextlinkclass                       = $myoptionalmodules_read
 $myoptionalmodules_randomtitles                        = $myoptionalmodules_randomdescriptions                 = $myoptionalmodules_miniloopmeta = 
 $myoptionalmodules_miniloopstyle                       = $myoptionalmodules_miniloopamount                     = null;
 
-$myoptionalmodules_exclude_categorieslevel0categories  = 
+$myoptionalmodules_exclude_categories_level0categories = 
 $myoptionalmodules_exclude_categorieslevel1categories  = $myoptionalmodules_exclude_categorieslevel2categories = $myoptionalmodules_exclude_categorieslevel7categories = 
 $myoptionalmodules_exclude_categoriesfront             = $myoptionalmodules_exclude_categoriestagarchives      = $myoptionalmodules_exclude_categoriessearchresults = 
 $myoptionalmodules_exclude_categoriesrss               = $myoptionalmodules_exclude_tagsfront                  = $myoptionalmodules_exclude_tagsrss = 
@@ -176,10 +176,10 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ) {
 	if( $name == 'myoptionalmodules_randomdescriptions' && $value )                  $myoptionalmodules_randomdescriptions                   = $value;
 	 
 	// Exclude Posts	 
-	if( $name == 'myoptionalmodules_exclude_categorieslevel0categories' && $value )  $myoptionalmodules_exclude_categorieslevel0categories   = $value;
-	if( $name == 'myoptionalmodules_exclude_categorieslevel1categories' && $value )  $myoptionalmodules_exclude_categorieslevel1categories   = $value;
-	if( $name == 'myoptionalmodules_exclude_categorieslevel2categories' && $value )  $myoptionalmodules_exclude_categorieslevel2categories   = $value;
-	if( $name == 'myoptionalmodules_exclude_categorieslevel7categories' && $value )  $myoptionalmodules_exclude_categorieslevel7categories   = $value;
+	if( $name == 'myoptionalmodules_exclude_categories_level0categories' && $value ) $myoptionalmodules_exclude_categories_level0categories  = $value;
+	if( $name == 'myoptionalmodules_exclude_categorieslevel1categories' && $value  ) $myoptionalmodules_exclude_categorieslevel1categories   = $value;
+	if( $name == 'myoptionalmodules_exclude_categorieslevel2categories' && $value  ) $myoptionalmodules_exclude_categorieslevel2categories   = $value;
+	if( $name == 'myoptionalmodules_exclude_categorieslevel7categories' && $value  ) $myoptionalmodules_exclude_categorieslevel7categories   = $value;
 	if( $name == 'myoptionalmodules_exclude_categoriesfront' && $value )             $myoptionalmodules_exclude_categoriesfront              = $value;
 	if( $name == 'myoptionalmodules_exclude_categoriestagarchives' && $value )       $myoptionalmodules_exclude_categoriestagarchives        = $value;
 	if( $name == 'myoptionalmodules_exclude_categoriessearchresults' && $value )     $myoptionalmodules_exclude_categoriessearchresults      = $value;

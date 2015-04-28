@@ -89,14 +89,19 @@ class myoptionalmodules {
 
 	// GET USER LEVELs for use throughout
 	function userlevel() {
-		if( is_user_logged_in() ) {
-			if( current_user_can ( 'edit_dashboard' ) )         $this->user_level = 4; // Admin
-			if( current_user_can ( 'delete_published_posts' ) ) $this->user_level = 3; // Editor
-			if( current_user_can ( 'delete_posts' ) )           $this->user_level = 2; // Author
-			if( current_user_can ( 'read' ) )                   $this->user_level = 1; // Subscriber
-		} else {
+		if( is_user_logged_in() ) :
+			if( current_user_can ( 'edit_dashboard' ) ):
+				$this->user_level = 4; // Admin
+			elseif( current_user_can ( 'delete_published_posts' ) ):
+				$this->user_level = 3; // Editor
+			elseif( current_user_can ( 'delete_posts' ) ):
+				$this->user_level = 2; // Author
+			elseif( current_user_can ( 'read' ) ):
+				$this->user_level = 1; // Subscriber
+			endif;
+		else:
 			$this->user_level = 0;
-		}
+		endif;
 	}
 
 	// Validate an IP address and check against DNSBlacklists (if enabled)
