@@ -14,18 +14,18 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 function my_optional_modules_get_category_ids() {
 
 	$cat_ids = null;
-	$cat_ids = get_terms( 
-		'category', 
-		array( 
-			'fields' => 'ids', 
-			'get'    => 'all' 
-		) 
+	$cat_ids = get_terms(
+		'category' ,
+		array(
+			'fields' => 'ids' ,
+			'get'    => 'all'
+		)
 	);
 
-	wp_cache_add( 
-		'all_category_ids', 
-		$cat_ids, 
-		'category' 
+	wp_cache_add(
+		'all_category_ids' ,
+		$cat_ids ,
+		'category'
 	);
 
 	return $cat_ids;

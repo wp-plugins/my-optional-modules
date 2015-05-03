@@ -8,7 +8,6 @@
  * Embeds
  */
 .media-embed {
-	border: 1px solid rgba(0,0,0,.1);
 	margin: 5px auto;
 	padding: 5px;
 }
@@ -552,8 +551,9 @@ h2.mom_related_title{
  * Youtube
  */
 .mom-youtube-content-div {
-	position:relative;
+	max-width: 100%;
 	overflow: hidden; 
+	position:relative;
 }
 .mom-youtube-play-button {
 	color: #fff;
@@ -573,6 +573,7 @@ h2.mom_related_title{
 .mom-youtube-thumbnail {
 	cursor: pointer;
 	display:none;
+	max-width: 100%;
 	visibility:hidden;
 }
 
