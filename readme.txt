@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: meta, og, twitter, facebook, google, random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 10.0.4
+Stable tag: 10.0.5
 
 An assortment of functions to enhance WordPress.
 
@@ -71,18 +71,24 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 2.	Share icons displayed at the top of the post content.
 
 == Changelog ==
+= 10.0.5 =
+*	*Release Date - *
+*   Lazyload Font Awesome CSS
+*   Bing and Alexa site verification added to 'Theme'
+*   initial values 'null' for some options (instead of '0') (bugfix)
+
 = 10.0.4 =
 *	*Release Date - 3rd, May, 2015*
 *	jquery version bump from 2.1.3 to 2.1.4 for CDN enqueued jquery
-*	fitvids for media embeds, with changes to media embedding to enhance quality of return.
+*	fitvids for media embeds, with changes to media embedding to enhance quality of return
 
 = 10.0.3 =
 *   *Release Date - 27th, April, 2015*
-*   Further fixing for exclude posts.
+*   Further fixing for exclude posts
 
 = 10.0.2 =
 *	*Release Date - 25th, April, 2015*
-*	Fix for exclusion module no longer excluding posts.
+*	Fix for exclusion module no longer excluding posts
 
 = 10.0.1 =
 *	*Release Date - 13th, April, 2015*

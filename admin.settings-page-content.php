@@ -2,7 +2,7 @@
 /**
  * ADMIN Settings Page Content
  *
- * File last update: 9.1.4
+ * File last update: 10.0.5
  *
  * Content of the /wp-admin/ SETTINGS PAGE for this plugin
  * INCLUDING all SAVE OPERATIONS.
@@ -256,6 +256,8 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						'myoptionalmodules_sharelinks_text' ,
 						'myoptionalmodules_google' ,
 						'myoptionalmodules_verification' ,
+						'myoptionalmodules_alexa' ,
+						'myoptionalmodules_bing' ,
 						'myoptionalmodules_previouslinkclass' ,
 						'myoptionalmodules_nextlinkclass' ,
 						'myoptionalmodules_readmore' ,
@@ -530,18 +532,20 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 								echo '
 								</select>';
 								$google = $previousclass = $nextclass = $readmore = $randompost = $randomtitles = $randomdescriptions = null;
-								$google             = sanitize_text_field ( get_option( 'myoptionalmodules_google' ) );
-								$verification       = sanitize_text_field ( get_option( 'myoptionalmodules_verification' ) );
-								$previousclass      = sanitize_text_field ( get_option( 'myoptionalmodules_previouslinkclass' ) );
-								$nextclass          = sanitize_text_field ( get_option( 'myoptionalmodules_nextlinkclass' ) );
-								$readmore           = sanitize_text_field ( get_option( 'myoptionalmodules_readmore' ) );
-								$randompost         = sanitize_text_field ( get_option( 'myoptionalmodules_randompost' ) );
-								$randomtitles       = sanitize_text_field ( get_option( 'myoptionalmodules_randomtitles' ) );
-								$randomdescriptions = sanitize_text_field ( get_option( 'myoptionalmodules_randomdescriptions' ) );
-								$miniloop_meta      = sanitize_text_field ( get_option( 'myoptionalmodules_miniloopmeta' ) );
+								$google             = sanitize_text_field ( get_option ( 'myoptionalmodules_google' ) );
+								$verification       = sanitize_text_field ( get_option ( 'myoptionalmodules_verification' ) );
+								$alexa              = sanitize_text_field ( get_option ( 'myoptionalmodules_alexa' ) );
+								$bing               = sanitize_text_field ( get_option ( 'myoptionalmodules_bing' ) );
+								$previousclass      = sanitize_text_field ( get_option ( 'myoptionalmodules_previouslinkclass' ) );
+								$nextclass          = sanitize_text_field ( get_option ( 'myoptionalmodules_nextlinkclass' ) );
+								$readmore           = sanitize_text_field ( get_option ( 'myoptionalmodules_readmore' ) );
+								$randompost         = sanitize_text_field ( get_option ( 'myoptionalmodules_randompost' ) );
+								$randomtitles       = sanitize_text_field ( get_option ( 'myoptionalmodules_randomtitles' ) );
+								$randomdescriptions = sanitize_text_field ( get_option ( 'myoptionalmodules_randomdescriptions' ) );
+								$miniloop_meta      = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopmeta' ) );
+								$miniloop_style     = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopstyle' ) );
+								$miniloop_amount    = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopamount' ) );										
 								$favicon            = sanitize_text_field ( esc_url ( get_option ( 'myoptionalmodules_favicon' ) ) );
-								$miniloop_style     = sanitize_text_field ( get_option( 'myoptionalmodules_miniloopstyle' ) );
-								$miniloop_amount    = sanitize_text_field ( get_option( 'myoptionalmodules_miniloopamount' ) );										
 								echo "
 								<section>
 									<label>Favicon URL</label>
@@ -574,6 +578,14 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 								<section>
 									<label>Google Verification Content</label>
 									<input type='text' id='myoptionalmodules_verification' name='myoptionalmodules_verification' value='{$verification}' />
+								</section>
+								<section>
+									<label>Alexa Verify ID</label>
+									<input type='text' id='myoptionalmodules_alexa' name='myoptionalmodules_alexa' value='{$alexa}' />
+								</section>
+								<section>
+									<label>Bing Validated ID</label>
+									<input type='text' id='myoptionalmodules_bing' name='myoptionalmodules_bing' value='{$bing}' />
 								</section>
 								<section>
 									<label>Previous link class</label>

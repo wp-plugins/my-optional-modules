@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_enable()
  *
- * File last update: 9.1.6
+ * File last update: 10.0.4
  *
  * Functionality for:
  * - Meta Tags
@@ -20,47 +20,44 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 class myoptionalmodules_enable {
 
 	function __construct() {
-
 		global $myoptionalmodules_metatags , $myoptionalmodules_horizontalgalleries , $myoptionalmodules_sharelinks , $myoptionalmodules_rsslinkbacks , $myoptionalmodules_404s , $myoptionalmodules_fontawesome;
-		if( $myoptionalmodules_metatags ) {
+		if( $myoptionalmodules_metatags ):
 			add_action ( 'wp_head' , array ( $this , 'meta' ) );
 			add_filter ( 'jetpack_enable_opengraph' , '__return_false' , 99 );
 			add_filter ( 'user_contactmethods' , array ( $this , 'twitter' ) );
 			add_filter ( 'admin_init' , array ( $this , 'twitter' ) );
-		}
+		endif;
 
-		if( $myoptionalmodules_horizontalgalleries ) {
+		if( $myoptionalmodules_horizontalgalleries ):
 			remove_shortcode ( 'gallery' );
 			add_action ( 'init' , array ( $this , 'horizontal_gallery_shortcode' ) , 99 );
 			add_filter ( 'use_default_gallery_style' , '__return_false' );
-		}
+		endif;
 
-		if( $myoptionalmodules_sharelinks ) {
+		if( $myoptionalmodules_sharelinks ):
 			add_filter ( 'the_content' , array ( $this , 'share' ) );
-		}
+		endif;
 
-		if( $myoptionalmodules_rsslinkbacks ) {
+		if( $myoptionalmodules_rsslinkbacks ):
 			add_filter ( 'the_content_feed' , array ( $this , 'rss' ) );
 			add_filter ( 'the_excerpt_rss' , array ( $this , 'rss' ) );
-		}
-		if( $myoptionalmodules_404s ) {
-			add_action ( 'wp' , array ( $this , 'no_404s' ) );
-		}
-		if( $myoptionalmodules_fontawesome ) {
-			add_action ( 'wp_enqueue_scripts' , array ( $this , 'fontawesome' ) );
-			add_action ( 'init' , array ( $this , 'fontawesome_shortcode' ) , 99 );
-		}
+		endif;
 
+		if( $myoptionalmodules_404s ):
+			add_action ( 'wp' , array ( $this , 'no_404s' ) );
+		endif;
+
+		if( $myoptionalmodules_fontawesome ):
+			add_action ( 'wp_head' , array ( $this , 'fontawesome' ) );
+			add_action ( 'init' , array ( $this , 'fontawesome_shortcode' ) , 99 );
+		endif;
 	}
 
 	// Twitter Field for User Profiles
 	function twitter( $profile_fields ){
-
 		$profile_fields['twitter_personal'] = 'Twitter handle';
 		return $profile_fields;
-
 	}
-
 
 	// Meta Tags (og:/Twitter)
 	function meta(){
@@ -70,19 +67,24 @@ class myoptionalmodules_enable {
 		$author    = null;
 
 		// OG:
-		$id        = null;
-		$title     = null;
-		$type      = null;
-		$thumbnail = null;
-		$image     = null;
-		$url       = null;
-		$site      = null;
-		$excerpt   = null;
-		$external  = null;
-		$host      = null;
-		$path      = null;
-		$video_w   = null;
-		$video_h   = null;
+		$id             = null;
+		$title          = null;
+		$type           = null;
+		$thumbnail      = null;
+		$image          = null;
+		$url            = null;
+		$site           = null;
+		$excerpt        = null;
+		$external       = null;
+		$host           = null;
+		$path           = null;
+		$video_w        = null;
+		$video_h        = null;
+		$published_time = null;
+		$modified_time  = null;
+		$posttags       = null;
+		$numtags        = null;
+		$num            = null;
 
 		if( is_single() || is_page() )
 			$id = $post->ID;
@@ -138,37 +140,63 @@ class myoptionalmodules_enable {
 			$url   = get_author_posts_url( $author );
 		}
 
-		$title     = sanitize_text_field ( str_replace ( '\'' , '' , $title ) );
-		$url       = sanitize_text_field ( str_replace ( array ( 'https:' , 'http:' ) , '' , esc_url ( $url ) ) );
-		$title     = sanitize_text_field( $title );
-		$site      = sanitize_text_field( $site );
-		$excerpt   = sanitize_text_field( $excerpt );
-		$type      = sanitize_text_field( $type );
-		$image     = sanitize_text_field( $image );
-		$video_w   = sanitize_text_field( $video_w );
-		$video_h   = sanitize_text_field( $video_h );
-		$url       = sanitize_text_field( $url );
+		$title          = sanitize_text_field ( str_replace ( '\'' , '' , $title ) );
+		$url            = sanitize_text_field ( str_replace ( array ( 'https:' , 'http:' ) , '' , esc_url ( $url ) ) );
+		$title          = sanitize_text_field( $title );
+		$site           = sanitize_text_field( $site );
+		$excerpt        = sanitize_text_field( $excerpt );
+		$type           = sanitize_text_field( $type );
+		$image          = sanitize_text_field( $image );
+		$video_w        = sanitize_text_field( $video_w );
+		$video_h        = sanitize_text_field( $video_h );
+		$url            = sanitize_text_field( $url );
+		$published_time = get_the_date( 'Y-m-dTH:i:sP');
+		$modified_time  = get_the_modified_date( 'Y-m-dTH:i:sP');
+		$posttags       = get_the_tags();
+		$numtags        = count ( $posttags );
+		$num            = 0;
 		
-		if( $title )     echo "\n<meta property='og:title' content='{$title}'>";
-		if( $site )      echo "\n<meta property='og:site_name' content='{$site}'>";
-		if( $excerpt )   echo "\n<meta property='og:description' content='{$excerpt}'>";
-		if( $type )      echo "\n<meta property='og:type' content='{$type}'>";
-		if( $thumbnail ) echo "\n<meta property='og:image' content='{$thumbnail}'>";
-		if( $image )     echo "\n<meta property='og:$og_type' content='{$image}'>";
-		if( $video_w )   echo "\n<meta property='og:video:width' content='{$video_w}'>";
-		if( $video_h )   echo "\n<meta property='og:video:height' content='{$video_h}'>";
-		if( $url )       echo "\n<meta property='og:url' content='{$url}'>";
+		if ( $title ):          echo "\n<meta property='og:title' content='{$title}'>";                          endif;
+		if ( $site ):           echo "\n<meta property='og:site_name' content='{$site}'>";                       endif;
+		if ( $excerpt ):        echo "\n<meta property='og:description' content='{$excerpt}'>";                  endif;
+		if ( $type ):           echo "\n<meta property='og:type' content='{$type}'>";                            endif;
+		if ( $thumbnail ):      echo "\n<meta property='og:image' content='{$thumbnail}'>";                      endif;
+		if ( $image ):          echo "\n<meta property='og:$og_type' content='{$image}'>";                       endif;
+		if ( $video_w ):        echo "\n<meta property='og:video:width' content='{$video_w}'>";                  endif;
+		if ( $video_h ):        echo "\n<meta property='og:video:height' content='{$video_h}'>";                 endif;
+		if ( $url ):            echo "\n<meta property='og:url' content='{$url}'>";                              endif;
+		if ( $published_time ): echo "\n<meta property='article:published_time' content='{$published_time}' />"; endif;
+		if ( $modified_time ):  echo "\n<meta property='article:modified_time' content='{$modified_time}' />";   endif;
+		if ( $modified_time ):  echo "\n<meta property='og:updated_time' content='{$modified_time}' />";         endif;
+		if ($posttags):
+			echo "\n<meta property='article:tag' content='";
+			  foreach( $posttags as $tag ):
+				echo "{$tag->name}";
+				if ( ++$num !== $numtags ):
+					echo ',';
+				endif;
+			  endforeach;
+			echo "' />";
+		endif;
 
-		$id        = null;
-		$title     = null;
-		$site      = null;
-		$excerpt   = null;
-		$type      = null;
-		$thumbnail = null;
-		$image     = null;
-		$video_w   = null;
-		$video_h   = null;
-		$url       = null;
+		$id             = null;
+		$title          = null;
+		$type           = null;
+		$thumbnail      = null;
+		$image          = null;
+		$url            = null;
+		$site           = null;
+		$excerpt        = null;
+		$external       = null;
+		$host           = null;
+		$path           = null;
+		$video_w        = null;
+		$video_h        = null;
+		$published_time = null;
+		$modified_time  = null;
+		$posttags       = null;
+		$numtags        = null;
+		$num            = null;
 
 		// Twitter
 		$card        = null;
@@ -389,9 +417,20 @@ class myoptionalmodules_enable {
 
 		$font_awesome_css = plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css';
 		$font_awesome_css = str_replace ( array ( 'https:', 'http:' ) , '' , esc_url ( $font_awesome_css ) );
-
-		wp_enqueue_style ( 'font_awesome' ,  $font_awesome_css );
-
+echo "<script>
+	var cb = function() {
+	var l = document.createElement('link'); l.rel = 'stylesheet';
+	l.href = '{$font_awesome_css}';
+	var h = document.getElementsByTagName('head')[0]; h.parentNode.insertBefore(l, h);
+	};
+	var raf = requestAnimationFrame || mozRequestAnimationFrame ||
+	webkitRequestAnimationFrame || msRequestAnimationFrame;
+	if (raf) raf(cb);
+	else window.addEventListener('load', cb);
+</script>
+<noscript>
+	<link rel='stylesheet' href='{$font_awesome_css}' type='text/css' media='all' />
+</noscript>\n";
 		$font_awesome_css = null;
 
 	}
