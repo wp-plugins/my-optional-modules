@@ -72,7 +72,7 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 
 == Changelog ==
 = 10.0.5 =
-*	*Release Date - *
+*	*Release Date - 28th, May, 2015*
 *   Lazyload Font Awesome CSS
 *   Bing and Alexa site verification added to 'Theme'
 *   initial values 'null' for some options (instead of '0') (bugfix)
