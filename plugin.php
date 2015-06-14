@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: 
 Description: Optional modules and additions for Wordpress.
-Version: 10.0.5
+Version: 10.0.6
 Author: boyevul
 Author URI: 
 
@@ -27,6 +27,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
 $myoptionalmodules_plugin_version       = '10';
+$myoptionalmodules_blank_counter        = 0;
 
 $myoptionalmodules_metatags                            = $myoptionalmodules_horizontalgalleries                 = $myoptionalmodules_sharelinks                         =
 $myoptionalmodules_rsslinkbacks                        = $myoptionalmodules_404s                                = $myoptionalmodules_fontawesome                        =
@@ -60,7 +61,8 @@ $myoptionalmodules_exclude_categoriescategoriesmon     = $myoptionalmodules_excl
 $myoptionalmodules_exclude_categoriescategoriesthu     = $myoptionalmodules_exclude_categoriescategoriesfri     = $myoptionalmodules_exclude_categoriescategoriessat    =
 $myoptionalmodules_exclude_usersuserssun               = $myoptionalmodules_exclude_usersusersmon               = $myoptionalmodules_exclude_usersuserstue              =
 $myoptionalmodules_exclude_usersuserswed               = $myoptionalmodules_exclude_usersusersthu               = $myoptionalmodules_exclude_usersusersfri              =
-$myoptionalmodules_exclude_usersuserssat               = null;
+$myoptionalmodules_exclude_usersuserssat               = $myoptionalmodules_disqus                              = $myoptionalmodules_pluginscript                       =
+null;
 
 
 $myoptionalmodules_getallpluginoptions  = wp_load_alloptions();
@@ -76,12 +78,13 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ):
 	 * - Author Archives
 	 * - Date Archives
 	 */
-	if( $name == 'myoptionalmodules_plugincss' && $value ):                           $myoptionalmodules_plugincss                            = $value; endif;
-	if( $name == 'myoptionalmodules_disablecomments' && $value ):                     $myoptionalmodules_disablecomments                      = $value; endif;
-	if( $name == 'myoptionalmodules_removecode' && $value ):                          $myoptionalmodules_removecode                           = $value; endif;
-	if( $name == 'myoptionalmodules_disablepingbacks' && $value ):                    $myoptionalmodules_disablepingbacks                     = $value; endif;
-	if( $name == 'myoptionalmodules_authorarchives' && $value ):                      $myoptionalmodules_authorarchives                       = $value; endif;
-	if( $name == 'myoptionalmodules_datearchives' && $value ):                        $myoptionalmodules_datearchives                         = $value; endif;
+	if ( $name == 'myoptionalmodules_plugincss' && $value ):                           $myoptionalmodules_plugincss                            = $value; endif;
+	if ( $name == 'myoptionalmodules_pluginscript' && $value ):                        $myoptionalmodules_pluginscript                         = $value; endif;
+	if ( $name == 'myoptionalmodules_disablecomments' && $value ):                     $myoptionalmodules_disablecomments                      = $value; endif;
+	if ( $name == 'myoptionalmodules_removecode' && $value ):                          $myoptionalmodules_removecode                           = $value; endif;
+	if ( $name == 'myoptionalmodules_disablepingbacks' && $value ):                    $myoptionalmodules_disablepingbacks                     = $value; endif;
+	if ( $name == 'myoptionalmodules_authorarchives' && $value ):                      $myoptionalmodules_authorarchives                       = $value; endif;
+	if ( $name == 'myoptionalmodules_datearchives' && $value ):                        $myoptionalmodules_datearchives                         = $value; endif;
 	
 	/**
 	 * Enable
@@ -160,6 +163,7 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ):
 	 * - Random::site::titles
 	 * - Random::site:description
 	 */
+	if( $name == 'myoptionalmodules_disqus' && $value ):                              $myoptionalmodules_disqus                               = $value; endif;
 	if( $name == 'myoptionalmodules_favicon' && $value ):                             $myoptionalmodules_favicon                              = $value; endif;
 	if( $name == 'myoptionalmodules_frontpage' && 'off' != $value ):                  $myoptionalmodules_frontpage                            = $value; endif;
 	if( $name == 'myoptionalmodules_miniloopmeta' && $value ):                        $myoptionalmodules_miniloopmeta                         = $value; endif;
@@ -261,10 +265,8 @@ if( current_user_can( 'edit_dashboard' ) && is_admin() ):
 			if ( 'settings_page_mommaincontrol' != $hook ) return;
 			$font_awesome_css = str_replace ( array ( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' ) );
 			$mom_admin_css    = str_replace ( array ( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/adminstyle/css' . $myoptionalmodules_plugin_version . '.css' ) );
-			$mom_admin_script = str_replace ( array ( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/adminstyle/script.js' ) );
 			wp_enqueue_style ( 'mom_admin_css' , $mom_admin_css );
 			wp_enqueue_style ( 'font_awesome' ,  $font_awesome_css );
-			wp_enqueue_script ( 'mom_admin_script' , $mom_admin_script , array ( 'jquery' ) );
 		}
 
 	}

@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: meta, og, twitter, facebook, google, random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 10.0.5
+Stable tag: 10.0.6
 
 An assortment of functions to enhance WordPress.
 
@@ -50,6 +50,7 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 *	Replace 'read more...' on excerpts
 *	Enable a keyword for random posts
 *	Set a selection of random site titles and descriptions
+*	Universal Disqus Code (non-Wordpress Identifying)
 
 = Exclude Posts =
 *	Exclude posts based on author, category, tag, or post format
@@ -71,6 +72,13 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 2.	Share icons displayed at the top of the post content.
 
 == Changelog ==
+= 10.0.6 =
+*	*Release Date - 14th, June, 2015*
+*	Insert Disqus Universal Code
+*   Ability to disable the My Optional Modules script.js load
+*	Theme:Miniloop fix (display)
+*   Excluding posts from logged out visitors not working on single post view, but error resolved regarding redeclaration
+
 = 10.0.5 =
 *	*Release Date - 28th, May, 2015*
 *   Lazyload Font Awesome CSS

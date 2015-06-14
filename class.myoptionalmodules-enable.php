@@ -473,55 +473,55 @@ echo "<script>
 		
 		$output  = '<div class="mom_shareLinks">';
 		
-		if( $myoptionalmodules_sharelinks_text ) {
+		if( $myoptionalmodules_sharelinks_text ):
 			$myoptionalmodules_sharelinks_text = esc_html ( $myoptionalmodules_sharelinks_text );
-		$output .= "<span>{$myoptionalmodules_sharelinks_text}</span>";
-		}
-		if( $myoptionalmodules_sharelinks_reddit && $myoptionalmodules_fontawesome ) {
+			$output .= "<span>{$myoptionalmodules_sharelinks_text}</span>";
+		endif;
+		if( $myoptionalmodules_sharelinks_reddit && $myoptionalmodules_fontawesome ):
 			$output .= "<a class='reddit fa fa-reddit' href='//www.reddit.com/submit?url={$url}'></a>";
-		} elseif( $myoptionalmodules_sharelinks_reddit && !$myoptionalmodules_fontawesome ) {
+		elseif( $myoptionalmodules_sharelinks_reddit && !$myoptionalmodules_fontawesome ):
 			$output .= "<a class='reddit' href='//www.reddit.com/submit?url={$url}'>reddit</a>";
-		}
+		endif;
 
-		if( $myoptionalmodules_sharelinks_google && $myoptionalmodules_fontawesome  ) {
+		if( $myoptionalmodules_sharelinks_google && $myoptionalmodules_fontawesome  ):
 			$output .= "<a class='google fa fa-google-plus' href='https://plus.google.com/share?url={$url}'></a>";
-		} elseif( $myoptionalmodules_sharelinks_google && !$myoptionalmodules_fontawesome  ) {
+		elseif( $myoptionalmodules_sharelinks_google && !$myoptionalmodules_fontawesome  ):
 			$output .= "<a class='google' href='https://plus.google.com/share?url={$url}'>google+</a>";
-		}
+		endif;
 
-		if( $myoptionalmodules_sharelinks_twitter && $myoptionalmodules_fontawesome  ) {
+		if( $myoptionalmodules_sharelinks_twitter && $myoptionalmodules_fontawesome  ):
 			$output .= "<a class='twitter fa fa-twitter' href='//twitter.com/home?status=Reading:%20{$url}'></a>";
-		} elseif( $myoptionalmodules_sharelinks_twitter && !$myoptionalmodules_fontawesome  ) {
+		elseif( $myoptionalmodules_sharelinks_twitter && !$myoptionalmodules_fontawesome  ):
 			$output .= "<a class='twitter' href='//twitter.com/home?status=Reading:%20{$url}'>twitter</a>";
-		}
+		endif;
 
-		if( $myoptionalmodules_sharelinks_facebook && $myoptionalmodules_fontawesome  ) {
+		if( $myoptionalmodules_sharelinks_facebook && $myoptionalmodules_fontawesome  ):
 			$output .= "<a class='facebook fa fa-facebook' href='//www.facebook.com/sharer.php?u={$url}&amp;t={$title}'></a>";
-		} elseif( $myoptionalmodules_sharelinks_facebook && !$myoptionalmodules_fontawesome  ) {
+		elseif( $myoptionalmodules_sharelinks_facebook && !$myoptionalmodules_fontawesome  ):
 			$output .= "<a class='facebook' href='//www.facebook.com/sharer.php?u={$url}&amp;t={$title}'>facebook</a>";
-		}
+		endif;
 
-		if( $myoptionalmodules_sharelinks_email && $myoptionalmodules_fontawesome  ) {
+		if( $myoptionalmodules_sharelinks_email && $myoptionalmodules_fontawesome  ):
 			$output .= "<a class='email fa fa-envelope' href='mailto:?subject={$title}&amp;body=%20{$excerpt}[{$url}]'></a>";
-		} elseif( $myoptionalmodules_sharelinks_email && !$myoptionalmodules_fontawesome  ) {
+		elseif( $myoptionalmodules_sharelinks_email && !$myoptionalmodules_fontawesome  ):
 			$output .= "<a class='email' href='mailto:?subject={$title}&amp;body={$excerpt}%20[{$url}]'>email</a>";
-		}
+		endif;
 
 		$output .='</div>';
 
-		if( is_single() && $myoptionalmodules_shareslinks_top ) {
+		if( is_single() && $myoptionalmodules_shareslinks_top ):
 			return $output . $content;
-		} elseif( is_single() && !$myoptionalmodules_shareslinks_top ) {
+		elseif( is_single() && !$myoptionalmodules_shareslinks_top ):
 			return do_shortcode ( $content ) . $output;
-		} elseif( is_page() && $myoptionalmodules_sharelinks_pages) {
-			if( is_page() && $myoptionalmodules_shareslinks_top ) {
+		elseif( is_page() && $myoptionalmodules_sharelinks_pages):
+			if( is_page() && $myoptionalmodules_shareslinks_top ):
 				return $output . $content;
-			} elseif( is_page() && !$myoptionalmodules_shareslinks_top ) {
+			elseif( is_page() && !$myoptionalmodules_shareslinks_top ):
 				return do_shortcode ( $content ) . $output;
-			}
-		} else {
+			endif;
+		else:
 			return do_shortcode ( $content );
-		}
+		endif;
 
 	}
 
@@ -536,10 +536,10 @@ echo "<script>
 	// 404s
 	function no_404s() {
 
-		if( is_404() ) {
+		if( is_404() ):
 			header ( 'location:' . esc_url ( get_site_url() ) );
 			exit;
-		}
+		endif;
 
 	}
 

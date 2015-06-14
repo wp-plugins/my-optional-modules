@@ -22,10 +22,11 @@ function myoptionalmodules_miniloop_shortcode( $atts ) {
 	global $paged, $post;
 	
 	$current_post   = 0;
-	if( is_single() )
+	if( is_single() ):
 		$current_post = $post->ID;
-	if( is_page() )
+	elseif( is_page() ):
 		$current_post = $post->ID;
+	endif;
 	$thumbs         = null;
 	$show_link      = null;
 	$amount         = null;
@@ -117,9 +118,10 @@ function myoptionalmodules_miniloop_shortcode( $atts ) {
 	
 	$open = '<div class="loopdeloopRotation loopdeloop_' . $style .'">';
 
-	if( $paging )
+	if( $paging ):
 		$paged = ( get_query_var ( 'page' ) ) ? get_query_var ( 'page' ) : 1;
-
+	endif;
+	
 	if( $meta && $key ) {
 		$args = array (
 			'post__not_in'     => array ( $exclude , $current_post ),

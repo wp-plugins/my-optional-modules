@@ -5,6 +5,7 @@
  * File last update: 10.0.5
  *
  * Functionality for:
+ * - Disqus Universal Code
  * - Miniloops
  * - Google Analytics
  * - Google Site Verification
@@ -25,7 +26,10 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 class myoptionalmodules_misc {
 
 	function __construct() {
-		global $myoptionalmodules_randompost , $myoptionalmodules_bing , $myoptionalmodules_alexa , $myoptionalmodules_google , $myoptionalmodules_verification , $myoptionalmodules_frontpage , $myoptionalmodules_previouslinkclass , $myoptionalmodules_nextlinkclass , $myoptionalmodules_readmore , $myoptionalmodules_randomtitles , $myoptionalmodules_randomdescriptions;
+		global $myoptionalmodules_disqus , $myoptionalmodules_randompost , $myoptionalmodules_bing , $myoptionalmodules_alexa , $myoptionalmodules_google , $myoptionalmodules_verification , $myoptionalmodules_frontpage , $myoptionalmodules_previouslinkclass , $myoptionalmodules_nextlinkclass , $myoptionalmodules_readmore , $myoptionalmodules_randomtitles , $myoptionalmodules_randomdescriptions;
+		if( $myoptionalmodules_disqus ):
+			add_filter ( 'comments_template' , array ( $this , 'disqus_code' ) );
+		endif;
 		add_filter ( 'the_content' , array ( $this , 'miniloop' ) );
 		if( $myoptionalmodules_google ):
 			add_action ( 'wp_head' , array ( $this , 'google_analytics' ) );
@@ -65,13 +69,18 @@ class myoptionalmodules_misc {
 		endif;
 	}
 
+	// Disqus Universal Code
+	function disqus_code ( $comment_template ) {
+		return dirname( __FILE__ ) . '/includes/templates/disqus.php';
+	}
+	
 	// Miniloops
-	function miniloop( $content ) {
+	function miniloop ( $content ) {
 		global $wp , $post , $myoptionalmodules_miniloopmeta , $myoptionalmodules_miniloopstyle , $myoptionalmodules_miniloopamount;
 		if( is_single() && $myoptionalmodules_miniloopmeta && $myoptionalmodules_miniloopstyle && $myoptionalmodules_miniloopamount):
 			$key    = sanitize_text_field ( get_post_meta ( $post->ID , $myoptionalmodules_miniloopmeta , true ) );
 			if( $key && $myoptionalmodules_miniloopmeta ):
-				$output = do_shortcode ( '[mom_miniloop meta="{$myoptionalmodules_miniloopmeta}" key="{$key}" style="{$myoptionalmodules_miniloopstyle}" amount="{$myoptionalmodules_miniloopamount}" ]' );
+				$output = do_shortcode ( "[mom_miniloop meta='{$myoptionalmodules_miniloopmeta}' key='{$key}' style='{$myoptionalmodules_miniloopstyle}' amount='{$myoptionalmodules_miniloopamount}' ]" );
 			else:
 				$output = null;
 			endif;
@@ -84,18 +93,13 @@ class myoptionalmodules_misc {
 	// Google Analytics
 	function google_analytics() {
 		global $myoptionalmodules_google;
-		if( is_single() || is_page() ):
-			$url = esc_js ( get_permalink() );
-		else:
-			$url = esc_js ( esc_url ( home_url ('/' ) ) );
-		endif;
 		echo "
 		<script>
 			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-			ga('create', '{$myoptionalmodules_google}', '{$url}');
+			ga('create', '{$myoptionalmodules_google}', 'auto');
 			ga('send', 'pageview');
 		</script>\n\n";
 	}

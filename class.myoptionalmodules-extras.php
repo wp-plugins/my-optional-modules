@@ -56,7 +56,11 @@ class myoptionalmodules_extras {
 
 	// Exclude posts
 	function exclude( $query ) {
-		include( 'function.exclude.php' );
+		global $myoptionalmodules_blank_counter;
+		++$myoptionalmodules_blank_counter;
+		if ( 1 == $myoptionalmodules_blank_counter ):
+			include( 'function.exclude.php' );
+		endif;
 	}
 
 }

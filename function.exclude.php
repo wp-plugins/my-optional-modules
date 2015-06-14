@@ -2,7 +2,7 @@
 /**
  * FUNCTION(ality) Exclude Posts
  *
- * File last update: 10.0.1
+ * File last update: 10.0.6
  *
  * Alter the query to remove posts based on many parameters
  */ 
@@ -197,7 +197,16 @@ $categories_to_hide = array_merge( ( array ) $hideUserCats, ( array ) $hideLogge
 $tags_to_hide       = array_merge( ( array ) $hideUserTags, ( array ) $hideLoggedOutTags, ( array ) $rssday );
 $users_to_hide      = array_filter( array_unique ( $users_to_hide ) );
 $categories_to_hide = array_filter( array_unique ( $categories_to_hide ) );
-$tags_to_hide       = array_filter( array_unique ( $tags_to_hide ) );	
+$tags_to_hide       = array_filter( array_unique ( $tags_to_hide ) );
+
+
+$users_to_hide      = preg_replace ( '/,+/' , ',' , $users_to_hide );
+$categories_to_hide = preg_replace ( '/,+/' , ',' , $categories_to_hide );
+$tags_to_hide       = preg_replace ( '/,+/' , ',' , $tags_to_hide );
+$loggedOutUsers     = preg_replace ( '/,+/' , ',' , $loggedOutUsers );
+$loggedOutCats      = preg_replace ( '/,+/' , ',' , $loggedOutCats );
+$loggedOutTags      = preg_replace ( '/,+/' , ',' , $loggedOutTags );
+
 
 /**
  * Loop alteration magic
@@ -235,20 +244,22 @@ endif;
  * Exclusion rules based on user levels will determine if these posts 
  * can be viewed in is_single() or not.
  */
-if ( $loggedOutUsers )
-	$chck_users = str_replace ( ',' , '' , $loggedOutUsers );
-if ( $loggedOutCats )
-	$chck_cats  = str_replace ( ',' , '' , $loggedOutCats );
-if ( $loggedOutTags )
-	$chck_tags  = str_replace ( ',' , '' , $loggedOutTags );
-
+if ( $loggedOutUsers ):
+	$chck_users = str_replace ( ',' , ',' , $loggedOutUsers );
+endif;
+if ( $loggedOutCats ):
+	$chck_cats  = str_replace ( ',' , ',' , $loggedOutCats );
+endif;
+if ( $loggedOutTags ):
+	$chck_tags  = str_replace ( ',' , ',' , $loggedOutTags );
+endif;
 
 if ( intval ( $chck_users ) || intval ( $chck_cats ) || intval ( $chck_tags ) ):
 	add_filter( 'the_content', 'myoptionalmodules_destroy_content_view', 20 );
 	function myoptionalmodules_destroy_content_view( $content ) {
-		if( is_single() ) {
+		if( is_single() ):
 			$content = '<div class="mom-unauthorized-content">You do not have permission to view this content.</div>';
-		}
-		return do_shortcode ( $content );
+			return do_shortcode ( $content );
+		endif;
 	}
 endif;

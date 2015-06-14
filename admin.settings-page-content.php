@@ -2,7 +2,7 @@
 /**
  * ADMIN Settings Page Content
  *
- * File last update: 10.0.5
+ * File last update: 10.0.6
  *
  * Content of the /wp-admin/ SETTINGS PAGE for this plugin
  * INCLUDING all SAVE OPERATIONS.
@@ -177,6 +177,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 
 					$options_disable = array (
 						'myoptionalmodules_plugincss' ,
+						'myoptionalmodules_pluginscript' ,
 						'myoptionalmodules_disablecomments' ,
 						'myoptionalmodules_removecode' ,
 						'myoptionalmodules_disablepingbacks' ,
@@ -185,6 +186,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 					);
 					$keys_disable = array (
 						' Plugin CSS' ,
+						' Plugin Script' ,
 						' Comment form' ,
 						' Unnecessary Code' ,
 						' Pingbacks' ,
@@ -267,6 +269,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						'myoptionalmodules_frontpage' ,
 						'myoptionalmodules_miniloopmeta' ,
 						'myoptionalmodules_favicon' ,
+						'myoptionalmodules_disqus' ,
 						'myoptionalmodules_miniloopstyle' ,
 						'myoptionalmodules_miniloopamount'
 					);
@@ -380,20 +383,9 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 					<div id="myoptionalmodules">
 					
 						<h2>My Optional Modules</h2>
-					
-						<div class="control-panel">
-							<a href="#tools-components-content" id="toggle-tools-components" data-div="tools-components-content" class="fa fa-wrench"><span>Tools</span></a>
-							<a href="#disable-components-content" id="toggle-disable-components" data-div="disable-components-content" class="fa fa-minus-square"><span>Disable</span></a>
-							<a href="#enable-components-content" id="toggle-enable-components" data-div="enable-components-content" class="fa fa-plus-square"><span>Enable</span></a>
-							<a href="#comment-components-content" id="toggle-comment-components" data-div="comment-components-content" class="fa fa-comments"><span>Comments</span></a>
-							<a href="#extras-components-content" id="toggle-extras-components" data-div="extras-components-content" class="fa fa-check-square"><span>Extras</span></a>
-							<a href="#theme-components-content" id="toggle-theme-components" data-div="theme-components-content" class="fa fa-book"><span>Theme</span></a>';
-							if ( get_option ( 'myoptionalmodules_exclude' ) )
-								echo '<a href="#exclude-components-content" id="toggle-exclude-components" data-div="exclude-components-content" class="fa fa-tag"><span>Exclude</span></a>';
-						echo '</div>
-						
-						<div id="tools-components-content" class="enabled">
-							<h3 class="fa fa-wrench"> Tools</h3>
+						<div class="clear">
+						<div class="setting">
+							<em>tools</em>
 							<form class="clutter" method="post" action="" name="optimizeTables">';
 								wp_nonce_field ( 'optimizeTablesForm' );
 								echo '
@@ -403,31 +395,31 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 							<form class="clutter" method="post" action="" name="deleteAllClutter">';
 								wp_nonce_field ( 'deleteAllClutterForm' );
 								echo '
-								<label for="deleteAllClutter"><i class="fa fa-trash-o"></i>All Trash</label>
+								<label for="deleteAllClutter"><i class="fa fa-trash-o"></i>Empty Trash</label>
 								<input class="hidden" id="deleteAllClutter" type="submit" value="Go" name="deleteAllClutter">
 							</form>
 							<form class="clutter" method="post" action="" name="deletePostRevisionsForm">';
 								wp_nonce_field ( 'deletePostRevisionsForm' );
 								echo '
-								<label for="delete_post_revisions"><i class="fa fa-trash-o"></i>Revisions + AutoDrafts</label>
+								<label for="delete_post_revisions"><i class="fa fa-trash-o"></i>Delete Revisions/Autodrafts</label>
 								<input class="hidden" id="delete_post_revisions" type="submit" value="Go" name="delete_post_revisions">
 							</form>
 							<form class="clutter" method="post" action="" name="deleteUnapprovedCommentsForm">';
 								wp_nonce_field ( 'deleteUnapprovedCommentsForm' );
 								echo '
-								<label for="delete_unapproved_comments"><i class="fa fa-trash-o"></i>Comments</label>
+								<label for="delete_unapproved_comments"><i class="fa fa-trash-o"></i>Clean Up Comments</label>
 								<input class="hidden" id="delete_unapproved_comments" type="submit" value="Go" name="delete_unapproved_comments">
 							</form>
 							<form class="clutter" method="post" action="" name="deleteUnusedTermsForm">';
 								wp_nonce_field ( 'deleteUnusedTermsForm' );
 								echo '
-								<label for="delete_unused_terms"><i class="fa fa-trash-o"></i>Orphan Tags + Categories</label>
+								<label for="delete_unused_terms"><i class="fa fa-trash-o"></i>Clean Up Tags/Categories</label>
 								<input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms">
 							</form>
 							<form class="clutter" method="post" action="" name="deleteDraftsForm">';
 								wp_nonce_field ( 'deleteDraftsForm' );
 								echo '
-								<label for="delete_drafts"><i class="fa fa-trash-o"></i>Drafts</label>
+								<label for="delete_drafts"><i class="fa fa-trash-o"></i>Delete Drafts</label>
 								<input class="hidden" id="delete_drafts" type="submit" value="Go" name="delete_drafts">
 							</form>
 						</div>
@@ -435,22 +427,23 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						<form method="post" name="myoptionalmodules_settings_form" action="" class="MOM_form">';
 						wp_nonce_field ( 'myoptionalmodules_settings_form' );
 						echo '
-							<div id="disable-components-content" class="disabled">
-								<h3 class="fa fa-minus-square"> Disable</h3>';
+							<div class="setting">
+								<em>disable</em>';
 								foreach ( $options_disable as &$option ) {
 									$title   = str_replace( $options_disable , $keys_disable , $option );
 									$checked = null;
-
 									if ( get_option ( $option ) )
 										$checked = ' checked';
 									echo "
 									<section>
-										<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> {$title}
+										<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> <label for='{$option}'>{$title}</label>
 									</section>";
 								}								
 							echo '</div>
-							<div id="comment-components-content" class="disabled">
-								<h3 class="fa fa-comments"> Comments</h3>';
+							</div>
+							<div class="clear">
+							<div class="setting">
+								<em>comments</em>';
 								if( !get_option ( 'myoptionalmodules_disablecomments' ) ) {
 									foreach ( $options_comment_form as &$option ) {
 										$title = str_replace ( $options_comment_form , $keys_comment_form , $option );
@@ -459,13 +452,13 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 											$checked = ' checked';
 										echo "
 										<section>
-											<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> {$title}
+											<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> <label for='{$option}'>{$title}</label>
 										</section>";
 									}
 								}
 							echo '</div>
-							<div id="enable-components-content" class="disabled">
-								<h3 class="fa fa-plus-square"> Enable</h3>';
+							<div class="setting">
+								<em>enable</em>';
 								foreach ( $options_enable as &$option ) {
 									$title = str_replace( $options_enable , $keys_enable , $option );
 									$checked = null;
@@ -474,13 +467,13 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 										$checked = ' checked';
 									echo "
 									<section>
-										<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> {$title}
+										<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> <label for='{$option}'>{$title}</label>
 									</section>";
 								}
 								if ( get_option ( 'myoptionalmodules_sharelinks' ) ) {
 										$myoptionalmodules_sharelinks_text = sanitize_text_field ( get_option ( 'myoptionalmodules_sharelinks_text' ) );
 										echo "
-										<hr /><label>Share text &mdash; <small><em>ex: share via:</em></small></label>
+										<hr /><label>Share text &mdash; <small>ex: share via:</small></label>
 										<input type='text' value='{$myoptionalmodules_sharelinks_text}' id='myoptionalmodules_sharelinks_text' name='myoptionalmodules_sharelinks_text' />";
 										foreach ( $options_shares as &$option ) {
 											$title = str_replace ( $options_shares , $keys_shares , $option );
@@ -489,13 +482,15 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 												$checked = ' checked';
 											echo "
 											<section>
-												<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> {$title}
+												<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> <label for='{$option}'>{$title}</label>
 											</section>";
 										}
 								}
 							echo '</div>
-							<div id="extras-components-content" class="disabled">
-								<h3 class="fa fa-check-square"> Extras</h3>';
+							</div>
+							<div class="clear">
+							<div class="setting">
+								<em>extras</em>';
 								foreach ( $options_extras as &$option ) {
 									$title = str_replace ( $options_extras , $keys_extras , $option );
 									$checked = null;
@@ -504,11 +499,12 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 										$checked = ' checked';
 										echo "
 										<section>
-											<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> {$title}
+											<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> <label for='{$option}'>{$title}</label>
 										</section>";
 								}
 							echo'</div>
-							<div id="theme-components-content" class="disabled">
+							<div class="setting">
+								<em>theme</em>
 								<select name="myoptionalmodules_frontpage" id="mompaf_0">
 									<option value="off"';
 									if ( get_option ( 'myoptionalmodules_frontpage' ) == 'off' )
@@ -546,7 +542,12 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 								$miniloop_style     = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopstyle' ) );
 								$miniloop_amount    = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopamount' ) );										
 								$favicon            = sanitize_text_field ( esc_url ( get_option ( 'myoptionalmodules_favicon' ) ) );
+								$disqus             = sanitize_text_field ( get_option ( 'myoptionalmodules_disqus' ) );
 								echo "
+								<section>
+									<label>Disqus Shortname <small>&mdash; <strong>this</strong>.disqus.com</small></label>
+									<input type='text' id='myoptionalmodules_disqus' name='myoptionalmodules_disqus' value='{$disqus}' />
+								</section>
 								<section>
 									<label>Favicon URL</label>
 									<input type='text' id='myoptionalmodules_favicon' name='myoptionalmodules_favicon' value='{$favicon}' />
@@ -600,7 +601,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 									<input type='text' id='myoptionalmodules_readmore' name='myoptionalmodules_readmore' value='{$readmore}' />
 								</section>
 								<section>
-									<label>yoursite.tld/<em>?random</em> keyword</label>
+									<label>yoursite.tld/<code>?random</code> keyword</label>
 									<input type='text' id='myoptionalmodules_randompost' name='myoptionalmodules_randompost' value='{$randompost}' />
 								</section>
 								<section>
@@ -612,7 +613,9 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 									<textarea id='myoptionalmodules_randomdescriptions' name='myoptionalmodules_randomdescriptions'>{$randomdescriptions}</textarea>
 								</section>";
 							echo '</div>
-							<div id="exclude-components-content" class="disabled">';
+							</div>
+							<div class="clear">
+							<div id="exclude-components-content">';
 								if ( get_option ( 'myoptionalmodules_exclude' ) ) {
 									$showmepages = get_pages();
 									$showmecats  = get_categories ( 'taxonomy=category&hide_empty=0' );
@@ -622,7 +625,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 									$catcount    = 0;
 									$usercount   = 0;
 									echo '
-									<div class="fullwidth">
+									<div class="setting full">
 										<strong>Exclude Posts</strong>
 										<p>Each field takes a comma-separated list of items for exclusion from the specified
 										section of the blog. When filling out each field, <code>this is the value you will use</code>. Names are there for reference.</p>
@@ -872,7 +875,8 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 										echo '
 										<input type="submit" value="Uninstall Confirm" class="button button-primary" name="myoptionalmodules_settings_uninstall_confirm" id="myoptionalmodules_settings_uninstall_confirm">';
 							echo '
-							</div>							
+							</div>
+							</div>
 						</form>
 					</div>';
 				}

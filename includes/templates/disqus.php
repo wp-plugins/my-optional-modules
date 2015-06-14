@@ -1,7 +1,9 @@
 <?php 
 
 	global $myoptionalmodules_disqus;
-	echo "<script type='text/javascript'>
+	echo "
+	<div id='disqus_thread'></div>
+	<script type='text/javascript'>
 		var disqus_shortname = '{$myoptionalmodules_disqus}';
 		(function() {
 			var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

@@ -30,10 +30,10 @@ class myoptionalmodules {
 		add_action ( 'admin_enqueue_scripts' , array ( $this , 'font_awesome' ) );
 		add_action ( 'after_setup_theme' , array ( $this , 'post_formats' ) );
 	
-		if( 1 == $myoptionalmodules_plugincss ) {
-		} else {
+		if( 1 == $myoptionalmodules_plugincss ):
+		else:
 			add_action  ( 'wp_print_styles' , array ( $this , 'plugin_stylesheets' ) );
-		}
+		endif;
 
 	}
 
@@ -43,13 +43,18 @@ class myoptionalmodules {
 			function mom_jquery(){
 				global $myoptionalmodules_lazyload;
 				global $myoptionalmodules_lazyload_version;
+				global $myoptionalmodules_pluginscript;
 				if( $myoptionalmodules_lazyload ) {
 					$lazyLoadFunctions = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/lazyload.js' ) );
 					wp_enqueue_script ( 'lazyload' , $myoptionalmodules_lazyload_version , array ( 'jquery' ) );
 					wp_enqueue_script ( 'lazyloadFunctions' , $lazyLoadFunctions , array ( 'jquery' ) );
 				}
 				$pluginfunctions = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/script.js' ) );
-				wp_enqueue_script ( 'mom_plugin_functions' , $pluginfunctions , array ( 'jquery' ) );
+				if ( 1 == $myoptionalmodules_pluginscript ):
+				else:
+					wp_enqueue_script ( 'mom_plugin_functions' , $pluginfunctions , array ( 'jquery' ) );
+				endif;
+				
 			}
 			add_action( 'wp_enqueue_scripts' , 'mom_jquery' );
 	}
