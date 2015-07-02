@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: meta, og, twitter, facebook, google, random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 10.0.6
+Stable tag: 10.0.7
 
 An assortment of functions to enhance WordPress.
 
@@ -35,6 +35,14 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 = Comment Form Components =
 *	DNS Blacklist lookup for potential commenters
 *	Hidden spam field to thwart bots
+
+= Media embedding =
+*	[mom_embed url='URL'] embeds from the following:
+*	Animoto, Blip, CollegeHumor, DailyMotion, DeviantArt,EmbedArticles, Flickr, 
+*	FunnyOrDie, gist.github, Gyfcat, Hulu, img.bi, Imgur, Instagram, iSnare, Issuu, 
+*	Kickstarter, Liveleak, Meetup, Mixcloud, Photobucket, PollDaddy, Redtube, 
+*	Rdio, Revision3, Scribd, SlideShare, SmugMug, SoundCloud, Spotify, TED, Tumblr, 
+*	Vidme, Vimeo, Vine, WordPress.tv, Youtube
 
 = Extra Features =
 *	oEmbed featured images
@@ -72,6 +80,10 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 2.	Share icons displayed at the top of the post content.
 
 == Changelog ==
+= 10.0.7 =
+*	*Release Date - 2nd, July, 2015*
+*	img.bi, deviantart, redtube, and vid.me added to [mom_embed]
+
 = 10.0.6 =
 *	*Release Date - 14th, June, 2015*
 *	Insert Disqus Universal Code

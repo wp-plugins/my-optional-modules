@@ -321,6 +321,20 @@ class myoptionalmodules_shortcodes{
 	
 	function charts ( $atts ) {
 
+		/*
+		 * [mom_charts type='TYPE' content='CONTENT' total_possible='TOTAL POSSIBLE' overall='0/1']
+		 *
+		 * [mom_charts type='bar' content='Acting:9::Story:5::Tone:6' total_possible='10' overall='1']
+		 * results in a bar graph with 3 items (acting, story, tone) with percent filled based on 
+		 * ratings (9, 5, 6) out of total possible (10).
+		 *
+		 * OPTIONAL: Add (ADDITIONAL INFORMATION) after rating for an item.
+		 * ITEM DESCRIPTION:RATING::(INFORMATION)::...
+		 *
+		 * ITEM DESCRIPTION:RATING::ITEM DESCRIPTION 2:RATING 2:ITEM DESCRIPTION 3:RATING 3...
+		 * Item descriptions should not have numbers, ratings should only be numbers.
+		 */
+	
 		$type = $output = null;
 		
 		extract (
