@@ -2,7 +2,7 @@
 /**
  * CLASS mom_mediaEmbed()
  *
- * File last update: 10.0.7
+ * File last update: 10.0.8
  *
  * Create a media embed from a URL in a template (or other) by passing a 
  * URL through the class:
@@ -21,6 +21,8 @@ class mom_mediaEmbed {
 
 	function mom_mediaEmbed ( $url , $title = null , $class = null , $size = null ) {
 
+		global $myoptionalmodules_pluginscript;
+	
 		if ( filter_var ( $url , FILTER_VALIDATE_URL ) !== false ):
 			if ( $size ):
 				$size   = sanitize_text_field ( $size );
@@ -47,10 +49,17 @@ class mom_mediaEmbed {
 
 				// img.bi
 				if ( strpos ( $host , 'img.bi' ) !== false ):
-					$output .= "
-						<img data-imgbi='{$url}' />
-						<noscript><a href='{$url}'>Image linked ({$url})</a></noscript>
-					";
+					
+					if ( 1 == $myoptionalmodules_pluginscript ):
+						$output .= "
+							<a href='{$url}'>Image linked ({$url})</a>
+						";
+					else:
+						$output .= "
+							<img data-imgbi='{$url}' />
+							<noscript><a href='{$url}'>Image linked ({$url})</a></noscript>
+						";
+					endif;
 
 				// Deviant Art
 				elseif ( strpos ( $host , 'deviantart.com' ) !== false ):
@@ -190,31 +199,33 @@ class mom_mediaEmbed {
 					$url       = sanitize_text_field ( $url );
 					$thumbnail = "//img.youtube.com/vi/{$url}/0.jpg";
 					
-					/*$output .= "<object width='640' height='390' data='https://www.youtube.com/v/{$url}?version=3{$timestamp}'>
-							<param name='movie' value='https://www.youtube.com/v/{$url}?version=3{$timestamp}' />
-							<param name='allowScriptAccess' value='always' />
-							<embed src='https://www.youtube.com/v/{$url}?version=3{$timestamp}'
-							type='application/x-shockwave-flash'
-							allowscriptaccess='always'
-							width='640' 
-							height='390' />
-						</object>";*/
-					
-					$output .= "<div id='mom-youtube-{$url}' class='mom-youtube-content-div'>
-						<img src='{$thumbnail}' data-time='{$timestamp}' data-video='{$url}' id='mom-youtube-thumbnail-{$url}' class='skipLazy mom-youtube-thumbnail' />
-						<i class='mom-youtube-play-button fa fa-play-circle'> &mdash; click thumbnail to play</i>
-					</div>
-					<noscript>
-						<object width='640' height='390' data='https://www.youtube.com/v/{$url}?version=3{$timestamp}'>
-							<param name='movie' value='https://www.youtube.com/v/{$url}?version=3{$timestamp}' />
-							<param name='allowScriptAccess' value='always' />
-							<embed src='https://www.youtube.com/v/{$url}?version=3{$timestamp}'
-							type='application/x-shockwave-flash'
-							allowscriptaccess='always'
-							width='640' 
-							height='390' />
-						</object>
-					</noscript>";
+					if ( 1 == $myoptionalmodules_pluginscript ):
+						$output .= "<object width='640' height='390' data='https://www.youtube.com/v/{$url}?version=3{$timestamp}'>
+								<param name='movie' value='https://www.youtube.com/v/{$url}?version=3{$timestamp}' />
+								<param name='allowScriptAccess' value='always' />
+								<embed src='https://www.youtube.com/v/{$url}?version=3{$timestamp}'
+								type='application/x-shockwave-flash'
+								allowscriptaccess='always'
+								width='640' 
+								height='390' />
+							</object>";
+					else:
+						$output .= "<div id='mom-youtube-{$url}' class='mom-youtube-content-div'>
+							<img src='{$thumbnail}' data-time='{$timestamp}' data-video='{$url}' id='mom-youtube-thumbnail-{$url}' class='skipLazy mom-youtube-thumbnail' />
+							<i class='mom-youtube-play-button fa fa-play-circle'> &mdash; click thumbnail to play</i>
+						</div>
+						<noscript>
+							<object width='640' height='390' data='https://www.youtube.com/v/{$url}?version=3{$timestamp}'>
+								<param name='movie' value='https://www.youtube.com/v/{$url}?version=3{$timestamp}' />
+								<param name='allowScriptAccess' value='always' />
+								<embed src='https://www.youtube.com/v/{$url}?version=3{$timestamp}'
+								type='application/x-shockwave-flash'
+								allowscriptaccess='always'
+								width='640' 
+								height='390' />
+							</object>
+						</noscript>";
+					endif;
 				
 				// gists
 				elseif ( strpos ( $host , 'gist.github.com' ) !== false ):

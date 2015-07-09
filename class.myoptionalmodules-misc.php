@@ -122,9 +122,10 @@ class myoptionalmodules_misc {
 	}
 
 	// Frontpage post
-	function front_post() {
+	function front_post( $query ) {
 		global $myoptionalmodules_frontpage;
-		if( is_home() && 'off' != $myoptionalmodules_frontpage ):
+		
+	if( is_home() && 'off' != $myoptionalmodules_frontpage ):
 			if( is_numeric ( $myoptionalmodules_frontpage ) ):
 				$myoptionalmodules_frontpage = $myoptionalmodules_frontpage;
 			elseif( $myoptionalmodules_frontpage ):
