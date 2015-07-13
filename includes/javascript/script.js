@@ -149,7 +149,7 @@ jQuery(document).ready(function($){
 			);
 			$( '#mom-youtube-thumbnail-' + mom_youtube_id ).remove();
 			$( '#mom-youtube-' + mom_youtube_id + ' .mom-youtube-play-button' ).remove();
-			$(".media-embed").fitVids();
+			$(".embed").fitVids();
 		});
 	});
 	
