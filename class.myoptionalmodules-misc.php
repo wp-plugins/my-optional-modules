@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_misc()
  *
- * File last update: 10.0.5
+ * File last update: 10.0.9
  *
  * Functionality for:
  * - Disqus Universal Code
@@ -91,17 +91,21 @@ class myoptionalmodules_misc {
 	}
 
 	// Google Analytics
+	// Don't show if user is admin
 	function google_analytics() {
-		global $myoptionalmodules_google;
-		echo "
-		<script>
-			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-			ga('create', '{$myoptionalmodules_google}', 'auto');
-			ga('send', 'pageview');
-		</script>\n\n";
+		global $wp , $myoptionalmodules_google;
+		if ( !current_user_can ( 'manage_options' ) ):
+			echo "
+			<script>
+				(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+				m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+				ga('create', '{$myoptionalmodules_google}', 'auto');
+				ga('send', 'pageview');
+			</script>\n\n
+			";
+		endif;
 	}
 	
 	// Site Verification Content
