@@ -244,7 +244,8 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						'myoptionalmodules_javascripttofooter' ,
 						'myoptionalmodules_lazyload' ,
 						'myoptionalmodules_recentpostswidget' ,
-						'myoptionalmodules_exclude'
+						'myoptionalmodules_exclude' ,
+						'myoptionalmodules_analyticspostsonly'
 					);
 					$keys_extras = array (
 						' External Thumbnails' ,
@@ -252,7 +253,8 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						' Javascript-to-Footer' ,
 						' Lazyload' ,
 						' Recent Posts Widget' ,
-						' Enable Exclude Posts'
+						' Enable Exclude Posts' ,
+						' Analytics On Single Only' ,
 					);
 					$theme_extras = array (
 						'myoptionalmodules_sharelinks_text' ,

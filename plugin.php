@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: 
 Description: Optional modules and additions for Wordpress.
-Version: 10.0.9.1
+Version: 10.0.9.2
 Author: boyevul
 Author URI: 
 
@@ -62,7 +62,7 @@ $myoptionalmodules_exclude_categoriescategoriesthu     = $myoptionalmodules_excl
 $myoptionalmodules_exclude_usersuserssun               = $myoptionalmodules_exclude_usersusersmon               = $myoptionalmodules_exclude_usersuserstue              =
 $myoptionalmodules_exclude_usersuserswed               = $myoptionalmodules_exclude_usersusersthu               = $myoptionalmodules_exclude_usersusersfri              =
 $myoptionalmodules_exclude_usersuserssat               = $myoptionalmodules_disqus                              = $myoptionalmodules_pluginscript                       =
-null;
+$myoptionalmodules_analyticspostsonly                  = null;
 
 
 $myoptionalmodules_getallpluginoptions  = wp_load_alloptions();
@@ -140,6 +140,7 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ):
 	 * - Lazyload
 	 * - Recent Posts Widget
 	 * - Enable Exclude Posts
+	 * - Analytics On Single Only
 	 */
 	if( $name == 'myoptionalmodules_nelio' && $value ):                               $myoptionalmodules_nelio                                = $value; endif;
 	if( $name == 'myoptionalmodules_featureimagewidth' && $value ):                   $myoptionalmodules_featureimagewidth                    = $value; endif;
@@ -147,6 +148,7 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ):
 	if( $name == 'myoptionalmodules_lazyload' && $value ):                            $myoptionalmodules_lazyload                             = $value; endif;
 	if( $name == 'myoptionalmodules_recentpostswidget' && $value ):                   $myoptionalmodules_recentpostswidget                    = $value; endif;
 	if( $name == 'myoptionalmodules_exclude' && $value ):                             $myoptionalmodules_exclude                              = $value; endif;
+	if( $name == 'myoptionalmodules_analyticspostsonly' && $value ):                  $myoptionalmodules_analyticspostsonly                   = $value; endif;
 	
 	/**
 	 * Theme Extras

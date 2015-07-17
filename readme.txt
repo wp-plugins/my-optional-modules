@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: meta, og, twitter, facebook, google, random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 10.0.9.1
+Stable tag: 10.0.9.2
 
 An assortment of functions to enhance WordPress.
 
@@ -80,6 +80,10 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 2.	Share icons displayed at the top of the post content.
 
 == Changelog ==
+= 10.0.9.2 =
+*	*Release Date - 16th, July, 2015*
+*	Set whether analytics shows only on single posts or everywhere
+
 = 10.0.9 / 10.0.9.1 =
 *	*Release Date - 13th, July, 2015*
 *	Container name for fitvids in script fixed

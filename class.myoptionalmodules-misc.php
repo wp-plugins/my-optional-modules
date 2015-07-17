@@ -93,9 +93,9 @@ class myoptionalmodules_misc {
 	// Google Analytics
 	// Don't show if user is admin
 	function google_analytics() {
-		global $wp , $myoptionalmodules_google;
+		global $wp , $myoptionalmodules_google , $myoptionalmodules_analyticspostsonly;
 		if ( !current_user_can ( 'manage_options' ) ):
-			echo "
+			$output = "
 			<script>
 				(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -105,6 +105,15 @@ class myoptionalmodules_misc {
 				ga('send', 'pageview');
 			</script>\n\n
 			";
+			
+			if ( $myoptionalmodules_analyticspostsonly ):
+				if ( is_single() ):
+					echo $output;
+				endif;
+			else:
+				echo $output;
+			endif;
+			
 		endif;
 	}
 	
