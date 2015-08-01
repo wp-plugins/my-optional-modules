@@ -1,9 +1,9 @@
 === My Optional Modules ===
 Contributors: boyevul
-Tags: meta, og, twitter, facebook, google, random, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, ajax, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, read more, single post, miniloop, attachment, media, embedder, oEmbed
+Tags: meta, og, twitter, facebook, google, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 10.0.9.3
+Stable tag: 10.0.9.4
 
 An assortment of functions to enhance WordPress.
 
@@ -46,7 +46,6 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 
 = Extra Features =
 *	oEmbed featured images
-*	Full-width feature images
 *	Move Javascripts to the footer
 *	Lazyload for images in posts
 *	Remove the currently viewed post from the default 'Recent Posts' widget
@@ -55,9 +54,7 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 *	Related posts by meta key
 *	Google Analytics and Site Verification integration
 *	Style previous and next links with a custom .class
-*	Replace 'read more...' on excerpts
 *	Enable a keyword for random posts
-*	Set a selection of random site titles and descriptions
 *	Universal Disqus Code (non-Wordpress Identifying)
 
 = Exclude Posts =
@@ -80,6 +77,17 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 2.	Share icons displayed at the top of the post content.
 
 == Changelog ==
+= 10.0.9.4 =
+*	*Release Date - 1st, August, 2015*
+*	Removed modules were either found to be (ultimately) useless
+*	or better handled on the theme level.
+*	(removed) Ajax Comment Form
+*	(removed) Previous link class / Next link class
+*	(removed) Random descriptions / titles
+*	(removed) Full-width feature images
+*	(removed) Read more... value
+*	(changed) Admin Settings Page CSS
+
 = 10.0.9.3 =
 *	*Release Date - 31st, July, 2015*
 *	jQuery version bump 2.1.4 -> 3.0.0-alpha1

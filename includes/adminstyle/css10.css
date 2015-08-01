@@ -24,7 +24,8 @@
 	#myoptionalmodules .clear {
 		clear: both; 
 		display: block; 
-		max-width: 525px;
+		max-width: 510px;
+		padding: 5px;
 	}
 	#myoptionalmodules .full {
 		width: 510px!important;
@@ -70,12 +71,24 @@
 			}
 	#myoptionalmodules .setting {
 		border: 1px solid rgba(0,0,0,.1);
-		float: left;
 		margin: 10px 5px 0;
 		padding: 35px 5px 5px;
 		position: relative;
-		width: 250px;
+		width: 100%;
 	}
+		#myoptionalmodules .setting section {
+			clear: both; 
+			display: block; 
+			padding: 5px;
+		}
+			#myoptionalmodules .setting section input[type="text"] {
+				float: right;
+			}
+			#myoptionalmodules .setting section select {
+				clear: both;
+				display: block;
+				width: 100%;
+			}
 		#myoptionalmodules .setting em {
 			background-color: #000;
 			color: #fff;

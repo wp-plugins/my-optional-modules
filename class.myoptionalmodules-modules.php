@@ -1,41 +1,70 @@
 <?php 
 /**
- * CLASS myoptionalmodules_enable()
+ * CLASS myoptionalmodules_modules()
  *
  * File last update: 10.0.9.3
  *
  * Functionality for:
- * - Meta Tags
- * - Horizontal Galleries
- * - Share Links
- * - RSS Linkbacks
- * - 404s
- * - Font Awesome
- */
+ * - Favicon
+ * - Full-length feature images
+ * - Javascripts to footer
+ * - Exclude posts
+ */ 
 
 if ( !defined ( 'MyOptionalModules' ) ) {
 	die();
 }
 
-class myoptionalmodules_enable {
+class myoptionalmodules_modules {
 
 	function __construct() {
-		
+
 		global 
+			$myoptionalmodules_javascripttofooter , 
+			$myoptionalmodules_exclude ,
+			$myoptionalmodules_favicon ,
 			$myoptionalmodules_metatags , 
 			$myoptionalmodules_horizontalgalleries , 
 			$myoptionalmodules_sharelinks , 
 			$myoptionalmodules_rsslinkbacks , 
 			$myoptionalmodules_404s , 
-			$myoptionalmodules_fontawesome;
+			$myoptionalmodules_fontawesome ,
+			$myoptionalmodules_plugin , 
+			$myoptionalmodules_disablepingbacks , 
+			$myoptionalmodules_authorarchives , 
+			$myoptionalmodules_datearchives , 
+			$myoptionalmodules_disablecomments , 
+			$myoptionalmodules_dnsbl , 
+			$myoptionalmodules_removecode ,
+			$myoptionalmodules_disqus , 
+			$myoptionalmodules_randompost , 
+			$myoptionalmodules_bing , 
+			$myoptionalmodules_alexa , 
+			$myoptionalmodules_google , 
+			$myoptionalmodules_verification , 
+			$myoptionalmodules_frontpage , 
+			$myoptionalmodules_readmore , 
+			$myoptionalmodules_commentspamfield;
 
+		if ( $myoptionalmodules_favicon ) {
+			add_action ( 'wp_head' , array ( $this , 'favicon' ) );
+		}
+
+		if( $myoptionalmodules_javascripttofooter ) {
+			add_action ( 'wp_enqueue_scripts' , array ( $this , 'remove' ) );
+			add_action ( 'wp_footer' , 'wp_enqueue_scripts' , 5 );
+			add_action ( 'wp_footer' , 'wp_print_head_scripts' , 5 );
+		}
+
+		if( $myoptionalmodules_exclude ) {
+			add_action( 'pre_get_posts' , array ( $this , 'exclude' ) );	
+		}	
 		if( $myoptionalmodules_metatags ) {
 			add_action ( 'wp_head' , array ( $this , 'meta' ) );
 			add_filter ( 'jetpack_enable_opengraph' , '__return_false' , 99 );
 			add_filter ( 'user_contactmethods' , array ( $this , 'twitter' ) );
 			add_filter ( 'admin_init' , array ( $this , 'twitter' ) );
 		}
-
 		if( $myoptionalmodules_horizontalgalleries ) {
 			remove_shortcode ( 'gallery' );
 			add_action ( 'init' , array ( $this , 'horizontal_gallery_shortcode' ) , 99 );
@@ -59,9 +88,110 @@ class myoptionalmodules_enable {
 			add_action ( 'wp_head' , array ( $this , 'fontawesome' ) );
 			add_action ( 'init' , array ( $this , 'fontawesome_shortcode' ) , 99 );
 		}
+		if( $myoptionalmodules_disablepingbacks ) {
+			add_filter( 'xmlrpc_methods' , array ( $this , 'pingbacks' ) );
+		}
+
+		if( $myoptionalmodules_authorarchives ) {
+			add_action( 'template_redirect', array ( $this , 'author_archives' ) );
+		}
+
+		if( $myoptionalmodules_datearchives ) {
+			add_action( 'wp', array ( $this , 'date_archives' ) );
+			add_action( 'template_redirect' , array ( $this , 'date_archives' ) );
+		}
+
+		if( 
+			$myoptionalmodules_disablecomments || 
+			$myoptionalmodules_dnsbl && true === $myoptionalmodules_plugin->DNSBL 
+		){
+			add_filter ( 'comments_template' , array ( $this , 'comments' ) );
+			add_filter ( 'comments_open' , array ( $this , 'comments_form') , 10, 2 );
+		}
+
+		if( $myoptionalmodules_removecode ) {
+			if ( !in_array ( $GLOBALS['pagenow'] , array ( 'wp-login.php' , 'wp-register.php' ) ) ) {
+				remove_action ('wp_head' , 'wp_generator');
+				add_filter    ( 'style_loader_src' , array ( $this , 'versions' ) , 0 );
+				add_filter    ( 'script_loader_src' , array ( $this , 'versions' ) , 0 );
+				add_action    ('init', array ( $this , 'head_cleanup' ) );
+				add_filter    ( 'style_loader_tag' , array ( $this , 'css_ids' ) );
+				add_action    ( 'init', array ( $this , 'replace_jquery' ) );
+				add_filter    ( 'wp_default_scripts' , array( $this , 'rem_j_migrate' ) );
+				add_action    ( 'wp_enqueue_scripts' , array( $this , 'add_j_migrate' ) );
+			}
+		}
+		if( $myoptionalmodules_disqus ) {
+			add_filter ( 'comments_template' , array ( $this , 'disqus_code' ) );
+		}
+		add_filter ( 'the_content' , array ( $this , 'miniloop' ) );
+		if( $myoptionalmodules_google ) {
+			add_action ( 'wp_head' , array ( $this , 'google_analytics' ) );
+		}
+		if( $myoptionalmodules_bing ) {
+			add_action ( 'wp_head' , array ( $this , 'bing' ) );
+		}
+		if( $myoptionalmodules_alexa ) {
+			add_action ( 'wp_head' , array ( $this , 'alexa' ) );
+		}
+		if( $myoptionalmodules_verification ) {
+			add_action ( 'wp_head' , array ( $this , 'site_verification' ) );
+		}
+		if( $myoptionalmodules_frontpage && 'off' != $myoptionalmodules_frontpage ) {
+			add_action ( 'wp' , array ( $this , 'front_post' ) );
+		}
+		if( $myoptionalmodules_readmore ) {
+			add_filter ( 'the_content_more_link' , array ( $this , 'read_more' ) );
+			add_filter ( 'excerpt_more' , array ( $this , 'read_more' ) );
+		}
+		if( $myoptionalmodules_randompost ) {
+			add_action ( 'wp' , array ( $this , 'random' ) );
+		}
+		if( $myoptionalmodules_commentspamfield ) {
+				add_filter ( 'comment_form_default_fields' , array ( $this , 'spam_field' ) );
+				add_action ( 'comment_form_logged_in_after' , array ( $this , 'spam_field' ) );
+				add_action ( 'comment_form_after_fields' , array ( $this , 'spam_field' ) );
+				add_filter ( 'preprocess_comment' , array ( $this , 'field_check' ) );
+		}
 
 	}
+	
+	/**
+	 * Theme -> Favicon
+	 * Enable favicon for your theme by placing 
+	 * the URL to the .ico file in theme->Favicon URL
+	 */	
+	function favicon() {
+		global $myoptionalmodules_favicon;
+		if ( $myoptionalmodules_favicon ) {
+			$url    = esc_url ( $myoptionalmodules_favicon );
+			$output = "<link rel='shortcut icon' href='{$url}' />\n";
+			echo $output;
+		}
+	}
+	
+	/**
+	 * Extras -> Javascript-to-footer
+	 * Remove enqueued scripts from wp_head
+	 */
+	function remove() {
+		remove_action ( 'wp_head' , 'wp_print_head_scripts' , 9 );
+		remove_action ( 'wp_head' , 'wp_enqueue_scripts' , 1 );
+	}
 
+	/**
+	 * Extras -> Enable Exclude Posts
+	 * Exclude posts from the loop based on several
+	 * parameters (set in options).
+	 */	
+	function exclude( $query ) {
+		global $myoptionalmodules_blank_counter;
+		++$myoptionalmodules_blank_counter;
+		if ( 1 == $myoptionalmodules_blank_counter ) {
+			include( 'function.exclude.php' );
+		}
+	}
+	
 	// Twitter Field for User Profiles
 	function twitter( $profile_fields ){
 		$profile_fields['twitter_personal'] = 'Twitter handle';
@@ -557,7 +687,258 @@ echo "<script>
 		endif;
 
 	}
+	
+	// Removing Superfluous Code
+	function replace_jquery() {
 
+		global $myoptionalmodules_jquery_version;
+
+		if( !is_admin()) {
+			wp_deregister_script ( 'jquery' );
+			wp_register_script   ( 'jquery' , $myoptionalmodules_jquery_version , false );
+			wp_enqueue_script    ( 'jquery' );
+		}
+
+	}
+
+	function rem_j_migrate( &$scripts ) {
+		if( !is_admin() ) {
+			$scripts->remove ( 'jquery' );
+			$scripts->add ( 'jquery' , false , array ( 'jquery-core' ) );
+		}
+	}
+
+	function add_j_migrate() {
+
+		global $myoptionalmodules_jquerymigrate_version;
+
+		wp_deregister_script ( 'jquery-migrate' );
+		wp_register_script (
+			'jquery-migrate',
+			$myoptionalmodules_jquerymigrate_version,
+			array( 'jquery' ),
+			true
+		);
+
+		wp_enqueue_script ( 'jquery-migrate' );
+
+	}
+
+	//benword.com/how-to-hide-that-youre-using-wordpress/
+	function head_cleanup() {
+
+		  global $wp_widget_factory;
+
+		  remove_action ( 'wp_head' , 'feed_links' , 2);
+		  remove_action ( 'wp_head' , 'feed_links_extra' , 3);
+		  remove_action ( 'wp_head' , 'rsd_link');
+		  remove_action ( 'wp_head' , 'wlwmanifest_link');
+		  remove_action ( 'wp_head' , 'adjacent_posts_rel_link_wp_head' , 10 , 0);
+		  remove_action ( 'wp_head' , 'wp_generator');
+		  remove_action ( 'wp_head' , 'wp_shortlink_wp_head' , 10 , 0);
+		  remove_action ( 'wp_head' , array ( $wp_widget_factory->widgets['WP_Widget_Recent_Comments'] , 'recent_comments_style' ) );
+		  add_filter    ( 'use_default_gallery_style' , '__return_null' );
+	}
+
+	// REMOVE stylesheet IDs
+	//blog.codecentric.de/en/2011/10/wordpress-and-mod_pagespeed-why-combine_css-does-not-work/
+	function css_ids( $link ) {
+
+		return preg_replace ( "/id='.*-css'/" , '' , $link );
+
+	}
+
+	// Version Information
+	function versions( $src ) {
+
+		if( strpos ( $src , 'ver=' . get_bloginfo ( 'version' ) ) ) { 
+			$src = remove_query_arg ( 'ver' , $src );
+		}
+
+		return $src;
+
+	}
+
+	// Disable author archives on blogs with only 1 author
+	function author_archives(){
+
+		global $wp_query;
+
+		if( is_author() ) {
+			if( sizeof ( get_users ( 'who=authors' ) ) === 1 )
+				wp_redirect ( get_bloginfo ( 'url' ) );
+		}
+
+	}
+
+	// Disable date archives
+	function date_archives(){
+
+		global $wp_query;
+
+		if( 
+			is_date()    || 
+			is_year()    || 
+			is_month()   || 
+			is_day()     || 
+			is_time()    || 
+			is_new_day() 
+		) {
+			$homeURL = esc_url ( home_url ( '/' ) );
+
+			if ( have_posts() ):the_post();
+			header( 'location:' . $homeURL );
+			exit;
+			endif;
+		}
+
+	}
+
+	// Blank Comments template
+	function comments( $comment_template ) {
+
+		return dirname( __FILE__ ) . '/includes/templates/comments.php';
+
+	}
+
+	// Destroy the Comments Form (if we need to)
+	function comments_form( $open , $post_id ) {
+
+		$post = get_post ( $post_id );
+		return false;
+
+	}	
+
+	// Disable Pingback.php
+	function pingbacks( $methods ) {
+
+		unset ( $methods['pingback.ping'] );
+		return $methods;
+
+	}
+	// Disqus Universal Code
+	function disqus_code ( $comment_template ) {
+		return dirname( __FILE__ ) . '/includes/templates/disqus.php';
+	}
+	
+	// Miniloops
+	function miniloop ( $content ) {
+		global $wp , $post , $myoptionalmodules_miniloopmeta , $myoptionalmodules_miniloopstyle , $myoptionalmodules_miniloopamount;
+		if( is_single() && $myoptionalmodules_miniloopmeta && $myoptionalmodules_miniloopstyle && $myoptionalmodules_miniloopamount):
+			$key    = sanitize_text_field ( get_post_meta ( $post->ID , $myoptionalmodules_miniloopmeta , true ) );
+			if( $key && $myoptionalmodules_miniloopmeta ):
+				$output = do_shortcode ( "[mom_miniloop meta='{$myoptionalmodules_miniloopmeta}' key='{$key}' style='{$myoptionalmodules_miniloopstyle}' amount='{$myoptionalmodules_miniloopamount}' ]" );
+			else:
+				$output = null;
+			endif;
+			return do_shortcode ( $content ) . $output;
+		else:
+			return do_shortcode ( $content );
+		endif;
+	}
+
+	// Google Analytics
+	// Don't show if user is admin
+	function google_analytics() {
+		global $wp , $myoptionalmodules_google , $myoptionalmodules_analyticspostsonly;
+		if ( !current_user_can ( 'manage_options' ) ):
+			$output = "
+			<script>
+				(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+				m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+				})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+				ga('create', '{$myoptionalmodules_google}', 'auto');
+				ga('send', 'pageview');
+			</script>\n\n
+			";
+			
+			if ( $myoptionalmodules_analyticspostsonly ):
+				if ( is_single() ):
+					echo $output;
+				endif;
+			else:
+				echo $output;
+			endif;
+			
+		endif;
+	}
+	
+	// Site Verification Content
+	// + Google
+	// + Bing
+	// + Alexa
+	function site_verification() {
+		global $myoptionalmodules_verification;
+		echo "<meta name='google-site-verification' content='{$myoptionalmodules_verification}' />\n\n";
+	}
+	function bing() {
+		global $myoptionalmodules_bing;
+		echo "<meta name='msvalidate.01' content='{$myoptionalmodules_bing}' />\n";
+	}
+	function alexa() {
+		global $myoptionalmodules_alexa;
+		echo "<meta name='alexaVerifyID' content='{$myoptionalmodules_alexa}'/>\n";	
+	}
+
+	// Frontpage post
+	function front_post( $query ) {
+		global $myoptionalmodules_frontpage;
+		
+	if( is_home() && 'off' != $myoptionalmodules_frontpage ):
+			if( is_numeric ( $myoptionalmodules_frontpage ) ):
+				$myoptionalmodules_frontpage = $myoptionalmodules_frontpage;
+			elseif( $myoptionalmodules_frontpage ):
+				$myoptionalmodules_frontpage = '';
+			endif;
+			if( have_posts() ) : the_post();
+				header( 'location:' . esc_url( get_permalink( $myoptionalmodules_frontpage ) ) ); 
+				exit; 
+			endif;
+		endif;
+	}
+
+	// Read More
+	function read_more( $more ) {
+		global $myoptionalmodules_readmore;
+		$get_link = esc_url ( get_permalink() );
+		if( '%blank%' == $myoptionalmodules_readmore ):
+			return '';
+		else:
+			return "<a href='{$get_link}'>{$myoptionalmodules_readmore}</a>";
+		endif;
+	}
+
+	// Random post
+	function random() {
+		global $myoptionalmodules_randompost;
+		if( isset( $_GET[ $myoptionalmodules_randompost ] ) ):
+			$args = array (
+				'numberposts' => 1,
+				'post_type'   => 'post',
+				'post_status' => 'publish',
+				'orderby'     => 'rand'
+			);
+			$get_all = get_posts ( $args );
+			foreach ( $get_all as $all_posts ):
+				$random_post = $all_posts->ID;
+			endforeach;
+			header ( 'location:' . esc_url ( get_permalink ( $random_post ) ) ); exit;
+		endif;
+	}
+
+	// Spam field
+	// Spam field will not show up for visitors who are logged in
+	function spam_field( $fields ) {
+		$fields[ 'spam' ] = '<input id="mom_fill_me_out" name="mom_fill_me_out" type="hidden" value="" />';
+		return $fields;
+	}
+	function field_check( $commentdata ) {
+		if ( $_REQUEST['mom_fill_me_out'] ) {
+			wp_die (  __ ( '<strong>Error</strong>: You seem to have filled something out that you shouldn\'t have.' ) );
+		}
+		return $commentdata;
+	}
 }
 
-$myoptionalmodules_enable = new myoptionalmodules_enable();
+$myoptionalmodules_modules = new myoptionalmodules_modules();

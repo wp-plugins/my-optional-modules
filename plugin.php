@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: 
 Description: Optional modules and additions for Wordpress.
-Version: 10.0.9.3
+Version: 10.0.9.4
 Author: boyevul
 Author URI: 
 
@@ -33,14 +33,13 @@ $myoptionalmodules_metatags                            = $myoptionalmodules_hori
 $myoptionalmodules_rsslinkbacks                        = $myoptionalmodules_404s                                = $myoptionalmodules_fontawesome                        =
 $myoptionalmodules_shareslinks_top                     = $myoptionalmodules_sharelinks_pages                    = $myoptionalmodules_sharelinks_reddit                  =
 $myoptionalmodules_sharelinks_google                   = $myoptionalmodules_sharelinks_twitter                  = $myoptionalmodules_sharelinks_facebook                =
-$myoptionalmodules_sharelinks_email                    = $myoptionalmodules_dnsbl                               = $myoptionalmodules_ajaxcomments                       =
+$myoptionalmodules_sharelinks_email                    = $myoptionalmodules_dnsbl                               = 
 $myoptionalmodules_commentspamfield                    = $myoptionalmodules_disablepingbacks                    = $myoptionalmodules_authorarchives                     =
 $myoptionalmodules_datearchives                        = $myoptionalmodules_disablecomments                     = $myoptionalmodules_dnsbl                              =
-$myoptionalmodules_removecode                          = $myoptionalmodules_featureimagewidth                   = $myoptionalmodules_javascripttofooter                 =
+$myoptionalmodules_removecode                          = $myoptionalmodules_javascripttofooter                  =
 $myoptionalmodules_exclude                             = $myoptionalmodules_nelio                               = $myoptionalmodules_recentpostswidget                  =
-$myoptionalmodules_google                              = $myoptionalmodules_frontpage                           = $myoptionalmodules_previouslinkclass                  =
-$myoptionalmodules_nextlinkclass                       = $myoptionalmodules_readmore                            = $myoptionalmodules_randompost                         =
-$myoptionalmodules_randomtitles                        = $myoptionalmodules_randomdescriptions                  = $myoptionalmodules_miniloopmeta                       =
+$myoptionalmodules_google                              = $myoptionalmodules_frontpage                           = $myoptionalmodules_randompost                         =
+$myoptionalmodules_miniloopmeta                        =
 $myoptionalmodules_miniloopstyle                       = $myoptionalmodules_miniloopamount                      = $myoptionalmodules_plugincss                          =
 $myoptionalmodules_lazyload                            = $myoptionalmodules_verification                        = $myoptionalmodules_sharelinks_text                    =
 $myoptionalmodules_favicon                             = $myoptionalmodules_bing                                = $myoptionalmodules_alexa                              =
@@ -126,16 +125,13 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ):
 	 * Comment Form
 	 * - DNSBL
 	 * - Spam trap
-	 * - Ajax
 	 */
 	if( $name == 'myoptionalmodules_dnsbl' && $value ):                               $myoptionalmodules_dnsbl                                = $value; endif;
 	if( $name == 'myoptionalmodules_commentspamfield' && $value ):                    $myoptionalmodules_commentspamfield                     = $value; endif;
-	if( $name == 'myoptionalmodules_ajaxcomments' && $value ):                        $myoptionalmodules_ajaxcomments                         = $value; endif;
 	
 	/**
 	 * Extras
 	 * - External Thumbnails
-	 * - Full-width feature images
 	 * - Javascript-to-footer
 	 * - Lazyload
 	 * - Recent Posts Widget
@@ -143,7 +139,6 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ):
 	 * - Analytics On Single Only
 	 */
 	if( $name == 'myoptionalmodules_nelio' && $value ):                               $myoptionalmodules_nelio                                = $value; endif;
-	if( $name == 'myoptionalmodules_featureimagewidth' && $value ):                   $myoptionalmodules_featureimagewidth                    = $value; endif;
 	if( $name == 'myoptionalmodules_javascripttofooter' && $value ):                  $myoptionalmodules_javascripttofooter                   = $value; endif;
 	if( $name == 'myoptionalmodules_lazyload' && $value ):                            $myoptionalmodules_lazyload                             = $value; endif;
 	if( $name == 'myoptionalmodules_recentpostswidget' && $value ):                   $myoptionalmodules_recentpostswidget                    = $value; endif;
@@ -158,12 +153,7 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ):
 	 * - Miniloop: amount
 	 * - Google Tracking ID
 	 * - Google Site Verification Content
-	 * - Previous link class
-	 * - Next link class
-	 * - Read more... value
 	 * - yoursite.tld/?random keyword
-	 * - Random::site::titles
-	 * - Random::site:description
 	 */
 	if( $name == 'myoptionalmodules_disqus' && $value ):                              $myoptionalmodules_disqus                               = $value; endif;
 	if( $name == 'myoptionalmodules_favicon' && $value ):                             $myoptionalmodules_favicon                              = $value; endif;
@@ -175,12 +165,7 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ):
 	if( $name == 'myoptionalmodules_bing' && $value ):                                $myoptionalmodules_bing                                 = $value; endif;
 	if( $name == 'myoptionalmodules_alexa' && $value ):                               $myoptionalmodules_alexa                                = $value; endif;
 	if( $name == 'myoptionalmodules_verification' && $value ):                        $myoptionalmodules_verification                         = $value; endif;
-	if( $name == 'myoptionalmodules_previouslinkclass' && $value ):                   $myoptionalmodules_previouslinkclass                    = $value; endif;
-	if( $name == 'myoptionalmodules_nextlinkclass' && $value ):                       $myoptionalmodules_nextlinkclass                        = $value; endif;
-	if( $name == 'myoptionalmodules_readmore' && $value ):                            $myoptionalmodules_readmore                             = $value; endif;
 	if( $name == 'myoptionalmodules_randompost' && $value ):                          $myoptionalmodules_randompost                           = esc_html ( $value ); endif;
-	if( $name == 'myoptionalmodules_randomtitles' && $value ):                        $myoptionalmodules_randomtitles                         = $value; endif;
-	if( $name == 'myoptionalmodules_randomdescriptions' && $value ):                  $myoptionalmodules_randomdescriptions                   = $value; endif;
 	 
 	// Exclude Posts	 
 	if( $name == 'myoptionalmodules_exclude_categories_level0categories' && $value ): $myoptionalmodules_exclude_categories_level0categories  = $value; endif;
@@ -247,12 +232,8 @@ include ( 'function.recent-posts.php' );
 include ( 'function.featured-images.php' );
 include ( 'class.mom-mediaembed.php' ); 
 include ( 'class.myoptionalmodules.php' );
-include ( 'class.myoptionalmodules-enable.php' );
-include ( 'class.myoptionalmodules-disable.php' );
-include ( 'class.myoptionalmodules-commentform.php' );
-include ( 'class.myoptionalmodules-extras.php' );
-include ( 'class.myoptionalmodules-misc.php' );
 include ( 'class.myoptionalmodules-shortcodes.php' );
+include ( 'class.myoptionalmodules-modules.php' );
 include ( 'function.shortcode.myoptionalmodules-miniloop.php' );
 
 if( current_user_can( 'edit_dashboard' ) && is_admin() ):

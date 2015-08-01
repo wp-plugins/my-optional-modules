@@ -2,7 +2,7 @@
 /**
  * ADMIN Settings Page Content
  *
- * File last update: 10.0.9.2
+ * File last update: 10.0.9.4
  *
  * Content of the /wp-admin/ SETTINGS PAGE for this plugin
  * INCLUDING all SAVE OPERATIONS.
@@ -185,8 +185,8 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						'myoptionalmodules_datearchives'
 					);
 					$keys_disable = array (
-						' Plugin CSS' ,
-						' Plugin Script' ,
+						' Plugin CSS <code><strong>advanced users only</strong></code>' ,
+						' Plugin Script <code><strong>advanced users only</strong></code>' ,
 						' Comment form' ,
 						' Unnecessary Code' ,
 						' Pingbacks' ,
@@ -230,17 +230,14 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 					);
 					$options_comment_form = array (
 						'myoptionalmodules_dnsbl' ,
-						'myoptionalmodules_commentspamfield' ,
-						'myoptionalmodules_ajaxcomments'
+						'myoptionalmodules_commentspamfield'
 					);
 					$keys_comment_form = array (
 						' DNSBL' ,
 						' Spam trap' ,
-						' Ajax'
 					);
 					$options_extras = array (
 						'myoptionalmodules_nelio' ,
-						'myoptionalmodules_featureimagewidth_submit' ,
 						'myoptionalmodules_javascripttofooter' ,
 						'myoptionalmodules_lazyload' ,
 						'myoptionalmodules_recentpostswidget' ,
@@ -249,7 +246,6 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 					);
 					$keys_extras = array (
 						' External Thumbnails' ,
-						' Full-width feature images' ,
 						' Javascript-to-Footer' ,
 						' Lazyload' ,
 						' Recent Posts Widget' ,
@@ -262,12 +258,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						'myoptionalmodules_verification' ,
 						'myoptionalmodules_alexa' ,
 						'myoptionalmodules_bing' ,
-						'myoptionalmodules_previouslinkclass' ,
-						'myoptionalmodules_nextlinkclass' ,
-						'myoptionalmodules_readmore' ,
 						'myoptionalmodules_randompost' ,
-						'myoptionalmodules_randomtitles' ,
-						'myoptionalmodules_randomdescriptions' ,
 						'myoptionalmodules_frontpage' ,
 						'myoptionalmodules_miniloopmeta' ,
 						'myoptionalmodules_favicon' ,
@@ -379,6 +370,13 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 								delete_option ( $field );
 						}
 						delete_option ( 'myoptionalmodules_upgrade_version' );
+						delete_option ( 'myoptionalmodules_ajaxcomments' );
+						delete_option ( 'myoptionalmodules_previouslinkclass' );
+						delete_option ( 'myoptionalmodules_nextlinkclass' );
+						delete_option ( 'myoptionalmodules_randomdescriptions' );
+						delete_option ( 'myoptionalmodules_randomtitles' );
+						delete_option ( 'myoptionalmodules_featureimagewidth_submit' );
+						delete_option ( 'myoptionalmodules_readmore' );
 					}
 					echo '
 					
@@ -507,6 +505,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 							echo'</div>
 							<div class="setting">
 								<em>theme</em>
+								<section>
 								<select name="myoptionalmodules_frontpage" id="mompaf_0">
 									<option value="off"';
 									if ( get_option ( 'myoptionalmodules_frontpage' ) == 'off' )
@@ -528,18 +527,15 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 										>Front page: '{$postsshown->post_title}'</option>";
 									}
 								echo '
-								</select>';
-								$google = $previousclass = $nextclass = $readmore = $randompost = $randomtitles = $randomdescriptions = null;
+								</select></section>';
+								$google = $previousclass = $nextclass = $readmore = $randompost = null;
 								$google             = sanitize_text_field ( get_option ( 'myoptionalmodules_google' ) );
 								$verification       = sanitize_text_field ( get_option ( 'myoptionalmodules_verification' ) );
 								$alexa              = sanitize_text_field ( get_option ( 'myoptionalmodules_alexa' ) );
 								$bing               = sanitize_text_field ( get_option ( 'myoptionalmodules_bing' ) );
 								$previousclass      = sanitize_text_field ( get_option ( 'myoptionalmodules_previouslinkclass' ) );
 								$nextclass          = sanitize_text_field ( get_option ( 'myoptionalmodules_nextlinkclass' ) );
-								$readmore           = sanitize_text_field ( get_option ( 'myoptionalmodules_readmore' ) );
 								$randompost         = sanitize_text_field ( get_option ( 'myoptionalmodules_randompost' ) );
-								$randomtitles       = sanitize_text_field ( get_option ( 'myoptionalmodules_randomtitles' ) );
-								$randomdescriptions = sanitize_text_field ( get_option ( 'myoptionalmodules_randomdescriptions' ) );
 								$miniloop_meta      = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopmeta' ) );
 								$miniloop_style     = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopstyle' ) );
 								$miniloop_amount    = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopamount' ) );										
@@ -591,28 +587,8 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 									<input type='text' id='myoptionalmodules_bing' name='myoptionalmodules_bing' value='{$bing}' />
 								</section>
 								<section>
-									<label>Previous link class</label>
-									<input type='text' id='myoptionalmodules_previouslinkclass' name='myoptionalmodules_previouslinkclass' value='{$previousclass}' />
-								</section>
-								<section>
-									<label>Next link class</label>
-									<input type='text' id='myoptionalmodules_nextlinkclass' name='myoptionalmodules_nextlinkclass' value='{$nextclass}' />
-								</section>
-								<section>
-									<label>Read more... value</label>
-									<input type='text' id='myoptionalmodules_readmore' name='myoptionalmodules_readmore' value='{$readmore}' />
-								</section>
-								<section>
 									<label>yoursite.tld/<code>?random</code> keyword</label>
 									<input type='text' id='myoptionalmodules_randompost' name='myoptionalmodules_randompost' value='{$randompost}' />
-								</section>
-								<section>
-									<label>Random::site::titles</label>
-									<textarea id='myoptionalmodules_randomtitles' name='myoptionalmodules_randomtitles'>{$randomtitles}</textarea>
-								</section>
-								<section>
-									<label>Random::site::description</label>
-									<textarea id='myoptionalmodules_randomdescriptions' name='myoptionalmodules_randomdescriptions'>{$randomdescriptions}</textarea>
 								</section>";
 							echo '</div>
 							</div>
