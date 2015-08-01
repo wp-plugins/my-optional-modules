@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_misc()
  *
- * File last update: 10.0.9
+ * File last update: 10.0.9.2
  *
  * Functionality for:
  * - Disqus Universal Code

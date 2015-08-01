@@ -1,4 +1,5 @@
 // img.bi
+// https://github.com/imgbi/img.bi.js
 "use strict";function q(a){throw a;}var t=void 0,u=!1;var sjcl={cipher:{},hash:{},keyexchange:{},mode:{},misc:{},codec:{},exception:{corrupt:function(a){this.toString=function(){return"CORRUPT: "+this.message};this.message=a},invalid:function(a){this.toString=function(){return"INVALID: "+this.message};this.message=a},bug:function(a){this.toString=function(){return"BUG: "+this.message};this.message=a},notReady:function(a){this.toString=function(){return"NOT READY: "+this.message};this.message=a}}};
 "undefined"!=typeof module&&module.exports&&(module.exports=sjcl);
 sjcl.cipher.aes=function(a){this.j[0][0][0]||this.D();var b,c,d,e,f=this.j[0][4],g=this.j[1];b=a.length;var h=1;4!==b&&(6!==b&&8!==b)&&q(new sjcl.exception.invalid("invalid aes key size"));this.a=[d=a.slice(0),e=[]];for(a=b;a<4*b+28;a++){c=d[a-1];if(0===a%b||8===b&&4===a%b)c=f[c>>>24]<<24^f[c>>16&255]<<16^f[c>>8&255]<<8^f[c&255],0===a%b&&(c=c<<8^c>>>24^h<<24,h=h<<1^283*(h>>7));d[a]=d[a-b]^c}for(b=0;a;b++,a--)c=d[b&3?a:a-4],e[b]=4>=a||4>b?c:g[0][f[c>>>24]]^g[1][f[c>>16&255]]^g[2][f[c>>8&255]]^g[3][f[c&
@@ -47,6 +48,16 @@ typeof c&&(c=sjcl.codec.utf8String.toBits(c));f=new sjcl.cipher[b.cipher](a);c=s
 sjcl.codec.base64.toBits(d[4]):unescape(d[4]);return b},d:function(a,b,c){a===t&&(a={});if(b===t)return a;for(var d in b)b.hasOwnProperty(d)&&(c&&(a[d]!==t&&a[d]!==b[d])&&q(new sjcl.exception.invalid("required parameter overridden")),a[d]=b[d]);return a},X:function(a,b){var c={},d;for(d in a)a.hasOwnProperty(d)&&a[d]!==b[d]&&(c[d]=a[d]);return c},W:function(a,b){var c={},d;for(d=0;d<b.length;d++)a[b[d]]!==t&&(c[b[d]]=a[b[d]]);return c}};sjcl.encrypt=sjcl.json.encrypt;sjcl.decrypt=sjcl.json.decrypt;
 sjcl.misc.V={};sjcl.misc.cachedPbkdf2=function(a,b){var c=sjcl.misc.V,d;b=b||{};d=b.iter||1E3;c=c[a]=c[a]||{};d=c[d]=c[d]||{firstSalt:b.salt&&b.salt.length?b.salt.slice(0):sjcl.random.randomWords(2,0)};c=b.salt===t?d.firstSalt:b.salt;d[c]=d[c]||sjcl.misc.pbkdf2(a,c,b.iter);return{key:d[c].slice(0),salt:c.slice(0)}};
 (function(){if(window.addEventListener){window.addEventListener("load",imgBiJS,false)}else{if(window.attachEvent){window.attachEvent("onload",imgBiJS)}else{document.addEventListener("load",imgBiJS,false)}}function imgBiJS(){var elems=document.querySelectorAll("[data-imgbi]");i=elems.length;while(i--){var params=elems[i].dataset.imgbi.split("#/");var ids=params[1].split("!");imgBiJSDownload(params[0]+"download/"+ids[0],ids[1],elems[i],new XMLHttpRequest())}}function imgBiJSDownload(url,pass,elem,request){request.open("GET",url);request.onload=function(){if(request.status==200){var result=sjcl.decrypt(pass,request.responseText);if(result){elem.src=result}else{console.log("Failed to decrypt image")}}else{console.log("Failed to load image")}};request.send(null)}})();
+
+/*jshint browser:true */
+/*!
+* FitVids 1.1
+*
+* Copyright 2013, Chris Coyier - http://css-tricks.com + Dave Rupert - http://daverupert.com
+* Credit to Thierry Koblentz - http://www.alistapart.com/articles/creating-intrinsic-ratios-for-video/
+* Released under the WTFPL license - http://sam.zoy.org/wtfpl/
+*
+*/
 
 ;(function( $ ){
 
@@ -154,24 +165,54 @@ jQuery(document).ready(function($){
 	});
 	
 	// 2.0 Horizontal Gallery Image Clicks
-	$( '[id^=mom-hgallery-gallery-]' ).each(function() {
-		var selector = $(this).attr('id');
-		var gid = $(this).attr('data-gallery-id');
-		$(document).on('click', '#' + selector + ' a img', function(e){
-			e.preventDefault();
-			var url = $(this).attr('src');
-			var cla = $(this).attr('class');
-			var wid = $(this).attr('width');
-			var hei = $(this).attr('height');
-			if ( url.indexOf( '-'+wid+'x'+hei+'' ) !== -1 ) {
-				var img = url.split('-'+wid+'x'+hei+'')[0];
-				var ext = '.' + url.substr( ( url.lastIndexOf('.') + 1 ) );
-			} else {
-				var img = url;
-				var ext = '';
-			}			
-			$('#mom_hgallery_catch_' + gid).html('<a href="'+img+ext+'"><img src="'+img+ext+'" class="hgallery-loaded" /></a>');
+	$('[id^=mom-hgallery-gallery-]')
+		.each(function()
+		{
+			var selector = $(this)
+				.attr('id');
+			var gid = $(this)
+				.attr('data-gallery-id');
+			$(document)
+				.on('click', '#' + selector + ' a img', function(e)
+				{
+					e.preventDefault();
+					var iid = $(this)
+						.parent()
+						.parent()
+						.parent()
+						.attr('img-id');
+					var cap = $('figcaption#' + iid + '')
+						.attr('img-comment');
+					if (cap)
+					{
+						cap = '<span class="image-caption">' + cap + '</span>';
+					}
+					else
+					{
+						cap = '<span class="image-caption"></span>';
+					}
+					var url = $(this)
+						.attr('src');
+					var cla = $(this)
+						.attr('class');
+					var wid = $(this)
+						.attr('width');
+					var hei = $(this)
+						.attr('height');
+					if (url.indexOf('-' + wid + 'x' + hei + '') !== -1)
+					{
+						var img = url.split('-' + wid + 'x' + hei + '')[0];
+						var ext = '.' + url.substr((url.lastIndexOf('.') + 1));
+					}
+					else
+					{
+						var img = url;
+						var ext = '';
+					}
+					$('#mom_hgallery_catch_' + gid)
+						.html('<a href="' + img + ext + '"><img src="' + img + ext +
+							'" class="hgallery-loaded" /></a>' + cap + '');
+				});
 		});
-	});
 	
 });

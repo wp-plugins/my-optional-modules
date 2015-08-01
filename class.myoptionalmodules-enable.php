@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_enable()
  *
- * File last update: 10.0.4
+ * File last update: 10.0.9.3
  *
  * Functionality for:
  * - Meta Tags
@@ -20,37 +20,46 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 class myoptionalmodules_enable {
 
 	function __construct() {
-		global $myoptionalmodules_metatags , $myoptionalmodules_horizontalgalleries , $myoptionalmodules_sharelinks , $myoptionalmodules_rsslinkbacks , $myoptionalmodules_404s , $myoptionalmodules_fontawesome;
-		if( $myoptionalmodules_metatags ):
+		
+		global 
+			$myoptionalmodules_metatags , 
+			$myoptionalmodules_horizontalgalleries , 
+			$myoptionalmodules_sharelinks , 
+			$myoptionalmodules_rsslinkbacks , 
+			$myoptionalmodules_404s , 
+			$myoptionalmodules_fontawesome;
+
+		if( $myoptionalmodules_metatags ) {
 			add_action ( 'wp_head' , array ( $this , 'meta' ) );
 			add_filter ( 'jetpack_enable_opengraph' , '__return_false' , 99 );
 			add_filter ( 'user_contactmethods' , array ( $this , 'twitter' ) );
 			add_filter ( 'admin_init' , array ( $this , 'twitter' ) );
-		endif;
+		}
 
-		if( $myoptionalmodules_horizontalgalleries ):
+		if( $myoptionalmodules_horizontalgalleries ) {
 			remove_shortcode ( 'gallery' );
 			add_action ( 'init' , array ( $this , 'horizontal_gallery_shortcode' ) , 99 );
 			add_filter ( 'use_default_gallery_style' , '__return_false' );
-		endif;
+		}
 
-		if( $myoptionalmodules_sharelinks ):
+		if( $myoptionalmodules_sharelinks ) {
 			add_filter ( 'the_content' , array ( $this , 'share' ) );
-		endif;
+		}
 
-		if( $myoptionalmodules_rsslinkbacks ):
+		if( $myoptionalmodules_rsslinkbacks ) {
 			add_filter ( 'the_content_feed' , array ( $this , 'rss' ) );
 			add_filter ( 'the_excerpt_rss' , array ( $this , 'rss' ) );
-		endif;
+		}
 
-		if( $myoptionalmodules_404s ):
+		if( $myoptionalmodules_404s ) {
 			add_action ( 'wp' , array ( $this , 'no_404s' ) );
-		endif;
+		}
 
-		if( $myoptionalmodules_fontawesome ):
+		if( $myoptionalmodules_fontawesome ) {
 			add_action ( 'wp_head' , array ( $this , 'fontawesome' ) );
 			add_action ( 'init' , array ( $this , 'fontawesome_shortcode' ) , 99 );
-		endif;
+		}
+
 	}
 
 	// Twitter Field for User Profiles
@@ -60,7 +69,7 @@ class myoptionalmodules_enable {
 	}
 
 	// Meta Tags (og:/Twitter)
-	function meta(){
+	function meta() {
 
 		global $post, $wp;
 
@@ -221,7 +230,7 @@ class myoptionalmodules_enable {
 
 		}
 		
-		// No-index/No-Follow archives/404s/search results to avoid duplicate content
+		// Noindex/Noarchive archives/404s/search results to avoid duplicate content
 		if( 
 			is_search() || 
 			is_404() || 
@@ -380,6 +389,12 @@ class myoptionalmodules_enable {
 			$output = apply_filters( 'gallery_style', $gallery_style . $gallery_div );
 			$i = 0;
 			foreach ( $attachments as $id => $attachment ) {
+				
+				$image_comment = null;
+				if ( $attachment->post_excerpt ):
+					$image_comment = strip_tags ( htmlentities ( $attachment->post_excerpt ) );
+				endif;
+				
 				if ( ! empty( $link ) && 'file' === $link )
 					$image_output = wp_get_attachment_link( $id, $size, false, false );
 				elseif ( ! empty( $link ) && 'none' === $link )
@@ -390,14 +405,14 @@ class myoptionalmodules_enable {
 				$orientation = '';
 				if ( isset( $image_meta[ 'height' ], $image_meta[ 'width' ] ) )
 					$orientation = ( $image_meta[ 'height' ] > $image_meta[ 'width' ] ) ? 'portrait' : 'landscape';
-				$output .= "<{$itemtag} class='gallery-item'>";
+				$output .= "<{$itemtag} img-id='{$id}' class='gallery-item'>";
 				$output .= "
 					<{$icontag} class='gallery-icon {$orientation}'>
-						$image_output
+						{$image_output}
 					</{$icontag}>";
 				if ( $captiontag && trim($attachment->post_excerpt) ) {
 					$output .= "
-						<{$captiontag} class='wp-caption-text gallery-caption'>
+						<{$captiontag} img-comment='{$image_comment}' id='{$id}' class='wp-caption-text gallery-caption'>
 						" . wptexturize($attachment->post_excerpt) . "
 						</{$captiontag}>";
 				}
