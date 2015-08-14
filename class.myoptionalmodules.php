@@ -182,4 +182,3 @@ class myoptionalmodules {
 
 $myoptionalmodules_plugin = new myoptionalmodules();
 $myoptionalmodules_plugin->userlevel();
-$myoptionalmodules_plugin->validate_ip_address();

@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_modules()
  *
- * File last update: 10.0.9.3
+ * File last update: 10.0.9.5
  *
  * Functionality for:
  * - Favicon
@@ -101,9 +101,12 @@ class myoptionalmodules_modules {
 			add_action( 'template_redirect' , array ( $this , 'date_archives' ) );
 		}
 
+		if ( $myoptionalmodules_dnsbl ) {
+			add_filter ( 'preprocess_comment' , array ( $this , 'dnsbl_check' ) );
+		}
+		
 		if( 
-			$myoptionalmodules_disablecomments || 
-			$myoptionalmodules_dnsbl && true === $myoptionalmodules_plugin->DNSBL 
+			$myoptionalmodules_disablecomments 
 		){
 			add_filter ( 'comments_template' , array ( $this , 'comments' ) );
 			add_filter ( 'comments_open' , array ( $this , 'comments_form') , 10, 2 );
@@ -936,6 +939,15 @@ echo "<script>
 	function field_check( $commentdata ) {
 		if ( $_REQUEST['mom_fill_me_out'] ) {
 			wp_die (  __ ( '<strong>Error</strong>: You seem to have filled something out that you shouldn\'t have.' ) );
+		}
+		return $commentdata;
+	}
+	
+	function dnsbl_check ( $commentdata ) {
+		global $myoptionalmodules_plugin;
+		$myoptionalmodules_plugin->validate_ip_address();
+		if ( true === $myoptionalmodules_plugin->DNSBL ) {
+			wp_die (  __ ( '<strong>Error</strong>: You can\'t do that.' ) );
 		}
 		return $commentdata;
 	}

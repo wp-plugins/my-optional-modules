@@ -2,7 +2,7 @@
 /**
  * CLASS mom_mediaEmbed()
  *
- * File last update: 10.0.8
+ * File last update: 10.0.9.5
  *
  * Create a media embed from a URL in a template (or other) by passing a 
  * URL through the class:
@@ -47,8 +47,13 @@ class mom_mediaEmbed {
 			
 			if ( $host ):
 
+				// ign.com
+				if ( strpos ( $host , 'ign.com' ) !== false ):
+				
+					$output = "<iframe src='http://widgets.ign.com/video/embed/content.html?url={$url}' width='468' height='263' scrolling='no' frameborder='0' allowfullscreen></iframe>";
+			
 				// img.bi
-				if ( strpos ( $host , 'img.bi' ) !== false ):
+				elseif ( strpos ( $host , 'img.bi' ) !== false ):
 					
 					if ( 1 == $myoptionalmodules_pluginscript ):
 						$output .= "
