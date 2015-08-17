@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: meta, og, twitter, facebook, google, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBLDNSBL, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.2
-Stable tag: 10.0.9.5
+Stable tag: 10.0.9.6
 
 An assortment of functions to enhance WordPress.
 
@@ -36,14 +36,6 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 *	DNS Blacklist lookup for potential commenters
 *	Hidden spam field to thwart bots
 
-= Media embedding =
-*	[mom_embed url='URL'] embeds from the following:
-*	Animoto, Blip, CollegeHumor, DailyMotion, DeviantArt,EmbedArticles, Flickr, 
-	FunnyOrDie, gist.github, Gyfcat, Hulu, ign, img.bi, Imgur, Instagram, iSnare, Issuu, 
-	Kickstarter, Liveleak, Meetup, Mixcloud, Photobucket, PollDaddy, Redtube, 
-	Rdio, Revision3, Scribd, SlideShare, SmugMug, SoundCloud, Spotify, TED, Tumblr, 
-	Vidme, Vimeo, Vine, WordPress.tv, Youtube
-
 = Extra Features =
 *	oEmbed featured images
 *	Move Javascripts to the footer
@@ -72,11 +64,40 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 2.	Click on Uninstall.
 3.	Confirm uninstall.
 
+== Shortcodes ==
+= [mom_embed url='URL']
+Embeds content from the following websites: Animoto, Blip, CollegeHumor, DailyMotion, DeviantArt,EmbedArticles, Flickr, 
+FunnyOrDie, gist.github, Gyfcat, Hulu, ign, img.bi, Imgur, Instagram, iSnare, Issuu, 
+Kickstarter, Liveleak, Meetup, Mixcloud, Photobucket, PollDaddy, Redtube, 
+Rdio, Revision3, Scribd, SlideShare, SmugMug, SoundCloud, Spotify, TED, Tumblr, 
+Vidme, Vimeo, Vine, WordPress.tv, Youtube
+
+= [mom_hidden]CONTENT[/mom_hidden] =
+Allows for content to be hidden from users who are not logged in, or for content to be hidden 
+from single_post views (but visible everywhere else).
+
+Example: [mom_hidden logged='1/0' single='1/0']CONTENT[/mom_hidden] where 1 is true and 0 is false.
+
+= [mom_charts] =
+Allows for the creation of simple charts graphing information.
+
+Example: [mom_charts type='bar' content='item description 1:5::item description 2:10' total_possible='10' overall='1']
+
+Each item is followed by a numerical value, which is then followed by a separator. In this example, 
+we have ITEM(1):VALUE(2)::ITEM(2):VALUE(2). Item descriptions should not have numbers, and numerical 
+values should be numerical only. Total possible is the total amount possible for any given numerical value,
+while overall determines if the overall score is to be displayed.
+
 == Screenshots ==
 1.	A horizontal gallery in a post.
 2.	Share icons displayed at the top of the post content.
 
 == Changelog ==
+= 10.0.9.6 =
+*	*Release Date - 17th, August, 2015*
+*	Shortcode information added to readme
+*	Unused/undocumented/ill formed shortcodes removed
+
 = 10.0.9.5 = 
 *	*Release Date - 14th, August, 2015*
 *	ign.com added to [mom_embed]
