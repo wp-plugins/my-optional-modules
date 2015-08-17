@@ -65,7 +65,7 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 3.	Confirm uninstall.
 
 == Shortcodes ==
-= [mom_embed url='URL']
+= [mom_embed url='URL'] =
 Embeds content from the following websites: Animoto, Blip, CollegeHumor, DailyMotion, DeviantArt,EmbedArticles, Flickr, 
 FunnyOrDie, gist.github, Gyfcat, Hulu, ign, img.bi, Imgur, Instagram, iSnare, Issuu, 
 Kickstarter, Liveleak, Meetup, Mixcloud, Photobucket, PollDaddy, Redtube, 
