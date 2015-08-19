@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_modules()
  *
- * File last update: 10.0.9.5
+ * File last update: 10.0.9.7
  *
  * Functionality for:
  * - Favicon
@@ -22,7 +22,6 @@ class myoptionalmodules_modules {
 		global 
 			$myoptionalmodules_javascripttofooter , 
 			$myoptionalmodules_exclude ,
-			$myoptionalmodules_favicon ,
 			$myoptionalmodules_metatags , 
 			$myoptionalmodules_horizontalgalleries , 
 			$myoptionalmodules_sharelinks , 
@@ -45,10 +44,6 @@ class myoptionalmodules_modules {
 			$myoptionalmodules_frontpage , 
 			$myoptionalmodules_readmore , 
 			$myoptionalmodules_commentspamfield;
-
-		if ( $myoptionalmodules_favicon ) {
-			add_action ( 'wp_head' , array ( $this , 'favicon' ) );
-		}
 
 		if( $myoptionalmodules_javascripttofooter ) {
 			add_action ( 'wp_enqueue_scripts' , array ( $this , 'remove' ) );
@@ -157,20 +152,6 @@ class myoptionalmodules_modules {
 				add_filter ( 'preprocess_comment' , array ( $this , 'field_check' ) );
 		}
 
-	}
-	
-	/**
-	 * Theme -> Favicon
-	 * Enable favicon for your theme by placing 
-	 * the URL to the .ico file in theme->Favicon URL
-	 */	
-	function favicon() {
-		global $myoptionalmodules_favicon;
-		if ( $myoptionalmodules_favicon ) {
-			$url    = esc_url ( $myoptionalmodules_favicon );
-			$output = "<link rel='shortcut icon' href='{$url}' />\n";
-			echo $output;
-		}
 	}
 	
 	/**

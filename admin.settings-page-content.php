@@ -2,7 +2,7 @@
 /**
  * ADMIN Settings Page Content
  *
- * File last update: 10.0.9.4
+ * File last update: 10.0.9.7
  *
  * Content of the /wp-admin/ SETTINGS PAGE for this plugin
  * INCLUDING all SAVE OPERATIONS.
@@ -261,7 +261,6 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						'myoptionalmodules_randompost' ,
 						'myoptionalmodules_frontpage' ,
 						'myoptionalmodules_miniloopmeta' ,
-						'myoptionalmodules_favicon' ,
 						'myoptionalmodules_disqus' ,
 						'myoptionalmodules_miniloopstyle' ,
 						'myoptionalmodules_miniloopamount'
@@ -377,6 +376,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						delete_option ( 'myoptionalmodules_randomtitles' );
 						delete_option ( 'myoptionalmodules_featureimagewidth_submit' );
 						delete_option ( 'myoptionalmodules_readmore' );
+						delete_option ( 'myoptionalmodules_favicon' );
 					}
 					echo '
 					
@@ -539,16 +539,11 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 								$miniloop_meta      = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopmeta' ) );
 								$miniloop_style     = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopstyle' ) );
 								$miniloop_amount    = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopamount' ) );										
-								$favicon            = sanitize_text_field ( esc_url ( get_option ( 'myoptionalmodules_favicon' ) ) );
 								$disqus             = sanitize_text_field ( get_option ( 'myoptionalmodules_disqus' ) );
 								echo "
 								<section>
 									<label>Disqus Shortname <small>&mdash; <strong>this</strong>.disqus.com</small></label>
 									<input type='text' id='myoptionalmodules_disqus' name='myoptionalmodules_disqus' value='{$disqus}' />
-								</section>
-								<section>
-									<label>Favicon URL</label>
-									<input type='text' id='myoptionalmodules_favicon' name='myoptionalmodules_favicon' value='{$favicon}' />
 								</section>
 								<section>
 									<label>Miniloop: meta</label>

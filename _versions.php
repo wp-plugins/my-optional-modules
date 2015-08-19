@@ -8,7 +8,7 @@
  * to always update for current releases.
  *
  * //cdnjs.com/
- * - Last checked 13th August 2015 9:01 AM
+ * - Last checked 19th August 2015 9:51 AM
  * - - 1.9.1        //cdnjs.com/libraries/jquery.lazyload
  * - - 3.0.0-alpha1 //cdnjs.com/libraries/jquery
  * - - 1.2.1        //cdnjs.com/libraries/jquery-migrate

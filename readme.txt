@@ -2,8 +2,8 @@
 Contributors: boyevul
 Tags: meta, og, twitter, facebook, google, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBLDNSBL, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, post formats, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
-Tested up to: 4.2
-Stable tag: 10.0.9.6
+Tested up to: 4.3
+Stable tag: 10.0.9.7
 
 An assortment of functions to enhance WordPress.
 
@@ -93,6 +93,10 @@ while overall determines if the overall score is to be displayed.
 2.	Share icons displayed at the top of the post content.
 
 == Changelog ==
+= 10.0.9.7 =
+*	*Release Date - 19, August, 2015*
+*	Favicon replaced by Site Icon in WordPress Customizer
+
 = 10.0.9.6 =
 *	*Release Date - 17th, August, 2015*
 *	Shortcode information added to readme

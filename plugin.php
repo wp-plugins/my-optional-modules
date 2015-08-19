@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: 
 Description: Optional modules and additions for Wordpress.
-Version: 10.0.9.6
+Version: 10.0.9.7
 Author: boyevul
 Author URI: 
 
@@ -42,7 +42,7 @@ $myoptionalmodules_google                              = $myoptionalmodules_fron
 $myoptionalmodules_miniloopmeta                        =
 $myoptionalmodules_miniloopstyle                       = $myoptionalmodules_miniloopamount                      = $myoptionalmodules_plugincss                          =
 $myoptionalmodules_lazyload                            = $myoptionalmodules_verification                        = $myoptionalmodules_sharelinks_text                    =
-$myoptionalmodules_favicon                             = $myoptionalmodules_bing                                = $myoptionalmodules_alexa                              =
+$myoptionalmodules_bing                                = $myoptionalmodules_alexa                              =
 $myoptionalmodules_exclude_categories_level0categories = $myoptionalmodules_exclude_categorieslevel1categories  = $myoptionalmodules_exclude_categorieslevel2categories =
 $myoptionalmodules_exclude_categorieslevel7categories  = $myoptionalmodules_exclude_categoriesfront             = $myoptionalmodules_exclude_categoriestagarchives      =
 $myoptionalmodules_exclude_categoriessearchresults     = $myoptionalmodules_exclude_categoriesrss               = $myoptionalmodules_exclude_tagsfront                  =
@@ -156,7 +156,6 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ):
 	 * - yoursite.tld/?random keyword
 	 */
 	if( $name == 'myoptionalmodules_disqus' && $value ):                              $myoptionalmodules_disqus                               = $value; endif;
-	if( $name == 'myoptionalmodules_favicon' && $value ):                             $myoptionalmodules_favicon                              = $value; endif;
 	if( $name == 'myoptionalmodules_frontpage' && 'off' != $value ):                  $myoptionalmodules_frontpage                            = $value; endif;
 	if( $name == 'myoptionalmodules_miniloopmeta' && $value ):                        $myoptionalmodules_miniloopmeta                         = $value; endif;
 	if( $name == 'myoptionalmodules_miniloopstyle' && $value ):                       $myoptionalmodules_miniloopstyle                        = strtolower( $value ); endif;
