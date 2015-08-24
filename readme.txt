@@ -97,7 +97,7 @@ while overall determines if the overall score is to be displayed.
 *	*Release Date - 24th, August, 2015*
 *	The following update corrects *guideline violations* in this WordPress plugin
 *	img.bi embedding removed (not GPL (creative commons), disallowed by WP)
-*	cdnjs.cloudflare.com calls to jquery, and jquery-migrate removed from *unnecessary code* (offloading js, disallowed WP)
+*	cdnjs.cloudflare.com calls to jquery, and jquery-migrate removed from *unnecessary code* (offloading js, disallowed by WP)
 *	lazyload now included locally (instead of from cdnjs.cloudflare.com)
 
 
