@@ -32,6 +32,7 @@ class mom_mediaEmbed {
 			$output = $host = $path = $query = $timestamp = $thumbnail = $embed = null;
 			$class  = sanitize_text_field ( $class );
 			$urls   = explode ( '::' , $url );
+			$count  = 0;
 			
 			if ( filter_var( $url, FILTER_VALIDATE_URL ) !== false ):
 				if ( isset ( parse_url ( $url ) [ 'host'  ] ) ):
@@ -52,20 +53,6 @@ class mom_mediaEmbed {
 				
 					$output = "<iframe src='http://widgets.ign.com/video/embed/content.html?url={$url}' width='468' height='263' scrolling='no' frameborder='0' allowfullscreen></iframe>";
 			
-				// img.bi
-				elseif ( strpos ( $host , 'img.bi' ) !== false ):
-					
-					if ( 1 == $myoptionalmodules_pluginscript ):
-						$output .= "
-							<a href='{$url}'>Image linked ({$url})</a>
-						";
-					else:
-						$output .= "
-							<img data-imgbi='{$url}' />
-							<noscript><a href='{$url}'>Image linked ({$url})</a></noscript>
-						";
-					endif;
-
 				// Deviant Art
 				elseif ( strpos ( $host , 'deviantart.com' ) !== false ):
 					$url = explode ( '/' , $url );

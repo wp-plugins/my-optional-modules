@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules()
  *
- * File last update: 9.1.8
+ * File last update: 10.0.9.8
  *
  * Actions REQUIRED by the plugin (unless otherwise noted).
  * Regardless of settings, these actions will always run.
@@ -42,11 +42,9 @@ class myoptionalmodules {
 		// JQUERY dependent
 			function mom_jquery(){
 				global $myoptionalmodules_lazyload;
-				global $myoptionalmodules_lazyload_version;
 				global $myoptionalmodules_pluginscript;
 				if( $myoptionalmodules_lazyload ) {
 					$lazyLoadFunctions = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/lazyload.js' ) );
-					wp_enqueue_script ( 'lazyload' , $myoptionalmodules_lazyload_version , array ( 'jquery' ) );
 					wp_enqueue_script ( 'lazyloadFunctions' , $lazyLoadFunctions , array ( 'jquery' ) );
 				}
 				$pluginfunctions = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/script.js' ) );

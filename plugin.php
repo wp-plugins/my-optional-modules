@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: 
 Description: Optional modules and additions for Wordpress.
-Version: 10.0.9.7
+Version: 10.0.9.8
 Author: boyevul
 Author URI: 
 
@@ -224,7 +224,6 @@ endforeach;
 define ( 'MyOptionalModules', true );
 require_once( ABSPATH . 'wp-includes/pluggable.php' );
 
-include ( '_versions.php' );
 include ( 'function.category-ids.php' );
 include ( 'function.exclude-categories.php' );
 include ( 'function.recent-posts.php' );

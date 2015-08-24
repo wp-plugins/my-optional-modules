@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_modules()
  *
- * File last update: 10.0.9.7
+ * File last update: 10.0.9.8
  *
  * Functionality for:
  * - Favicon
@@ -114,9 +114,6 @@ class myoptionalmodules_modules {
 				add_filter    ( 'script_loader_src' , array ( $this , 'versions' ) , 0 );
 				add_action    ('init', array ( $this , 'head_cleanup' ) );
 				add_filter    ( 'style_loader_tag' , array ( $this , 'css_ids' ) );
-				add_action    ( 'init', array ( $this , 'replace_jquery' ) );
-				add_filter    ( 'wp_default_scripts' , array( $this , 'rem_j_migrate' ) );
-				add_action    ( 'wp_enqueue_scripts' , array( $this , 'add_j_migrate' ) );
 			}
 		}
 		if( $myoptionalmodules_disqus ) {
@@ -672,41 +669,7 @@ echo "<script>
 
 	}
 	
-	// Removing Superfluous Code
-	function replace_jquery() {
 
-		global $myoptionalmodules_jquery_version;
-
-		if( !is_admin()) {
-			wp_deregister_script ( 'jquery' );
-			wp_register_script   ( 'jquery' , $myoptionalmodules_jquery_version , false );
-			wp_enqueue_script    ( 'jquery' );
-		}
-
-	}
-
-	function rem_j_migrate( &$scripts ) {
-		if( !is_admin() ) {
-			$scripts->remove ( 'jquery' );
-			$scripts->add ( 'jquery' , false , array ( 'jquery-core' ) );
-		}
-	}
-
-	function add_j_migrate() {
-
-		global $myoptionalmodules_jquerymigrate_version;
-
-		wp_deregister_script ( 'jquery-migrate' );
-		wp_register_script (
-			'jquery-migrate',
-			$myoptionalmodules_jquerymigrate_version,
-			array( 'jquery' ),
-			true
-		);
-
-		wp_enqueue_script ( 'jquery-migrate' );
-
-	}
 
 	//benword.com/how-to-hide-that-youre-using-wordpress/
 	function head_cleanup() {

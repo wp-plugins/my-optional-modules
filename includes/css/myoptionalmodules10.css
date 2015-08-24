@@ -500,6 +500,15 @@ h2.mom_related_title{
 /* 
  * Horizontal Galleries
  */
+.close-mom-gallery-image {
+    background-color: rgba(0, 0, 0, .8);
+    color: rgba(255, 255, 255, .8);
+	cursor: pointer;
+	display: block;
+    padding: 15px;
+    position: relative;
+    width: 100%;
+}
 .horizontalGallery { 
 	display: block; 
 	height: auto; 
