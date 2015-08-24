@@ -43,8 +43,10 @@ class myoptionalmodules_modules {
 			$myoptionalmodules_verification , 
 			$myoptionalmodules_frontpage , 
 			$myoptionalmodules_readmore , 
-			$myoptionalmodules_commentspamfield;
-
+			$myoptionalmodules_commentspamfield ,
+			$myoptionalmodules_miniloopmeta , 
+			$myoptionalmodules_miniloopstyle , 
+			$myoptionalmodules_miniloopamount;
 		if( $myoptionalmodules_javascripttofooter ) {
 			add_action ( 'wp_enqueue_scripts' , array ( $this , 'remove' ) );
 			add_action ( 'wp_footer' , 'wp_enqueue_scripts' , 5 );
@@ -119,7 +121,11 @@ class myoptionalmodules_modules {
 		if( $myoptionalmodules_disqus ) {
 			add_filter ( 'comments_template' , array ( $this , 'disqus_code' ) );
 		}
-		add_filter ( 'the_content' , array ( $this , 'miniloop' ) );
+		
+		if( $myoptionalmodules_miniloopmeta && $myoptionalmodules_miniloopstyle && $myoptionalmodules_miniloopamount ) {
+			add_filter ( 'the_content' , array ( $this , 'miniloop' ) );
+		}
+		
 		if( $myoptionalmodules_google ) {
 			add_action ( 'wp_head' , array ( $this , 'google_analytics' ) );
 		}

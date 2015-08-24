@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules()
  *
- * File last update: 10.0.9.8
+ * File last update: 10.0.9.9
  *
  * Actions REQUIRED by the plugin (unless otherwise noted).
  * Regardless of settings, these actions will always run.
@@ -28,7 +28,6 @@ class myoptionalmodules {
 
 		add_action ( 'wp', array( $this, 'scripts' ) );
 		add_action ( 'admin_enqueue_scripts' , array ( $this , 'font_awesome' ) );
-		add_action ( 'after_setup_theme' , array ( $this , 'post_formats' ) );
 	
 		if( 1 == $myoptionalmodules_plugincss ):
 		else:
@@ -70,24 +69,6 @@ class myoptionalmodules {
 		$myStyleFile = str_replace ( array ( 'https:', 'http:' ) , '' , esc_url( WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules' . $myoptionalmodules_plugin_version . '.css' ) );
 		wp_register_style ( 'my_optional_modules' , $myStyleFile );
 		wp_enqueue_style  ( 'my_optional_modules' );
-	}
-
-	// Add ALL POST FORMATS
-	function post_formats() {
-		add_theme_support (
-			'post-formats',
-			array (
-				'aside',
-				'gallery',
-				'link',
-				'image',
-				'quote',
-				'status',
-				'video',
-				'audio',
-				'chat'
-			)
-		);
 	}
 
 	// GET USER LEVELs for use throughout
