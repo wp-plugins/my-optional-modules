@@ -67,7 +67,7 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 == Shortcodes ==
 = [mom_embed url='URL'] =
 Embeds content from the following websites: Animoto, Blip, CollegeHumor, DailyMotion, DeviantArt,EmbedArticles, Flickr, 
-FunnyOrDie, gist.github, Gyfcat, Hulu, ign, img.bi, Imgur, Instagram, iSnare, Issuu, 
+FunnyOrDie, gist.github, Gyfcat, Hulu, ign, Imgur, Instagram, iSnare, Issuu, 
 Kickstarter, Liveleak, Meetup, Mixcloud, Photobucket, PollDaddy, Redtube, 
 Rdio, Revision3, Scribd, SlideShare, SmugMug, SoundCloud, Spotify, TED, Tumblr, 
 Vidme, Vimeo, Vine, WordPress.tv, Youtube
