@@ -1,13 +1,5 @@
 <?php 
-
-	global $myoptionalmodules_disqus;
-	echo "<script type='text/javascript'>
-		var disqus_shortname = '{$myoptionalmodules_disqus}';
-		(function() {
-			var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-			dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-			(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-		})();
-	</script>";
-
+    // Blank comment template
+    // Will be shown when users who aren't logged in try to view materials 
+    // that are restricted to logged in users.
 ?>

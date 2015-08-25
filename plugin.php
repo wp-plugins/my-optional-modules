@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: 
 Description: Optional modules and additions for Wordpress.
-Version: 10.0.9.9
+Version: 10.1.0.0
 Author: boyevul
 Author URI: 
 
