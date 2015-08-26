@@ -2,7 +2,7 @@
 /**
  * ADMIN Settings Page Content
  *
- * File last update: 10.0.9.7
+ * File last update: 10.1.0.1
  *
  * Content of the /wp-admin/ SETTINGS PAGE for this plugin
  * INCLUDING all SAVE OPERATIONS.
@@ -185,13 +185,13 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						'myoptionalmodules_datearchives'
 					);
 					$keys_disable = array (
-						' Plugin CSS <code><strong>advanced users only</strong></code>' ,
-						' Plugin Script <code><strong>advanced users only</strong></code>' ,
-						' Comment form' ,
-						' Unnecessary Code' ,
-						' Pingbacks' ,
-						' Author Archives' ,
-						' Date Archives'
+						' Disable Plugin CSS <em>Keeps this plugins CSS from enqueueing. You will need to manually style all plugin elements yourself.</em>' ,
+						' Disable Plugin Script <em>Keeps this plugins main jquery script from loading. You will lose some functionality.</em>' ,
+						' Disable Comment form <em>Removes the comment form from every portion of your site, and replaces it with a blank template.</em>' ,
+						' Remove Unnecessary Code <em>Removes the XHTML generator, CSS and JS ids, feed links, Really Simple Discovery link, WLW Manifest link, adjacent posts links, and other such code clutter.</em>' ,
+						' Disable Pingbacks <em>Disables pingbacks to your site.</em>' ,
+						' Disable Author Archives <em>Disables all author based archives, and will instead redirect users to your homepage when accessing them.</em>' ,
+						' Disable Date Archives <em>Disables all date based archives, and will instead redirect users to your homepage when accessing them.</em>'
 					);
 					$options_enable = array (
 						'myoptionalmodules_metatags' ,
@@ -202,12 +202,12 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						'myoptionalmodules_404s'
 					);
 					$keys_enable = array (
-						' Meta Tags' ,
-						' Horizontal Galleries' ,
-						' Font Awesome' ,
-						' Social Links' ,
-						' RSS Linkbacks' ,
-						' 404s-to-home'
+						' Enable Meta Tags <em>Enable meta tags for your posts.</em>' ,
+						' Enable Horizontal Galleries <em>Turn all image galleries into horizontal image galleries.</em>' ,
+						' Enable Font Awesome <em>Enable the use of Font Awesome on your site.</em>' ,
+						' Enable Social Links <em>Enable scriptless share buttons for your posts/pages.</em>' ,
+						' Enable RSS Linkbacks <em>Appends a link back to your site on all RSS items.</em>' ,
+						' Enable 404s-to-home <em>Redirects all 404s to your homepage.</em>'
 					);
 
 					$options_shares = array (
@@ -233,8 +233,8 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						'myoptionalmodules_commentspamfield'
 					);
 					$keys_comment_form = array (
-						' DNSBL' ,
-						' Spam trap' ,
+						' DNSBL <em>Checks a commentors IP against several DNS Blacklists to determine if the commentor is a potential threat or not. Discards the comment if they are listed.</em>' ,
+						' Spam trap <em>Enables a simple spam field for commentors who are not logged in that will discard the comment if filled out (potentially by a bot).</em>' ,
 					);
 					$options_extras = array (
 						'myoptionalmodules_nelio' ,
@@ -245,12 +245,12 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						'myoptionalmodules_analyticspostsonly'
 					);
 					$keys_extras = array (
-						' External Thumbnails' ,
-						' Javascript-to-Footer' ,
-						' Lazyload' ,
-						' Recent Posts Widget' ,
-						' Enable Exclude Posts' ,
-						' Analytics On Single Only' ,
+						' External Thumbnails <em>Utilizes <a href="//wordpress.org/plugins/external-featured-image/">Nelio External Featured Image</a> in conjunction with this plugins [mom_embed] to allow for any kind of embeddable media to be used as a featured image.</em>' ,
+						' Javascript-to-Footer <em>Move all JS to the footer.</em>' ,
+						' Lazyload <em>Utilize Lazyload for all post images.</em>' ,
+						' Recent Posts Widget <em>Changes the behavior of the Recent Posts Widget to exclude the currently viewed post from its list.</em>' ,
+						' Enable Exclude Posts <em>Exclude posts from anywhere on the site, based on many different settings.</em>' ,
+						' Analytics On Single Only <em>Only use Google Analytics on single posts. Set your Google Tracking ID below.</em>' ,
 					);
 					$theme_extras = array (
 						'myoptionalmodules_sharelinks_text' ,
@@ -389,37 +389,37 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 							<form class="clutter" method="post" action="" name="optimizeTables">';
 								wp_nonce_field ( 'optimizeTablesForm' );
 								echo '
-								<label for="optimizeTables"><i class="fa fa-rocket"></i>Optimize Tables</label>
+								<label for="optimizeTables"><i class="fa fa-rocket"></i>Optimize Tables <em>Optimize your sites SQL tables.</em></label>
 								<input class="hidden" id="optimizeTables" type="submit" value="Go" name="optimizeTables">
 							</form>
 							<form class="clutter" method="post" action="" name="deleteAllClutter">';
 								wp_nonce_field ( 'deleteAllClutterForm' );
 								echo '
-								<label for="deleteAllClutter"><i class="fa fa-trash-o"></i>Empty Trash</label>
+								<label for="deleteAllClutter"><i class="fa fa-trash-o"></i>Empty Trash <em>Perform all of the below trash removal actions, instantly.</em></label>
 								<input class="hidden" id="deleteAllClutter" type="submit" value="Go" name="deleteAllClutter">
 							</form>
 							<form class="clutter" method="post" action="" name="deletePostRevisionsForm">';
 								wp_nonce_field ( 'deletePostRevisionsForm' );
 								echo '
-								<label for="delete_post_revisions"><i class="fa fa-trash-o"></i>Delete Revisions/Autodrafts</label>
+								<label for="delete_post_revisions"><i class="fa fa-trash-o"></i>Delete Revisions/Autodrafts <em>Delete revisions, auto-drafts, and empties the trash.</em></label>
 								<input class="hidden" id="delete_post_revisions" type="submit" value="Go" name="delete_post_revisions">
 							</form>
 							<form class="clutter" method="post" action="" name="deleteUnapprovedCommentsForm">';
 								wp_nonce_field ( 'deleteUnapprovedCommentsForm' );
 								echo '
-								<label for="delete_unapproved_comments"><i class="fa fa-trash-o"></i>Clean Up Comments</label>
+								<label for="delete_unapproved_comments"><i class="fa fa-trash-o"></i>Clean Up Comments <em>Deletes unapproved comments, comments belonged to trashed posts, or comments labeled as spam.</em></label>
 								<input class="hidden" id="delete_unapproved_comments" type="submit" value="Go" name="delete_unapproved_comments">
 							</form>
 							<form class="clutter" method="post" action="" name="deleteUnusedTermsForm">';
 								wp_nonce_field ( 'deleteUnusedTermsForm' );
 								echo '
-								<label for="delete_unused_terms"><i class="fa fa-trash-o"></i>Clean Up Tags/Categories</label>
+								<label for="delete_unused_terms"><i class="fa fa-trash-o"></i>Clean Up Tags/Categories <em>Removes tags and categories that have no posts associated with them.</em></label>
 								<input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms">
 							</form>
 							<form class="clutter" method="post" action="" name="deleteDraftsForm">';
 								wp_nonce_field ( 'deleteDraftsForm' );
 								echo '
-								<label for="delete_drafts"><i class="fa fa-trash-o"></i>Delete Drafts</label>
+								<label for="delete_drafts"><i class="fa fa-trash-o"></i>Delete Drafts <em>Delete all drafts.</em></label>
 								<input class="hidden" id="delete_drafts" type="submit" value="Go" name="delete_drafts">
 							</form>
 						</div>
