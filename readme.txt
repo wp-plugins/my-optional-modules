@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: meta, og, twitter, facebook, google, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBLDNSBL, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.3
-Stable tag: 10.1.0.1
+Stable tag: 10.1.0.2
 
 An assortment of functions to enhance WordPress.
 
@@ -37,7 +37,6 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 *	Hidden spam field to thwart bots
 
 = Extra Features =
-*	oEmbed featured images
 *	Move Javascripts to the footer
 *	Lazyload for images in posts
 *	Remove the currently viewed post from the default 'Recent Posts' widget
@@ -66,11 +65,13 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 
 == Shortcodes ==
 = [mom_embed url='URL'] =
-Embeds content from the following websites: Animoto, Blip, CollegeHumor, DailyMotion, DeviantArt,EmbedArticles, Flickr, 
+Embeds content from the following websites: Animoto, AShemaleTube, Blip, CollegeHumor, DailyMotion, DeviantArt,EmbedArticles, Flickr, 
 FunnyOrDie, gist.github, Gyfcat, Hulu, ign, Imgur, Instagram, iSnare, Issuu, 
-Kickstarter, Liveleak, Meetup, Mixcloud, Photobucket, PollDaddy, Redtube, 
+Kickstarter, Liveleak, Meetup, Mixcloud, Photobucket, PollDaddy, Pornhub, Redtube, 
 Rdio, Revision3, Scribd, SlideShare, SmugMug, SoundCloud, Spotify, TED, Tumblr, 
 Vidme, Vimeo, Vine, WordPress.tv, Youtube
+
+You can set size='small/medium' to affect the size of the embed (in some rare cases).
 
 = [mom_hidden]CONTENT[/mom_hidden] =
 Allows for content to be hidden from users who are not logged in, or for content to be hidden 
@@ -93,6 +94,12 @@ while overall determines if the overall score is to be displayed.
 2.	Share icons displayed at the top of the post content.
 
 == Changelog ==
+= 10.1.0.2 =
+*	*Release Date - 28th, August, 2015*
+*	(removed) oEmbed featured images
+*	Only include certain necessary files for functionality when functionality is specifically turned on in settings
+*	Miniloops will now ignore sticky posts
+
 = 10.1.0.1 =
 *	*Release Date - 26th, August, 2015*
 *	*Most* items on settings page now describe what they do.

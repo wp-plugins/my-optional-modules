@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_modules()
  *
- * File last update: 10.0.9.8
+ * File last update: 10.1.0.2
  *
  * Functionality for:
  * - Favicon
@@ -204,8 +204,6 @@ class myoptionalmodules_modules {
 		$external       = null;
 		$host           = null;
 		$path           = null;
-		$video_w        = null;
-		$video_h        = null;
 		$published_time = null;
 		$modified_time  = null;
 		$posttags       = null;
@@ -225,33 +223,6 @@ class myoptionalmodules_modules {
 			$title = sanitize_text_field ( str_replace ( '\'' , '' , get_post_field ( 'post_title' , $id ) ) );
 			$image = wp_get_attachment_image_src ( get_post_thumbnail_id ( $id ) , 'single-post-thumbnail' );
 			$image = $image[0];
-		
-			// If External Feature Images isn't enabled, we can't use this function.
-			if ( function_exists ( 'myoptionalmodules_get_thumbnail_src' ) )
-				$external = myoptionalmodules_get_thumbnail_src( $id );
-
-			if( $external ) {
-				if ( isset ( parse_url ( $external ) [ 'host'  ] ) )
-					$host  = parse_url ( $external ) [ 'host'  ];
-				if ( isset ( parse_url ( $external ) [ 'path'  ] ) )
-					$path  = parse_url ( $external ) [ 'path'  ];
-
-				if( strpos ( $host , 'youtube.com' ) !== false ) {
-					$video     = explode ( '/' , $external );
-					$video     = $video [ sizeof ( $video ) - 1 ];
-					$og_type   = 'video';
-					$image     = "//youtube.com/v/$video?version=3&amp;autohide=1";
-					$video_w   = '398';
-					$video_h   = '264';
-					$thumbnail = "//img.youtube.com/vi/$video/0.jpg";
-					$type      = 'video';
-				}
-
-				if( strpos ( $host , 'imgur.com' ) !== false && strpos ( $path , '/album/' ) === false )
-					$image   = $external;
-
-			}
-
 			$url      = get_permalink( $id );
 			$site     = get_bloginfo( 'name' );
 			$excerpt  = strip_tags ( esc_html ( preg_replace ( '/\s\s+/i' , '' , get_the_excerpt ( ) ) ) );
@@ -273,8 +244,6 @@ class myoptionalmodules_modules {
 		$excerpt        = sanitize_text_field( $excerpt );
 		$type           = sanitize_text_field( $type );
 		$image          = sanitize_text_field( $image );
-		$video_w        = sanitize_text_field( $video_w );
-		$video_h        = sanitize_text_field( $video_h );
 		$url            = sanitize_text_field( $url );
 		$published_time = get_the_date( 'Y-m-dTH:i:sP');
 		$modified_time  = get_the_modified_date( 'Y-m-dTH:i:sP');
@@ -288,8 +257,6 @@ class myoptionalmodules_modules {
 		if ( $type ):           echo "\n<meta property='og:type' content='{$type}'>";                            endif;
 		if ( $thumbnail ):      echo "\n<meta property='og:image' content='{$thumbnail}'>";                      endif;
 		if ( $image ):          echo "\n<meta property='og:$og_type' content='{$image}'>";                       endif;
-		if ( $video_w ):        echo "\n<meta property='og:video:width' content='{$video_w}'>";                  endif;
-		if ( $video_h ):        echo "\n<meta property='og:video:height' content='{$video_h}'>";                 endif;
 		if ( $url ):            echo "\n<meta property='og:url' content='{$url}'>";                              endif;
 		if ( $published_time ): echo "\n<meta property='article:published_time' content='{$published_time}' />"; endif;
 		if ( $modified_time ):  echo "\n<meta property='article:modified_time' content='{$modified_time}' />";   endif;
@@ -316,8 +283,6 @@ class myoptionalmodules_modules {
 		$external       = null;
 		$host           = null;
 		$path           = null;
-		$video_w        = null;
-		$video_h        = null;
 		$published_time = null;
 		$modified_time  = null;
 		$posttags       = null;

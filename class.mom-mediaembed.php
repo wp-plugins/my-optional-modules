@@ -47,11 +47,36 @@ class mom_mediaEmbed {
 			endif;
 			
 			if ( $host ):
-
-				// ign.com
-				if ( strpos ( $host , 'ign.com' ) !== false ):
 				
-					$output = "<iframe src='http://widgets.ign.com/video/embed/content.html?url={$url}' width='468' height='263' scrolling='no' frameborder='0' allowfullscreen></iframe>";
+				// ashemaletube.com
+				if ( strpos ( $host , 'ashemaletube.com' ) !== false ):
+					$url = explode ( '/' , $url );
+					$url = $url [ sizeof ( $url ) - 2 ];
+					$url = sanitize_text_field ( $url );
+					
+					if ( 'small' == $size ):
+						$height = 375;
+						$width  = 500;
+					elseif ( 'medium' == $size ):
+						$height = 450;
+						$width  = 600;						
+					else:
+						$height = 600;
+						$width  = 800;
+					endif;
+					
+					$output .= "<iframe src='http://www.ashemaletube.com/embed/embed.php?m={$url}&amp;h=59399&amp;width={$width}&amp;height={$height}' width='{$width}' height='{$height}' frameborder='0' scrolling='no'></iframe>";
+			
+				// pornhub.com
+				elseif ( strpos ( $host , 'pornhub.com' ) !== false ):
+					$url = str_replace( 'viewkey=', '', $query );
+					$url = sanitize_text_field ( $url );
+					$output .= "<iframe src='http://www.pornhub.com/embed/{$url}' frameborder='0' width='560' height='340' scrolling='no'></iframe>";
+			
+				// ign.com
+				elseif ( strpos ( $host , 'ign.com' ) !== false ):
+				
+					$output .= "<iframe src='http://widgets.ign.com/video/embed/content.html?url={$url}' width='468' height='263' scrolling='no' frameborder='0' allowfullscreen></iframe>";
 			
 				// Deviant Art
 				elseif ( strpos ( $host , 'deviantart.com' ) !== false ):

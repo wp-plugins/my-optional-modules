@@ -1,14 +1,6 @@
 /* My Optional Modules Stylesheet 
 	(since version 4.0.5) */
 	
-	#myoptionalmodules {
-		background-color: #fff;
-		border: 1px solid rgba(0,0,0,.1);
-		display: block;
-		margin: 5px auto;
-		padding: 10px;
-		width: 98%;
-	}
 	#myoptionalmodules *:after,
 	#myoptionalmodules *:before,
 	#myoptionalmodules * {
@@ -31,7 +23,7 @@
 		width: 510px!important;
 	}
 	#myoptionalmodules .full {
-			background-color: rgba(47,51,53,.7);
+			background-color: rgba(47,51,53,.7)!important;
 			border: 1px solid rgba(47,51,53,.9);
 			color: #fff;
 			clear: both;
@@ -50,6 +42,7 @@
 				width: 48%;
 				float: left;
 				clear: none;
+				position: relative;
 			}
 			#myoptionalmodules .full section label {
 				background-color: rgba(0,0,0,.5);
@@ -58,19 +51,27 @@
 				padding: 8px;
 				position: absolute; 
 				width: 140px;
+				z-index: 98;
 			}
 			#myoptionalmodules .full input[type="text"] {
 				display: block;
 				float: none!important;
 				padding: 5px 5px 5px 145px ;
+				position: relative;
 				width: 100%!important; 
+				z-index: 97;
 			}
-			#myoptionalmodules .full select {
-				width: 98%;
-				margin: 5px 10px;
+			
+			#myoptionalmodules .full input[type="text"]:focus {
+				background-color: #fff;
+				padding: 5px;
+				z-index: 99;
 			}
+			
 	#myoptionalmodules .setting {
+		background-color: #fff;
 		border: 1px solid rgba(0,0,0,.1);
+		display: block;
 		margin: 10px 5px 0;
 		padding: 35px 5px 5px;
 		position: relative;
@@ -81,14 +82,6 @@
 			display: block; 
 			padding: 5px;
 		}
-			#myoptionalmodules .setting section input[type="text"] {
-				float: right;
-			}
-			#myoptionalmodules .setting section select {
-				clear: both;
-				display: block;
-				width: 100%;
-			}
 		#myoptionalmodules .setting em {
 			background-color: #000;
 			color: #fff;
@@ -129,7 +122,13 @@
 			text-align: left!important;
 		}
 		
-		#myoptionalmodules .setting select {
-			max-width: 95%;
+		.full-text {
+			cursor: pointer;
+			display: block;
+			margin: 5px 0 10px;
+			max-width: 510px;
+			padding: 10px;
+			position: relative;
+			width: 100%;
+			box-sizing(border-box);
 		}
-		

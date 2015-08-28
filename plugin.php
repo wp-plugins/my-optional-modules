@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: 
 Description: Optional modules and additions for Wordpress.
-Version: 10.1.0.1
+Version: 10.1.0.2
 Author: boyevul
 Author URI: 
 
@@ -37,12 +37,12 @@ $myoptionalmodules_sharelinks_email                    = $myoptionalmodules_dnsb
 $myoptionalmodules_commentspamfield                    = $myoptionalmodules_disablepingbacks                    = $myoptionalmodules_authorarchives                     =
 $myoptionalmodules_datearchives                        = $myoptionalmodules_disablecomments                     = $myoptionalmodules_dnsbl                              =
 $myoptionalmodules_removecode                          = $myoptionalmodules_javascripttofooter                  =
-$myoptionalmodules_exclude                             = $myoptionalmodules_nelio                               = $myoptionalmodules_recentpostswidget                  =
+$myoptionalmodules_exclude                             = $myoptionalmodules_recentpostswidget                   =
 $myoptionalmodules_google                              = $myoptionalmodules_frontpage                           = $myoptionalmodules_randompost                         =
 $myoptionalmodules_miniloopmeta                        =
 $myoptionalmodules_miniloopstyle                       = $myoptionalmodules_miniloopamount                      = $myoptionalmodules_plugincss                          =
 $myoptionalmodules_lazyload                            = $myoptionalmodules_verification                        = $myoptionalmodules_sharelinks_text                    =
-$myoptionalmodules_bing                                = $myoptionalmodules_alexa                              =
+$myoptionalmodules_bing                                = $myoptionalmodules_alexa                               =
 $myoptionalmodules_exclude_categories_level0categories = $myoptionalmodules_exclude_categorieslevel1categories  = $myoptionalmodules_exclude_categorieslevel2categories =
 $myoptionalmodules_exclude_categorieslevel7categories  = $myoptionalmodules_exclude_categoriesfront             = $myoptionalmodules_exclude_categoriestagarchives      =
 $myoptionalmodules_exclude_categoriessearchresults     = $myoptionalmodules_exclude_categoriesrss               = $myoptionalmodules_exclude_tagsfront                  =
@@ -61,7 +61,7 @@ $myoptionalmodules_exclude_categoriescategoriesthu     = $myoptionalmodules_excl
 $myoptionalmodules_exclude_usersuserssun               = $myoptionalmodules_exclude_usersusersmon               = $myoptionalmodules_exclude_usersuserstue              =
 $myoptionalmodules_exclude_usersuserswed               = $myoptionalmodules_exclude_usersusersthu               = $myoptionalmodules_exclude_usersusersfri              =
 $myoptionalmodules_exclude_usersuserssat               = $myoptionalmodules_disqus                              = $myoptionalmodules_pluginscript                       =
-$myoptionalmodules_analyticspostsonly                  = null;
+$myoptionalmodules_analyticspostsonly                  = $myoptionalmodules_pluginshortcodes                    = null;
 
 
 $myoptionalmodules_getallpluginoptions  = wp_load_alloptions();
@@ -71,6 +71,8 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ):
 	/**
 	 * Disable
 	 * - Plugin CSS
+	 * - Plugin Script
+	 * - Plugin Shortcodes
 	 * - Comment form
 	 * - Unnecessary Code
 	 * - Pingbacks
@@ -79,6 +81,7 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ):
 	 */
 	if ( $name == 'myoptionalmodules_plugincss' && $value ):                           $myoptionalmodules_plugincss                            = $value; endif;
 	if ( $name == 'myoptionalmodules_pluginscript' && $value ):                        $myoptionalmodules_pluginscript                         = $value; endif;
+	if ( $name == 'myoptionalmodules_pluginshortcodes' && $value ):                    $myoptionalmodules_pluginshortcodes                     = $value; endif;
 	if ( $name == 'myoptionalmodules_disablecomments' && $value ):                     $myoptionalmodules_disablecomments                      = $value; endif;
 	if ( $name == 'myoptionalmodules_removecode' && $value ):                          $myoptionalmodules_removecode                           = $value; endif;
 	if ( $name == 'myoptionalmodules_disablepingbacks' && $value ):                    $myoptionalmodules_disablepingbacks                     = $value; endif;
@@ -131,14 +134,12 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ):
 	
 	/**
 	 * Extras
-	 * - External Thumbnails
 	 * - Javascript-to-footer
 	 * - Lazyload
 	 * - Recent Posts Widget
 	 * - Enable Exclude Posts
 	 * - Analytics On Single Only
 	 */
-	if( $name == 'myoptionalmodules_nelio' && $value ):                               $myoptionalmodules_nelio                                = $value; endif;
 	if( $name == 'myoptionalmodules_javascripttofooter' && $value ):                  $myoptionalmodules_javascripttofooter                   = $value; endif;
 	if( $name == 'myoptionalmodules_lazyload' && $value ):                            $myoptionalmodules_lazyload                             = $value; endif;
 	if( $name == 'myoptionalmodules_recentpostswidget' && $value ):                   $myoptionalmodules_recentpostswidget                    = $value; endif;
@@ -225,14 +226,34 @@ define ( 'MyOptionalModules', true );
 require_once( ABSPATH . 'wp-includes/pluggable.php' );
 
 include ( 'function.category-ids.php' );
-include ( 'function.exclude-categories.php' );
-include ( 'function.recent-posts.php' );
-include ( 'function.featured-images.php' );
-include ( 'class.mom-mediaembed.php' ); 
+
+if ( $myoptionalmodules_exclude ) {
+	include ( 'function.exclude-categories.php' );
+}
+
+if ( $myoptionalmodules_recentpostswidget ) {
+	include ( 'function.recent-posts.php' );
+}
+
+if ( $myoptionalmodules_pluginshortcodes ) {
+	// Shortcodes are disabled
+	
+	// If Miniloop parameters are set, we still need to include the file so it can be used
+	if( $myoptionalmodules_miniloopamount && $myoptionalmodules_miniloopstyle && $myoptionalmodules_miniloopmeta ) {
+		include ( 'function.shortcode.myoptionalmodules-miniloop.php' );
+	}
+	
+} else {
+	include ( 'class.mom-mediaembed.php' ); 
+	include ( 'class.myoptionalmodules-shortcodes.php' );
+	include ( 'function.shortcode.myoptionalmodules-miniloop.php' );
+}
+
 include ( 'class.myoptionalmodules.php' );
-include ( 'class.myoptionalmodules-shortcodes.php' );
 include ( 'class.myoptionalmodules-modules.php' );
-include ( 'function.shortcode.myoptionalmodules-miniloop.php' );
+
+
+
 
 if( current_user_can( 'edit_dashboard' ) && is_admin() ):
 	class myoptionalmodules_admin_css {

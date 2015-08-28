@@ -2,7 +2,7 @@
 /**
  * ADMIN Settings Page Content
  *
- * File last update: 10.1.0.1
+ * File last update: 10.1.0.2
  *
  * Content of the /wp-admin/ SETTINGS PAGE for this plugin
  * INCLUDING all SAVE OPERATIONS.
@@ -178,6 +178,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 					$options_disable = array (
 						'myoptionalmodules_plugincss' ,
 						'myoptionalmodules_pluginscript' ,
+						'myoptionalmodules_pluginshortcodes' ,
 						'myoptionalmodules_disablecomments' ,
 						'myoptionalmodules_removecode' ,
 						'myoptionalmodules_disablepingbacks' ,
@@ -187,6 +188,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 					$keys_disable = array (
 						' Disable Plugin CSS <em>Keeps this plugins CSS from enqueueing. You will need to manually style all plugin elements yourself.</em>' ,
 						' Disable Plugin Script <em>Keeps this plugins main jquery script from loading. You will lose some functionality.</em>' ,
+						' Disable Plugin Shortcodes <em>You may choose to disable the file class.myoptionalmodules-shortcodes.php in its entirety. [mom_embed], [mom_hidden], and [mom_charts] will no longer work.</em>' ,
 						' Disable Comment form <em>Removes the comment form from every portion of your site, and replaces it with a blank template.</em>' ,
 						' Remove Unnecessary Code <em>Removes the XHTML generator, CSS and JS ids, feed links, Really Simple Discovery link, WLW Manifest link, adjacent posts links, and other such code clutter.</em>' ,
 						' Disable Pingbacks <em>Disables pingbacks to your site.</em>' ,
@@ -237,7 +239,6 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						' Spam trap <em>Enables a simple spam field for commentors who are not logged in that will discard the comment if filled out (potentially by a bot).</em>' ,
 					);
 					$options_extras = array (
-						'myoptionalmodules_nelio' ,
 						'myoptionalmodules_javascripttofooter' ,
 						'myoptionalmodules_lazyload' ,
 						'myoptionalmodules_recentpostswidget' ,
@@ -245,7 +246,6 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						'myoptionalmodules_analyticspostsonly'
 					);
 					$keys_extras = array (
-						' External Thumbnails <em>Utilizes <a href="//wordpress.org/plugins/external-featured-image/">Nelio External Featured Image</a> in conjunction with this plugins [mom_embed] to allow for any kind of embeddable media to be used as a featured image.</em>' ,
 						' Javascript-to-Footer <em>Move all JS to the footer.</em>' ,
 						' Lazyload <em>Utilize Lazyload for all post images.</em>' ,
 						' Recent Posts Widget <em>Changes the behavior of the Recent Posts Widget to exclude the currently viewed post from its list.</em>' ,
@@ -377,12 +377,11 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						delete_option ( 'myoptionalmodules_featureimagewidth_submit' );
 						delete_option ( 'myoptionalmodules_readmore' );
 						delete_option ( 'myoptionalmodules_favicon' );
+						delete_option ( 'myoptionalmodules_nelio' );
 					}
 					echo '
 					
 					<div id="myoptionalmodules">
-					
-						<h2>My Optional Modules</h2>
 						<div class="clear">
 						<div class="setting">
 							<em>tools</em>
@@ -441,23 +440,25 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 								}								
 							echo '</div>
 							</div>
-							<div class="clear">
-							<div class="setting">
-								<em>comments</em>';
-								if( !get_option ( 'myoptionalmodules_disablecomments' ) ) {
-									foreach ( $options_comment_form as &$option ) {
-										$title = str_replace ( $options_comment_form , $keys_comment_form , $option );
-										$checked = null;
-										if ( get_option ( $option ) )
-											$checked = ' checked';
-										echo "
-										<section>
-											<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> <label for='{$option}'>{$title}</label>
-										</section>";
-									}
-								}
-							echo '</div>
-							<div class="setting">
+							<div class="clear">';
+							
+							if( !get_option ( 'myoptionalmodules_disablecomments' ) ) {
+								echo '<div class="setting">
+									<em>comments</em>';
+										foreach ( $options_comment_form as &$option ) {
+											$title = str_replace ( $options_comment_form , $keys_comment_form , $option );
+											$checked = null;
+											if ( get_option ( $option ) )
+												$checked = ' checked';
+											echo "
+											<section>
+												<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> <label for='{$option}'>{$title}</label>
+											</section>";
+										}
+								echo '</div>';
+							}
+							
+							echo '<div class="setting">
 								<em>enable</em>';
 								foreach ( $options_enable as &$option ) {
 									$title = str_replace( $options_enable , $keys_enable , $option );
@@ -506,7 +507,9 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 							<div class="setting">
 								<em>theme</em>
 								<section>
-								<select name="myoptionalmodules_frontpage" id="mompaf_0">
+								<label for="mompaf_0">Set homepage as a post <em>Like setting the homepage as a page, this 
+								setting allows you to set your homepage as a post.</em></label>
+								<select class="full-text" name="myoptionalmodules_frontpage" id="mompaf_0">
 									<option value="off"';
 									if ( get_option ( 'myoptionalmodules_frontpage' ) == 'off' )
 										echo 'selected="selected"';
@@ -521,10 +524,15 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 									foreach ( $showmeposts as $postsshown ) {
 										echo "
 										<option name='myoptionalmodules_frontpage' id='mompaf_{$postsshown->ID}' value='{$postsshown->ID}'";
-										$postID   = $postsshown->ID;
-										$selected = selected ( $myoptionalmodules_frontpage , $postID );
+										$postID       = $postsshown->ID;
+										$selected     = selected ( $myoptionalmodules_frontpage , $postID );
+										$post_title   = substr( $postsshown->post_title , 0 , 48 );
+										$title_length = strlen( $post_title );
+										if( $title_length > 47 ) {
+											$post_title = "{$post_title}...";
+										}
 										echo "
-										>Front page: '{$postsshown->post_title}'</option>";
+										>Front page: '{$post_title}'</option>";
 									}
 								echo '
 								</select></section>';
@@ -542,16 +550,19 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 								$disqus             = sanitize_text_field ( get_option ( 'myoptionalmodules_disqus' ) );
 								echo "
 								<section>
-									<label>Disqus Shortname <small>&mdash; <strong>this</strong>.disqus.com</small></label>
-									<input type='text' id='myoptionalmodules_disqus' name='myoptionalmodules_disqus' value='{$disqus}' />
+									<label for='myoptionalmodules_disqus'>Disqus Shortname <small>&mdash; <strong>this</strong>.disqus.com</small> <em>Enables Disqus comments for your posts.</em></label>
+									<input class='full-text' type='text' id='myoptionalmodules_disqus' name='myoptionalmodules_disqus' value='{$disqus}' />
 								</section>
 								<section>
-									<label>Miniloop: meta</label>
-									<input type='text' id='myoptionalmodules_miniloopmeta' name='myoptionalmodules_miniloopmeta' value='$miniloop_meta' />
+									<label for='myoptionalmodules_miniloopmeta'>Miniloop: meta <em>This is the name of a custom field that will tie posts together. If Post A and Post C share the value 'video game' while Post B has the value 'movie',
+									Post A and Post C will be considered similar to each other, regardless of category.</em></label>
+									<input class='full-text' type='text' id='myoptionalmodules_miniloopmeta' name='myoptionalmodules_miniloopmeta' value='$miniloop_meta' />
 								</section>
 								<section>";
 									echo '
-									<select name="myoptionalmodules_miniloopstyle" id="myoptionalmodules_miniloopstyle">
+									<label for="myoptionalmodules_miniloopstyle">Miniloop: style <em>Choose a display style for your miniloop. Your miniloop
+									will always be displayed following your post content.</em></label>
+									<select class="full-text" name="myoptionalmodules_miniloopstyle" id="myoptionalmodules_miniloopstyle">
 										<option value="">Miniloop style: not set</option>
 										<option value="columns"'; selected ( $miniloop_style , 'columns' ); echo '>Miniloop style: Columns</option>
 										<option value="list"';    selected ( $miniloop_style , 'list'    ); echo '>Miniloop style: List</option>
@@ -562,28 +573,28 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 								echo "
 								</section>
 								<section>
-									<label>Miniloop: amount</label>
-									<input type='text' id='myoptionalmodules_miniloopamount' name='myoptionalmodules_miniloopamount' value='{$miniloop_amount}' />
+									<label for='myoptionalmodules_miniloopamount'>Miniloop: amount <em>How many posts to display. Can be as many or as few as you desire.</em></label>
+									<input class='full-text' type='text' id='myoptionalmodules_miniloopamount' name='myoptionalmodules_miniloopamount' value='{$miniloop_amount}' />
 								</section>
 								<section>
-									<label>Google Tracking ID</label>
-									<input type='text' id='myoptionalmodules_google' name='myoptionalmodules_google' value='{$google}' />
+									<label>Google Tracking ID <em>Your Google Analytics Tracking ID.</em></label>
+									<input class='full-text' type='text' id='myoptionalmodules_google' name='myoptionalmodules_google' value='{$google}' />
 								</section>
 								<section>
-									<label>Google Verification Content</label>
-									<input type='text' id='myoptionalmodules_verification' name='myoptionalmodules_verification' value='{$verification}' />
+									<label>Google Verification Content <em><a href='https://sites.google.com/site/webmasterhelpforum/en/verification-specifics'>Google Webmaster Tools verification details</a>.</em></label>
+									<input class='full-text' type='text' id='myoptionalmodules_verification' name='myoptionalmodules_verification' value='{$verification}' />
 								</section>
 								<section>
-									<label>Alexa Verify ID</label>
-									<input type='text' id='myoptionalmodules_alexa' name='myoptionalmodules_alexa' value='{$alexa}' />
+									<label>Alexa Verify ID <em><a href='http://www.alexa.com/siteowners/claim'>Claim Your Site on Alexa</a> and enter the verification ID here.</em></label>
+									<input class='full-text' type='text' id='myoptionalmodules_alexa' name='myoptionalmodules_alexa' value='{$alexa}' />
 								</section>
 								<section>
-									<label>Bing Validated ID</label>
-									<input type='text' id='myoptionalmodules_bing' name='myoptionalmodules_bing' value='{$bing}' />
+									<label>Bing Validated ID <em><a href='http://www.bing.com/webmaster/help/how-to-verify-ownership-of-your-site-afcfefc6'>Verify Ownership of Your Website (with Bing)</a>. Your Bing Validated ID is the content of msvalidate.</em></label>
+									<input class='full-text' type='text' id='myoptionalmodules_bing' name='myoptionalmodules_bing' value='{$bing}' />
 								</section>
 								<section>
-									<label>yoursite.tld/<code>?random</code> keyword</label>
-									<input type='text' id='myoptionalmodules_randompost' name='myoptionalmodules_randompost' value='{$randompost}' />
+									<label for='myoptionalmodules_randompost'>yoursite.tld/<code>?random</code> keyword <em>Creates a redirect for a random post. Loading up yoursite.tld/?KEYWORD will load a random post.</em></label>
+									<input class='full-text' type='text' id='myoptionalmodules_randompost' name='myoptionalmodules_randompost' value='{$randompost}' />
 								</section>";
 							echo '</div>
 							</div>

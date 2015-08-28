@@ -2,7 +2,7 @@
 /*
  * FUNCTION SHORTCODE myoptionalmodules_miniloop_shortcode()
  *
- * File last update: 9.2
+ * File last update: 10.1.0.2
  *
  * Insert a mini loop of posts based on a set of parameters
  * [mom_miniloop PARAMETERS]
@@ -124,47 +124,49 @@ function myoptionalmodules_miniloop_shortcode( $atts ) {
 	
 	if( $meta && $key ) {
 		$args = array (
-			'post__not_in'     => array ( $exclude , $current_post ),
-			'posts_per_page'   => $amount,
-			'offset'           => $offset,
-			'category'         => $category_id,
-			'category_name'    => $category_name,
-			'orderby'          => $orderby,
-			'order'            => $order,
-			'post_type'        => 'post',
-			'post_status'      => $post_status,
-			'suppress_filters' => true,
-			'cache_results'    => $cache_results,
-			'year'             => $year,
-			'monthnum'         => $month,
-			'day'              => $day,
-			'paged'            => $paged,
-			'meta_query'       => array(
+			'ignore_sticky_posts' => 1,
+			'post__not_in'        => array ( $exclude , $current_post ),
+			'posts_per_page'      => $amount,
+			'offset'              => $offset,
+			'category'            => $category_id,
+			'category_name'       => $category_name,
+			'orderby'             => $orderby,
+			'order'               => $order,
+			'post_type'           => 'post',
+			'post_status'         => $post_status,
+			'suppress_filters'    => true,
+			'cache_results'       => $cache_results,
+			'year'                => $year,
+			'monthnum'            => $month,
+			'day'                 => $day,
+			'paged'               => $paged,
+			'meta_query'          => array(
 				array ( 
-					'key'     => $meta,
-					'value'   => array ( $key ),
-					'compare' => 'IN',
+					'key'         => $meta,
+					'value'       => array ( $key ),
+					'compare'     => 'IN',
 				)
 			)
 		);
 	} else {
 		$args = array (
-		'post__not_in'     => array ( $exclude , $current_post ),
-		'posts_per_page'   => $amount,
-		'offset'           => $offset,
-		'category'         => $category_id,
-		'category_name'    => $category_name,
-		'orderby'          => $orderby,
-		'order'            => $order,
-		'post_type'        => 'post',
-		'post_status'      => $post_status,
-		'suppress_filters' => true,
-		'cache_results'    => $cache_results,
-		'year'             => $year,
-		'monthnum'         => $month,
-		'day'              => $day,
-		'paged'            => $paged,
-		'meta_key'         => $meta
+		'ignore_sticky_posts' => 1,
+		'post__not_in'        => array ( $exclude , $current_post ),
+		'posts_per_page'      => $amount,
+		'offset'              => $offset,
+		'category'            => $category_id,
+		'category_name'       => $category_name,
+		'orderby'             => $orderby,
+		'order'               => $order,
+		'post_type'           => 'post',
+		'post_status'         => $post_status,
+		'suppress_filters'    => true,
+		'cache_results'       => $cache_results,
+		'year'                => $year,
+		'monthnum'            => $month,
+		'day'                 => $day,
+		'paged'               => $paged,
+		'meta_key'            => $meta
 		);
 	}
 
