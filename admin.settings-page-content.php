@@ -2,7 +2,7 @@
 /**
  * ADMIN Settings Page Content
  *
- * File last update: 10.1.0.2
+ * File last update: 10.1.3
  *
  * Content of the /wp-admin/ SETTINGS PAGE for this plugin
  * INCLUDING all SAVE OPERATIONS.
@@ -188,7 +188,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 					$keys_disable = array (
 						' Disable Plugin CSS <em>Keeps this plugins CSS from enqueueing. You will need to manually style all plugin elements yourself.</em>' ,
 						' Disable Plugin Script <em>Keeps this plugins main jquery script from loading. You will lose some functionality.</em>' ,
-						' Disable Plugin Shortcodes <em>You may choose to disable the file class.myoptionalmodules-shortcodes.php in its entirety. [mom_embed], [mom_hidden], and [mom_charts] will no longer work.</em>' ,
+						' Disable Plugin Shortcodes <em>You may choose to disable the file class.myoptionalmodules-shortcodes.php in its entirety. [mom_embed], [mom_hidden], [mom_charts], and [mom_categories] will no longer work.</em>' ,
 						' Disable Comment form <em>Removes the comment form from every portion of your site, and replaces it with a blank template.</em>' ,
 						' Remove Unnecessary Code <em>Removes the XHTML generator, CSS and JS ids, feed links, Really Simple Discovery link, WLW Manifest link, adjacent posts links, and other such code clutter.</em>' ,
 						' Disable Pingbacks <em>Disables pingbacks to your site.</em>' ,
@@ -255,6 +255,10 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 					$theme_extras = array (
 						'myoptionalmodules_sharelinks_text' ,
 						'myoptionalmodules_google' ,
+						'myoptionalmodules_custom_embed' ,
+						'myoptionalmodules_custom_hidden' ,
+						'myoptionalmodules_custom_charts' ,
+						'myoptionalmodules_custom_categories' ,						
 						'myoptionalmodules_verification' ,
 						'myoptionalmodules_alexa' ,
 						'myoptionalmodules_bing' ,
@@ -263,7 +267,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						'myoptionalmodules_miniloopmeta' ,
 						'myoptionalmodules_disqus' ,
 						'myoptionalmodules_miniloopstyle' ,
-						'myoptionalmodules_miniloopamount'
+						'myoptionalmodules_miniloopamount' 
 					);
 					$options_exclude = array (
 						'myoptionalmodules_exclude_usersrss' ,
@@ -536,19 +540,48 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 									}
 								echo '
 								</select></section>';
-								$google = $previousclass = $nextclass = $readmore = $randompost = null;
-								$google             = sanitize_text_field ( get_option ( 'myoptionalmodules_google' ) );
-								$verification       = sanitize_text_field ( get_option ( 'myoptionalmodules_verification' ) );
-								$alexa              = sanitize_text_field ( get_option ( 'myoptionalmodules_alexa' ) );
-								$bing               = sanitize_text_field ( get_option ( 'myoptionalmodules_bing' ) );
-								$previousclass      = sanitize_text_field ( get_option ( 'myoptionalmodules_previouslinkclass' ) );
-								$nextclass          = sanitize_text_field ( get_option ( 'myoptionalmodules_nextlinkclass' ) );
-								$randompost         = sanitize_text_field ( get_option ( 'myoptionalmodules_randompost' ) );
-								$miniloop_meta      = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopmeta' ) );
-								$miniloop_style     = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopstyle' ) );
-								$miniloop_amount    = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopamount' ) );										
-								$disqus             = sanitize_text_field ( get_option ( 'myoptionalmodules_disqus' ) );
+								$google               = $verification     = $alexa            =
+								$bing                 = $randompost       = $miniloop_meta    =
+								$miniloop_style       = $miniloop_amount  = $disqus           =
+								$shortcode_embed      = $shortcode_hidden = $shortcode_charts =
+								$shortcode_categories = null;
+								
+								$google               = sanitize_text_field ( get_option ( 'myoptionalmodules_google' ) );
+								$verification         = sanitize_text_field ( get_option ( 'myoptionalmodules_verification' ) );
+								$alexa                = sanitize_text_field ( get_option ( 'myoptionalmodules_alexa' ) );
+								$bing                 = sanitize_text_field ( get_option ( 'myoptionalmodules_bing' ) );
+								$randompost           = sanitize_text_field ( get_option ( 'myoptionalmodules_randompost' ) );
+								$miniloop_meta        = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopmeta' ) );
+								$miniloop_style       = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopstyle' ) );
+								$miniloop_amount      = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopamount' ) );										
+								$disqus               = sanitize_text_field ( get_option ( 'myoptionalmodules_disqus' ) );
+								$shortcode_embed      = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_embed' ) );
+								$shortcode_hidden     = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_hidden' ) );
+								$shortcode_charts     = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_charts' ) );
+								$shortcode_categories = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_categories' ) );
+								
 								echo "
+								<section><hr /><strong>Shortcode Customization</strong></section>
+								<section>
+									<label for='myoptionalmodules_custom_embed'>Embed shortcode parameter <small>&mdash; default: mom_embed</small>
+									<input class='full-text' type='text' id='myoptionalmodules_custom_embed' name='myoptionalmodules_custom_embed' value='{$shortcode_embed}' />
+								</section>
+								<section>
+									<label for='myoptionalmodules_custom_hidden'>Hidden shortcode parameter <small>&mdash; default: mom_hidden</small>
+									<input class='full-text' type='text' id='myoptionalmodules_custom_hidden' name='myoptionalmodules_custom_hidden' value='{$shortcode_hidden}' />
+								</section>
+								<section>
+									<label for='myoptionalmodules_custom_charts'>Charts shortcode parameter <small>&mdash; default: mom_charts</small>
+									<input class='full-text' type='text' id='myoptionalmodules_custom_charts' name='myoptionalmodules_custom_charts' value='{$shortcode_charts}' />
+								</section>
+								<section>
+									<label for='myoptionalmodules_custom_categories'>Categories shortcode parameter <small>&mdash; default: mom_categories</small>
+									<input class='full-text' type='text' id='myoptionalmodules_custom_categories' name='myoptionalmodules_custom_categories' value='{$shortcode_categories}' />
+								</section>
+								<section><hr /></section>
+								
+								
+								
 								<section>
 									<label for='myoptionalmodules_disqus'>Disqus Shortname <small>&mdash; <strong>this</strong>.disqus.com</small> <em>Enables Disqus comments for your posts.</em></label>
 									<input class='full-text' type='text' id='myoptionalmodules_disqus' name='myoptionalmodules_disqus' value='{$disqus}' />

@@ -2,7 +2,7 @@
 /**
  * CLASS mom_mediaEmbed()
  *
- * File last update: 10.0.9.5
+ * File last update: 10.1.3
  *
  * Create a media embed from a URL in a template (or other) by passing a 
  * URL through the class:
@@ -130,10 +130,10 @@ class mom_mediaEmbed {
 					$url = str_replace ( array ( 'https://' , 'http://' , 'imgur.com/a/' , 'i.imgur.com/' ) , '' , $url );
 					$url = sanitize_text_field ( $url );
 					if ( strpos ( $path , '/a/' ) !== false ):
-						$output .= "<iframe class='imgur-album' src='//imgur.com/a/{$url}/embed'></iframe>";
+						$output .= "<blockquote class='imgur-embed-pub' lang='en' data-id='a/{$url}'></blockquote><script async src='//s.imgur.com/min/embed.js' charset='utf-8'></script>";
 					elseif ( strpos ( $path , '/gallery/' ) !== false ):
 						$url = str_replace ( 'imgur.com/gallery/' , '' , $url );
-						$output .= "<div class='imgur-iframe'><blockquote class='imgur-embed-pub' lang='en' data-id='{$url}' data-context='false'><a rel='nofollow' href='//imgur.com/{$url}'>View post on imgur.com</a></blockquote><script async src='//s.imgur.com/min/embed.js' charset='utf-8'></script></div>";
+						$output .= "<blockquote class='imgur-embed-pub' lang='en' data-id='a/{$url}'></blockquote><script async src='//s.imgur.com/min/embed.js' charset='utf-8'></script>";
 					else:
 						$ext = pathinfo($url, PATHINFO_EXTENSION);
 						if ( 'webm' == $ext ):
@@ -264,25 +264,19 @@ class mom_mediaEmbed {
 			
 			endif;
 			
-			if ( $gumboard_user_disable_img ):
-				echo "<div class='{$class}'>";
-					echo "<p><a rel='nofollow' href='{$original_url}'>Attachment</a> <small>&mdash; you currently have embeds turned off.</small></p>";
-					$output = null;
+			if ( $output ):
+				if ( 'user_info_image' != $class ):
+					echo "<div class='embed'>";
+					echo $output;
+				else:
+					echo '<div class="user_info_image">';
+					echo $output;
+				endif;
 				echo '</div>';
 			else:
-				if ( $output ):
-					if ( 'user_info_image' != $class ):
-						echo "<div class='embed'>";
-						echo $output;
-					else:
-						echo '<div class="user_info_image">';
-						echo $output;
-					endif;
-					echo '</div>';
-				else:
-					echo "<div class='gumboard_content_comment'><p><a rel='nofollow' href='{$url}'>Attached link</a> <small>(<a href='//{$host}'>{$host}</a>)</small></p></div>";
-				endif;
+				echo "<div class='gumboard_content_comment'><p><a rel='nofollow' href='{$url}'>Attached link</a> <small>(<a href='//{$host}'>{$host}</a>)</small></p></div>";
 			endif;
+
 			
 		endif;
 

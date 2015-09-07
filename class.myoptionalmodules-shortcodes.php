@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_shortcodes()
  *
- * File last update: 10.0.9.6
+ * File update: 10.1.3
  *
  * All shortcodes for My Optional Modules
  */
@@ -14,13 +14,37 @@ if ( !defined ( 'MyOptionalModules' ) ) {
 class myoptionalmodules_shortcodes{
 
 	function __construct() {
-		remove_shortcode ( 'mom_embed' );
-		remove_shortcode ( 'mom_hidden' );
-		remove_shortcode ( 'mom_charts' );
-
-		add_shortcode    ( 'mom_embed' , array ( $this , 'embed' ) );
-		add_shortcode    ( 'mom_hidden' , array ( $this , 'hidden' ) );
-		add_shortcode    ( 'mom_charts' , array ( $this , 'charts' ) );
+		
+		/**
+		 * Customize shortcode code
+		 */
+		
+		global $myoptionalmodules_custom_embed;
+		global $myoptionalmodules_custom_hidden; 
+		global $myoptionalmodules_custom_charts;
+		global $myoptionalmodules_custom_categories;
+		
+		if( !$myoptionalmodules_custom_embed ){
+			$myoptionalmodules_custom_embed = 'mom_embed';
+		}
+		if( !$myoptionalmodules_custom_hidden ){
+			$myoptionalmodules_custom_hidden = 'mom_hidden';
+		}
+		if( !$myoptionalmodules_custom_charts ){
+			$myoptionalmodules_custom_charts = 'mom_charts';
+		}
+		if( !$myoptionalmodules_custom_categories ){
+			$myoptionalmodules_custom_categories = 'mom_categories';
+		}	
+		
+		remove_shortcode ( $myoptionalmodules_custom_embed );
+		remove_shortcode ( $myoptionalmodules_custom_hidden );
+		remove_shortcode ( $myoptionalmodules_custom_charts );
+		remove_shortcode ( $myoptionalmodules_custom_categories );
+		add_shortcode    ( $myoptionalmodules_custom_embed , array ( $this , 'embed' ) );
+		add_shortcode    ( $myoptionalmodules_custom_hidden , array ( $this , 'hidden' ) );
+		add_shortcode    ( $myoptionalmodules_custom_charts , array ( $this , 'charts' ) );
+		add_shortcode    ( $myoptionalmodules_custom_categories , array ( $this , 'categories' ) );
 	}
 	
 	function embed( $atts ) {
@@ -84,7 +108,7 @@ class myoptionalmodules_shortcodes{
 		return do_shortcode ( $content );
 	}
 	
-	function charts ( $atts ) {
+	function charts( $atts ) {
 
 		/*
 		 * [mom_charts type='TYPE' content='CONTENT' total_possible='TOTAL POSSIBLE' overall='0/1']
@@ -162,6 +186,23 @@ class myoptionalmodules_shortcodes{
 			}
 		}
 		return $output;
-	}		
+	}
+	
+	function categories() {
+		$output = null;
+		$output .= '<div class="mom_cat-container">';
+		$args = array(
+			'orderby' => 'name',
+			'parent' => 0
+		);
+		$categories = get_categories( $args );
+		foreach ( $categories as $category ) {
+			$link = get_category_link( $category->term_id );
+			$output .= "<div class='mom_cat-containers'><span><strong><a href='{$link}'>{$category->name}</a></strong></span>{$category->description}</div>";
+		}
+		$output .= '</div>';
+		
+		return $output;
+	}
 }
 $myoptionalmodules_shortcodes = new myoptionalmodules_shortcodes();
