@@ -4,7 +4,7 @@
 .mom-reddit-feed a {
 	border: none;
 	color: rgba(30,123,195,1); 
-	display: block;
+	
 	text-decoration: none; 
 }
 .mom-reddit-feed a:hover { 
@@ -24,6 +24,15 @@
 .mom-reddit-feed { 
 	padding: 5% 0; 
 }
+	.mom-reddit-feed p {
+		clear: both;
+		display: block;
+	}
+		.mom-reddit-feed small {
+			display: inline;
+			clear: none;
+			margin: 10px;
+		}
 	.mom-reddit-feed  h3 { 
 		display: block; 
 		clear: both; 
@@ -121,8 +130,7 @@ h2.mom_related_title{
 	margin: 10px;
 }
 .mom_shareLinks a{
-	background-color: #fff;
-	color: #000;
+	border: none;
 	margin: 5px 5px 5px 0;
 	padding: 15px 25px;
 	text-align: center;

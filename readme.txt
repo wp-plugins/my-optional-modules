@@ -97,16 +97,20 @@ Creates a feed for a given reddit sub. sub should be the name of the subreddit, 
 to pull, title can be %blank% to display no title, left blank to use the subreddit's title, or 
 customized to display your own title, and description should be a 1 or a 0 (to display (1) or not (0)).
 
-Example: [mom_reddit sub='destinythegame' limit='5' title='You might be interested in' description='0']
+Designate a thread URL to pull comments for that thread. Comment output ignores title and sub attribute of shortcode.
+
+Example: [mom_reddit sub='destinythegame' thread='' limit='5' title='You might be interested in' description='0']
 
 == Screenshots ==
 1.	A horizontal gallery in a post.
 2.	Share icons displayed at the top of the post content.
 
 == Changelog ==
-= 10.1.4 / .5 / .6 =
+
+= 10.1.7 =
 *	*Release Date - 14th, September, 2015*
 *	(added) [mom_reddit] for embedding subreddit feeds
+*	Remove background color from share links for better theme integration
 
 = 10.1.3 =
 *	*Release Date - 7th, September, 2015*

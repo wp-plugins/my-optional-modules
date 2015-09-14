@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_shortcodes()
  *
- * File update: 10.1.6
+ * File update: 10.1.7
  *
  * All shortcodes for My Optional Modules
  */
@@ -215,7 +215,8 @@ class myoptionalmodules_shortcodes{
 		extract (
 			shortcode_atts ( 
 				array (
-					'sub'         => '' , 
+					'sub'         => '' ,
+					'thread'      => '' ,
 					'limit'       => 10 ,
 					'title'       => '' ,
 					'description' => 0
@@ -225,51 +226,75 @@ class myoptionalmodules_shortcodes{
 		);
 		
 		$sub    = sanitize_text_field ( $sub );
+		$thread = sanitize_text_field ( $thread );
 		$limit  = intval ( $limit );
 		$title  = sanitize_text_field ( $title );
 		$output = null;
+		$count  = 0;
 		
-		if ( $sub ) {
+		if ( $sub || $thread ) {
 		
-			$url = "https://www.reddit.com/r/{$sub}/.rss?limit={$limit}";
+			if ( $sub && !$thread ) {
+				$url = "https://www.reddit.com/r/{$sub}/.rss?limit={$limit}";
+			} elseif ( $thread && !$sub ) {
+				$url = "{$thread}/.rss?limit={$limit}";
+			} else {
+				$url = null;
+			}
 			
-			$content = file_get_contents( $url );
+			if ( $url ) {
+			
+				$content = file_get_contents( $url );
 
-			$x = new SimpleXmlElement( $content );
-			$x->channel->title = sanitize_text_field ( $x->channel->title );
-			$x->channel->description = sanitize_text_field ( $x->channel->description );
-			
-			if ( 'search results' != strtolower ( $x->channel->title ) ) {
-			
-				$channel_title = strtolower( str_replace( array( 'https://www.reddit.com/r/', '/' ), '', $x->channel->link ) );
+				$x = new SimpleXmlElement( $content );
+				$x->channel->title = sanitize_text_field ( $x->channel->title );
+				$x->channel->description = sanitize_text_field ( $x->channel->description );
 				
-				if ( '%blank%' == $title ) {
-					$title = null;
-				} elseif ( $title ) {
-					$title = "<h1>{$title}</h1>";
-				} elseif ( !$title ) {
-					$title = "<h1><a href='{$x->channel->link}'>{$x->channel->title}</a></h1>";
-				}
+				if ( 'search results' != strtolower ( $x->channel->title ) ) {
 				
-				if ( $description ) {
-					$description = "<h2>{$x->channel->description}</h2>";
-				} else {
-					$description = null;
-				}
-				
-				$output .= "
-					<div class='mom-reddit-feed'>
-						{$title}{$description}
-						
-				";
-				foreach( $x->channel->item as $entry ){
-					$post_type = null;
-					if( strpos( $entry->description, 'SC_OFF' ) !== false ){
-						$post_type = "<small>(self.{$channel_title})</small>";
+					$channel_title = strtolower( str_replace( array( 'https://www.reddit.com/r/', '/' ), '', $x->channel->link ) );
+					
+					if ( '%blank%' == $title ) {
+						$title = null;
+					} elseif ( $title ) {
+						$title = "<h1>{$title}</h1>";
+					} elseif ( !$title ) {
+						$title = "<h1><a href='{$x->channel->link}'>{$x->channel->title}</a></h1>";
 					}
-					$output .= "<h3><a href='{$entry->link}'>{$entry->title} {$post_type}</a></h3>";
+					
+					if ( $sub && !$thread ) {
+						if ( $description ) {
+							$description = "<h2>{$x->channel->description}</h2>";
+						} else {
+							$description = null;
+						}
+					} elseif ( $thread && !$sub ) {
+						$description = null;
+						$title = null;
+					}
+					
+					$output .= "
+						<div class='mom-reddit-feed'>
+							{$title}{$description}
+							
+					";
+					foreach( $x->channel->item as $entry ){
+						++$count;
+						$post_type = null;
+						if( strpos( $entry->description, 'SC_OFF' ) !== false ){
+							$post_type = "<small>(self.{$channel_title})</small>";
+						}
+						if ( $sub && !$thread ) {
+							$output .= "<h3><a href='{$entry->link}'>{$entry->title} {$post_type}</a></h3>";
+						} elseif ( $thread && !$sub ) {
+							if ( $count > 1 ) {
+								$output .= "<p>{$entry->description} <small><a href='{$entry->link}'>#</a></small></p>";
+							}
+						}
+					}
+					$output .= "</div>";
+				
 				}
-				$output .= "</div>";
 				
 			}
 		
