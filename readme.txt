@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: reddit, meta, og, twitter, facebook, google, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBLDNSBL, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.3
-Stable tag: 10.1.6
+Stable tag: 10.1.7
 
 An assortment of functions to enhance WordPress.
 
