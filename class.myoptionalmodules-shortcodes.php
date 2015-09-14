@@ -237,13 +237,12 @@ class myoptionalmodules_shortcodes{
 			$x = new SimpleXmlElement( $content );
 			$channel_title = strtolower( str_replace( array( 'https://www.reddit.com/r/', '/' ), '', $x->channel->link ) );
 			
-			if ( $title ) {
-				$title = "<h1>{$title}</h1>";
-			}
-			elseif ( !$title ) {
-				$title = "<h1><a href='{$x->channel->link}'>{$x->channel->title}</a></h1>";
-			} elseif ( '%blank%' == strtolower ( $title ) ) {
+			if ( '%blank%' == $title ) {
 				$title = null;
+			} elseif ( $title ) {
+				$title = "<h1>{$title}</h1>";
+			} elseif ( !$title ) {
+				$title = "<h1><a href='{$x->channel->link}'>{$x->channel->title}</a></h1>";
 			}
 			
 			if ( $description ) {
