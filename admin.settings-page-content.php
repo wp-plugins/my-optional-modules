@@ -188,7 +188,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 					$keys_disable = array (
 						' Disable Plugin CSS <em>Keeps this plugins CSS from enqueueing. You will need to manually style all plugin elements yourself.</em>' ,
 						' Disable Plugin Script <em>Keeps this plugins main jquery script from loading. You will lose some functionality.</em>' ,
-						' Disable Plugin Shortcodes <em>You may choose to disable the file class.myoptionalmodules-shortcodes.php in its entirety. [mom_embed], [mom_hidden], [mom_charts], and [mom_categories] will no longer work.</em>' ,
+						' Disable Plugin Shortcodes <em>You may choose to disable the file class.myoptionalmodules-shortcodes.php in its entirety. [mom_embed], [mom_hidden], [mom_charts], [mom_categories], and [mom_reddit] will no longer work.</em>' ,
 						' Disable Comment form <em>Removes the comment form from every portion of your site, and replaces it with a blank template.</em>' ,
 						' Remove Unnecessary Code <em>Removes the XHTML generator, CSS and JS ids, feed links, Really Simple Discovery link, WLW Manifest link, adjacent posts links, and other such code clutter.</em>' ,
 						' Disable Pingbacks <em>Disables pingbacks to your site.</em>' ,

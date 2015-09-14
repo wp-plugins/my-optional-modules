@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_shortcodes()
  *
- * File update: 10.1.4
+ * File update: 10.1.5
  *
  * All shortcodes for My Optional Modules
  */
@@ -235,6 +235,10 @@ class myoptionalmodules_shortcodes{
 			
 			$content = file_get_contents( $url );
 			$x = new SimpleXmlElement( $content );
+			
+			$x->channel->title = sanitize_text_field ( $x->channel->title );
+			$x->channel->description = sanitize_text_field ( $x->channel->description );
+			
 			$channel_title = strtolower( str_replace( array( 'https://www.reddit.com/r/', '/' ), '', $x->channel->link ) );
 			
 			if ( '%blank%' == $title ) {
@@ -261,7 +265,7 @@ class myoptionalmodules_shortcodes{
 				if( strpos( $entry->description, 'SC_OFF' ) !== false ){
 					$post_type = "<small>(self.{$channel_title})</small>";
 				}
-				$output .= "<a href='{$entry->link}'>{$entry->title} {$post_type}</a>";
+				$output .= "<h3><a href='{$entry->link}'>{$entry->title} {$post_type}</a></h3>";
 			}
 			$output .= "</div>";
 			

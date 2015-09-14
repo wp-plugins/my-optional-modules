@@ -2,7 +2,9 @@
  * [mom_reddit]
  */
 .mom-reddit-feed a {
+	border: none;
 	color: rgba(30,123,195,1); 
+	display: block;
 	text-decoration: none; 
 }
 .mom-reddit-feed a:hover { 
@@ -16,19 +18,20 @@
 .mom-reddit-feed h2 { 
 	font-size: 1.5rem; 
 	font-weight: 600; 
+	opacity: .8;
 	padding: 10px 0; 
 }
 .mom-reddit-feed { 
-	padding: 5%; 
+	padding: 5% 0; 
 }
-	.mom-reddit-feed  a { 
+	.mom-reddit-feed  h3 { 
 		display: block; 
 		clear: both; 
 		font-size: 1.3rem; 
 		font-weight: 500; 
 		padding: 10px 0; 
 	}
-		.mom-reddit-feed  a small { 
+		.mom-reddit-feed  h3 small { 
 			font-size: .8rem; 
 		}
 
