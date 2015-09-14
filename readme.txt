@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: reddit, meta, og, twitter, facebook, google, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBLDNSBL, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.3
-Stable tag: 10.1.5
+Stable tag: 10.1.6
 
 An assortment of functions to enhance WordPress.
 
@@ -104,7 +104,7 @@ Example: [mom_reddit sub='destinythegame' limit='5' title='You might be interest
 2.	Share icons displayed at the top of the post content.
 
 == Changelog ==
-= 10.1.4 / .5 =
+= 10.1.4 / .5 / .6 =
 *	*Release Date - 14th, September, 2015*
 *	(added) [mom_reddit] for embedding subreddit feeds
 
