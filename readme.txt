@@ -1,9 +1,9 @@
 === My Optional Modules ===
 Contributors: boyevul
-Tags: meta, og, twitter, facebook, google, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBLDNSBL, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, single post, miniloop, attachment, media, embedder, oEmbed
+Tags: reddit, meta, og, twitter, facebook, google, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBLDNSBL, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.3
-Stable tag: 10.1.3
+Stable tag: 10.1.4
 
 An assortment of functions to enhance WordPress.
 
@@ -92,11 +92,22 @@ while overall determines if the overall score is to be displayed.
 = [mom_categories] =
 Creates a display column(s) of all parent categories, with links, and descriptions of each.
 
+= [mom_reddit] =
+Creates a feed for a given reddit sub. sub should be the name of the subreddit, limit the number of entries 
+to pull, title can be %blank% to display no title, left blank to use the subreddit's title, or 
+customized to display your own title, and description should be a 1 or a 0 (to display (1) or not (0)).
+
+Example: [mom_reddit sub='destinythegame' limit='5' title='You might be interested in' description='0']
+
 == Screenshots ==
 1.	A horizontal gallery in a post.
 2.	Share icons displayed at the top of the post content.
 
 == Changelog ==
+= 10.1.4 =
+*	*Release Date - 14th, September, 2015*
+*	(added) [mom_reddit] for embedding subreddit feeds
+
 = 10.1.3 =
 *	*Release Date - 7th, September, 2015*
 *	(added) [mom_categories] shortcode (parent category display)

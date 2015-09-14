@@ -258,7 +258,8 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						'myoptionalmodules_custom_embed' ,
 						'myoptionalmodules_custom_hidden' ,
 						'myoptionalmodules_custom_charts' ,
-						'myoptionalmodules_custom_categories' ,						
+						'myoptionalmodules_custom_categories' ,
+						'myoptionalmodules_custom_redditfeed' ,
 						'myoptionalmodules_verification' ,
 						'myoptionalmodules_alexa' ,
 						'myoptionalmodules_bing' ,
@@ -559,6 +560,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 								$shortcode_hidden     = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_hidden' ) );
 								$shortcode_charts     = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_charts' ) );
 								$shortcode_categories = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_categories' ) );
+								$shortcode_redditfeed = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_redditfeed' ) );
 								
 								echo "
 								<section><hr /><strong>Shortcode Customization</strong></section>
@@ -577,6 +579,10 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 								<section>
 									<label for='myoptionalmodules_custom_categories'>Categories shortcode parameter <small>&mdash; default: mom_categories</small>
 									<input class='full-text' type='text' id='myoptionalmodules_custom_categories' name='myoptionalmodules_custom_categories' value='{$shortcode_categories}' />
+								</section>
+								<section>
+									<label for='myoptionalmodules_custom_redditfeed'>reddit feed shortcode parameter <small>&mdash; default: mom_reddit</small>
+									<input class='full-text' type='text' id='myoptionalmodules_custom_redditfeed' name='myoptionalmodules_custom_redditfeed' value='{$shortcode_redditfeed}' />
 								</section>
 								<section><hr /></section>
 								

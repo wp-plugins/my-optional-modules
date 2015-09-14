@@ -1,4 +1,38 @@
 /**
+ * [mom_reddit]
+ */
+.mom-reddit-feed a {
+	color: rgba(30,123,195,1); 
+	text-decoration: none; 
+}
+.mom-reddit-feed a:hover { 
+	color: rgba(30,123,195,.5); 
+}
+.mom-reddit-feed h1 { 
+	font-size: 1.7rem; 
+	font-weight: 700; 
+	padding: 10px 0; 
+}
+.mom-reddit-feed h2 { 
+	font-size: 1.5rem; 
+	font-weight: 600; 
+	padding: 10px 0; 
+}
+.mom-reddit-feed { 
+	padding: 5%; 
+}
+	.mom-reddit-feed  a { 
+		display: block; 
+		clear: both; 
+		font-size: 1.3rem; 
+		font-weight: 500; 
+		padding: 10px 0; 
+	}
+		.mom-reddit-feed  a small { 
+			font-size: .8rem; 
+		}
+
+/**
  * [mom_categories]
  */
 .mom_cat-container {

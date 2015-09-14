@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: 
 Description: Optional modules and additions for Wordpress.
-Version: 10.1.3
+Version: 10.1.4
 Author: boyevul
 Author URI: 
 
@@ -63,7 +63,7 @@ $myoptionalmodules_exclude_usersuserswed               = $myoptionalmodules_excl
 $myoptionalmodules_exclude_usersuserssat               = $myoptionalmodules_disqus                              = $myoptionalmodules_pluginscript                       =
 $myoptionalmodules_analyticspostsonly                  = $myoptionalmodules_pluginshortcodes                    = 
 $myoptionalmodules_custom_embed                        = $myoptionalmodules_custom_hidden                       = $myoptionalmodules_custom_charts                      = 
-$myoptionalmodules_custom_categories                   = null;
+$myoptionalmodules_custom_categories                   = $myoptionalmodules_custom_redditfeed                   = null;
 
 
 $myoptionalmodules_getallpluginoptions  = wp_load_alloptions();
@@ -173,6 +173,7 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ):
 	if( $name == 'myoptionalmodules_custom_hidden' && $value ):                       $myoptionalmodules_custom_hidden                        = $value; endif;
 	if( $name == 'myoptionalmodules_custom_charts' && $value ):                       $myoptionalmodules_custom_charts                        = $value; endif;
 	if( $name == 'myoptionalmodules_custom_categories' && $value ):                   $myoptionalmodules_custom_categories                    = $value; endif;
+	if( $name == 'myoptionalmodules_custom_redditfeed' && $value ):                   $myoptionalmodules_custom_redditfeed                    = $value; endif;
 	
 	// Exclude Posts	 
 	if( $name == 'myoptionalmodules_exclude_categories_level0categories' && $value ): $myoptionalmodules_exclude_categories_level0categories  = $value; endif;

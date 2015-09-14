@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_shortcodes()
  *
- * File update: 10.1.3
+ * File update: 10.1.4
  *
  * All shortcodes for My Optional Modules
  */
@@ -23,28 +23,34 @@ class myoptionalmodules_shortcodes{
 		global $myoptionalmodules_custom_hidden; 
 		global $myoptionalmodules_custom_charts;
 		global $myoptionalmodules_custom_categories;
+		global $myoptionalmodules_custom_redditfeed;
 		
-		if( !$myoptionalmodules_custom_embed ){
+		if( '' == $myoptionalmodules_custom_embed ){
 			$myoptionalmodules_custom_embed = 'mom_embed';
 		}
-		if( !$myoptionalmodules_custom_hidden ){
+		if( '' == $myoptionalmodules_custom_hidden ){
 			$myoptionalmodules_custom_hidden = 'mom_hidden';
 		}
-		if( !$myoptionalmodules_custom_charts ){
+		if( '' == $myoptionalmodules_custom_charts ){
 			$myoptionalmodules_custom_charts = 'mom_charts';
 		}
-		if( !$myoptionalmodules_custom_categories ){
+		if( '' == $myoptionalmodules_custom_categories ){
 			$myoptionalmodules_custom_categories = 'mom_categories';
-		}	
+		}
+		if( '' == $myoptionalmodules_custom_redditfeed ){
+			$myoptionalmodules_custom_reddtifeed = 'mom_reddit';
+		}
 		
 		remove_shortcode ( $myoptionalmodules_custom_embed );
 		remove_shortcode ( $myoptionalmodules_custom_hidden );
 		remove_shortcode ( $myoptionalmodules_custom_charts );
 		remove_shortcode ( $myoptionalmodules_custom_categories );
+		remove_shortcode ( $myoptionalmodules_custom_redditfeed );
 		add_shortcode    ( $myoptionalmodules_custom_embed , array ( $this , 'embed' ) );
 		add_shortcode    ( $myoptionalmodules_custom_hidden , array ( $this , 'hidden' ) );
 		add_shortcode    ( $myoptionalmodules_custom_charts , array ( $this , 'charts' ) );
 		add_shortcode    ( $myoptionalmodules_custom_categories , array ( $this , 'categories' ) );
+		add_shortcode    ( $myoptionalmodules_custom_redditfeed , array ( $this , 'reddit' ) );
 	}
 	
 	function embed( $atts ) {
@@ -204,5 +210,67 @@ class myoptionalmodules_shortcodes{
 		
 		return $output;
 	}
+	
+	function reddit( $atts ) {
+		extract (
+			shortcode_atts ( 
+				array (
+					'sub'         => '' , 
+					'limit'       => 10 ,
+					'title'       => '' ,
+					'description' => 0
+				)
+				, $atts 
+			)
+		);
+		
+		$sub    = sanitize_text_field ( $sub );
+		$limit  = intval ( $limit );
+		$title  = sanitize_text_field ( $title );
+		$output = null;
+		
+		if ( $sub ) {
+		
+			$url = "https://www.reddit.com/r/{$sub}/.rss?limit={$limit}";
+			
+			$content = file_get_contents( $url );
+			$x = new SimpleXmlElement( $content );
+			$channel_title = strtolower( str_replace( array( 'https://www.reddit.com/r/', '/' ), '', $x->channel->link ) );
+			
+			if ( $title ) {
+				$title = "<h1>{$title}</h1>";
+			}
+			elseif ( !$title ) {
+				$title = "<h1><a href='{$x->channel->link}'>{$x->channel->title}</a></h1>";
+			} elseif ( '%blank%' == strtolower ( $title ) ) {
+				$title = null;
+			}
+			
+			if ( $description ) {
+				$description = "<h2>{$x->channel->description}</h2>";
+			} else {
+				$description = null;
+			}
+			
+			$output .= "
+				<div class='mom-reddit-feed'>
+					{$title}{$description}
+					
+			";
+			foreach( $x->channel->item as $entry ){
+				$post_type = null;
+				if( strpos( $entry->description, 'SC_OFF' ) !== false ){
+					$post_type = "<small>(self.{$channel_title})</small>";
+				}
+				$output .= "<a href='{$entry->link}'>{$entry->title} {$post_type}</a>";
+			}
+			$output .= "</div>";
+			
+		}
+		
+		return $output;
+		
+	}
+	
 }
 $myoptionalmodules_shortcodes = new myoptionalmodules_shortcodes();
