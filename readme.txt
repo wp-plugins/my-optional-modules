@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: reddit, meta, og, twitter, facebook, google, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBLDNSBL, garbage, removal, trash, footer, lazy load, exclude, remove, hide, front page, search results, authors, categories, tags, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.3
-Stable tag: 10.1.7
+Stable tag: 10.1.8
 
 An assortment of functions to enhance WordPress.
 
@@ -38,13 +38,11 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 
 = Extra Features =
 *	Move Javascripts to the footer
-*	Lazyload for images in posts
 *	Remove the currently viewed post from the default 'Recent Posts' widget
 *	Exclude posts from almost anywhere
 *	Make the front page a post
 *	Related posts by meta key
 *	Google Analytics and Site Verification integration
-*	Style previous and next links with a custom .class
 *	Enable a keyword for random posts
 *	Universal Disqus Code (non-Wordpress Identifying)
 
@@ -106,6 +104,10 @@ Example: [mom_reddit sub='destinythegame' thread='' limit='5' title='You might b
 2.	Share icons displayed at the top of the post content.
 
 == Changelog ==
+= 10.1.8 -
+*	*Release Date - 25th, September, 2015*
+*	For reddit thread comment display, do not show [deleted] comments.
+*	Ability to disable horizontal gallery script.
 
 = 10.1.7 =
 *	*Release Date - 14th, September, 2015*

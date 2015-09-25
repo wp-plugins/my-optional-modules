@@ -39,21 +39,31 @@ class myoptionalmodules {
 	// Enqueue scripts
 	function scripts(){
 		// JQUERY dependent
-			function mom_jquery(){
-				global $myoptionalmodules_lazyload;
-				global $myoptionalmodules_pluginscript;
-				if( $myoptionalmodules_lazyload ) {
-					$lazyLoadFunctions = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/lazyload.js' ) );
-					wp_enqueue_script ( 'lazyloadFunctions' , $lazyLoadFunctions , array ( 'jquery' ) );
-				}
-				$pluginfunctions = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/script.js' ) );
-				if ( 1 == $myoptionalmodules_pluginscript ):
-				else:
-					wp_enqueue_script ( 'mom_plugin_functions' , $pluginfunctions , array ( 'jquery' ) );
-				endif;
-				
+		function mom_jquery(){
+			global $myoptionalmodules_pluginshortcodes;
+			global $myoptionalmodules_lazyload;
+			global $myoptionalmodules_pluginscript;
+			global $myoptionalmodules_newwindow;
+			if ( 1 == $myoptionalmodules_pluginscript ){
+				$pluginfunctions = null;
+			}else{
+				$pluginfunctions   = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/script.js' ) );
+				wp_enqueue_script ( 'mom_plugin_functions' , $pluginfunctions , array ( 'jquery' ) );
 			}
-			add_action( 'wp_enqueue_scripts' , 'mom_jquery' );
+			if ( 1 == $myoptionalmodules_newwindow ){
+				$hgalleryfunctions = null;
+			}else{
+				$hgalleryfunctions = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/hgallery.js' ) );
+				wp_enqueue_script ( 'mom_hgallery_functions' , $hgalleryfunctions , array ( 'jquery' ) );
+			}
+			if ( 1 == $myoptionalmodules_pluginshortcodes ){
+				$hgalleryfunctions = $youtubefunctions = null;
+			}else{
+				$youtubefunctions  = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/youtube.js' ) );
+				wp_enqueue_script ( 'mom_youtube_functions' , $youtubefunctions , array ( 'jquery' ) );
+			}
+		}
+		add_action( 'wp_enqueue_scripts' , 'mom_jquery' );
 	}
 
 	// Enqueue Font Awesome for ADMIN

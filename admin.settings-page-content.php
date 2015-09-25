@@ -198,6 +198,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 					$options_enable = array (
 						'myoptionalmodules_metatags' ,
 						'myoptionalmodules_horizontalgalleries' ,
+						'myoptionalmodules_newwindow' ,
 						'myoptionalmodules_fontawesome' ,
 						'myoptionalmodules_sharelinks' ,
 						'myoptionalmodules_rsslinkbacks' ,
@@ -206,6 +207,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 					$keys_enable = array (
 						' Enable Meta Tags <em>Enable meta tags for your posts.</em>' ,
 						' Enable Horizontal Galleries <em>Turn all image galleries into horizontal image galleries.</em>' ,
+						' Disable Horizontal Galleries script <em>Open gallery images normally</em>' ,
 						' Enable Font Awesome <em>Enable the use of Font Awesome on your site.</em>' ,
 						' Enable Social Links <em>Enable scriptless share buttons for your posts/pages.</em>' ,
 						' Enable RSS Linkbacks <em>Appends a link back to your site on all RSS items.</em>' ,

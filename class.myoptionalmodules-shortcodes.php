@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_shortcodes()
  *
- * File update: 10.1.7
+ * File update: 10.1.8
  *
  * All shortcodes for My Optional Modules
  */
@@ -10,6 +10,27 @@
 if ( !defined ( 'MyOptionalModules' ) ) {
 	die();
 }
+
+function mom_reddit_formatting ( $comment ) {
+	$input = array (
+		'/\*(.*?)\*/is' ,
+		'/\*\*(.*?)\*\*/is' ,
+		'/\*\*\*(.*?)\*\*\*/is' ,
+		'/\~\~(.*?)\~\~/is' ,
+		'/-\-\-\-/is' ,
+		'/\`(.*?)\`/is' ,
+	);
+	$output = array (
+		'<em>$1</em>' ,
+		'<b>$1</b>' ,
+		'<b><em>$1</em></b>' ,
+		'<strike>$1</strike>' ,
+		'<hr />' ,
+		'<code>$1</code>' ,
+	);
+	$rtrn = preg_replace ( $input , $output , $comment );
+	return $rtrn;
+}	
 
 class myoptionalmodules_shortcodes{
 
@@ -249,6 +270,7 @@ class myoptionalmodules_shortcodes{
 				$x = new SimpleXmlElement( $content );
 				$x->channel->title = sanitize_text_field ( $x->channel->title );
 				$x->channel->description = sanitize_text_field ( $x->channel->description );
+				$x->channel->description = mom_reddit_formatting ( $x->channel->description );
 				
 				if ( 'search results' != strtolower ( $x->channel->title ) ) {
 				
@@ -279,6 +301,10 @@ class myoptionalmodules_shortcodes{
 							
 					";
 					foreach( $x->channel->item as $entry ){
+						
+						$entry->description = sanitize_text_field ( $entry->description );
+						$entry->description = mom_reddit_formatting ( $entry->description );
+						
 						++$count;
 						$post_type = null;
 						if( strpos( $entry->description, 'SC_OFF' ) !== false ){
@@ -286,7 +312,7 @@ class myoptionalmodules_shortcodes{
 						}
 						if ( $sub && !$thread ) {
 							$output .= "<h3><a href='{$entry->link}'>{$entry->title} {$post_type}</a></h3>";
-						} elseif ( $thread && !$sub ) {
+						} elseif ( $thread && !$sub && '[deleted]' != $entry->description ) {
 							if ( $count > 1 ) {
 								$output .= "<p>{$entry->description} <small><a href='{$entry->link}'>#</a></small></p>";
 							}

@@ -3,7 +3,7 @@
 Plugin Name: My Optional Modules
 Plugin URI: 
 Description: Optional modules and additions for Wordpress.
-Version: 10.1.7
+Version: 10.1.8
 Author: boyevul
 Author URI: 
 
@@ -18,6 +18,24 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program;if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+This plugin was released in 2013. Version 1 had 2 modules, initially. Rotating
+Universal Passwords (RUPs) and obwcountplus (Count++) (an attempt to update 
+http://wordpress.org/plugins/post-word-count/). 
+
+Looking back, it's kind of funny to see what has been added and taken away from 
+the plugin itself. And as I write this, on the 25th of September, 2015, I realize 
+that for 2 years, I've worked on this for literally nobody, for the sole purpose 
+of who knows, for a paycheck totalling 0$, to ensure that you, my unknown benefactors, 
+gets some extra use out of your WordPress installation for an amount of thanks 
+that I can count on a single hand.
+
+Of course, if I were doing this for money or applause, I would have certainly picked 
+something other than freely distributed software to spend my time working with.
+
+I guess what I'm trying to say is: enjoy the free shit. You know, if you're even 
+reading this. Whatever, who cares, none of it matters.
+
 */
 
 /**
@@ -39,7 +57,7 @@ $myoptionalmodules_datearchives                        = $myoptionalmodules_disa
 $myoptionalmodules_removecode                          = $myoptionalmodules_javascripttofooter                  =
 $myoptionalmodules_exclude                             = $myoptionalmodules_recentpostswidget                   =
 $myoptionalmodules_google                              = $myoptionalmodules_frontpage                           = $myoptionalmodules_randompost                         =
-$myoptionalmodules_miniloopmeta                        =
+$myoptionalmodules_miniloopmeta                        = $myoptionalmodules_newwindow                           =
 $myoptionalmodules_miniloopstyle                       = $myoptionalmodules_miniloopamount                      = $myoptionalmodules_plugincss                          =
 $myoptionalmodules_lazyload                            = $myoptionalmodules_verification                        = $myoptionalmodules_sharelinks_text                    =
 $myoptionalmodules_bing                                = $myoptionalmodules_alexa                               =
@@ -101,6 +119,7 @@ foreach( $myoptionalmodules_getallpluginoptions as $name => $value ):
 	 */
 	if( $name == 'myoptionalmodules_metatags' && $value ):                            $myoptionalmodules_metatags                             = $value; endif;
 	if( $name == 'myoptionalmodules_horizontalgalleries' && $value ):                 $myoptionalmodules_horizontalgalleries                  = $value; endif;
+	if( $name == 'myoptionalmodules_newwindow' && $value ):                           $myoptionalmodules_newwindow                            = $value; endif;
 	if( $name == 'myoptionalmodules_fontawesome' && $value ):                         $myoptionalmodules_fontawesome                          = $value; endif;
 	if( $name == 'myoptionalmodules_sharelinks' && $value ):                          $myoptionalmodules_sharelinks                           = $value; endif;
 	if( $name == 'myoptionalmodules_rsslinkbacks' && $value ):                        $myoptionalmodules_rsslinkbacks                         = $value; endif;

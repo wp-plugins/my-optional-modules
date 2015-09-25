@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_modules()
  *
- * File last update: 10.1.0.2
+ * File last update: 10.1.8
  *
  * Functionality for:
  * - Favicon
@@ -19,34 +19,34 @@ class myoptionalmodules_modules {
 
 	function __construct() {
 
-		global 
-			$myoptionalmodules_javascripttofooter , 
-			$myoptionalmodules_exclude ,
-			$myoptionalmodules_metatags , 
-			$myoptionalmodules_horizontalgalleries , 
-			$myoptionalmodules_sharelinks , 
-			$myoptionalmodules_rsslinkbacks , 
-			$myoptionalmodules_404s , 
-			$myoptionalmodules_fontawesome ,
-			$myoptionalmodules_plugin , 
-			$myoptionalmodules_disablepingbacks , 
-			$myoptionalmodules_authorarchives , 
-			$myoptionalmodules_datearchives , 
-			$myoptionalmodules_disablecomments , 
-			$myoptionalmodules_dnsbl , 
-			$myoptionalmodules_removecode ,
-			$myoptionalmodules_disqus , 
-			$myoptionalmodules_randompost , 
-			$myoptionalmodules_bing , 
-			$myoptionalmodules_alexa , 
-			$myoptionalmodules_google , 
-			$myoptionalmodules_verification , 
-			$myoptionalmodules_frontpage , 
-			$myoptionalmodules_readmore , 
-			$myoptionalmodules_commentspamfield ,
-			$myoptionalmodules_miniloopmeta , 
-			$myoptionalmodules_miniloopstyle , 
-			$myoptionalmodules_miniloopamount;
+		global $myoptionalmodules_javascripttofooter;
+		global $myoptionalmodules_exclude;
+		global $myoptionalmodules_metatags;
+		global $myoptionalmodules_horizontalgalleries;
+		global $myoptionalmodules_sharelinks;
+		global $myoptionalmodules_rsslinkbacks;
+		global $myoptionalmodules_404s;
+		global $myoptionalmodules_fontawesome;
+		global $myoptionalmodules_plugin;
+		global $myoptionalmodules_disablepingbacks;
+		global $myoptionalmodules_authorarchives;
+		global $myoptionalmodules_datearchives;
+		global $myoptionalmodules_disablecomments;
+		global $myoptionalmodules_dnsbl;
+		global $myoptionalmodules_removecode;
+		global $myoptionalmodules_disqus;
+		global $myoptionalmodules_randompost;
+		global $myoptionalmodules_bing;
+		global $myoptionalmodules_alexa;
+		global $myoptionalmodules_google;
+		global $myoptionalmodules_verification;
+		global $myoptionalmodules_frontpage;
+		global $myoptionalmodules_readmore; 
+		global $myoptionalmodules_commentspamfield;
+		global $myoptionalmodules_miniloopmeta;
+		global $myoptionalmodules_miniloopstyle;
+		global $myoptionalmodules_miniloopamount;
+		
 		if( $myoptionalmodules_javascripttofooter ) {
 			add_action ( 'wp_enqueue_scripts' , array ( $this , 'remove' ) );
 			add_action ( 'wp_footer' , 'wp_enqueue_scripts' , 5 );
@@ -118,6 +118,7 @@ class myoptionalmodules_modules {
 				add_filter    ( 'style_loader_tag' , array ( $this , 'css_ids' ) );
 			}
 		}
+		
 		if( $myoptionalmodules_disqus ) {
 			add_filter ( 'comments_template' , array ( $this , 'disqus_code' ) );
 		}
@@ -156,6 +157,9 @@ class myoptionalmodules_modules {
 		}
 
 	}
+	
+	
+
 	
 	/**
 	 * Extras -> Javascript-to-footer
@@ -664,6 +668,12 @@ echo "<script>
 
 		return preg_replace ( "/id='.*-css'/" , '' , $link );
 
+	}
+	
+	function twentyfifteen_remove_link( $link ) {
+		
+		return preg_replace ( "Proudly powered by WordPress" , '' , $link );
+		
 	}
 
 	// Version Information
