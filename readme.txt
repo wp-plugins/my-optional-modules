@@ -104,7 +104,7 @@ Example: [mom_reddit sub='destinythegame' thread='' limit='5' title='You might b
 2.	Share icons displayed at the top of the post content.
 
 == Changelog ==
-= 10.1.8 -
+= 10.1.8 =
 *	*Release Date - 25th, September, 2015*
 *	For reddit thread comment display, do not show [deleted] comments.
 *	Ability to disable horizontal gallery script.
@@ -143,7 +143,6 @@ Example: [mom_reddit sub='destinythegame' thread='' limit='5' title='You might b
 *	img.bi embedding removed (not GPL (creative commons), disallowed by WP)
 *	cdnjs.cloudflare.com calls to jquery, and jquery-migrate removed from *unnecessary code* (offloading js, disallowed by WP)
 *	lazyload now included locally (instead of from cdnjs.cloudflare.com)
-
 
 = 10.0.9.7 =
 *	*Release Date - 19, August, 2015*
