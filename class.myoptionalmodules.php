@@ -2,21 +2,14 @@
 /**
  * CLASS myoptionalmodules()
  *
- * File last update: 10.0.9.9
+ * File last update: 10.1.9
  *
  * Actions REQUIRED by the plugin (unless otherwise noted).
  * Regardless of settings, these actions will always run.
  *
- * We use this functionality to strip protocol from the URLs so that 
- * they do not contribute to content warnings when a person uses this plugin 
- * on a site that also uses HTTPS. Therefore, our URLS are served as 
- * //URL (which works with both HTTP: and HTTPS: without issue)
- * str_replace ( array ( 'https:', 'http:' ) , '' , esc_url( URL ) )
  */
 
-if ( !defined ( 'MyOptionalModules' ) ) {
-	die();
-}
+defined('MyOptionalModules') or exit;
 
 class myoptionalmodules {
 	
@@ -24,7 +17,7 @@ class myoptionalmodules {
 	
 	function __construct() {
 
-		global $myoptionalmodules_plugincss;
+		$myoptionalmodules_plugincss = sanitize_text_field ( get_option ( 'myoptionalmodules_plugincss' ) );
 
 		add_action ( 'wp', array( $this, 'scripts' ) );
 		add_action ( 'admin_enqueue_scripts' , array ( $this , 'font_awesome' ) );
@@ -40,26 +33,25 @@ class myoptionalmodules {
 	function scripts(){
 		// JQUERY dependent
 		function mom_jquery(){
-			global $myoptionalmodules_pluginshortcodes;
-			global $myoptionalmodules_lazyload;
-			global $myoptionalmodules_pluginscript;
-			global $myoptionalmodules_newwindow;
+			$myoptionalmodules_pluginshortcodes = sanitize_text_field ( get_option ( 'myoptionalmodules_pluginshortcodes' ) );
+			$myoptionalmodules_pluginscript = sanitize_text_field ( get_option ( 'myoptionalmodules_pluginscript' ) );
+			$myoptionalmodules_newwindow = sanitize_text_field ( get_option ( 'myoptionalmodules_newwindow' ) );
 			if ( 1 == $myoptionalmodules_pluginscript ){
 				$pluginfunctions = null;
 			}else{
-				$pluginfunctions   = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/script.js' ) );
+				$pluginfunctions   = mom_strip_protocol ( plugins_url() . '/my-optional-modules/includes/javascript/script.js' );
 				wp_enqueue_script ( 'mom_plugin_functions' , $pluginfunctions , array ( 'jquery' ) );
 			}
 			if ( 1 == $myoptionalmodules_newwindow ){
 				$hgalleryfunctions = null;
 			}else{
-				$hgalleryfunctions = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/hgallery.js' ) );
+				$hgalleryfunctions = mom_strip_protocol ( plugins_url() . '/my-optional-modules/includes/javascript/hgallery.js' );
 				wp_enqueue_script ( 'mom_hgallery_functions' , $hgalleryfunctions , array ( 'jquery' ) );
 			}
 			if ( 1 == $myoptionalmodules_pluginshortcodes ){
 				$hgalleryfunctions = $youtubefunctions = null;
 			}else{
-				$youtubefunctions  = str_replace( array( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/my-optional-modules/includes/javascript/youtube.js' ) );
+				$youtubefunctions  = mom_strip_protocol ( plugins_url() . '/my-optional-modules/includes/javascript/youtube.js' );
 				wp_enqueue_script ( 'mom_youtube_functions' , $youtubefunctions , array ( 'jquery' ) );
 			}
 		}
@@ -68,15 +60,15 @@ class myoptionalmodules {
 
 	// Enqueue Font Awesome for ADMIN
 	function font_awesome() {
-		$font_awesome_css = str_replace ( array ( 'https:' , 'http:' ) , '' , esc_url ( plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' ) );
+		$font_awesome_css = mom_strip_protocol ( plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css' );
 		wp_register_style ( 'font_awesome' , $font_awesome_css );
 		wp_enqueue_style  ( 'font_awesome' );
 	}
 
 	// Enqueue plugin CSS
 	function plugin_stylesheets() {
-		global $myoptionalmodules_plugin_version;
-		$myStyleFile = str_replace ( array ( 'https:', 'http:' ) , '' , esc_url( WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules' . $myoptionalmodules_plugin_version . '.css' ) );
+		$myoptionalmodules_plugin_version = '10';
+		$myStyleFile = mom_strip_protocol ( WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules' . $myoptionalmodules_plugin_version . '.css' );
 		wp_register_style ( 'my_optional_modules' , $myStyleFile );
 		wp_enqueue_style  ( 'my_optional_modules' );
 	}
@@ -100,7 +92,7 @@ class myoptionalmodules {
 
 	// Validate an IP address and check against DNSBlacklists (if enabled)
 	function validate_ip_address() {
-		global $myoptionalmodules_dnsbl;
+		$myoptionalmodules_dnsbl = sanitize_text_field ( get_option ( 'myoptionalmodules_dnsbl' ) );
 		
 		if( $myoptionalmodules_dnsbl ) {
 			/**

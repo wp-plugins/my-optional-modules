@@ -2,7 +2,7 @@
 /**
  * FUNCTION myoptionalmodules_WP_Widget_Recent_Posts()
  *
- * File last update: 9.1.2
+ * File last update: 10.1.9
  *
  * Alters the default 'Recent Posts' widget to exclude the post
  * that is currently being viewed ( is_single() )
@@ -11,11 +11,9 @@
  * to be altering TOO much of the original code.
  */
 
-if ( !defined ( 'MyOptionalModules' ) ) {
-	die();
-}
+defined('MyOptionalModules') or exit;
 
-if( $myoptionalmodules_recentpostswidget ) {
+if ( get_option ( 'myoptionalmodules_recentpostswidget' ) ) {
 
 	function myoptionalmodules_WP_Widget_Recent_Posts() {
 		register_widget ( 'myoptionalmodules_WP_Widget_Recent_Posts' );
@@ -39,7 +37,8 @@ if( $myoptionalmodules_recentpostswidget ) {
 		}
 		function widget($args, $instance) {
 			$cache = wp_cache_get('widget_recent_posts', 'widget');
-			global $wp, $post;
+			global $wp;
+			global $post;
 			if ( !is_array($cache) )
 				$cache = array();
 			if ( ! isset( $args['widget_id'] ) )
@@ -57,9 +56,13 @@ if( $myoptionalmodules_recentpostswidget ) {
 				$number = 10;
 			$show_date = isset( $instance['show_date'] ) ? $instance['show_date'] : false;
 
+			$post_id = get_the_ID();
 			if( is_single() ) {
-				$post_id = get_the_ID();
-				$r  = new WP_Query( apply_filters( 'widget_posts_args', array( 'posts_per_page' => $number, 'no_found_rows' => true, 'post_status' => 'publish', 'ignore_sticky_posts' => true, 'post__not_in' => array( $post_id ) ) ) );
+				if ( get_option ( 'myoptionalmodules_keeptitle_recentpostswidget' ) ) {
+					$r  = new WP_Query( apply_filters( 'widget_posts_args', array( 'posts_per_page' => $number, 'no_found_rows' => true, 'post_status' => 'publish', 'ignore_sticky_posts' => true ) ) );
+				} else {
+					$r  = new WP_Query( apply_filters( 'widget_posts_args', array( 'posts_per_page' => $number, 'no_found_rows' => true, 'post_status' => 'publish', 'ignore_sticky_posts' => true, 'post__not_in' => array( $post_id ) ) ) );
+				}
 			} else {
 				$r = new WP_Query( apply_filters( 'widget_posts_args', array( 'posts_per_page' => $number, 'no_found_rows' => true, 'post_status' => 'publish', 'ignore_sticky_posts' => true ) ) );
 			}
@@ -71,10 +74,17 @@ if( $myoptionalmodules_recentpostswidget ) {
 			<ul>
 			<?php while ( $r->have_posts() ) : $r->the_post(); ?>
 				<li>
-					<a href="<?php the_permalink() ?>" title="<?php echo esc_attr( get_the_title() ? get_the_title() : get_the_ID() ); ?>"><?php if ( get_the_title() ) the_title(); else the_ID(); ?></a>
+					<?php if ( get_the_ID() == $post_id && is_single() && get_option ( 'myoptionalmodules_keeptitle_recentpostswidget' ) ) { ?>
+						<b class="mom-bold-title"><?php if ( get_the_title() ) the_title(); else the_ID(); ?>
+					<?php } else { ?>
+						<a href="<?php the_permalink() ?>" title="<?php echo esc_attr( get_the_title() ? get_the_title() : get_the_ID() ); ?>"><?php if ( get_the_title() ) the_title(); else the_ID(); ?></a>
+					<?php }?>
 				<?php if ( $show_date ) : ?>
 					<span class="post-date"><?php echo get_the_date(); ?></span>
 				<?php endif; ?>
+				<?php if ( get_the_ID() == $post_id && is_single() && get_option ( 'myoptionalmodules_keeptitle_recentpostswidget' ) ) { ?>
+					</b>
+				<?php }?>
 				</li>
 			<?php endwhile; ?>
 			</ul>

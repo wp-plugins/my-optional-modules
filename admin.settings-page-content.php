@@ -2,15 +2,13 @@
 /**
  * ADMIN Settings Page Content
  *
- * File last update: 10.1.4
+ * File last update: 10.1.9
  *
  * Content of the /wp-admin/ SETTINGS PAGE for this plugin
  * INCLUDING all SAVE OPERATIONS.
  */
 
-if ( !defined ( 'MyOptionalModules' ) ) {
-	die();
-}
+defined('MyOptionalModules') or exit;
 
 if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 	add_action ( 'admin_menu' , 'my_optional_modules_add_options_page' );
@@ -26,7 +24,8 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 			class myoptionalmodules_settings_form {
 
 				function __construct() {
-					global $table_prefix , $wpdb;
+					global $table_prefix;
+					global $wpdb;
 
 					// Trash Removal
 					if (
@@ -242,15 +241,15 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 					);
 					$options_extras = array (
 						'myoptionalmodules_javascripttofooter' ,
-						'myoptionalmodules_lazyload' ,
 						'myoptionalmodules_recentpostswidget' ,
+						'myoptionalmodules_keeptitle_recentpostswidget' ,
 						'myoptionalmodules_exclude' ,
 						'myoptionalmodules_analyticspostsonly'
 					);
 					$keys_extras = array (
 						' Javascript-to-Footer <em>Move all JS to the footer.</em>' ,
-						' Lazyload <em>Utilize Lazyload for all post images.</em>' ,
 						' Recent Posts Widget <em>Changes the behavior of the Recent Posts Widget to exclude the currently viewed post from its list.</em>' ,
+						' Recent Posts Widget (Keep the title) <em>Instead of excluding the entry from the list, de-link and bold it.</em>' ,
 						' Enable Exclude Posts <em>Exclude posts from anywhere on the site, based on many different settings.</em>' ,
 						' Analytics On Single Only <em>Only use Google Analytics on single posts. Set your Google Tracking ID below.</em>' ,
 					);
@@ -385,6 +384,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						delete_option ( 'myoptionalmodules_readmore' );
 						delete_option ( 'myoptionalmodules_favicon' );
 						delete_option ( 'myoptionalmodules_nelio' );
+						delete_option ( 'myoptionalmodules_lazyload' );
 					}
 					echo '
 					

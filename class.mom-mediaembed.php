@@ -2,7 +2,7 @@
 /**
  * CLASS mom_mediaEmbed()
  *
- * File last update: 10.1.3
+ * File last update: 10.1.9
  *
  * Create a media embed from a URL in a template (or other) by passing a 
  * URL through the class:
@@ -11,9 +11,7 @@
  * Separate multiple embeds with :: ( URL::URL2::URL3::URL4 )
  */
 
-if ( !defined ('MyOptionalModules' ) ) {
-	die();
-}
+defined('MyOptionalModules') or exit;
 
 class mom_mediaEmbed {
 
@@ -21,7 +19,7 @@ class mom_mediaEmbed {
 
 	function mom_mediaEmbed ( $url , $title = null , $class = null , $size = null ) {
 
-		global $myoptionalmodules_pluginscript;
+		$myoptionalmodules_pluginscript = sanitize_text_field ( get_option ( 'myoptionalmodules_pluginscript' ) );
 	
 		if ( filter_var ( $url , FILTER_VALIDATE_URL ) !== false ):
 			if ( $size ):

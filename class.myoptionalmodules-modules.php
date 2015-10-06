@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules_modules()
  *
- * File last update: 10.1.8
+ * File last update: 10.1.9
  *
  * Functionality for:
  * - Favicon
@@ -11,105 +11,62 @@
  * - Exclude posts
  */ 
 
-if ( !defined ( 'MyOptionalModules' ) ) {
-	die();
-}
+defined('MyOptionalModules') or exit;
 
 class myoptionalmodules_modules {
 
 	function __construct() {
-
-		global $myoptionalmodules_javascripttofooter;
-		global $myoptionalmodules_exclude;
-		global $myoptionalmodules_metatags;
-		global $myoptionalmodules_horizontalgalleries;
-		global $myoptionalmodules_sharelinks;
-		global $myoptionalmodules_rsslinkbacks;
-		global $myoptionalmodules_404s;
-		global $myoptionalmodules_fontawesome;
-		global $myoptionalmodules_plugin;
-		global $myoptionalmodules_disablepingbacks;
-		global $myoptionalmodules_authorarchives;
-		global $myoptionalmodules_datearchives;
-		global $myoptionalmodules_disablecomments;
-		global $myoptionalmodules_dnsbl;
-		global $myoptionalmodules_removecode;
-		global $myoptionalmodules_disqus;
-		global $myoptionalmodules_randompost;
-		global $myoptionalmodules_bing;
-		global $myoptionalmodules_alexa;
-		global $myoptionalmodules_google;
-		global $myoptionalmodules_verification;
-		global $myoptionalmodules_frontpage;
-		global $myoptionalmodules_readmore; 
-		global $myoptionalmodules_commentspamfield;
-		global $myoptionalmodules_miniloopmeta;
-		global $myoptionalmodules_miniloopstyle;
-		global $myoptionalmodules_miniloopamount;
-		
-		if( $myoptionalmodules_javascripttofooter ) {
-			add_action ( 'wp_enqueue_scripts' , array ( $this , 'remove' ) );
+		if ( get_option ( 'myoptionalmodules_javascripttofooter' ) ) {
+			add_action ( 'wp_enqueue_scripts' , array ( $this , 'move_to_footer' ) );
 			add_action ( 'wp_footer' , 'wp_enqueue_scripts' , 5 );
 			add_action ( 'wp_footer' , 'wp_print_head_scripts' , 5 );
 		}
-
-		if( $myoptionalmodules_exclude ) {
+		if ( get_option ( 'myoptionalmodules_exclude' ) ) {
 			add_action( 'pre_get_posts' , array ( $this , 'exclude' ) );	
 		}	
-		if( $myoptionalmodules_metatags ) {
+		if ( get_option ( 'myoptionalmodules_metatags' ) ) {
 			add_action ( 'wp_head' , array ( $this , 'meta' ) );
 			add_filter ( 'jetpack_enable_opengraph' , '__return_false' , 99 );
 			add_filter ( 'user_contactmethods' , array ( $this , 'twitter' ) );
 			add_filter ( 'admin_init' , array ( $this , 'twitter' ) );
 		}
-		if( $myoptionalmodules_horizontalgalleries ) {
+		if ( get_option ( 'myoptionalmodules_horizontalgalleries' ) ) {
 			remove_shortcode ( 'gallery' );
 			add_action ( 'init' , array ( $this , 'horizontal_gallery_shortcode' ) , 99 );
 			add_filter ( 'use_default_gallery_style' , '__return_false' );
 		}
-
-		if( $myoptionalmodules_sharelinks ) {
+		if ( get_option ( 'myoptionalmodules_sharelinks' ) ) {
 			add_filter ( 'the_content' , array ( $this , 'share' ) );
 		}
-
-		if( $myoptionalmodules_rsslinkbacks ) {
+		if ( get_option ( 'myoptionalmodules_rsslinkbacks' ) ) {
 			add_filter ( 'the_content_feed' , array ( $this , 'rss' ) );
 			add_filter ( 'the_excerpt_rss' , array ( $this , 'rss' ) );
 		}
-
-		if( $myoptionalmodules_404s ) {
+		if ( get_option ( 'myoptionalmodules_404s' ) ) {
 			add_action ( 'wp' , array ( $this , 'no_404s' ) );
 		}
-
-		if( $myoptionalmodules_fontawesome ) {
+		if ( get_option ( 'myoptionalmodules_fontawesome' ) ) {
 			add_action ( 'wp_head' , array ( $this , 'fontawesome' ) );
 			add_action ( 'init' , array ( $this , 'fontawesome_shortcode' ) , 99 );
 		}
-		if( $myoptionalmodules_disablepingbacks ) {
+		if ( get_option ( 'myoptionalmodules_disablepingbacks' ) ) {
 			add_filter( 'xmlrpc_methods' , array ( $this , 'pingbacks' ) );
 		}
-
-		if( $myoptionalmodules_authorarchives ) {
+		if ( get_option ( 'myoptionalmodules_authorarchives' ) ) {
 			add_action( 'template_redirect', array ( $this , 'author_archives' ) );
 		}
-
-		if( $myoptionalmodules_datearchives ) {
+		if ( get_option ( 'myoptionalmodules_datearchives' ) ) {
 			add_action( 'wp', array ( $this , 'date_archives' ) );
 			add_action( 'template_redirect' , array ( $this , 'date_archives' ) );
 		}
-
-		if ( $myoptionalmodules_dnsbl ) {
+		if ( get_option ( 'myoptionalmodules_dnsbl' ) ) {
 			add_filter ( 'preprocess_comment' , array ( $this , 'dnsbl_check' ) );
 		}
-		
-		if( 
-			$myoptionalmodules_disablecomments 
-		){
+		if ( get_option ( 'myoptionalmodules_disablecomments' ) ){
 			add_filter ( 'comments_template' , array ( $this , 'comments' ) );
 			add_filter ( 'comments_open' , array ( $this , 'comments_form') , 10, 2 );
 		}
-
-		if( $myoptionalmodules_removecode ) {
+		if ( get_option ( 'myoptionalmodules_removecode' ) ) {
 			if ( !in_array ( $GLOBALS['pagenow'] , array ( 'wp-login.php' , 'wp-register.php' ) ) ) {
 				remove_action ('wp_head' , 'wp_generator');
 				add_filter    ( 'style_loader_src' , array ( $this , 'versions' ) , 0 );
@@ -118,85 +75,91 @@ class myoptionalmodules_modules {
 				add_filter    ( 'style_loader_tag' , array ( $this , 'css_ids' ) );
 			}
 		}
-		
-		if( $myoptionalmodules_disqus ) {
+		if ( get_option ( 'myoptionalmodules_disqus' ) ) {
 			add_filter ( 'comments_template' , array ( $this , 'disqus_code' ) );
 		}
-		
-		if( $myoptionalmodules_miniloopmeta && $myoptionalmodules_miniloopstyle && $myoptionalmodules_miniloopamount ) {
+		if ( get_option ( 'myoptionalmodules_miniloopmeta' ) && get_option ( 'myoptionalmodules_miniloopstyle' ) && get_option ( 'myoptionalmodules_miniloopamount' ) ) {
 			add_filter ( 'the_content' , array ( $this , 'miniloop' ) );
 		}
-		
-		if( $myoptionalmodules_google ) {
+		if ( get_option ( 'myoptionalmodules_google' ) ) {
 			add_action ( 'wp_head' , array ( $this , 'google_analytics' ) );
 		}
-		if( $myoptionalmodules_bing ) {
+		if ( get_option ( 'myoptionalmodules_bing' ) ) {
 			add_action ( 'wp_head' , array ( $this , 'bing' ) );
 		}
-		if( $myoptionalmodules_alexa ) {
+		if ( get_option ( 'myoptionalmodules_alexa' ) ) {
 			add_action ( 'wp_head' , array ( $this , 'alexa' ) );
 		}
-		if( $myoptionalmodules_verification ) {
+		if ( get_option ( 'myoptionalmodules_verification' ) ) {
 			add_action ( 'wp_head' , array ( $this , 'site_verification' ) );
 		}
-		if( $myoptionalmodules_frontpage && 'off' != $myoptionalmodules_frontpage ) {
+		if ( get_option ( 'myoptionalmodules_frontpage' ) && 'off' != get_option ( 'myoptionalmodules_frontpage' ) ) {
 			add_action ( 'wp' , array ( $this , 'front_post' ) );
 		}
-		if( $myoptionalmodules_readmore ) {
-			add_filter ( 'the_content_more_link' , array ( $this , 'read_more' ) );
-			add_filter ( 'excerpt_more' , array ( $this , 'read_more' ) );
-		}
-		if( $myoptionalmodules_randompost ) {
+		if ( get_option ( 'myoptionalmodules_randompost' ) ) {
 			add_action ( 'wp' , array ( $this , 'random' ) );
 		}
-		if( $myoptionalmodules_commentspamfield ) {
+		if ( get_option ( 'myoptionalmodules_commentspamfield' ) ) {
 				add_filter ( 'comment_form_default_fields' , array ( $this , 'spam_field' ) );
 				add_action ( 'comment_form_logged_in_after' , array ( $this , 'spam_field' ) );
 				add_action ( 'comment_form_after_fields' , array ( $this , 'spam_field' ) );
 				add_filter ( 'preprocess_comment' , array ( $this , 'field_check' ) );
 		}
-
 	}
 	
 	
 
 	
 	/**
-	 * Extras -> Javascript-to-footer
-	 * Remove enqueued scripts from wp_head
+	 Extras
+		Javascript-to-Footer
+		Attempts to move all .js to the footer
+		Theme must have wp_footer() for this to work.
 	 */
-	function remove() {
-		remove_action ( 'wp_head' , 'wp_print_head_scripts' , 9 );
-		remove_action ( 'wp_head' , 'wp_enqueue_scripts' , 1 );
+	function move_to_footer(){
+		remove_action( 'wp_head', 'wp_print_head_scripts', 9 );
+		remove_action( 'wp_head', 'wp_enqueue_scripts', 1 );
 	}
-
+	
 	/**
-	 * Extras -> Enable Exclude Posts
-	 * Exclude posts from the loop based on several
-	 * parameters (set in options).
-	 */	
-	function exclude( $query ) {
-		global $myoptionalmodules_blank_counter;
-		++$myoptionalmodules_blank_counter;
-		if ( 1 == $myoptionalmodules_blank_counter ) {
+	 Extras
+		Enable Exclude Posts
+		Allows the admin to exclude posts from various 
+		parts of the blog based on different parameters.
+	 */
+	function exclude( $query ){
+		$count = 0;
+		++$count;
+		if( 1 == $count ){
 			include( 'function.exclude.php' );
 		}
 	}
 	
-	// Twitter Field for User Profiles
+	
+	
+	
+	
+	/**
+	 Adds a Twitter handle field to the user profile
+	 when Enable Meta Tags is enabled.
+	 */
 	function twitter( $profile_fields ){
 		$profile_fields['twitter_personal'] = 'Twitter handle';
 		return $profile_fields;
 	}
+	
+	/**
+	 Enable
+		Enable Meta Tags
+		Enables meta tags for posts, in the form 
+		of OG:tags.
+	 */
+	function meta(){
 
-	// Meta Tags (og:/Twitter)
-	function meta() {
+		global $post;
+		global $wp;
 
-		global $post, $wp;
-
-		$author    = null;
-
-		// OG:
+		$author         = null;
 		$id             = null;
 		$title          = null;
 		$type           = null;
@@ -214,26 +177,28 @@ class myoptionalmodules_modules {
 		$numtags        = null;
 		$num            = null;
 
-		if( is_single() || is_page() )
+		if( is_single() || is_page() ){
 			$id = $post->ID;
+		}
 
-		if( is_single() || is_page() || is_author() )
+		if( is_single() || is_page() || is_author() ){
 			$author = $post->post_author;
+		}
 
 		$og_type = 'image';
 	
 		if( is_single() || is_page() ) {
-			$type  = 'article';
-			$title = sanitize_text_field ( str_replace ( '\'' , '' , get_post_field ( 'post_title' , $id ) ) );
-			$image = wp_get_attachment_image_src ( get_post_thumbnail_id ( $id ) , 'single-post-thumbnail' );
-			$image = $image[0];
-			$url      = get_permalink( $id );
-			$site     = get_bloginfo( 'name' );
-			$excerpt  = strip_tags ( esc_html ( preg_replace ( '/\s\s+/i' , '' , get_the_excerpt ( ) ) ) );
+			$type    = 'article';
+			$title   = sanitize_text_field ( str_replace ( '\'' , '' , get_post_field ( 'post_title' , $id ) ) );
+			$image   = wp_get_attachment_image_src ( get_post_thumbnail_id ( $id ) , 'single-post-thumbnail' );
+			$image   = $image[0];
+			$url     = get_permalink( $id );
+			$site    = get_bloginfo( 'name' );
+			$excerpt = strip_tags ( esc_html ( preg_replace ( '/\s\s+/i' , '' , get_the_excerpt ( ) ) ) );
 		} else {
-			$title    = get_bloginfo ( 'name' );
-			$url      = esc_url ( home_url ( '/' ) );
-			$type     = 'website';
+			$title = get_bloginfo ( 'name' );
+			$url   = esc_url ( home_url ( '/' ) );
+			$type  = 'website';
 		}
 
 		if( is_author() ) {
@@ -242,7 +207,7 @@ class myoptionalmodules_modules {
 		}
 
 		$title          = sanitize_text_field ( str_replace ( '\'' , '' , $title ) );
-		$url            = sanitize_text_field ( str_replace ( array ( 'https:' , 'http:' ) , '' , esc_url ( $url ) ) );
+		$url            = sanitize_text_field ( mom_strip_protocol ( $url ) );
 		$title          = sanitize_text_field( $title );
 		$site           = sanitize_text_field( $site );
 		$excerpt        = sanitize_text_field( $excerpt );
@@ -265,7 +230,8 @@ class myoptionalmodules_modules {
 		if ( $published_time ): echo "\n<meta property='article:published_time' content='{$published_time}' />"; endif;
 		if ( $modified_time ):  echo "\n<meta property='article:modified_time' content='{$modified_time}' />";   endif;
 		if ( $modified_time ):  echo "\n<meta property='og:updated_time' content='{$modified_time}' />";         endif;
-		if ($posttags):
+		
+		if( $posttags ){
 			echo "\n<meta property='article:tag' content='";
 			  foreach( $posttags as $tag ):
 				echo "{$tag->name}";
@@ -274,8 +240,9 @@ class myoptionalmodules_modules {
 				endif;
 			  endforeach;
 			echo "' />";
-		endif;
+		}
 
+		$author         = null;
 		$id             = null;
 		$title          = null;
 		$type           = null;
@@ -296,30 +263,24 @@ class myoptionalmodules_modules {
 		// Twitter
 		$card        = null;
 		$attribution = null;
-		
 		if( is_single() || is_page() ) {
 			$card        = 'summary';
 			$attribution = get_the_author_meta ( 'twitter_personal' , $author );
 			$attribution = sanitize_text_field ( str_replace ( array ( '@' , '\'' ) , '' , $attribution ) );
-
 			if( $attribution ) {
 				$card        = sanitize_text_field ( $card );
 				$attribution = sanitize_text_field ( $attribution );
-
 				if( $card )        echo "\n<meta name='twitter:card' content='{$card}'>";
 				if( $attribution ) echo "\n<meta name='twitter:creator' content='@{$attribution}'>";
-
 			}
-
 			$card         = null;
 			$attribution  = null;
-
 		}
 		
 		// Noindex/Noarchive archives/404s/search results to avoid duplicate content
 		if( 
-			is_search() || 
-			is_404() || 
+			is_search()  || 
+			is_404()     || 
 			is_archive() 
 		){ 
 			echo "\n<meta name='robots' content='noindex,noarchive'>";
@@ -327,15 +288,11 @@ class myoptionalmodules_modules {
 
 		echo "\n\n";
 		
-		$author = null;
-
 	}
 
 	// Horizontal Gallery Shortcode
-	function horizontal_gallery_shortcode() {
-
-		add_shortcode ( 'gallery' , array ( $this , 'shortcode_output' ) );
-
+	function horizontal_gallery_shortcode(){
+		add_shortcode( 'gallery', array( $this, 'shortcode_output' ));
 	}
 
 	// CORE Gallery Shortcode copy/paste and altered for Horizontal display
@@ -517,7 +474,7 @@ class myoptionalmodules_modules {
 	function fontawesome() {
 
 		$font_awesome_css = plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/fontawesome/css/font-awesome.min.css';
-		$font_awesome_css = str_replace ( array ( 'https:', 'http:' ) , '' , esc_url ( $font_awesome_css ) );
+		$font_awesome_css = mom_strip_protocol ( $font_awesome_css );
 echo "<script>
 	var cb = function() {
 	var l = document.createElement('link'); l.rel = 'stylesheet';
@@ -562,14 +519,22 @@ echo "<script>
 	// Share Links
 	function share( $content ) {
 
-		global 
-		$wp                                  , $post                                 , $myoptionalmodules_fontawesome         , 
-		$myoptionalmodules_shareslinks_top   , $myoptionalmodules_sharelinks_pages   , $myoptionalmodules_sharelinks_reddit   , 
-		$myoptionalmodules_sharelinks_google , $myoptionalmodules_sharelinks_twitter , $myoptionalmodules_sharelinks_facebook , 
-		$myoptionalmodules_sharelinks_email  , $myoptionalmodules_sharelinks_text;
+		global $wp;
+		global $post;
+		
+		$myoptionalmodules_fontawesome         = sanitize_text_field ( get_option ( 'myoptionalmodules_fontawesome' ) );
+		$myoptionalmodules_shareslinks_top     = sanitize_text_field ( get_option ( 'myoptionalmodules_shareslinks_top' ) );
+		$myoptionalmodules_sharelinks_pages    = sanitize_text_field ( get_option ( ' myoptionalmodules_sharelinks_pages' ) );
+		$myoptionalmodules_sharelinks_reddit   = sanitize_text_field ( get_option ( ' myoptionalmodules_sharelinks_reddit' ) );
+		$myoptionalmodules_sharelinks_google   = sanitize_text_field ( get_option ( ' myoptionalmodules_sharelinks_google' ) );
+		$myoptionalmodules_sharelinks_twitter  = sanitize_text_field ( get_option ( ' myoptionalmodules_sharelinks_twitter' ) );
+		$myoptionalmodules_sharelinks_facebook = sanitize_text_field ( get_option ( ' myoptionalmodules_sharelinks_facebook' ) );
+		$myoptionalmodules_sharelinks_email    = sanitize_text_field ( get_option ( ' myoptionalmodules_sharelinks_email' ) );
+		$myoptionalmodules_sharelinks_text     = sanitize_text_field ( get_option ( ' myoptionalmodules_sharelinks_text' ) );
 
 		$excerpt     = htmlentities ( str_replace ( ' ' , '%20' , $post->post_excerpt ) ); 
 		$title       = str_replace ( ' ' , '%20' , get_the_title ( $post->ID ) );
+		$title       = htmlentities ( $title );
 		$url         = esc_url ( get_the_permalink() );
 		
 		$output  = '<div class="mom_shareLinks">';
@@ -751,7 +716,15 @@ echo "<script>
 	
 	// Miniloops
 	function miniloop ( $content ) {
-		global $wp , $post , $myoptionalmodules_miniloopmeta , $myoptionalmodules_miniloopstyle , $myoptionalmodules_miniloopamount;
+		global $wp;
+		global $post;
+		
+		$myoptionalmodules_miniloopmeta   = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopmeta' ) );
+		$myoptionalmodules_miniloopstyle  = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopstyle' ) );
+		$myoptionalmodules_miniloopamount = sanitize_text_field ( get_option ( 'myoptionalmodules_miniloopamount' ) );
+		
+		$myoptionalmodules_miniloopstyle  = strtolower ( $myoptionalmodules_miniloopstyle );
+		$myoptionalmodules_miniloopamount = intval ( $myoptionalmodules_miniloopamount );
 		if( is_single() && $myoptionalmodules_miniloopmeta && $myoptionalmodules_miniloopstyle && $myoptionalmodules_miniloopamount):
 			$key    = sanitize_text_field ( get_post_meta ( $post->ID , $myoptionalmodules_miniloopmeta , true ) );
 			if( $key && $myoptionalmodules_miniloopmeta ):
@@ -768,7 +741,11 @@ echo "<script>
 	// Google Analytics
 	// Don't show if user is admin
 	function google_analytics() {
-		global $wp , $myoptionalmodules_google , $myoptionalmodules_analyticspostsonly;
+		global $wp;
+		
+		$myoptionalmodules_google             = sanitize_text_field ( get_option ( 'myoptionalmodules_google' ) );
+		$myoptionalmodules_analyticspostsonly = sanitize_text_field ( get_option ( 'myoptionalmodules_analyticspostsonly' ) );
+		
 		if ( !current_user_can ( 'manage_options' ) ):
 			$output = "
 			<script>
@@ -797,23 +774,23 @@ echo "<script>
 	// + Bing
 	// + Alexa
 	function site_verification() {
-		global $myoptionalmodules_verification;
+		$myoptionalmodules_verification = sanitize_text_field ( get_option ( 'myoptionalmodules_verification' ) );;
 		echo "<meta name='google-site-verification' content='{$myoptionalmodules_verification}' />\n\n";
 	}
 	function bing() {
-		global $myoptionalmodules_bing;
+		$myoptionalmodules_bing = sanitize_text_field ( get_option ( 'myoptionalmodules_bing' ) );
 		echo "<meta name='msvalidate.01' content='{$myoptionalmodules_bing}' />\n";
 	}
 	function alexa() {
-		global $myoptionalmodules_alexa;
+		$myoptionalmodules_alexa = sanitize_text_field ( get_option ( 'myoptionalmodules_alexa' ) );
 		echo "<meta name='alexaVerifyID' content='{$myoptionalmodules_alexa}'/>\n";	
 	}
 
 	// Frontpage post
 	function front_post( $query ) {
-		global $myoptionalmodules_frontpage;
+		$myoptionalmodules_frontpage = sanitize_text_field ( get_option ( 'myoptionalmodules_frontpage' ) );
 		
-	if( is_home() && 'off' != $myoptionalmodules_frontpage ):
+		if( is_home() && 'off' != $myoptionalmodules_frontpage ):
 			if( is_numeric ( $myoptionalmodules_frontpage ) ):
 				$myoptionalmodules_frontpage = $myoptionalmodules_frontpage;
 			elseif( $myoptionalmodules_frontpage ):
@@ -826,20 +803,9 @@ echo "<script>
 		endif;
 	}
 
-	// Read More
-	function read_more( $more ) {
-		global $myoptionalmodules_readmore;
-		$get_link = esc_url ( get_permalink() );
-		if( '%blank%' == $myoptionalmodules_readmore ):
-			return '';
-		else:
-			return "<a href='{$get_link}'>{$myoptionalmodules_readmore}</a>";
-		endif;
-	}
-
 	// Random post
 	function random() {
-		global $myoptionalmodules_randompost;
+		$myoptionalmodules_randompost = esc_html ( sanitize_text_field ( get_option ( 'myoptionalmodules_randompost' ) ) );
 		if( isset( $_GET[ $myoptionalmodules_randompost ] ) ):
 			$args = array (
 				'numberposts' => 1,

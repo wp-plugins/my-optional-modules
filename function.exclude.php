@@ -2,16 +2,67 @@
 /**
  * FUNCTION(ality) Exclude Posts
  *
- * File last update: 10.0.6
+ * File last update: 10.2
  *
  * Alter the query to remove posts based on many parameters
  */ 
 
-if ( !defined ( 'MyOptionalModules' ) ) {
-	die();
-}
+defined('MyOptionalModules') or exit;
 
-global $myoptionalmodules_plugin , $myoptionalmodules_exclude_categoriesfront , $myoptionalmodules_exclude_categoriestagarchives , $myoptionalmodules_exclude_categoriessearchresults , $myoptionalmodules_exclude_categoriesrss , $myoptionalmodules_exclude_tagsfront , $myoptionalmodules_exclude_tagsrss , $myoptionalmodules_exclude_tagscategoryarchives , $myoptionalmodules_exclude_tagssearchresults , $myoptionalmodules_exclude_postformatsfront , $myoptionalmodules_exclude_postformatscategoryarchives , $myoptionalmodules_exclude_postformatstagarchives , $myoptionalmodules_exclude_postformatssearchresults , $myoptionalmodules_exclude_visitorpostformats , $myoptionalmodules_exclude_postformatsrss , $myoptionalmodules_exclude_usersrss , $myoptionalmodules_exclude_usersfront , $myoptionalmodules_exclude_userstagarchives , $myoptionalmodules_exclude_userscategoryarchives , $myoptionalmodules_exclude_userssearchresults , $myoptionalmodules_exclude_userslevel10users , $myoptionalmodules_exclude_userslevel1users , $myoptionalmodules_exclude_userslevel2users , $myoptionalmodules_exclude_userslevel7users , $myoptionalmodules_exclude_categories_level0categories , $myoptionalmodules_exclude_categorieslevel1categories , $myoptionalmodules_exclude_categorieslevel2categories , $myoptionalmodules_exclude_categorieslevel7categories , $myoptionalmodules_exclude_tagslevel0tags , $myoptionalmodules_exclude_tagslevel1tags , $myoptionalmodules_exclude_tagslevel2tags , $myoptionalmodules_exclude_tagslevel7tags , $myoptionalmodules_exclude_tagstagssun , $myoptionalmodules_exclude_tagstagsmon , $myoptionalmodules_exclude_tagstagstue , $myoptionalmodules_exclude_tagstagswed , $myoptionalmodules_exclude_tagstagsthu , $myoptionalmodules_exclude_tagstagsfri , $myoptionalmodules_exclude_tagstagssat , $myoptionalmodules_exclude_categoriescategoriessun , $myoptionalmodules_exclude_categoriescategoriesmon , $myoptionalmodules_exclude_categoriescategoriestue , $myoptionalmodules_exclude_categoriescategorieswed , $myoptionalmodules_exclude_categoriescategoriesthu , $myoptionalmodules_exclude_categoriescategoriesfri , $myoptionalmodules_exclude_categoriescategoriessat , $myoptionalmodules_exclude_usersuserssun , $myoptionalmodules_exclude_usersusersmon , $myoptionalmodules_exclude_usersuserstue , $myoptionalmodules_exclude_usersuserswed , $myoptionalmodules_exclude_usersusersthu , $myoptionalmodules_exclude_usersusersfri , $myoptionalmodules_exclude_usersuserssat;
+global $myoptionalmodules_plugin;
+
+$myoptionalmodules_exclude_categoriesfront = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categoriesfront' ) );
+$myoptionalmodules_exclude_categoriestagarchives = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categoriestagarchives' ) );
+$myoptionalmodules_exclude_categoriessearchresults = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categoriessearchresults' ) );
+$myoptionalmodules_exclude_categoriesrss = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categoriesrss' ) );
+$myoptionalmodules_exclude_tagsfront = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_tagsfront' ) );
+$myoptionalmodules_exclude_tagsrss = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_tagsrss' ) );
+$myoptionalmodules_exclude_tagscategoryarchives = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_tagscategoryarchives' ) );
+$myoptionalmodules_exclude_tagssearchresults = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_tagssearchresults' ) );
+$myoptionalmodules_exclude_postformatsfront = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_postformatsfront' ) );
+$myoptionalmodules_exclude_postformatscategoryarchives = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_postformatscategoryarchives' ) );
+$myoptionalmodules_exclude_postformatstagarchives = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_postformatstagarchives' ) );
+$myoptionalmodules_exclude_postformatssearchresults = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_postformatssearchresults' ) );
+$myoptionalmodules_exclude_visitorpostformats = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_visitorpostformats' ) );
+$myoptionalmodules_exclude_postformatsrss = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_postformatsrss' ) );
+$myoptionalmodules_exclude_usersrss = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_usersrss' ) );
+$myoptionalmodules_exclude_usersfront = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_usersfront' ) );
+$myoptionalmodules_exclude_userstagarchives = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_userstagarchives' ) );
+$myoptionalmodules_exclude_userscategoryarchives = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_userscategoryarchives' ) );
+$myoptionalmodules_exclude_userssearchresults = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_userssearchresults' ) );
+$myoptionalmodules_exclude_userslevel10users = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_userslevel10users' ) );
+$myoptionalmodules_exclude_userslevel1users = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_userslevel1users' ) );
+$myoptionalmodules_exclude_userslevel2users = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_userslevel2users' ) );
+$myoptionalmodules_exclude_userslevel7users = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_userslevel7users' ) );
+$myoptionalmodules_exclude_categories_level0categories = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categories_level0categories' ) );
+$myoptionalmodules_exclude_categorieslevel1categories = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categorieslevel1categories' ) );
+$myoptionalmodules_exclude_categorieslevel2categories = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categorieslevel2categories' ) );
+$myoptionalmodules_exclude_categorieslevel7categories = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categorieslevel7categories' ) );
+$myoptionalmodules_exclude_tagslevel0tags = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_tagslevel0tags' ) );
+$myoptionalmodules_exclude_tagslevel1tags = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_tagslevel1tags' ) );
+$myoptionalmodules_exclude_tagslevel2tags = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_tagslevel2tags' ) );
+$myoptionalmodules_exclude_tagslevel7tags = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_tagslevel7tags' ) );
+$myoptionalmodules_exclude_tagstagssun = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_tagstagssun' ) );
+$myoptionalmodules_exclude_tagstagsmon = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_tagstagsmon' ) );
+$myoptionalmodules_exclude_tagstagstue = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_tagstagstue' ) );
+$myoptionalmodules_exclude_tagstagswed = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_tagstagswed' ) );
+$myoptionalmodules_exclude_tagstagsthu = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_tagstagsthu' ) );
+$myoptionalmodules_exclude_tagstagsfri = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_tagstagsfri' ) );
+$myoptionalmodules_exclude_tagstagssat = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_tagstagssat' ) );
+$myoptionalmodules_exclude_categoriescategoriessun = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categoriescategoriessun' ) );
+$myoptionalmodules_exclude_categoriescategoriesmon = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categoriescategoriesmon' ) );
+$myoptionalmodules_exclude_categoriescategoriestue = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categoriescategoriestue' ) );
+$myoptionalmodules_exclude_categoriescategorieswed = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categoriescategorieswed' ) );
+$myoptionalmodules_exclude_categoriescategoriesthu = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categoriescategoriesthu' ) );
+$myoptionalmodules_exclude_categoriescategoriesfri = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categoriescategoriesfri' ) );
+$myoptionalmodules_exclude_categoriescategoriessat = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_categoriescategoriessat' ) );
+$myoptionalmodules_exclude_usersuserssun = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_usersuserssun' ) );
+$myoptionalmodules_exclude_usersusersmon = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_usersusersmon' ) );
+$myoptionalmodules_exclude_usersuserstue = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_usersuserstue' ) );
+$myoptionalmodules_exclude_usersuserswed = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_usersuserswed' ) );
+$myoptionalmodules_exclude_usersusersthu = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_usersusersthu' ) );
+$myoptionalmodules_exclude_usersusersfri = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_usersusersfri' ) );
+$myoptionalmodules_exclude_usersuserssat = sanitize_text_field ( get_option ( 'myoptionalmodules_exclude_usersuserssat' ) );
 $date_day = strtolower( date( 'D' ) );
 
 /**
@@ -256,10 +307,12 @@ endif;
 
 if ( intval ( $chck_users ) || intval ( $chck_cats ) || intval ( $chck_tags ) ):
 	add_filter( 'the_content', 'myoptionalmodules_destroy_content_view', 20 );
-	function myoptionalmodules_destroy_content_view( $content ) {
-		if( is_single() ):
-			$content = '<div class="mom-unauthorized-content">You do not have permission to view this content.</div>';
-			return do_shortcode ( $content );
-		endif;
+	if(!function_exists('myoptionalmodules_destroy_content_view')){
+		function myoptionalmodules_destroy_content_view( $content ) {
+			if( is_single() ):
+				$content = '<div class="mom-unauthorized-content">You do not have permission to view this content.</div>';
+				return do_shortcode ( $content );
+			endif;
+		}
 	}
 endif;

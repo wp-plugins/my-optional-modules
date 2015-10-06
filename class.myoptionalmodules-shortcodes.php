@@ -2,14 +2,12 @@
 /**
  * CLASS myoptionalmodules_shortcodes()
  *
- * File update: 10.1.8
+ * File update: 10.1.9
  *
  * All shortcodes for My Optional Modules
  */
 
-if ( !defined ( 'MyOptionalModules' ) ) {
-	die();
-}
+defined('MyOptionalModules') or exit;
 
 function mom_reddit_formatting ( $comment ) {
 	$input = array (
@@ -40,11 +38,11 @@ class myoptionalmodules_shortcodes{
 		 * Customize shortcode code
 		 */
 		
-		global $myoptionalmodules_custom_embed;
-		global $myoptionalmodules_custom_hidden; 
-		global $myoptionalmodules_custom_charts;
-		global $myoptionalmodules_custom_categories;
-		global $myoptionalmodules_custom_redditfeed;
+		$myoptionalmodules_custom_embed = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_embed' ) );
+		$myoptionalmodules_custom_hidden = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_hidden' ) );
+		$myoptionalmodules_custom_charts = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_charts' ) );
+		$myoptionalmodules_custom_categories = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_categories' ) );
+		$myoptionalmodules_custom_redditfeed = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_redditfeed' ) );
 		
 		if( '' == $myoptionalmodules_custom_embed ){
 			$myoptionalmodules_custom_embed = 'mom_embed';
@@ -106,7 +104,8 @@ class myoptionalmodules_shortcodes{
 	}	
 	
 	function hidden( $atts, $content ) {
-		global $wp , $post;
+		global $wp;
+		global $post;
 		extract (
 			shortcode_atts ( 
 				array (

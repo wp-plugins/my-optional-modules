@@ -2,15 +2,13 @@
 /*
  * FUNCTION SHORTCODE myoptionalmodules_miniloop_shortcode()
  *
- * File last update: 10.1.0.2
+ * File last update: 10.1.9
  *
  * Insert a mini loop of posts based on a set of parameters
  * [mom_miniloop PARAMETERS]
  */
 
-if ( !defined ( 'MyOptionalModules' ) ) {
-	die();
-}
+defined('MyOptionalModules') or exit;
 
 function myoptionalmodules_register_miniloop() {
 	add_shortcode ( 'mom_miniloop' , 'myoptionalmodules_miniloop_shortcode' );
@@ -19,7 +17,8 @@ add_action ( 'init' , 'myoptionalmodules_register_miniloop' );
 
 function myoptionalmodules_miniloop_shortcode( $atts ) {
 
-	global $paged, $post;
+	global $paged;
+	global $post;
 	
 	$current_post   = 0;
 	if( is_single() ):

@@ -2,16 +2,13 @@
 /*
  * ADMIN Font Awesome
  *
- * File last update: 10.0.9.3
+ * File last update: 10.1.9
  *
  * Adds Font Awesome buttons to click to add to post edit content
  * while NOT IN VISUAL MODE. 
  */
 
-if ( !defined ( 'MyOptionalModules' ) ) {
-	die();
-}
-
+defined('MyOptionalModules') or exit;
 
 $css  = plugins_url() . '/' . plugin_basename ( dirname ( __FILE__ ) ) . '/includes/';
 add_action ( 'wp_enqueue_admin_scripts' , 'myoptionalmodules_scripts' );
@@ -25,7 +22,7 @@ function myoptionalmodules_fontfa_posteditscreen ( $post_type ) {
 	if ( $edit_post_type != 'page' )
 	return;
 
-	global $myoptionalmodules_fontawesome;
+	$myoptionalmodules_fontawesome = sanitize_text_field ( get_option ( 'myoptionalmodules_fontawesome' ) );
 	if ( $myoptionalmodules_fontawesome ) { ?>
 		<div class="myoptionalmodules_fontfa_posteditscreen postbox">
 			<h3>Font Awesome Icons &mdash; shortcode usage: [font-fa i="<em>icon-name</em>"] (<a href="http://fortawesome.github.io/Font-Awesome/icons/">Names</a>)</h3>
