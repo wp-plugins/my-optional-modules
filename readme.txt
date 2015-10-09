@@ -66,7 +66,6 @@ and contain relevant information as to what they do. When in doubt, read.
 = [mom_miniloop] =
 Allows you embed a miniature loop of posts based on several customizable parameters.
 
-Parameters:
 1. `thumbs` :: show thumbnails :: 1(yes) 0(no) :: default: 1
 1. `downsize` :: downsize thumbnail image quality :: 1(yes) 0(no) :: default: 1
 1. `show_link` :: display link text :: 1(yes) 0(no) :: default: 1
