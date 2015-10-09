@@ -3,48 +3,45 @@ Contributors: boyevul
 Tags: reddit, meta, og, twitter, facebook, google, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, garbage, removal, trash, footer, exclude, remove, hide, front page, search results, authors, categories, tags, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.3.2
-Stable tag: 10.2
+Stable tag: 10.4
 
 An assortment of functions to enhance WordPress.
 
 == Description ==
 MOM features an assortment of functions designed to add (or extend) functionality within WordPress.
 
-= Trash Removal =
+= One-click optimizations... =
 *	Optimize the WordPress database
-*	Clean up reivisions and auto-drafts
-*	Clean up unapproved comments, spam comments, and comments belonging to trashed posts
-*	Clean up tags and categories with no posts associated with them
-*	Clean up drafts
+*	Remove revisions and autodrafts
+*	Remove unapproved / trashed / spam comments
+*	Remove orphaned tags and categories
+*	Remove drafts
 
-= Disable Components =
-*	Disable comments site-wide
-*	Remove superfluous code
-*	Disable Pingbacks
-*	Disable author archives on single author installations
-*	Disable date archives
+= (Optionally) disable... =
+*	all comments, sitewide
+*	XHTML generator, CSS / JS ids, feed links, RSD, WLW manifest, adjacent post links, etc.
+*	Pingbacks
+*	Author / date-based archives
 
-= Enable Components =
-*	OG:tags and Twitter Card integration
-*	Horizontal scrolling galleries
+= (Optionally) enable... =
+*	OG:tag / Twitter card integration
+*	Horizontal [gallery]
 *	Font Awesome
 *	Scriptless social share links
-*	Links back to your site on all RSS items
-*	Redirect 404s to the homepage
+*	Link back to your site on all RSS items
+*	Redirect (all) 404s to the homepage
 
 = Comment Form Components =
-*	DNS Blacklist lookup for potential commenters
-*	Hidden spam field to thwart bots
+*	DNS Blacklist integration with customizable database list
+*	Hidden spam fields to aid in protection from bots
 
-= Extra Features =
-*	Move Javascripts to the footer
-*	Remove the currently viewed post from the default 'Recent Posts' widget
-*	Exclude posts from almost anywhere
-*	Make the front page a post
-*	Related posts by meta key
-*	Google Analytics and Site Verification integration
-*	Enable a keyword for random posts
-*	Universal Disqus Code (non-Wordpress Identifying)
+= (Optional) extra features =
+*	Javascript(s) to the footer
+*	Alter the behavior of the recent posts widget
+*	Set the homepage as a post
+*	enable Disqus for comments
+*	Google Analytics / Alexa Verification / Bing Validation
+*	Random post URL 
 
 = Exclude Posts =
 *	Exclude posts based on author, category, tag, or post format
@@ -56,12 +53,40 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 2.	Navigate to your plugins menu in your Wordpress admin.
 3.	Activate it, and navigate to Dashboard->Settings->My Optional Modules for configuration.
 
+= Settings =
+All settings on the admin page ( Dashboard->Settings->My Optional Modules ) are labelled appropriately, 
+and contain relevant information as to what they do. When in doubt, read.
+
 = 3-step uninstallation =
 1.	Navigate to Dashboard->Settings->My Optional Modules.
 2.	Click on Uninstall.
 3.	Confirm uninstall.
 
 == Shortcodes ==
+= [mom_miniloop] =
+Allows you embed a miniature loop of posts based on several customizable parameters.
+
+Parameters:
+1. `thumbs` :: show thumbnails :: 1(yes) 0(no) :: default: 1
+1. `downsize` :: downsize thumbnail image quality :: 1(yes) 0(no) :: default: 1
+1. `show_link` :: display link text :: 1(yes) 0(no) :: default: 1
+1. `amount` :: how many posts to display :: default: 4
+1. `offset` :: offset loop by x amount of posts :: default: 0
+1. `paging` :: page the results? :: 1(yes) 0(no) :: default: 0
+1. `year` :: define a year for the posts to be drawn from :: current:123 defined:2014,2013,2012... :: default: none
+1. `month` :: define a month for the posts to be drawn from :: current:123 define:1,2,3,4... :: default: none
+1. `day` :: define a day for the posts to be drawn from :: current:123 define:1,2,3,4... :: default: none
+1. `exclude` :: (comma separated) list of post IDs to exclude :: default: none
+1. `link_content` :: alpha-numeric value for the post title :: default: none (defaults to post title)
+1. `category` :: (comma separated) list of numerical ID(s) or category name(s) to draw posts from (do not mix IDs and names) :: default: none
+1. `key` :: posts with THIS meta key VALUE :: default: none
+1. `meta` :: posts with THIS meta KEY :: default: none
+1. `cache_results` :: cache the results of this loop :: true(yes) false(no) :: default: false
+1. `style` :: define the style to use for the loop :: columns,slider,tiled,list,blurbs :: default: tiled
+1. `orderby` :: order the posts by... :: ID,author,title,name,type,date,modified,parent,rand,none :: default: post_date
+1. `order` :: order the posts in... :: DESC(descending order) or ASC(ascending) :: default: DESC
+1. `post_status` :: posts with THIS post status :: publish,pending,draft,auto-draft,future,private,inherit,trash,any :: default: publish
+
 = [mom_embed url='URL'] =
 Embeds content from the following websites: Animoto, AShemaleTube, Blip, CollegeHumor, DailyMotion, DeviantArt,EmbedArticles, Flickr, 
 FunnyOrDie, gist.github, Gyfcat, Hulu, ign, Imgur, Instagram, iSnare, Issuu, 
@@ -104,6 +129,20 @@ Example: [mom_reddit sub='destinythegame' thread='' limit='5' title='You might b
 2.	Share icons displayed at the top of the post content.
 
 == Changelog ==
+= 10.4 =
+* 	*Release Date - 9th, October, 2015*
+*	Minor change to how exclude posts handles dated exclusion parameters
+*	Set homepage as post skips sticky post when front page is set to latest post
+*	[mom_miniloop] information added to readme
+*	[mom_miniloop] shortcode parameter able to be customized
+*	[mom_miniloop] bugfixes
+
+= 10.3 =
+*	*Release Date - 8th, October, 2015*
+*	Specify your own list of DNSBL to use with the DNSBL comment setting
+*	When posts are hidden based on user levels, the comment form is disabled for those users as well
+*	myoptionalmodules10.css renamed to simply css.css
+
 = 10.2 =
 *	*Release Date - 5th, October, 2015*
 *	fixed an error when excluding posts based on user levels

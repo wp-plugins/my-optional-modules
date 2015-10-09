@@ -2,7 +2,7 @@
 /**
  * ADMIN Settings Page Content
  *
- * File last update: 10.1.9
+ * File last update: 10.4
  *
  * Content of the /wp-admin/ SETTINGS PAGE for this plugin
  * INCLUDING all SAVE OPERATIONS.
@@ -233,10 +233,12 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 					);
 					$options_comment_form = array (
 						'myoptionalmodules_dnsbl' ,
+						'myoptionalmodules_lookups' ,
 						'myoptionalmodules_commentspamfield'
 					);
 					$keys_comment_form = array (
 						' DNSBL <em>Checks a commentors IP against several DNS Blacklists to determine if the commentor is a potential threat or not. Discards the comment if they are listed.</em>' ,
+						' DNSBL Databases <em>DNSBL databases to use. Use <a href="//dnsbl.info/dnsbl-list.php">this</a> list for reference. One database per line.</em>' ,
 						' Spam trap <em>Enables a simple spam field for commentors who are not logged in that will discard the comment if filled out (potentially by a bot).</em>' ,
 					);
 					$options_extras = array (
@@ -261,6 +263,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						'myoptionalmodules_custom_charts' ,
 						'myoptionalmodules_custom_categories' ,
 						'myoptionalmodules_custom_redditfeed' ,
+						'myoptionalmodules_custom_miniloop' ,
 						'myoptionalmodules_verification' ,
 						'myoptionalmodules_alexa' ,
 						'myoptionalmodules_bing' ,
@@ -332,8 +335,18 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						foreach ( $all_options as &$option ) {
 
 							if ( isset ( $_POST[ $option ] ) ) {
-								$value = intval ( $_POST[ $option ] );
-									update_option( $option , $value );
+								if ( 'myoptionalmodules_lookups' == $option ) {
+									$value = str_replace (
+										array ( 'https://' , 'http://' , ',' ) ,
+										'' ,
+										$_POST[ $option ]
+									);
+									$value = $_POST[ $option ];
+									$value = implode ( "\n" , array_map ( 'sanitize_text_field' , explode ( "\n" , $value ) ) );
+								} else {
+									$value = intval ( $_POST[ $option ] );
+								}
+								update_option( $option , $value );
 							} else {
 								delete_option ( $option );
 							}
@@ -453,16 +466,30 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 								echo '<div class="setting">
 									<em>comments</em>';
 										foreach ( $options_comment_form as &$option ) {
-											$title = str_replace ( $options_comment_form , $keys_comment_form , $option );
-											$checked = null;
-											if ( get_option ( $option ) )
-												$checked = ' checked';
-											echo "
-											<section>
-												<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> <label for='{$option}'>{$title}</label>
-											</section>";
+											
+											if ( 'myoptionalmodules_lookups' == $option ) {
+												$title = str_replace ( $options_comment_form , $keys_comment_form , $option );
+												$value = get_option ( $option );
+												echo "
+												<section>
+													<label for='{$option}'>{$title}</label>
+													<textarea class='full-text' name='{$option}' id='{$option}'>{$value}</textarea>
+													<small>Defaults (leave blank): <br />dnsbl-1.uceprotect.net<br /> dnsbl-2.uceprotect.net<br /> dnsbl-3.uceprotect.net<br /> dnsbl.sorbs.net<br /> zen.spamhaus.org</small>
+												</section><hr />";								
+											} else {
+												$title = str_replace ( $options_comment_form , $keys_comment_form , $option );
+												$checked = null;
+												if ( get_option ( $option ) )
+													$checked = ' checked';
+												echo "
+												<section>
+													<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> <label for='{$option}'>{$title}</label>
+												</section>";
+											}
 										}
 								echo '</div>';
+							} else {
+								echo '<div class="setting"><em>The comment form is disabled</em><section>Comment-related modules are currently inaccessible.</section></div>';
 							}
 							
 							echo '<div class="setting">
@@ -563,33 +590,40 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 								$shortcode_charts     = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_charts' ) );
 								$shortcode_categories = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_categories' ) );
 								$shortcode_redditfeed = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_redditfeed' ) );
+								$shortcode_miniloop   = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_miniloop' ) );
 								
-								echo "
-								<section><hr /><strong>Shortcode Customization</strong></section>
-								<section>
-									<label for='myoptionalmodules_custom_embed'>Embed shortcode parameter <small>&mdash; default: mom_embed</small>
-									<input class='full-text' type='text' id='myoptionalmodules_custom_embed' name='myoptionalmodules_custom_embed' value='{$shortcode_embed}' />
-								</section>
-								<section>
-									<label for='myoptionalmodules_custom_hidden'>Hidden shortcode parameter <small>&mdash; default: mom_hidden</small>
-									<input class='full-text' type='text' id='myoptionalmodules_custom_hidden' name='myoptionalmodules_custom_hidden' value='{$shortcode_hidden}' />
-								</section>
-								<section>
-									<label for='myoptionalmodules_custom_charts'>Charts shortcode parameter <small>&mdash; default: mom_charts</small>
-									<input class='full-text' type='text' id='myoptionalmodules_custom_charts' name='myoptionalmodules_custom_charts' value='{$shortcode_charts}' />
-								</section>
-								<section>
-									<label for='myoptionalmodules_custom_categories'>Categories shortcode parameter <small>&mdash; default: mom_categories</small>
-									<input class='full-text' type='text' id='myoptionalmodules_custom_categories' name='myoptionalmodules_custom_categories' value='{$shortcode_categories}' />
-								</section>
-								<section>
-									<label for='myoptionalmodules_custom_redditfeed'>reddit feed shortcode parameter <small>&mdash; default: mom_reddit</small>
-									<input class='full-text' type='text' id='myoptionalmodules_custom_redditfeed' name='myoptionalmodules_custom_redditfeed' value='{$shortcode_redditfeed}' />
-								</section>
-								<section><hr /></section>
-								
-								
-								
+								if( !get_option('myoptionalmodules_pluginshortcodes') ) {
+									echo "
+									<section><hr /><strong>Shortcode Customization</strong></section>
+									<section>
+										<label for='myoptionalmodules_custom_embed'>Embed shortcode parameter <small>&mdash; default: mom_embed</small>
+										<input class='full-text' type='text' id='myoptionalmodules_custom_embed' name='myoptionalmodules_custom_embed' value='{$shortcode_embed}' />
+									</section>
+									<section>
+										<label for='myoptionalmodules_custom_hidden'>Hidden shortcode parameter <small>&mdash; default: mom_hidden</small>
+										<input class='full-text' type='text' id='myoptionalmodules_custom_hidden' name='myoptionalmodules_custom_hidden' value='{$shortcode_hidden}' />
+									</section>
+									<section>
+										<label for='myoptionalmodules_custom_charts'>Charts shortcode parameter <small>&mdash; default: mom_charts</small>
+										<input class='full-text' type='text' id='myoptionalmodules_custom_charts' name='myoptionalmodules_custom_charts' value='{$shortcode_charts}' />
+									</section>
+									<section>
+										<label for='myoptionalmodules_custom_categories'>Categories shortcode parameter <small>&mdash; default: mom_categories</small>
+										<input class='full-text' type='text' id='myoptionalmodules_custom_categories' name='myoptionalmodules_custom_categories' value='{$shortcode_categories}' />
+									</section>
+									<section>
+										<label for='myoptionalmodules_custom_redditfeed'>reddit feed shortcode parameter <small>&mdash; default: mom_reddit</small>
+										<input class='full-text' type='text' id='myoptionalmodules_custom_redditfeed' name='myoptionalmodules_custom_redditfeed' value='{$shortcode_redditfeed}' />
+									</section>
+									<section>
+										<label for='myoptionalmodules_custom_miniloop'>Miniloop shortcode parameter <small>&mdash; default: mom_miniloop</small>
+										<input class='full-text' type='text' id='myoptionalmodules_custom_miniloop' name='myoptionalmodules_custom_miniloop' value='{$shortcode_miniloop}' />
+									</section>
+									<section><hr /></section>";
+								} else {
+									echo '<section><hr><strong>Shortcodes are disabled. <small>Shortcode-related settings are inaccessible.</small></strong><hr /></section>';
+								}								
+								echo "								
 								<section>
 									<label for='myoptionalmodules_disqus'>Disqus Shortname <small>&mdash; <strong>this</strong>.disqus.com</small> <em>Enables Disqus comments for your posts.</em></label>
 									<input class='full-text' type='text' id='myoptionalmodules_disqus' name='myoptionalmodules_disqus' value='{$disqus}' />

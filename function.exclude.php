@@ -2,7 +2,7 @@
 /**
  * FUNCTION(ality) Exclude Posts
  *
- * File last update: 10.2
+ * File last update: 10.4
  *
  * Alter the query to remove posts based on many parameters
  */ 
@@ -73,38 +73,14 @@ $date_day = strtolower( date( 'D' ) );
 
 $chck_users = $chck_cats = $chck_tags = $t11 = $c_1 = $u_1 = null;
  
-$c1 = $t1 = $rss_day = 
-$u1 = array ( '0' );
+$c1      = array ( '0' );
+$t1      = array ( '0' );
+$rss_day = array ( '0' );
+$u1      = array ( '0' );
 
-if( $date_day == 'sun' ):
-	$MOM_Exclude_Tags_Day  = $myoptionalmodules_exclude_tagstagssun;
-	$MOM_Exclude_Cats_Day  = $myoptionalmodules_exclude_categoriescategoriessun;
-	$MOM_Exclude_Users_Day = $myoptionalmodules_exclude_usersuserssun;
-elseif( $date_day == 'mon' ):
-	$MOM_Exclude_Tags_Day  = $myoptionalmodules_exclude_tagstagsmon;
-	$MOM_Exclude_Cats_Day  = $myoptionalmodules_exclude_categoriescategoriesmon;
-	$MOM_Exclude_Users_Day = $myoptionalmodules_exclude_usersusersmon;
-elseif( $date_day == 'tue' ):
-	$MOM_Exclude_Tags_Day  = $myoptionalmodules_exclude_tagstagstue;
-	$MOM_Exclude_Cats_Day  = $myoptionalmodules_exclude_categoriescategoriestue;
-	$MOM_Exclude_Users_Day = $myoptionalmodules_exclude_usersuserstue;
-elseif( $date_day == 'wed' ):
-	$MOM_Exclude_Tags_Day  = $myoptionalmodules_exclude_tagstagswed;
-	$MOM_Exclude_Cats_Day  = $myoptionalmodules_exclude_categoriescategorieswed;
-	$MOM_Exclude_Users_Day = $myoptionalmodules_exclude_usersuserswed;
-elseif( $date_day == 'thu' ):
-	$MOM_Exclude_Tags_Day  = $myoptionalmodules_exclude_tagstagsthu;
-	$MOM_Exclude_Cats_Day  = $myoptionalmodules_exclude_categoriescategoriesthu;
-	$MOM_Exclude_Users_Day = $myoptionalmodules_exclude_usersusersthu;
-elseif( $date_day == 'fri' ):
-	$MOM_Exclude_Tags_Day  = $myoptionalmodules_exclude_tagstagsfri;
-	$MOM_Exclude_Cats_Day  = $myoptionalmodules_exclude_categoriescategoriesfri;
-	$MOM_Exclude_Users_Day = $myoptionalmodules_exclude_usersusersfri;
-elseif( $date_day == 'sat' ):
-	$MOM_Exclude_Tags_Day  = $myoptionalmodules_exclude_tagstagssat;
-	$MOM_Exclude_Cats_Day  = $myoptionalmodules_exclude_categoriescategoriessat;
-	$MOM_Exclude_Users_Day = $myoptionalmodules_exclude_usersuserssat;
-endif;
+$MOM_Exclude_Tags_Day  = ${'myoptionalmodules_exclude_tagstags'.$date_day};
+$MOM_Exclude_Cats_Day  = ${'myoptionalmodules_exclude_categoriescategories'.$date_day};
+$MOM_Exclude_Users_Day = ${'myoptionalmodules_exclude_usersusers'.$date_day};
 
 /**
  * Get the (current) days values
@@ -306,13 +282,24 @@ if ( $loggedOutTags ):
 endif;
 
 if ( intval ( $chck_users ) || intval ( $chck_cats ) || intval ( $chck_tags ) ):
-	add_filter( 'the_content', 'myoptionalmodules_destroy_content_view', 20 );
+	add_filter('the_content','myoptionalmodules_destroy_content_view',20);
+	add_filter('comments_template','myoptionalmodules_destroy_comments');
+	add_filter('comments_open','myoptionalmodules_destroy_comments_form',10,2);
+	if(!function_exists('myoptionalmodules_destroy_comments')){
+		function myoptionalmodules_destroy_comments($comment_template){
+			return dirname( __FILE__ ) . '/includes/templates/comments.php';
+		}
+	}
+	if(!function_exists('myoptionalmodules_destroy_comments_form')){
+		function myoptionalmodules_destroy_comments_form($open,$post_id){
+			$post = get_post($post_id);
+			return false;
+		}
+	}
 	if(!function_exists('myoptionalmodules_destroy_content_view')){
-		function myoptionalmodules_destroy_content_view( $content ) {
-			if( is_single() ):
-				$content = '<div class="mom-unauthorized-content">You do not have permission to view this content.</div>';
-				return do_shortcode ( $content );
-			endif;
+		function myoptionalmodules_destroy_content_view($content){
+			$content = '<div class="mom-unauthorized-content">You do not have permission to view this content.</div>';
+			return do_shortcode($content);
 		}
 	}
 endif;

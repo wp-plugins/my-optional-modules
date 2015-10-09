@@ -2,13 +2,8 @@
 /**
  * CLASS myoptionalmodules_modules()
  *
- * File last update: 10.1.9
+ * File last update: 10.4
  *
- * Functionality for:
- * - Favicon
- * - Full-length feature images
- * - Javascripts to footer
- * - Exclude posts
  */ 
 
 defined('MyOptionalModules') or exit;
@@ -628,7 +623,7 @@ echo "<script>
 	}
 
 	// REMOVE stylesheet IDs
-	//blog.codecentric.de/en/2011/10/wordpress-and-mod_pagespeed-why-combine_css-does-not-work/
+	// blog.codecentric.de/en/2011/10/wordpress-and-mod_pagespeed-why-combine_css-does-not-work/
 	function css_ids( $link ) {
 
 		return preg_replace ( "/id='.*-css'/" , '' , $link );
@@ -726,9 +721,15 @@ echo "<script>
 		$myoptionalmodules_miniloopstyle  = strtolower ( $myoptionalmodules_miniloopstyle );
 		$myoptionalmodules_miniloopamount = intval ( $myoptionalmodules_miniloopamount );
 		if( is_single() && $myoptionalmodules_miniloopmeta && $myoptionalmodules_miniloopstyle && $myoptionalmodules_miniloopamount):
+			$miniloop_shortcode = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_miniloop' ) );
+			if ( '' == $miniloop_shortcode ) {
+				$miniloop = 'mom_miniloop';
+			} else {
+				$miniloop = $miniloop_shortcode;
+			}			
 			$key    = sanitize_text_field ( get_post_meta ( $post->ID , $myoptionalmodules_miniloopmeta , true ) );
 			if( $key && $myoptionalmodules_miniloopmeta ):
-				$output = do_shortcode ( "[mom_miniloop meta='{$myoptionalmodules_miniloopmeta}' key='{$key}' style='{$myoptionalmodules_miniloopstyle}' amount='{$myoptionalmodules_miniloopamount}' ]" );
+				$output = do_shortcode ( "[{$miniloop} meta='{$myoptionalmodules_miniloopmeta}' key='{$key}' style='{$myoptionalmodules_miniloopstyle}' amount='{$myoptionalmodules_miniloopamount}' ]" );
 			else:
 				$output = null;
 			endif;
@@ -793,12 +794,24 @@ echo "<script>
 		if( is_home() && 'off' != $myoptionalmodules_frontpage ):
 			if( is_numeric ( $myoptionalmodules_frontpage ) ):
 				$myoptionalmodules_frontpage = $myoptionalmodules_frontpage;
+				if( have_posts() ) : the_post();
+					header( 'location:' . esc_url( get_permalink( $myoptionalmodules_frontpage ) ) ); 
+					exit; 
+				endif;
 			elseif( $myoptionalmodules_frontpage ):
-				$myoptionalmodules_frontpage = '';
-			endif;
-			if( have_posts() ) : the_post();
-				header( 'location:' . esc_url( get_permalink( $myoptionalmodules_frontpage ) ) ); 
-				exit; 
+				$args = array (
+					'numberposts'  => 1,
+					'post_type'    => 'post',
+					'post_status'  => 'publish',
+					'orderby'      => 'DESC' ,
+				);
+				$get_all = get_posts ( $args );
+				foreach ( $get_all as $all_posts ):
+					$current_post = $all_posts->ID;
+				endforeach;
+				$permalink = esc_url ( get_permalink ( $current_post ) );
+				$permalink = str_replace ( array ( 'https:' , 'http:' ) , '' , $permalink );
+				header ( "location: {$permalink}"); exit;
 			endif;
 		endif;
 	}

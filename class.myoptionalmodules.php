@@ -2,7 +2,7 @@
 /**
  * CLASS myoptionalmodules()
  *
- * File last update: 10.1.9
+ * File last update: 10.3
  *
  * Actions REQUIRED by the plugin (unless otherwise noted).
  * Regardless of settings, these actions will always run.
@@ -67,8 +67,7 @@ class myoptionalmodules {
 
 	// Enqueue plugin CSS
 	function plugin_stylesheets() {
-		$myoptionalmodules_plugin_version = '10';
-		$myStyleFile = mom_strip_protocol ( WP_PLUGIN_URL . '/my-optional-modules/includes/css/myoptionalmodules' . $myoptionalmodules_plugin_version . '.css' );
+		$myStyleFile = mom_strip_protocol ( WP_PLUGIN_URL . '/my-optional-modules/includes/css/css.css' );
 		wp_register_style ( 'my_optional_modules' , $myStyleFile );
 		wp_enqueue_style  ( 'my_optional_modules' );
 	}
@@ -124,13 +123,20 @@ class myoptionalmodules {
 			 * Blacklists to check
 			 * Extensive list found here: //dnsbl.info/dnsbl-list.php
 			 */
-			$dnsbl_lookup=array(
-				'dnsbl-1.uceprotect.net',
-				'dnsbl-2.uceprotect.net',
-				'dnsbl-3.uceprotect.net',
-				'dnsbl.sorbs.net',
-				'zen.spamhaus.org'
-			);
+			
+			$dns_lookups = get_option ( 'myoptionalmodules_lookups' );
+			$dns_lookups = implode ( "\n" , array_map ( 'sanitize_text_field' , explode ( "\n" , $dns_lookups ) ) );
+			$dns_lookups = explode ( "\n" , $dns_lookups );
+			if ( !$dns_lookups ) {
+					$dns_lookups = array(
+					'dnsbl-1.uceprotect.net',
+					'dnsbl-2.uceprotect.net',
+					'dnsbl-3.uceprotect.net',
+					'dnsbl.sorbs.net',
+					'zen.spamhaus.org'
+				);
+			}
+			$dnsbl_lookup=$dns_lookups;
 
 			if( $this->ipaddress ) {
 				$reverse_ip=implode ("." , array_reverse(explode ( "." , $this->ipaddress ) ) );
