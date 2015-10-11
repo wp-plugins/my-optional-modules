@@ -2,7 +2,7 @@
 /*
 Plugin Name: My Optional Modules
 Description: Optional modules and additions for Wordpress.
-Version: 11
+Version: 11.1
 Author: boyevul
 */
 
@@ -20,6 +20,7 @@ class myoptionalmodules_plugin_includes {
 		if ( !get_option ( 'myoptionalmodules_pluginshortcodes' ) ) {
 
 			include ( 'class.mom-mediaembed.php' ); 
+			include ( 'class.mom-reddit.php' );
 			include ( 'class.myoptionalmodules-shortcodes.php' );
 			include ( 'function.shortcode.myoptionalmodules-miniloop.php' );
 

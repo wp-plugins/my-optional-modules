@@ -1,3 +1,76 @@
+.myoptionalmodules-subreddit .reddit-item-listing {
+	clear: both;
+	display: block;
+	margin: 10px 0 25px;
+	position: relative;
+}
+	.myoptionalmodules-subreddit .no-image {
+		padding: 1% 1% 1% 8%;
+	}
+	.myoptionalmodules-subreddit .image {
+		padding: 1% 1% 1% 24%;
+	}
+	.myoptionalmodules-subreddit .nsfw {
+		border: 1px solid rgba(0,0,0,.1);
+		font-size: .8rem;
+		font-weight: 700;
+		margin-right: 10px;
+		padding: 5px;
+		text-align: center;
+		text-transform: uppercase;
+	}
+	.myoptionalmodules-subreddit .stickied {
+		border: 1px solid rgba(0,0,0,.1);
+	}
+	.myoptionalmodules-subreddit .stickied .fa-sticky-note {
+		bottom: 1%;
+		font-size: .8rem;
+		position: absolute;
+		right: 1%;
+		text-transform: uppercase;
+	}
+	.myoptionalmodules-subreddit .reddit-item-listing a {
+		border: none;
+		box-shadow: none;
+		text-decoration: none;
+	}
+	.myoptionalmodules-subreddit .reddit-item-listing .thumb {
+		left: 8%;
+		position: absolute;
+		top: 5%;
+		width: 14%;
+	}
+	.myoptionalmodules-subreddit .reddit-item-listing .listing-date {
+		clear: both;
+		display: block;
+		font-size: 1rem;
+		margin: 5px 0;
+	}
+	.myoptionalmodules-subreddit .reddit-item-listing .listing-score {
+		border: 1px solid rgba(0,0,0,.1);
+		font-size: .9rem;
+		left: 1%;
+		padding: 2px;
+		position: absolute;
+		text-align: center;
+		top: 7%;
+		width: 5%;
+	}
+	.myoptionalmodules-subreddit .reddit-item-listing .listing-title {
+		clear: both;
+		display: block;
+		font-size: 1.5rem;
+	}
+	.myoptionalmodules-subreddit .reddit-item-listing .listing-title small {
+		font-size: .8rem;
+	}
+	.myoptionalmodules-subreddit .reddit-item-listing .listing-information {
+		clear: both;
+		display: block; 
+		font-size: 1rem;
+		margin: 10px 0;
+	}
+	
 .mom-bold-title {
 	font-weight: 700;
 	opacity: .6;

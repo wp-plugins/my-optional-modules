@@ -42,7 +42,6 @@ class myoptionalmodules_shortcodes{
 		$myoptionalmodules_custom_hidden = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_hidden' ) );
 		$myoptionalmodules_custom_charts = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_charts' ) );
 		$myoptionalmodules_custom_categories = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_categories' ) );
-		$myoptionalmodules_custom_redditfeed = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_redditfeed' ) );
 		
 		if( '' == $myoptionalmodules_custom_embed ){
 			$myoptionalmodules_custom_embed = 'mom_embed';
@@ -56,20 +55,16 @@ class myoptionalmodules_shortcodes{
 		if( '' == $myoptionalmodules_custom_categories ){
 			$myoptionalmodules_custom_categories = 'mom_categories';
 		}
-		if( '' == $myoptionalmodules_custom_redditfeed ){
-			$myoptionalmodules_custom_reddtifeed = 'mom_reddit';
-		}
 		
 		remove_shortcode ( $myoptionalmodules_custom_embed );
 		remove_shortcode ( $myoptionalmodules_custom_hidden );
 		remove_shortcode ( $myoptionalmodules_custom_charts );
 		remove_shortcode ( $myoptionalmodules_custom_categories );
-		remove_shortcode ( $myoptionalmodules_custom_redditfeed );
 		add_shortcode    ( $myoptionalmodules_custom_embed , array ( $this , 'embed' ) );
 		add_shortcode    ( $myoptionalmodules_custom_hidden , array ( $this , 'hidden' ) );
 		add_shortcode    ( $myoptionalmodules_custom_charts , array ( $this , 'charts' ) );
 		add_shortcode    ( $myoptionalmodules_custom_categories , array ( $this , 'categories' ) );
-		add_shortcode    ( $myoptionalmodules_custom_redditfeed , array ( $this , 'reddit' ) );
+
 	}
 	
 	function embed( $atts ) {
@@ -229,104 +224,6 @@ class myoptionalmodules_shortcodes{
 		$output .= '</div>';
 		
 		return $output;
-	}
-	
-	function reddit( $atts ) {
-		extract (
-			shortcode_atts ( 
-				array (
-					'sub'         => '' ,
-					'thread'      => '' ,
-					'limit'       => 10 ,
-					'title'       => '' ,
-					'description' => 0
-				)
-				, $atts 
-			)
-		);
-		
-		$sub    = sanitize_text_field ( $sub );
-		$thread = sanitize_text_field ( $thread );
-		$limit  = intval ( $limit );
-		$title  = sanitize_text_field ( $title );
-		$output = null;
-		$count  = 0;
-		
-		if ( $sub || $thread ) {
-		
-			if ( $sub && !$thread ) {
-				$url = "https://www.reddit.com/r/{$sub}/.rss?limit={$limit}";
-			} elseif ( $thread && !$sub ) {
-				$url = "{$thread}/.rss?limit={$limit}";
-			} else {
-				$url = null;
-			}
-			
-			if ( $url ) {
-			
-				$content = file_get_contents( $url );
-
-				$x = new SimpleXmlElement( $content );
-				$x->channel->title = sanitize_text_field ( $x->channel->title );
-				$x->channel->description = sanitize_text_field ( $x->channel->description );
-				$x->channel->description = mom_reddit_formatting ( $x->channel->description );
-				
-				if ( 'search results' != strtolower ( $x->channel->title ) ) {
-				
-					$channel_title = strtolower( str_replace( array( 'https://www.reddit.com/r/', '/' ), '', $x->channel->link ) );
-					
-					if ( '%blank%' == $title ) {
-						$title = null;
-					} elseif ( $title ) {
-						$title = "<h1>{$title}</h1>";
-					} elseif ( !$title ) {
-						$title = "<h1><a href='{$x->channel->link}'>{$x->channel->title}</a></h1>";
-					}
-					
-					if ( $sub && !$thread ) {
-						if ( $description ) {
-							$description = "<h2>{$x->channel->description}</h2>";
-						} else {
-							$description = null;
-						}
-					} elseif ( $thread && !$sub ) {
-						$description = null;
-						$title = null;
-					}
-					
-					$output .= "
-						<div class='mom-reddit-feed'>
-							{$title}{$description}
-							
-					";
-					foreach( $x->channel->item as $entry ){
-						
-						$entry->description = sanitize_text_field ( $entry->description );
-						$entry->description = mom_reddit_formatting ( $entry->description );
-						
-						++$count;
-						$post_type = null;
-						if( strpos( $entry->description, 'SC_OFF' ) !== false ){
-							$post_type = "<small>(self.{$channel_title})</small>";
-						}
-						if ( $sub && !$thread ) {
-							$output .= "<h3><a href='{$entry->link}'>{$entry->title} {$post_type}</a></h3>";
-						} elseif ( $thread && !$sub && '[deleted]' != $entry->description ) {
-							if ( $count > 1 ) {
-								$output .= "<p>{$entry->description} <small><a href='{$entry->link}'>#</a></small></p>";
-							}
-						}
-					}
-					$output .= "</div>";
-				
-				}
-				
-			}
-		
-		}
-		
-		return $output;
-		
 	}
 	
 }
