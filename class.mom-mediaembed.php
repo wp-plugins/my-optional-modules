@@ -17,7 +17,7 @@ class mom_mediaEmbed {
 
 	var $url;
 
-	function mom_mediaEmbed ( $url , $title = null , $class = null , $size = null ) {
+	function mom_mediaEmbed ( $url , $title = null , $class = null , $size = null , $display_text = true ) {
 
 		$myoptionalmodules_pluginscript = sanitize_text_field ( get_option ( 'myoptionalmodules_pluginscript' ) );
 	
@@ -125,7 +125,7 @@ class mom_mediaEmbed {
 
 				// imgur
 				elseif ( strpos ( $host , 'imgur.com' ) !== false ):
-					$url = str_replace ( array ( 'https://' , 'http://' , 'imgur.com/a/' , 'i.imgur.com/' ) , '' , $url );
+					$url = str_replace ( array ( 'https://' , 'http://' , 'imgur.com/a/' , 'i.imgur.com/' , 'imgur.com/' ) , '' , $url );
 					$url = sanitize_text_field ( $url );
 					if ( strpos ( $path , '/a/' ) !== false ):
 						$output .= "<blockquote class='imgur-embed-pub' lang='en' data-id='a/{$url}'></blockquote><script async src='//s.imgur.com/min/embed.js' charset='utf-8'></script>";
@@ -146,7 +146,7 @@ class mom_mediaEmbed {
 						else:
 							$small_url = preg_replace('/(.*)(\.[\w\d]{3})/', '$1$2', $url);
 						endif;
-						$output .= "<a class='imgur-link' href='//i.imgur.com/{$url}'><img data-small='//i.imgur.com/{$small_url}' data-src='//i.imgur.com/{$url}' class='imgur-image' alt='image' src='//i.imgur.com/{$small_url}'/></a>";
+						$output .= "<blockquote class='imgur-embed-pub' lang='en' data-id='{$url}'><a href='//imgur.com/{$url}'>View post on imgur.com</a></blockquote><script async src='//s.imgur.com/min/embed.js' charset='utf-8'></script>";
 					endif;
 
 				// liveleak
@@ -272,7 +272,9 @@ class mom_mediaEmbed {
 				endif;
 				echo '</div>';
 			else:
-				echo "<div class='gumboard_content_comment'><p><a rel='nofollow' href='{$url}'>Attached link</a> <small>(<a href='//{$host}'>{$host}</a>)</small></p></div>";
+				if ( true == $display_text ):
+					echo "<div class='gumboard_content_comment'><p><a rel='nofollow' href='{$url}'>Attached link</a> <small>(<a href='//{$host}'>{$host}</a>)</small></p></div>";
+				endif;
 			endif;
 
 			

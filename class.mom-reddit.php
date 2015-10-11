@@ -2,7 +2,7 @@
 /**
  * CLASS mom-reddit()
  *
- * File last update: 11.1
+ * File last update: 11.1.1
  *
  * Embed a subreddit into WordPress
  *
@@ -49,29 +49,45 @@ class mom_reddit {
 		extract (
 			shortcode_atts (
 				array (
-					'sub'  => '' ,
+					'sub'    => ''    ,
+					'sticky' => 1     ,
+					'score'  => 0     ,
+					'thumbs' => 1     ,
+					'nsfw'   => 1     ,
+					'type'   => 'all' ,
+					'amount' => '25'  ,
 				),
 				$atts
 			)
 		);
 
-		$sub = strtolower ( sanitize_text_field ( $sub ) );
+		$count  = 0;
+		$sub    = strtolower ( sanitize_text_field ( $sub ) );
+		$type   = strtolower ( sanitize_text_field ( $type ) );
+		$sticky = intval ( $sticky );
+		$score  = intval ( $score );
+		$thumbs = intval ( $thumbs );
+		$nsfw   = intval ( $nsfw );
+		
+		$output_open = null;
+		$post        = null;
+		$output_end  = null;
 		
 		if ( $sub ):
 			$json = json_decode ( file_get_contents ( 'http://reddit.com/r/' . sanitize_text_field ( $sub ) . '/.json' ) );
-		elseif ( $user ):
-			$json = json_decode ( file_get_contents ( 'http://reddit.com/user/' . sanitize_text_field ( $user ) . '/.json' ) );
 		endif;
-		
-		$output = null;
 		
 		if ( $sub || $user ):
 			$data = $json->data->children;
 			
 			if ( $sub ):
 				if ( $data ):
-					$output .= '<div class="myoptionalmodules-subreddit">';
+					$output_open .= "
+					<div class='myoptionalmodules-subreddit'>
+						<span class='title-bar'><a href='//reddit.com/r/{$sub}'>r/{$sub}</a></span>
+						<div class='inner'><i class='fa fa-reddit'> powered by <a href='//reddit.com/'>reddit</a></i>";
 					foreach ( $data as $value ):
+						++$count;
 						$domain    = null;
 						$title     = null;
 						$url       = null;
@@ -82,19 +98,23 @@ class mom_reddit {
 						$thumb     = null;
 						$gild      = null;
 						$comments  = null;
-						$score     = null;
-						$nsfw      = null;
+						$points    = null;
+						$is_nsfw   = null;
 						$over18    = false;
 						$div       = 'nonstickied';
 						$padding   = 'no-image';
+						$is_self   = $value->data->is_self;
+						
+						$subreddit = strtolower ( sanitize_text_field ( $value->data->subreddit ) );
 						
 						if ( true == $value->data->stickied ):
 							$div      = 'stickied';
 							$stickied = '<i class="fa fa-sticky-note"> sticky</i>';
 						endif;
 						if ( $value->data->domain ):
-							$domain = sanitize_text_field ( $value->data->domain );
-							$domain = "<small>(<a href='//reddit.com/domain/{$domain}'>{$domain}</a>)</small>";
+							$domain_raw = sanitize_text_field ( $value->data->domain );
+							$domain     = sanitize_text_field ( $value->data->domain );
+							$domain     = "<small>(<a href='//reddit.com/domain/{$domain}'>{$domain}</a>)</small>";
 						endif;
 						if ( $value->data->title ):
 							$title = sanitize_text_field ( $value->data->title );
@@ -113,27 +133,30 @@ class mom_reddit {
 							$comments = intval ( $value->data->num_comments );
 							$comments = "<a href='{$permalink}'>{$comments} comments</a>";
 						else:
-							$comments = '<em>no comments</em>';
+							$comments = "<a href='{$permalink}'><em>no comments</em></a>";
 						endif;
 						if ( $value->data->score ):
-							$score = intval ( $value->data->score );
-							$score = "<span class='listing-score'>{$score}</span>";
+							$raw_score = intval ( $value->data->score );
+							$points    = intval ( $value->data->score );
+							$points    = "<span class='listing-score'>{$points}</span>";
 						else:
-							$score = '<span class="listing-score">0</span>';
+							$points = '<span class="listing-score">0</span>';
 						endif;
 						if ( $value->data->author ):
 							$author = sanitize_text_field ( $value->data->author );
 							$author = " by <a href='//reddit.com/user/{$author}'>{$author}</a>";
 						endif;
 						if ( $value->data->created_utc ):
-							$date = $value->data->created_utc;
-							$date = date( 'Y-m-d H:i:s' , $date );
-							$date = "submitted {$author} on {$date}";
+							$date          = $value->data->created_utc;
+							$date_readable = date( 'Y-m-d H:i:s' , $date );
+							$date          = human_time_diff ( $date , current_time ( 'timestamp' ) );
+							$date          = "submitted {$author} {$date} ago";
 						endif;
-						if ( 'self' != strtolower ( $value->data->thumbnail ) ):
+						if ( $value->data->thumbnail && false == $is_self ):
+							
 							if ( true == $value->data->over_18 ):
-								$thumb = null;
-								$nsfw  = '<span class="nsfw">nsfw</span>';
+								$thumb   = null;
+								$is_nsfw = '<span class="nsfw">nsfw</span>';
 							else:
 								if ( !strpos ( strtolower ( $value->data->title ) , 'spoiler' ) ):
 									$padding = 'image';
@@ -143,32 +166,51 @@ class mom_reddit {
 									$thumb   = null;
 								endif;
 							endif;
+							
 						else:
 							$thumb = null;
 						endif;
 						
-						$output .= "
-							<div class='reddit-item-listing {$div} {$padding}'>
-								{$score}{$stickied}
-								{$thumb}
-								<span class='listing-title'>
-									{$url} {$domain}
-								</span>
-								<span class='listing-date'>
-									{$date}
-								</span>
-								<span class='listing-information'>
-								{$nsfw} {$comments}
-								</span>
-							</div>
-						";
+						if ( !$thumbs ):
+							$padding = 'no-image';
+							$thumb   = null;
+						endif;
+						
+						if ( $score >= $raw_score || $count > $amount ):
+							$post .= '';
+						elseif ( !$sticky && 'stickied' == $div ):
+							$post .= '';
+						elseif ( !$nsfw && $is_nsfw ):
+							$post .= '';
+						elseif ( 'self' == $type && false == $is_self ):
+							$post .= '';
+						elseif ( 'links' == $type && true == $is_self ):
+							$post .= '';							
+						else:
+							$post .= "
+								<div class='reddit-item-listing {$div} {$padding}'>
+									{$points}{$stickied}
+									{$thumb}
+									<span class='listing-title'>
+										{$url} {$domain}
+									</span>
+									<span class='listing-date'>
+										{$date}
+									</span>
+									<span class='listing-information'>
+									{$is_nsfw} {$comments}
+									</span>
+								</div>
+							";
+						endif;
+
 					endforeach;
-					$output .= '</div>';
+					$output_end .= '</div></div>';
 				endif;
 			endif;
 		endif;
 		
-		return $output;
+		return $output_open . $post . $output_end;
 
 	}
 	
