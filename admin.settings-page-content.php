@@ -2,7 +2,7 @@
 /**
  * ADMIN Settings Page Content
  *
- * File last update: 10.4
+ * File last update: 11
  *
  * Content of the /wp-admin/ SETTINGS PAGE for this plugin
  * INCLUDING all SAVE OPERATIONS.
@@ -208,7 +208,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						' Enable Horizontal Galleries <em>Turn all image galleries into horizontal image galleries.</em>' ,
 						' Disable Horizontal Galleries script <em>Open gallery images normally</em>' ,
 						' Enable Font Awesome <em>Enable the use of Font Awesome on your site.</em>' ,
-						' Enable Social Links <em>Enable scriptless share buttons for your posts/pages.</em>' ,
+						' Enable Social Links <em>Enable scriptless share buttons for your posts/pages. New options will appear upon saving.</em>' ,
 						' Enable RSS Linkbacks <em>Appends a link back to your site on all RSS items.</em>' ,
 						' Enable 404s-to-home <em>Redirects all 404s to your homepage.</em>'
 					);
@@ -252,7 +252,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 						' Javascript-to-Footer <em>Move all JS to the footer.</em>' ,
 						' Recent Posts Widget <em>Changes the behavior of the Recent Posts Widget to exclude the currently viewed post from its list.</em>' ,
 						' Recent Posts Widget (Keep the title) <em>Instead of excluding the entry from the list, de-link and bold it.</em>' ,
-						' Enable Exclude Posts <em>Exclude posts from anywhere on the site, based on many different settings.</em>' ,
+						' Enable Exclude Posts <em>Exclude posts from anywhere on the site, based on many different settings. New options will appear upon saving.</em>' ,
 						' Analytics On Single Only <em>Only use Google Analytics on single posts. Set your Google Tracking ID below.</em>' ,
 					);
 					$theme_extras = array (
@@ -403,51 +403,63 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 					
 					<div id="myoptionalmodules">
 						<div class="clear">
-						<div class="setting">
-							<em>tools</em>
-							<form class="clutter" method="post" action="" name="optimizeTables">';
-								wp_nonce_field ( 'optimizeTablesForm' );
-								echo '
-								<label for="optimizeTables"><i class="fa fa-rocket"></i>Optimize Tables <em>Optimize your sites SQL tables.</em></label>
-								<input class="hidden" id="optimizeTables" type="submit" value="Go" name="optimizeTables">
-							</form>
-							<form class="clutter" method="post" action="" name="deleteAllClutter">';
-								wp_nonce_field ( 'deleteAllClutterForm' );
-								echo '
-								<label for="deleteAllClutter"><i class="fa fa-trash-o"></i>Empty Trash <em>Perform all of the below trash removal actions, instantly.</em></label>
-								<input class="hidden" id="deleteAllClutter" type="submit" value="Go" name="deleteAllClutter">
-							</form>
-							<form class="clutter" method="post" action="" name="deletePostRevisionsForm">';
-								wp_nonce_field ( 'deletePostRevisionsForm' );
-								echo '
-								<label for="delete_post_revisions"><i class="fa fa-trash-o"></i>Delete Revisions/Autodrafts <em>Delete revisions, auto-drafts, and empties the trash.</em></label>
-								<input class="hidden" id="delete_post_revisions" type="submit" value="Go" name="delete_post_revisions">
-							</form>
-							<form class="clutter" method="post" action="" name="deleteUnapprovedCommentsForm">';
-								wp_nonce_field ( 'deleteUnapprovedCommentsForm' );
-								echo '
-								<label for="delete_unapproved_comments"><i class="fa fa-trash-o"></i>Clean Up Comments <em>Deletes unapproved comments, comments belonged to trashed posts, or comments labeled as spam.</em></label>
-								<input class="hidden" id="delete_unapproved_comments" type="submit" value="Go" name="delete_unapproved_comments">
-							</form>
-							<form class="clutter" method="post" action="" name="deleteUnusedTermsForm">';
-								wp_nonce_field ( 'deleteUnusedTermsForm' );
-								echo '
-								<label for="delete_unused_terms"><i class="fa fa-trash-o"></i>Clean Up Tags/Categories <em>Removes tags and categories that have no posts associated with them.</em></label>
-								<input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms">
-							</form>
-							<form class="clutter" method="post" action="" name="deleteDraftsForm">';
-								wp_nonce_field ( 'deleteDraftsForm' );
-								echo '
-								<label for="delete_drafts"><i class="fa fa-trash-o"></i>Delete Drafts <em>Delete all drafts.</em></label>
-								<input class="hidden" id="delete_drafts" type="submit" value="Go" name="delete_drafts">
-							</form>
-						</div>
+						
+							<div class="section">
+								<strong><a href="https://wordpress.org/plugins/my-optional-modules/">My Optional Modules</a></strong> <small>&mdash; <em>version 11</em></small>
+							</div>
+							<div class="section" id="tools">
+								<div class="left">
+									tools
+								</div>
+								<div class="right">
+									<form class="clutter" method="post" action="" name="optimizeTables">';
+										wp_nonce_field ( 'optimizeTablesForm' );
+										echo '
+										<label for="optimizeTables">Optimize Tables <em>Optimize your sites SQL tables.</em></label>
+										<input class="hidden" id="optimizeTables" type="submit" value="Go" name="optimizeTables">
+									</form>
+									<form class="clutter" method="post" action="" name="deleteAllClutter">';
+										wp_nonce_field ( 'deleteAllClutterForm' );
+										echo '
+										<label for="deleteAllClutter">Empty Trash <em>Perform all of the below trash removal actions, instantly.</em></label>
+										<input class="hidden" id="deleteAllClutter" type="submit" value="Go" name="deleteAllClutter">
+									</form>
+									<form class="clutter" method="post" action="" name="deletePostRevisionsForm">';
+										wp_nonce_field ( 'deletePostRevisionsForm' );
+										echo '
+										<label for="delete_post_revisions">Delete Revisions/Autodrafts <em>Delete revisions, auto-drafts, and empties the trash.</em></label>
+										<input class="hidden" id="delete_post_revisions" type="submit" value="Go" name="delete_post_revisions">
+									</form>
+									<form class="clutter" method="post" action="" name="deleteUnapprovedCommentsForm">';
+										wp_nonce_field ( 'deleteUnapprovedCommentsForm' );
+										echo '
+										<label for="delete_unapproved_comments">Clean Up Comments <em>Deletes unapproved comments, comments belonged to trashed posts, or comments labeled as spam.</em></label>
+										<input class="hidden" id="delete_unapproved_comments" type="submit" value="Go" name="delete_unapproved_comments">
+									</form>
+									<form class="clutter" method="post" action="" name="deleteUnusedTermsForm">';
+										wp_nonce_field ( 'deleteUnusedTermsForm' );
+										echo '
+										<label for="delete_unused_terms">Clean Up Tags/Categories <em>Removes tags and categories that have no posts associated with them.</em></label>
+										<input class="hidden" id="delete_unused_terms" type="submit" value="Go" name="delete_unused_terms">
+									</form>
+									<form class="clutter" method="post" action="" name="deleteDraftsForm">';
+										wp_nonce_field ( 'deleteDraftsForm' );
+										echo '
+										<label for="delete_drafts">Delete Drafts <em>Delete all drafts.</em></label>
+										<input class="hidden" id="delete_drafts" type="submit" value="Go" name="delete_drafts">
+									</form>
+								</div>
+							</div>
+						
 
 						<form method="post" name="myoptionalmodules_settings_form" action="" class="MOM_form">';
 						wp_nonce_field ( 'myoptionalmodules_settings_form' );
 						echo '
-							<div class="setting">
-								<em>disable</em>';
+							<div class="section" id="disable">
+								<div class="left">
+									disable
+								</div>
+								<div class="right">';
 								foreach ( $options_disable as &$option ) {
 									$title   = str_replace( $options_disable , $keys_disable , $option );
 									$checked = null;
@@ -457,43 +469,46 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 									<section>
 										<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> <label for='{$option}'>{$title}</label>
 									</section>";
-								}								
-							echo '</div>
-							</div>
-							<div class="clear">';
+								}
+							echo '
+								</div>
+							</div>';
 							
-							if( !get_option ( 'myoptionalmodules_disablecomments' ) ) {
-								echo '<div class="setting">
-									<em>comments</em>';
-										foreach ( $options_comment_form as &$option ) {
-											
-											if ( 'myoptionalmodules_lookups' == $option ) {
-												$title = str_replace ( $options_comment_form , $keys_comment_form , $option );
-												$value = get_option ( $option );
-												echo "
-												<section>
-													<label for='{$option}'>{$title}</label>
-													<textarea class='full-text' name='{$option}' id='{$option}'>{$value}</textarea>
-													<small>Defaults (leave blank): <br />dnsbl-1.uceprotect.net<br /> dnsbl-2.uceprotect.net<br /> dnsbl-3.uceprotect.net<br /> dnsbl.sorbs.net<br /> zen.spamhaus.org</small>
-												</section><hr />";								
-											} else {
-												$title = str_replace ( $options_comment_form , $keys_comment_form , $option );
-												$checked = null;
-												if ( get_option ( $option ) )
-													$checked = ' checked';
-												echo "
-												<section>
-													<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> <label for='{$option}'>{$title}</label>
-												</section>";
-											}
+							
+							echo '<div class="section" id="comments">
+								<div class="left">
+									comments
+								</div>
+								<div class="right">';
+									foreach ( $options_comment_form as &$option ) {
+										
+										if ( 'myoptionalmodules_lookups' == $option ) {
+											$title = str_replace ( $options_comment_form , $keys_comment_form , $option );
+											$value = get_option ( $option );
+											echo "
+											<section>
+												<label for='{$option}'>{$title}</label>
+												<textarea class='full-text' name='{$option}' id='{$option}'>{$value}</textarea>
+												<small>Defaults (leave blank): <br />dnsbl-1.uceprotect.net<br /> dnsbl-2.uceprotect.net<br /> dnsbl-3.uceprotect.net<br /> dnsbl.sorbs.net<br /> zen.spamhaus.org</small>
+											</section><hr />";								
+										} else {
+											$title = str_replace ( $options_comment_form , $keys_comment_form , $option );
+											$checked = null;
+											if ( get_option ( $option ) )
+												$checked = ' checked';
+											echo "
+											<section>
+												<input type='checkbox' value='1' name='{$option}' id='{$option}'{$checked}> <label for='{$option}'>{$title}</label>
+											</section>";
 										}
-								echo '</div>';
-							} else {
-								echo '<div class="setting"><em>The comment form is disabled</em><section>Comment-related modules are currently inaccessible.</section></div>';
-							}
+									}
+							echo '</div></div>';
 							
-							echo '<div class="setting">
-								<em>enable</em>';
+							echo '<div class="section" id="enable">
+									<div class="left">
+										enable
+									</div>
+									<div class="right">';
 								foreach ( $options_enable as &$option ) {
 									$title = str_replace( $options_enable , $keys_enable , $option );
 									$checked = null;
@@ -508,8 +523,8 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 								if ( get_option ( 'myoptionalmodules_sharelinks' ) ) {
 										$myoptionalmodules_sharelinks_text = sanitize_text_field ( get_option ( 'myoptionalmodules_sharelinks_text' ) );
 										echo "
-										<hr /><label>Share text &mdash; <small>ex: share via:</small></label>
-										<input type='text' value='{$myoptionalmodules_sharelinks_text}' id='myoptionalmodules_sharelinks_text' name='myoptionalmodules_sharelinks_text' />";
+										<section><label>Share text &mdash; <small>ex: share via:</small></label>
+										<input type='text' class='full-text' value='{$myoptionalmodules_sharelinks_text}' id='myoptionalmodules_sharelinks_text' name='myoptionalmodules_sharelinks_text' /></section>";
 										foreach ( $options_shares as &$option ) {
 											$title = str_replace ( $options_shares , $keys_shares , $option );
 											$checked = null;
@@ -523,9 +538,13 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 								}
 							echo '</div>
 							</div>
-							<div class="clear">
-							<div class="setting">
-								<em>extras</em>';
+
+							
+							<div class="section" id="extras">
+								<div class="left">
+									extras
+								</div>
+								<div class="right">';
 								foreach ( $options_extras as &$option ) {
 									$title = str_replace ( $options_extras , $keys_extras , $option );
 									$checked = null;
@@ -538,8 +557,13 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 										</section>";
 								}
 							echo'</div>
-							<div class="setting">
-								<em>theme</em>
+							</div>
+							
+							<div class="section" id="theme">
+								<div class="left">
+									theme
+								</div>
+								<div class="right">
 								<section>
 								<label for="mompaf_0">Set homepage as a post <em>Like setting the homepage as a page, this 
 								setting allows you to set your homepage as a post.</em></label>
@@ -592,9 +616,8 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 								$shortcode_redditfeed = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_redditfeed' ) );
 								$shortcode_miniloop   = sanitize_text_field ( get_option ( 'myoptionalmodules_custom_miniloop' ) );
 								
-								if( !get_option('myoptionalmodules_pluginshortcodes') ) {
+
 									echo "
-									<section><hr /><strong>Shortcode Customization</strong></section>
 									<section>
 										<label for='myoptionalmodules_custom_embed'>Embed shortcode parameter <small>&mdash; default: mom_embed</small>
 										<input class='full-text' type='text' id='myoptionalmodules_custom_embed' name='myoptionalmodules_custom_embed' value='{$shortcode_embed}' />
@@ -618,19 +641,17 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 									<section>
 										<label for='myoptionalmodules_custom_miniloop'>Miniloop shortcode parameter <small>&mdash; default: mom_miniloop</small>
 										<input class='full-text' type='text' id='myoptionalmodules_custom_miniloop' name='myoptionalmodules_custom_miniloop' value='{$shortcode_miniloop}' />
-									</section>
-									<section><hr /></section>";
-								} else {
-									echo '<section><hr><strong>Shortcodes are disabled. <small>Shortcode-related settings are inaccessible.</small></strong><hr /></section>';
-								}								
+									</section>";
 								echo "								
 								<section>
 									<label for='myoptionalmodules_disqus'>Disqus Shortname <small>&mdash; <strong>this</strong>.disqus.com</small> <em>Enables Disqus comments for your posts.</em></label>
 									<input class='full-text' type='text' id='myoptionalmodules_disqus' name='myoptionalmodules_disqus' value='{$disqus}' />
 								</section>
 								<section>
-									<label for='myoptionalmodules_miniloopmeta'>Miniloop: meta <em>This is the name of a custom field that will tie posts together. If Post A and Post C share the value 'video game' while Post B has the value 'movie',
-									Post A and Post C will be considered similar to each other, regardless of category.</em></label>
+									<label for='myoptionalmodules_miniloopmeta'>Miniloop: meta key
+										<em>This is the name of a custom field that will tie posts together. If Post A and C have the meta key 'type' with the value of 'game', and Post B has 
+										the meta key 'type' with the value of 'movie', then Posts A and C will be considered similar, regardless of category and Post B will not be considered 
+										as similar.</em></label>
 									<input class='full-text' type='text' id='myoptionalmodules_miniloopmeta' name='myoptionalmodules_miniloopmeta' value='$miniloop_meta' />
 								</section>
 								<section>";
@@ -674,7 +695,7 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 							echo '</div>
 							</div>
 							<div class="clear">
-							<div id="exclude-components-content">';
+							<div id="exclude">';
 								if ( get_option ( 'myoptionalmodules_exclude' ) ) {
 									$showmepages = get_pages();
 									$showmecats  = get_categories ( 'taxonomy=category&hide_empty=0' );
@@ -918,23 +939,41 @@ if( current_user_can ( 'edit_dashboard' ) && is_admin() ){
 								</div>';
 								$showmepages = $showmecats = $showmetags = $showmeusers = $tagcount = $catcount = $usercount = null;
 							}
-							echo '</div>							
-								<div class="clear">
+							echo '</div>
+								<div class="form-buttons">
+									<span>
 									<input type="submit" value="Save" class="button button-primary" name="myoptionalmodules_settings_form" id="myoptionalmodules_settings_form">';
-									if ( !isset ( $_POST['myoptionalmodules_settings_reset'] ) )
+									if ( !isset ( $_POST['myoptionalmodules_settings_reset'] ) ) {
 										echo '
 										<input type="submit" value="Reset" class="button button-primary" name="myoptionalmodules_settings_reset" id="myoptionalmodules_settings_reset">';
-									else
+									} else {
 										echo '
 										<input type="submit" value="Reset Confirm" class="button button-primary" name="myoptionalmodules_settings_reset_confirm" id="myoptionalmodules_settings_reset_confirm">';
-									if ( !isset ( $_POST['myoptionalmodules_settings_uninstall'] ) )
+									}
+									if ( !isset ( $_POST['myoptionalmodules_settings_uninstall'] ) ) {
 										echo '
 										<input type="submit" value="Uninstall" class="button button-primary" name="myoptionalmodules_settings_uninstall" id="myoptionalmodules_settings_uninstall">';
-									else
+									} else {
 										echo '
 										<input type="submit" value="Uninstall Confirm" class="button button-primary" name="myoptionalmodules_settings_uninstall_confirm" id="myoptionalmodules_settings_uninstall_confirm">';
-							echo '
-							</div>
+									}
+									
+									echo '
+										</span>
+										<span>
+											<a href="#tools">tools</a>
+											<a href="#disable">disable</a>
+											<a href="#comments">comments</a>
+											<a href="#enable">enable</a>
+											<a href="#extras">extras</a>
+											<a href="#theme">theme</a>';
+										if ( get_option ( 'myoptionalmodules_exclude' ) ) {
+											echo '<a href="#exclude">exclude</a>';
+										}
+										echo '</span>
+									';
+										
+							echo '</div>
 							</div>
 						</form>
 					</div>';

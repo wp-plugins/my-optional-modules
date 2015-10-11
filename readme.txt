@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: reddit, meta, og, twitter, facebook, google, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, garbage, removal, trash, footer, exclude, remove, hide, front page, search results, authors, categories, tags, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.3.2
-Stable tag: 10.4
+Stable tag: 11
 
 An assortment of functions to enhance WordPress.
 
@@ -40,7 +40,7 @@ MOM features an assortment of functions designed to add (or extend) functionalit
 *	Alter the behavior of the recent posts widget
 *	Set the homepage as a post
 *	enable Disqus for comments
-*	Google Analytics / Alexa Verification / Bing Validation
+*	Google Analytics/Verification / Alexa Verification / Bing Validation
 *	Random post URL 
 
 = Exclude Posts =
@@ -128,6 +128,10 @@ Example: [mom_reddit sub='destinythegame' thread='' limit='5' title='You might b
 2.	Share icons displayed at the top of the post content.
 
 == Changelog ==
+= 11 =
+*	*Release Date - 10th, October, 2015*
+*	Admin interface *should be* easier to navigate
+
 = 10.4 =
 * 	*Release Date - 9th, October, 2015*
 *	Minor change to how exclude posts handles dated exclusion parameters

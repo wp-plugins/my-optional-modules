@@ -2,7 +2,7 @@
 /*
 Plugin Name: My Optional Modules
 Description: Optional modules and additions for Wordpress.
-Version: 10.4
+Version: 11
 Author: boyevul
 */
 

@@ -1,5 +1,61 @@
 /* My Optional Modules Stylesheet 
 	(since version 4.0.5) */
+	.full,
+	.section {
+		background-color: rgba(255,255,255,.5);
+		border: 1px solid rgba(0,0,0,.1);
+		clear: both;
+		display: block;
+		margin: 0;
+		max-width: 500px;
+		overflow: auto;
+		padding: 35px 10px;
+		width: 100%;
+	}
+		.section a {
+			text-decoration: none;
+		}
+		.left {
+			float: left;
+			font-size: .6rem;
+			width: 5%;
+		}
+		.right {
+			float: right;
+			padding: 0 0 0 5%;
+			width: 85%;
+		}
+			.right section,
+			.right form {
+				font-size: .7rem;
+				margin: 0 0 10px 0;
+				padding: 0 5px 0 10px;
+				position: relative;
+			}
+				.right section:hover label,
+				.right form:hover label {
+					font-weight: 700;
+				}
+			.right section:not(:last-child),
+			.right form:not(:last-child) {
+				border-bottom: 1px solid rgba(0,0,0,.1);
+			}
+			.right section input[type="checkbox"] {
+				left: -5%;
+				height: 15px;
+				overflow: hidden;
+				position: absolute;
+				top: 45%;
+				width: 10px;
+			}
+				.right section textarea {
+					height: 100px;
+				}
+				.right section input[type="checkbox"]:checked {
+					background-color: #000;
+					color: #000;
+				}
+
 	
 	#myoptionalmodules *:after,
 	#myoptionalmodules *:before,
@@ -13,25 +69,20 @@
 		content: ""; 
 		display: table;
 	}
+	#myoptionalmodules {
+		max-width: 100%;
+		padding: 0;
+		position: relative;
+	}
+	#myoptionamodules form .left-form {
+		float: left;
+		max-width: 500px;
+		width: 90%;
+	}
 	#myoptionalmodules .clear {
 		clear: both; 
 		display: block; 
-		max-width: 510px;
-		padding: 5px;
 	}
-	#myoptionalmodules .full {
-		width: 510px!important;
-	}
-	#myoptionalmodules .full {
-			background-color: rgba(47,51,53,.7)!important;
-			border: 1px solid rgba(47,51,53,.9);
-			color: #fff;
-			clear: both;
-			float: none;
-			margin: 5px 5px 25px 5px!important;
-			padding: 30px 5px 5px;
-			position: relative;
-		}
 			#myoptionalmodules .full section {
 				clear: both; 
 				display: block;
@@ -67,54 +118,8 @@
 				padding: 5px;
 				z-index: 99;
 			}
-			
-	#myoptionalmodules .setting {
-		background-color: #fff;
-		border: 1px solid rgba(0,0,0,.1);
-		display: block;
-		margin: 10px 5px 0;
-		padding: 35px 5px 5px;
-		position: relative;
-		width: 100%;
-	}
-		#myoptionalmodules .setting section {
-			clear: both; 
-			display: block; 
-			padding: 5px;
-		}
-		#myoptionalmodules .setting em {
-			background-color: #000;
-			color: #fff;
-			padding: 5px;
-			position: absolute;
-			right: 0;
-			text-align: center;
-			top: 0;
-			width: 100%;
-		}
-		#myoptionalmodules .setting input[type=checkbox],
-		#myoptionalmodules .setting i {
-			margin: 0 5px 0 0;
-		}
-		#myoptionalmodules .setting section,
-		#myoptionalmodules .setting form {
-			border-left: 5px solid rgba(0,0,0,0);
-			padding: 5px;
-		}
-		#myoptionalmodules .setting section:hover,
-		#myoptionalmodules .setting form:hover {
-			border-left: 5px solid rgba(0,0,0,.1);
-		}
-		#myoptionalmodules .setting section,
-		#myoptionalmodules .setting form label {
-			display: block; 
-			height: 100%;
-			width: 100%;
-		}
-		
+
 		label em {
-			background-color: inherit!important;
-			color: inherit!important;
 			clear: both!important;
 			display: block!important;
 			padding: 5px 0!important;
@@ -132,3 +137,46 @@
 			width: 100%;
 			box-sizing(border-box);
 		}
+		.form-buttons {
+			background-color: #fff;
+			border: 1px solid rgba(0,0,0,.1);
+			max-width: 500px;
+			position: fixed;
+			bottom: 0;
+			width: 100%;
+			z-index: 99;
+		}
+			.form-buttons span {
+				clear: both;
+				display: block;
+				font-size: .7rem;
+				margin: 0;
+				padding: 5px;
+				width: 100%;
+			}
+				.form-buttons span a {
+					margin: 5px;
+					padding: 5px;
+					text-decoration: none;
+				}
+		.form-buttons input[type=submit] {
+			background-color: transparent;
+			border: none;
+			box-shadow: none;
+			clear: none;
+			color: rgba(0,0,0,.8);
+			display: block;
+			float: left;
+			font-size: .8rem;
+			height: auto;
+			margin: 5px;
+			max-width: 150px;
+			padding: 5px;
+			text-align: left;
+		}
+			.form-buttons input[type=submit]:hover {
+				background-color: transparent;
+				box-shadow: none;
+				color: rgba(0,0,0,.9);
+				font-weight: 700;
+			}
