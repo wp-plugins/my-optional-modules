@@ -2,7 +2,7 @@
 /**
  * CLASS mom-reddit()
  *
- * File last update: 11.1.1
+ * File last update: 11.1.2
  *
  * Embed a subreddit into WordPress
  *
@@ -49,164 +49,189 @@ class mom_reddit {
 		extract (
 			shortcode_atts (
 				array (
-					'sub'    => ''    ,
-					'sticky' => 1     ,
-					'score'  => 0     ,
-					'thumbs' => 1     ,
-					'nsfw'   => 1     ,
-					'type'   => 'all' ,
-					'amount' => '25'  ,
+					'sub'    => ''          ,
+					'search' => ''          ,
+					'sort'   => 'relevance' ,
+					'thread' => ''          ,
+					'sticky' => 1           ,
+					'score'  => 0           ,
+					'thumbs' => 1           ,
+					'nsfw'   => 1           ,
+					'type'   => 'all'       ,
+					'amount' => '25'        ,
+					'header' => 1           ,
+					'credit' => 1           ,
+					'from'   => 'all'       ,
 				),
 				$atts
 			)
 		);
 
-		$count  = 0;
-		$sub    = strtolower ( sanitize_text_field ( $sub ) );
-		$type   = strtolower ( sanitize_text_field ( $type ) );
-		$sticky = intval ( $sticky );
-		$score  = intval ( $score );
-		$thumbs = intval ( $thumbs );
-		$nsfw   = intval ( $nsfw );
+		$count     = 0;
+		$sub       = strtolower ( sanitize_text_field ( $sub ) );
+		$search    = sanitize_text_field ( $search );
+		$relevance = strtolower ( sanitize_text_field ( $sort ) );
+		$type      = strtolower ( sanitize_text_field ( $type ) );
+		$from      = strtolower ( $from );
+		$sticky    = intval ( $sticky );
+		$score     = intval ( $score );
+		$thumbs    = intval ( $thumbs );
+		$nsfw      = intval ( $nsfw );
+		$header    = intval ( $header );
+		$credit    = intval ( $credit );
 		
-		$output_open = null;
-		$post        = null;
-		$output_end  = null;
+		$output_open   = null;
+		$post          = null;
+		$output_end    = null;
+		$header_output = null;
+		$credit_output = null;
 		
 		if ( $sub ):
-			$json = json_decode ( file_get_contents ( 'http://reddit.com/r/' . sanitize_text_field ( $sub ) . '/.json' ) );
+			$json = json_decode ( file_get_contents ( "https://reddit.com/r/{$sub}/.json?limit={$amount}&t={$from}" ) );
+		elseif ( $search ):
+			if ( $sub ):
+				$restrict = "&restrict_sr={$sub}";
+			else:
+				$restrict = null;
+			endif;
+			$json = json_decode ( file_get_contents ( "https://www.reddit.com/search.json?q={$search}&limit={$amount}&t={$from}&sort={$sort}{$restrict}" ) );
 		endif;
 		
-		if ( $sub || $user ):
-			$data = $json->data->children;
-			
-			if ( $sub ):
-				if ( $data ):
-					$output_open .= "
-					<div class='myoptionalmodules-subreddit'>
-						<span class='title-bar'><a href='//reddit.com/r/{$sub}'>r/{$sub}</a></span>
-						<div class='inner'><i class='fa fa-reddit'> powered by <a href='//reddit.com/'>reddit</a></i>";
-					foreach ( $data as $value ):
-						++$count;
-						$domain    = null;
-						$title     = null;
-						$url       = null;
-						$permalink = null;
-						$author    = null;
-						$stickied  = null;
-						$created   = null;
-						$thumb     = null;
-						$gild      = null;
-						$comments  = null;
-						$points    = null;
-						$is_nsfw   = null;
-						$over18    = false;
-						$div       = 'nonstickied';
-						$padding   = 'no-image';
-						$is_self   = $value->data->is_self;
+		if ( $header ):
+			$header_output = "<span class='title-bar'><a href='//reddit.com/r/{$sub}'>r/{$sub}</a></span>";
+		endif;
+		
+		if ( $credit ):
+			$credit_output = "<i class='fa fa-reddit'> powered by <a href='//reddit.com/'>reddit</a></i>";
+		endif;
+		
+		if ( $sub || $search ):
+			$sub_data = $json->data->children;
+			if ( $sub_data ):
+				$output_open .= "
+				<div class='myoptionalmodules-subreddit'>
+					{$header_output}
+					<div class='inner'>{$credit_output}";
+				foreach ( $sub_data as $value ):
+					++$count;
+					$domain    = null;
+					$title     = null;
+					$url       = null;
+					$permalink = null;
+					$author    = null;
+					$stickied  = null;
+					$created   = null;
+					$thumb     = null;
+					$gild      = null;
+					$comments  = null;
+					$points    = null;
+					$is_nsfw   = null;
+					$over18    = false;
+					$div       = 'nonstickied';
+					$padding   = 'no-image';
+					$is_self   = $value->data->is_self;
+					
+					$subreddit = strtolower ( sanitize_text_field ( $value->data->subreddit ) );
+					
+					if ( true == $value->data->stickied ):
+						$div      = 'stickied';
+						$stickied = '<i class="fa fa-sticky-note"> sticky</i>';
+					endif;
+					if ( $value->data->domain ):
+						$domain_raw = sanitize_text_field ( $value->data->domain );
+						$domain     = sanitize_text_field ( $value->data->domain );
+						$domain     = "<small>(<a href='//reddit.com/domain/{$domain}'>{$domain}</a>)</small>";
+					endif;
+					if ( $value->data->title ):
+						$title = sanitize_text_field ( $value->data->title );
+					endif;
+					if ( $value->data->url ):
+						$url = esc_url ( $value->data->url );
+						$url = "<a href='{$url}'>{$title}</a>";
+					endif;
+					if ( $value->data->gilded ):
+						$gild = intval ( $value->data->gilded );
+					endif;
+					if ( $value->data->permalink ):
+						$permalink = esc_url ( '//reddit.com/' . $value->data->permalink );
+					endif;
+					if ( $value->data->num_comments ): 
+						$comments = intval ( $value->data->num_comments );
+						$comments = "<a href='{$permalink}'>{$comments} comments</a>";
+					else:
+						$comments = "<a href='{$permalink}'><em>no comments</em></a>";
+					endif;
+					if ( $value->data->score ):
+						$raw_score = intval ( $value->data->score );
+						$points    = intval ( $value->data->score );
+						$points    = "<span class='listing-score'>{$points}</span>";
+					else:
+						$points = '<span class="listing-score">0</span>';
+					endif;
+					if ( $value->data->author ):
+						$author = sanitize_text_field ( $value->data->author );
+						$author = " by <a href='//reddit.com/user/{$author}'>{$author}</a>";
+					endif;
+					if ( $value->data->created_utc ):
+						$date          = $value->data->created_utc;
+						$date_readable = date( 'Y-m-d H:i:s' , $date );
+						$date          = human_time_diff ( $date , current_time ( 'timestamp' ) );
+						$date          = "submitted {$author} {$date} ago";
+					endif;
+					if ( $value->data->thumbnail && false == $is_self ):
 						
-						$subreddit = strtolower ( sanitize_text_field ( $value->data->subreddit ) );
-						
-						if ( true == $value->data->stickied ):
-							$div      = 'stickied';
-							$stickied = '<i class="fa fa-sticky-note"> sticky</i>';
-						endif;
-						if ( $value->data->domain ):
-							$domain_raw = sanitize_text_field ( $value->data->domain );
-							$domain     = sanitize_text_field ( $value->data->domain );
-							$domain     = "<small>(<a href='//reddit.com/domain/{$domain}'>{$domain}</a>)</small>";
-						endif;
-						if ( $value->data->title ):
-							$title = sanitize_text_field ( $value->data->title );
-						endif;
-						if ( $value->data->url ):
-							$url = esc_url ( $value->data->url );
-							$url = "<a href='{$url}'>{$title}</a>";
-						endif;
-						if ( $value->data->gilded ):
-							$gild = intval ( $value->data->gilded );
-						endif;
-						if ( $value->data->permalink ):
-							$permalink = esc_url ( '//reddit.com/' . $value->data->permalink );
-						endif;
-						if ( $value->data->num_comments ): 
-							$comments = intval ( $value->data->num_comments );
-							$comments = "<a href='{$permalink}'>{$comments} comments</a>";
-						else:
-							$comments = "<a href='{$permalink}'><em>no comments</em></a>";
-						endif;
-						if ( $value->data->score ):
-							$raw_score = intval ( $value->data->score );
-							$points    = intval ( $value->data->score );
-							$points    = "<span class='listing-score'>{$points}</span>";
-						else:
-							$points = '<span class="listing-score">0</span>';
-						endif;
-						if ( $value->data->author ):
-							$author = sanitize_text_field ( $value->data->author );
-							$author = " by <a href='//reddit.com/user/{$author}'>{$author}</a>";
-						endif;
-						if ( $value->data->created_utc ):
-							$date          = $value->data->created_utc;
-							$date_readable = date( 'Y-m-d H:i:s' , $date );
-							$date          = human_time_diff ( $date , current_time ( 'timestamp' ) );
-							$date          = "submitted {$author} {$date} ago";
-						endif;
-						if ( $value->data->thumbnail && false == $is_self ):
-							
-							if ( true == $value->data->over_18 ):
-								$thumb   = null;
-								$is_nsfw = '<span class="nsfw">nsfw</span>';
-							else:
-								if ( !strpos ( strtolower ( $value->data->title ) , 'spoiler' ) ):
-									$padding = 'image';
-									$thumb   = esc_url ( $value->data->thumbnail );
-									$thumb   = "<img src='{$thumb}' class='thumb' />";
-								else:
-									$thumb   = null;
-								endif;
-							endif;
-							
-						else:
-							$thumb = null;
-						endif;
-						
-						if ( !$thumbs ):
-							$padding = 'no-image';
+						if ( true == $value->data->over_18 ):
 							$thumb   = null;
+							$is_nsfw = '<span class="nsfw">nsfw</span>';
+						else:
+							if ( !strpos ( strtolower ( $value->data->title ) , 'spoiler' ) ):
+								$padding = 'image';
+								$thumb   = esc_url ( $value->data->thumbnail );
+								$thumb   = "<img src='{$thumb}' class='thumb' />";
+							else:
+								$thumb   = null;
+							endif;
 						endif;
 						
-						if ( $score >= $raw_score || $count > $amount ):
-							$post .= '';
-						elseif ( !$sticky && 'stickied' == $div ):
-							$post .= '';
-						elseif ( !$nsfw && $is_nsfw ):
-							$post .= '';
-						elseif ( 'self' == $type && false == $is_self ):
-							$post .= '';
-						elseif ( 'links' == $type && true == $is_self ):
-							$post .= '';							
-						else:
-							$post .= "
-								<div class='reddit-item-listing {$div} {$padding}'>
-									{$points}{$stickied}
-									{$thumb}
-									<span class='listing-title'>
-										{$url} {$domain}
-									</span>
-									<span class='listing-date'>
-										{$date}
-									</span>
-									<span class='listing-information'>
-									{$is_nsfw} {$comments}
-									</span>
-								</div>
-							";
-						endif;
+					else:
+						$thumb = null;
+					endif;
+					
+					if ( !$thumbs ):
+						$padding = 'no-image';
+						$thumb   = null;
+					endif;
+					
+					if ( $score >= $raw_score ):
+						$post .= '';
+					elseif ( !$sticky && 'stickied' == $div ):
+						$post .= '';
+					elseif ( !$nsfw && $is_nsfw ):
+						$post .= '';
+					elseif ( 'self' == $type && false == $is_self ):
+						$post .= '';
+					elseif ( 'links' == $type && true == $is_self ):
+						$post .= '';							
+					else:
+						$post .= "
+							<div class='reddit-item-listing {$div} {$padding}'>
+								{$points}{$stickied}
+								{$thumb}
+								<span class='listing-title'>
+									{$url} {$domain}
+								</span>
+								<span class='listing-date'>
+									{$date}
+								</span>
+								<span class='listing-information'>
+								{$is_nsfw} {$comments}
+								</span>
+							</div>
+						";
+					endif;
 
-					endforeach;
-					$output_end .= '</div></div>';
-				endif;
+				endforeach;
+				$output_end .= '</div></div>';
 			endif;
 		endif;
 		

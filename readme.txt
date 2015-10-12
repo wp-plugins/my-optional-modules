@@ -3,7 +3,7 @@ Contributors: boyevul
 Tags: reddit, meta, og, twitter, facebook, google, description, title, 404, comments, version, pingbacks, author, date, archives, disable, horizontal, galleries, font awesome, share, RSS, DNSBL, garbage, removal, trash, footer, exclude, remove, hide, front page, search results, authors, categories, tags, single post, miniloop, attachment, media, embedder, oEmbed
 Requires at least: 4.1
 Tested up to: 4.3.2
-Stable tag: 11.1.1
+Stable tag: 11.1.2
 
 An assortment of functions to enhance WordPress.
 
@@ -118,24 +118,29 @@ Creates a display column(s) of all parent categories, with links, and descriptio
 Embed a subreddit.
 
 1. `sub` :: the sub you wish to embed :: default: none
+1. `search` :: keyword to search for :: combine with `sub` to search within that sub only :: default: none
+1. `sort` :: combine with `search` to sort results :: top,relevance,new,comments,relevance2 :: default: relevance
 1. `sticky` :: include sticky posts :: 1(yes) 0(no) :: default: 1
 1. `score` :: exclude posts below a certain score :: default: 1
 1. `nsfw` :: show posts that are marked as NSFW :: 1(yes) 0(no) :: default: 1
 1. `type` :: which type of posts to show :: all, self, or links :: default: all
-1. `amount` :: return (between) 1 and 25 results :: default: 25
+1. `amount` :: how many results to return :: default: 25
+1. `header` :: display link back to sub on reddit :: 1(yes) 0(no) :: default: 1
+1. `credit` :: display powered by text :: 1(yes) 0(no) :: default: 1
+1. `from` :: determine when to draw posts from :: hour,day,week,month,year,all :: default: all
 
 `sub` examples: sub, sub/new, sub/rising, sub/controversial, sub/top.
 
-Example: [mom_reddit sub='all' sticky=1 score=0 nsfw=1 type=all amount=25]
+Example: [mom_reddit sub='all' search='' sort='relevance' sticky=1 score=0 nsfw=1 type=all amount=25 header=1 credit=1 from='all']
 
 == Screenshots ==
 1.	A horizontal gallery in a post.
 2.	Share icons displayed at the top of the post content.
 
 == Changelog ==
-= 11.1 / 11.1.1 = 
+= 11.1 / 11.1.1 / 11.1.2 = 
 *	*Release Date - 11th, October, 2015*
-*	Additional parameters can be set for [mom_reddit]
+*	**Additional parameters can be set for [mom_reddit]**
 *	[mom_reddit] now uses .json instead of .rss (and just works better)
 
 = 11 =
